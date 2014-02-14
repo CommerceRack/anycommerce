@@ -2,25 +2,18 @@
    ".415-protectors-and-covers" : {
       "youtube_videoid" : "qeJ2NWgDH6w",
       "youtube_videoheader" : "Protect Your Feather Bed",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_protectors_for_pillows_featherbeds_fiberbeds_mattresses.jpg",
       "description" : "Protect your bedding investment with these removable covers. Easy care options are machine washable and dryable. In addition to pillow protectors and featherbed protectors we feature water resistant, bed bug and dust mite proof mattress covers. ",
       "youtube_videodescription" : "Adding a feather bed protector on your feather bed is a great way to minimize feather bed washings and to extend it's life. Please note most feather beds cannot be washed at home due to their size."
    },
-   ".200-protectors-and-covers.125-feather-bed-cover-protectors" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".brands.50-downlite-hotel-bedding-search" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".brands.50-downlite-hotel-bedding-search" : {},
    ".product-tabs.shipping-returns" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "== Shipping: ==\n* Most orders received are processed within 1-2 business days except for special holiday time periods.\n* If your order has not shipped in those time frames please contact us.\n\n== Returns: ==\n* You can return most new and unopened items within 35 days of delivery for a refund (Please call or email us right away).\n* Items must be returned in new or unused condition and contain all original materials included with the shipment.\n* All returned items will be inspected and may be subject to a partial refund, if it has been used.\n* If the return is a result of our error, the full cost of the merchandise and shipping charges will be refunded.\n* Returns may be subject to you, the customer, paying for the return Shipping & Handling, as well as a restocking fee up to 25% for non-defective items.\n* Please note if item is returned without a Return Merchandise Authorization (RMA) additional charges may apply.\n* Please DO NOT SEND back items prior to receiving a special return authorization issued by an associate.\n\n== Exchanges: ==\n* You can exchange most new and unopened items within 35 days of delivery.\n* Items must be returned in new or unused condition and contain all original materials included with the shipment.\n* All exchange items will be inspected and may be subject to a restocking fee.\n* No items may be returned or exchanged after 35 days. \n* If you purchased the item and received a free shipping promotion you will be credited back your order less a restocking fee. \n\nTo apply for a return or exchange, please email us and an associate will review your file right away. In order to help you properly we request that you be as descriptive as possible when using our contact us form. Please DO NOT SEND back items prior to receiving a special return authorization issued by an associate.\n\nPlease allow for shipping and handling time when completing a return or exchange. \n\nExpect to receive the refund within 2-3 weeks after DOWNLITE receives your return."
    },
+   ".200-protectors-and-covers.125-feather-bed-cover-protectors" : {},
    ".hotels.360-golf-resorts-bedding.110-pebble-beach-golf-resort" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_pebble_beach_golf_resort_bedding.jpg",
       "description" : "The Pebble Beach Golf Resort features bedding made by DOWNLITE.\n\n\nThe Pebble Beach Golf Resort uses our luxury down alternative PrimaLoft pillows and comforters. PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -28,7 +21,6 @@
    ".hotels.360-golf-resorts-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Golf Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_golf_resort_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -36,7 +28,6 @@
    ".hotels.175-luxury-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Luxury Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_trump_hotel_chicago_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -44,7 +35,6 @@
    ".325-bath-and-gifts" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Get The Hotel Look @ Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_bath_and_gift_ideas.jpg",
       "description" : "Gifts offer an opportunity to thank others and sometimes even yourself for life's special occasions. Aside from our luxury bedding we offer 'hotel style' towels, robes and more to replicate that resort experience.",
       "youtube_videodescription" : "Many of our customers have stayed at a hotel property where they enjoyed our bedding. Now you can give the same bedding as a gift."
@@ -52,26 +42,23 @@
    ".hotels.175-luxury-hotel-bedding.140-la-fonda-on-the-plaza-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "La Fonda Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_la_fonda_on_the_plaza_hotel_bedding.jpg",
       "description" : "The La Fonda On The Plaza Hotel features bedding made by DOWNLITE.\n\n\nThey use our 50/50 pillow, middle weight down comforters and our PrimaLoft mattress pads. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest duvet covers for any comforter purchases.\n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.200-bolster-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.200-bolster-pillow-inserts" : {},
+   ".415-protectors-and-covers.175--mattress-protectors" : {},
    ".hotels.100-national-chain-hotels.170-four-points-by-sheraton-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Four Points By Sheraton",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_four_points_by_sheraton_hotel_bedding.jpg",
       "description" : "The Four Points By Sheraton Hotel features bedding made by DOWNLITE and sold online through their own guest resale website. \n\n\nPlease note when visiting their guest resale site they use our Medium density 50/50 Down & Feather Pillow as well as our EnviroLoft down alternative hotel  pillow (also in medium density). In addition, these properties use our diamond quilted down blankets.\n\n\nThe medium density 50/50 and EnviroLoft pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. Blankets are typically used without a cover - but if you wanted to add a duvet cover to protect the blanket you could.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
+   ".300-sealy-comforters" : {},
    ".hotels.175-luxury-hotel-bedding.280-canyon-ranch-spa-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_canyon_ranch_bedding.jpg",
       "description" : "The Canyon  Ranch Spa features bedding made by DOWNLITE.\n\n\nThe Canyon Ranch Spa uses our 50/50 down/feather blend pillows, our quilted top feather beds and our medium weight down comforters.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -79,18 +66,13 @@
    ".hotels.350-casino-hotels.170-resorts-casino-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_resorts_casino_hotel_bedding.jpg",
       "description" : "The Resorts Casino Hotel features bedding made by DOWNLITE.\n\n\nThe Resorts Casino Hotel uses our down alternative EnviroLoft comforters (Many customers like to upgrade to the PrimaLoft option). PrimaLoft is our luxury down alternative that mimics the best properties of down. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".hotels.bates_motel" : {
-      "fl" : "~downlite_c_dataentry"
-   },
    ".hotels.200-cruise-lines" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Cruise Line Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_cruise_line_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -98,53 +80,37 @@
    ".brands.185-cool-touch-bedding" : {
       "youtube_videoid" : "y43iGEWKqWA",
       "youtube_videoheader" : "Cool Touch Bedding Relief",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_cool_touch_bedding.jpg",
       "description" : "In search of some cooling relief at night? Whether you are prone to being warm blooded or experiencing some change of life issues - you need cooling comfort. DOWNLITE offers several unique solutions to help you stay comfortable and cool at night in bed.\n\n\nWhen it comes to cooling comfort we suggest fabrics that use TENCEL Lyocell due to it's unique ability to feel cool against the skin, wick away moisture and just feel amazing. TENCEL Lyocell is often considered a miracle fabric for the way it feels so great in sheeting, duvets and other fabric applications.\n\n\nUnderneath the top or out fabrics we suggest Outlast Or Climarelle as a great solution to help transfer heat away from your body at night. Heat transfer technologies are known as PCM (Phase Change Materials). Originally developed for NASA - Outlast is an ultra premium material we use for pillows to offer cooling comfort).\n\nDOWNLITE also offers lighter weight blanket solutions to help reduce night time sweats.",
       "youtube_videodescription" : "Don't settle for warm restless nights when you can enjoy cool comfort at night. Options include Outlast, Tencel Lyocell and more for a cooler sleep environment."
    },
-   ".200-bed-toppers.featherbeds" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".450-overstock-clearance-sale.150-blanket-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".brands" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".200-bed-toppers.featherbeds" : {},
+   ".450-overstock-clearance-sale.150-blanket-sales" : {},
+   ".100-pillows.225-decorative-pillow-insert-form-pillows" : {},
+   ".brands" : {},
    ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape" : {
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_pillow_insert_forms.jpg",
-      "description" : "Call us slightly obsessed but we can'\u0099t think of a better, faster way to reinvent your living space then a good decorative pillow. Looking good is part of the puzzle - but the pillow form should be engineered to exceed your highest expectations. DOWNLITE offers our exclusive SoftPlus two layer fabric system to reduce poking, feel softer and look whiter [important for delicate or thin outer fabrics]. You can shop our pillow inserts by shape or filling material."
+      "description" : "Call us slightly obsessed but we can't think of a better, faster way to reinvent your living space then a good decorative pillow. Looking good is part of the puzzle - but the pillow form should be engineered to exceed your highest expectations. DOWNLITE offers our exclusive SoftPlus two layer fabric system to reduce poking, feel softer and look whiter [important for delicate or thin outer fabrics]. You can shop our pillow inserts by shape or filling material."
    },
    ".hotels.390-new-york-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_new_york_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.175-rounds-and-circle-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.175-rounds-and-circle-pillow-inserts" : {},
    ".603-down-alternative" : {
       "banner1" : "8/800x300_landing_page_down_alternatives_from_downlite.jpg",
-      "fl" : "c-20090113",
       "description" : "== Down Alternative Options For Bedding ==\n\n\nDo you have allergies to down bedding or think that you do? We get a lot of folks who call and write to us about allergy concerns from down to dust mites. There are several important factors to consider when evaluating bedding allergies. Aside from down allergies, some consumers want the luxury of down but a lower price point. For those consumers we have a collection of luxury down alternatives to choose from.\n\n\nIf you think you have allergy issues or are buying bedding for your family or house guests we recommend PrimaLoft, which is a luxury Down Alternative filling material. Not only does PrimaLoft mimic feel of down filling but it keeps a warmth level equivalent to a 550-600 fill power white goose down. PrimaLoft also has a permanent antimicrobial treatment in the fibers that will not wash out. PrimaLoft is used in bed pillows, comforters, mattress pads, pillow forms and on occasion fiber beds (soft beds)."
    },
    ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling" : {
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_pillow_forms_by_filling.jpg",
       "description" : "Call us slightly obsessed but we can't think of a better, faster way to reinvent your living space then a good decorative pillow. Looking good is part of the puzzle - but the pillow form should be engineered to exceed your highest expectations. DOWNLITE offers our exclusive SoftPlus two layer fabric system to reduce poking, feel softer and look whiter [important for delicate or thin outer fabrics]. You can shop our pillow inserts by shape or filling material."
    },
    ".hotels.190-boutique-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Boutique Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_boutique_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -152,42 +118,35 @@
    ".hotels.380-conference-center-hotels.100-mount-washington-conference-center-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Mount Washington Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_mount_washington_mount_washington_confrence_center_hotel_bedding.jpg",
       "description" : "The Mount Washington Conference Center Hotel uses bedding from DOWNLITE.\n\n\nThis property uses our Hypoallergenic EnviroLoft Pillows (In Firm Density) and EnviroLoft Comforters.\n\n\nWe recommend adding pillow protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover to any comforter purchases not only to extend their life but to add a splash of color in your bedroom.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".450-overstock-clearance-sale.225-protector-cover-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
    ".hotels.150-luxury-resort" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Luxury Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_fontainbleau_resort_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".hotels.175-luxury-hotel-bedding.310-pan-pacific-hotels-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_pan_pacific_hotels_bedding.jpg",
-      "description" : "The Pan Pacific Hotel in WA features bedding made by DOWNLITE.\n\n\nThe Pan Pacific  Hotel uses several items from DOWNLITE including:  our feather and down chamber pillow, our down comforters and even our down mattress pads.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
-      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
-   },
+   ".450-overstock-clearance-sale.225-protector-cover-sales" : {},
    ".hotels.100-national-chain-hotels.180-millenium-hotels-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Millennium Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_millemium_un_plaza_hotel_bedding.jpg",
       "description" : "The Millennium Hotels include several properties in the United States including locations in Boston, Chicago, Los Angeles, New York and more. All of the properties Millennium Hotels feature bedding made by DOWNLITE.\n\nThe Millennium hotels use our 50/50 pillows as well as our hotel style down comforters in a warmer weight level.  This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows and duvet covers for comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
+   ".hotels.175-luxury-hotel-bedding.310-pan-pacific-hotels-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Hotel Bedding For Home",
+      "picture1" : "4/480x360_pan_pacific_hotels_bedding.jpg",
+      "description" : "The Pan Pacific Hotel in WA features bedding made by DOWNLITE.\n\n\nThe Pan Pacific  Hotel uses several items from DOWNLITE including:  our feather and down chamber pillow, our down comforters and even our down mattress pads.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
+   },
    ".hotels.190-boutique-hotel-bedding.190-le-parc-suite-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Le Parc Suite Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_le_parc_suite_hotel_bedding.jpg",
       "description" : "The Le Parc Suite Hotel in West, LA features bedding made by DOWNLITE.\n\nThey use our medium (Warmer) weight goose down comforters.\n\nThe Le Parc Suite hotel comforters are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding duvet covers to any comforter purchases to extend their care and maintenance. We also suggest a duvet cover for any comforter purchases.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -195,7 +154,6 @@
    ".175-throws-and-blankets" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Perfect Hotel Bed At Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_blankets_and_throws.jpg",
       "description2" : "A common question we are often asked is \"What is the difference between Blankets Vs. Comforters Vs. Throws?\". Blankets are lightweight and used on the bed typically for spring or summer (Or even when layering with a down comforter for a 'Hotel Look'). Blankets typically feature smaller quilted boxes that range from 8 inches to 10 inches. \n\n* Comforters are usually thicker then blankets with about double the filling material used and typically larger boxes (12 to 16 inches). Throws are the most like blankets with the biggest difference being size - throws are typically used for the couch or casual wrapping up while resting. \n\n* Blankets and throws are generally easy care home machine washable and dryable. Comforters due to their size sometimes require a commercial size washing machine. Often blankets and throws carried in stores are imported from China - our collection below is primarily made in the USA (unless noted as such).",
       "description" : "Find the perfect lightweight blanket for summer time usage or browse our collection of throws perfect for the couch and living areas.",
@@ -204,7 +162,6 @@
    ".hotels.360-golf-resorts-bedding.100-bandon-dunes-golf-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Bandon Dunes Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_bandon_dunes_golf_resort_bedding.jpg",
       "description" : "The Bandon Dunes Golf Resort features bedding made by DOWNLITE.\n\nThey use our Quilted EcoCluster Fiber Beds shown in the link below.\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding fiber bed protectors to any fiber beds to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -212,7 +169,6 @@
    ".hotels.190-boutique-hotel-bedding.220-gansevoort-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_gansevoort_hotel_bedding.jpg",
       "description" : "The Gansevoort Hotel Group has several properties around the world featuring bedding made by DOWNLITE. DOWNLITE has made bedding for both their NY properties as well as for Miami and the Turks & Caicos.\n\n\nThe Gansevort hotels use a couple types of bed pillows including our 50/50 feather and down blend as well as our EnviroLoft (medium density option) down alternative polyester models. They use a quilted top featherbed and our EnviroLoft down alternative comforters. Online we offer the upgraded white goose version of the 50/50 pillow for home purchases.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -220,60 +176,45 @@
    ".hotels.190-boutique-hotel-bedding.230-andaz-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_andaz_hotel_bedding.jpg",
       "description" : "The Andaz Hotel features bedding made by DOWNLITE.\n\n\nThe Andaz Hotel uses our 50/50 feather and down blend pillows.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".225-mattress-pads-and-toppers" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "Protect your bed investment with one of those soft pads and toppers. Also helps to improve a mattress needing additional softness."
    },
    ".hotels.150-luxury-resort.290-the-furnace-creek-ranch-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Furnace Creek Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_ranch_at_furnace_creek_resort_bedding.jpg",
       "description" : "The Furnace Creek Ranch/Resort features bedding made by DOWNLITE.\n\n\nThe Furnace Creek  Resort uses our down alternative EnviroLoft comforters as well as our EnviroLoft pillows.  EnviroLoft is our down alternative that mimics the properties of down bedding. EnviroLoft blankets run small for home usage - so consider upgrading to the bigger PrimaLoft blankets on our website. For the EnviroLoft pillows - be sure to opt for the medium density option.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.250-novelty-shape-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.160-down-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".400-bedding-supplies" : {
-      "youtube_videoid" : "sNrDSa9ad5s",
-      "youtube_videoheader" : "Buy Hypoallergenic Down",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_bulk_down_and_feather_fillings_and_supplies.jpg",
-      "description" : "Now available for purchase in smaller amounts for filling or repairing fine couches, cushions, jackets and sleeping bags. \n\n\nThese fillings are prepackaged in bags in boxes ready to ship. Please note down is available only in 1 pound batches(except Eiderdown sold by the ounce) whereas feather blends are only available in 5 pound batches (except Grey Duck Feathers sold in 25 pound boxes). We cannot sell in smaller or larger units on the site (however you can add multiple quantities to an order). \n\n\nIn addition to our small bulk down options we will sometimes have extra pillow and comforter shells available for your project needs.",
-      "youtube_videodescription" : "Whether you are looking to re-stuff a pillow, upgrade your jacket or replace a pillow cushion on your couch - you will need our hypoallergenic filling."
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.250-novelty-shape-pillow-inserts" : {},
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.160-down-inserts" : {},
    ".hotels.190-boutique-hotel-bedding.260-the-tuscany-ny-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "6/600x400_the_tuscany_hotel_ny_bedding.jpg",
       "description" : "The Tuscany NY (A St Giles Property) features bedding made by DOWNLITE.\n\n\nThe Tuscany uses our 50/50 Down & Feather blend pillows which offer just the right amount of down softness with feather support.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.100-95-percent-grey-duck-feather-inserts" : {
-      "fl" : "~downlite_c_dataentry"
+   ".400-bedding-supplies" : {
+      "youtube_videoid" : "sNrDSa9ad5s",
+      "youtube_videoheader" : "Buy Hypoallergenic Down",
+      "picture1" : "4/480x360_bulk_down_and_feather_fillings_and_supplies.jpg",
+      "description" : "Now available for purchase in smaller amounts for filling or repairing fine couches, cushions, jackets and sleeping bags. \n\n\nThese fillings are prepackaged in bags in boxes ready to ship. Please note down is available only in 1 pound batches(except Eiderdown sold by the ounce) whereas feather blends are only available in 5 pound batches (except Grey Duck Feathers sold in 25 pound boxes). We cannot sell in smaller or larger units on the site (however you can add multiple quantities to an order). \n\n\nIn addition to our small bulk down options we will sometimes have extra pillow and comforter shells available for your project needs.",
+      "youtube_videodescription" : "Whether you are looking to re-stuff a pillow, upgrade your jacket or replace a pillow cushion on your couch - you will need our hypoallergenic filling."
    },
-   ".500-hotel-cruise-resort-bedding" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".500-hotel-cruise-resort-bedding" : {},
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.100-95-percent-grey-duck-feather-inserts" : {},
    ".611-featherbed-versus-mattress-pad" : {
       "banner1" : "8/800x300_landing_page_featherbed_versus_mattress_pad.jpg",
-      "fl" : "c-20090113",
       "description" : "== Featherbeds Versus Mattress Pads - How To Choose? ==\n\n\nA feather bed is a bedding item used on top of your mattress and is filled with a blend of down and feathers. Some feather beds feature a top layer whether it is down topped or polyester pillow topped. Feather beds generally are 3 to 5 inches in height and feature baffle box chambers to keep the fill separated and easier to fluff and maintain.\n\n\nA mattress pad is generally used over your mattress and features a stretchable skirt or sometimes anchor bands to keep it in place. Typically mattress pads are no thicker than one inch. Mattress pads also can feature special treatments such as a water resistant layer.\n\n\nMattress pads protect your mattress while feather beds or fiber beds add fluffy comfort.\n\n\nA feather bed and a mattress pad can be used together based on the size of the mattress pad skirt or anchor bands. The average consumer mattress is approximately 12 inches in height. So if you have a feather bed on top of your mattress your mattress pad can be applied on top of the feather bed if it has a skirt that is approximately 16 inches or more in height. If your mattress pad has a smaller skirt you can place it over your mattress and below your feather bed. As another option if you have a down topped feather bed you might not want to interfere with the softness of the down material and keep your mattress pad below your feather bed. If you have a dog, baby or generally spill items in your bed frequently you might want to opt to keep a water resistant mattress pad on top of your feather bed. Generally feather beds are not machine washable due to their size and should be spot cleaned. We do recommend adding a feather bed protector when buying a feather bed or even to cover an older feather bed and extend its life."
    },
    ".hotels.100-national-chain-hotels.200-radisson-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Radisson Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_radisson_hotel_bedding.jpg",
       "description" : "The Radisson Hotel features bedding made by DOWNLITE.\n\n\nSome properties use our PrimaLoft down alternative bedding - while others use our hotel style chamber pillow and hotel style down comforters.\n\n\nBoth the PrimaLoft pillows and chamber pillows they use are rated as the MEDIUM density option. The comforters they use are in the WARM option. All of the pillows and comforters are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding duvet covers to any comforter purchase.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -281,31 +222,27 @@
    ".hotels.175-luxury-hotel-bedding.120-st-regis-hotels-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "St. Regis Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "1/1000x800_st_regis_hotels_bedding.jpg",
       "description" : "The St. Regis Hotel features bedding made by DOWNLITE and sold online through their own guest resale website.\n\nPlease note when visiting their guest resale site they use a few different pillow styles including:\n* 25/75 style pillow - 25% down and 75% feathers\n* MicroLoft Gel Pillow - A slick polyester that has a unique squishy feeling\n\nPlease note that the various St. Regis properties buy a mix of items for the properties. If in doubt please contact the St. Regis you stayed at and ask the concierge or housekeeping to get the exact pillow style used in your room. \n\n\nUsually most of the St. Regis customers are looking to purchase the 25/75 pillow. Because that pillow is not normally made available we have some 'like' options listed below. We also suggest a chamber style pillow which has a core of feathers and is surrounded by down. Many guests like to consider it as an option because it is stocked all year.\n\nBoth of the St. Regis Hotel pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".200-bed-toppers" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Hotel Style Feather Beds",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_bed_toppers_featherbeds_mattress_pads_toppers.jpg",
-      "description" : "There is nothing as dreamy as sinking into a soft billowy bed at night and the key is to use a good bed topper. There are basically two types of options - feather beds which provide 3-5 inches of filling comfort or mattress pads & toppers which add a smaller degree of softness.\n\n\nYou can use a feather bed and a mattress pad at the same time for the ultimate in soft goodness. Many of our customers use bed toppers to help soften a hard memory foam mattress.\n\n\nWhether you seek protection of your mattress or want to dramatically add softness we have options for you.",
-      "youtube_videodescription" : "Learn how to get the same soft feeling of luxury at home with the right feather bed."
-   },
    ".hotels.100-national-chain-hotels.150-westin-hotels-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Westin Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "2/200x200_westin_hotels_heavenly_bedding.jpg",
       "description" : "The Westin Hotel features bedding made by DOWNLITE and sold online through their own guest resale website. \n\n\nPlease note when visiting their guest resale site they use our Medium density 50/50 hotel style pillow. \n\n\nThe medium density 50/50 pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
+   ".200-bed-toppers" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Hotel Style Feather Beds",
+      "picture1" : "4/480x360_bed_toppers_featherbeds_mattress_pads_toppers.jpg",
+      "description" : "There is nothing as dreamy as sinking into a soft billowy bed at night and the key is to use a good bed topper. There are basically two types of options - feather beds which provide 3-5 inches of filling comfort or mattress pads & toppers which add a smaller degree of softness.\n\n\nYou can use a feather bed and a mattress pad at the same time for the ultimate in soft goodness. Many of our customers use bed toppers to help soften a hard memory foam mattress.\n\n\nWhether you seek protection of your mattress or want to dramatically add softness we have options for you.",
+      "youtube_videodescription" : "Learn how to get the same soft feeling of luxury at home with the right feather bed."
+   },
    ".hotels.190-boutique-hotel-bedding.280-the-gramercy-hotel-ny-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : " Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_gramercy_park_hotel_ny_bedding.jpg",
       "description" : "The Gramercy Park Hotel features bedding made by DOWNLITE.\n\n\nThe Gramercy Park Hotel uses our EnviroLoft, down alternative pillows.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -313,35 +250,30 @@
    ".hotels.250-local-and-bnb" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Local And B&B Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_local_hotels_and_bed_and_breakfasts_bedding.jpg",
       "description2" : "",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".325-bath-and-towels" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".325-bath-and-towels" : {},
    ".125-comforters" : {
       "youtube_videoid" : "gzpjbmZlQAY",
       "youtube_videoheader" : "Comforter Size Matters",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "6/480x360_down_and_down_alternative_comforters.jpg",
       "description2" : "With so many comforter options it can be a bit confusing which to pick. Don't take the chance of guessing on a comforter for your comfort - call or email us for help.",
       "description" : "There are many options for comforter choices ranging from entry level light weight models to choices that feature extra filling and upgraded fabrics.",
       "youtube_videodescription" : "Learn why the size of the comforter can make a big difference in how you sleep regardless of the filling material on the inside."
    },
+   ".hotels.185-luxury-inn-bedding" : {},
    ".hotels.100-national-chain-hotels.160-aloft-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Aloft Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_aloft_hotel_bedding.jpg",
-      "description" : "The Aloft Hotel features bedding made by DOWNLITE and sold online through their own guest resale website. \n\n\nPlease note when visiting their guest resale site they use our medium density EnviroLoft hotel style pillow and EnviroLoft down alternative comforter. \n\n\nThe medium density EnviroLoft pillows and comforters are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest duvet covers for any comforter purchases."
+      "description" : "The Aloft Hotel features bedding made by DOWNLITE and sold online through their own guest resale website. \n\n\nPlease note when visiting their guest resale site they use our firm density EnviroLoft hotel style pillow and EnviroLoft down alternative comforter. \n\n\nThe firm density EnviroLoft pillows and comforters are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest duvet covers for any comforter purchases."
    },
    ".hotels.150-luxury-resort.175-hawks-cay-resorts-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hawks Cay Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hawks_cay_resort_bedding.jpg",
       "description" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world.\n\nThe Hawks Cay Resort features bedding made by DOWNLITE.\n\n\nThey use our warmer weight white goose down comforters shown in the link below.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding duvets to any comforters to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -350,7 +282,6 @@
       "meta_keywords" : "primaloft,primaloft comforter,primaloft pillow",
       "youtube_videoid" : "-G-mgyRchVA",
       "youtube_videoheader" : "PrimaLoft Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_primaloft_home_bedding.jpg",
       "head_title" : "PrimaLoft Bedding By DOWNLITE",
       "description" : "If your looking for the best down alternative look no further then PrimaLoft. Not only is PrimaLoft permanently anti microbial, but it's hypoallergenic and used by only the finest brands.\n\n\nEasy to care for, PrimaLoft can be machine washed and dried for years of comfort. Countless fine resorts, hotels and department stores feature PrimaLoft bedding to their guests and customers. When fine hotels and resorts use PrimaLoft bedding it traditionally comes with a 230 TC cambric cotton fabric which is very durable.\n\n\nHotels typically use a smaller length so if you want a comforter that is longer we suggest upgrading to an oversize queen or king for better comfort.",
@@ -359,81 +290,73 @@
    ".hotels.380-conference-center-hotels.110-gaylord-conference-center-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Gaylord Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_gaylord_hotel_bedding.jpg",
       "description" : "The Gaylord Conference Center Hotels features bedding made by DOWNLITE. The Opryland, Palms, Texan and the National all purchase the same bedding.\n\n\nThe Gaylord Conference Center Hotels use two different style pillows made by DOWNLITE. The more popular pillow, features a core of hypoallergenic feathers with a top and bottom layer of polyester. The other style pillow bought is our medium density EnviroLoft pillow. Both pillows are rated as medium density and available in different sizes.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.175-enviroloft-polyester-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.175-enviroloft-polyester-inserts" : {},
+   ".125-comforters.125-synthetic-down-alternative-comforters" : {},
    ".hotels.250-local-and-bnb.260-crabtree-cottage-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Crabtree Cottage Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_crabtree_cottage_bedding.jpg",
       "description" : "The Crabtree Cottage uses our PrimaLoft, luxury down alternative collection of bedding.  We also suggest our cool to the touch Tencel Lyocell sheets, pillowcases and duvet covers to compliment the bedding. Please note that the comforter model they use is offered online in 3 weight levels to fit your comfort levels.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".125-comforters.125-synthetic-down-alternative-comforters" : {
-      "fl" : "~downlite_c_dataentry"
-   },
    ".609-blanket-versus-comforter" : {
       "banner1" : "8/800x300_landing_page_blanket_versus_comforter.jpg",
-      "fl" : "c-20090113",
       "description" : "== Blanket Versus Comforters - How To Choose ==\n\n\nDOWNLITE primarily makes filled bedding so on our site we have two top of bed options: comforters and blankets.\n\n\nA comforter is usually filled with down or down alternative and has stitched boxes ranging in size from 10 inches to 16 inches. The larger the box size the higher the fill power or more filling is needed to keep the square fluffy. Comforters are generally best suited for fall/winter usage as they tend to be better in heat retention when compared to a blanket.\n\n\nA blanket is usually filled with down or down alternative and features smaller stitched boxes ranging in size from 4 to 6 inches. Blankets are typically larger than comforters as they are meant to be tucked under the mattress for a hotel look. Blankets frequently have a decorative element such as satin binding or a self flange. Blankets are a great summer weight bedding option. They can be paired with a comforter in winter for extra warmth. Most blankets are machine washable. "
+   },
+   ".hotels.250-local-and-bnb.270-hidden-hills-cabins-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Hidden Hills Bedding",
+      "picture1" : "8/800x800_hidden_hills_cabin_ok.jpg",
+      "description" : "The Hidden Hills Cabins use our PrimaLoft, luxury down alternative collection of bedding. We also suggest our cool to the touch Tencel Lyocell sheets, pillowcases and duvet covers to compliment the bedding. ",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
    ".living-social" : {
       "dl_banner_top3" : "ALT=&IMG=livingsocial%2ftestprod%2ejpg&LINK=http%3a%2f%2fwww%2edownlitebedding%2ecom%2fproduct%2fSDL100PI0230%2f",
       "dl_banner_middle1" : "ALT=&IMG=&LINK=",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "",
       "dl_banner_top" : "ALT=&IMG=&LINK="
    },
    ".hotels" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Style Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
    ".617-downlite-partners" : {
-      "fl" : "c-20090113",
       "description" : "== DOWNLITE Partners ==\n\n\nAs one of the last few American textile companies we are always happy to share information on our partners who also manufacture goods in the United States.\n\n\n* CollegeBedLofts.com - These guys make some great solid wood frame loft bed frames perfect for dorm rooms and areas needing extra space. Based in PA - all items are made in the USA."
    },
-   ".100-pillows.150-synthetic-down-alternative-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".hotels.190-boutique-hotel-bedding.110-tower-23-hotel-bedding" : {
+   ".product-tabs" : {},
+   ".100-pillows.150-synthetic-down-alternative-pillows" : {},
+   ".hotels.380-conference-center-hotels" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Tower 23 Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_tower_23_hotel_bedding.jpg",
-      "description" : "The Tower 23 property features bedding made by DOWNLITE.\n\n\nThey use several of our items including our quilted feather beds, ultraplush mattress pads, EnviroLoft down alternative comforters and our 50/50 down and feather pillows.\n\n\nAll of the bedding is made in the USA and machine washable and dryable (except the feather beds which are too large - so be sure to add a feather bed protector). This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
+      "youtube_videoheader" : "Conference Center Bedding",
+      "picture1" : "4/480x360_mount_washington_mount_washington_confrence_center_hotel_bedding.jpg",
+      "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
    ".hotels.200-cruise-lines.100-regent-cruise-line-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Regent Cruise Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_regent_cruise_line_bedding.jpg",
       "description2" : "This cruise line purchased/uses our line of warmer weight down comforters and our 5/95 feather blend pillows. We also suggest our cool to the touch Tencel Lyocell bedding to compliment the bedding. Please note that the comforter model they use is offered online in 3 weight levels to fit your comfort levels.",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".hotels.380-conference-center-hotels" : {
+   ".hotels.190-boutique-hotel-bedding.110-tower-23-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Conference Center Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_mount_washington_mount_washington_confrence_center_hotel_bedding.jpg",
-      "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
+      "youtube_videoheader" : "Tower 23 Hotel Bedding",
+      "picture1" : "4/480x360_tower_23_hotel_bedding.jpg",
+      "description" : "The Tower 23 property features bedding made by DOWNLITE.\n\n\nThey use several of our items including our quilted feather beds, ultraplush mattress pads, EnviroLoft down alternative comforters and our 50/50 down and feather pillows.\n\n\nAll of the bedding is made in the USA and machine washable and dryable (except the feather beds which are too large - so be sure to add a feather bed protector). This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
    ".hotels.350-casino-hotels.120-the-venetian-casino-resort-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_venetian_casino_resort_hotel_bedding.jpg",
       "description" : "The Venetian Casino, Hotel & Resort features bedding made by DOWNLITE.\n\n\nThey use our medium weight white goose down comforters for their rooms. These medium warmth level down comforters are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. Be sure to select the 'Warmer' option from the drop down menu which has several variations.  This property also uses our 20/80 pillows (which are similar to the 25/75 model we sell as well).\n\n\nWe recommend adding duvet covers to any comforters to extend their care and maintenance.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -441,20 +364,17 @@
    ".hotels.200-cruise-lines.110-crystal-cruise-lines-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Crystal Cruise Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_crystal_cruise_line_bedding.jpg",
-      "description" : "The Crystal Cruise line features bedding made by DOWNLITE.\n\n\nThey use a 50/50 style pillow - half down, half feathers. The 50/50 pillow is a very specific pillow that is usually not sold in stores, but typically available only online (A 50/50 pillow is really different then a basic down pillow - it offers the perfect blend of down softness and feather support).\n\n\nThe Crystal Cruise line also uses our 'warm' weight down comforters (also available in warmer and warmest).\n\n\nThe Crystal Cruise line pillow is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover for any comforter purchases.\n\n",
+      "description" : "The Crystal Cruise line features bedding made by DOWNLITE.\n\n\nThey use a 50/50 style pillow - half down, half feathers. The 50/50 pillow is a very specific pillow that is usually not sold in stores, but typically available only online (A 50/50 pillow is really different then a basic down pillow - it offers the perfect blend of down softness and feather support). In addition to the 50/50 pillow - some rooms use our EnviroLoft down alternative pillows in medium density.\n\n\nThe Crystal Cruise line also uses our 'warm' weight down comforters (also available in warmer and warmest).\n\n\nThe Crystal Cruise line pillow is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover for any comforter purchases.\n\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
    ".607-feathers-versus-down" : {
       "banner1" : "8/800x300_feathers_versus_down.jpg",
-      "fl" : "c-20090113",
       "description" : "== Feathers Versus Down ==\n\n\nDown is the light fluffy coating beneath the feathers of ducks and geese. Each down cluster is made from thousands of tiny fibers, like little cotton balls between the bird's skin and feathers. Mother Nature created down to keep water fowl dry and warm when they swim around in the water. One down comforter provides the warmth and temperature control of 14 wool blankets, but because of down's natural ability to pull moisture away from the skin you never wake up hot and clammy in the middle of the night.\n\n\nHigh quality down comes only from ducks and geese. Chickens and other birds do not produce down because they do not spend a significant portion of their lives in the water. 85% of the world's production of down and feathers comes from Asia; the remaining 15% is generally produced in Eastern Europe. Farmers who raise ducks and geese for their meat sell the unprocessed feathers and down to processing companies around the world, so no usable part of the bird is wasted.\n\n\nDown clusters are naturally very durable, it is not uncommon for people to use a down bedding product for a dozen years or more before replacing it. Down is also naturally flame retardant, making it an excellent choice for safe sleeping.\n\n\nDown and feathers come in various shades ranging from pure white to black speckled gray. There is a premium on pure white down and feathers because of their ability to visually blend better when filled into white bedding products, but the color does not affect the down's loft or warmth. As consumers taste for lighter bird meat increases, white down and feathers are becoming more abundant."
    },
    ".hotels.100-national-chain-hotels.240-drury-inn-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Drury Inn Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_drury_inn_hotel_bedding.jpg",
       "description" : "The Drury Inn Hotel features bedding made by DOWNLITE.\n\n\nThe Drury Inn uses two types of pillows - a medium density quilted feather pillow as well as a medium density EnviroLoft down alternative polyester pillow.\n\n \nWe recommend adding protectors to any pillows to extend their care and maintenance. \n\n\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the pillows and comforters used at the best properties in the world."
@@ -462,20 +382,17 @@
    ".hotels.200-cruise-lines.130-seabourn-cruise-line-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Seabourn Cruise Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_seabourn_cruise_line_bedding.jpg",
       "description" : "The Seabourn Cruise Line features bedding made by DOWNLITE.\n\n\nThe Seabourn Cruise Line uses our luxury down alternative PrimaLoft comforters and our chamber style pillows (A core of feathers with down on the outside for softness).\n\n\nThis cruise line uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".425-gifts" : {
       "banner1" : "",
-      "fl" : "~downlite_c_dataentry",
       "description" : "Give that special someone a gift they will remember for a long time from DOWNLITE. Whether you want to give a pair of pillows to a newly married couple or want to buy a throw for soemones couch we have lots of options."
    },
    ".hotels.370-beach-hotel-bedding.210-seacrest-oceanfront-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Seacrest Oceanfront Hotel",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_seacrest_resort_pismo_beach_bedding.jpg",
       "description" : "The Seacrest Oceanfront Hotel features bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft down alternative comforters. These down alternative comforters are hypoallergenic, easy care and made in the USA.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.\n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -483,53 +400,43 @@
    ".hotels.370-beach-hotel-bedding.230-the-perry-south-beach-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "The Perry Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_perry_hotel_bedding.jpg",
       "description" : "The Perry South Beach Hotel features bedding made by DOWNLITE.\n\n\nThe Perry uses our 10/90 feather and down pillows. These medium density pillows offer a softer experience then a typical 5/95 pillow.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
-      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
-   },
-   ".hotels.150-luxury-resort.260-house-on-the-rock-resort-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "House On The Rock Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_house_on_the_rock_bedding.jpg",
-      "description" : "The House On The Rock Resort features bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft down alternative comforters as well as the medium density EnviroLoft pillows. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding duvets to any comforters to extend their care and maintenance.",
-      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
-   },
-   ".hotels.350-casino-hotels.140-four-winds-casino-resort-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Four Winds Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_four_winds_casino_resort_bedding.jpg",
-      "description" : "The Four Winds Casino & Resort features bedding made by DOWNLITE.\n\n\nThe Four Winds Resort uses our EnviroLoft down alternative comforters\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".hotels.390-new-york-hotel-bedding.150-paramount-hotel-ny-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_paramount_hotel_ny_bedding.jpg",
       "description" : "The Paramount Hotel features bedding made by DOWNLITE.\n\n\nThe Paramount Hotel uses our Chamber Style pillows which offer the support of feathers with the softness of down. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".pillows.100-specialty_pillow" : {
-      "fl" : "c-20100825"
+   ".hotels.350-casino-hotels.140-four-winds-casino-resort-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Four Winds Resort Bedding",
+      "picture1" : "4/480x360_four_winds_casino_resort_bedding.jpg",
+      "description" : "The Four Winds Casino & Resort features bedding made by DOWNLITE.\n\n\nThe Four Winds Resort uses our EnviroLoft down alternative comforters\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
+   ".hotels.150-luxury-resort.260-house-on-the-rock-resort-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "House On The Rock Bedding",
+      "picture1" : "4/480x360_house_on_the_rock_bedding.jpg",
+      "description" : "The House On The Rock Resort features bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft down alternative comforters as well as the medium density EnviroLoft pillows. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding duvets to any comforters to extend their care and maintenance.",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
+   },
+   ".125-comforters.150-comforter-sets" : {},
    ".hotels.150-luxury-resort.250-safety-harbor-resort-and-spa-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Safety Harbor Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_safety_harbor_resort_spa_bedding.jpg",
       "description" : "The Safety Harbor Resort & Spa features bedding made by DOWNLITE.\n\n\nThey use our 'chamber' pillow as well as our EnviroLoft down alternative comforter (Some customers choose to upgrade to our PrimaLoft luxury down alternative comforters).\n\n\nThe medium density hotel style pillow top chamber pillow features a core of hypoallergenic feathers and down with a top and bottom layer of soft down alternative. The pillow top chamber pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel style' bedding look at home."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.150-rectangle-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.150-rectangle-pillow-inserts" : {},
    ".brands.225-twin-xl-bedding" : {
       "youtube_videoid" : "t6wLbdh-CwA",
       "youtube_videoheader" : "Dorm Ready TXL Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_twin_xl_back_to_school_dorm_bedding.jpg",
       "description" : "With school just around the corner for college freshman (FROSH) you will want to make sure you have the correct extra long twin bedding to fit the twin xl 39 x 80 dorm beds. Not only is DOWNLITE the countries largest down bedding manufacturer but we specialize in hard to find sizes and offer manufacturer direct price savings. \n\nBetween dorm friendly twin xl feather beds, twin xl mattress pads, twin xl down comforters and twin xl sheet sets we have you covered in comfort. \n\nDon't wait to get your dorm bedding - stores typically sell out with limited assortments to choose from.\n\nIt's a great idea to combine your purchases with your roommates to qualify for free shipping (Spend $150 and shipping free).\n\nUse coupon code DORMSAVE to save 10% on all Twin XL Bedding.",
       "youtube_videodescription" : "Ready for school yet? DOWNLITE offers numerous twin xl bedding options including extra long twin comforters, xl twin feather beds and more."
@@ -537,26 +444,22 @@
    ".hotels.150-luxury-resort.220-mauna-lani-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Mauna Lani Resort",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_mauna_lani_resort_bedding.jpg",
       "description" : "The Mauna Lani Resort property features bedding made by DOWNLITE.\n\n\nThis amazing resort uses a special type of pillow made by DOWNLITE called a chamber pillow. A chamber pillow has a core of supportive feathers surrounded by layers of soft down for that 'just right' feeling. The chamber pillow shown below is made in the USA of our hypoallergenic materials. This medium density pillow is unique in it's feeling and offers the perfect balance of softness and support.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.200-euro-neck-and-body-specialty-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
    ".hotels.250-local-and-bnb.110-fulton-steamboat-inn-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Fulton Steamboat Inn",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_fulton_steamboat_inn_bedding.jpg",
       "description" : "The Fulton Steamboat Inn feature bedding made by DOWNLITE. \n\n\nThis Inn uses our polyester chamber pillow (Available in limited supply).  The property features bedding made in the USA featuring our antimicrobial hypoallergenic cleaning process. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
+   ".100-pillows.200-euro-neck-and-body-specialty-pillows" : {},
+   ".brands.100-sealy-brand-bedding" : {},
    ".hotels.300-las-vegas-hotels.110-mandalay-bay-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Mandalay Bay Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_mandalay_bay_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -564,18 +467,15 @@
    ".hotels.100-national-chain-hotels.190-country-inn-and-suites-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Country Inn & Suites Bed",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_country_inn_and_suites_hotel_bedding.jpg",
       "description" : "The country Inn & Suites Hotel features bedding made by DOWNLITE and sold online through their own guest resale website. \n\n\nPlease note when visiting their guest resale site they our Medium density PrimaLoft hotel style pillow as well hotel style PrimaLoft comforter.\n\n\nThe medium density Primaloft hotel style pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding pillow protectors to any order.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".200-bed-toppers.fiberbeds" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".400-sealy-sheet-sets" : {},
+   ".200-bed-toppers.fiberbeds" : {},
    ".hotels.100-national-chain-hotels.210-choice-hotels-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Choice Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_choice_hotels_bedding.jpg",
       "description" : "Choice Hotels is a group of hotel franchises operating under several names (Comfort Inn, Comfort Suites, Clarion Inn, Sleep Inn, Mainstay Suites, Econolodge, Roadway Inn, Days Inn, Quality Inn and more). During the last ten years, many of the properties upgraded their hotel bedding based on their brand standards required by the corporate franchise company. As a result - DOWNLITE - one of the 2-3 preferred vendors at the time shipped a combination of pillows, comforters, and mattress pads to approximately one thousand properties worldwide.\n\n\nBecause each property owner could buy slightly different - it is hard to say for sure, what each hotel purchased and uses because we shipped mainly to their distribution centers. The safest thing to do for finding an item you enjoyed, is to write down or record the information on the law tag attached to a product and contact us for more information. In some cases the description on the law tag will match one of the items listed below directly. In other cases you may not have had a chance to written down the info or lost it and we can try to manually look it up one by one to help you out.\n\n\nIn terms of pillows - 90% of the property owners used our Medium Density EnviroLoft pillow, followed by a split of those using either the 5/95 feather pillow or the MicroLoft pillow. In very few cases did they use an 'all down pillow' - of course if you would like that option they are available for sale as well.\n\n\nMost properties used our Ultra Plush pad - a very nice thick easy care pad.\n\n\nFor comforters and blankets almost 100% of the properties used our EnviroLoft down alternative filling in either the regular or the lightweight options (we suggest the lightweight option when pairing with a duvet cover to minimize weight).",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -583,79 +483,57 @@
    ".hotels.100-national-chain-hotels.280-hotel-intercontinental-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hotel_intercontinental_bedding.jpg",
       "description" : "The Hotel Intercontinental features bedding made by DOWNLITE.\n\n\nThe Hotel Intercontinental uses medium density White Goose Chamber pillows (great for back and side sleepers). Some locations also use our PrimaLoft, Luxury Down Alternative Comforters.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".450-overstock-clearance-sale.200-mattress-pad-topper-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".275-sheets-and-duvets.duvets" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".415-protectors-and-covers.200-decorative-protectors" : {},
+   ".450-overstock-clearance-sale.200-mattress-pad-topper-sales" : {},
+   ".275-sheets-and-duvets.duvets" : {},
    ".hotels.350-casino-hotels.100-mohegen-sun-casino-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Mohegen Sun Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_mohegen_sun_casino_hotel_bedding.jpg",
       "description" : "The Mohegen Sun Casino Resort features bedding made by DOWNLITE.\n\nThey use our Medium density EnviroLoft hotel style pillow as well as our Chamber Pillows. These medium density pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. Be sure to select the Medium density option for the EnviroLoft model which has several variations.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.225-neckroll-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".hotels.hotel_california" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.225-neckroll-pillow-inserts" : {},
    ".living-social.april" : {
       "dl_banner_middle1" : "ALT=&IMG=livingsocial%2fliving_social_welcom_guest%2ejpg&LINK=",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "livingsocial/welcome_to_downlite.jpg",
       "banner_wide1" : "ALT=&IMG=livingsocial%2fliving_social_welcom_guest%2ejpg&LINK=",
       "description" : "<i>Hello,<br>\nWe Thank you for your interest in our Livingsocial Deal purchase. Please add the item below to your cart and feel free to browse the rest of our store for other more items of with the same hotel comfort and quality items.<br>\nThanks,<br>\n-Downlite<i\\>"
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.100-square-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".450-overstock-clearance-sale.125-comforter-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.100-square-pillow-inserts" : {},
    ".hotels.150-luxury-resort.200-woodstock-inn-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ ",
       "youtube_videoheader" : "Woodstock Inn & Resort",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_woodstock_inn_resort_vermont_bedding.jpg",
       "description" : "The Woodstock Inn & Resort features bedding made by DOWNLITE.\n\nThe medium density hotel style pillow top chamber pillow features a core of hypoallergenic feathers and down with a top and bottom layer of soft down alternative. The pillow top chamber pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
+   ".450-overstock-clearance-sale.125-comforter-sales" : {},
    ".brands.125-tommybahama-bedding" : {
       "meta_keywords" : "tommy bahama,tommybahama,tommy bahama bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_tommy_bahama_bedding.jpg",
       "head_title" : "Tommy Bahama Home By DOWNLITE",
-      "description" : "Step into an oasis of relaxation where white sandy beaches, cool tropical breezes and utter comfort await you every night. Our Tommy Bahama bedding collection is designed using the finest and softest materials for your relaxation. These bedding basics include fine cottons paired with down and down alternative fillings to cradle you in bliss.\n\n\nPerfect for all climates these tropical bedding inspired pieces are designed for the master suite in sizes ranging from oversized queen and oversized king in blankets and comforters. One of our favorite Tommy Bahama pieces includes our PrimaLoft pillow with Tencel Lyocell fabric \u00e2\u0080\u0093 perfect for the pillow connoisseur who enjoys cool touch pillows.\n\n\nAs our collections is always being designed and crafted for your sleeping enjoyment please expect to see Tommy Bahama blankets featured in the summer and Tommy Bahama comforters for the fall."
+      "description" : "Step into an oasis of relaxation where white sandy beaches, cool tropical breezes and utter comfort await you every night. Our Tommy Bahama bedding collection is designed using the finest and softest materials for your relaxation. These bedding basics include fine cottons paired with down and down alternative fillings to cradle you in bliss.\n\n\nPerfect for all climates these tropical bedding inspired pieces are designed for the master suite in sizes ranging from oversized queen and oversized king in blankets and comforters. One of our favorite Tommy Bahama pieces includes our PrimaLoft pillow with Tencel Lyocell fabric â perfect for the pillow connoisseur who enjoys cool touch pillows.\n\n\nAs our collections is always being designed and crafted for your sleeping enjoyment please expect to see Tommy Bahama blankets featured in the summer and Tommy Bahama comforters for the fall."
    },
    ".150-bedding-sets" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "Recently stayed at hotel or resort featuring bedding from DOWNLITE? If so one of these item collections will help you get that same comfort at home. These 3 and 4 star sets include a comforter, two pillows ansd a matching mattress pad or topper for your enjoyment."
    },
    ".hotels.250-local-and-bnb.100-harbor-view-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Harbor View Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_harbor_view_hotel_bedding.jpg",
       "description2" : "",
       "description" : "The Harbor View Hotel purchased our line of warmer weight down comforters and our primaloft down alternative pillows. We also suggest our cool to the touch Tencel Lyocell bedding to compliment the bedding. Please note that the comforter model they use is offered online in 3 weight levels to fit your comfort levels.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.175-polyester-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.175-polyester-pillows" : {},
    ".hotels.190-boutique-hotel-bedding.240-padre-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Padre Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_padre_hotel_bedding.jpg",
       "description" : "The Padre Hotel features bedding made by DOWNLITE.\n\n\nThe Padre Hotel uses several items including our quilted feather pillows, medium weight down comforters and baffle box feather beds. For the feather pillow, we suggest the 10/90 quilted models shown below. The Padre Hotel also uses some of our EnviroLoft, down alternative pillows for select rooms/requests.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -663,7 +541,6 @@
    ".hotels.350-casino-hotels.110-aqua-caliente-casino-resort-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Aqua Caliente Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_agua_caliente_resort_cainso_bedding.jpg",
       "description" : "The Aqua Caliente Casino Resort features bedding made by DOWNLITE.\n\n\nThey use our Medium density EnviroLoft hotel style pillow. The medium density EnviroLoft pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -671,47 +548,41 @@
    ".hotels.190-boutique-hotel-bedding.200-hotel-indigo-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Indigo Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hotel_indigo_bedding.jpg",
       "description" : "The Hotel Indigo features bedding made by DOWNLITE.\n\n\nThey use several different items in their various properties including a quilted feather pillow, PrimaLoft comforter and our Ultraplush mattress pads.\n\n\nMost of the Hotel Indigo bedding is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover for any comforter purchases.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
+   ".hotels.175-luxury-hotel-bedding.130-biltmore-estate-inn-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Biltmore Estate Bedding",
+      "picture1" : "4/480x360_biltmore_estate_inn_bedding.jpg",
+      "description" : "The Biltmore Estate Inn property features bedding made by DOWNLITE. This grand hotel uses a special type of pillow made by DOWNLITE called a chamber pillow. A chamber pillow has a core of supportive feathers surrounded by layers of soft down for that 'just right' feeling. The chamber pillow shown below is made in the USA of our hypoallergenic materials. This medium density pillow is unique in it's feeling and offers the perfect balance of softness and support.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
+      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
+   },
    ".450-overstock-clearance-sale" : {
       "youtube_videoid" : "ssPmLNHZ6Es",
       "youtube_videoheader" : "Better Bedding On Sale",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_downlite_bedding_sale.jpg",
       "description2" : "With so many items for sale it can be a bit confusing which to pick. Don't take the chance of guessing on an item - call or email us for help.",
       "description" : "When you buy bedding manufacturer direct your already getting a great deal. These are items that are at their absolute lowest - buy them while you can. These overstock items are a combination of clearance items, discount items and best buys.",
       "youtube_videodescription" : "Learn how the right bedding can make a difference in how you feel and perform in life. As the manufacturer for most down bedding sold in stores offer great manufacturer direct savings on select items that are overstocks."
    },
-   ".hotels.175-luxury-hotel-bedding.130-biltmore-estate-inn-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Biltmore Estate Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_biltmore_estate_inn_bedding.jpg",
-      "description" : "The Biltmore Estate Inn property features bedding made by DOWNLITE. This grand hotel uses a special type of pillow made by DOWNLITE called a chamber pillow. A chamber pillow has a core of supportive feathers surrounded by layers of soft down for that 'just right' feeling. The chamber pillow shown below is made in the USA of our hypoallergenic materials. This medium density pillow is unique in it's feeling and offers the perfect balance of softness and support.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
-      "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
-   },
-   ".615-restassured-hypoallergenic-bedding" : {
-      "youtube_videoid" : "sNrDSa9ad5s",
-      "youtube_videoheader" : "Hypoallergenic Down",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_restassured_hypoallergenic_down_and_feather_fillings.jpg",
-      "description" : "== Hypoallergenic Down & Feather Fillings ==\n\n\nDOWNLITE offers a special type of down and feather fillings that is rated hypoallergenic.\n\nLearn how we process our hypoallergenic down by watching our video.",
-      "youtube_videodescription" : "Don't take a chance on cheap imported bedding with who knows what lurking in the fillings. DOWNLITE is one of the only vertical bedding manufacturers in the down and feather business cleaning it's own fillings."
-   },
    ".brands.175-goodhousekeeping-bedding" : {
-      "fl" : "~downlite_c_dataentry",
       "meta_description" : "good housekeeping bedding,good housekeeping pillow,good house keeping pillow",
       "picture1" : "4/480x360_good_housekeeping_home_bedding.jpg",
       "head_title" : "Good Housekeeping Bedding By DOWNLITE",
       "description" : "When it comes to your personal comfort, don't settle for a pillow that is too soft, too firm or hard to care for. DOWNLITE offers the perfect solution for your needs with the easy to care for Good Housekeeping PrimaLoft Pillow. Featuring a special NanoTex treatment on the removable protector, these pillows will not only feel great but stand the test of time with ease of care.\n\n\nIn an exclusive relationship with the Good Housekeeping magazine, DOWNLITE offers these easy to care for PrimaLoft pillows for your home.\n\n\nNow celebrating it's 100 year anniversary, these pillows are a testament to the quality and reliability the brand offers."
    },
+   ".615-restassured-hypoallergenic-bedding" : {
+      "youtube_videoid" : "sNrDSa9ad5s",
+      "youtube_videoheader" : "Hypoallergenic Down",
+      "picture1" : "4/480x360_restassured_hypoallergenic_down_and_feather_fillings.jpg",
+      "description" : "== Hypoallergenic Down & Feather Fillings ==\n\n\nDOWNLITE offers a special type of down and feather fillings that is rated hypoallergenic.\n\nLearn how we process our hypoallergenic down by watching our video.",
+      "youtube_videodescription" : "Don't take a chance on cheap imported bedding with who knows what lurking in the fillings. DOWNLITE is one of the only vertical bedding manufacturers in the down and feather business cleaning it's own fillings."
+   },
    ".hotels.190-boutique-hotel-bedding.210-dream-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Dream Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_dream_hotel_bedding.jpg",
       "description" : "The Dream Hotel features bedding made by DOWNLITE.\n \nThey use two types of pillows including our 50/50 style pillow - half down, half feathers as well as our chamber pillow. Both pillows are considered medium density they are great for side and back sleepers. The dream hotel also uses our baffle box feather beds and our EnviroLoft down alternative. \n \nAll of the dream hotel bedding is made in the USA featuring our antimicrobial hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n \nWe recommend adding protectors to any pillows to extend their care and maintenance. \n\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the pillows and comforters used at the best properties in the world."
@@ -719,7 +590,6 @@
    ".hotels.190-boutique-hotel-bedding.270-the-court-hotel-ny-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/600x400_the_court_hotel_ny_bedding.jpg",
       "description" : "The Court NY (A St Giles Property) features bedding made by DOWNLITE.\n\n\nThe Tuscany uses our 50/50 Down & Feather blend pillows which offer just the right amount of down softness with feather support.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -727,20 +597,13 @@
    ".hotels.100-national-chain-hotels.230-best-western-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Best Western Hotel",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_best_western_hotel_bedding.jpg",
       "description" : "The Best Western Hotel chain line features bedding made by DOWNLITE. Not all properties use our bedding - but the hotel chain dictates that properties buy similiar items made by different manufacturing companies.\n\n\nThey use a down alternative pillow and comoforter we call EnviroLoft. Easy to care for and hypoallergenic, this down alternative is soft and lofty like down. The Best Western properties also use our UltraPlush mattress pads.\n\n\nMost of the Best Western bedding is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover for any comforter purchases.\n\n\n\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".cristions" : {
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_cristions_wholesale.jpg",
-      "description" : "Welcome Steve,\n\n\nThis 'landing page' will allow you quick access to the items you have expressed an interest in buying. Remember to be logged in so that your wholesale pricing structure applies.\n\n\nRun into any problems - email or call Stefan:\nshunter@downlite.com\n513-229-6348\n\nTo find your items simply type the following strings into the search box on the top left:\n* 'HOS100CO0050' (Level 6 300 TC Down Comforter)\n* 'HOS100PI0370' (Double Loft Chamber Pillow)\n"
-   },
    ".hotels.200-cruise-lines.120-holland-america-cruise-line-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Holland America Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_holland_america_cruise_line_bedding.jpg",
       "description" : "The Holland America cruise line features bedding made by DOWNLITE.\n\n\nThey use a white goose down pillow from DOWNLITE - rated as soft density.\n\n\nThe Holland America cruise line also uses our 'warm' weight down alternative EnviroLoft comforters.\n\n\nThe Holland America cruise line pillow is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest adding a duvet cover for any comforter purchases.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -748,26 +611,22 @@
    ".hotels.100-national-chain-hotels.110-embassy-suites-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Embassy Suites Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_embassy_suites_hotel_bedding.jpg",
       "description" : "The Embassy Suites Hotel features bedding made by DOWNLITE and sold online through their own guest resale website.\n\n\nPlease note when visiting their guest resale site they use our Medium density EnviroLoft hotel style pillow.\n\n\nThe medium density EnviroLoft pillows are made in the USA featuring our  hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".450-overstock-clearance-sale.250-duvet-and-sheet-set-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".450-overstock-clearance-sale.250-duvet-and-sheet-set-sales" : {},
    ".brands.500-sealy-bedding" : {
       "youtube_videoid" : "ZDoBnKXj_3w",
       "youtube_videoheader" : "Life Before Your Eyes",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_sealy_bedding_brand.jpg",
       "description" : "Sealy is one of the oldest bedding brands in the world with a strong heritage for American made products.\n\nThe Sealy product line represents a broad range of premium bedding offering soft cotton fabrics paired with comforting fillings. Sealy bedding products include a full range of pillows, mattress pads and toppers, comforters, sheet sets and more.\n\nTo learn more simply browse the items below or if you want to shop not only Sealy but also Sealy Posturepedic and Stearns & Foster - simply shop with the items below.\n\nDue to the range of options don't feel overwhelmed by all the options and contact a bedding specialist, Monday To Friday from 10 AM through 4 PM EST.",
       "youtube_videodescription" : "Whatever you do in bed - Sealy supports it!"
    },
+   ".415-protectors-and-covers.100-pillow-protectors" : {},
    ".hotels.185-luxury-inn-bedding.the_inn_at_blackberry_farm_bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Blackberry Farm Inn",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_blackberry_farm_inn_bedding.jpg",
       "description" : "The Blackberry Farm Inn features bedding made by DOWNLITE.\n\n\nThey use our soft density white goose down pillows as well as our quilted feather beds. Please note they also bought our Comforel bed pillows, but those are no longer available. We suggest our PrimaLoft medium density down alternative pillows as an option to replace the Comforel pillows.\n\n\nThe Blackberry Farm Inn pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -775,44 +634,37 @@
    ".hotels.100-national-chain-hotels.250-hotel-sierra-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Sierra Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hotel_sierra_bedding.jpg",
       "description" : "The Hotel Sierra features bedding made by DOWNLITE.\n\n\nThe Hotel Sierra uses our 50/50 down and feather pillows. These medium density pillows are perfect for back and side sleepers.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
+   ".100-pillows" : {
+      "youtube_videoid" : "FK7NAV9l2nA",
+      "youtube_videoheader" : "How To Select A Pillow?",
+      "widebanner_top1" : "ALT=Down%2c+Feather+%26+Down+Alternative+Pillows+%2d+Made+In+The+USA&IMG=P%2fpillows_category_banner%2ejpg&LINK=",
+      "picture1" : "C/480x360_down_and_down_alternative_pillows.jpg",
+      "description2" : "With so many pillow options it can be a bit confusing which to pick. Don't take the chance of guessing on a pillow for your comfort - call or email us for help.",
+      "description" : "Don't settle for a pillow past its prime. DOWNLITE knows pillows and makes them for the best stores in the country and the finest hotels in the world. Whether you seek an extra soft down pillow or PrimaLoft, the luxury down alternative option - we have you covered. Hypoallergenic, easy care and made in the USA - who can ask for more.",
+      "youtube_videodescription" : "Learn how to buy the right density pillow based on your sleep position. Covers Soft, Medium and Firm sleep positions."
+   },
    ".hotels.250-local-and-bnb.120-applewood-inn-spa-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Applewood Inn Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_applewood_inn_spa_bedding.jpg",
       "description" : "The Applewood Inn & Spa features bedding made by DOWNLITE.\n\nThis Inn uses our cream color PrimaLoft European Style Comforters(Available in limited supply - if sold out we have other options in white color choices - just callus). The property features bedding made in the USA featuring our antimicrobial hypoallergenic cleaning process.\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding duvet covers to any comforter purchases to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows" : {
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "C/480x360_down_and_down_alternative_pillows.jpg",
-      "description2" : "With so many pillow options it can be a bit confusing which to pick. Don't take the chance of guessing on a pillow for your comfort - call or email us for help.",
-      "description" : "Don't settle for a pillow past its prime. DOWNLITE knows pillows and makes them for the best stores in the country and the finest hotels in the world. Whether you seek an extra soft down pillow or PrimaLoft, the luxury down alternative option - we have you covered. Hypoallergenic, easy care and made in the USA - who can ask for more.",
-      "youtube_videodescription" : "Learn how to buy the right density pillow based on your sleep position. Covers Soft, Medium and Firm sleep positions.",
-      "youtube_videoheader" : "How To Select A Pillow?",
-      "youtube_videoid" : "FK7NAV9l2nA",
-      "widebanner_top1" : "ALT=Down%2c+Feather+%26+Down+Alternative+Pillows+%2d+Made+In+The+USA&IMG=P%2fpillows_category_banner%2ejpg&LINK="
-   },
    ".hotels.100-national-chain-hotels" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "National Chain Hotels",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_national_chain_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.100-white-goose-and-duck-down-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.100-white-goose-and-duck-down-pillows" : {},
    ".hotels.175-luxury-hotel-bedding.100-trump-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Trump Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_trump_hotel_chicago_bedding",
       "description" : "The Trump Hotel features bedding made by DOWNLITE. Please note that most of the properties use the same bedding with some slight variations. Of note they use our 50/50 pillows and what we call the Deluxe 10/90 feather bed on our website. Some of the bedding in the room is not made by DOWNLITE such as the linens and the mattress itself. However, we suggest our Tencel Lyocell sheet sets and duvet covers for your master suite at home.\n\nAll of the items we make for the Trump Hotels is made in the USA of hypoallergenic fillings.  This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
@@ -820,7 +672,6 @@
    ".hotels.185-luxury-inn-bedding.120-martha-washington-inn-and-spa" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Martha Washington Inn",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_martha_washington_inn_spa_bedding.jpg",
       "description" : "The Martha Washington Inn & Spa features bedding made by DOWNLITE.\n\n\nThey use our medium density EnviroLoft down alternative pillows.\n\n\nThe Martha Washington Inn & spa pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -828,47 +679,42 @@
    ".hotels.370-beach-hotel-bedding.220-seacrest-beach-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Seacrest Beach Hotel",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_seacrest_beach_hotel_bedding.jpg",
       "description" : "The Seacrest Beach Hotel features bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft Medium Density bed pillows. These down alternative pillows are hypoallergenic, easy care and made in the USA. They also use our EnviroLoft down alternative comforters.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
-      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
-   },
-   ".hotels.175-luxury-hotel-bedding.290-the-pierre-hotel-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_the_pierre_hotel_bedding.jpg",
-      "description" : "\nThe Pierre Hotel features bedding made by DOWNLITE.\n\n\nThe Pierre Hotel uses our chamber style feather and down pillows (A core of feathers surrounded by soft down) as well as our medium weight down comforters.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".hotels.150-luxury-resort.270-the-breakers-palm-beach-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_breakers_bedding.jpg",
       "description" : "The Breakers Palm Beach Resort features bedding made by DOWNLITE.\n\n\nThe Breakers uses our luxury down alternative PrimaLoft pillows. PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
+   },
+   ".hotels.175-luxury-hotel-bedding.290-the-pierre-hotel-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Hotel Bedding For Home",
+      "picture1" : "4/480x360_the_pierre_hotel_bedding.jpg",
+      "description" : "\nThe Pierre Hotel features bedding made by DOWNLITE.\n\n\nThe Pierre Hotel uses our chamber style feather and down pillows (A core of feathers surrounded by soft down) as well as our medium weight down comforters.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
+   },
+   ".100-pillows.140-down-feather-polyester-hybrid-pillows" : {},
+   ".hotels.350-casino-hotels.150-treasure-island-casino-resort-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Treasure Island Bedding",
+      "picture1" : "4/480x360_treasure_island_resort_casino_bedding.jpg",
+      "description" : "The Treasure Island Casino & Resort (In MN) features bedding made by DOWNLITE.\n\n\nThe Treasure Island Resort uses our 10/90 pillows. The 10/90 pillows were our medium density (great for back and side sleepers). Due to the unique nature of the 10/90 blend - only a few pillows are similar and are shown below.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".hotels.100-national-chain-hotels.120-hilton-garden-inn-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hilton Garden Inn Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hilton_garden_inn_bedding.jpg",
       "description" : "The Hilton Garden Inn Hotel features bedding made by DOWNLITE and sold online through their own guest resale website.\n\nPlease note when visiting their guest resale site they use our Cluster Puff hotel style pillow.\n\nThe soft/medium density Cluster Puff pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".hotels.350-casino-hotels.150-treasure-island-casino-resort-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Treasure Island Bedding",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_treasure_island_resort_casino_bedding.jpg",
-      "description" : "The Treasure Island Casino & Resort (In MN) features bedding made by DOWNLITE.\n\n\nThe Treasure Island Resort uses our 10/90 pillows. The 10/90 pillows were our medium density (great for back and side sleepers). Due to the unique nature of the 10/90 blend - only a few pillows are similar and are shown below.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
-      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
-   },
    ".hotels.350-casino-hotels.180-coushatta-casino-resort-seven-clans-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_seven_clans_hotel_bedding.jpg",
       "description" : "The Seven Clans Casino Hotel features bedding made by DOWNLITE.\n\n\nThe Seven Clans Casino Hotel uses our down alternative MicroLoft gel pillows in the Firm Density (they are not what we consider really firm - but that is the style name the hotel buys from. The MicroLoft filling is a special dense polyester, that give a great squishy feeling).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -876,24 +722,15 @@
    ".hotels.100-national-chain-hotels.220-gaylord-hotels-resorts-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Gaylord Hotels & Resorts",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_gaylord_hotels_bedding.jpg",
       "description" : "The Gaylord Hotel & Resort properties located throughout the USA feature bedding made by DOWNLITE. Known for their very, very large conference style hotels with amazing amenities. All of the properties use the same core basic bedding line of pillows - from Orlando to DC.\n\n\nThis hotel uses two kinds of pillows from DOWNLITE. They use our polyester chamber pillow (Available in limited supply) as well as our medium density EnviroLoft Pillow. Between the two, the polyester chamber pillow has a firmer feeling compared to the EnviroLoft pillow. This property uses the bedding listed below in their rooms and is available for sale for home.\n\n\nBoth of the Gaylord Hotel pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.150-75-percent-white-goose-feather-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".pillows" : {
-      "fl" : "c-20090617"
-   },
-   ".325-bath-and-gifts.gifts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.150-75-percent-white-goose-feather-inserts" : {},
+   ".325-bath-and-gifts.gifts" : {},
    ".hotels.300-las-vegas-hotels" : {
       "youtube_videoid" : "0KQHXc4cBvQ ",
       "youtube_videoheader" : "Las Vegas Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_las_vegas_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -901,7 +738,6 @@
    ".hotels.150-luxury-resort.280-the-greenbrier-resort" : {
       "youtube_videoid" : "0KQHXc4cBvQ ",
       "youtube_videoheader" : "Greenbrier Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_greenbrier_resort_bedding.jpg",
       "description" : "The Greenbrier Resort features bedding made by DOWNLITE.\n\nThe property uses both soft down pillows and down alternative pillows. When selecting the down pillow - be sure to select the soft density.  When selecting the down alternative pillow - please select the medium density. The Greenbrier also uses our medium weight White Goose down comforters. All the Greenbrier items are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -909,41 +745,32 @@
    ".hotels.150-luxury-resort.100-fontainbleau-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Fontainbleau Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_fontainbleau_resort_bedding",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".hotels.back_to_the_hotel" : {
-      "fl" : "~downlite_c_dataentry"
+   ".200-protectors-and-covers.150-mattress-cover-protector-encasements" : {},
+   ".275-sheets-and-pillowcases" : {
+      "prodlist_custom" : "&SORTBY=PRICE_DESC&FORMAT=CUSTOM&SRC=&ALTERNATE=0&SIZE=&SHOWSKU=&",
+      "description" : "When it comes to a great night's sleep you deserve the best sheets available. DOWNLITE offers luxury sheet sets including fabrics like TENCEL Lyocell which offers a silky and cool touch. We also offer special size sheets including twin xl sheets perfect for the dorm room or adjustable beds needing xl twin."
    },
    ".hotels.150-luxury-resort.230-suncadia-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Suncadia Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_suncadia_resort_bedding.jpg",
       "description" : "The Suncadia Resort fatures bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft down alternative pillows as well as some of our feather blend pillows. Please note they use our Medium density EnviroLoft pillows and in some rooms our 20/80 pillows (Due to their unique nature this style pillow is often not available - but our chamber pillows feel pretty close to them). The Suncadia resort also uses our EnviroLoft down alternative comforters in their rooms.\n\n\nBoth of the Suncadia pillows and comforters are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".200-protectors-and-covers.150-mattress-cover-protector-encasements" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".275-sheets-and-pillowcases" : {
-      "fl" : "~downlite_c_dataentry",
-      "prodlist_custom" : "&SORTBY=PRICE_DESC&FORMAT=CUSTOM&SRC=&ALTERNATE=0&SIZE=&SHOWSKU=&",
-      "description" : "When it comes to a great night's sleep you deserve the best sheets available. DOWNLITE offers luxury sheet sets including fabrics like TENCEL Lyocell which offers a silky and cool touch. We also offer special size sheets including twin xl sheets perfect for the dorm room or adjustable beds needing xl twin."
-   },
+   ".brands.400-stearns-and-foster-brand-bedding" : {},
    ".hotels.100-national-chain-hotels.220-hyatt-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hyatt Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_hyatt_hotel_bedding.jpg",
       "description" : "The Hyatt Hotel features bedding made by DOWNLITE and sold online through their own guest resale website.\n\nPlease note when visiting their guest resale site they use several items with each property whether corporate owned or franchised selecting their own items.These items include our down alternative EnviroLoft pillows, down pillows and various down comforters and bed toppers.\n\nAll of the Hyatt pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.\n\n"
    },
    ".613-made-in-the-usa-bedding" : {
       "meta_keywords" : "american bedding,made in usa bedding,usa bedding",
       "banner1" : "8/800x300_landing_page_made_in_the_usa_bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_made_in_the_usa_bedding.jpg",
       "head_title" : "Made In The USA Bedding By DOWNLITE",
       "description" : "== Made In The USA Bedding ==\n\n\nDOWNLITE is a fourth generation business that is proudly located in the United States. With a 100 plus years of family history in down bedding we are the largest down and feather processor in the United States. Not only do we manufacturer down bedding for the best department stores, catalogs, hotels and resorts but we also sell our hypoallergenic fillings to other bedding companies. Another branch of DOWNLITE sells our RestAssured Hypoallergenic fillings to other manufacturers including jacket and outerwear companies as well as to luxury furniture manufacturers.\n\n\nMaking bedding involves using materials from around the globe - from the filling to the fabric. As such we sometimes get asked to be more specific about what is considered 'Made In The USA'? "
@@ -951,7 +778,6 @@
    ".hotels.370-beach-hotel-bedding.200-castle-in-the-sand-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Castle In The Sand",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_castle_in_the_sand_bedding.jpg",
       "description" : "The Castle In The Sand Hotel features bedding made by DOWNLITE.\n\n\nThey use our EnviroLoft Medium Density bed pillows. These down alternative pillows are hypoallergenic, easy care and made in the USA.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -959,18 +785,15 @@
    ".hotels.190-boutique-hotel-bedding.100-public-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Public Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_public_hotel_room_bedding.jpg",
       "description" : "The Public Hotel in Chicago features bedding made by DOWNLITE.\n\n\nThey use our 'soft' density white goose down pillows as well as our 'warmer' weight white goose down comforters.\n\n\nThe Public Hotel pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest a duvet cover for any comforter purchases.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
-   ".100-pillows.125-white-goose-and-duck-feather-pillows" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.125-white-goose-and-duck-feather-pillows" : {},
+   ".brands.250-super-king-size-bedding" : {},
    ".hotels.380-conference-center-hotels.120-peabody-conference-center-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_orlando_peabody_hotel_bedding.jpg",
       "description" : "The Peabody Conference Center Hotels (Orlando & Memphis) feature bedding made by DOWNLITE.\n\n\nThe Peabody Conference Center Hotels use our quilted 5/95 feather and down blend pillows (Many guests like to upgrade to a 10/90 for home use). In addition, they also use 26 x 26 euro pillows from for decoration. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -978,55 +801,38 @@
    ".brands.600-trump-home-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "6/600x400_trump_home_bedding_collection.jpg",
       "description" : "The TRUMP HOME collection combines the luxury and comfort of Trump five-star properties with the DOWNLITE tradition of high-quality American made bedding.    Enhance your sleep experience with this affordable luxury collection of pillows and comforters made to the high quality standards of Trump and DOWNLITE.  Exquisite, silky soft Pima cotton is paired with artisan-sourced, American-farmed down or PrimaLoft, the luxury down alternative fillings.  Made in the USA with American sourced materials.\n\n\nThe TRUMP Home product line represents a broad range of premium bedding including a full range of pillows, comforters and more.\n\n\nDue to the range of options, please contact a bedding specialist, Monday To Friday from 10 AM through 4 PM EST for expert help.\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.125-euro-pillow-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".125-comforters.100-white-goose-and-duck-down-comforters" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".450-overstock-clearance-sale.175-feather-or-fiber-bed-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.125-90-percent-white-goose-feather-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   ".275-sheets-and-duvets.sheets" : {
-      "fl" : "~downlite_c_dataentry"
-   },
-   "homepage" : {},
-   ".200-protectors-and-covers.100-pillow-cover-protectors" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.100-pillow-insert-forms-by-shape.125-euro-pillow-inserts" : {},
+   ".100-sealy-pillows" : {},
+   ".125-comforters.100-white-goose-and-duck-down-comforters" : {},
+   ".450-overstock-clearance-sale.175-feather-or-fiber-bed-sales" : {},
+   ".100-pillows.250-pillow-protectors" : {},
+   ".275-sheets-and-duvets.sheets" : {},
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.125-90-percent-white-goose-feather-inserts" : {},
+   ".200-protectors-and-covers.100-pillow-cover-protectors" : {},
    ".hotels.350-casino-hotels" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Casino Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_casino_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
    },
+   ".450-overstock-clearance-sale.100-pillow-sales" : {},
    ".brands.150-jessica-mcclintock-bedding" : {
       "youtube_videoid" : "wEYd67ef03Q",
       "youtube_videoheader" : "Jessica McClintock",
-      "fl" : "~downlite_c_dataentry",
       "meta_description" : "jessica mcclintock,jessica mcclintock bedding,jmc bedding",
       "picture1" : "4/480x360_jessica_mcclintock_home_bedding.jpg",
       "head_title" : "Jessica McClintock Bedding By DOWNLITE",
       "description" : "Crisp tailoring, romantic details and American quality are represented by a bedding collection from DOWNLITE which has the exclusive license for Jessica McClintock basic bedding. Based on her lifestyle and fashion lines the collection includes bedding basics such as pillows and comforters filled with hypoallergenic down and down alternatives.",
       "youtube_videodescription" : "Timeless, classic and romantic details set the Jessica McClintock bedding collection apart."
    },
-   ".450-overstock-clearance-sale.100-pillow-sales" : {
-      "fl" : "~downlite_c_dataentry"
-   },
    ".hotels.300-las-vegas-hotels.100-the-venetian-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Venetian Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_venetian_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -1034,18 +840,14 @@
    ".hotels.350-casino-hotels.130-soaring-eagle-casino-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Soaring Eagle Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_soaring_eagle_casino_resort_bedding.jpg",
       "description" : "The Soaring Eagle Casino & Resort features bedding made by DOWNLITE.\n\n\nThe Soaring Eagle Resort uses our luxury down alternative PrimaLoft pillows and comforters as well as our EnviroLoft pillow forms for decoration. PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
-   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.200-primaloft-down-alternative-inserts" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".100-pillows.225-decorative-pillow-insert-form-pillows.150-pillow-insert-forms-by-filling.200-primaloft-down-alternative-inserts" : {},
    ".hotels.370-beach-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_beach_hotel_bedding.jpg",
       "description" : "Chances are that you enjoyed our bedding at a resort, a hotel, a cruise line or even a romantic Bed & Breakfast. DOWNLITE offers the same pillows and comforters used at these fine properties for your home. In most cases we also provide you options for an upgraded item that features bigger sizes then a property would use.\n\n\nBecause we have our items in thousands of properties around the world - please use the links below to help find the hotel you were at. If your property is not listed - simply give us a call and we will research it for you.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -1053,43 +855,36 @@
    ".hotels.150-luxury-resort.240-the-phoenician-resort-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Phoenician Resort Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_phoenecian_resort_bedding.jpg",
       "description" : "The Phoenician Resort features bedding made by DOWNLITE.\n\n\nThey use a 50/50 style pillow - half down, half feathers. The 50/50 pillow is a very specific pillow that is usually not sold in stores, but typically available only online (A 50/50 pillow is really different then a basic down pillow - it offers the perfect blend of down softness and feather support).\n\n\nThe Phoenician Resort pillow is made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.\n\n",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
+   ".100-sealy-pillows.100-side-sleeper-pillows" : {},
    ".bedding-guide" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : ""
-   },
-   ".hotels.175-luxury-hotel-bedding.300-le-meridien-hotel-bedding" : {
-      "youtube_videoid" : "0KQHXc4cBvQ",
-      "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
-      "picture1" : "4/480x360_le_meridien_hotel_bedding.jpg",
-      "description" : "The Le Meridien Hotel features bedding made by DOWNLITE. Please note many US properties buy their items from DOWNLITE - but only some international properties.\n\n\nThe Le Meridien uses our luxury down alternative PrimaLoft pillows and comforters.  PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
-      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".600-silk-down-bedding-buying-guide" : {
       "meta_keywords" : "silk down pillow,silk down comforter,silk down bedding",
       "banner1" : "8/800x300_landing_page_silk_down_bedding_buying_guide.jpg",
-      "fl" : "c-20090113",
       "picture1" : "4/400x400_silk_down_bedding_buying_guide",
       "description2" : "Silk down bedding is a great option for the ultimate in luxury.",
       "prodlist_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=&ALTERNATE=0&SIZE=&SHOWSKU=&",
       "description" : "== Silk Down Bedding Buying Guide ==\n\n\nIf you want the ultimate in bedding luxury then down filled silk bedding is a great option. Silk down bedding is generally higher maintenance and requires dry cleaning for the silk. Most silk bedding products are not made with machine washable grade silk fabric. Due to the fine nature of silk yarn most silk down bedding comes in higher thread count ranges from 400 and up. Most silk bed pillows feature a removable silk protector. To wash the pillow you would remove the outer protector. You could then machine wash your pillow and send the protector to a dry cleaner. This is a much cheaper option than sending the whole pillow to the dry cleaner (which can run about $20 to $30 for a cleaning)."
    },
+   ".hotels.175-luxury-hotel-bedding.300-le-meridien-hotel-bedding" : {
+      "youtube_videoid" : "0KQHXc4cBvQ",
+      "youtube_videoheader" : "Hotel Bedding For Home",
+      "picture1" : "4/480x360_le_meridien_hotel_bedding.jpg",
+      "description" : "The Le Meridien Hotel features bedding made by DOWNLITE. Please note many US properties buy their items from DOWNLITE - but only some international properties.\n\n\nThe Le Meridien uses our luxury down alternative PrimaLoft pillows and comforters.  PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
+      "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
+   },
    ".300-duvets-and-shams" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "Protect your comforter investment with a duvet cover. Not only does using a duvet help minimize care and maintenance for your comforter, but it also adds fashion to your room. You simply remove the duvet cover for laundering and then replace back on your comforter."
    },
-   ".325-bath-and-gifts.bath-and-towels" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".325-bath-and-gifts.bath-and-towels" : {},
    ".hotels.250-local-and-bnb.130-blackberry-farm-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_blackberry_farm_bedding.jpg",
       "description" : "The Blackberry Farm Inn features bedding made by DOWNLITE.\n\n\nThey use our soft density white goose down pillows as well as our quilted feather beds. Please note they also bought our Comforel bed pillows, but those are no longer available. We suggest our PrimaLoft medium density down alternative pillows as an option to replace the Comforel pillows.\n\n\nThe Blackberry Farm Inn pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -1097,15 +892,14 @@
    ".hotels.190-boutique-hotel-bedding.250-the-bowery-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_bowery_hotel_bedding.jpg",
       "description" : "The Bowery Hotel features bedding made by DOWNLITE.\n\n\nThe Bowery Hotel uses our medium density White Goose Chamber pillows (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
+   "." : {},
    ".hotels.100-national-chain-hotels.270-wyndham-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "How to Get The Hotel Look",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_wyndham_hotel_bedding.jpg",
       "description" : "The Wyndham Hotel features bedding made by DOWNLITE.\n\n\nThe Wyndham Hotel  uses our down alternative EnviroLoft comforters. EnviroLoft, is our down alternative that mimics the best properties of down. Some properties may also be using our EnviroLoft bed pillows.\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -1113,36 +907,29 @@
    ".hotels.350-casino-hotels.160-the-palazzo-casino-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Palazzo Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_palazzo_casino_hotel_bedding.jpg",
       "description" : "The Palazzo Casino & Hotel features bedding made by DOWNLITE.\n\n\nThe Palazzo Hotel uses our 50/50 down and feather blend pillows. \n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
    },
    ".250-feather-beds-and-fiber-beds" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "There is nothing as dreamy as sinking into a soft billowy bed at night and the key is to use a good bed topper specifically a feather bed or a fiber bed. Unlike a mattress pad, these bed toppers are meant to add height and softness versus protection for your bed. As the country's largest down bedding manufacturer we have combined several of the best features our retail partners demand into a collection made of hypoallergenic fillings and made in the USA. DOWNLITE carries many great styles ranging from an entry level Baffle Box construction to sumptuous Down Top styles and even the very hard to find European Bag Style Feather Bed."
    },
-   "cart" : {},
    ".product-tabs.bedding-guide" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "Buying bedding online can be daunting because you can't touch the items. As the leading supplier of bedding to the best stores, hotels, resorts and cruise lines - we know how to keep you comfortable. \n\nMany common questions are answered below - you can also visit our sleeping blog at NocJournal.com or call us for more advice.\n\n== Fill Power Information ==\n* Often times the fill power of an item can be confused as a barometer for quality.\n* Fill power simply measures how fluffy the down is and makes the most sense when comparing comforters.\n* Most consumers love cloud lift soft bedding - and to get that experience a higher fill power is needed.\n* For Pillows a fill power of 550 - 600 is perfectly fine\n* For comforters a fill power of 600-800 is amazing (the higher the number the more cloud like you will feel\n\n== Pillow Tips ==\nPillows are sold by density level - regardless of filling material.\nWhite Goose Down is considered the gold standard closely followed by PrimaLoft which is our Luxury Down Alternative\n* If you sleep on your side (50% of us do) then choose a firmer density pillow.\n* If you sleep on your back (25% of us do) then choose a medium density pillow.\n* If you sleep face down or on your stomach (25% of us do) - then choose a soft density pillow.\n\n100% of DOWNLITE's pillows are made in the USA of Hypoallergenic materials.\n\nMost pillows are machine washable & dryable (except silk and rayon).\n\nPillows can last 1-25 years based on the fillings, usage and care. Polyester pillows last 1-2 years usually versus down and feather pillows which can last 5-25 years.\n\nFluff Your pillows in the dryer on high heat once a month for 15 minutes to keep them fluffy, fresh and in good shape.\n\n== Comforter Tips ==\n* We also suggest buying the biggest size you can to allow for less tug of war with the covers\n* Most comforters can be machine washed and dried in a commercial laundry mat\n* Try using a duvet to add color and protection to a comforter (duvet size should be within plus or minus two inches of the comforter dimensions).\n* Fills can shift in baffle box constructions - so look for PermaBaffle design comforters or sewn thru constructions.\n\n\n== Feather Bed Tips ==\n* 90% of all our feather beds are made in the USA.\n* Feather beds are too large to wash - so spot care paired with a protector works best.\n* Adding a mattress pad on a featherbed is a great way to limit any feather poking and extend usage.\n* Fluff you feather bed daily or every other day for optimum softness.\n\n\n== Sheeting, Duvets & Fine Linens ==\n* We suggest Tencel Lyocell for fabrics which is really a miracle material with a soft to the touch hand, excellent moisture wicking and relatively easy care.\n* Tencel Lyocell comes from sustainably grown Eucalyptus trees and is processed in a very eco efficient manner.\n* Don't wash sheets, duvet covers or fine linens with towels.\n\n\n== Fabrics & Thread Counts ==\n* Most of us have been conditioned to assume higher thread counts means a better product - this is not always the case.\n* We prefer Supima Cotton when available for it's long staple fibers (this means a more durable and silky product).\n* Higher thread counts mean a more dense fabric - which means  a stiffer fabric (generally we limit our fabrics to 500 TC or lower with most in the 300-400 range).\n* The weave and finishing of fabric can greatly impact it's hand (Which greatly impacts german fabrics which typically have the best hand but a relatively lower thread count due to amazing finishing).\n* DOWNLITE does not add FR (Flame Retardent) treatments to it's fabrics.\n* Wrinkle resistant fabric is usually chemically treated with an agent. DOWNLITE seldom uses these finishes for it's bedding (if an agent or finish was applied we would clearly mention it on the product information).\n* The finest cotton in the world is a German Batiste - very light weight and made with long staple cotton."
    },
    ".hotels.150-luxury-resort.210-amara-creekside-resort-spa-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Amara Creekside Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_amara_creekside_resort_bedding.jpg",
       "description" : "The Amara Creekside Casino Resort Spa features bedding made by DOWNLITE.\n\n\nPlease note they use a 50/50 style pillow - half down, half feathers. The 50/50 pillow is a very specific pillow that is usually not sold in stores, but typically available only online (A 50/50 pillow is really different then a basic down pillow - it offers the perfect blend of down softness and feather support).\n\nThe Amara Creekside Resort & Spa uses pillow made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property.  DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
    ".200-protectors-and-covers" : {
-      "fl" : "~downlite_c_dataentry",
       "description" : "Protecot your bedding investment with these removable covers. Easy care options are machine washable and dryable. In addition to pillow protectors and featherbed protectors we feature water resistant, bed bug and dust mite proof mattress covers."
    },
    ".hotels.185-luxury-inn-bedding.110-the-inn-at-rancho-santa-fe-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Inn At Rancho Santa Fe",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_the_inn_at_rancho_santa_fe_bedding.jpg",
       "description" : "The Inn At Rancho Santa Fe features bedding made by DOWNLITE.\n\nThey use our 50/50 down and feather pillows as well as our 'warmer' weight white goose down comforters.\n\nThe Inn At Rancho Santa Fe are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. We also suggest a duvet cover for any comforter purchases.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world. "
@@ -1151,19 +938,15 @@
       "meta_keywords" : "sheraton bedding,sheraton pillow,sheraton comforter",
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Sheraton Hotel Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_sheraton_hotel_bedding.jpg",
       "head_title" : "Sheraton Hotel Bedding By DOWNLITE",
       "description" : "The Sheraton Hotel features bedding made by DOWNLITE and sold online through their own guest resale website.\n\n\nPlease note when visiting their guest resale site they use a 50/50 style pillow - half down, half feathers. Some properties also use a down alternative pillow filled with our EnviroLoft Firm polyester fiber(In firm density). The 50/50 pillow is a very specific pillow that is usually not sold in stores, but typically available only online (A 50/50 pillow is really different then a basic down pillow - it offers the perfect blend of down softness and feather support).\n\n\nBoth of the Sheraton pillows are made in the USA featuring our antimicrobial hypoallergenic cleaning process. This property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance. ",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
    },
-   ".200-bed-toppers.mattress_pads" : {
-      "fl" : "~downlite_c_dataentry"
-   },
+   ".200-bed-toppers.mattress_pads" : {},
    ".hotels.100-national-chain-hotels.260-royal-sonesta-hotel-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Hotel Bedding For Home",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_royal_sonesta_bedding.jpg",
       "description" : "The Royal Sonesta Hotel features bedding made by DOWNLITE.\n\n\nThe Royal Sonesta Hotel uses our luxury down alternative PrimaLoft pillows and blankets (as well as our down blankets). PrimaLoft is our luxury down alternative that mimics the best properties of down. The PrimaLoft pillows were our medium density (great for back and side sleepers).\n\n\nThis property uses the bedding listed below in their rooms and is available for sale to home customers.\n\n\nWe recommend adding protectors to any pillows and duvet covers to comforters to extend their care and maintenance. \n\n",
       "youtube_videodescription" : "Watch and learn how to get the same 'hotel look' at home using the right types of bedding."
@@ -1171,33 +954,30 @@
    ".brands.100-eddiebauer-bedding" : {
       "meta_keywords" : "eddie bauer,eddiebauer,eddie bauer bedding",
       "meta_description" : "Find a selection of limited edition Eddie Bauer bedding manufacturer direct. Hard to find sizes and exclusive filling options and more for Eddie Bauer bedding.",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_eddie_bauer_bedding.jpg",
       "description2" : "",
       "youtube_videodescription" : "",
       "description" : "Well known for their classic designs and dependable quality our officially licensed collection of Eddie Bauer bedding is sure to delight you. Featuring White Goose Down and PrimaLoft, the Luxury Down Alternative all paired with silky soft fabrics and an attention to quality in every detail. DOWNLITE is not only the official licensee but also supplies most of the bedding used in their catalogs and online.\n\n\nMany of the items we are showcasing here are limited edition items not available in stores.",
-      "youtube_videoid" : "",
       "youtube_videoheader" : "",
+      "youtube_videoid" : "",
       "head_title" : "Eddie Bauer Bedding By DOWNLITE",
       "page_title" : "Eddie Bauer Bedding - Manufacturer Direct"
    },
    ".275-sheets-and-duvets" : {
       "youtube_videoid" : "rvMRl5HR0-g",
       "youtube_videoheader" : "Silky Cool Touch Sheets",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_sheets_and_duvets_sets.jpg",
       "description" : "Whether you seek over sized sheet & duvets sets or need a specialty size we have you covered.",
       "youtube_videodescription" : "DOWNLITE offers sheets and duvets featuring cool touch Tencel Lyocell. The sheets and duvets sets feel amazingly cool to the touch and pair perfectly with our bedding."
    },
+   ".415-protectors-and-covers.150-featherbed-protectors" : {},
    ".605-comforter-or-duvet-insert" : {
       "banner1" : "8/800x300_landing_page_comforter_versus_duvet_insert.jpg",
-      "fl" : "c-20090113",
       "description" : "== Comforter Or Duvet Insert - Does It Matter? ==\n\n\nMost American consumers call down filled top of bed products a comforter. When abroad or even in the hospitality industry a comforter is called a duvet. So when searching for a comforter you will likely see it on our web site referenced as a comforter. To most American consumers a duvet is the decorative protector used in combination with a comforter. A duvet is a comforter protector that covers a comforter and is closed via buttons, zipper or an envelope type closure. When it comes time to launder the bedding, the duvet can easily be removed for cleaning and the comforter has to be washed less."
    },
    ".hotels.175-luxury-hotel-bedding.110-fairmont-hotels-bedding" : {
       "youtube_videoid" : "0KQHXc4cBvQ",
       "youtube_videoheader" : "Fairmont Hotels Bedding",
-      "fl" : "~downlite_c_dataentry",
       "picture1" : "4/480x360_fairmont_hotels_bedding.jpg",
       "description" : "The Fairmont Hotel features bedding made by DOWNLITE.\n\n\nPlease note when visiting their guest resale site they use our hotel style chamber pillow which has a core of feathers covered with a layer of down on the top and bottom.\n\n\nThe medium density chamber pillows are made in the USA featuring our hypoallergenic fillings. This property uses the bedding listed below in their rooms and is available for sale to home customers. \n\n\nWe recommend adding protectors to any pillows to extend their care and maintenance.",
       "youtube_videodescription" : "Perhaps you just came back from a great vacation or business trip and were curious what bedding you enjoyed at that property. DOWNLITE makes most of the hotel pillows and hotel comforters used at the best properties in the world."
