@@ -1355,7 +1355,7 @@ if it already has a simple, lock the button
 	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
 	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
 	<td class='alignLeft' >
-		<input type='number' class='smallInput' data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' step='1' min='0' />
+		<input type='number' class='smallInput' data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' step='1' /><!-- inv need to support negative amounts -->
 	</td>
 	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
 
