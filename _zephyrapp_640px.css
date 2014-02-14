@@ -55,6 +55,8 @@ body{background:#ffffff;}
 
 /**** Cart CSS****/
 #cartStuffList li {border:none;}
+.cartSubtotalTop{font-weight: bold; font-family: 'Nunito',sans-serif; font-size:16px; padding-bottom:4px;}
+.cartSubtotal {color:#0878da;}
 .cartSummaryTotalsContainer h2 {font-size:16px; padding:4px 10px;}
 .cartButtons span {display:block; margin-bottom: 0.5em;}
 

@@ -1983,7 +1983,10 @@ So the cart template should contain these two elements and the extension should 
 <div id='cartTemplate' class='loadingBG cartTemplate'>
 
 <form id='cartTemplateForm' action='#' onSubmit='return false'>
-
+<div class="alignCenter cartSubtotalTop">
+	<span>Subtotal &#40;<span class="cartItemCount"></span> Items&#41; &#58;</span>
+	<span class="cartSubtotal"></span>
+</div>
 <span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
 <img class="freeShipCart" src="images/freeshipping_cart.jpg"/>
 <div class='cartStuffContainer'>
@@ -1996,66 +1999,7 @@ So the cart template should contain these two elements and the extension should 
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
 </div>
 
-<div class='cartSummaryTotalsContainer'>
-	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
-		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding'>Cart Totals</h2>
-		<div class='cartSummaryContainer stdPadding'>
 
-<section id='cartTemplateCostSummary' class='cartSummary marginBottom'>
-
-	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
-
-	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
-
-	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
-
-	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
-	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
-
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
-
-</section>
-
-<section id='cartTemplateShippingContainer' class='marginBottom'>
-	<h3>Shipping:</h3>
-
-	<div class='cartZipCodeContainer marginBottom'>
-		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
-			app.ext.store_cart.u.updateCartSummary();
-			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-			app.model.dispatchThis('immutable');"  />
-	</div>
-
-	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
-</section>
-
-<section class='marginBottom'>
-
-	
-
-</section>
-
-		</div>
-		<div class='ui-state-default cartButtons stdPadding clearfix'>
-			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class='continueShoppingSpan'><button class='ui-button-text-only ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');"><span class="ui-button-text">Continue Shopping</span></button></span>
-	
-			<span id='inStoreCheckoutButton' title='proceed to secure checkout'><button class='ui-button ui-button-text-only ui-state-highlight ui-corner-all checkoutButton displayNoneMobile' onClick="showContent('checkout',{});"><span class="ui-button-text">Store Checkout</span></button></span>
-	
-			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-	
-			<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
-	
-			<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
-	
-		</div>
-
-	</div>
-</div>
 </form>
 </div><!-- /cartTemplate -->
 

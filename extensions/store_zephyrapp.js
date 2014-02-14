@@ -103,6 +103,12 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').hide();
 				}]);
 				
+				app.rq.push(['templateFunction', 'cartTemplate', 'onCompletes',function(P){
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					$('.responsiveDropdown').hide();
+				}]);
+				
 				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
