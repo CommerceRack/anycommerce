@@ -32,7 +32,7 @@ Add support for data-mining- hooks for google analytics tracking
 */
 
 
-var tools_ABtesting = function() {
+var tools_ab_testing = function() {
 	var theseTemplates = new Array('');
 	var r = {
 
