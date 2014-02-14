@@ -221,7 +221,9 @@ function model(_app) {
 //* 201338 -> moved the c increment to below the comparison and changed from c > to c >=. that way if numRequestsPP = 1, this will work correctly.
 //					if(c > _app.globalAjax.numRequestsPerPipe){
 					if(c >= _app.globalAjax.numRequestsPerPipe){
-						setTimeout("this.dispatchThis('"+QID+"');",500); //will fire off the remaining items in the q shortly.
+						setTimeout(function(){
+							_app.model.dispatchThis(QID);
+							},500); //will fire off the remaining items in the q shortly.
 						break //max of 100 dispatches at a time.
 						}
 					c++;
