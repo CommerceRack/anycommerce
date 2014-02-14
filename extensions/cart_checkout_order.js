@@ -806,7 +806,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				if($form instanceof jQuery)	{
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON({cb:true});
-					dump(" -> formObj: "); dump(formObj);
+//					dump(" -> formObj: "); dump(formObj);
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
 					if(_app.ext.order_create.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
