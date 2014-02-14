@@ -12,23 +12,21 @@ myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.t
 myApp.rq.push(['extension',0,'order_create','extensions/checkout/extension.js']);
 myApp.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
-
-myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
+//myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
 
 myApp.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 myApp.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
-
+myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 myApp.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 
-myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
-myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
+//myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
+//myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
 
 //myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
-myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 //myApp.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
 //myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //myApp.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
