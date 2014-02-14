@@ -1031,6 +1031,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 							if(_app.data[rd.datapointer]['@ITEMS'].length || _app.u.thisIsAnAdminSession())	{
 								_app.u.dump(" -> cart has items or this is an admin session. cartID: "+cartID);
 								var $checkoutContents = _app.renderFunctions.transmogrify({},'checkoutTemplate',_app.ext.order_create.u.extendedDataForCheckout(cartID));
+								
 								$checkoutContents.data('cartid',cartID);
 
 								if($checkoutContents.attr('id'))	{}
@@ -1039,7 +1040,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 									}								
 
 								$chkContainer.append($checkoutContents);
-
+_app.u.handleButtons($chkContainer); //will handle buttons outside any of the fieldsets.
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
@@ -1277,7 +1278,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 					$(this).button('disable'); //prevent doubleclick.
 					var $form = $('form','#chooserResultContainer');
 					if($form && $form.length)	{
-						_app.u.dump(" -> found form");
+//						_app.u.dump(" -> found form");
 						$form.append("<input type='hidden' name='_cartid' value='"+$checkout.data('cartid')+"' \/>");
 						var sfo = $form.serializeJSON(); //Serialized Form Object.
 						var pid = sfo.sku;  //shortcut
@@ -1296,6 +1297,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 										}
 									else	{
 										$('#prodFinder').dialog('close');
+//										dump(" ----> $chkoutForm.length: "+$chkoutForm.length);
 										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
 										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
 										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);

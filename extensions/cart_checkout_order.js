@@ -805,13 +805,15 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				dump("BEGIN cco.u.sanitizeAndUpdateCart");
 				if($form instanceof jQuery)	{
 					_tag = _tag || {};
-					var formObj = $form.serializeJSON();
+					var formObj = $form.serializeJSON({cb:true});
+					dump(" -> formObj: "); dump(formObj);
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
 					if(_app.ext.order_create.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
 						}
 // to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
 					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
+						dump(" -> populateAddressFromShortcut.  from: "+fromAddr+" toAddr: "+toAddr);
 						var addr = _app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
 						for(var index in addr)	{
 							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
@@ -847,9 +849,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 								}
 							}
 						}
-//regularize checkbox data.
-					if(formObj['want/bill_to_ship'] == 'ON')	{formObj['want/bill_to_ship'] = 1} 
-					if(formObj['want/create_customer'] == 'ON')	{formObj['want/create_customer'] = 1}
+
 
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];

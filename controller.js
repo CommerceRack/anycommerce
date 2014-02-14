@@ -1289,6 +1289,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 
 						for(var i = 0; i < supportedEvents.length; i += 1)	{
 							$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"]",function(e,p){
+//								dump(" -> executing event. p: "); dump(p);
 								return _app.u._executeEvent($(e.currentTarget),$.extend(p,e));
 								});
 							}	
@@ -1307,6 +1308,9 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(ep.handleObj && ep.handleObj.origType)	{
 					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
 					}
+				
+//				dump(" -> type: "+type);
+				
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
 					var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
