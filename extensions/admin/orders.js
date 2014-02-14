@@ -2681,7 +2681,9 @@ else	{
 								_app.u.throwMessage(rd);
 								}
 							else	{
-								var $tbody = $("[data-app-role='transactionHistoryContent']",$parent).empty(); //clear all teh rows from the tracking table.
+								var $tbody = $("[data-app-role='trackingInformation'] tbody",$parent).empty(); //clear all teh rows from the tracking table.
+								dump(" ----> $parent.length: "+$parent.length);
+								dump(" ----> $tbody.length: "+$tbody.length);
 								rd.translateOnly = true;
 								$tbody.anycontent(rd); //rebuild tracking table.
 								$(".gridTable tr:last",$parent).effect("highlight", {},3000); //make's it more obvious something happened.
