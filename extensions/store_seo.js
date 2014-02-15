@@ -26,7 +26,7 @@ var store_seo = function(_app) {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : {
-		defaultTitle : "",
+		defaultTitle : "", //Should not include any Prefix or Postfix
 		titlePrefix : "",
 		titlePostfix : ""
 		},
@@ -73,10 +73,11 @@ var store_seo = function(_app) {
 
 		u : {
 			generateMeta : function(infoObj){
-				var title = '';
+				var baseTitle = '';
 				var desc = '';
 				switch(infoObj.pageType){
 					case "homepage" :
+						//Use Default Title
 						break;
 					case "category" :
 						break;
@@ -95,15 +96,12 @@ var store_seo = function(_app) {
 					default :
 						break;
 					}
-				if(!title){
-					title = _app.ext.store_seo.vars.defaultTitle;
+				if(!baseTitle){
+					baseTitle = _app.ext.store_seo.vars.defaultTitle;
 					}
 				
-				document.title = title;
+				document.title = _app.ext.store_seo.vars.titlePrefix + title + _app.ext.store_seo.vars.titlePostfix;
 				$('meta[name=description]').attr('content', desc);
-				},
-			buildTitle : function(title){
-				return _app.ext.store_seo.vars.titlePrefix + title + _app.ext.store_seo.vars.titlePostfix;
 				}
 			}, //u [utilities]
 
