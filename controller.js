@@ -2830,7 +2830,7 @@ return $r;
 								}						
 
 							}
-						$ele.trigger(infoObj.state,infoObj);
+						$ele.trigger(infoObj.state,[$ele,infoObj]);
 						}
 					else	{
 						$ele.anymessage({'message':'_app.templateFunctions.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and depart are acceptable values.','gMessage':true});
