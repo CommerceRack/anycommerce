@@ -20,6 +20,7 @@
 //CCO = Cart, Checkout and Orders. Lots of shared code across these three areas.
 var cco = function(_app) {
 	var r = {
+		vars : {},
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 
 /*
@@ -351,7 +352,9 @@ left them be to provide guidance later.
 					if(vars['payment/CC'] && _app.u.isValidCC(vars['payment/CC']))	{} else	{errors.push("payment/CC");}
 					if(vars['payment/MM'] && _app.u.isValidMonth(vars['payment/MM']))	{} else {errors.push("payment/MM");}
 					if(vars['payment/YY'] && _app.u.isValidCCYear(vars['payment/YY']))	{} else {errors.push("payment/YY");}
-					if(vars['payment/CV'] && vars['payment/CV'].length > 2){} else {errors.push("payment/CV")}
+					if(!_app.vars.thisSessionIsAdmin)	{
+						if(vars['payment/CV'] && vars['payment/CV'].length > 2){} else {errors.push("payment/CV")}
+						}
 					return (errors.length) ? errors : false;
 					}
 				else	{
