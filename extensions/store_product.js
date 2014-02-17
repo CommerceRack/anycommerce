@@ -455,11 +455,11 @@ it has no inventory AND inventory matters to merchant
 					r = false;
 					}
 				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:base_price'] == '')	{
-//					_app.u.dump(" -> base price not set: "+pid);
+					_app.u.dump(" -> base price not set: "+pid);
 					r = false;
 					}
 				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
-//					_app.u.dump(" -> product is a parent: "+pid);
+					_app.u.dump(" -> product is a parent: "+pid);
 					r = false;
 					}
 //inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
