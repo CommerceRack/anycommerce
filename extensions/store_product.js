@@ -617,6 +617,7 @@ NOTES
 - if you pass a parentID, it is your responsibility to empty that parent, if needed.
 */
 			prodDataInModal : function(P)	{
+//				dump("BEGIN prodDataInModal");
 				if(P.pid && P.templateID)	{
 					var $parent = $("#product-modal");
 					
@@ -626,10 +627,16 @@ NOTES
 						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
 						$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false});
 						}
-					
+//In the handleTemplateEvents execution, the template instance is 'found'. The init, complete and depart events are NOT on $parent, they're on the template instance.
+					$parent.dialog('option','close',function(){
+//						dump(" -> GOT into the option close callback."); dump(P);
+						P.state = 'depart';
+						_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
+						});
 					
 					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
-
+					P.state = 'init';
+					_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 					_app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$parent.anymessage({'message':rd});
@@ -637,6 +644,8 @@ NOTES
 						else	{
 							$parent.dialog( "option", "title", _app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.anycontent({'templateID':P.templateID,'translateOnly':true,'datapointer':"appProductGet|"+P.pid});
+							P.state = 'complete';
+							_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 							}
 						}});
 					_app.ext.store_product.calls.appReviewsList.init(P.pid); //
