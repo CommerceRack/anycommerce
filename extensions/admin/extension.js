@@ -1345,7 +1345,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 
 //Here for legacy support.  All it does is change the hash, adding opts as key value pairs AFTER the hash.
 			navigateTo : function(path,opts){
-//				dump("BEGIN navigateTo");
+//				dump("BEGIN navigateTo "+path);
 				opts = opts || {};
 				var newHash = path;
 //sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
@@ -1354,7 +1354,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					}
 				else	{
 					if(path.indexOf('#!') == 0)	{newHash = path;}
-	//if/when vstore compat is gone, the next to if/else won't be necessary.
+	//if/when vstore compat is gone, the next two if/else won't be necessary.
 					else if(path.indexOf('/biz/') == 0)	{
 						newHash = "#!"+path;
 						}
@@ -1365,6 +1365,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 	
 						}
 					if(newHash)	{
+						dump(" -> new hash: "+newHash);
 						if($.isEmptyObject(opts))	{}
 						else	{
 							newHash += "?"+$.param(opts)

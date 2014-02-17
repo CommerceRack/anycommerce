@@ -648,7 +648,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var r = false;
 			switch(cmd)	{
 				case 'authAdminLogin':
-//				case 'appBuyerLogin':
+//				case 'appBuyerLogin': //necessary for buyer login to be persistant
+//				case 'whoAmI': //necessary for buyer login to be persistant
 				r = true;
 				}
 			return r;

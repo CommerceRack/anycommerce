@@ -115,7 +115,7 @@ var myRIA = function(_app) {
 					dump(' -> cart id was specified on the URI');
 					}
 				else	{}
-				
+
 				if(_app.vars.apptimizer === true) {$.support.onpopstate = false} //disable uri rewrite and rely on hashChange
 
 				initCM = function(cartID)	{
@@ -126,6 +126,7 @@ var myRIA = function(_app) {
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
 						}
 					}
+
 
 
 				if(cartID)	{
@@ -193,33 +194,36 @@ document.write = function(v){
 	$("body").append(v);
 	}
 
+				window.showContent = _app.ext.myRIA.a.showContent; //a shortcut for easy execution.
+				window.quickView = _app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 
 
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				_app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
 
-				var page = _app.ext.myRIA.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+				_app.model.addDispatchToQ({"_cmd":"whoAmI","_tag":{"datapointer":"whoAmI",callback:function(rd){
+					var page = _app.ext.myRIA.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+	
+					if(page.pageType == 'cart' || page.pageType == 'checkout')	{
+	//if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
+						}
+					else if(cartID)	{
+						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'mutable');
+						_app.model.dispatchThis('mutable');
+						}
+					else	{} //no cart to go get. cartCreate already been added to Q by now.
+					
+					_app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
+					_app.ext.myRIA.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
 
-				if(page.pageType == 'cart' || page.pageType == 'checkout')	{
-//if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
-					}
-				else if(cartID)	{
-					_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'mutable');
-					}
-				else	{} //no cart to go get. cartCreate already been added to Q by now.
+					if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete(page)}; //gets run after app has been init
+					_app.ext.myRIA.thirdParty.init();
+					
+					}}},"mutable"); //used to determine if user is logged in or not.
 
 
 				_app.model.dispatchThis('mutable');
-				
-				window.showContent = _app.ext.myRIA.a.showContent; //a shortcut for easy execution.
-				window.quickView = _app.ext.myRIA.a.quickView; //a shortcut for easy execution.
-				
-				_app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
-				if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete(page)}; //gets run after app has been init
-				
-				_app.ext.myRIA.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
-				_app.ext.myRIA.thirdParty.init();
 				}
 			}, //startMyProgram 
 
@@ -2492,6 +2496,14 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								_app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
 								_app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
 								break;
+							
+							case 'logout':
+								dump(" --------> got to here");
+								$(document.body).removeClass('buyerLoggedIn');
+								$('.username').empty();
+								_app.u.logBuyerOut();
+								showContent('homepage',{});
+								break;
 							default:
 								dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
 							}
@@ -3079,14 +3091,7 @@ else	{
 					}
 				else	{} //validateForm will handle the error display.
 				},
-
-			buyerLogoutExec : function($ele,p)	{
-				$(document.body).removeClass('buyerLoggedIn');
-				$('.username').empty();
-				_app.u.logBuyerOut();
-				showContent('homepage',{});
-				},
-			
+	
 			cartShipMethodSelect : function($ele,P)	{
 				var $cart = $ele.closest("[data-template-role='cart']");
 				_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');

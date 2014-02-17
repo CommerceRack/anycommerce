@@ -1577,11 +1577,12 @@ AUTHENTICATION/USER
 				_app.model.destroy('cartDetail|'+_app.model.fetchCartID()); //need the cart object to update again w/out customer details.
 				_app.model.destroy('whoAmI'); //need this nuked too.
 				_app.vars.cid = null; //used in soft-auth.
-				window.localStorage.clear(); //clear everything from localStorage.
-				
 				_app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
-				_app.calls.refreshCart.init({},'immutable');
+//				_app.calls.refreshCart.init({},'immutable');
 				_app.model.dispatchThis('immutable');
+				if($.support.localStorage)	{
+					window.localStorage.clear(); //clear everything from localStorage.
+					}
 				}, //logBuyerOut
 
 			thisIsAnAdminSession : function()	{

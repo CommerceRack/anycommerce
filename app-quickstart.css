@@ -46,7 +46,7 @@ input:focus {
 	}
 
 input.numberInput	{width:50px}
-
+label span.prompt	{display:inline-block; width:20%; margin-right:2em; vertical-align:top;}
 button:focus	{outline:none;}
 
 .zform_number	{width:50px;}
@@ -383,15 +383,6 @@ SEARCH RESULTS PAGE
 HELP PAGES
 
 ***************************************************/
-
-/***** CONTACT US ******/
-#contactForm {float:right; margin: 0 0 12px 12px;}
-#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
-#contactForm div	{margin-bottom:5px}
-#contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
-#contactForm input, #contactForm textarea	{width:145px;}
-#contactForm textarea	{height:125px;}
-
 
 
 /**** FAQ *****/
