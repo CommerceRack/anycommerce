@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 
-<!-- do not populate or add meta data or title, the SEO layer will add it -->
+<!-- do not populate or add meta data, the SEO layer will add it -->
+<title>Quickstart</title><!-- this will get populated by the SEO layer -->
 
 <!-- used for optional social media extensions -->
 <meta property="og:type" content="" id='ogType' >
@@ -493,11 +494,11 @@ this will likely become more flexible in the future. ###
 		<td class='prodSummaryContainer marginBottom no_underline'>
 		<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 	
-		<hgroup class='marginBottom'>
+		<div class='marginBottom'>
 			<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
 			<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
 			<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
-		</hgroup>
+		</div>
 	
 		<div class='priceContainer marginBottom'>
 			<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
@@ -749,10 +750,10 @@ if you change these, you should move them above this comment so that when you (o
 			<fieldset>
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>
-				<div><label>Email Address: <input type='email' name='sender' required='required' /></label></div>
-				<div><label>Subject: <input type='text' name='subject' required='required' /></label></div>
-				<div><label>Order ID: <input type='text' name='OID' /></label></div>
-				<div><label>Message: <textarea name='body' required='required' ></textarea></label></div>
+				<div><label><span class='prompt'>Email Address</span><input type='email' name='sender' required='required' /></label></div>
+				<div><label><span class='prompt'>Subject</span><input type='text' name='subject' required='required' /></label></div>
+				<div><label><span class='prompt'>Order ID</span><input type='text' name='OID' /></label></div>
+				<div><label><span class='prompt'>Message</span><textarea name='body' required='required' ></textarea></label></div>
 				<div class='alignRight'><input type='submit' class='applyButton' value='Send Message' />
 				</div>
 			</fieldset>
@@ -924,8 +925,8 @@ subscribeListsArticle is used for authenticated buyers
 				<form action='#' name='changePasswordForm' data-app-submit="myRIA|passwordChangeSubmit">
 				<fieldset class='borderNone'>
 				<div class="messaging"></div>
-				<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' size='35' required='required' /></div>
-				<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' required='required' size='35' /></div>
+				<div class='marginBottom'><label><span class='prompt'>Password</span><input type='password' name='password' size='35' required='required' /></label></div>
+				<div class='marginBottom'><label><span class='prompt'>Confirm Password</span><input type='password' name='password2' required='required' size='35' /></label></div>
 				<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton applyButton'></div>
 				
 				</fieldset>
@@ -1075,8 +1076,10 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	<h3>Shipping:</h3>
 
 	<div class='cartZipCodeContainer marginBottom'>
-		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10' data-app-blur='cco|cartZipUpdateExec' />
+		<label>
+			Zip/Postal Code:
+			<input type='text' size='6'  name='ship/postal' value='' data-bind='var: cart(ship/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10' data-app-blur='cco|cartZipUpdateExec' />
+		</label>
 	</div>
 
 	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;' data-app-role='shipMethodsUL' ></ul>
@@ -1093,7 +1096,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
 			<span class='continueShoppingSpan thisButton'><button class='applyButton continueShoppingButton' data-app-click='myRIA|dialogClose'>Continue Shopping</button></span>
 	
-			<span id='inStoreCheckoutButton thisButton' title='proceed to secure checkout'><button class='applyButton ui-state-highlight checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+			<span id='inStoreCheckoutButton' class='thisButton' title='proceed to secure checkout'><button class='applyButton ui-state-highlight checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
 	
 			<span id='paypalECButton' class='thisButton' data-bind='var: cart(cart/cartid); format:paypalECButton; extension:cco;'></span>
 	
@@ -1218,16 +1221,16 @@ used for store_crm.js
 <input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
 
 
-<label>Your Name: <input type="text" name="CUSTOMER_NAME" value="" MAXLENGTH="30" required='required' /></label><br />
+<label><span class='prompt'>Your Name</span><input type="text" name="CUSTOMER_NAME" value="" MAXLENGTH="30" required='required' /></label><br />
 
-<label>Location: <input type="text" MAXLENGTH="30" name="LOCATION" value="" /></label><br />
+<label><span class='prompt'>Location</span><input type="text" MAXLENGTH="30" name="LOCATION" value="" /></label><br />
 
-<label>Subject: <input type="text" MAXLENGTH="60" name="SUBJECT" /></label><br />
+<label><span class='prompt'>Subject</span><input type="text" MAXLENGTH="60" name="SUBJECT" /></label><br />
 
-<label>Review: <textarea required='required' name="MESSAGE" ></textarea></label><br />
+<label><span class='prompt'>Review</span><textarea required='required' name="MESSAGE" ></textarea></label><br />
 
 <label>
-	Score:
+	<span class='prompt'>Score</span>
 	<select name="RATING" id='reviewsRating'>
 		<option value="10">5</option>
 		<option value="9">4.5</option>
@@ -1381,15 +1384,10 @@ The 'data-action' attribute is used to assign an onclick.
 </tr>
 <tr>
 	<td>
-<hgroup class='marginBottom'>
-<!-- print icon -->
-
-
-<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
-
+<div class='marginBottom'>
 <h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
 <h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
-</hgroup>
+</div>
 
 <address class='marginBottom'>
 <b>
@@ -1463,18 +1461,23 @@ The 'data-action' attribute is used to assign an onclick.
 	<p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 	<div id='loginFormContainer'>
-		<form action='#' data-app-submit='myRIA|accountLoginSubmit'>
+		<form action='#' data-app-submit='myRIA|accountLoginSubmit' class='marginBottom'>
+		<input type='hidden' name='method' value='unsecure' />
 		<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 			<fieldset>
-		
+			<legend>Account Login</legend>
 			<div>
-			<label for='login'>Login/Email</label>
-			<input type='email' class='zform_textbox zform_email' required='required'  name='login' value='' size='25' />
+			<label>
+				<span class='prompt'>Login/Email</span>
+				<input type='email' class='zform_textbox zform_email' required='required'  name='login' value='' size='25' />
+			</label>
 			</div>
 		
 			<div>
-			<label for='password'>Password</label>
-			<input type='password' class='zform_textbox zform_password' required='required'  name='password' value='' size='25' />
+			<label>
+				<span class='prompt'>Password</span>
+				<input type='password' class='zform_textbox zform_password' required='required'  name='password' value='' size='25' />	
+			</label>
 			</div>
 		
 			<div>
@@ -1483,14 +1486,17 @@ The 'data-action' attribute is used to assign an onclick.
 			</fieldset>
 		</form>
 
-		<div id='recoverPasswordContainer'>
-			<hr />
-
-			<h3 class='marginBottom'>Recover Password</h3>
+		<div id='recoverPasswordContainer' class='marginBottom'>
 			<div id='recoverPasswordMessaging' class='appMessaging'></div>
 			<form action='#' data-app-submit='myRIA|accountPasswordRecoverSubmit'>
 			<fieldset>
-			<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' size='25' /></div>
+			<legend>Recover Password</legend>
+			<div class='marginBottom'>
+			<label>
+				<span class='prompt'>Login/Email</span>
+				<input type='text' name='login' required='required' size='25' />
+			</label>
+			</div>
 			
 			<div><input type='submit' class='applyButton' value='Email Password to Me' /></div>
 			
@@ -1500,7 +1506,6 @@ The 'data-action' attribute is used to assign an onclick.
 		</div><!-- /recoverPasswordContainer -->
 
 		<div>
-		<hr />
 		<button class='applyButton' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
 		</div>
 	</div>

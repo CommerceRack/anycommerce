@@ -327,14 +327,6 @@ CUSTOMER PAGES
 
 
 
-
-/****** LOGIN MODAL ******/
-#loginFormForModal fieldset	{border:0}
-.loginOption fieldset div	{margin-bottom:12px;}
-.loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
-.loginOption label:after	{margin-right:12px; content:":"}
-
-
 /****** NEWSLETTER SUBSCRIBE/ACCOUNT CREATE ******/
 #subscribeFormContainer .userInfo div	{margin-bottom:6px;}
 #subscribeFormContainer li	{list-style:none;}
