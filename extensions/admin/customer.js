@@ -384,7 +384,7 @@ $D is returned.
 			addressCreateUpdateShow : function(vars,callback,address)	{
 				vars = vars || {};
 				address = address || {};
-//				_app.u.dump(" -> address: "); _app.u.dump(address);
+				_app.u.dump(" -> address: "); _app.u.dump(address,'debug');
 				if((vars.TYPE == 'bill' || vars.TYPE == 'ship') && vars.mode && vars.CID && vars.show)	{
 					//add CID and mode to address object so that translator adds them to hidden inputs.
 					address.CID = vars.CID;
