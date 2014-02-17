@@ -2207,7 +2207,12 @@ effects the display of the nav buttons only. should be run just after the handle
 						$nav.append("<li><a href='#company?show="+$(this).attr('id').replace('Article','')+"'>"+($('h1:first',$(this)).text())+"</a></li>");
 						});
 
+
 					$('#mainContentArea').append($content);
+
+					_app.u.handleCommonPlugins($content);
+					_app.u.handleButtons($content);
+
 					_app.ext.myRIA.u.bindNav('#companyNav a');
 					}
 
@@ -2400,6 +2405,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					$customer = _app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID);
 					$('#mainContentArea').append($customer);
 					_app.ext.myRIA.u.bindNav('#customerNav a');
+					_app.u.handleCommonPlugins($customer);
+					_app.u.handleButtons($customer);
 					}
 
 				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
