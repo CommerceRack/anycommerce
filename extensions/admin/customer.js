@@ -384,11 +384,17 @@ $D is returned.
 			addressCreateUpdateShow : function(vars,callback,address)	{
 				vars = vars || {};
 				address = address || {};
-//				_app.u.dump(" -> address: "); _app.u.dump(address);
+				_app.u.dump(" -> address: "); _app.u.dump(address,'debug');
 				if((vars.TYPE == 'bill' || vars.TYPE == 'ship') && vars.mode && vars.CID && vars.show)	{
 					//add CID and mode to address object so that translator adds them to hidden inputs.
 					address.CID = vars.CID;
 					address.TYPE = vars.TYPE;
+					//a customer address passed from checkout will use bill/address, not bill_address.
+					for(var index in address)	{
+						if(index.indexOf(vars.type+'/') >= 0)	{
+							address[index.replace(vars.type+'/',vars.type+'_')] = address[index];
+							}
+						}
 
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title' : vars.mode+' address ('+vars.TYPE+')',
@@ -397,17 +403,17 @@ $D is returned.
 						});
 
 					//if the email isn't set, use the customer record email to populate.
-					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("data.adminCustomerDetail|"+vars.CID+"._EMAIL",_app))	{
-						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
-						}
+//					if(address.TYPE == 'bill' && !address.email && _app.u.thisNestedExists("data.adminCustomerDetail|"+vars.CID+"._EMAIL",_app))	{
+//						$("input[name='email']",$D).addClass((vars.mode == 'update' ? 'edited' : '')).val(_app.data["adminCustomerDetail|"+vars.CID]._EMAIL).trigger('change');
+//						}
 					//the id can't be changed once it's set.
 					if(vars.mode == 'update' || address._id)	{
 						$("input[name='SHORTCUT']",$D).prop('disabled','disabled');
 						}
 					//ship addresses don't support email address.
-					if(vars.TYPE == 'ship')	{
-						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
-						}
+//					if(vars.TYPE == 'ship')	{
+//						$("input[name='email']",$D).closest('label').empty().remove(); //email isn't a valid shipping input.
+//						}
 					
 					var $form = $('form:first',$D).data(vars);
 					
@@ -426,7 +432,7 @@ $D is returned.
 									else	{
 										$D.dialog('close');
 										if(typeof callback == 'function')	{
-											callback(vars);
+											callback(vars,sfo);
 											}
 										}
 									}},'immutable');
@@ -1726,7 +1732,7 @@ _app.model.dispatchThis('immutable');
 						$("tbody",$panel).empty(); //clear address rows so new can be added.
 						$panel.anycontent({'data' : _app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
 						_app.u.handleButtons($panel);
-						},_app.data['adminCustomerDetail|'+CID][addrType][index]);
+						},_app.data['adminCustomerDetail|'+CID][addrType][index]).anyform({'trackEdits':true});
 				}, //showAddrUpdate
 
 //executed on a button to show the customer create form.

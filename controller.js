@@ -58,8 +58,8 @@ function controller(_app)	{
 		window.makeImage = _app.u.makeImage; //FUTURE -> get rid of this. temporary work around for variations code in includes.
 //		dump(" -> initializing app");
 		_app.u.updatejQuerySupport(); //update the $.support object w/ some additional helpful info. Needs to be very early in the process since handleSession will use it.
-
 		_app.vars = _app.vars || {};
+		if(_app.vars.addjQueryPointer) {jQuery._app = _app;} 
 		_app.vars.platform = _app.vars.platform ? _app.vars.platform : 'webapp'; //webapp, ios, android
 		_app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		_app.vars.fbUser = {};
@@ -1289,6 +1289,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 
 						for(var i = 0; i < supportedEvents.length; i += 1)	{
 							$t.on(supportedEvents[i]+".app","[data-app-"+supportedEvents[i]+"]",function(e,p){
+//								dump(" -> executing event. p: "); dump(p);
 								return _app.u._executeEvent($(e.currentTarget),$.extend(p,e));
 								});
 							}	
@@ -1307,7 +1308,9 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(ep.handleObj && ep.handleObj.origType)	{
 					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
 					}
-				dump(" -> type: "+type);
+				
+//				dump(" -> type: "+type);
+				
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
 					var	AEF = $.trim(actionsArray[i]).split('|'); //Action Extension Function.  [0] is extension. [1] is Function.
@@ -1833,9 +1836,7 @@ VALIDATION
 						required = ($input.attr('required') == 'required') ? true : false;
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
-					
-					_app.u.dump(" -> $input.data('minlength'): "+$input.data('minlength'));
-					
+				
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
@@ -2829,7 +2830,7 @@ return $r;
 								}						
 
 							}
-						$ele.trigger(infoObj.state,infoObj);
+						$ele.trigger(infoObj.state,[$ele,infoObj]);
 						}
 					else	{
 						$ele.anymessage({'message':'_app.templateFunctions.handleTemplateEvents, infoObj.state ['+infoObj.state+'] is not valid. Only init, complete and depart are acceptable values.','gMessage':true});

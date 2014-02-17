@@ -118,15 +118,25 @@ var myRIA = function(_app) {
 				
 				if(_app.vars.apptimizer === true) {$.support.onpopstate = false} //disable uri rewrite and rely on hashChange
 
+				initCM = function(cartID)	{
+					if($('#cartMessenger').length)	{
+						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+						}
+					else	{
+						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
+						}
+					}
+
+
 				if(cartID)	{
 					dump(" -> cartID is set, init messenger");
 					_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
-					_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+					initCM(cartID);
 					}
 				else if(cartID = _app.model.fetchCartID())	{
 					dump(" -> cartID obtained from fetchCartID. cartid: "+cartID);
 					//no need to add this cartID to the session/vars.carts, because that's where fetch gets it from.
-					_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+					initCM(cartID);
 					}
 				else	{
 					dump(" -> no cart found. create a new one");
@@ -136,7 +146,7 @@ var myRIA = function(_app) {
 							}
 						else	{
 							//appCartCreate automatically updates session/vars.carts
-							_app.ext.cart_message.u.initCartMessenger(_app.model.fetchCartID(),$('#cartMessenger')); //starts the cart message polling
+							initCM(_app.model.fetchCartID());
 							}
 						}},'mutable');
 					}
@@ -1571,8 +1581,6 @@ setTimeout(function(){
 					}
 				},
 				
-
-
 
 //obj is going to be the container around the img. probably a div.
 //the internal img tag gets nuked in favor of an ordered list.
@@ -3080,10 +3088,21 @@ else	{
 				},
 			
 			cartMessagePageSend : function($ele,p)	{
+				p.preventDefault();
 				var vars = _app.u.getWhitelistedObject(_app.ext.myRIA.vars.sotw,['pageType','pid','show','navcat','keywords','templateID','uriParams']); //don't need everything in sotw.
 				var cartid = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				vars.domain = (document.location.protocol == 'file:') ? _app.vars.testURL : document.domain;
-				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid},'passive');
+				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'view.'+vars.pageType,'vars':vars,'_cartid':cartid,'_tag':{
+					'callback' : function(rd)	{
+						if(_app.model.responseHasErrors(rd)){
+							$('#cartMessenger').anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$("[data-app-role='messageHistory']",'#cartMessenger').append(vars.pageType+" page sent to admin.");
+							}
+						}
+					}},'passive');
 				_app.model.dispatchThis('passive');
 				},
 			

@@ -16,3 +16,6 @@ For the buyer side...
 	}
 .selfMessage	{color:#366;}
 .otherMessage	{color:#639;}
+
+
+.cartMessageChooser  .chooserAddToCartForm	{display:none;}

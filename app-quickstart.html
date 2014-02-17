@@ -10,6 +10,7 @@
 <meta property="og:image" content="" id='ogImage' >
 <meta property="og:description" content="" id='ogDescription' >
 
+<meta name=viewport content="width=device-width, initial-scale=1">
 
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
@@ -58,7 +59,8 @@ $(document).ready(function(){
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://www.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+		"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+		"addjQueryPointer" : true,
 		"initComplete" : function(t){
 			dump(" -> init is complete");
 			t.u.loadScript('app-quickstart-init.js',function(){
@@ -163,17 +165,17 @@ ANIMATION TESTING
 
 
 <div id='cartMessenger' class='displayNone seoStrip' data-app-role='cartMessenger' title="help">
-	<form>
+	<form novalidate='novalidate'>
 		<div class='messageHistoryContainer'>
 			<section data-app-role='messageHistory'></section>
 		</div>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
 			<textarea name='message' required='required' class='fullWidth' rows='5' placeholder='send a message'></textarea>
-			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
+			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send Message</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
-		<button class='applyButton' data-app-click="myRIA|cartMessagePageSend" title='Show the associate what page I am on.'>Send Page</button>
-		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton'>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
+		<button class='applyButton displayNone show4ActiveChat' data-app-click="myRIA|cartMessagePageSend" title='Show the associate what page I am on.'>Send Page</button>
+		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton hide4ActiveChat'>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
 		</section>
 	</form>
 </div>
@@ -1527,7 +1529,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>
-	<li><a href='#' onClick="myApp.ext.cart_message.a.showBuyerCMUI();">Messaging UI</a>
+	<li><a href='#' onClick="myApp.ext.myRIA.a.showBuyerCMUI();">Messaging UI</a>
 	<li>Some JS test links
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>

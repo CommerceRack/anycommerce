@@ -2010,6 +2010,7 @@ vars.findertype is required. acceptable values are:
 //attribute - ex: zoovy:accessory_products
 //vars is for variables. eventually, path and attrib should be move into the vars object.
 //vars will be used to contain all the 'chooser' variables.
+//className in vars can be used to apply instance specific classes to the finder (hide/show things as necessary).
 			showFinderInModal : function(findertype,path,attrib,vars)	{
 				_app.u.dump("BEGIN showFinderInModal. findertype: "+findertype+" and path: "+path);
 				if(findertype)	{
@@ -2017,7 +2018,7 @@ vars.findertype is required. acceptable values are:
 					vars = vars || {};
 //a finder has already been opened. empty it.
 					if($finderModal.length > 0)	{
-						$finderModal.empty();
+						$finderModal.empty().removeClass(); //remove all classes from any previous instances. use vars.classname to add newones.
 						$finderModal.attr({'data-findertype':'','data-path':'','data-attrib':''}); //make sure settings from last product are not used.
 						}
 					else	{
@@ -2027,6 +2028,7 @@ vars.findertype is required. acceptable values are:
 					if(path && !vars.path)	{vars.path = path} else {}
 					if(attrib && !vars.attrib)	{vars.attrib = attrib} else {}
 					if(findertype && !vars.findertype)	{vars.findertype = findertype} else {}
+					$finderModal.addClass(vars.classname);
 
 //set the following vars as attributes. at the time the finder was built, didn't have a good understanding of .data().
 //eventually, everything will get moved over to .data();
@@ -2181,7 +2183,10 @@ vars.findertype is required. acceptable values are:
 						}
 					else	{
 						_app.u.dump(" -> execute navigateTo for linkFrom being set");
-//						_app.ext.admin.a.navigateTo('#!dashboard'); //* 201401 -> router handles this now.
+						if(!document.location.hash)	{
+							//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
+							_app.ext.admin.a.navigateTo('#!dashboard');
+							}
 						}
 					}
 				else if(!_app.vars.domain)	{
@@ -2190,7 +2195,10 @@ vars.findertype is required. acceptable values are:
 					}
 				else	{
 					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
-//					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('#!dashboard')); //* 201401 -> router handles this now.
+					if(!document.location.hash)	{
+						//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
+						_app.ext.admin.a.navigateTo('#!dashboard');
+						}
 					}
 
 				_app.model.dispatchThis('immutable');

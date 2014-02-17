@@ -108,7 +108,22 @@ Where I left off:
 		<legend class='smallPadding' >Summary</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartSummaryTemplate;'></div>
 	</fieldset>
+
+
+<!-- moved these out of the fieldsets for the adminUI. noticed if you update a field w/ a blur, such as zip, then push save, the blur event triggers the panel to clear prior to the click being triggered -->
+<section id='checkoutButtons'>
+
+	<div class='buttonset alignRight'>
+	<button class='floatLeft applyButton' data-app-click='order_create|adminCartRemoveFromSession' title="This will remove the cart from your session. It will NOT delete the cart.">Remove Cart</button>
+	<button class='applyButton' data-app-role='saveButton' data-app-click='order_create|cartOrderSave' title="Save changes without creating an order. This will NOT save credit card numbers.">Save <span class='numChanges'></span> Changes</button>
+	<button class='applyButton ui-state-highlight' data-app-click="order_create|execCartOrderCreate">Create Order</button>
+	</div>
 	
+</section>
+
+
+
+
 	</td>
 </tr>
 </table>
@@ -342,7 +357,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 			<input type="hidden" name="_cartid" value="" data-bind="var:cart(cart/cartid); format:popVal;"  /><!-- used in store_product.u.handleAddToCart -->
 	
 		<label><span>Qty:</span><input type='number' class='smallInput' step='1' min='0' name="qty" size="3" value="1"  /></label>
-		<label><span>Product id:</span><input type='text' name='sku' size='10' data-input-keyup='data-input-format' data-input-format='pid' /></label>
+		<label><span>SKU:</span><input type='text' name='sku' size='10' /></label><!-- do not force 'pid' formatting, this could be a sku -->
 		<label><span>Price: </span><input type='number' class='price smallInput' size='5' name='price' step='0.01' min='0' /></label>
 		<span class='applyButton' data-app-click="order_create|cartItemAddFromForm">Add</span>
 	</div>
@@ -376,17 +391,10 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<span class='applyButton' data-app-click="order_create|execCouponAdd" data-button-id='execCouponAdd' >add</span>
 	</div>
 
-
-	<div class='buttonset alignRight'>
-	<button class='floatLeft applyButton' data-app-click='order_create|adminCartRemoveFromSession' title="This will remove the cart from your session. It will NOT delete the cart.">Remove Cart</button>
-	<button class='applyButton' data-app-role='saveButton' data-app-click='order_create|cartOrderSave' title="Save changes without creating an order. This will NOT save credit card numbers.">Save <span class='numChanges'></span> Changes</button>
-	<button class='applyButton ui-state-highlight' data-app-click="order_create|execCartOrderCreate">Create Order</button>
+	<div data-app-role='referenceNumber' class='displayNone'>
+		<label>Purchase Order/Reference #: </label>
+		<input type'text' name='want/reference_number' size='12' />
 	</div>
-
-<div data-app-role='referenceNumber' class='displayNone'>
-	<label>Purchase Order/Reference #: </label>
-	<input type'text' name='want/reference_number' size='12' />
-</div>
 
 
 </section>
@@ -403,7 +411,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
 	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
 	<div class='clearfix'>
-		<button class='floatRight applyButton' data-app-click='order_create|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
+		<button class='floatRight applyButton' data-app-role='addressSelectButton' data-app-click='order_create|execBuyerAddressSelect' data-icon='false' data-icon-primary='ui-icon-check'>Use This Address</button>
 		<button class='floatRight marginRight applyButton' data-app-role='addressEditButton' data-app-click="order_create|adminAddressCreateUpdateShow" data-icon='false' data-icon-primary='ui-icon-pencil' data-mode='update'>Edit This Address</button>
 	</div>
 </address>

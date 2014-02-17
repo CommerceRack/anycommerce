@@ -163,7 +163,7 @@ PRODUCT FINDER/CHOOSER
 </tr>
 </table>
 <div data-bind='useParentData:true; format:detailedInvDisplay; extension:store_product;' class='inventory'></div>
-	<form action='#' onSubmit="return false;">
+	<form action='#' onSubmit="return false;" class='chooserAddToCartForm'>
 	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='sku' />
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		

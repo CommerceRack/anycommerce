@@ -1,7 +1,7 @@
 
 myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.testURL+'jsonapi/config.js' : myApp.vars.baseURL+'jsonapi/config.js',function(){
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
-	myApp.u.dump(" ->>>>>>>>>>>>>>>>>>>>>>>>>>>>> zGlobals is an object")
+//	myApp.u.dump(" ->>>>>>>>>>>>>>>>>>>>>>>>>>>>> zGlobals is an object");
 	myApp.vars.username = zGlobals.appSettings.username.toLowerCase(); //used w/ image URL's.
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 	myApp.vars.secureURL = zGlobals.appSettings.https_app_url;
@@ -12,23 +12,21 @@ myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.t
 myApp.rq.push(['extension',0,'order_create','extensions/checkout/extension.js']);
 myApp.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
-
-myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
+//myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
 
 myApp.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 myApp.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
-
+myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 myApp.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 
-myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
-myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
+//myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
+//myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
 
 //myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
-myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 //myApp.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
 //myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //myApp.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
@@ -46,6 +44,8 @@ myApp.cmr.push(['chat.join',function(message){
 	var $ui = myApp.ext.myRIA.a.showBuyerCMUI();
 	$("[data-app-role='messageInput']",$ui).show();
 	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+	$('.show4ActiveChat',$ui).show();
+	$('.hide4ActiveChat',$ui).hide();
 	}]);
 
 myApp.cmr.push(['goto',function(message,$context){
@@ -54,7 +54,7 @@ myApp.cmr.push(['goto',function(message,$context){
 		.addClass('chat_post')
 		.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
 		.on('click',function(){
-			showContent('',message.vars);
+			showContent(myApp.ext.myRIA.u.whatAmIFor(message.vars),message.vars);
 			});
 	$history.append($P);
 	$history.parent().scrollTop($history.height());

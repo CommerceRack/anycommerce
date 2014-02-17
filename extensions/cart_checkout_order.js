@@ -447,7 +447,7 @@ left them be to provide guidance later.
 					var sfo = $form.serializeJSON() || {}, payby = sfo["want/payby"];
 					if(payby)	{
 						if(payby.indexOf('WALLET') == 0)	{
-							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby)));
+							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby,cartid)));
 							}
 						else if(payby == 'CREDIT')	{
 							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
@@ -671,13 +671,22 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return r;
 				},
 			
-			getWalletByID : function(ID)	{
+			getWalletByID : function(ID,cartid)	{
 				var r = false;
-				if(_app.data.buyerWalletList && _app.data.buyerWalletList['@wallets'].length)	{
-					var L = _app.data.buyerWalletList['@wallets'].length;
+				var wallets;
+				if(_app.u.thisIsAnAdminSession())	{
+					wallets = _app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartid].customer.cid]['@WALLETS'];
+					}
+				else if(_app.data.buyerWalletList && _app.data.buyerWalletList['@wallets'].length)	{
+					wallets = _app.data.buyerWalletList['@wallets']
+					}
+				else	{}
+
+				if(wallets)	{
+					var L = wallets.length;
 					for(var i = 0; i < L; i += 1)	{
-						if(ID == _app.data.buyerWalletList['@wallets'][i].ID)	{
-							r = _app.data.buyerWalletList['@wallets'][i];
+						if(ID == wallets[i].ID)	{
+							r = wallets[i];
 							break;
 							}
 						}
@@ -708,7 +717,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		//expiration is less of a concern
 						case 'CREDIT':
 	
-							tmp += "<div><label>Credit Card # <input type='text' data-format-rules='CC' size='30' name='payment/CC' data-app-keyup='input-format' data-input-format='numeric' class='creditCard' value='";
+							tmp += "<div><label>Credit Card # <input type='text' data-format-rules='CC' size='30' name='payment/CC' data-input-keyup='input-format' data-input-format='numeric' class='creditCard' value='";
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
@@ -719,7 +728,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							
 							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
-							tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+							if(!_app.u.thisIsAnAdminSession())	{
+								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
+								}
+							tmp += "'  /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
@@ -802,16 +814,28 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
-				if($form)	{
+				dump("BEGIN cco.u.sanitizeAndUpdateCart");
+				if($form instanceof jQuery)	{
 					_tag = _tag || {};
-					var formObj = $form.serializeJSON();
+					var formObj = $form.serializeJSON({cb:true});
+//					dump(" -> formObj: "); dump(formObj);
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
 					if(_app.ext.order_create.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
 						}
 // to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
 					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
-						var addr = _app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+						dump(" -> populateAddressFromShortcut.  from: "+fromAddr+" toAddr: "+toAddr);
+						
+						var addr;
+						if(_app.vars.thisSessionIsAdmin)	{
+							var cartID = $form.closest("[data-app-role='checkout']").data('cartid');
+							addr = _app.ext.cco.u.getAndRegularizeAddrObjByID(_app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid]['@'+fromAddr.toUpperCase()],formObj[fromAddr+'/shortcut'],fromAddr,true)
+							}
+						else	{
+							addr = _app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+							}
+
 						for(var index in addr)	{
 							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
 								if(fromAddr == toAddr)	{
@@ -846,9 +870,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 								}
 							}
 						}
-//regularize checkbox data.
-					if(formObj['want/bill_to_ship'] == 'ON')	{formObj['want/bill_to_ship'] = 1} 
-					if(formObj['want/create_customer'] == 'ON')	{formObj['want/create_customer'] = 1}
+
 
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
@@ -859,11 +881,19 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
-					delete formObj['coupon'];	
+					delete formObj['want/new_password2'];
+					delete formObj['coupon'];
+					//the following get added to the checkout form in the admin UI
+					delete formObj['sku'];	
+					delete formObj['override'];	
+					delete formObj['add'];	
 					delete formObj['qty']; //admin UI for line item editing.	
 					delete formObj['price']; //admin UI for line item editing.
 
 					_app.ext.cco.calls.cartSet.init(formObj,_tag); //adds dispatches.
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In cco.u.sanitizeAndUpdateCart, $form was not a valid instance of jQuery.","gMessage":true});
 					}
 				}, //sanitizeAndUpdateCart
 

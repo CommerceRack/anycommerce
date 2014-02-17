@@ -107,7 +107,9 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 							_app.model.dpsSet('cartMessages','lastMessageTS',_app.u.epochNow()); //record when the last message came in. used at init.
 							}
 						else	{
-							(_app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : _app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
+							if(_app.ext.cart_message.vars.carts[cartID])	{
+								(_app.ext.cart_message.vars.carts[cartID].frequency >= 60000) ? 60000 : _app.ext.cart_message.vars.carts[cartID].frequency += 3000; //frequency is never much more than a minute.
+								}
 							}
 //now queue up the next request.
 						_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);
@@ -429,7 +431,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				$("<button \/>").text('Send to Buyer').attr('data-app-click','cart_message|gotoProductExec').button().appendTo($buttons);
 //				$("<button \/>").text('Add to Cart').attr('data-app-click','order_create|cartItemAddWithChooser').button().appendTo($buttons);
 
-				_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons});
+				_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $buttons,'classname':'cartMessageChooser'});
 				_app.u.addEventDelegation($buttons);
 				},
 			
@@ -476,7 +478,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 							}
 						else	{
 							//success content goes here.
-							$("<div \/>").append("Cart ID: "+_app.data[rd.datapointer].csr).dialog({'modal':true});
+							$("<div \/>").append("Cart Shortcut: "+_app.data[rd.datapointer].csr).dialog({'modal':true});
 							}
 						}}},'mutable');
 					_app.model.dispatchThis('mutable');
@@ -496,7 +498,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 					$ele.hide();
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In cart_message.e.cartCSRShortcutExec, unable to ascertain cartid.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In cart_message.e.chatInitExec, unable to ascertain cartid.","gMessage":true});
 					}
 				} //chatInitExec
 			
