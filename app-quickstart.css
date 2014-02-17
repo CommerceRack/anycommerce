@@ -24,7 +24,7 @@ button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
 .smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
 .smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
 
-p	{margin-bottom:12px;}
+p	{margin-bottom:1em;}
 
 
 table {
@@ -38,7 +38,7 @@ td.valignMiddle	{vertical-align: middle;}
 
 /* feel free to delete these or override in your own .css file */
 h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
-p	{margin:0 0 12px 0;}
+
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
@@ -116,13 +116,15 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-.marginLeft	{margin-left:12px;}
-.marginRight	{margin-right:12px;}
-.marginTop	{margin-top:12px;}
-.marginBottom	{margin-bottom:12px;}
-.stdMargin	{margin:12px;}
-.headerPadding	{padding: 3px 6px;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
-.stdPadding	{padding:12px;}
+.marginLeft	{margin-left:1em;}
+.marginRight	{margin-right:1em;}
+.marginTop	{margin-top:1em;}
+.marginBottom	{margin-bottom:1em;}
+
+.stdMargin	{margin:1em;}
+.headerPadding	{padding: .2em .4em;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
+.stdPadding	{padding:1em;}
+
 .fullWidth	{width:100%;}
 
 
