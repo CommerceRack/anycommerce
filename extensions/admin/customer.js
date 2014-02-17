@@ -384,11 +384,17 @@ $D is returned.
 			addressCreateUpdateShow : function(vars,callback,address)	{
 				vars = vars || {};
 				address = address || {};
-				_app.u.dump(" -> address: "); _app.u.dump(address);
+//				_app.u.dump(" -> address: "); _app.u.dump(address);
 				if((vars.TYPE == 'bill' || vars.TYPE == 'ship') && vars.mode && vars.CID && vars.show)	{
 					//add CID and mode to address object so that translator adds them to hidden inputs.
 					address.CID = vars.CID;
 					address.TYPE = vars.TYPE;
+					//a customer address passed from checkout will use bill/address, not bill_address.
+					for(var index in address)	{
+						if(index.indexOf(vars.type+'/') >= 0)	{
+							address[index.replace(vars.type+'/',vars.type+'_')] = address[index];
+							}
+						}
 
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title' : vars.mode+' address ('+vars.TYPE+')',

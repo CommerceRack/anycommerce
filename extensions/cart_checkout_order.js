@@ -639,6 +639,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 								}
 							}
 						}
+					dump(" -> address"); dump(address);
 					r = address;
 					}
 				else	{
@@ -814,7 +815,16 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 // to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
 					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
 						dump(" -> populateAddressFromShortcut.  from: "+fromAddr+" toAddr: "+toAddr);
-						var addr = _app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+						
+						var addr;
+						if(_app.vars.thisSessionIsAdmin)	{
+							var cartID = $form.closest("[data-app-role='checkout']").data('cartid');
+							addr = _app.ext.cco.u.getAndRegularizeAddrObjByID(_app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid]['@'+fromAddr.toUpperCase()],formObj[fromAddr+'/shortcut'],fromAddr,true)
+							}
+						else	{
+							addr = _app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+							}
+
 						for(var index in addr)	{
 							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
 								if(fromAddr == toAddr)	{
@@ -860,7 +870,12 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
-					delete formObj['coupon'];	
+					delete formObj['want/new_password2'];
+					delete formObj['coupon'];
+					//the following get added to the checkout form in the admin UI
+					delete formObj['sku'];	
+					delete formObj['override'];	
+					delete formObj['add'];	
 					delete formObj['qty']; //admin UI for line item editing.	
 					delete formObj['price']; //admin UI for line item editing.
 
