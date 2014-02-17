@@ -1,0 +1,29 @@
+
+*** These modified files were found in JOE when it aborted on Thu Dec 19 14:26:19 2013
+*** JOE was aborted because the terminal closed
+
+*** File '(Unnamed)'
+spooler
+uwsgi::
+adminProductMacro
+INV-RETURN
+INV-RETURN
+iNV-
+INV-
+pretty-date
+pretty_date
+:900
+cartDetail
+
+*** File '(Unnamed)'
+mule.pl
+mule.pl
+corostream.pl
+test.pl
+test.pl
+test.pl
+/httpd/modules/JSONAPI.pm
+/httpd/modules/JSONAPI.pm
+/httpd/modules/ZTOOLKIT.pm
+vhosts.conf
+/httpd/modules/JSONAPI.pm
