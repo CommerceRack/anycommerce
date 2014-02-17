@@ -691,7 +691,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							}
 						}
 					}
-				dump(" -> getWalletByID: "); dump(r);
 				return r;
 				},
 
@@ -729,7 +728,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							
 							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
-							tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+							if(!_app.u.thisIsAnAdminSession())	{
+								tmp += " required='required' "
+								}
+							tmp += "'  /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
