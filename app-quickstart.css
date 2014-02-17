@@ -1,9 +1,20 @@
-body,html	{font-size:100%;}
+@charset "utf-8";
+
+/*
+
+The css in this file is optimized for a mobile device, then uses media queries to tailor the experience for larger browsers.
+That way, the mobile device (which typically has less power) can skip all the heavy lifting of dealing w/ the media queries.
+The media queries are located at the bottom of this file.
+
+*/
+
+body,html	{font-size:85%;} /* increased for non mobile devices w/ a media query */
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
 #appPreView	{width:550px; margin:0 auto;}
 
+section	{display:block;}
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
@@ -15,7 +26,7 @@ note - background- are use instead of background in case element this is applied
 li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
 span.wait	{display:inline-block;}
 
-/******* global styles - added for cross-browser uniformity or usability ******/
+/* global styles - added for cross-browser uniformity or usability */
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
 
@@ -69,7 +80,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-/******* positioning *******/
+/* positioning */
 
 .floatLeft	{float:left;}
 .floatRight	{float:right;}
@@ -82,7 +93,7 @@ and offMenu is toggle off, hiding the change button.
 .center	{margin:0 auto;}
 
 
-/****** aesthetics/usability ******/
+/* aesthetics/usability */
 
 /* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
 .disabled	{
@@ -138,9 +149,6 @@ and offMenu is toggle off, hiding the change button.
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
 
-/* ** 201346 -> messaging styles are now in anyplugins.css */
-
-
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
 .appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
@@ -163,13 +171,13 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-/***************************************************
+/*
 
 LISTS (product list and/or subcategory list)
 these get used just about everywhere. leave these fairly generic 
 and override using classes or id's as needed.
 
-***************************************************/
+*/
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
@@ -219,11 +227,11 @@ and override using classes or id's as needed.
 
 
 
-/***************************************************
+/*
 
 PRODUCT DETAIL PAGE (productTemplate)
 
-***************************************************/
+*/
 
 .prodViewerContainer	{width:100%;}
 
@@ -254,7 +262,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .variation_attribs	{display:none;} /* don't show finder attributes */
 
-/****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
+/* REVIEW GFX - used for review summary and in list of reviews on product detail page */
 
 .reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
@@ -275,7 +283,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .prodlist .review_0	{display:none;} /* hide the stars for items with no reviews */
 
 
-/****** REVIEW LIST - on product detail page, used for product reviews. ******/
+/* REVIEW LIST - on product detail page, used for product reviews. */
 #prodViewerReviews	{margin:0; padding:0;} /* parent ul containing all reviews, each review as an li */
 .reviewLineItem {margin:0 0 12px 0; padding:0 0 12px 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
 .prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 12px 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
@@ -285,18 +293,18 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .reviewLineItem blockquote	{margin:0 0 0 185px; padding:0;}
 
 
-/****** WRITE REVIEW MODAL ******/
+/* WRITE REVIEW MODAL */
 #reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
 #reviewsMessage		{width:250px; height:250px;}
 #reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:5px;}
 #reviewFrm .ui-button	{float:right;}
 
-/***************************************************
+/*
 
 BREADCRUMB
  -> used on product and category pages
 
-***************************************************/
+*/
 
 
 .breadcrumb	{margin-bottom:12px;}
@@ -308,33 +316,32 @@ BREADCRUMB
 
 
 
-/***************************************************
+/*
 
 cartTemplate
 
-***************************************************/
+*/
 
 
 .cartContainer	{width:100%;}
 
 #mainContentArea_cart .continueShoppingButton	{display:none;} /* used in modal cart only */
 
-/***************************************************
+/*
 
 CUSTOMER PAGES
 
-***************************************************/
+*/
 
 
-
-/****** NEWSLETTER SUBSCRIBE/ACCOUNT CREATE ******/
+/* NEWSLETTER SUBSCRIBE/ACCOUNT CREATE */
 #subscribeFormContainer .userInfo div	{margin-bottom:6px;}
 #subscribeFormContainer li	{list-style:none;}
 #subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
 .subscribeListItem	{display:block; height:30px;}
 
 
-/****** ORDER HISTORY AND INVOICE ******/
+/* ORDER HISTORY AND INVOICE */
 
 #ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
 #ordersArticle .orderContentsTable	{width:100%}
@@ -344,8 +351,9 @@ CUSTOMER PAGES
 .orderContentsProdlistContainer	{width:500px;}
 .orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
 
+.invoiceAddressContainer .billAddress, .invoiceAddressContainer .shipAddress	{margin-bottom:1em;}
 
-/****** MY ACCOUNT ******/
+/* MY ACCOUNT */
 
 #buyerAddresses	{margin-bottom:12px;}
 #buyerAddresses h2	{margin:12px 0; clear:both;}
@@ -353,11 +361,11 @@ CUSTOMER PAGES
 
 
 
-/***************************************************
+/*
 
 SEARCH RESULTS PAGE
 
-***************************************************/
+*/
 
 #mainContentArea_search	{position:relative;}
 
@@ -378,14 +386,14 @@ SEARCH RESULTS PAGE
 	box-sizing: border-box;
 	}
 
-/***************************************************
+/*
 
 HELP PAGES
 
-***************************************************/
+*/
 
 
-/**** FAQ *****/
+/* FAQ /
 .faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
 .faqQuestion:before	{content:"Q: ";}
 .faqAnswer:before	{content:"A: ";}
@@ -397,14 +405,12 @@ HELP PAGES
 
 
 
-/***************************************************
+/*
 
 CART
 
+*/
 
-***************************************************/
-
-/* ** 201346 -> css redux to make cart responsive. big update in template as well. see media query at bottom of doc too. */
 .cartStuffContainer	{width:100%; margin:0 0 1em 0;}
 #cartStuffList	{list-style:none; margin:0; padding:0; font-size:.85em;}
 #cartStuffList li	{display:block; margin:0 0 1em 0;}
@@ -412,20 +418,17 @@ CART
 .cartButtons .thisButton	{display:block; margin-bottom:.5em;}
 .cartSummaryTotalsContainer h2	{font-size:.8em;} 
 
-/* cart product list */
-@media only screen and (max-width: 400px) {
-	.cartQuantityInput	{clear:both;} /* this is wide, so put it on it's own line so that it doesn't wrap (only in small screens) */
-	}
 
 
 
 
 
-/***************************************************
+
+/*
 
 CHECKOUT
 
-***************************************************/
+*/
 
 #paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
 
@@ -496,21 +499,22 @@ CHECKOUT
 	}
 
 
-
-
-
-
-
-
 .debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
 
 
 
+/* cart product list */
+@media only screen and (min-width: 400px) {
+	body,html	{font-size:100%;}
+	}
 
 
 
-/* ** 201346 -> for responsive cart layout. */
 @media only screen and (min-width: 750px) {
+	/* invoice address get aligned on the same row now that space allows for it. the container around the addresses will handle the margin now. */
+	.invoiceAddressContainer .billAddress, .invoiceAddressContainer .shipAddress	{float:left;  margin-bottom:0;}
+	.invoiceAddressContainer .billAddress	{margin-right:2em;}
+	/* shift cart totals to right side */
 	.cartSummaryTotalsContainer, .cartStuffContainer	{width:49%;}
 	.cartStuffContainer	{float:left;}
 	.cartSummaryTotalsContainer	{float:right;}

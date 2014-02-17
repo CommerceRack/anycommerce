@@ -1370,66 +1370,62 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
-<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
-<tr>
-	<td colspan='2'>
-<div class='floatRight'>
-<button data-app-click="myRIA|execOrder2Cart" class='applyButton' data-icon-primary='ui-icon-refresh-1-w'>Re-order</button>
-<button data-app-click="order_create|execInvoicePrint" class='applyButton' data-icon-primary='ui-icon-print'>Print Invoice</button>
-</div>
+<div class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
 
-<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
+	<div class='clearfix marginBottom'>
+		<div class='floatRight'>
+		<button data-app-click="myRIA|execOrder2Cart" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-w'>Re-order</button>
+		<button data-app-click="order_create|execInvoicePrint" class='applyButton'  data-text='false' data-icon-primary='ui-icon-print'>Print Invoice</button>
+		</div>
+	
+		<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
+		<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+		<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+	</div>
 
-	</td>
-</tr>
-<tr>
-	<td>
-<div class='marginBottom'>
-<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
-</div>
+	<section class='clearfix invoiceAddressContainer marginBottom'>
 
-<address class='marginBottom'>
-<b>
-	<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
-	<span data-bind='var:order(order/bill/lastname);format:text;'></span>
-</b>
-<div data-bind='var:order(order/bill/address1);format:text;'></div>
-<div data-bind='var:order(order/bill/address2);format:text;'></div>
-<div>
-	<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
-</div>
-<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
-</address>
+		<address class='billAddress'>
+		<b>
+			<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+			<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+		</b>
+		<div data-bind='var:order(order/bill/address1);format:text;'></div>
+		<div data-bind='var:order(order/bill/address2);format:text;'></div>
+		<div>
+			<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+			<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+			<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
+		</div>
+		<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
+		</address>
+		
+		<address class='shipAddress'>
+		<b>
+			<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+			<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+		</b>
+		<div data-bind='var:order(order/ship/address1);format:text;'></div>
+		<div data-bind='var:order(order/ship/address2);format:text;'></div>
+		<div>
+			<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+			<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+			<span data-bind='var:order(order/ship/postal);format:text;'></span>
+		</div>
+		<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
+		</address>
 
-<address class='marginBottom'>
-<b>
-	<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
-	<span data-bind='var:order(order/ship/lastname);format:text;'></span>
-</b>
-<div data-bind='var:order(order/ship/address1);format:text;'></div>
-<div data-bind='var:order(order/ship/address2);format:text;'></div>
-<div>
-	<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(order/ship/postal);format:text;'></span>
-</div>
-<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
-</address>
+	</section>
 
-
-	</td>
-	<td class='orderContentsProdlistContainer'>
+	<section class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
 	<table  class='listStyleNone lineItemProdlist'>
 		<tbody data-bind="var: order(order/@ITEMS); format:processList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
 	</table>
-	</td>
-</tr>
-</table>
+	</section>
 
+
+</div>
 
 
 
