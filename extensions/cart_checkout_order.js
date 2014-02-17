@@ -447,7 +447,7 @@ left them be to provide guidance later.
 					var sfo = $form.serializeJSON() || {}, payby = sfo["want/payby"];
 					if(payby)	{
 						if(payby.indexOf('WALLET') == 0)	{
-							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby)));
+							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby,cartid)));
 							}
 						else if(payby == 'CREDIT')	{
 							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
@@ -639,7 +639,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 								}
 							}
 						}
-					dump(" -> address"); dump(address);
 					r = address;
 					}
 				else	{
@@ -672,17 +671,27 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return r;
 				},
 			
-			getWalletByID : function(ID)	{
+			getWalletByID : function(ID,cartid)	{
 				var r = false;
-				if(_app.data.buyerWalletList && _app.data.buyerWalletList['@wallets'].length)	{
-					var L = _app.data.buyerWalletList['@wallets'].length;
+				var wallets;
+				if(_app.u.thisIsAnAdminSession())	{
+					wallets = _app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartid].customer.cid]['@WALLETS'];
+					}
+				else if(_app.data.buyerWalletList && _app.data.buyerWalletList['@wallets'].length)	{
+					wallets = _app.data.buyerWalletList['@wallets']
+					}
+				else	{}
+
+				if(wallets)	{
+					var L = wallets.length;
 					for(var i = 0; i < L; i += 1)	{
-						if(ID == _app.data.buyerWalletList['@wallets'][i].ID)	{
-							r = _app.data.buyerWalletList['@wallets'][i];
+						if(ID == wallets[i].ID)	{
+							r = wallets[i];
 							break;
 							}
 						}
 					}
+				dump(" -> getWalletByID: "); dump(r);
 				return r;
 				},
 
