@@ -717,7 +717,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 		//expiration is less of a concern
 						case 'CREDIT':
 	
-							tmp += "<div><label>Credit Card # <input type='text' data-format-rules='CC' size='30' name='payment/CC' data-app-keyup='input-format' data-input-format='numeric' class='creditCard' value='";
+							tmp += "<div><label>Credit Card # <input type='text' data-format-rules='CC' size='30' name='payment/CC' data-input-keyup='input-format' data-input-format='numeric' class='creditCard' value='";
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
@@ -729,7 +729,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
 							if(!_app.u.thisIsAnAdminSession())	{
-								tmp += " required='required' "
+								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
 								}
 							tmp += "'  /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							

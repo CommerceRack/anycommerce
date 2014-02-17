@@ -1253,25 +1253,27 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 
 			cartItemAddFromForm : function($ele,p)	{
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
-				_app.ext.store_product.u.handleAddToCart($chkoutForm);
-				_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
-				_app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
-				_app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
-				_app.calls.cartDetail.init($checkout.data('cartid'),{
-					'callback':function(rd){
-						if(_app.model.responseHasErrors(rd)){
-							$ele.closest('fieldset').anymessage({'message':rd});
+				_app.ext.store_product.u.handleAddToCart($chkoutForm,{'callback': function(){
+					_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
+					_app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
+					_app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
+					_app.calls.cartDetail.init($checkout.data('cartid'),{
+						'callback':function(rd){
+							if(_app.model.responseHasErrors(rd)){
+								$ele.closest('fieldset').anymessage({'message':rd});
+								}
+							else	{
+								_app.ext.order_create.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+								_app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+								_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+								_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+								_app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+								}
 							}
-						else	{
-							_app.ext.order_create.u.handlePanel($checkout,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							_app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-							_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-							_app.ext.order_create.u.handlePanel($checkout,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-							_app.ext.order_create.u.handlePanel($checkout,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-							}
-						}
-					},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
-				_app.model.dispatchThis('immutable');
+						},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
+					_app.model.dispatchThis('immutable');
+					}});
+				
 				}, //cartItemAddFromForm
 
 			cartItemAddWithChooser : function($ele,p)	{

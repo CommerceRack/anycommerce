@@ -691,6 +691,16 @@ NOTES
 						if(obj.price == "")	{delete obj.price; _app.u.dump("Deleting price");}
 						else{}
 
+//The sku could be a fully qualified sku (ex: PRODUCTID:AOOO:A112:ABThis is the value).
+//just add these to the obj and the loop a little further down will format them properly into the %variations object.
+						if(sku.indexOf(':') >= -1)	{
+							var skuArr = sku.split(':');
+							obj.sku = skuArr[0];
+							for(var i = 1; i < skuArr.length; i += 1)	{
+								obj[skuArr[i].substring(0,2)] = skuArr[i].substr(2);
+								}
+							}
+
 //There are use cases for skipping validation, such as admin, quick order, etc.
 						if($form.data('skipvalidation') || _app.ext.store_product.validate.addToCart(sku,$form))	{
 							
@@ -732,7 +742,7 @@ NOTES
 //a no frills add to cart. returns false unless a dispatch occurs, then true.
 			handleAddToCart : function($form,_tag)	{
 				var r = false; //what is returned. True if a dispatch occurs.
-				_app.u.dump("BEGIN store_product.u.handleAddToCart");
+//				_app.u.dump("BEGIN store_product.u.handleAddToCart");
 // SANITY -> don't 'require' $form to be a form. It could be a fieldset or some other container as part of a bigger form (such as order create).
 				if($form instanceof jQuery)	{
 					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($form);
