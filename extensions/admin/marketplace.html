@@ -761,7 +761,6 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 
 <div id='syndication_amz'>
 <h1 class='marginBottom'>Amazon</h1>
-<h4 class='marginTop' data-bind="var:mkt(mws_token); format:text; pretext:Token: ;"></h4>
 
 <button class='floatRight' data-app-event="admin_marketplace|amazonMWSLinkTo">Create/Verify MWS Token</button>
 <input type='hidden' name='DST' value='AMZ' />
@@ -774,6 +773,7 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 
 <fieldset>
 	<legend>General</legend>
+
 	<label>
 		<span>Amazon Syndication Merchant Name</span>
 		<input name="amz_merchantname" value="" type="text" required='required' data-bind="var: mkt(amz_merchantname); format:popVal;" />
@@ -816,6 +816,14 @@ HINT: The username, password, etc. are provided by Amazon Product Ads. These set
 		<input name="amz_secretkey" value="" type="text" data-bind="var: mkt(amz_secretkey); format:popVal;" />
 	</label>
 	<p class='hint'>Required for Checkout by Amazon</p>
+	
+	<label>
+		<span>Marketplace ID</span>
+		<select name='amz_marketplaceid' data-bind="var: mkt(amz_marketplaceid); format:popVal;">
+			<option value='ATVPDKIKX0DER'>US</option>
+			<option value='A2EUQ1WTGCTBG2'>Canada</option>
+		</select>
+	</label>
 
 </fieldset>
 
