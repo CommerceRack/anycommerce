@@ -4467,6 +4467,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					}
 				else	{
 					//there are no td's tagged as searchable. what to do here?
+					dump(" -> tableFilter was run on a table with no searchable td's. Add the isSearchable class to at least one td.");
 					}
 				},
 

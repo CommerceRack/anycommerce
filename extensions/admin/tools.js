@@ -658,7 +658,7 @@ var admin_tools = function(_app) {
 			flexeditAttributeAdd2EnabledList : function($ele,P)	{
 				var $tr = $ele.closest('tr');
 				$ele.closest("[data-app-role='flexeditManager']").find("tbody[data-app-role='flexeditEnabledListTbody']:first").append($tr);
-				$tr.attr('data-id',$tr.attr('data-obj_index'));
+				$tr.attr('data-id',$tr.attr('data-obj_index')).find('.queryMatch').removeClass('queryMatch'); //if a filter was used in the attributes list, queryMatch is added which changes the bg color.
 				_app.u.handleButtons($tr);
 				},
 
@@ -694,7 +694,7 @@ var admin_tools = function(_app) {
 			flexeditSaveExec : function($ele,P)	{
 				var json = new Array();
 				var keys = new Array();
-				$btn.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
+				$ele.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
 					if($.inArray($(this).data('id'),keys) >= 0)	{
 						//if an id is already in keys, it's already added to the flex json. This keeps duplicate id's from being added.
 						}
@@ -708,7 +708,7 @@ var admin_tools = function(_app) {
 					'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
 					'_tag':	{
 						'callback' : 'showMessaging',
-						'jqObj' : $btn.closest('form'),
+						'jqObj' : $ele.closest('form'),
 						'removeFromDOMItemsTaggedForDelete' : true,
 						'restoreInputsFromTrackingState' : true,
 						'message':'Your changes have been saved'
@@ -736,7 +736,7 @@ var admin_tools = function(_app) {
 				P.preventDefault();
 				_app.model.addDispatchToQ({
 					'_cmd':'adminPlatformLogDownload',
-					'GUID':$btn.closest('tr').data('guid'),
+					'GUID':$ele.closest('tr').data('guid'),
 					'_tag':	{
 						'datapointer' : 'adminPlatformLogDownload', //big dataset returned. only keep on in memory.
 						'callback' : 'fileDownloadInModal',

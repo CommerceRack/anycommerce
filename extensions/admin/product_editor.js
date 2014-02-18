@@ -51,7 +51,7 @@ var admin_prodedit = function(_app) {
 				'checkbox' : { 'type' : 'checkbox'},
 				'digest' : { 'type' : 'hidden'},
 				'special' : { 'type' : 'hidden'},
-				'boolean' : { 'type' : 'cb'},
+				'boolean' : { 'type' : 'checkbox'},
 				'chooser/counter' : { 'type' : 'text'},
 	//			'ebay/storecat' :  {'type':'ebay/storecat'}, //not supported at this time.
 				'ebay/attributes' : { 'type' : 'text'},
