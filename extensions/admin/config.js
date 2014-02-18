@@ -343,8 +343,10 @@ var admin_config = function(_app) {
 				}, //showTaxConfig
 
 
-			showShippingManager : function($target)	{
+			showShippingManager : function($target,P)	{
+				P = P || {};
 				$target.showLoading({'message':'Fetching your active shipping methods'});
+//				dump(" ->>>> params: "); dump(P,'debug');
 				
 				_app.model.destroy('adminConfigDetail|shipping|'+_app.vars.partition);
 				_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
@@ -377,16 +379,14 @@ var admin_config = function(_app) {
 							if(shipmethods[i].provider.indexOf('FLEX:') === 0)	{
 //								_app.u.dump("shipmethods[i].enabled: "+shipmethods[i].enable);
 								var $li = $("<li \/>");
-								$li.data('provider',shipmethods[i].provider)
+								$li.attr('data-provider',shipmethods[i].provider) //needs to be an attribute. is used as a selector later.
 								$li.text(shipmethods[i].name);
 								if(shipmethods[i].handler)	{$li.append(" ["+shipmethods[i].handler.toLowerCase()+"]")}
 								$li.addClass((shipmethods[i].enable == 1) ? '' :'opacity50');
 								$li.appendTo($flexUL)
 								}
 							}
-						
-						
-						
+
 						_app.u.handleButtons($target);
 						_app.u.addEventDelegation($target);
 						$target.anyform();
@@ -397,7 +397,13 @@ var admin_config = function(_app) {
 						$("[data-app-role='shipMethodsByZone']:first, [data-app-role='shipMethodsGlobal']:first, [data-app-role='shipMethodsByFlex']:first",$leftColumn).find('li').each(function(){
 							$(this).addClass('ui-corner-none pointer').attr('data-app-click','admin_config|shipMethodUpdateShow');
 							});
-						$("li[data-provider='GENERAL']",$leftColumn).trigger('click');
+						if(!P.provider)	{P.provider = 'GENERAL'} //load the general settings by default.
+						if($("li[data-provider='"+P.provider+"']",$leftColumn).length)	{
+							$("li[data-provider='"+P.provider+"']",$leftColumn).trigger('click');
+							}
+						else	{
+							$target.anymessage({"message":"The shipping provider "+P.provider+" does not exist","gMessage":true});
+							}
 						}
 					}},'mutable');
 				_app.model.dispatchThis('mutable');
@@ -425,8 +431,8 @@ var admin_config = function(_app) {
 
 
 			showShipMethodEditorByProvider : function(provider,$target)	{
-				
-				if(provider && $target)	{
+				dump("BEGIN showShipMethodEditorByProvider --------------");
+				if(provider && $target instanceof jQuery)	{
 					$target.empty();
 					$target.closest('form').find('.buttonset').hide(); //turn this off always. turn on when needed.
 					
@@ -438,33 +444,38 @@ var admin_config = function(_app) {
 						}
 					else	{
 						var shipData = _app.ext.admin_config.u.getShipMethodByProvider(provider);
-						
-						_app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
-						
-						if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
-							$target.closest('form').find('.buttonset').show();
-							$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
-							$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
-							}
-						else if(provider == 'FEDEX' && !shipData.meter)	{
-//the fedex account has not been registered through us yet. show reg form.
-							$target.anycontent({'templateID':'shippingFedExRegTemplate',data:{}});
-							}
-						else if(provider == 'UPS' && !shipData.shipper_number)	{
-//the UPS account has not been registered through us yet. show reg form.
-							$target.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate',data:{}});
-							}
-						
-						else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
-							$target.closest('form').find('.buttonset').show();
-							$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
-							}
-						else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
-							$target.closest('form').find('.buttonset').show();
-							$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
+//						dump(" ->>>> shipData: "); dump(shipData,'debug');
+						if(!$.isEmptyObject(shipData))	{
+							_app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
+							if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
+								$target.closest('form').find('.buttonset').show();
+								$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
+								$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
+								}
+							else if(provider == 'FEDEX' && !shipData.meter)	{
+	//the fedex account has not been registered through us yet. show reg form.
+								$target.anycontent({'templateID':'shippingFedExRegTemplate',data:{}});
+								}
+							else if(provider == 'UPS' && !shipData.shipper_number)	{
+	//the UPS account has not been registered through us yet. show reg form.
+								$target.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate',data:{}});
+								}
+							
+							else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
+								$target.closest('form').find('.buttonset').show();
+								$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
+								}
+							else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
+								$target.closest('form').find('.buttonset').show();
+								$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
+								}
+							else	{
+								$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true,'persistent':true});
+								}
+							
 							}
 						else	{
-							$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true,'persistent':true});
+							$target.anymessage({"message":"In admin_config.a.showShipMethodEditorByProvider, the provider ["+provider+"] was not found in the shipmethods object.","gMessage":true});
 							}
 						
 						}
@@ -476,7 +487,7 @@ var admin_config = function(_app) {
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target (as an instanceof jQuery) ['+($target instanceof jQuery)+'] and provider ['+provider+'] are required.','gMessage':true});
 					}
 				
 				}, //showShipMethodEditorByProvider
@@ -1117,7 +1128,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$("h3.heading:first",$ele.closest("[data-app-role='slimLeftContainer']")).text("Edit: "+$ele.text());
 					$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
 					$ele.addClass('ui-state-focus');
-					_app.ext.admin_config.a.showShipMethodEditorByProvider($ele.data('provider'),$contentColumn)
+					_app.ext.admin_config.a.showShipMethodEditorByProvider($ele.data('provider'),$contentColumn);
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.e.shipMethodUpdateShow, trigger element did not specify data-provider, which is required.","gMessage":true});
@@ -1176,7 +1187,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					
 					if($ele.data('mode') == 'insert')	{
 						callback = function(rd){
-							_app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$ele.closest("[data-app-role='slimLeftContent']"))
+							navigateTo("#!ext/admin_config/showShippingManager",{'provider':sfo.provider});
 							}; //when a new method is added, the callback gets changed slightly to refect the update to the list of flex methods.
 						macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider+"&handler="+$ele.data('handler'));
 						}
@@ -1216,9 +1227,10 @@ when an event type is changed, all the event types are dropped, then re-added.
 					else	{} //perfectlynormal to not have a data table.
 				
 					_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
-				//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
-					_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
-					_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
+//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
+// ** 201401 -> the new callback for navigateTo on the configMacro call will destroy/re-obtain the shipmethods.
+//					_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+//					_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
 				
 				//	_app.u.dump(" -> macros"); _app.u.dump(macros);
 					_app.model.dispatchThis('immutable');
