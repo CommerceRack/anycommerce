@@ -2014,22 +2014,18 @@ So the cart template should contain these two elements and the extension should 
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<input type='number' class='floatRight qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 
-		<h4 data-bind='var: product(prod_name); format:text; '></h4>
+		<div class="prodListName" data-bind='var: product(prod_name); format:text; '></div>
 
-		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
-
-		<div>
-		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
-		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-
+		<div class="prodListPricing">
+			<span class="prodListPrice" data-bind='var: product(base_price); format:money; currencySign: $;  hideZero:true; className:price;'></span>
 		</div>
+		<div class="inventoryContainer" data-bind="useParentData:true; format:inventoryAvailQtyCart; extension:store_zephyrapp;"></div>
+		<button class='removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove</button>
 
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</li>

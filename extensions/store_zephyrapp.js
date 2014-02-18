@@ -340,6 +340,22 @@ var store_zephyrapp = function() {
 					//	$tag.append('This product is currently out of stock');
 						}
 					}
+				},
+				
+			inventoryAvailQtyCart : function($tag,data){
+				if(data.value['%attribs']['zoovy:grp_type'] == 'PARENT'){
+					// do nothing
+					}
+				else {
+					var inv = app.ext.store_product.u.getProductInventory(data.value.product);
+					if(inv > 0){
+						$tag.append('In Stock Now (Qty avail: '+inv+')');
+						}
+					else{
+					//	Taking out for time being since we already have an out of stock msg
+					//	$tag.append('This product is currently out of stock');
+						}
+					}
 				}
 			
 			}, //renderFormats

@@ -900,9 +900,28 @@ a:hover {
 }
 .cartHeaderText h2 {
 	color:#4f4f4f;
-	padding:0px 6px 0px 2px;
+	padding:0px 2px;
 }
 #cartStuffList {
     border-top: 1px solid #000000;
+}
+.qtyInput.numberInput {
+    border: 1px solid #000000;
+    border-radius: 8px;
+    float: right;
+    height: 18px;
+    margin-right: 6px;
+    text-align: center;
+    width: 30px;
+}
+.removeButton {
+	background:url("images/removebtn_bg.jpg") no-repeat scroll center top #4f4f4f;
+	border: 1px solid #000000;
+	color:#ffffff;
+	font-weight:bold;
+	font-size:15px;
+	padding:5px;
+	margin-top:3px;
+	min-width:75px;
 }
 /***** Cart CSS End *****/
