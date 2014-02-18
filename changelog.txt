@@ -50,6 +50,9 @@ ADMIN
 	new - interface for order create received overhaul. supports multiple carts (order in progress).
 	new - all new help doc. click 'help' in header.
 	new - file attachment for ticket is new. This method will replace what is used elsewhere (csv, media lib, etc).
+	enhancement - flexedit manager
+		now has a 'filter' at the top to make it easier to find attributes.
+		boolean and keyword list now supported in the editor.
 
 Checkout/1PC
 	payment methods now hidden/not required if balance is zero.
