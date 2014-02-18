@@ -68,12 +68,12 @@ var admin_tools = function(_app) {
 				},
 			
 			siteDebugger : function()	{
-				var $SD = $('#storeDebugger');
+				var $SD = $('#siteDebugger');
 				if($SD.length)	{
 					$SD.dialog('open');
 					}
 				else	{
-					$SD = $("<div \/>").attr('title','Site Debug Tools').anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
+					$SD = $("<div \/>").attr({'id':'siteDebugger','title':'Site Debug Tools'}).anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog();
 					_app.u.handleButtons($SD);
 					_app.u.handleCommonPlugins($SD);
 					_app.u.addEventDelegation($SD);
@@ -842,9 +842,13 @@ var admin_tools = function(_app) {
 			siteDebugExec : function($ele,p)	{
 				var cmdObj = $ele.closest('form').serializeJSON();
 				cmdObj._tag = {
-					'datapointer' : cmdObj.siteDebug
+					'datapointer' : cmdObj._cmd,
+					'callback' : function(rd)	{
+var data = _app.data[rd.datapointer];
+$ele.closest('form').find("[data-app-role='siteDebugContent']").empty().append(JSON.stringify(data)); // ### TODO -> make this pretty.
+
+						}
 					};
-				_app.u.dump(cmdObj);
 				_app.model.addDispatchToQ(cmdObj,'mutable');
 				_app.model.dispatchThis('mutable');
 				},
