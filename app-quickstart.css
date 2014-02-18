@@ -146,6 +146,7 @@ and offMenu is toggle off, hiding the change button.
 .buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
+.hint	{font-weight:normal; font-size:.8em;}
 
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
 .appAccordianesque .ui-accordion-header {padding:.5em 2em;}
@@ -518,6 +519,7 @@ CHECKOUT
 	.cartButtons .continueShoppingSpan	{float:left; margin:0;}
 	
 	.companyAddress	{float:left; margin-right:2em; width:40%;}
+	.hint	{font-weight:normal; font-size:.7em;}
 	}
 
 @media only screen and (min-width: 1024px) {

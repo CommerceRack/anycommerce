@@ -1105,6 +1105,9 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 					_app.u.handleCommonPlugins($ui);
 					_app.u.addEventDelegation($ui);
 					}
+				$ui.find('.show4ActiveChat').hide(); //hidden by default. will be activated once a chat starts.
+				//the information below is added to the dialog each time it's opened. that way it's up to date.
+				$ui.find('.stats').empty().end().append("<p class='hint stats'>domain: "+document.domain+"<br \/>release: "+_app.vars.release+"<br \/>cart id: "+_app.model.fetchCartID()+"<\/p>");
 				$ui.dialog('open');
 				return $ui;
 				},
@@ -2442,6 +2445,10 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					else	{
 					
 						switch(infoObj.show)	{
+							case 'help':
+								myApp.ext.myRIA.a.showBuyerCMUI();
+								break;
+						
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {

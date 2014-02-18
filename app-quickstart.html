@@ -166,7 +166,7 @@ ANIMATION TESTING
 
 
 <div id='cartMessenger' class='displayNone seoStrip' data-app-role='cartMessenger' title="help">
-	<form novalidate='novalidate'>
+	<form novalidate='novalidate' onSubmit="return false">
 		<div class='messageHistoryContainer'>
 			<section data-app-role='messageHistory'></section>
 		</div>
@@ -176,7 +176,7 @@ ANIMATION TESTING
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
 		<button class='applyButton displayNone show4ActiveChat' data-app-click="myRIA|cartMessagePageSend" title='Show the associate what page I am on.'>Send Page</button>
-		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton hide4ActiveChat'>Get Cart ID</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
+		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton hide4ActiveChat'>Cart Shortcut</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
 		</section>
 	</form>
 </div>
