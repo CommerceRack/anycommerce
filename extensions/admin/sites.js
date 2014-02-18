@@ -698,7 +698,7 @@ used, but not pre-loaded.
 					_app.model.destroy('adminProjectList');
 					sfo.UUID = _app.u.guidGenerator();
 					sfo._cmd = 'adminProjectCreate';
-					_app.model.addDispatchToQ({"_cmd":"","_tag":{"callback":function(rd){
+					sfo._tag = {"callback":function(rd){
 						$form.hideLoading();
 						if(_app.model.responseHasErrors(rd)){
 							$form.anymessage({'message':rd});
@@ -706,9 +706,10 @@ used, but not pre-loaded.
 						else	{
 							$('#globalMessaging').anymessage(_app.u.successMsgObject('Thank you, your project has been created.'));
 							$ele.closest('.ui-dialog-content').dialog('close');
-							navigateTo("#:sites");
+							navigateTo("#!ext/admin_sites/showDomainConfig");
 							}
-						}}},"immutable");
+						}}
+					_app.model.addDispatchToQ(sfo,"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm handles error display.
