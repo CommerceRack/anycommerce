@@ -621,8 +621,10 @@ This is used to get add an array of skus, most likely for a product list.
 			
 			contactFormSubmit : function($ele,p)	{
 				p.preventDefault();
+				dump(" -> BEGIN store_crm.e.contactFormSubmit");
 				if(_app.u.validateForm($ele))	{
 					var sfo = $ele.serializeJSON();
+					sfo._cmd = "appSendMessage";
 					sfo._tag = {
 						'callback':'showMessaging',
 						'jqObj':$ele,
@@ -631,7 +633,9 @@ This is used to get add an array of skus, most likely for a product list.
 					_app.model.addDispatchToQ(sfo,"immutable");
 					_app.model.dispatchThis('immutable');
 					}
-				else	{} //validateForm handles error display.
+				else	{
+					dump(" -> did not pass validation.");
+					} //validateForm handles error display.
 				},
 			
 			productBuyerListRemoveExec : function($ele,p)	{

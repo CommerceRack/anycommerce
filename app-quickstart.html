@@ -578,7 +578,7 @@ this will likely become more flexible in the future. ###
 	
 		<div  class='tabContent' data-anytab-content='prodReviews'>
 	
-			<div class='clearfix alignRight'>
+			<div class='clearfix alignRight' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 				<button class='applyButton' data-app-click="store_crm|productReviewShow" >Write Review</button>
 			</div>
 	
@@ -751,6 +751,7 @@ if you change these, you should move them above this comment so that when you (o
 			</div>
 
 			<form action='#' data-app-submit='store_crm|contactFormSubmit' name='contactForm'>
+			<input type='hidden' name='msgtype' value="feedback" />
 			<fieldset>
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>

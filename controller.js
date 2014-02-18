@@ -1309,7 +1309,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
 					}
 				
-//				dump(" -> type: "+type);
+				dump(" -> type: "+type);
 				
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
