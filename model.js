@@ -149,6 +149,7 @@ function model(_app) {
 			QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			var r; // return value.
 			if(dispatch && !dispatch['_cmd'])	{
+				_app.u.dump("in model.addDispatchToQ, no _cmd was set in dispatch. dispatch follows: ","warn"); dump(dispatch);
 				r = false;
 				}
 // if QID was not a string, a catastropic JS error occured. could (and did) happen if call has bug in it.
