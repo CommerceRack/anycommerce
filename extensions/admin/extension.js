@@ -1376,6 +1376,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 						$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a #! or is not an acceptable legacy compatibility mode link.','gMessage':true});
 						}
 					}
+				return false; //return false so that a href='#' onclick='return navigateTo... works properly (hash doesn't update to #);
 				},
 //executed after the hashChange, as part of the route callback.
 			handleTabClick : function(tab,opts)	{
