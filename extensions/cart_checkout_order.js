@@ -732,7 +732,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<\/select>";
 							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
-							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-app-keyup='input-format' value='";
+							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
 							if(!_app.u.thisIsAnAdminSession())	{
 								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
