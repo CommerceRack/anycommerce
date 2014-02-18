@@ -2057,12 +2057,13 @@ if(ps.indexOf('?') >= 1)	{
 					}
 //!!! need to find an IE8 friendly way of doing this.  This code caused a script error					
 //				document.getElementsByTagName('title')[0].innerHTML = fullpath; //doing this w/ jquery caused IE8 to error. test if changed.
-
+				var obj = app.u.getBlacklistedObject(infoObj,["list"]);
 				try	{
-					window.history[historyFunction](infoObj, title, fullpath);
+					window.history[historyFunction](obj, title, fullpath);
 					}
 				catch(err)	{
 					//Handle errors here
+					app.u.dump(err);
 					useAnchor = true;
 					}
 				return useAnchor;
