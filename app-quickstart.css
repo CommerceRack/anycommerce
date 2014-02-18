@@ -12,7 +12,7 @@ body,html	{font-size:85%;} /* increased for non mobile devices w/ a media query 
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
-#appPreView	{width:550px; margin:0 auto;}
+#appPreView	{width:50%; max-width:550px; margin:0 auto;}
 
 section	{display:block;}
 
@@ -30,7 +30,7 @@ span.wait	{display:inline-block;}
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
 
-button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
+button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
 /* for small buttons */
 .smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
 .smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
@@ -59,8 +59,6 @@ input:focus {
 input.numberInput	{width:50px}
 label span.prompt	{display:inline-block; width:20%; margin-right:2em; vertical-align:top;}
 button:focus	{outline:none;}
-
-.zform_number	{width:50px;}
 
 /*
 classes used on menus that are toggled on/off. wrap offMenu around the default buttons and onMenu around buttons that get turned on.
@@ -150,15 +148,15 @@ and offMenu is toggle off, hiding the change button.
 
 
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
-.appAccordianesque .ui-accordion-header {padding:3px 24px;}
+.appAccordianesque .ui-accordion-header {padding:.5em 2em;}
 
 
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
 .mainColumn	{width:75%;}
-.sideline	{float:right; width:20%; margin:0 0 24px 0px;}
-.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+.sideline	{float:right; width:20%; margin:0 0 2em 0;}
+.sideline a	{padding:1em 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 
@@ -181,15 +179,15 @@ and override using classes or id's as needed.
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
-.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+.fluidList li	{float:left; margin:1em; padding:0; display:inline-block;}
 
 .quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
 .productList > li	{width:150px; height:250px; position:relative;}
-.lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+.lineItemProdlist > li	{position:relative; display:block; padding:1em 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
-.lineItemProdlist .prodThumb	{margin-right:12px;}
+.lineItemProdlist .prodThumb	{margin-right:1em;}
 
 .categoryList > li	{width:150px; height:200px;}
 
@@ -204,10 +202,7 @@ and override using classes or id's as needed.
 
 /* multpage header for lists (product list) - most styling handled by jqueryUI */
 
-.mpControls	{padding:2px 6px;}
-
-
-
+.mpControls	{padding:.3em .8em;}
 
 /* used for the picture slider mouse over effect in some product lists */
 
@@ -221,8 +216,8 @@ and override using classes or id's as needed.
 
 /* for variations */
 
-.variation	{margin-bottom:6px;} /* class applied to div containing a variation group */
-.variation_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
+.variation	{margin-bottom:.5em;} /* class applied to div containing a variation group */
+.variation_radio span label	{display:block; margin-bottom:.5em; margin-left:1em;}
 
 
 
@@ -235,11 +230,11 @@ PRODUCT DETAIL PAGE (productTemplate)
 
 .prodViewerContainer	{width:100%;}
 
-.breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
+.breadAndAddThisContainer	{margin-bottom:.5em; padding-bottom:.5em; border-bottom:1px dotted #b6b6b6;}
 
 /* primary image and thumbnails */
-.imageContainer	{width:10%; padding-right:24px;}
-.prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+.imageContainer	{width:10%; padding-right:2em;}
+.prodViewerContainer .prodThumbs div	{float:left; margin:1em 1em 0 0;}
 
 
 .prodSummaryContainer	{width:90%;}
@@ -251,20 +246,20 @@ PRODUCT DETAIL PAGE (productTemplate)
 the child list and loading graphic should only show up IF the product is a parent.
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
 */
-.grpType_PARENT	{display:block; margin-bottom:12px;}
+.grpType_PARENT	{display:block; margin-bottom:1em;}
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
 
-.prodViewerAddToCartForm	{margin-bottom:24px;}
-.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
-.variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
+.prodViewerAddToCartForm	{margin-bottom:2em;}
+.prodViewerAddToCartForm fieldset	{margin-bottom: 1em; padding:0;}
+.variation > label:after	{content:":"; padding-right:1em;} /* applies to first label in a group. so no impact on radio labels */
 
-.CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
+.CRMButtonMenu	{margin:0; padding:0; margin-bottom:1em;}
 
 .variation_attribs	{display:none;} /* don't show finder attributes */
 
 /* REVIEW GFX - used for review summary and in list of reviews on product detail page */
 
-.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
+.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:.5em; padding-right:.5em;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
 
 .reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:none;} /* display none hides the reviews for the 'zero' reviews graphic */
@@ -285,8 +280,8 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 /* REVIEW LIST - on product detail page, used for product reviews. */
 #prodViewerReviews	{margin:0; padding:0;} /* parent ul containing all reviews, each review as an li */
-.reviewLineItem {margin:0 0 12px 0; padding:0 0 12px 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
-.prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 12px 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
+.reviewLineItem {margin:0 0 1em 0; padding:0 0 1em 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
+.prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 1em 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
 .prodReviewInfo li	{display:block; clear:both;} /* applies to li for location, name, date, etc */
 .prodReviewTemplate li p	{font-weight:normal; margin:0; padding:0;}
 
@@ -296,7 +291,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 /* WRITE REVIEW MODAL */
 #reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
 #reviewsMessage		{width:250px; height:250px;}
-#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:5px;}
+#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:.5em;}
 #reviewFrm .ui-button	{float:right;}
 
 /*
@@ -307,9 +302,9 @@ BREADCRUMB
 */
 
 
-.breadcrumb	{margin-bottom:12px;}
+.breadcrumb	{margin-bottom:1em;}
 .breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
-.breadcrumb li:after	{content:" \00BB "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
+.breadcrumb li:after	{content:" \00BB "; padding-left:1em; font-size:1em; font-weight:bold; color:#999999;}
 .breadcrumb li:last-child:after	{content:"";}
 
 .breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
@@ -335,9 +330,9 @@ CUSTOMER PAGES
 
 
 /* NEWSLETTER SUBSCRIBE/ACCOUNT CREATE */
-#subscribeFormContainer .userInfo div	{margin-bottom:6px;}
+#subscribeFormContainer .userInfo div	{margin-bottom:.5em;}
 #subscribeFormContainer li	{list-style:none;}
-#subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
+#subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:1em;}
 .subscribeListItem	{display:block; height:30px;}
 
 
@@ -346,18 +341,18 @@ CUSTOMER PAGES
 #ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
 #ordersArticle .orderContentsTable	{width:100%}
 
-
+/* ### TODO -> find where this is used and make it responsive */
 #orderInvoiceSoloPage table	{width:700px;}
 .orderContentsProdlistContainer	{width:500px;}
-.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
+.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 .5em .5em 0;}
 
 .invoiceAddressContainer .billAddress, .invoiceAddressContainer .shipAddress	{margin-bottom:1em;}
 
 /* MY ACCOUNT */
 
-#buyerAddresses	{margin-bottom:12px;}
-#buyerAddresses h2	{margin:12px 0; clear:both;}
-#buyerAddresses address	{margin:0 0px 12px 0; float:left; width:90%; display:block; padding:5px;}
+#buyerAddresses	{margin-bottom:1em;}
+#buyerAddresses h2	{margin:1em 0; clear:both;}
+#buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}
 
 
 
@@ -369,9 +364,9 @@ SEARCH RESULTS PAGE
 
 #mainContentArea_search	{position:relative;}
 
-.resultsHeader	{position:relative; padding:3px 6px;}
+.resultsHeader	{position:relative; padding:.3em 1em;}
 .resultsMenuContainer	{position:absolute; top:1px; left:3px;}
-.resultsMenuContainer .resultsMenu	{margin:3px 12px 0 0px;} /* used for sorting and pagination menus */
+.resultsMenuContainer .resultsMenu	{margin:.3em 1em 0 0;} /* used for sorting and pagination menus */
 .resultsMenuContainer ul.ui-menu ul	{z-index:10000; width:150px;}
 
 .resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
@@ -380,7 +375,7 @@ SEARCH RESULTS PAGE
 
 .minimalMode .hideInMinimalMode	{display:none;}
 .minimalMode .searchResultsProduct	{
-	height:120px; width:120px; overflow:hidden; margin:0 5px 5px 0;
+	height:120px; width:120px; overflow:hidden; margin:0 .5em .5em 0;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 	box-sizing: border-box;
@@ -394,6 +389,7 @@ HELP PAGES
 
 
 /* FAQ /
+### TODO -> why is this commented out?
 .faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
 .faqQuestion:before	{content:"Q: ";}
 .faqAnswer:before	{content:"A: ";}
@@ -430,20 +426,20 @@ CHECKOUT
 
 */
 
-#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
+#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:.5em;}
 
 
-.paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
-.paybySupplemental select {margin-right:12px;}
+.paybySupplemental {padding:1em; font-weight:normal; border-top-width:0;}
+.paybySupplemental select {margin-right:1em;}
 
-.addressList address	{float:left; margin:0 12px 12px 0;}
+.addressList address	{float:left; margin:0 1em 1em 0;}
 
 .creditCardCVVIcon	{display:inline-block !important;}
 
-.checkoutFormContainer input, checkoutFormContainer select	{margin:2px 6px 2px 0;}
+.checkoutFormContainer input, checkoutFormContainer select	{margin:.3em .5em .3em 0;}
 .checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
 
-.headerPadding label	{padding:2px 6px;}
+.headerPadding label	{padding:.3em .5em;}
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */
 /*             http://www.bloggermint.com/demos/darknavmenu/#            */
@@ -470,7 +466,7 @@ CHECKOUT
 .ddUlMenu ul li a {
 	float: left;
 	text-decoration:none;
-	padding:0 12px;
+	padding:0 1em;
 	cursor:pointer;
 	}
 
@@ -499,7 +495,7 @@ CHECKOUT
 	}
 
 
-.debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+.debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:.5em;}
 
 
 
@@ -520,6 +516,8 @@ CHECKOUT
 	.cartSummaryTotalsContainer	{float:right;}
 	.cartButtons .thisButton	{float:right; margin:0 0 .4em .4em;}
 	.cartButtons .continueShoppingSpan	{float:left; margin:0;}
+	
+	.companyAddress	{float:left; margin-right:2em; width:40%;}
 	}
 
 @media only screen and (min-width: 1024px) {
