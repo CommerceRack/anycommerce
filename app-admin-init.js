@@ -43,7 +43,16 @@ adminApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js
 	}]);
 
 //required for init. don't change from 0.
-adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js',function(){window.myCreole = new Parse.Simple.Creole();}]); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+//adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js',function(){window.myCreole = new Parse.Simple.Creole();}]); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/tlc.js']); //used pretty early in process..
+
+//once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
+adminApp.u.loadScript(adminApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
+	adminApp.model.getGrammar(adminApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
+
+
 
 adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'app-admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
@@ -184,7 +193,7 @@ adminApp.router.addAlias('404',function(v)	{
 
 
 adminApp.router.appendHash({'type':'match','route':'/biz/vstore*','callback':function(v){
-//	console.log(" -> Welcome to legacy compat mode.");
+//	_app.u.dump(" -> Welcome to legacy compat mode.");
 //	console.dir(v);
 	adminApp.model.fetchAdminResource(v.hash.substr(2),{'tab':adminApp.ext.admin.vars.tab,'targetID':adminApp.ext.admin.vars.tab+'Content'});
 	}});

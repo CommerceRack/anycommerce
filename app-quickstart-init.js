@@ -38,6 +38,11 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.showloading-v1.0.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 myApp.rq.push(['css',1,myApp.vars.baseURL+'resources/anyplugins.css']);
 
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/peg-0.8.0.js']); //in zero pass in case product page is first page.
+
+
+
 //Cart Messaging Responses.
 
 myApp.cmr.push(['chat.join',function(message){

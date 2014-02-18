@@ -48,7 +48,7 @@
 //		ebaySpecsCSS = ebaySpecsCSS+app.vars.baseURL;
 //		ebaySpecsPNG = ebaySpecsPNG+app.vars.baseURL;
 //	}
-	if(baseURL in window) {
+	if(window.baseURL) {
 		ebaySpecsCSS = ebaySpecsCSS+baseURL;
 		ebaySpecsPNG = ebaySpecsPNG+baseURL;
 	}	

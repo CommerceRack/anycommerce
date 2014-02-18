@@ -1778,9 +1778,35 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 				else	{
 					_app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
+				},
+
+			getGrammar : function(url)	{
+				$.ajax({
+					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
+					'dataType' : 'text',
+					'error' : function()	{
+						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
+						},
+					'success' : function(file){
+						try{
+							var pegParserSource = PEG.buildParser(file);
+							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+							success = true;
+							}
+						catch(e)	{
+							console.warn("Could not build pegParser.");
+							console.error(buildErrorMessage(e));
+							}
+						if(success)	{
+							_app.u.dump(" -> successfully built pegParser");
+							}
+						else	{
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+							}
+						}
+					})
+
 				}
-
-
 
 
 

@@ -941,7 +941,7 @@ Some utilities for loading external files, such as .js, .css or even extensions.
 */
 
 		loadScript : function(url, callback, params){
-		//	app.u.dump("load script: "+url);
+//			dump("load script: "+url+" and typeof callback: "+(typeof callback));
 			if(url)	{
 				var script = document.createElement("script");
 				script.type = "text/javascript";
