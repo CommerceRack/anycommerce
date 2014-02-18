@@ -851,14 +851,16 @@ has to be within the fieldset to for data-table to work right.
 				<label>
 					<span>Type</span>
 					<select name='type' data-bind='var: flexedit(type); format:popVal;' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
+						<option value='boolean'>Boolean (checkbox)</option>
 						<option value='checkbox'>Checkbox</option>
 						<option value='currency'>Currency</option>
 						<option value='image'>Image</option>
 						<option value='keyword'>Keyword</option>
+						<option value='keywordlist'>Keyword list</option>
 						<option value='number'>Number</option>
 						<option value='select' data-show-panel='flexEditOptionsInput'>Select</option>
-						<option value='textbox'>Text (small block)</option>
-						<option value='textarea'>Text (big block)</option>
+						<option value='textbox'>Text (single line)</option>
+						<option value='textarea'>Text (multi line)</option>
 						<option value='weight'>Weight</option>
 					</select>
 				</label>
