@@ -154,11 +154,10 @@ var store_product = function(_app) {
 //this'll change going forward.
 
 addToCart : function (pid,$form){
-	_app.u.dump("BEGIN store_product.validate.addToCart");
-	_app.u.dump(" -> pid: "+pid);
+	_app.u.dump("BEGIN store_product.validate.addToCart. pid: "+pid);
 	var valid = true; //what is returned.
 	if(pid && $form instanceof jQuery)	{
-		_app.u.dump(" -> have a pid and a valid $form.");
+//		_app.u.dump(" -> have a pid and a valid $form.");
 		//copied locally for quick reference.
 		var
 			sogJSON = _app.u.thisNestedExists("data.appProductGet|"+pid+".@variations",_app) ? _app.data['appProductGet|'+pid]['@variations'] : {},
@@ -167,7 +166,7 @@ addToCart : function (pid,$form){
 	//	_app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 	
 		if($.isEmptyObject(sogJSON))	{
-			_app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+//			_app.u.dump('no sogs present (or empty object). this is valid, product may not have variations.');
 			}
 		else if($.isEmptyObject(formJSON))	{
 			_app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
@@ -755,16 +754,10 @@ NOTES
 // SANITY -> don't 'require' $form to be a form. It could be a fieldset or some other container as part of a bigger form (such as order create).
 				if($form instanceof jQuery)	{
 					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($form);
-					
-//					_app.u.dump("cartObj from store_product:"); _app.u.dump(cartObj);
-//					_app.u.dump("cartObj from cco"); _app.u.dump(_app.ext.cco.u.buildCartItemAppendObj($form.serializeJSON(),_app.model.fetchCartID()));
-					
-					
 					if(cartObj)	{
 //						_app.u.dump(" -> have a valid cart object"); _app.u.dump(cartObj);
 						if(cartObj)	{
 							r = true;
-							
 							_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
 							_app.model.dispatchThis('immutable');
 							}

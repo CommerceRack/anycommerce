@@ -144,10 +144,10 @@ var order_create = function(_app) {
 $('body').hideLoading();
 var $context = responseData._rtag.jqObj;
 
-_app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-_app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
 _app.ext.order_create.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic']);
 _app.ext.order_create.u.handlePanel($context,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
+_app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+_app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
 					}});
 				var cartid = $context.closest("[data-app-role='checkout']").data('cartid');
 				_app.model.destroy('cartDetail|'+cartid);
@@ -818,6 +818,9 @@ an existing user gets a list of previous addresses they've used and an option to
 							}
 						}
 					}
+				else if(_app.vars.thisSessionIsAdmin && !_app.data['cartDetail|'+cartID]['@ITEMS'].length)	{
+					$fieldset.anymessage({"message":"<p>An item must be added to the cart before shipping can be displayed.</p>","persistent":true});
+					}
 //no shipping methods and buyer is logged in.
 				else if(_app.u.buyerIsAuthenticated())	{
 					var hasPredefBillAddr = _app.ext.cco.u.buyerHasPredefinedAddresses('bill'),
@@ -1232,7 +1235,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					cartid = $ele.closest(":data(cartid)").data('cartid'),
 					vars = {
 						stid : $container.data('stid'),
-						uuid : $container.data('uuid'),
+						uuid : $container.attr('data-uuid'),
 						qty : $("input[name='qty']",$container).val(), //admin wants qty.
 						quantity : $("input[name='qty']",$container).val() //cartItemUpdate wants quantity
 						}
@@ -1293,27 +1296,33 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //						_app.u.dump(" -> sfo: "); _app.u.dump(sfo);
 						if(_app.ext.store_product.validate.addToCart(pid,$form))	{
 							_app.u.dump(" -> passed validation");
-							_app.ext.store_product.u.handleAddToCart($form);
-							_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
-							_app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
-							_app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
-							_app.calls.cartDetail.init($checkout.data('cartid'),{
-								'callback':function(rd){
-									if(_app.model.responseHasErrors(rd)){
-										$('#prodFinder').anymessage({'message':rd});
+							_app.ext.store_product.u.handleAddToCart($form,{'callback' : function(){
+
+								_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
+								_app.model.destroy('appPaymentMethods|'+$checkout.data('cartid'));
+								_app.ext.cco.calls.appPaymentMethods.init({_cartid:$checkout.data('cartid')},{},'immutable');
+								_app.calls.cartDetail.init($checkout.data('cartid'),{
+									'callback':function(rd){
+										if(_app.model.responseHasErrors(rd)){
+											$('#prodFinder').anymessage({'message':rd});
+											}
+										else	{
+											$('#prodFinder').dialog('close');
+	//										dump(" ----> $chkoutForm.length: "+$chkoutForm.length);
+											_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+											_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
+											_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
+											_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
+											_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
+											}
 										}
-									else	{
-										$('#prodFinder').dialog('close');
-//										dump(" ----> $chkoutForm.length: "+$chkoutForm.length);
-										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
-										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsShip',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutMethodsPay',['empty','translate','handleDisplayLogic']);
-										_app.ext.order_create.u.handlePanel($chkoutForm,'chkoutCartSummary',['empty','translate','handleDisplayLogic']);
-										}
-									}
-								},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
-							_app.model.dispatchThis('immutable');
+									},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
+								//an issue w/ the API maybe? the cartDetail is coming back w/out the updated items list. ### FUTURE -> address this.
+								setTimeout(function(){
+									_app.model.dispatchThis('immutable');
+									},500);
+								}});
+
 							}
 						else	{
 							_app.u.dump("Chooser add to cart did not pass validation",'warn');

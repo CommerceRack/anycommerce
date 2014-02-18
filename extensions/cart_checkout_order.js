@@ -631,15 +631,15 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //used in admin. adminBuyerGet formats address w/ ship_ or bill_ instead of ship/ or bill/
 // addrArr is is the customerGet (for either @ship or @bill). ID is the ID/Shortcut of the method selected/desired.
 			getAndRegularizeAddrObjByID : function(addrArr,ID,type,regularize)	{
-				dump("BEGIN cco.u.getAndRegularizeAddrObjByID. regularize: "+regularize);
+//				dump("BEGIN cco.u.getAndRegularizeAddrObjByID. regularize: "+regularize);
 				var r = false; //what is returned.
 				if(typeof addrArr == 'object' && ID && type)	{
-					var address = addrArr[_app.ext.admin.u.getIndexInArrayByObjValue(addrArr,'_id',ID)];
+					var address = $.extend({},addrArr[_app.ext.admin.u.getIndexInArrayByObjValue(addrArr,'_id',ID)]); //COPY array so original in memory is unaffected.
 					if(regularize)	{
-						dump(" ->  got into the regularize code. if any conversions occur, they'll be listed below: ");
+//						dump(" ->  got into the regularize code. if any conversions occur, they'll be listed below: ");
 						for(var index in address)	{
 							if(index.indexOf(type+'_') >= 0)	{
-								dump(" ---->  converting "+index+" to "+index.replace(type+'_',type+'/'));
+//								dump(" ---->  converting "+index+" to "+index.replace(type+'_',type+'/'));
 								address[index.replace(type+'_',type+'/')] = address[index];
 								delete address[index];
 								}
