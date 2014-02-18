@@ -2315,11 +2315,12 @@ else	{} //no changes in sku attribs.
 
 			amazonLogShow : function($ele,p)	{
 				var
-					pid = $ele.closest("[data-pid]").data('pid'),
+					pid = $ele.closest('[data-app-role="taskItemContainer"]').data('pid'), //can't use closest because the tr will have it for the wrong pid. need the pid of the product being edited.
 					index = $ele.closest("[data-obj_index]").attr('data-obj_index'),
 					errors = 0; //the number of 'error' messages in @LOG
-				
-				if(pid && index && _app.data["adminProductAmazonDetail|"+pid] && _app.data["adminProductAmazonDetail|"+pid]['@DETAIL'] && _app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index] && _app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'])	{
+
+
+				if(pid && index && _app.u.thisNestedExists("data.adminProductAmazonDetail|"+pid+".@DETAIL."+index+".@LOG",_app))	{
 					var 
 						logArr = _app.data["adminProductAmazonDetail|"+pid]['@DETAIL'][index]['@LOG'],
 						L = logArr.length,
