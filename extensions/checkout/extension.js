@@ -1771,11 +1771,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				if(cartID)	{
 					if(_app.u.thisIsAnAdminSession())	{
 						//can skip all the paypal code in an admin session. it isn't a valid payment option.
-						if(_app.data['cartDetail|'+cartID] && _app.data['cartDetail|'+cartID].customer && _app.data['cartDetail|'+cartID].customer.cid && _app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid])	{
+						if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid])	{
 							//change this so object stores the data how buyerAddressList and buyerWalletList would.
-							obj = _app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid];
+							obj = $.extend(true,obj,_app.data['adminCustomerDetail|'+_app.data['cartDetail|'+cartID].customer.cid]); //have to copy the detail record or it gets updated in memory.
 							}
-						$.extend(true,obj,_app.data['appPaymentMethods|'+cartID],_app.data['appCheckoutDestinations|'+cartID],_app.data['cartDetail|'+cartID]);
+						$.extend(obj,_app.data['appPaymentMethods|'+cartID],_app.data['appCheckoutDestinations|'+cartID],_app.data['cartDetail|'+cartID]);
 						}
 					else	{
 						if(_app.u.buyerIsAuthenticated())	{
@@ -1827,11 +1827,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 			
 //$content could be the parent form or the forms container. just something around this checkout. (so that multiple checkout forms are possible. imp in UI
 //role is the value of data-app-role on the fieldset.
-//actions is what needs to happen. an array.  accepted values are empty, showLoading, addAppEvents, translate and handleDisplayLogic. ex: ['translate','handleDisplayLogic']
+//actions is what needs to happen. an array.  accepted values are empty, showLoading, translate and handleDisplayLogic. ex: ['translate','handleDisplayLogic']
 //actions are rendered in the order they're passed.
 
 			handlePanel : function($context, role, actions)	{
-//				_app.u.dump("BEGIN handlePanel."); //_app.u.dump(actions);
+//				_app.u.dump("BEGIN handlePanel ["+role+"]."); //_app.u.dump(actions);
 
 				if($context instanceof jQuery && role && actions && typeof actions === 'object')	{
 //					_app.u.dump(" -> role: "+role);
@@ -1854,8 +1854,6 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
-//						_app.u.dump(" -> translating "+role+" cartID: "+cartID);
-//						_app.u.dump("_app.ext.order_create.u.extendedDataForCheckout()"); _app.u.dump(_app.ext.order_create.u.extendedDataForCheckout());
 						$fieldset.anycontent({'data' : _app.ext.order_create.u.extendedDataForCheckout(cartID)});
 						} //populates the template.
 					
@@ -1888,7 +1886,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.ext.order_create.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
 					_app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
 					_app.ext.order_create.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
-					
+
+						if(_app.u.thisIsAnAdminSession())	{
+							_app.ext.order_create.u.handlePanel($context,'chkoutCartItemsList',['showLoading']);
+							}
+
 					_app.model.destroy('cartDetail|'+cartid);
 					_app.ext.cco.calls.appPaymentMethods.init({_cartid:cartid},{},'immutable'); //update pay and ship anytime either address changes.
 					_app.calls.cartDetail.init(cartid,{'callback':function(){
