@@ -2036,9 +2036,11 @@ setTimeout(function(){
 					}
 //!!! need to find an IE8 friendly way of doing this.  This code caused a script error					
 //				document.getElementsByTagName('title')[0].innerHTML = fullpath; //doing this w/ jquery caused IE8 to error. test if changed.
-
+				
+// *** 201401 During search the infoObj.list jquery object was uncloneable, so the addPushState was failing and users could not use the back button to go back to search pages -mc
+				var obj = _app.u.getBlacklistedObject(infoObj, ["list"]);
 				try	{
-					window.history[historyFunction](infoObj, title, fullpath);
+					window.history[historyFunction](obj, title, fullpath);
 					}
 				catch(err)	{
 					//Handle errors here
