@@ -3089,11 +3089,17 @@ else	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
 					$ele.showLoading({'message':'Sending request for password recovery.'});
-					_app.model.addDispatchToQ({"_cmd":"appBuyerPasswordRecover","method":"email","login":$("[name='login']",$ele).val(),"_tag":{"datapointer":"appBuyerPasswordRecover","callback":{
-						'callback':'showMessaging',
-						'message':'Thank you, will receive an email shortly',
-						'jqObj':$ele
-						}}},"immutable");
+					_app.model.addDispatchToQ({
+						"_cmd":"appBuyerPasswordRecover",
+						"method":"email",
+						"login":$("[name='login']",$ele).val(),
+						"_tag":{
+							"datapointer":"appBuyerPasswordRecover",
+							'callback':'showMessaging',
+							'message':'Thank you, will receive an email shortly',
+							'jqObj':$ele
+							}
+						},"immutable");
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm will handle the error display.
