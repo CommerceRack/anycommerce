@@ -653,3 +653,125 @@ That's also why the template does not contain a form
 </div>
 
 
+
+
+
+
+
+
+<!--
+----------------------------------------------------------
+Updated files for TLC -> here for testing purposes.
+----------------------------------------------------------
+-->
+
+
+
+<div id='domainAndAppConfigTemplate_TLC' class='ui-widget smallButton'>
+
+	<h1 data-tlc="bind $var '.mytest'; apply --append;"></h1>
+	<section class='marginBottom' data-app-role='domainsAndHostsContainer' data-tablefilter-role='container'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		
+		<button class='applyButton floatRight ' data-app-click='admin_sites|adminDomainCreateShow' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Domain</button>
+		
+		<span class='marginRight floatRight'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+		</span>
+		
+		<h2 class="smallPadding">Domain Configuration</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-tlc="bind $var '.@DOMAINS'; controller#loop --templateid='domainListTemplate_TLC';" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
+	<thead>
+	<tr>
+		<th>Domain</th>
+		<th>Partition</th>
+		<th></th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	</table>
+	</div>
+	</section>
+
+	<section data-app-role='projectsContainer' data-tablefilter-role='container'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<button class='applyButton floatRight' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_sites|projectCreateShow'>Add Project</button>
+		<span class='marginRight floatRight'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter"  />
+		</span>
+		<h2 class="smallPadding">Projects</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth gridTable marginTop' data-tlc="bind $var '.@PROJECTS'; controller#loop --templateid='projectsListTemplate_TLC';" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
+	<thead>
+	<tr>
+		<th>Title</th>
+		<th>Type</th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	</table>
+	</div>
+	
+	</section>
+
+	
+</div>
+
+
+<!-- used in domain config for each domain in the list. -->
+<table>
+
+<tbody id='domainListTemplate_TLC' data-element='domain'>
+<tr>
+	<td class='isSearchable' data-tlc="bind $var '.DOMAINNAME'; apply --append;"></td>
+	<td class='isSearchable' data-tlc="bind $var '.PRT'; apply --append;"></td>
+	<td></td>
+	<td class='alignRight'>
+	<button data-app-click="admin_batchjob|adminBatchJobExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-refresh' data-type="UTILITY/SITEMAP" data-whitelist="DOMAINNAME,PRT">Update Sitemap</button>
+	<button data-app-click='admin_sites|domainPutInFocus' class='applyButton' data-text='false' data-icon-primary='ui-icon-check' title="Use this domain">Use Domain</button>
+	<button data-app-click='admin_sites|adminDomainDetailShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' title="Edit this domain">Details</button>
+	</td>
+</tr>
+<tr>
+	<td colspan='4' class='domainDetailRow'>
+	<div class='displayNone' data-app-role='domainDetailContainer'>
+
+	</div>
+	</td>
+</tr>
+</tbody>
+
+<tbody id='projectsListTemplate_TLC'>
+<tr>
+	<td class='isSearchable' data-tlc="bind $var '.TITLE'; apply --append;"></td>
+	<td class='isSearchable' data-bind="var: projects(TYPE); format:text;"></td>
+	<td class='alignRight'>
+	<span data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
+	<button class='applyButton' data-app-click='admin_sites|projectDetailShow' data-icon-primary='ui-icon-info' data-text='false'>View Details</button>
+	</td>
+</tr>
+
+
+<tr class='displayNone'>
+	<td colspan='3'>
+	<div class='marginLeft'>
+		<div  data-tlc="bind $var '.ID'; format --prepend='ID: '; apply --append;"></div>
+		<div  data-tlc="bind $var '.TYPE'; format --prepend='type: '; apply --append;"></div>
+		<div  data-tlc="bind $var '.CREATED_TS'; format --prepend='Created: '; apply --append;"></div>
+		<div  data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
+		<div  data-tlc="bind $var '.APP_VERSION'; format --prepend='App version: '; apply --append;"></div>
+		<div  data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
+		<div  data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
+		<div  data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
+		<div  data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
+		<div  data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
+		<div  data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+	</div>
+	</td>
+</tr>
+</tbody>
+
+</table>

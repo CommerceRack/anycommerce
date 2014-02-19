@@ -2850,6 +2850,25 @@ return $r;
 
 
 
+	tlcFormats : {
+		loop : function($tag,data,thisTLC)	{
+			dump(" -----------> into the loop code");
+//			dump(data);
+// SANITY -> the peg file is nesting the returned array value 1 extra level deep, hence the extra [0] below. if the loop suddenly stops working, remove the [0].
+			var arr = data.globals.binds[data.globals.focusBind][0], argObj = thisTLC.args2obj(data.command.args);
+			if(argObj.templateid)	{
+				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
+				for(var index in arr)	{
+					$tag.append(new tlc(argObj.templateid.value,arr[index]).runTLC());
+					}
+				}
+			else	{
+				dump("No template specified",warn); dump(data);
+				}
+			}
+		},
+
+
 					////////////////////////////////////   renderFormats    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 

@@ -112,6 +112,21 @@ used, but not pre-loaded.
 				_app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
 				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
+				},
+			
+			showDomainConfigTLC : function($target)	{
+				$target.showLoading();
+				_app.u.addEventDelegation($target);
+				
+				_app.model.addDispatchToQ({'_cmd':'adminDomainList','hosts' : true,'_tag':	{'datapointer' : 'adminDomainList'}},'mutable');
+				_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	{'datapointer' : 'adminProjectList','callback':function(){
+					$target.hideLoading();
+//					dump(" -> data for tlc: "); dump($.extend({},_app.data.adminDomainList,_app.data.adminProjectList));
+					var thisTLC = new tlc('domainAndAppConfigTemplate_TLC',$.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'}));
+					$target.append(thisTLC.runTLC());
+					_app.u.handleButtons($target);
+					}}},'mutable');
+				_app.model.dispatchThis('mutable');
 				}
 			
 			}, //Actions

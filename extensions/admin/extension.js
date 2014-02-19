@@ -2262,7 +2262,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 							}
 						else	{
 							var domObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@DOMAINS'],'DOMAINNAME',domain) || {};
-							dump(' -> domObj: '); dump(domObj,'debug');
+//							dump(' -> domObj: '); dump(domObj,'debug');
 							if(!$.isEmptyObject(domObj))	{
 								_app.ext.admin.a.changeDomain(domObj.DOMAINNAME,domObj.PRT);
 								}

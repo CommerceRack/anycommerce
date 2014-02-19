@@ -1783,7 +1783,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 			getGrammar : function(url)	{
 				$.ajax({
 					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
-					'dataType' : 'text',
+					'dataType' : 'html',
 					'error' : function()	{
 						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
 						},

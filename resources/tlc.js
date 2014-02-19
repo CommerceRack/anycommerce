@@ -2,9 +2,8 @@
 //creates an instance of the template, in memory.
 //interpolates all data-tlc on that template.
 //returns the template.
-var tlc = function(templateID, data)	{
-	dump(" -> templateID: "+templateID);
-	this.templateID = templateID;
+var tlc = function(templateid, data)	{
+	this.templateid = templateid;
 	this.data = data;
 
 //used w/ peg parser for tlc errors.
@@ -12,38 +11,60 @@ var tlc = function(templateID, data)	{
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
 
+	this.createTemplate = function(templateid)	{
+		var $tmp = $($._app.u.jqSelector('#',templateid));
+		return $._app.model.makeTemplate($tmp,templateid);
+		}
+	
+	this.getTemplateInstance = function(templateid)	{
+		var r; //what is returned. either a jquery instance of the template OR false (invalid template)
+		if(templateid && $._app.templates[templateid])	{
+			r = $._app.templates[templateid].clone(true);
+			}
+		else if(this.createTemplate(templateid))	{ //createTemplate returns a boolean.
+			r = $._app.templates[templateid].clone(true);
+			}
+		else	{r = false} //invalid template.
+		return r;
+		}
+
 //This is where the magic happens. Run this and the translated template will be returned.
 	this.runTLC = function()	{
-		var startTime = new Date().getTime(); dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
+		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
 		
 		var _self = this; //'this' context is lost within each loop.
-		var $t = window.templates[templateID].clone();
+		var $t = _self.getTemplateInstance(_self.templateid);
+		if($t)	{
 //		dump(" -> running tlcInstance.runTLC. data-tlc.length: "+$("[data-tlc]",$t).length);
-		$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){
-			var $tag = $(this), tlc = $tag.data('tlc');
+			$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
+				var $tag = $(this), tlc = $tag.data('tlc');
 //			dump("----------------> start new $tag <-----------------");
-			var commands = false;
-			try{
-				commands = window.pegParser.parse(tlc);
-				}
-			catch(e)	{
-				dump(self.buildErrorMessage(e));
-				}
-
-			if(commands && !$.isEmptyObject(commands))	{
-				_self.executeCommands(commands,{
-					tags : {
-						'$tag' : $tag
-						}, //an object of tags.
-					focusTag : '$tag' //the pointer to the tag that is currently in focus.
-					});
-				}
-			else	{
-				dump("couldn't parse a tlc",'warn');
-				//could not parse tlc. error already reported.
-				}
-//			dump("----------------> end $tag <-----------------");
-			});
+				var commands = false;
+				try{
+					commands = window.pegParser.parse(tlc);
+					}
+				catch(e)	{
+					dump(self.buildErrorMessage(e));
+					}
+	
+				if(commands && !$.isEmptyObject(commands))	{
+					_self.executeCommands(commands,{
+						tags : {
+							'$tag' : $tag
+							}, //an object of tags.
+						focusTag : '$tag' //the pointer to the tag that is currently in focus.
+						});
+					}
+				else	{
+					dump("couldn't parse a tlc",'warn');
+					//could not parse tlc. error already reported.
+					}
+	//			dump("----------------> end $tag <-----------------");
+				});
+			}
+		else	{
+			//invalid template
+			}
 		dump("END runTLC: "+(new Date().getTime() - startTime)+" milliseconds");
 		return $t;
 		} //runTLC
@@ -309,6 +330,25 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //truncate
 
 
+	this.format_from_module = function(cmd,globals)	{
+//		dump(" -> non 'core' based format. not handled yet"); // dump(' -> cmd'); dump(cmd); dump(' -> globals'); dump(globals);
+		var moduleFormats;
+
+		if(cmd.module == 'controller')	{
+			moduleFormats = $._app.tlcFormats
+			}
+		else if($._app.ext[cmd.module] && $._app.ext[cmd.module].tlcFormats)	{
+			moduleFormats = $._app.ext[cmd.module].tlcFormats;
+			}
+		else	{}
+
+		if(moduleFormats && typeof moduleFormats[cmd.name] === 'function')	{
+			moduleFormats[cmd.name](globals.tags[globals.focusTag],{'command':cmd,'globals':globals},this);// probably want the first param to be the tag.
+			}
+
+		}
+
+
 
 /* //////////////////////////////     TYPE HANDLERS		 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 
@@ -321,9 +361,14 @@ command (everything else that's supported).
 */
 
 	this.handleType_command = function(cmd,globals)	{
-//		dump(" -> cmd.name: "+cmd.name); // dump(cmd);
+		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
-			this['handleCommand_'+cmd.name](cmd,globals);
+			if(cmd.module == 'core')	{
+				this['handleCommand_'+cmd.name](cmd,globals)
+				}
+			else	{
+				this.format_from_module(cmd,globals);
+				}
 			}
 		catch(e){
 			dump(e);
@@ -368,7 +413,7 @@ command (everything else that's supported).
 		return (action == 'isTrue' ? true : false);
 		}
 
-
+	
 
 
 /* //////////////////////////////     COMMAND HANDLERS		 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
@@ -384,12 +429,8 @@ command (everything else that's supported).
 				catch(e)	{}
 				}
 			}
-		else if(cmd.module && cmd.module.indexOf('#') >= 0)	{
-			dump(" -> non 'core' based format. not handled yet");
-			//use format in extension.
-			}
 		else	{
-			dump(" -> invalid core format specified");
+			dump(" -> invalid core  format specified.",'warn');
 			//invalid format specified.
 			}
 		return r;
@@ -399,7 +440,7 @@ command (everything else that's supported).
 //may be able to merge this with the handleCommand_format. We'll see after the two are done and if the params passed into the functions are the same or no.
 // NOTE -> stopped on 'apply' for now. B is going to change the way the grammer hands back the response. Once he does that, I'll need to flatten the array into a hash to easily test if 'empty' or some other verb is set.
 	this.handleCommand_apply = function(cmd,globals)	{
-//		dump(" -> BEGIN handleCommand_apply");// dump(cmd);
+		dump(" -> BEGIN handleCommand_apply");// dump(cmd);
 		var r = true;
 		if(cmd.module == 'core')	{
 			var
@@ -486,7 +527,7 @@ command (everything else that's supported).
 		}
 
 	this.handleCommand_transmogrify = function(cmd,globals)	{
-//		dump(" ->>>>>>> templateID: "+cmd.args[0].value); //dump(this.args2obj(cmd.args));
+//		dump(" ->>>>>>> templateid: "+cmd.args[0].value); //dump(this.args2obj(cmd.args));
 		var tmp = new tlc(cmd.args[0].value,this.data);
 		globals.tags[globals.focusTag].append(tmp.runTLC());
 		//this will backically instantate a new tlc (or whatever it's called)
@@ -557,7 +598,7 @@ command (everything else that's supported).
 //can be triggered by runTLC OR by handleType_Block.
 	this.executeCommands = function(commands,globals)	{
 //		dump(" -> running tlcInstance.executeCommands"); // dump(commands);
-		//make sure all the globals are defined. whatever is passed in will overwrite the defaults.
+		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		var theseGlobals = $.extend(true,{
 			binds : {}, //an object of all the binds set in args.
 			tags : {
