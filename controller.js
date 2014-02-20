@@ -2857,11 +2857,15 @@ return $r;
 			var $tmp = $("<div>");
 //			dump(data);
 // SANITY -> the peg file is nesting the returned array value 1 extra level deep, hence the extra [0] below. if the loop suddenly stops working, remove the [0].
-			var arr = data.globals.binds[data.globals.focusBind][0], argObj = thisTLC.args2obj(data.command.args);
+//			dump(data);
+//			dump(" ---------- ARGS "); dump(data.command.args);
+			var
+				arr = data.globals.binds[data.globals.focusBind][0], 
+				argObj = thisTLC.args2obj(data.command.args);
 			if(argObj.templateid)	{
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
 				for(var index in arr)	{
-					$tmp.append(new tlc().runTLC({'templateid':argObj.templateid.value,'data':arr[index]}));
+					$tmp.tlc({'templateid':argObj.templateid.value,'dataset':arr[index],'dataAttribs':arr[index]});
 					}
 				r = $tmp.children();
 				}

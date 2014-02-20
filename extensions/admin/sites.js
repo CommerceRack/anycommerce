@@ -122,7 +122,7 @@ used, but not pre-loaded.
 				_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	{'datapointer' : 'adminProjectList','callback':function(){
 					$target.hideLoading().tlc({
 						'templateid' : 'domainAndAppConfigTemplate_TLC',
-						data : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'})
+						dataset : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'})
 						});
 //					dump(" -> data for tlc: "); dump($.extend({},_app.data.adminDomainList,_app.data.adminProjectList));
 //					var thisTLC = new tlc('domainAndAppConfigTemplate_TLC',$.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'}));

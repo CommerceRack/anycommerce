@@ -3,19 +3,21 @@
 		options : {
 			templateid : null, //optional.  if set, the template will be appended to the target element.
 //having any data is optional. A template ID only can be specified, thus allowing an instance to be added to the DOM w/ no interpolation.
-			data : {}, //used to interpolate the template. can be passed in directly or can be set w/ datapointer/extendByDatapointers
+			dataset : {}, //used to interpolate the template. can be passed in directly or can be set w/ datapointer/extendByDatapointers
 			datapointer : null, //can be used to set data. ($._app.data[datapointer] )
-			extendByDatapointers : new Array() //an array of datapointers. will merge all the data into one object prior to translation
+			extendByDatapointers : new Array(), //an array of datapointers. will merge all the data into one object prior to translation
+//if dataAttribs is set, these will be added to this.element as both attributes data- .  data- will be prepended if not already set.
+			dataAttribs : null
 			},
 		_init : function(){
 			var o = this.options;
 			//one of these three must be set or running this doesn't really serve any purpose.
-			if(o.templateid || o.data || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
+			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
 				if(o.datapointer)	{
 					o.data = $._app.data[o.datapointer];
 					}
-				if(o.extendByDatapointers)	{
-					this.handleDataPointers;
+				if(!$.isEmptyObject(o.extendByDatapointers))	{
+					this._handleDatapointers();
 					}
 				this._render();
 				}
@@ -36,9 +38,29 @@
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
 					if($._app.data[o.extendByDatapointers[i]])	{
-						this.options.data = $.extend({},this.options.data,$._app.data[o.extendByDatapointers[i]]);
+						this.options.dataset = $.extend({},this.options.dataset,$._app.data[o.extendByDatapointers[i]]);
 						}
 					}
+				}
+			},
+		_handleDataAttribs : function()	{
+			var o = this.options;
+	//		_app.u.dump(" -> eleAttr is NOT empty");
+			var tmp = {};
+			for(var index in o.dataAttribs)	{
+				if(typeof o.dataAttribs[index] == 'object')	{
+					//can't output an object as a string. later, if/when data() is used, this may be supported.
+					}
+				else if(index.match("^[a-zA-Z0-9_\-]*$"))	{
+					tmp[((index.indexOf('data-') === 0) ? '' : 'data-' + index).toLowerCase()] = o.dataAttribs[index]
+					}
+				else	{
+					//can't have non-alphanumeric characters in attribute
+					}
+				}
+			if(!$.isEmptyObject(tmp)){
+				dump(" -> obj: "); dump(tmp);
+				this.element.children().first().attr(tmp); //applied to firstChild because that's the instance of the template.
 				}
 			},
 		_render : function()	{
@@ -47,9 +69,14 @@
 //### FUTURE -> move tlc code into this
 			var instance = new tlc();
 			self.element.append(instance.runTLC({
-				templateid : this.options.templateid,
-				data : this.options.data
+				templateid : self.options.templateid,
+				dataset : self.options.dataset
 				}));
+
+			if(!$.isEmptyObject(self.options.dataAttribs))	{
+				self._handleDataAttribs();
+				}
+
 			}
 		
 		});
@@ -66,6 +93,7 @@ var tlc = function()	{
 	this.buildErrorMessage = function(e) {
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
+
 
 	this.createTemplate = function(templateid)	{
 		var $tmp = $($._app.u.jqSelector('#',templateid));
@@ -85,18 +113,18 @@ var tlc = function()	{
 		}
 
 //This is where the magic happens. Run this and the translated template will be returned.
+// p.dataset is the data object. dataset was used instead of data to make it easier to search for.
 // ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
 	this.runTLC = function(P)	{
-		
-		this.templateid = P.templateid;
-		this.data = P.data || {};
+
+//		this.data = P.data || {};
 		
 		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
 		
 		var _self = this; //'this' context is lost within each loop.
-		var $t = _self.getTemplateInstance(_self.templateid);
+		var $t = _self.getTemplateInstance(P.templateid);
 		if($t)	{
-//		dump(" -> running tlcInstance.runTLC. data-tlc.length: "+$("[data-tlc]",$t).length);
+
 			$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 				var $tag = $(this), tlc = $tag.data('tlc');
 //			dump("----------------> start new $tag <-----------------");
@@ -114,7 +142,7 @@ var tlc = function()	{
 							'$tag' : $tag
 							}, //an object of tags.
 						focusTag : '$tag' //the pointer to the tag that is currently in focus.
-						});
+						},P.dataset);
 					}
 				else	{
 					dump("couldn't parse a tlc",'warn');
@@ -421,7 +449,7 @@ Block (set for the statements inside an IF IsTrue or IsFalse). contains an array
 command (everything else that's supported).
 */
 
-	this.handleType_command = function(cmd,globals)	{
+	this.handleType_command = function(cmd,globals,dataset)	{
 //		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
 			if(cmd.module == 'core')	{
@@ -437,15 +465,15 @@ command (everything else that's supported).
 			}
 		}
 
-	this.handleType_BIND = function(cmd,globals)	{
+	this.handleType_BIND = function(cmd,globals,dataset)	{
 //		dump("Now we bind"); dump(cmd);
 		//scalar type means get the value out of the data object.
-		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(this.data, '$'+cmd.Src.value) : cmd.Src.value;
+		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(dataset, '$'+cmd.Src.value) : cmd.Src.value;
 		globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
 		return cmd.Set.value;
 		}
 	
-	this.handleType_IF = function(cmd,globals)	{
+	this.handleType_IF = function(cmd,globals,dataset)	{
 //		dump("BEGIN handleIF"); dump(cmd);
 		var p1; //first param for comparison.
 		var args = cmd.When.args;
@@ -466,7 +494,7 @@ command (everything else that's supported).
 		if(cmd[action])	{
 //			dump(' -> cmd[action]'); dump(cmd[action].statements[0]);
 			for(var i = 0, L = cmd[action].statements[0].length; i < L; i += 1)	{
-				this.executeCommands(cmd[action].statements[0][i],globals); // ### TODO -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
+				this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
 				}
 			
 			}
@@ -657,8 +685,8 @@ command (everything else that's supported).
 
 
 //can be triggered by runTLC OR by handleType_Block.
-	this.executeCommands = function(commands,globals)	{
-//		dump(" -> running tlcInstance.executeCommands"); // dump(commands);
+	this.executeCommands = function(commands,globals,dataset)	{
+//		dump(" -> running tlcInstance.executeCommands"); dump(dataset);
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		var theseGlobals = $.extend(true,{
 			binds : {}, //an object of all the binds set in args.
@@ -672,13 +700,13 @@ command (everything else that's supported).
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 //			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
-				this.handleType_command(commands[i],theseGlobals);
+				this.handleType_command(commands[i],theseGlobals,dataset);
 				}
 			else if(commands[i].type == 'IF')	{
-				this['handleType_IF'](commands[i],theseGlobals);
+				this['handleType_IF'](commands[i],theseGlobals,dataset);
 				}
 			else if(commands[i].type == 'BIND')	{
-				this['handleType_BIND'](commands[i],theseGlobals);
+				this['handleType_BIND'](commands[i],theseGlobals,dataset);
 				}
 			else	{
 				//unrecognized type.
