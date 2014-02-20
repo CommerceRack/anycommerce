@@ -112,6 +112,13 @@ var tlc = function()	{
 		return r;
 		}
 
+// ### FUTURE -> allows --datapointer='appProductDetail' to be set and this could be used to gather what datasets should be acquired.
+// would return an object.
+//	this.gatherDatapointers = function(){}'
+
+
+
+
 //This is where the magic happens. Run this and the translated template will be returned.
 // p.dataset is the data object. dataset was used instead of data to make it easier to search for.
 // ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
