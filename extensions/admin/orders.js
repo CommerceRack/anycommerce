@@ -574,7 +574,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 									//done means done. no adjusting price or quantity at this point.
 									if(invDetail.BASETYPE == "DONE")	{
 //										$tr.attr('title','This item is DONE. It is no longer editable');
-										$tr.attr('title','This item is DONE. Be very cautions about editing it.');
+										$tr.attr('title','This item is DONE. Be very cautious about editing it.');
 //										$('button',$tr).button('disable'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 //										$(':input',$tr).prop('disabled','disabled'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 										}
