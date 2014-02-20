@@ -682,7 +682,7 @@ Updated files for TLC -> here for testing purposes.
 		<h2 class="smallPadding">Domain Configuration</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-tlc="bind $var '.@DOMAINS'; controller#loop --templateid='domainListTemplate_TLC';" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
+	<table class='fullWidth marginTop domainList' data-app-role='domainListNonFavorites' data-tlc="bind $var '.@DOMAINS'; controller#loop --templateid='domainListTemplate_TLC';  apply --append;" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
 	<thead>
 	<tr>
 		<th>Domain</th>
@@ -704,7 +704,7 @@ Updated files for TLC -> here for testing purposes.
 		<h2 class="smallPadding">Projects</h2>
 	</div>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<table class='fullWidth gridTable marginTop' data-tlc="bind $var '.@PROJECTS'; controller#loop --templateid='projectsListTemplate_TLC';" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
+	<table class='fullWidth gridTable marginTop' data-tlc="bind $var '.@PROJECTS'; controller#loop --templateid='projectsListTemplate_TLC';  apply --append;" data-tablefilter-role='table' data-tablefilter-selector='tbody'>
 	<thead>
 	<tr>
 		<th>Title</th>
@@ -758,17 +758,17 @@ Updated files for TLC -> here for testing purposes.
 <tr class='displayNone'>
 	<td colspan='3'>
 	<div class='marginLeft'>
-		<div  data-tlc="bind $var '.ID'; format --prepend='ID: '; apply --append;"></div>
-		<div  data-tlc="bind $var '.TYPE'; format --prepend='type: '; apply --append;"></div>
-		<div  data-tlc="bind $var '.CREATED_TS'; format --prepend='Created: '; apply --append;"></div>
-		<div  data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
-		<div  data-tlc="bind $var '.APP_VERSION'; format --prepend='App version: '; apply --append;"></div>
-		<div  data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
-		<div  data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
-		<div  data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
-		<div  data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
-		<div  data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
-		<div  data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
+		<div data-tlc="bind $var '.ID'; format --prepend='ID: '; apply --append;"></div>
+		<div data-tlc="bind $var '.TYPE'; format --prepend='type: '; apply --append;"></div>
+		<div data-tlc="bind $var '.CREATED_TS'; format --prepend='Created: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_VERSION'; format --prepend='App version: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_RELEASE'; format --prepend='App release: '; apply --append;" ></div>
+		<div data-tlc="bind $var '.APP_ROOT'; format --prepend='App root: '; apply --append;" ></div>
+		<div data-tlc="bind $var '.GITHUB_REPO'; format --prepend='Repository: '; apply --append;" ></div>
+		<div data-tlc="bind $var '.GITHUB_BRANCH'; format --prepend='Branch: '; apply --append;" ></div>
+		<div data-tlc="bind $var '.APP_EXPIRE'; format --prepend='Expiration: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
 	</div>
 	</td>
 </tr>

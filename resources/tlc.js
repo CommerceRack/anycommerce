@@ -1,11 +1,67 @@
+(function($) {
+	$.widget("ui.tlc",{
+		options : {
+			templateid : null, //optional.  if set, the template will be appended to the target element.
+//having any data is optional. A template ID only can be specified, thus allowing an instance to be added to the DOM w/ no interpolation.
+			data : {}, //used to interpolate the template. can be passed in directly or can be set w/ datapointer/extendByDatapointers
+			datapointer : null, //can be used to set data. ($._app.data[datapointer] )
+			extendByDatapointers : new Array() //an array of datapointers. will merge all the data into one object prior to translation
+			},
+		_init : function(){
+			var o = this.options;
+			//one of these three must be set or running this doesn't really serve any purpose.
+			if(o.templateid || o.data || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
+				if(o.datapointer)	{
+					o.data = $._app.data[o.datapointer];
+					}
+				if(o.extendByDatapointers)	{
+					this.handleDataPointers;
+					}
+				this._render();
+				}
+			else	{
+				dump('In $.tlc, no templateid or data was supplied. tlc is not going to accomplish anything without either data or a template.','warn');
+				}
+			}, //_init
+
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}, //_setOption
+		_handleDatapointers : function()	{
+			var o = this.options;
+			//'data' could be a pointer, which we don't want to modify, so we extend a blank object and add data in the mix.
+			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
+			if(o.extendByDatapointers.length)	{
+//				dump(" -> datapointers have been extended for anycontent");
+				var L = o.extendByDatapointers.length;
+				for(var i = 0; i < L; i += 1)	{
+					if($._app.data[o.extendByDatapointers[i]])	{
+						this.options.data = $.extend({},this.options.data,$._app.data[o.extendByDatapointers[i]]);
+						}
+					}
+				}
+			},
+		_render : function()	{
+			var self = this;
+//currently, the tlc core code and this plugin are intentionally independant. allows, if necessary, tlc to be run directly.
+//### FUTURE -> move tlc code into this
+			var instance = new tlc();
+			self.element.append(instance.runTLC({
+				templateid : this.options.templateid,
+				data : this.options.data
+				}));
+			}
+		
+		});
+
+	})(jQuery);
+
+
 
 //creates an instance of the template, in memory.
 //interpolates all data-tlc on that template.
 //returns the template.
-var tlc = function(templateid, data)	{
-	this.templateid = templateid;
-	this.data = data;
-
+var tlc = function()	{
 //used w/ peg parser for tlc errors.
 	this.buildErrorMessage = function(e) {
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
@@ -29,7 +85,12 @@ var tlc = function(templateid, data)	{
 		}
 
 //This is where the magic happens. Run this and the translated template will be returned.
-	this.runTLC = function()	{
+// ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
+	this.runTLC = function(P)	{
+		
+		this.templateid = P.templateid;
+		this.data = P.data || {};
+		
 		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
 		
 		var _self = this; //'this' context is lost within each loop.
@@ -343,7 +404,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		else	{}
 
 		if(moduleFormats && typeof moduleFormats[cmd.name] === 'function')	{
-			moduleFormats[cmd.name](globals.tags[globals.focusTag],{'command':cmd,'globals':globals},this);// probably want the first param to be the tag.
+			globals.binds[globals.focusBind] = moduleFormats[cmd.name]({'command':cmd,'globals':globals},this);// probably want the first param to be the tag.
 			}
 
 		}
@@ -361,7 +422,7 @@ command (everything else that's supported).
 */
 
 	this.handleType_command = function(cmd,globals)	{
-		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
+//		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
 			if(cmd.module == 'core')	{
 				this['handleCommand_'+cmd.name](cmd,globals)
@@ -440,7 +501,7 @@ command (everything else that's supported).
 //may be able to merge this with the handleCommand_format. We'll see after the two are done and if the params passed into the functions are the same or no.
 // NOTE -> stopped on 'apply' for now. B is going to change the way the grammer hands back the response. Once he does that, I'll need to flatten the array into a hash to easily test if 'empty' or some other verb is set.
 	this.handleCommand_apply = function(cmd,globals)	{
-		dump(" -> BEGIN handleCommand_apply");// dump(cmd);
+//		dump(" -> BEGIN handleCommand_apply");// dump(cmd);
 		var r = true;
 		if(cmd.module == 'core')	{
 			var
@@ -528,8 +589,8 @@ command (everything else that's supported).
 
 	this.handleCommand_transmogrify = function(cmd,globals)	{
 //		dump(" ->>>>>>> templateid: "+cmd.args[0].value); //dump(this.args2obj(cmd.args));
-		var tmp = new tlc(cmd.args[0].value,this.data);
-		globals.tags[globals.focusTag].append(tmp.runTLC());
+		var tmp = new tlc();
+		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:cmd.args[0].value,data:this.data}));
 		//this will backically instantate a new tlc (or whatever it's called)
 		}
 

@@ -2851,20 +2851,24 @@ return $r;
 
 
 	tlcFormats : {
-		loop : function($tag,data,thisTLC)	{
-			dump(" -----------> into the loop code");
+		//tlcFormats return the updated 'value' (essentially, what they want added to the DOM)
+		loop : function(data,thisTLC)	{
+			var r = false;
+			var $tmp = $("<div>");
 //			dump(data);
 // SANITY -> the peg file is nesting the returned array value 1 extra level deep, hence the extra [0] below. if the loop suddenly stops working, remove the [0].
 			var arr = data.globals.binds[data.globals.focusBind][0], argObj = thisTLC.args2obj(data.command.args);
 			if(argObj.templateid)	{
-				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
+//				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
 				for(var index in arr)	{
-					$tag.append(new tlc(argObj.templateid.value,arr[index]).runTLC());
+					$tmp.append(new tlc().runTLC({'templateid':argObj.templateid.value,'data':arr[index]}));
 					}
+				r = $tmp.children();
 				}
 			else	{
 				dump("No template specified",warn); dump(data);
 				}
+			return r;
 			}
 		},
 
