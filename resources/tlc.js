@@ -14,12 +14,14 @@
 			//one of these three must be set or running this doesn't really serve any purpose.
 			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
 				if(o.datapointer)	{
-					o.data = $._app.data[o.datapointer];
+					o.dataset = $._app.data[o.datapointer];
 					}
 				if(!$.isEmptyObject(o.extendByDatapointers))	{
 					this._handleDatapointers();
 					}
-				this._render();
+				var $instance = this._render();
+				this._handleDataAttribs($instance);
+				this.element.append($instance);
 				}
 			else	{
 				dump('In $.tlc, no templateid or data was supplied. tlc is not going to accomplish anything without either data or a template.','warn');
@@ -34,33 +36,36 @@
 			//'data' could be a pointer, which we don't want to modify, so we extend a blank object and add data in the mix.
 			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
 			if(o.extendByDatapointers.length)	{
-//				dump(" -> datapointers have been extended for anycontent");
+				dump(" -> datapointers have been extended for tlc");
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
 					if($._app.data[o.extendByDatapointers[i]])	{
-						this.options.dataset = $.extend({},this.options.dataset,$._app.data[o.extendByDatapointers[i]]);
+						$.extend(true,this.options.dataset,$._app.data[o.extendByDatapointers[i]]);
 						}
 					}
 				}
 			},
-		_handleDataAttribs : function()	{
+		_handleDataAttribs : function($tag)	{
 			var o = this.options;
 	//		_app.u.dump(" -> eleAttr is NOT empty");
-			var tmp = {};
-			for(var index in o.dataAttribs)	{
-				if(typeof o.dataAttribs[index] == 'object')	{
-					//can't output an object as a string. later, if/when data() is used, this may be supported.
+			if(!$.isEmptyObject(o.dataAttribs))	{
+				var tmp = {};
+				for(var index in o.dataAttribs)	{
+					if(typeof o.dataAttribs[index] == 'object')	{
+						//can't output an object as a string. later, if/when data() is used, this may be supported.
+						}
+					else if(index.match("^[a-zA-Z0-9_\-]*$"))	{
+						tmp[((index.indexOf('data-') === 0) ? '' : 'data-' + index).toLowerCase()] = o.dataAttribs[index]
+						}
+					else	{
+						//can't have non-alphanumeric characters in attribute
+						}
 					}
-				else if(index.match("^[a-zA-Z0-9_\-]*$"))	{
-					tmp[((index.indexOf('data-') === 0) ? '' : 'data-' + index).toLowerCase()] = o.dataAttribs[index]
+				if(!$.isEmptyObject(tmp)){
+	//				dump(" -> obj: "); dump(tmp);
+					$tag.attr(tmp).data(o.dataAttribs); //applied to firstChild because that's the instance of the template.
 					}
-				else	{
-					//can't have non-alphanumeric characters in attribute
-					}
-				}
-			if(!$.isEmptyObject(tmp)){
-				dump(" -> obj: "); dump(tmp);
-				this.element.children().first().attr(tmp); //applied to firstChild because that's the instance of the template.
+
 				}
 			},
 		_render : function()	{
@@ -68,15 +73,11 @@
 //currently, the tlc core code and this plugin are intentionally independant. allows, if necessary, tlc to be run directly.
 //### FUTURE -> move tlc code into this
 			var instance = new tlc();
-			self.element.append(instance.runTLC({
+			var $tmp = instance.runTLC({
 				templateid : self.options.templateid,
 				dataset : self.options.dataset
-				}));
-
-			if(!$.isEmptyObject(self.options.dataAttribs))	{
-				self._handleDataAttribs();
-				}
-
+				});
+			return $tmp
 			}
 		
 		});
@@ -91,6 +92,7 @@
 var tlc = function()	{
 //used w/ peg parser for tlc errors.
 	this.buildErrorMessage = function(e) {
+		dump(e);
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
 
@@ -140,7 +142,7 @@ var tlc = function()	{
 					commands = window.pegParser.parse(tlc);
 					}
 				catch(e)	{
-					dump(self.buildErrorMessage(e));
+					dump(_self.buildErrorMessage(e));
 					}
 	
 				if(commands && !$.isEmptyObject(commands))	{

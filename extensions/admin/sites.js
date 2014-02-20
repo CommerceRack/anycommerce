@@ -94,7 +94,7 @@ used, but not pre-loaded.
 										_app.data[rd.datapointer]['*favorites'].push(domains[i]);
 										}
 									}
-								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
+								$target.tlc({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
 								_app.u.handleButtons($target);
 								}
 							}
@@ -105,7 +105,7 @@ used, but not pre-loaded.
 
 				},
 			
-			
+/*			
 			showDomainConfig : function($target)	{
 				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anyform();
 				_app.u.addEventDelegation($target);
@@ -113,20 +113,17 @@ used, but not pre-loaded.
 				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				},
-			
-			showDomainConfigTLC : function($target)	{
+*/			
+			showDomainConfig : function($target)	{
 				$target.showLoading();
 				_app.u.addEventDelegation($target);
 				
 				_app.model.addDispatchToQ({'_cmd':'adminDomainList','hosts' : true,'_tag':	{'datapointer' : 'adminDomainList'}},'mutable');
 				_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	{'datapointer' : 'adminProjectList','callback':function(){
 					$target.hideLoading().tlc({
-						'templateid' : 'domainAndAppConfigTemplate_TLC',
-						dataset : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'})
+						'templateid' : 'domainAndAppConfigTemplate',
+						dataset : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList)
 						});
-//					dump(" -> data for tlc: "); dump($.extend({},_app.data.adminDomainList,_app.data.adminProjectList));
-//					var thisTLC = new tlc('domainAndAppConfigTemplate_TLC',$.extend({},_app.data.adminDomainList,_app.data.adminProjectList,{'mytest':'jt was here'}));
-//					$target.append(thisTLC.runTLC());
 					_app.u.handleButtons($target);
 					}}},'mutable');
 				_app.model.dispatchThis('mutable');
@@ -390,10 +387,8 @@ used, but not pre-loaded.
 								'DOMAINNAME':sfo.DOMAINNAME,
 								'_tag':	{
 									'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
-									'skipAppEvents' : true,
-									'translateOnly' : true,
 									'jqObj' : $tbody,
-									'callback' : 'anycontent'
+									'callback' : 'tlc'
 									}
 								},'immutable');
 							}
@@ -419,8 +414,7 @@ used, but not pre-loaded.
 					'hosts' : true,
 					'_tag':	{
 						'datapointer' : 'adminDomainList',
-						'callback':'anycontent',
-						'translateOnly' : true,
+						'callback':'tlc',
 						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",$target)
 						}
 					},Q);
@@ -428,8 +422,7 @@ used, but not pre-loaded.
 					'_cmd':'adminProjectList',
 					'_tag':	{
 						'datapointer' : 'adminProjectList',
-						'callback':'anycontent',
-						'translateOnly' : true,
+						'callback':'tlc',
 						'jqObj' : $("[data-app-role='projectsContainer']:first",$target)
 						}
 					},Q);
@@ -514,7 +507,7 @@ used, but not pre-loaded.
 						'DOMAINNAME':$ele.data('domainname'),
 						'_tag':{
 							'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),
-							'callback':'anycontent',
+							'callback':'tlc',
 							'jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").showLoading({'message':'Fetching domain diagnostics'})
 							}
 						},'mutable');
@@ -530,7 +523,7 @@ used, but not pre-loaded.
 				var $detail = $ele.closest('tr').next('tr').find("[data-app-role='domainDetailContainer']:first");
 				var wasVisible = $detail.is(':visible'); //used to track state prior to all detail panels being closed.
 				$("[data-app-role='domainDetailContainer']:visible",$ele.closest('table')).each(function(){$(this).slideUp('slow','',function(){
-					$(this).intervaledEmpty().anycontent('destroy');
+					$(this).intervaledEmpty().tlc('destroy');
 					});}); //close any open rows. interface gets VERY crowded if more than one editor is open.
 				_app.u.dump(" -> wasVisible: "+wasVisible);
 				if(wasVisible)	{}//was open and has already been closed
@@ -538,7 +531,7 @@ used, but not pre-loaded.
 					$detail.show();
 					var domainname = $ele.closest("[data-domainname]").data('domainname');
 					if(domainname)	{
-						$detail.anycontent({'templateID':'domainUpdateTemplate','showLoadingMessage':'Fetching domain details'});
+						$detail.showLoading({'message':'Fetching domain detail'});
 						$detail.attr({'data-domainname':domainname,'data-domain':domainname});
 						$("[data-app-role='domainsHostsTbody']",$detail).attr({'data-domainname':domainname,'data-domain':domainname}).addClass('buttonset'); //here for templateEditor.
 						_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
@@ -547,11 +540,10 @@ used, but not pre-loaded.
 							'DOMAINNAME':domainname,
 							'_tag':	{
 								'datapointer' : 'adminDomainDetail|'+domainname,
-								'skipAppEvents' : true,
+								'templateID':'domainUpdateTemplate',
 								'extendByDatapointers' : ['adminConfigDetail|prts'],
-								'translateOnly' : true,
 								'jqObj' : $detail,
-								'callback' : 'anycontent',
+								'callback' : 'tlc',
 								onComplete : function(rd)	{
 									$('form',$detail).anyform({'trackEdits':true}); //enable form 'tracking' so save button counts number of changes
 									$("select[name='PRT']",$detail).val(_app.data[rd.datapointer].PRT); //select the partition
@@ -594,6 +586,7 @@ used, but not pre-loaded.
 					if($ele.data('mode') == 'update')	{
 // ### FUTURE -> this is gonna get more love soon.  When it does, for adding a template to a host, would be nice to remember which template was selected.
 						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
+						_app.u.dump(" -> data: ");_app.u.dump(data);
 						title += ': '+(data.HOSTNAME.toString().toLowerCase())
 						}
 					
@@ -614,7 +607,7 @@ used, but not pre-loaded.
 							}
 						else	{
 							//success content goes here.
-							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
+							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).tlc({'datapointer':rd.datapointer});
 							if($ele.data('mode') == 'update')	{
 								$("input[name='PROJECT']",$D).val(_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
 								}
@@ -634,13 +627,13 @@ used, but not pre-loaded.
 					if(_app.model.fetchData('adminSiteTemplateList') == false)	{
 						_app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{
 							'datapointer' : 'adminSiteTemplateList',
-							'callback' : 'anycontent',
+							'callback' : 'tlc',
 							'jqObj' : $("[data-app-role='hostTemplateListContainer']",$D)
 							}},'mutable'); //necessary for projects list in app based hosttypes.
 						_app.model.dispatchThis();
 						}
 					else	{
-						$("[data-app-role='hostTemplateListContainer']",$D).anycontent({'datapointer' : 'adminSiteTemplateList'});
+						$("[data-app-role='hostTemplateListContainer']",$D).tlc({'datapointer' : 'adminSiteTemplateList'});
 						}
 						
 					_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.
@@ -678,8 +671,7 @@ used, but not pre-loaded.
 							"_cmd":"adminProjectDetail",
 							"UUID":projectUUID,
 							"_tag": {
-								'callback':'anycontent',
-								'translateOnly' : true,
+								'callback':'anytlc',
 								jqObj:$detailRow,
 								'datapointer' : 'adminProjectDetail|'+projectUUID
 								}

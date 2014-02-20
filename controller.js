@@ -94,7 +94,7 @@ function controller(_app)	{
 		_app.vars.passInDispatchV += 'browser:'+_app.u.getBrowserInfo()+";OS:"+_app.u.getOSInfo()+';compatMode:'+document.compatMode;
 
 		_app.vars.release = _app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
-		_app.u.dump("version: "+_app.model.version+" and release "+_app.vars.release);
+		_app.u.dump(" -> version: "+_app.model.version+" and release "+_app.vars.release);
 		_app.ext = _app.ext || {}; //for holding extensions
 		_app.data = {}; //used to hold all data retrieved from ajax requests.
 		_app.vars.extensions = _app.vars.extensions || []; //the list of extensions that are/will be loaded
@@ -507,6 +507,54 @@ _app.u.throwMessage(responseData); is the default error handler.
 					}
 				}
 			},
+
+
+
+
+	
+//very similar to the original translate selector in the control and intented to replace it. 
+//This executes the handleAppEvents in addition to the normal translation.
+//jqObj is required and should be a jquery object.
+		tlc : {
+			onMissing : function(rd)	{
+				rd._rtag.jqObj.anymessage(rd);
+				},
+			onSuccess : function(_rtag)	{
+//				_app.u.dump("BEGIN callbacks.tlc"); _app.u.dump(_rtag);
+				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
+					
+					var $target = _rtag.jqObj.hideLoading(); //shortcut
+					if(_rtag.templateID && !_rtag.templateid)	{_rtag.templateid = _rtag.templateID} //anycontent used templateID. tlc uses templateid. rather than put this into the core tranlsator, it's here as a stopgap.
+//anycontent will disable hideLoading and loadingBG classes.
+//to maintain flexibility, pass all anycontent params in thru _tag
+					$target.tlc(_rtag);
+
+					_app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
+
+					if(_rtag.applyEditTrackingToInputs)	{
+						$target.anyform({'trackEdits':true});
+						_app.ext.admin.u.applyEditTrackingToInputs(); //applies 'edited' class when a field is updated. unlocks 'save' button.
+						}
+//allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
+					if(typeof _rtag.onComplete == 'function')	{
+						_rtag.onComplete(_rtag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
+					}
+				
+				},
+			onError : function(rd)	{
+				if(rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj == 'object'){
+					rd._rtag.jqObj.hideLoading().anymessage({'message':rd});
+					}
+				else	{
+					$('#globalMessage').anymessage({'message':rd});
+					}
+				}
+			}, //translateSelector
 
 
 	
@@ -1392,7 +1440,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					_app.u.printByjqObj($(_app.u.jqSelector('#',id)));
 					}
 				else	{
-					_app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
+					_app.u.dump("WARNING! - printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
 					}
 				}, //printByElementID
 
@@ -1613,7 +1661,6 @@ AUTHENTICATION/USER
 	//and all third parties would get 'guest'
 				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
 					r = 'thirdPartyGuest';
-	//					_app.ext.myRIA.thirdParty.fb.saveUserDataToSession();
 					}
 				else if(_app.model.fetchData('cartDetail|'+cartID) && _app.data['cartDetail|'+cartID] && _app.data['cartDetail|'+cartID].bill && _app.data['cartDetail|'+cartID].bill.email)	{
 					r = 'guest';
@@ -2864,8 +2911,9 @@ return $r;
 				argObj = thisTLC.args2obj(data.command.args);
 			if(argObj.templateid)	{
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
-				for(var index in arr)	{
-					$tmp.tlc({'templateid':argObj.templateid.value,'dataset':arr[index],'dataAttribs':arr[index]});
+				for(var i in arr)	{
+					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
+					$tmp.tlc({'templateid':argObj.templateid.value,'dataset':arr[i],'dataAttribs':arr[i]});
 					}
 				r = $tmp.children();
 				}
@@ -2962,7 +3010,7 @@ do's should modify $tag or apply the value.
 
 //for embedding. There is an action for showing a youtube video in an iframe in quickstart.
 // hint: set the action as an onclick and set attribute youtube:video id on element and use jquery to pass it in. 
-//ex: data-bind='var:product(youtube:videoid);format:assignAttribute; attribute:data-videoid;' onClick="_app.ext.myRIA.a.showYoutubeInModal($(this).attr('data-videoid'));
+//ex: data-bind='var:product(youtube:videoid);format:assignAttribute; attribute:data-videoid;' onClick="_app.ext.quickstart.a.showYoutubeInModal($(this).attr('data-videoid'));
 		youtubeVideo : function($tag,data){
 			var width = data.bindData.width ? data.bindData.width : 560
 			var height = data.bindData.height ? data.bindData.height : 315
