@@ -26,7 +26,7 @@
 <ul>	
 	<li id="domainListFavoriteTemplate" class="ui-widget-content ui-corner-all domainPanel positionRelative smallButton">
 		<div class="alignCenter">
-		<img data-tlc="admin#companylogo  --useParentData='1'; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="160" width="160">
+		<img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="160" width="160">
 		</div>
 		
 		<div data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domain'; apply --append;" class="positionAbsolute positionTop positionRight stdPadding"><!-- stdPadding aligns this button w/ host-buttons -->
@@ -43,7 +43,7 @@
 <table>
 <!-- used in 'sites' tab for list of all domains -->
 <tbody><tr id="sitesDomainRowTemplate">
-	<td class="alignCenter width1"><img data-tlc="admin#companylogo  --useParentData='1'; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="40" width="80"></td>
+	<td class="alignCenter width1"><img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="40" width="80"></td>
 	<td data-tlc="bind $var '.DOMAINNAME'; apply --append;"></td>
 	<td data-tlc="bind $var '.PRT'; apply --append;"></td>
 	<td class="alignRight">
@@ -154,9 +154,9 @@
 <tbody><tr id="domainListHostsRowTemplate" data-element="host">
 	<td data-tlc="bind $var '.HOSTNAME'; apply --append;"></td>
 	<td data-tlc="bind $var '.HOSTTYPE'; apply --append;"></td>
-	<td data-tlc="bind $var '.PROJECT'; admin_sites#projectidpretty ; apply --append;"></td>
+	<td data-tlc="bind $var '.PROJECT'; admin_sites#projectidpretty  --legacy ; apply --append;"></td>
 	<td class="alignRight width50">
-	<span data-tlc="admin_sites#apphostbuttons  --useParentData='true'; apply --append;" data-bind="useParentData:true; format:appHostButtons; extension:admin_sites;"></span>
+	<span data-tlc="admin_sites#apphostbuttons  --useParentData='true' --legacy ; apply --append;" data-bind="useParentData:true; format:appHostButtons; extension:admin_sites;"></span>
 	<button class="applyButton" data-app-click="admin|tagRow4Remove" data-text="false" data-icon-primary="ui-icon-close">Delete this Host</button>
 	<button class="applyButton" data-app-click="admin_sites|adminDomainCreateUpdateHostShow" data-mode="update" data-icon-primary="ui-icon-pencil" data-text="false">Edit Host</button>
 	<button class="applyButton" data-app-click="admin_sites|domainView" data-mode="host" data-text="false" data-icon-primary="ui-icon-newwin">View Site</button><!-- buttons that always show up should be on the right so they don't move -->
@@ -419,7 +419,7 @@ That's also why the template does not contain a form
 	
 		<fieldset class="marginBottom labelsAsBreaks">
 
-			<div class="pointer marginBottom"><div class="logoWhiteness"><img data-tlc="admin#companylogo  --useParentData='1'; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" onclick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" height="50" width="150"></div></div>
+			<div class="pointer marginBottom"><div class="logoWhiteness"><img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" onclick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" height="50" width="150"></div></div>
 			
 			<label>
 				<input data-tlc="bind $var '.IS_PRIMARY'; apply --select=$var; apply --append;" class="applyAnycb" name="IS_PRIMARY" type="checkbox">
@@ -575,7 +575,7 @@ That's also why the template does not contain a form
 	<td data-tlc="bind $var '.TITLE'; apply --append;" class="isSearchable"></td>
 	<td data-tlc="bind $var '.TYPE'; apply --append;" class="isSearchable"></td>
 	<td class="alignRight">
-	<span data-tlc="admin_sites#projectbuttons  --useParentData='true'; apply --append;" data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
+	<span data-tlc="admin_sites#projectbuttons  --useParentData='true' --legacy ; apply --append;" data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
 	<button class="applyButton" data-app-click="admin_sites|projectDetailShow" data-icon-primary="ui-icon-info" data-text="false">View Details</button>
 	</td>
 </tr>

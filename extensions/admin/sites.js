@@ -131,26 +131,16 @@ used, but not pre-loaded.
 			
 			}, //Actions
 
+
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //renderFormats are what is used to actually output data.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-				projectID2Pretty : function($tag,data)	{
-					var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
-					if(_app.data.adminProjectList && _app.data.adminProjectList['@PROJECTS'])	{
-						var index = _app.ext.admin.u.getIndexInArrayByObjValue(_app.data.adminProjectList['@PROJECTS'],'UUID',data.value);
-						if(index === 0 || index >= 1)	{
-							if(_app.data.adminProjectList['@PROJECTS'][index].TITLE)	{
-								o = _app.data.adminProjectList['@PROJECTS'][index].TITLE;
-								}
-							}
-						}
-					$tag.text(o);
-					},
 
-				projectButtons : function($tag,data)	{
+				projectbuttons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('projectMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 					if(data.value.GITHUB_REPO)	{
@@ -177,7 +167,7 @@ used, but not pre-loaded.
 					},
 
 				//pass in HOSTTYPE as data.
-				appHostButtons : function($tag,data)	{
+				apphostbuttons : function($tag,data)	{
 					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
 					$tag.css('position','relative');  //so menu appears where it should.
 

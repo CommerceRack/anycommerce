@@ -170,8 +170,10 @@ var tlc = function()	{
 //used in 'apply' and possibly elsewhere. changes the args arrays into a single object for easy lookup.
 	this.args2obj = function(args)	{
 		var r = {};
-		for(var i = 0, L = args.length; i < L; i += 1)	{
-			r[args[i].key] = (args[i].value == null) ? true : args[i].value; //some keys, like append or media, have no value and will be set to null.
+		if(!$.isEmptyObject(args))	{
+			for(var i = 0, L = args.length; i < L; i += 1)	{
+				r[args[i].key] = (args[i].value == null) ? true : args[i].value; //some keys, like append or media, have no value and will be set to null.
+				}
 			}
 		return r;
 		}
@@ -428,22 +430,43 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //truncate
 
 
-	this.format_from_module = function(cmd,globals)	{
+	this.format_from_module = function(cmd,globals,dataset)	{
 //		dump(" -> non 'core' based format. not handled yet"); // dump(' -> cmd'); dump(cmd); dump(' -> globals'); dump(globals);
-		var moduleFormats;
-
-		if(cmd.module == 'controller')	{
-			moduleFormats = $._app.tlcFormats
+//		dump(" -> cmd.args: "); dump(cmd.args);
+		var moduleFormats, argObj = this.args2obj(cmd.args);
+		var r = true; //what is returned. if false is returned, the rest of the statement is NOT executed.
+// ### FUTURE -> once renderFormats are no longer supported, won't need argObj or the 'if' for legacy (tho it could be left to throw a warning)
+		if(argObj.legacy)	{
+			if($._app.ext[cmd.module] && $._app.ext[cmd.module].renderFormats && typeof $._app.ext[cmd.module].renderFormats[cmd.name] == 'function')	{
+				$._app.ext[cmd.module].renderFormats[cmd.name](globals.tags[globals.focusTag],{'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset),'databind':argObj})
+				r = false; //when a renderFormat is executed, the rest of the statement is not run. renderFormats aren't designed to work with this and their predicability is unknown. so is their life expectancy.
+				}
+			else	{
+				dump("A renderFormat was defined, but does not exist.  name: "+cmd.name+" in extension "+cmd.module,'warn')
+				}
 			}
-		else if($._app.ext[cmd.module] && $._app.ext[cmd.module].tlcFormats)	{
-			moduleFormats = $._app.ext[cmd.module].tlcFormats;
+		else	{
+	
+			if(cmd.module == 'controller')	{
+				moduleFormats = $._app.tlcFormats
+				}
+			else if($._app.ext[cmd.module] && $._app.ext[cmd.module].tlcFormats)	{
+				moduleFormats = $._app.ext[cmd.module].tlcFormats;
+				}
+			else	{}
+	
+			if(moduleFormats && typeof moduleFormats[cmd.name] === 'function')	{
+				globals.binds[globals.focusBind] = moduleFormats[cmd.name]({'command':cmd,'globals':globals,'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset)},this); // ### TODO -> discuss. this passes in entire data object if no bind is present.
+				//tlcFormats do NOT kill the rest of the statement like legacy/renderformats do.
+				}
+			else if(moduleFormats)	{
+				dump("A tlcFormat was defined, but does not exist.  name: "+cmd.name+" in extension "+cmd.module)
+				}
+			else	{
+				dump("Could not ascertain module formats for the following command: ","error"); dump(cmd);
+				}
 			}
-		else	{}
-
-		if(moduleFormats && typeof moduleFormats[cmd.name] === 'function')	{
-			globals.binds[globals.focusBind] = moduleFormats[cmd.name]({'command':cmd,'globals':globals},this);// probably want the first param to be the tag.
-			}
-
+		return r;
 		}
 
 
@@ -459,19 +482,21 @@ command (everything else that's supported).
 */
 
 	this.handleType_command = function(cmd,globals,dataset)	{
+		var r = true;
 //		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
 			if(cmd.module == 'core')	{
 				this['handleCommand_'+cmd.name](cmd,globals)
 				}
 			else	{
-				this.format_from_module(cmd,globals);
+				r = this.format_from_module(cmd,globals,dataset);
 				}
 			}
 		catch(e){
 			dump(e);
 			dump(cmd);
 			}
+		return r;
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
@@ -709,7 +734,12 @@ command (everything else that's supported).
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 //			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
-				this.handleType_command(commands[i],theseGlobals,dataset);
+				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
+				else	{
+					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
+					//handleCommand returned a false. That means either an error occured OR this executed a renderFormat. stop processing.
+					break;
+					}
 				}
 			else if(commands[i].type == 'IF')	{
 				this['handleType_IF'](commands[i],theseGlobals,dataset);
