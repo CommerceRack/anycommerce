@@ -27,7 +27,7 @@ var buysafe_guarantee = function(_app) {
 		
 		vars : {
 			"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-			"dependencies" : ['myRIA'] //a list of other extensions (just the namespace) that are required for this one to load
+			"dependencies" : ['quickstart'] //a list of other extensions (just the namespace) that are required for this one to load
 			},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -57,7 +57,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 
 _app.u.dump("BEGIN buysafe_guarantee.startExtension.onSuccess.");
 
-//make sure the templates have been loaded. all the myRIA templates are loaded at the same time.
+//make sure the templates have been loaded. all the quickstart templates are loaded at the same time.
 					if(_app.templates && _app.templates.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
 
 //http://developer.buysafe.com/bsg_overview.php

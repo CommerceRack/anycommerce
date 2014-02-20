@@ -20,7 +20,7 @@ myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
-myApp.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
+myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram']);
 
 //myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
 //myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
@@ -46,7 +46,7 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/peg-0.8.0.js']); //in ze
 //Cart Messaging Responses.
 
 myApp.cmr.push(['chat.join',function(message){
-	var $ui = myApp.ext.myRIA.a.showBuyerCMUI();
+	var $ui = myApp.ext.quickstart.a.showBuyerCMUI();
 	$("[data-app-role='messageInput']",$ui).show();
 	$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
 	$('.show4ActiveChat',$ui).show();
@@ -59,7 +59,7 @@ myApp.cmr.push(['goto',function(message,$context){
 		.addClass('chat_post')
 		.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
 		.on('click',function(){
-			showContent(myApp.ext.myRIA.u.whatAmIFor(message.vars),message.vars);
+			showContent(myApp.ext.quickstart.u.whatAmIFor(message.vars),message.vars);
 			});
 	$history.append($P);
 	$history.parent().scrollTop($history.height());
@@ -113,7 +113,7 @@ myApp.u.appInitComplete = function(P)	{
 		//the fb code only works if an appID is set, so don't show banner if not present.				
 		if(myApp.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
 			$('.ocmFacebookComment',$checkout).click(function(){
-				myApp.ext.myRIA.thirdParty.fb.postToWall(cartContentsAsLinks);
+				myApp.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
 				_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
 				});
 			}

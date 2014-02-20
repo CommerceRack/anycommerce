@@ -113,7 +113,6 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // parentID, templateID (template used on each item in the results) and datapointer.
 		handleElasticResults : {
 			onSuccess : function(_rtag)	{
-//				_app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
 				var L = _app.data[_rtag.datapointer]['_count'];
 				
 				var $list = _rtag.list;

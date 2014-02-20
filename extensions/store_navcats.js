@@ -168,7 +168,7 @@ templateID - the template id used (from _app.templates)
 // override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
 		getChildData : {
 			onSuccess : function(tagObj)	{
-//				_app.u.dump('BEGIN _app.ext.myRIA.callbacks.getChildData.onSuccess');
+//				_app.u.dump('BEGIN _app.ext.quickstart.callbacks.getChildData.onSuccess');
 				var path = tagObj.datapointer.split('|')[1];
 //				_app.u.dump(" -> path: "+path);
 				tagObj.callback = 'addCatToDom'; //the tagObj will have 
@@ -407,7 +407,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 			
 						
 			addQueries4BreadcrumbToQ : function(path)	{
-//				_app.u.dump("BEGIN myRIA.u.getBreadcrumbData");
+//				_app.u.dump("BEGIN quickstart.u.getBreadcrumbData");
 				var datapointers = new Array(); //what's returned. the length can be used to update numRequests (if necessary). the array itself can be used for extending by datapointers, if necessary.
 				var pathArray = path.split('.');
 				var len = pathArray.length

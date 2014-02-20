@@ -2255,7 +2255,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					}
 //used to ensure the domain selected (either from document.domain or dpsGet) is valid for this account.
 				function validateDomain(domain)	{
-					dump(" -> begin validateDoman: "+domain);
+//					dump(" -> begin validateDoman: "+domain);
 					_app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});

@@ -325,9 +325,9 @@ so the atc events are unbinded, then binded.
 //						_app.u.dump(" -> is choose options.");
 						$tag.addClass('chooseOptionsButton').unbind('.myATCEvent').bind('click.myATCEvent',function(event){
 event.preventDefault();
-// !!! TEMPORARY!!! this needs to be handled better. a function needs to be passed in or something.
+// ### TODO -> this needs to be handled better. a function needs to be passed in or something.
 //move into the custom _app. 
-_app.ext.myRIA.u.handlePageContent('product',pid)
+_app.ext.quickstart.u.handlePageContent('product',pid)
 					}).text('Choose Options')}
 					
 					}

@@ -61,7 +61,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 				onSuccess : function(){
 //					_app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
-//make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
+//make sure that not only has quickstart been loaded, but that the createTemplateFunctions has executed
 					if(_app.templates && _app.templates.productTemplate && typeof _gaq == 'object')	{
 
 //_app.u.dump(" -> adding triggers");
