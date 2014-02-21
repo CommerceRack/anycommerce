@@ -85,7 +85,7 @@ function buildParams(odb)	{
 function upgradeRenderFormat(odb)	{
 	var r = false;
 	switch(odb.format){
-		
+		//if you update this list and add an 'if' to the output, be sure to adjust the 'if' handler in doIt2It
 		case 'stuffList':
 			console.warn("The following data-bind was using 'stufflist', which is a deprecated list format. The data-bind was upgraded to 'loop', but this does not behave in the exact same manner. You should investigate this further (most likely update the template that contained this element from quickstart (or whatever extension loaded it).");
 			r = "controller#loop --templateid='"+odb.loadsTemplate+"'; "; break;
@@ -143,7 +143,7 @@ function doIt2It()	{
 		//old: var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;
 		//new: command1 $variable --xyz='scalar' --abc true #b00be5; command2 --moreParameters; 
 		var odb = parseDataBind($tag.data('bind')); // Old Data Bind. sure.
-		var command = '';
+		var command = '', hasIf = false;
 
 
 		if(odb.var)	{
@@ -157,8 +157,6 @@ function doIt2It()	{
 			command += "if(is $var --blank) {{bind var '"+odb.defaultValue+"';}}; "
 			}
 
-
-
 		if(odb.pretext)	{
 			command += "format --prepend='"+(odb.pretext.charAt(0) == ' ' ? odb.pretext.substr(1) : odb.pretext)+"'; " //for pretext, the leading whitespace is probably not desired in most cases.
 			}
@@ -166,6 +164,23 @@ function doIt2It()	{
 		if(odb.posttext)	{
 			command += "format --append='"+odb.posttext+"'; "; //here, leading whitespace is probably desired and the trailing whitespace isn't likely to hurt anything.
 			}
+
+
+/*
+// the original behavior of a data-bind was to skip the output if the value was not set. That is not true in TLC.
+// so put the 'apply' into an if. Of course, some
+*/
+function wrappedApply()	{
+	var r = "";
+	if(odb.showIfSet || odb.showIfMatch || odb.hideIfSet || odb.addClass)	{
+		//these already have apply.
+		}
+	else	{
+		r = "if (is $var --notblank;) {{apply --append;}};"
+		}
+	return r;	
+	}
+
 
 		
 		if(odb.format == 'imageURL')	{
@@ -183,17 +198,16 @@ function doIt2It()	{
 			command += odb.extension+"#";
 			command += format+' ';
 			command += buildParams(odb);
-			command += " --legacy ";
-			command += "; apply --append;";
+			command += " --legacy; apply --append;";
 			}
 		else	{
 			if(odb.format == 'text')	{
 				//this is the default. no special formatting or anything else is necessary.
-				command += "apply --append;";
+				command += wrappedApply(); console.log(" -> wrappedApply: "+wrappedApply());
 				}
 			else if(upgradeRenderFormat(odb))	{
 				command += upgradeRenderFormat(odb);
-				command += "apply --append;";
+				command += wrappedApply();
 				}
 			else	{
 				console.warn("Something went wrong.  The following line did not specify an extension and the renderFormat was not handled in upgradeRenderFormat.\ndatabind: "+$tag.data('bind'));
