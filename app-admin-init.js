@@ -46,6 +46,7 @@ adminApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js
 //adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js',function(){window.myCreole = new Parse.Simple.Creole();}]); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/tlc.js']); //used pretty early in process..
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/anycontent.js']);
 
 //once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
 adminApp.u.loadScript(adminApp.vars.baseURL+'resources/peg-0.8.0.js',function(){

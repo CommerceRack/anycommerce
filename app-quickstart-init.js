@@ -36,12 +36,16 @@ myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram'])
 
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/tlc.js']); //in zero pass in case product page is first page.
 myApp.rq.push(['css',1,myApp.vars.baseURL+'resources/anyplugins.css']);
 
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/peg-0.8.0.js']); //in zero pass in case product page is first page.
 
-
+//once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
+myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
+	myApp.model.getGrammar(myApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
 
 //Cart Messaging Responses.
 

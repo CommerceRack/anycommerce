@@ -254,8 +254,10 @@ document.write = function(v){
 //				dump(" -> tagObj: ");	dump(tagObj);
 				_app.ext.quickstart.u.handleMinicartUpdate(tagObj);
 				//empty is to get rid of loading gfx.
-				var $cart = tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID))
-				$cart.empty().append(_app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,_app.data[tagObj.datapointer]));
+				var $cart = tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID));
+// * 201401 ->	removing all references to renderFunctions in favor of tlc.
+//				$cart.empty().append(_app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,_app.data[tagObj.datapointer]));
+				$cart.empty().tlc(tagObj)				
 				tagObj.state = 'complete'; //needed for handleTemplateEvents.
 				_app.renderFunctions.handleTemplateEvents($cart,tagObj);
 				}
@@ -281,7 +283,7 @@ document.write = function(v){
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
 //				dump("Rendering product template for: "+pid);
-				tagObj.jqObj.anycontent({'translateOnly':true,'data':tmp});
+				tagObj.jqObj.tlc({'translateOnly':true,'dataset':tmp});
 				tagObj.pid = pid;
 				//build queries will validate the namespaces used AND also fetch the parent product if this item is a child.
 				_app.ext.quickstart.u.buildQueriesFromTemplate(tagObj);
@@ -318,7 +320,7 @@ document.write = function(v){
 		showAddresses : {
 			onSuccess : function(_tag)	{
 				var $myAccountPage = $('#myaccountArticle');
-				$myAccountPage.anycontent({'data':_app.data.buyerAddressList});
+				$myAccountPage.tlc({'dataset':_app.data.buyerAddressList});
 				_app.u.handleButtons($myAccountPage);
 				}
 			}, //showAddresses
@@ -366,7 +368,8 @@ document.write = function(v){
 						}
 					tmp.session = _app.ext.quickstart.vars.session;
 //a category page gets translated. A product page does not because the bulk of the product data has already been output. prodlists are being handled via buildProdlist
-					_app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
+//					_app.renderFunctions.translateTemplate(tmp,tagObj.parentID); // * 201401 ->	removing all references to renderFunctions in favor of tlc.
+					$(_app.u.jqSelector('#',tagObj.parentID)).tlc({'dataset':tmp})
 					}
 //product page handline
 				else if(tagObj.pid)	{
@@ -376,7 +379,7 @@ document.write = function(v){
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && _app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
-							$("[data-app-role='childrenSiblingsContainer']",$(_app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':_app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
+							$("[data-app-role='childrenSiblingsContainer']",$(_app.u.jqSelector('#',tagObj.parentID))).show().tlc({'dataset':_app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
 							}
 						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
 							dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
@@ -399,7 +402,6 @@ document.write = function(v){
 				tagObj.state = 'complete'; //needed for handleTemplateEvents.
 
 				_app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID))),tagObj);
-
 				},
 			onError : function(responseData,uuid)	{
 				$('#mainContentArea').removeClass('loadingBG')
@@ -567,7 +569,12 @@ need to be customized on a per-ria basis.
 						//categories that start with ! are 'hidden' and should not be displayed.
 						}
 					else if(!$.isEmptyObject(_app.data['appNavcatDetail|'+thisCatSafeID]))	{
-						$tag.append(_app.renderFunctions.transmogrify({'id':thisCatSafeID,'catsafeid':thisCatSafeID},data.bindData.loadsTemplate,_app.data['appNavcatDetail|'+thisCatSafeID]));
+//						$tag.append(_app.renderFunctions.transmogrify({'id':thisCatSafeID,'catsafeid':thisCatSafeID},data.bindData.loadsTemplate,_app.data['appNavcatDetail|'+thisCatSafeID]));
+						$tag.tlc({
+							dataAttribs : {'id':thisCatSafeID,'catsafeid':thisCatSafeID},
+							dataset : _app.data['appNavcatDetail|'+thisCatSafeID],
+							templateid : data.bindData.loadsTemplate
+							})
 						}
 					else	{
 						dump("WARNING - subcategoryList reference to appNavcatDetail|"+thisCatSafeID+" was an empty object.");
@@ -655,7 +662,12 @@ need to be customized on a per-ria basis.
 					if(data.value.hits.total)	{
 						for(var i = 0; i < L; i += 1)	{
 							pid = data.value.hits.hits[i]['_id'];
-							$tag.append(_app.renderFunctions.transmogrify({'id':parentID+'_'+pid,'pid':pid},templateID,data.value.hits.hits[i]['_source']));
+//							$tag.append(_app.renderFunctions.transmogrify({'id':parentID+'_'+pid,'pid':pid},templateID,data.value.hits.hits[i]['_source']));
+							$tag.tlc({
+								dataAttribs : {'id':parentID+'_'+pid,'pid':pid},
+								templateid : templateID,
+								dataset : data.value.hits.hits[i]['_source']
+								});
 							}
 						
 						if(data.bindData.before) {$tag.before(data.bindData.before)} //used for html
@@ -1017,7 +1029,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.back = 0;
 						infoObj.templateID = 'pageNotFoundTemplate'
 						infoObj.state = 'init'; //needed for handleTemplateEvents.
-						var $fourOhFour = _app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj);
+//						var $fourOhFour = _app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj);
+						var $fourOhFour = $("<div \/>").tlc({
+							dataAttribs : {'id':'page404'},
+							templateid : infoObj.templateID,
+							dataset : infoObj
+							});
 						_app.renderFunctions.handleTemplateEvents($fourOhFour,infoObj);
 						$('#mainContentArea').append($fourOhFour);
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
@@ -1305,7 +1322,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 								$detail.anymessage({'message':rd});
 								}
 							else	{
-								$detail.anycontent({'templateID':'productTemplateQuickView','data' : _app.data[rd.datapointer]})
+								$detail.tlc({'templateID':'productTemplateQuickView','dataset' : _app.data[rd.datapointer]})
 								}
 
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
@@ -1427,7 +1444,12 @@ setTimeout(function(){
 						for(var i = 0; i < L; i += 1)	{
 							if(_app.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
 								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
-								$target.append(_app.renderFunctions.transmogrify({'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},templateID,_app.data['appFAQs']['@detail'][i]))
+//								$target.append(_app.renderFunctions.transmogrify({'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},templateID,_app.data['appFAQs']['@detail'][i]))
+$target.tlc({
+	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
+	templateid : templateID,
+	dataset : _app.data['appFAQs']['@detail'][i]
+	})
 								}
 							}
 						}
@@ -2159,7 +2181,8 @@ effects the display of the nav buttons only. should be run just after the handle
 	
 //no need to render template again.
 					if(!$product.length){
-						$product = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID});
+//						$product = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID});
+						$product.tcl({templateid:infoObj.templateID,dataAttribs:{'id':parentID}});
 						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
 						_app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
@@ -2207,7 +2230,11 @@ effects the display of the nav buttons only. should be run just after the handle
 					//template has already been added to the DOM. likley moving between company pages.
 					}
 				else	{
-					var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID);
+//					var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID);
+					$content.tlc({
+						templateid : infoObj.templateID,
+						dataAttribs : {'id':parentID}
+						})
 					$content.addClass("displayNone");
 
 					var $nav = $('#companyNav ul:first',$content);
@@ -2252,7 +2279,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					_app.ext.quickstart.u.revertPageFromPreviewMode($('#mainContentArea_search'));
 					}
 				else	{
-					$('#mainContentArea').anycontent({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
+					$('#mainContentArea').tlc({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
 					$page = $('#mainContentArea_search');
 					}
 
@@ -2411,7 +2438,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //only create instance once.
 				if($customer.length)	{}
 				else	{
-					$customer = _app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID);
+//					$customer = _app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID);
+					$customer = $("<div>",{id:infoObj.parentID}).tlc({templateid:'customerTemplate'});
 					$('#mainContentArea').append($customer);
 					_app.ext.quickstart.u.bindNav('#customerNav a');
 					_app.u.handleCommonPlugins($customer);
@@ -2455,9 +2483,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
-									callback : 'anycontent',
-									jqObj : $article,
-									translateOnly : true
+									callback : 'tlc',
+									jqObj : $article
 									}},'mutable');
 								_app.model.dispatchThis('mutable');
 								break;
@@ -2466,9 +2493,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
-									callback : 'anycontent',
-									jqObj : $article,
-									translateOnly : true
+									callback : 'tlc',
+									jqObj : $article
 									}},'mutable');
 								_app.model.dispatchThis('mutable');
 								break;	
@@ -2480,7 +2506,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									$article.showLoading({'message':'Retrieving order information'});
 									_app.model.addDispatchToQ({"_cmd":"buyerOrderGet",'orderid':orderID,'cartid':cartID,"_tag":{
 										"datapointer":"buyerOrderGet|"+orderID,
-										"callback": "anycontent",
+										"callback": "tlc",
 										"jqObj" : $article
 										}},"mutable");
 									_app.model.dispatchThis('mutable');
@@ -2493,7 +2519,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							//always fetch a clean copy of the order history.
 								_app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","_tag":{
 									"datapointer":"buyerPurchaseHistory",
-									"callback":"anycontent",
+									"callback":"tlc",
 									"jqObj" : $("[data-app-role='orderList']",'#ordersArticle').empty()
 									}},"mutable");
 								break;
@@ -2764,7 +2790,8 @@ buyer to 'take with them' as they move between  pages.
 						_app.renderFunctions.handleTemplateEvents($parent,infoObj);
 						}
 					else	{
-						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
+//						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
+						$content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID});
 //if dialog is set, we've entered this function through showPageInDialog.
 //content gets added immediately to the dialog.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
@@ -2971,7 +2998,7 @@ _app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 					_app.model.addDispatchToQ({"_cmd":"buyerOrderGet",'orderid':orderID,"_tag":{
 						"datapointer":"buyerOrderGet|"+orderID,
 						'templateID':'invoiceTemplate',
-						"callback": "anycontent",
+						"callback": "tlc",
 						"jqObj" : $orderContents
 						}},"mutable");
 					_app.model.dispatchThis('mutable');

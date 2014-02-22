@@ -74,11 +74,12 @@ function parseDataVar(v)	{
 
 //takes a databind and builds a string, built from all the key/value pairs in odb, formatted for tlc.
 function buildParams(odb)	{
-	var tmp = getBlacklistedObject(odb,['format','var','extension','pretext','posttext','useParentData']);
+	var tmp = getBlacklistedObject(odb,['format','var','extension','pretext','posttext','useParentData','loadsTemplate','editor']);
 	r = ""; //what is returned. 
 	for(var index in tmp)	{
-		r += " --"+index+"='"+tmp[index]+"'"
+		r += " --"+(index.toLowerCase().replace(/[^a-z]/g,''))+"='"+tmp[index]+"'";
 		}
+	if(odb.loadsTemplate)	{r += " --templateid='"+odb.loadsTemplate+"' "}
 	return r;
 	}
 

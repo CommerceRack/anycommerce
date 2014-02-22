@@ -142,7 +142,7 @@ var tlc = function()	{
 					commands = window.pegParser.parse(tlc);
 					}
 				catch(e)	{
-					dump(_self.buildErrorMessage(e));
+					dump(_self.buildErrorMessage(e)); dump(tlc);
 					}
 	
 				if(commands && !$.isEmptyObject(commands))	{
@@ -438,7 +438,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 // ### FUTURE -> once renderFormats are no longer supported, won't need argObj or the 'if' for legacy (tho it could be left to throw a warning)
 		if(argObj.legacy)	{
 			if($._app.ext[cmd.module] && $._app.ext[cmd.module].renderFormats && typeof $._app.ext[cmd.module].renderFormats[cmd.name] == 'function')	{
-				$._app.ext[cmd.module].renderFormats[cmd.name](globals.tags[globals.focusTag],{'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset),'databind':argObj})
+				$._app.ext[cmd.module].renderFormats[cmd.name](globals.tags[globals.focusTag],{'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset),'bindData':argObj})
 				r = false; //when a renderFormat is executed, the rest of the statement is not run. renderFormats aren't designed to work with this and their predicability is unknown. so is their life expectancy.
 				}
 			else	{
@@ -485,7 +485,7 @@ command (everything else that's supported).
 		var r = true;
 //		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
-			if(cmd.module == 'core')	{
+			if(cmd.module == 'core' && typeof this['handleCommand_'+cmd.name] == 'function')	{
 				this['handleCommand_'+cmd.name](cmd,globals)
 				}
 			else	{
@@ -493,6 +493,7 @@ command (everything else that's supported).
 				}
 			}
 		catch(e){
+			dump("An error occured when attempting to execute the command.","error");
 			dump(e);
 			dump(cmd);
 			}

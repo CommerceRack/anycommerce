@@ -263,7 +263,10 @@ A special translate template for product so that reviews can be merged into the 
 //a product list needs an ID for multipage to work right. will assign a random one if none is set.
 //that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
-
+			productlist : function($tag,data)	{
+				//need to keep admin and quickstart both running.
+				this.productList($tag,data);
+				},
 			productList : function($tag,data)	{
 //				_app.u.dump("BEGIN store_prodlist.renderFormats.productList");
 //				_app.u.dump(" -> data.bindData: "); _app.u.dump(data.bindData);
