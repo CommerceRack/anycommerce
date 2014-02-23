@@ -7,21 +7,37 @@
 			datapointer : null, //can be used to set data. ($._app.data[datapointer] )
 			extendByDatapointers : new Array(), //an array of datapointers. will merge all the data into one object prior to translation
 //if dataAttribs is set, these will be added to this.element as both attributes data- .  data- will be prepended if not already set.
-			dataAttribs : null
+			dataAttribs : null,
+			verb : 'transmogrify' //acceptable values are transmogrify, translate or template (transmogrify requires template and does both apply template and translate).
+			// for verb, may later offer a dwiw which tries to intelligently guess what to do. 
 			},
 		_init : function(){
 			var o = this.options;
 			//one of these three must be set or running this doesn't really serve any purpose.
 			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
+				//first, resolve 'dataset' so that singular object can be used for any translations.
 				if(o.datapointer)	{
 					o.dataset = $._app.data[o.datapointer];
 					}
 				if(!$.isEmptyObject(o.extendByDatapointers))	{
 					this._handleDatapointers();
 					}
-				var $instance = this._render();
-				this._handleDataAttribs($instance);
-				this.element.append($instance);
+				
+				if(o.verb == 'transmogrify')	{
+					var $instance = this.transmogrify();
+					this._handleDataAttribs($instance);
+					this.element.append($instance);					
+					}
+				else if(o.verb == 'translate')	{
+//					dump(" -> o.dataset"); dump(o.dataset);
+					this.translate();
+					}
+				else if(o.verb == 'template')	{
+					this.element.append(this.template());
+					}
+				else	{
+					dump("in tlc() jquery function, an invalid verb ["+o.verb+"] was specified.","warn");
+					}
 				}
 			else	{
 				dump('In $.tlc, no templateid or data was supplied. tlc is not going to accomplish anything without either data or a template.','warn');
@@ -68,10 +84,15 @@
 
 				}
 			},
-		_render : function()	{
+		template : function()	{
+			return new tlc().getTemplateInstance(this.options.templateid);
+			},
+		translate : function()	{
+			new tlc().translate(this.element,this.options.dataset);
+			},
+		transmogrify : function()	{
 			var self = this;
-//currently, the tlc core code and this plugin are intentionally independant. allows, if necessary, tlc to be run directly.
-//### FUTURE -> move tlc code into this
+//the tlc core code and this plugin are intentionally independant. allows tlc to be run directly. ex: buildQueriesFromTemplate
 			var instance = new tlc();
 			var $tmp = instance.runTLC({
 				templateid : self.options.templateid,
@@ -96,7 +117,6 @@ var tlc = function()	{
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
 
-
 	this.createTemplate = function(templateid)	{
 		var $tmp = $($._app.u.jqSelector('#',templateid));
 		return $._app.model.makeTemplate($tmp,templateid);
@@ -119,6 +139,40 @@ var tlc = function()	{
 //	this.gatherDatapointers = function(){}'
 
 
+	this.translate = function($ele,dataset)	{
+		if($ele instanceof jQuery && dataset)	{
+			
+			}
+		else	{
+			dump(" -> Either $ele is not an instance of jquery ["+($ele instanceof jQuery)+"] or an empty dataset was passed into tlc.translate. dataset follows:"); dump(dataset);
+			}
+		var _self = this;
+		$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
+			var $tag = $(this), tlc = $tag.data('tlc');
+//			dump("----------------> start new $tag <-----------------");
+			var commands = false;
+			try{
+				commands = window.pegParser.parse(tlc);
+				}
+			catch(e)	{
+				dump(_self.buildErrorMessage(e)); dump(tlc);
+				}
+
+			if(commands && !$.isEmptyObject(commands))	{
+				_self.executeCommands(commands,{
+					tags : {
+						'$tag' : $tag
+						}, //an object of tags.
+					focusTag : '$tag' //the pointer to the tag that is currently in focus.
+					},dataset);
+				}
+			else	{
+				dump("couldn't parse a tlc",'warn');
+				//could not parse tlc. error already reported.
+				}
+//			dump("----------------> end $tag <-----------------");
+			});
+		}
 
 
 //This is where the magic happens. Run this and the translated template will be returned.
@@ -128,42 +182,17 @@ var tlc = function()	{
 
 //		this.data = P.data || {};
 		
-		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
+//		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
 		
 		var _self = this; //'this' context is lost within each loop.
 		var $t = _self.getTemplateInstance(P.templateid);
-		if($t)	{
-
-			$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
-				var $tag = $(this), tlc = $tag.data('tlc');
-//			dump("----------------> start new $tag <-----------------");
-				var commands = false;
-				try{
-					commands = window.pegParser.parse(tlc);
-					}
-				catch(e)	{
-					dump(_self.buildErrorMessage(e)); dump(tlc);
-					}
-	
-				if(commands && !$.isEmptyObject(commands))	{
-					_self.executeCommands(commands,{
-						tags : {
-							'$tag' : $tag
-							}, //an object of tags.
-						focusTag : '$tag' //the pointer to the tag that is currently in focus.
-						},P.dataset);
-					}
-				else	{
-					dump("couldn't parse a tlc",'warn');
-					//could not parse tlc. error already reported.
-					}
-	//			dump("----------------> end $tag <-----------------");
-				});
+		if($t instanceof jQuery)	{
+			_self.translate($t,P.dataset);
 			}
 		else	{
 			//invalid template
 			}
-		dump("END runTLC: "+(new Date().getTime() - startTime)+" milliseconds");
+//		dump("END runTLC: "+(new Date().getTime() - startTime)+" milliseconds"); //if you uncomment this, also uncomment the 'startTime' var near the top.
 		return $t;
 		} //runTLC
 
@@ -234,7 +263,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		else	{
 			r = false;
 			//either media or src left blank. OR media is tru and the var specified doesn't exist.
-			dump("Something was missing for apply_img.\if media.type == 'variable' then globals.binds[argObj.media.value] must be set.\nor src ["+argObj.src+"] not specified on appy img OR media is set but globals.binds["+argObj.media+"] ["+globals.binds[argObj.media]+"} is not.");
+			dump("Something was missing for apply_img.\nif media.type == 'variable' then globals.binds[argObj.media.value] must be set.\nor src not specified on appy img OR media is set but globals.binds is not.");
+			dump("globals: "); dump(globals);
 			}
 
 		if(filePath && formatter == 'img')	{
@@ -493,9 +523,9 @@ command (everything else that's supported).
 				}
 			}
 		catch(e){
-			dump("An error occured when attempting to execute the command.","error");
-			dump(e);
+			dump("An error occured when attempting to execute the command. command follows: ");
 			dump(cmd);
+			dump(e);
 			}
 		return r;
 		}
@@ -529,7 +559,7 @@ command (everything else that's supported).
 		if(cmd[action])	{
 //			dump(' -> cmd[action]'); dump(cmd[action].statements[0]);
 			for(var i = 0, L = cmd[action].statements[0].length; i < L; i += 1)	{
-				this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
+				this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO  !!! -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
 				}
 			
 			}
@@ -754,4 +784,37 @@ command (everything else that's supported).
 
 			}
 		}
-	}
+	
+//This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.
+	this.getBinds = function(templateid)	{
+		var _self = this; //'this' context is lost within each loop.
+		var $t = _self.getTemplateInstance(templateid), bindArr = new Array();
+	
+		$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
+			var $tag = $(this), tlc = $tag.data('tlc');
+//			dump("----------------> start new $tag <-----------------");
+			var commands = false;
+			try{
+				commands = window.pegParser.parse(tlc);
+				}
+			catch(e)	{
+				dump(_self.buildErrorMessage(e)); dump(tlc);
+				}
+			if(commands && !$.isEmptyObject(commands))	{
+				var L = commands.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(commands[i].type == 'BIND' && commands[i].Src.type == 'scalar' && $.inArray(commands[i].Src.value,bindArr) < 0 )	{
+						bindArr.push(commands[i].Src.value.substr(1)); //for what this is used for, the preceeding period is not desired.
+						}
+					}
+				}
+			else	{
+				dump("couldn't parse a tlc",'warn');
+				//could not parse tlc. error already reported.
+				}
+//			dump("----------------> end $tag <-----------------");
+			});
+		return bindArr;
+		} //end getBinds
+
+	} //end

@@ -520,21 +520,21 @@ _app.u.throwMessage(responseData); is the default error handler.
 				rd._rtag.jqObj.anymessage(rd);
 				},
 			onSuccess : function(_rtag)	{
-//				_app.u.dump("BEGIN callbacks.tlc"); _app.u.dump(_rtag);
+//				_app.u.dump("BEGIN callbacks.tlc ------------------------"); _app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
-					var $target = _rtag.jqObj.hideLoading(); //shortcut
+					var $target = _rtag.jqObj
+					$target.hideLoading(); //shortcut
 					if(_rtag.templateID && !_rtag.templateid)	{_rtag.templateid = _rtag.templateID} //anycontent used templateID. tlc uses templateid. rather than put this into the core tranlsator, it's here as a stopgap.
 //anycontent will disable hideLoading and loadingBG classes.
 //to maintain flexibility, pass all anycontent params in thru _tag
+dump(" -> _rtag: "); dump(_rtag);
 					$target.tlc(_rtag);
-
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 
 					if(_rtag.applyEditTrackingToInputs)	{
 						$target.anyform({'trackEdits':true});
-						_app.ext.admin.u.applyEditTrackingToInputs(); //applies 'edited' class when a field is updated. unlocks 'save' button.
 						}
 //allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
 					if(typeof _rtag.onComplete == 'function')	{
@@ -544,7 +544,6 @@ _app.u.throwMessage(responseData); is the default error handler.
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
 					}
-				
 				},
 			onError : function(rd)	{
 				if(rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj == 'object'){
@@ -2086,7 +2085,7 @@ VALIDATION
 				else if(type == 'greet')	{
 					console.log("%c\n\n"+msg+"\n\n",'color: purple; font-weight: bold;')
 					}
-				else if(console[type])	{
+				else if(typeof console[type] == 'function')	{
 					console[type](msg);
 					}
 				else	{} //hhhhmm... unsupported type.

@@ -100,7 +100,7 @@ var quickstart = function(_app) {
 
 		startMyProgram : {
 			onSuccess : function()	{
-			dump("BEGIN quickstart.callback.startMyProgram");
+//			dump("BEGIN quickstart.callback.startMyProgram");
 //			dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			dump(" -> window.history.pushState: "+typeof window.history.pushState);
 
@@ -346,30 +346,27 @@ document.write = function(v){
 //used as part of showContent for the home and category pages. Will display the data retrieved from fetch.
 		showPageContent : {
 			onSuccess : function(tagObj)	{
+//				dump(" BEGIN quickstart.callbacks.onSuccess.showPageContent");
 //when translating a template, only 1 dataset can be passed in, so detail and page are merged and passed in together.
-				var tmp = {};
 
 //cat page handling.
 				if(tagObj.navcat)	{
 //					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
+
+					tagObj.dataset = $.extend({},_app.data['appNavcatDetail|'+tagObj.navcat],{'%page':_app.data['appPageGet|'+tagObj.navcat]['%page']},{'session':_app.ext.quickstart.vars.session});
+					delete tagObj.datapointer; //delete this to be sure tlc uses dataset.
 //					dump(" -> tagObj: "); dump(tagObj);
 
-					if(typeof _app.data['appNavcatDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(_app.data['appNavcatDetail|'+tagObj.navcat]))	{
-						tmp = _app.data['appNavcatDetail|'+tagObj.navcat]
-						}
-					if(typeof _app.data['appPageGet|'+tagObj.navcat] == 'object' && typeof _app.data['appPageGet|'+tagObj.navcat]['%page'] == 'object' && !$.isEmptyObject(_app.data['appPageGet|'+tagObj.navcat]['%page']))	{
-						tmp['%page'] = _app.data['appPageGet|'+tagObj.navcat]['%page'];
-						}
-					if(tagObj.lists.length)	{
+/*					if(tagObj.lists.length)	{
 						var L = tagObj.lists.length;
 						for(var i = 0; i < L; i += 1)	{
 							tmp[tagObj.lists[i]] = _app.data['appNavcatDetail|'+tagObj.lists[i]];
 							}
 						}
-					tmp.session = _app.ext.quickstart.vars.session;
+*/
 //a category page gets translated. A product page does not because the bulk of the product data has already been output. prodlists are being handled via buildProdlist
 //					_app.renderFunctions.translateTemplate(tmp,tagObj.parentID); // * 201401 ->	removing all references to renderFunctions in favor of tlc.
-					$(_app.u.jqSelector('#',tagObj.parentID)).tlc({'dataset':tmp})
+					tagObj.jqObj.tlc(tagObj);
 					}
 //product page handline
 				else if(tagObj.pid)	{
@@ -585,10 +582,10 @@ need to be customized on a per-ria basis.
 //if first char is a !, hide that char, then render as text. used in breadcrumb
 //likely to be used in prodcats if/when it's built.s
 //here, on 'could' disable the display if they didn't want hidden cats to show in the breadcrumb.
-			catText : function($tag,data)	{
-//				dump(data.value);
+			cattext : function($tag,data)	{
+				dump(" -> value: "); dump(data.value);
 				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
-				_app.renderFormats.text($tag,data)
+				_app.renderFormats.text($tag,data);
 				},
 
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
@@ -2791,7 +2788,7 @@ buyer to 'take with them' as they move between  pages.
 						}
 					else	{
 //						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
-						$content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID});
+						var $content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID});
 //if dialog is set, we've entered this function through showPageInDialog.
 //content gets added immediately to the dialog.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
@@ -2800,7 +2797,7 @@ buyer to 'take with them' as they move between  pages.
 							$content.addClass('displayNone'); //hidden by default for page transitions.
 							$('#mainContentArea').append($content);
 							}
-						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','parentID':parentID});
+						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$content});
 						_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
 						_app.model.dispatchThis();
 						}
@@ -2815,19 +2812,12 @@ buyer to 'take with them' as they move between  pages.
 //required params include templateid and either: tagObj.navcat or tagObj.pid  navcat can = . for homepage.
 //load in a template and the necessary queries will be built.
 //currently, only works on product, category and home page templates.
+//by the time we get to this point, the core dataset (appNavcatDetail or appProductGet) is already in memory.
 			buildQueriesFromTemplate : function(tagObj)	{
 //dump("BEGIN quickstart.u.buildQueriesFromTemplate");
 //dump(tagObj);
 
-//***201352 The ping call below will overwrite the data in the datapointer, losing the navcatDetail.  Deleting this datapointer *shouldn't* have 
-//negative effects elsewhere due to the deep copy in fetchPageContent and the lack of use of datapointer in the showPageContent callback.  Hopefully. -mc
-delete tagObj.datapointer;
-
 var numRequests = 0; //will be incremented for # of requests needed. if zero, execute showPageContent directly instead of as part of ping. returned.
-var catSafeID = tagObj.navcat;
-
-var myAttributes = new Array(); // used to hold all the 'page' attributes that will be needed. passed into appPageGet request.
-var elementID; //used as a shortcut for the tag ID, which is requied on a search element. recycled var.
 
 $.extend(tagObj, {"callback":"showPageContent","searchArray":[],"extension":"quickstart","lists":[]});
 /*
@@ -2837,29 +2827,35 @@ tagObj.searchArray = new Array(); //an array of search datapointers. added to _t
 tagObj.extension = 'quickstart'
 tagObj.lists = new Array(); // all the list id's needed.
 */
-_app.model.fetchData('appPageGet|'+catSafeID); //move data from local storage to memory, if present.
 
-//goes through template.  Put together a list of all the data needed. Add appropriate calls to Q.
-_app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
+//compiles a list of all the bind commands scalar pointers. (ex:  %page.description,@products) NOT the values themselves.
+//used to determine what data needs to be fetched.
+var bindArr = new tlc().getBinds(tagObj.templateID);
 
-	var $focusTag = $(this);
+if(tagObj.pid)	{
+	if($.inArray('%ATTRIBS.zoovy:grp_children',bindArr) >= 0 && _app.u.thisNestedExists("data.appProductGet|"+tagObj.pid+".%attribs",_app) && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent'])	{
+		numRequests += _app.calls.appProductGet.init({'pid':_app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
+		}
+	}
+else if(tagObj.navcat)	{
+	_app.model.fetchData('appPageGet|'+tagObj.navcat); //move data from local storage to memory, if present.
+	//pageAttributes is an array of all the %page. scalars refenced in the template. They're fetched in a special manner.
+	//pageObj is a pointer to the category page object in memory, if set. used to see if data is already available.
+	var pageAttributes = new Array(), pageObj = (_app.u.thisNestedExists("data.appPageGet|"+tagObj.navcat+".%page",_app)) ? _app.data['appPageGet|'+tagObj.navcat]['%page'] : {}; 
 	
-//proceed if data-bind has a value (not empty).
-	if(_app.u.isSet($focusTag.attr('data-bind'))){
-		
-		var bindData = _app.renderFunctions.parseDataBind($focusTag.attr('data-bind')) ;
-//		dump(bindData);
-		var namespace = _app.u.isSet(bindData['var']) ? bindData['var'].split('(')[0] : "";
-		var attribute = _app.renderFunctions.parseDataVar(bindData['var']);
-		var tmpAttr; //recycled. used when a portion of the attribute is stipped (page.) and multiple references to trimmed var are needed.
-//these get used in prodlist and subcat elements (anywhere loadstemplate is used)
-		bindData.templateID = bindData.loadsTemplate;
-		bindData.parentID = $focusTag.attr('id');
-
-//		dump(" -> namespace: "+namespace);
-//		dump(" -> attribute: "+attribute);
-		
-		if(bindData.useParentData)	{}
+	for(var i = 0, L = bindArr.length; i < L; i += 1)	{
+		if(bindArr[i].indexOf('%page') == 0 && (!pageObj[bindArr[i]] || !pageObj[bindArr[i]] === null))	{ //a null value would mean the data was requested already but isn't set.
+			pageAttributes.push(bindArr[i].substring(6)); //api is sent an array w/out %page. (ex: %page.description is set as description)
+			}
+		else if(bindArr[i] == '@subcategoryDetail')	{
+//SANITY -> can't use thisNestedExists here because appNavcatDetail|. for homepage will return false.
+			if(_app.data['appNavcatDetail|'+tagObj.navcat]['@subcategoryDetail'] && !$.isEmptyObject(_app.data['appNavcatDetail|'+tagObj.navcat]['@subcategoryDetail']))	{
+				numRequests += _app.ext.store_navcats.u.getChildDataOf(tagObj.navcat,{},'max');
+				}
+			}
+		else	{}
+/*
+### TODO -> these should probably be moved to the renderFormat since w/out a namespace, we won't know for sure what we're dealing w/
 		else if(namespace == 'elastic-native')	{
 //			dump(" -> Elastic-native namespace");
 			elementID = $focusTag.attr('id');
@@ -2868,113 +2864,36 @@ _app.templates[tagObj.templateID].find('[data-bind]').each(function()	{
 				tagObj.searchArray.push('appPublicSearch|'+elementID); //keep a list of all the searches that are being done. used in callback.
 				}
 			}
-//session is a globally recognized namespace. It's content usually doesn't require a request. the data is in memory (quickstart.vars.session)
-		else if(namespace == 'session')	{
-
-			}
-
-//handle all the queries that are specific to a product.
-//by now the product info, including variations, inventory and review 'should' already be in memory (showProd has been executed)
-// the callback, showPageContent, does not run transmogrify over the product data. the lists are handled through buildProdlist, so if any new attributes
-// are supported that may require a request for additional data, something will need to be added to showPageContent to handle the display.
-// don't re-render entire layout. Inefficient AND will break some extensions, such as powerreviews.
-		else if(tagObj.pid)	{
-//on a child page, need to go get the 'siblings' (on a small, go get med, large, etc)
-//don't just look at children, ALWAYS look at ['zoovy:grp_type'] to verify it's set as a CHILD (or PARENT in some cases)
-			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof _app.data['appProductGet|'+tagObj.pid] === 'object' && _app.data['appProductGet|'+tagObj.pid]['%attribs'] && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent'])	{
-				dump(" -> Fetch parent product record.");
-				numRequests += _app.calls.appProductGet.init({'pid':_app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
-				}
-			else if(bindData.format == 'productList')	{
-//a product list takes care of getting all it's own data.
-				}
-			else if(namespace == 'reviews' || namespace == 'session' || namespace == 'product')	{
-				//recognized namespace, but data is already retrieved.
-				}
-			else	{
-				_app.u.throwMessage("Uh oh! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+tagObj.pid);
-				dump("ERROR! unrecognized namespace ["+namespace+"] used on attribute "+attribute+" for pid "+tagObj.pid);
-				}
-			}// /tagObj.pid
 
 
-// this is a navcat in focus
-		else	{
-			if(namespace == 'category' &&  attribute.substring(0,5) === '%page')	{
-				tmpAttr = attribute.substring(6);
-				
-//if some attributes for this page have already been fetched, check to see if the attribute in focus in here or not set.
-// ** 201318 -> the changes below are to make the appGet more efficient (eliminates duplicate %page attribute requests)
-//				if(myAttributes.indexOf(tmpAttr) >= 0)	{} //attribute is already in the list of attributes to be fetched.
-// ** 201332 -> IE8 doesn't support indexOf on an array.
-//				if($.inArray(tmpAttr,myAttributes))	{} //attribute is already in the list of attributes to be fetched.
-// ** 201332 -> The return value of inArray is the same as indexOf, so it should be >= 0 as well
-				if($.inArray(tmpAttr,myAttributes) >= 0)	{} //attribute is already in the list of attributes to be fetched.
-				else if(_app.data['appPageGet|'+catSafeID] && _app.data['appPageGet|'+catSafeID]['%page'])	{
-					if(_app.data['appPageGet|'+catSafeID]['%page'][tmpAttr])	{} //already have value
-					else if(_app.data['appPageGet|'+catSafeID]['%page'][tmpAttr] === null){} //value has been requested but is not set.
-					else	{
-						myAttributes.push(tmpAttr);  //set value to the actual value
-						}
-					}
-//no attributes are present so go get them pls.
-				else	{
-					myAttributes.push(tmpAttr);  //set value to the actual value
-					}				
-				
-				}
 			else if(namespace == 'list' && attribute.charAt(0) == '$')	{
 				var listPath = attribute.split('.')[0]
 				tagObj.lists.push(listPath); //attribute formatted as $listname.@products
-//** 201318 -> numRequests could have been getting set to zero, causing no dispatch to go
 				numRequests += _app.ext.calls.appNavcatDetail.init({'path':listPath,'detail':'fast'});
 				}
-			else if(namespace == 'list')	{
-				// no src is set.
-				_app.u.throwGMessage("In quickstart.u.buildQueriesByTemplate, namespace set to list but invalid SRC ["+attribute+"] is specified... so we don't know where to get the data.");
-				dump(bindData);
-				}
-			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
-//				dump(" -> category(@subcategoryDetail) found");
-//check for the presence of subcats. if none are present, do nothing.
-//if detail isn't set on the subcat, fetching subcats isn't necessary anyway.
-				if(bindData.detail && typeof _app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(_app.data['appNavcatDetail|'+catSafeID]['@subcategoryDetail']))	{
-					numRequests += _app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'max');
-					}
-				}
+
 			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{
 				numRequests += _app.ext.store_navcats.u.addQueries4BreadcrumbToQ(catSafeID).length;
 				}
-			else if(namespace == 'category' && bindData.format == 'productList' )	{
-				//product lists take care of themselves. do nothing.
-				}
-			else if(namespace == 'category')	{
-				// do nothing. this would be hit for something like category(pretty), which is perfectly valid but needs no additional data.
-				}
-			else	{
-					_app.u.throwMessage("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+tagObj.pageType+" for navcat "+tagObj.navcat);
-					dump("Uh oh! unrecognized namespace ["+bindData['var']+"] used for pagetype "+tagObj.pageType+" for navcat "+tagObj.navcat);
-				}
+*/
+		}
+	if(pageAttributes.length)	{
+		numRequests += _app.ext.store_navcats.calls.appPageGet.init({'PATH':tagObj.navcat,'@get':pageAttributes});
+		}
 
-			}
-		} //ends isset(databind).
-	}); //ends each
+	if(numRequests > 0)	{
+		delete tagObj.datapointer; //delete datapointer or ping will save over it.
+		_app.calls.ping.init(tagObj);
+		}
+	else	{
+		_app.ext.quickstart.callbacks.showPageContent.onSuccess(tagObj);
+		}		
+
+	return numRequests;
+
+	}
 
 
-			//dump(" -> numRequests b4 appPageGet: "+numRequests);
-				if(myAttributes.length > 0)	{
-					numRequests += _app.ext.store_navcats.calls.appPageGet.init({'PATH':catSafeID,'@get':myAttributes});
-					}
-//				dump(" -> numRequests AFTER appPageGet: "+numRequests);
-//queries are all compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
-				if(numRequests > 0)	{
-					_app.calls.ping.init(tagObj);
-					}
-				else	{
-					_app.ext.quickstart.callbacks.showPageContent.onSuccess(tagObj);
-					}		
-
-				return numRequests;
 				}, //buildQueriesFromTemplate
 
 

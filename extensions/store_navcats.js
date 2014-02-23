@@ -203,6 +203,9 @@ templateID - the template id used (from _app.templates)
 				}, //numproduct
 
 			categorylist : function($tag,data)	{
+				dump(" BEGIN store_navcats.renderFormats.categorylist");
+				data.value = data.value[0]; // ### TODO -> data is returned nested an extra level deep. this compensates. that bug in peg needs to be addressed.
+//				dump(" -> data.value"); dump(data.value);
 				if(typeof data.value == 'object' && data.value.length > 0)	{
 					var L = data.value.length;
 					var call = 'appNavcatDetail';
@@ -215,9 +218,10 @@ templateID - the template id used (from _app.templates)
 						if(!data.value[i].pretty || data.value[i].pretty[0] != '!')	{
 //							var parentID = data.value[i].path+"_catgid+"+(_app.u.guidGenerator().substring(10));
 //							var $ele = _app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'catsafeid':data.value[i].path});
-$ele = $().tlc({'templateid':data.bindData.templateid,'dataAttribs':{'catsafeid':data.value[i].path}})
+							var $tmp = $("<ul \/>").tlc({'templateid':data.bindData.templateid,'verb':'template','dataAttribs':{'catsafeid':data.value[i].path}});
+							var $ele = $tmp.children().first();
 							$tag.append($ele);
-							numRequests += _app.calls.appNavcatDetail.init({'path':data.value[i].path,'detail':data.bindData.detail},{'callback':'anycontent','translateOnly':true,'jqObj':$ele},'mutable');
+							numRequests += _app.calls.appNavcatDetail.init({'path':data.value[i].path,'detail':data.bindData.detail},{'callback':'tlc','jqObj':$ele,'verb':'translate'},'mutable');
 							}
 						}
 					if(numRequests)	{_app.model.dispatchThis('mutable')}
