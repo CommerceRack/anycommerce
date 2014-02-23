@@ -265,6 +265,8 @@ A special translate template for product so that reviews can be merged into the 
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
 			productlist : function($tag,data)	{
 				//need to keep admin and quickstart both running.
+//				dump(" data.value: "); dump(data.value);
+				data.bindData.loadsTemplate = data.bindData.templateid; // ### TODO -> once the prodlist code is updated, this can be ditched.
 				this.productList($tag,data);
 				},
 			productList : function($tag,data)	{
@@ -679,7 +681,12 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 				if(plObj.hide_pagination === true)	{
 					}
 				else	{
-					$output = _app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+//					$output = _app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+					$output.tlc({
+						'templateid' : mpControlSpec,
+						'dataset' : plObj,
+						'dataAttribs' : {'id':'mpControl_'+plObj.parentID+'_'+location}
+						})
 					$output.find('.mpControlJumpToPage, .paging').click(function(){
 						_app.ext.store_prodlist.u.mpJumpToPage($(this))
 						_app.u.jumpToAnchor('mpControl_'+plObj.parentID+'_header');

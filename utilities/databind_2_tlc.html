@@ -105,7 +105,7 @@ function upgradeRenderFormat(odb)	{
 		case 'addClass':
 			r = "if(is $var --notblank) {{ apply --class='"+odb.className+"'; }}; "; break;
 		case 'wiki':
-			r = "wiki --extension='quickstart'; "; break;
+			r = "render --wiki='quickstart'; "; break;
 		case 'truncText':
 			r = "format --truncate='"+odb.numCharacters+"'; "; break;
 		case 'selectedOptionsDisplay':

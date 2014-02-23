@@ -172,7 +172,7 @@ var tlc = function()	{
 		var r = {};
 		if(!$.isEmptyObject(args))	{
 			for(var i = 0, L = args.length; i < L; i += 1)	{
-				r[args[i].key] = (args[i].value == null) ? true : args[i].value; //some keys, like append or media, have no value and will be set to null.
+				r[args[i].key] = (args[i].value == null) ? true : args[i].value.value; //some keys, like append or media, have no value and will be set to null.
 				}
 			}
 		return r;
@@ -624,12 +624,12 @@ command (everything else that's supported).
 
 	
 	this.handleCommand_render = function(cmd,globals){
-		var r, argObj = this.args2obj(cmd.args); //an object is used to easily check if specific apply commands are present
+		var r, argObj = this.args2obj(cmd.args), value = globals.binds[globals.focusbind]; //an object is used to easily check if specific apply commands are present
 //		dump(" -> cmd: "); dump(cmd);
 		if(argObj.wiki)	{
 			var $tmp = $("<div>").append(value);
 			//r = wikify($tmp.text()); //###TODO -> 
-			globals.binds[cmd.Set.value] = $tmp.text();
+			globals.tags[globals.focusTag] = $tmp.html();
 			}
 		else if(argObj.html)	{
 			r = value; //if the content is already html, shouldn't have to do anything to it.

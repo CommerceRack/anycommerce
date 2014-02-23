@@ -216,7 +216,6 @@ ANIMATION TESTING
 
 
 
-
 <!--
 
 ############################
@@ -237,11 +236,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
 
 	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --before='<h2>Featured Items</h2>' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
-	<p data-tlc="bind $var '.%page.description'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<p data-tlc="bind $var '.%page.description'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
 <!--
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: quickstart; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
 -->
@@ -270,17 +269,17 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
-	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy; apply --append;" src="images/blank.gif" alt="">
+	<img data-tlc="bind $var '.%page.banner1'; myRIA#banner  --height='250' --width='750' --legacy; apply --append;" src="images/blank.gif" alt="">
 
 	<h2 data-tlc="bind $var '.%page.header'; if (is $var --notblank;) {{apply --append;}};"></h2>
 
-	<p data-tlc="bind $var '.%page.description'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<p data-tlc="bind $var '.%page.description'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
 
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul><!-- outputs a list of subcategories -->
 
 	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withreviews='1' --withinventory='1' --withvariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
 
-	<p data-tlc="bind $var '.%page.description2'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<p data-tlc="bind $var '.%page.description2'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
 
 
 </div>
@@ -296,7 +295,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <li id="categoryListTemplate">
 	<div onclick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class="pointer">
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="catThumb" alt="" height="120" width="120"></div>
-		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;"></span></div>
+		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; myRIA#cattext  --legacy; apply --append;"></span></div>
 	</div>
 </li>
 
@@ -304,7 +303,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <li id="categoryListTemplateRootCats">
 	<div onclick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class="pointer">
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;" src="blank.gif" class="catThumb" alt="" height="35" width="35"></div>
-		<div class="catName"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;"></span></div>
+		<div class="catName"><span data-tlc="bind $var '.pretty'; myRIA#cattext  --legacy; apply --append;"></span></div>
 	</div>
 </li>
 
@@ -320,10 +319,10 @@ remember to NOT put the button inside the 'onclick' container or two events will
 -->
 <li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
 
-	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
+	<button class="floatRight pointer quickView displayNone" data-app-click="myRIA|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 
 	<div data-tlc="bind $var '.%ATTRIBS.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
-		<div data-tlc="bind $var '.%ATTRIBS.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
+		<div data-tlc="bind $var '.%ATTRIBS.pid'; myRIA#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
 		<img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
@@ -335,9 +334,9 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 	
-	<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
+	<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="myRIA|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
-		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addToCartButton; extension:quickstart; useParentData:true;">more details</button>
+		<button data-tlc="myRIA#addtocartbutton  --legacy; apply --append;" data-bind="format:addToCartButton; extension:myRIA; useParentData:true;">more details</button>
 	</form>
 	
 </li>
@@ -360,7 +359,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --class='review_'; }}; if (is $var --notblank;) {{apply --append;}};" class="reviewSprite"></span>
 	
-		<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
+		<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="myRIA|productAdd2Cart" data-show="modal">
 	
 			<fieldset data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 			<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
@@ -384,7 +383,7 @@ container ul should have lineItemProdlist class on it instead of productList
 <span class="ui-icon ui-icon-cart"></span>
 </button>
 
-<button class="ui-state-default ui-corner-all" title="more information" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">
+<button class="ui-state-default ui-corner-all" title="more information" data-app-click="myRIA|quickviewShow" data-loadstemplate="productTemplateQuickView">
 <span class="ui-icon ui-icon-info"></span>
 </button>
 
@@ -425,7 +424,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
 <li id="productListTemplateResults" class="loadingBG searchResultsProduct ">
-	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
+	<div data-app-click="myRIA|inlineProductPreviewShow" class="pointer">
 		<div class="prodThumbContainer">
 		<img data-tlc="bind $var '.%ATTRIBS.images'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
@@ -484,7 +483,7 @@ this will likely become more flexible in the future. ###
 	<tbody><tr>
 		<td class="imageContainer">
 	
-	<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
+	<div data-app-click="myRIA|productPicsInModalShow" class="pointer clearfix">
 	
 		<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_is_tags'; controller#addtagspans; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
 		<img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
@@ -508,7 +507,7 @@ this will likely become more flexible in the future. ###
 	
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="stid"></h5>
-			<h5 data-tlc="bind $var '.%ATTRIBS.zoovy:prod_mfg'; format --prepend='Mfg: '; quickstart#searchlink  --legacy; apply --append;"></h5>
+			<h5 data-tlc="bind $var '.%ATTRIBS.zoovy:prod_mfg'; format --prepend='Mfg: '; myRIA#searchlink  --legacy; apply --append;"></h5>
 			<h5 data-tlc="bind $var '.%ATTRIBS.zoovy:prod_mfgid'; format --prepend='Mfg ID: '; if (is $var --notblank;) {{apply --append;}};"></h5>
 		</div>
 	
@@ -516,8 +515,8 @@ this will likely become more flexible in the future. ###
 			<h4 data-tlc="bind $var '.%ATTRIBS.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="basePrice"></h4>
 			<h5 data-tlc="bind $var '.%ATTRIBS.zoovy:prod_msrp'; format --prepend='MSRP: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="prodMSRP"></h5>
 			<span class="savings">
-				<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-				<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
+				<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='You save: '; myRIA#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
+				<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='('; format --append=')'; myRIA#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
 			</span>
 		</div>
 		<div class="socialLinks"></div>
@@ -531,7 +530,7 @@ this will likely become more flexible in the future. ###
 		<div data-tlc="bind $var '.%ATTRIBS.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency marginBottom"></div>
 		<div data-app-role="timeInTransit" class="displayNone"></div>
 	
-		<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
+		<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="myRIA|productAdd2Cart" data-show="inline">
 	
 			<fieldset data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 			<fieldset data-tlc="if(is $var --blank) {{bind var '1';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='1' --legacy; apply --append;" data-bind="useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;" class="borderNone"></fieldset>
@@ -539,7 +538,7 @@ this will likely become more flexible in the future. ###
 			<input data-tlc="bind $var '.%ATTRIBS.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addToCartButton displayNone" type="submit">
 		</form>
 	
-		<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_cpsiawarning'; quickstart#cpsiawarning  --legacy; apply --append;"></div>
+		<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_cpsiawarning'; myRIA#cpsiawarning  --legacy; apply --append;"></div>
 		<div data-tlc="bind $var '.%ATTRIBS.zoovy:qty_price'; format --prepend='Quantity Discounts:'; store_product#quantitydiscounts  --classname='marginBottom' --legacy; apply --append;"></div>
 	
 		<section class="marginBottom">
@@ -551,7 +550,7 @@ this will likely become more flexible in the future. ###
 	
 		<a href="#" data-app-click="store_crm|productReviewShow">Write Review</a>	|
 	
-		<a href="#" data-app-click="quickstart|productAdd2List" data-listid="wishlist">Add to Wishlist</a>
+		<a href="#" data-app-click="myRIA|productAdd2List" data-listid="wishlist">Add to Wishlist</a>
 	
 		</menu>
 	
@@ -576,15 +575,15 @@ this will likely become more flexible in the future. ###
 		</ul>
 	
 		<div class="tabContent" data-anytab-content="prodDesc">
-			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_desc'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
+			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_desc'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</div>
 	
 		<div class="tabContent" data-anytab-content="prodSpecs">
-			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_detail'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
+			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_detail'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</div>
 	
 		<div class="tabContent" data-anytab-content="prodFeatures">
-			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_features'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
+			<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_features'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</div>
 	
 	
@@ -633,7 +632,7 @@ this will likely become more flexible in the future. ###
 <div>
 
 	<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_is_tags'; controller#addtagspans; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
-	<div data-tlc="bind $var '.%ATTRIBS.pid'; quickstart#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
+	<div data-tlc="bind $var '.%ATTRIBS.pid'; myRIA#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
 
 </div>
 
@@ -648,8 +647,8 @@ this will likely become more flexible in the future. ###
 		<h4 data-tlc="bind $var '.%ATTRIBS.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="basePrice"></h4>
 		<h5 data-tlc="bind $var '.%ATTRIBS.zoovy:prod_msrp'; format --prepend='MSRP: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="prodMSRP"></h5>
 		<span class="savings">
-			<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-			<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
+			<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='You save: '; myRIA#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
+			<span data-tlc="bind $var '.%ATTRIBS.pid'; format --prepend='('; format --append=')'; myRIA#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
 		</span>
 	</div>
 
@@ -660,7 +659,7 @@ this will likely become more flexible in the future. ###
 		<span data-tlc="bind $var '.reviews.total'; format --append=' from '; if (is $var --notblank;) {{apply --append;}};"></span>
 	</section>
 
-	<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_desc'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.%ATTRIBS.zoovy:prod_desc'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></div>
 
 	</td>
 </tr>
@@ -730,7 +729,7 @@ if you change these, you should move them above this comment so that when you (o
 <!--  used in breadcrumb -->
 <ul>
 	<li id="breadcrumbTemplate">
-	<a data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;" href="#" onclick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});"></a>
+	<a data-tlc="bind $var '.pretty'; myRIA#cattext  --legacy; apply --append;" href="#" onclick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});"></a>
 	</li>
 </ul>
 
@@ -743,7 +742,7 @@ if you change these, you should move them above this comment so that when you (o
 	<div class="sideline">
 <nav id="companyNav">
 <ul class="listStyleNone noPadOrMargin">
-<!-- these are generated via javascript, based on the quickstart.pages object. -->
+<!-- these are generated via javascript, based on the myRIA.pages object. -->
 </ul>
 </nav>
 	</div>
@@ -752,7 +751,7 @@ if you change these, you should move them above this comment so that when you (o
 <!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
 		<div id="aboutArticle" class="textContentArea article">
 			<h1>About Us</h1>
-			<div data-tlc="bind $var '.zoovy:about'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="aboutUsContent"></div>
+			<div data-tlc="bind $var '.zoovy:about'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="aboutUsContent"></div>
 		</div>
 
 
@@ -775,7 +774,7 @@ if you change these, you should move them above this comment so that when you (o
 				</div>
 			</fieldset>
 			</form>
-			<div data-tlc="bind $var '.zoovy:contact'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="contactContent"></div>
+			<div data-tlc="bind $var '.zoovy:contact'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="contactContent"></div>
 		</div>
 
 
@@ -789,7 +788,7 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="paymentArticle">
 			<h1>Payment Policy</h1>
-			<div data-tlc="bind $var '.zoovy:payment_policy'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="paymentContent"></div>
+			<div data-tlc="bind $var '.zoovy:payment_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="paymentContent"></div>
 		</div>
 
 
@@ -839,14 +838,14 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="returnArticle">
 			<h1>Return Policy</h1>
-			<div data-tlc="bind $var '.zoovy:return_policy'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="returnContent"></div>
+			<div data-tlc="bind $var '.zoovy:return_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="returnContent"></div>
 		</div>
 
 
 
 		<div class="displayNone textContentArea" id="shippingArticle">
 			<h1>Shipping Information</h1>
-			<div data-tlc="bind $var '.zoovy:shipping_policy'; wiki --extension='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="shippingContent"></div>
+			<div data-tlc="bind $var '.zoovy:shipping_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="shippingContent"></div>
 		</div>
 
 	</div>
@@ -902,7 +901,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
 	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
+		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="myRIA|showBuyerAddressAdd">New Billing Address</button>
 		<h2>Billing Address(es)</h2>
 	</div>
 	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
@@ -910,7 +909,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
 	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
+		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="myRIA|showBuyerAddressAdd">New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
 	</div>
 	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
@@ -939,14 +938,13 @@ subscribeListsArticle is used for authenticated buyers
 			<h1>Change Password</h1>
 			<div id="changepasswordContainer">
 
-				<form action="#" name="changePasswordForm" data-app-submit="quickstart|passwordChangeSubmit">
+				<form action="#" name="changePasswordForm" data-app-submit="myRIA|passwordChangeSubmit">
 				<fieldset class="borderNone">
 				<div class="messaging"></div>
 				<div class="marginBottom"><label><span class="prompt">Password</span><input name="password" size="35" required="required" type="password"></label></div>
 				<div class="marginBottom"><label><span class="prompt">Confirm Password</span><input name="password2" required="required" size="35" type="password"></label></div>
 				<div class="marginBottom"><input value="Change Password" class="loadingButton applyButton" type="submit"></div>
 				
-
 				</fieldset>
 				</form>
 
@@ -1112,8 +1110,8 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		</div>
 		<div class="ui-state-default cartButtons stdPadding clearfix">
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogCloseExec">Continue Shopping</button></span>
-
+			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogClose">Continue Shopping</button></span>
+	
 			<span id="inStoreCheckoutButton" class="thisButton" title="proceed to secure checkout"><button class="applyButton ui-state-highlight checkoutButton" onclick="showContent('checkout',{});">Store Checkout</button></span>
 	
 			<span data-tlc="bind $var '.cart/cartid'; cco#paypalecbutton  --legacy; apply --append;" id="paypalECButton" class="thisButton"></span>
@@ -1137,7 +1135,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	<li id="productListTemplateCart" class="padMargBorderBottom clearfix">
 
 		<button data-tlc="cco#cartitemremovebutton  --legacy; apply --append;" class="floatRight removeButton" data-bind="format:cartItemRemoveButton; extension:cco; useParentData:true;" data-app-click="cco|cartItemRemove">Remove Item From Cart</button>
-		<button data-tlc="quickstart#movetowishlistbutton  --legacy; apply --append;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:quickstart; useParentData:true;">Move to Wishlist</button>
+		<button data-tlc="myRIA#movetowishlistbutton  --legacy; apply --append;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:myRIA; useParentData:true;">Move to Wishlist</button>
 
 		<div class="floatLeft"><img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; if(is $var --blank) {{bind $var 'product(%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
 
@@ -1170,7 +1168,7 @@ used on a product layout. Some product have 'children' which may represent the s
 	<td><img data-tlc="bind $var '.%ATTRIBS.zoovy:prod_image1'; apply --img --media=$var --width=45 --height=45 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="45" width="45"></td>
 	<td data-tlc="bind $var '.%ATTRIBS.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></td>
 	<td>
-	<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
+	<form data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="myRIA|productAdd2Cart" data-show="modal">
 
 		<fieldset data-tlc="bind $var '.%ATTRIBS.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 		<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
@@ -1273,7 +1271,7 @@ used for store_crm.js
 
 
 <div id="subscribeFormTemplate">
-<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit">
+<form action="#" name="subscribeFrm" data-app-submit="myRIA|subscribeSubmit">
 
 <fieldset class="userInfo borderNone">
 <div>
@@ -1301,7 +1299,7 @@ used for store_crm.js
 
 <section data-tlc="bind $var '.ORDERID'; apply --attrib='data-orderid'; if (is $var --notblank;) {{apply --append;}};" id="orderLineItemTemplate" class="appAccordianesque" data-app-role="orderLineitemContainer">
 
-	<div data-app-role="orderHeader" data-app-click="quickstart|orderDetailShow" class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom">
+	<div data-app-role="orderHeader" data-app-click="myRIA|orderDetailShow" class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom">
 	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-tlc="bind $var '.ORDERID'; format --prepend='Order ID: '; if (is $var --notblank;) {{apply --append;}};"></span>
 	<span data-tlc="bind $var '.MODIFIED_GMT'; format --prepend='Placed on '; datetime --out='mdy'; if (is $var --notblank;) {{apply --append;}};"></span>
@@ -1321,7 +1319,7 @@ used for store_crm.js
 
 <section id="faqTopicTemplate">
 
-	<div class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom" data-app-click="quickstart|faqDetailShow">
+	<div class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom" data-app-click="myRIA|faqDetailShow">
 	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-tlc="bind $var '.TOPIC_TITLE'; if (is $var --notblank;) {{apply --append;}};"></span>
 	</div>
@@ -1346,7 +1344,7 @@ The 'data-action' attribute is used to assign an onclick.
 -->
 
 <address id="billAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
-	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
+	<button data-app-click="myRIA|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
 	<div class="addressFullname">
 		<span data-tlc="bind $var '.bill/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
 		<span data-tlc="bind $var '.bill/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
@@ -1367,7 +1365,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- used in the my account area -->
 <address id="shipAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
-	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
+	<button data-app-click="myRIA|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
 	<div class="addressFullname">
 		<span data-tlc="bind $var '.ship/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
 		<span data-tlc="bind $var '.ship/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
@@ -1392,7 +1390,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 	<div class="clearfix marginBottom">
 		<div class="floatRight">
-		<button data-app-click="quickstart|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
+		<button data-app-click="myRIA|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
 		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
 		</div>
 	
@@ -1444,7 +1442,6 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 </div>
-
 
 
 
