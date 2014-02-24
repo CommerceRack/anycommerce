@@ -171,9 +171,9 @@ function doIt2It()	{
 // the original behavior of a data-bind was to skip the output if the value was not set. That is not true in TLC.
 // so put the 'apply' into an if. Of course, some
 */
-function wrappedApply()	{
+function wrappedApply(db)	{
 	var r = "";
-	if(odb.showIfSet || odb.showIfMatch || odb.hideIfSet || odb.addClass)	{
+	if(db.showIfSet || db.showIfMatch || db.hideIfSet || db.addClass || db.assignAttribute || db.setVal || db.popVal)	{
 		//these already have apply.
 		}
 	else	{
@@ -204,11 +204,11 @@ function wrappedApply()	{
 		else	{
 			if(odb.format == 'text')	{
 				//this is the default. no special formatting or anything else is necessary.
-				command += wrappedApply(); console.log(" -> wrappedApply: "+wrappedApply());
+				command += wrappedApply();
 				}
 			else if(upgradeRenderFormat(odb))	{
 				command += upgradeRenderFormat(odb);
-				command += wrappedApply();
+				command += wrappedApply(odb);
 				}
 			else	{
 				console.warn("Something went wrong.  The following line did not specify an extension and the renderFormat was not handled in upgradeRenderFormat.\ndatabind: "+$tag.data('bind'));
