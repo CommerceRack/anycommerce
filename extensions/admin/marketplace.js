@@ -362,6 +362,7 @@ var admin_marketplace = function(_app) {
 //instead of applying anycontent to the tab itself, it's applied to a child element. avoids potential conflicts down the road.
 					$target.empty().append($profileContent);
 					$target.showLoading({'message':'Fetching launch profile details for '+profile});
+					_app.u.addEventDelegation($target);
 	
 					_app.model.addDispatchToQ({
 						'_cmd':'adminEBAYProfileDetail',
@@ -1259,13 +1260,12 @@ after that cmd is sent, the modal is closed and the original input is updated. I
 					if($btn.closest('.ui-widget-stickytab-content').length)	{} //already in a sticky tab
 					else if($('#stickytabs').children().length)	{} //not clicked from the sticky tab, but the tab is already open.
 					else	{
-						$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-						$('button, a',$table).each(function(){
-							$(this).off('close.stickytab').on('click.closeStickytab',function(){
-								$table.stickytab('close');
-								})
-							});
+						$table.stickytab({'tabtext':'Launch Profiles','tabID':'launchProfilesStickyTab'});
+						$table.off('click.stickytab').on('click.stickytab','button, a',function(e){
+							e.preventDefault();
+							$table.stickytab('close');
+							})
 						}
 //now show the editor.  This must happen after stickytab generation or the click events on the row buttons in the table get dropped.
 					_app.ext.admin_marketplace.a.showEBAYLaunchProfileEditor($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('profile'));
@@ -1505,12 +1505,8 @@ _app.model.dispatchThis('mutable');
 				}, //showDSTDetail
 
 
-			ebayServiceAddShow : function($btn)	{
-				$btn.button()
-				$btn.off('click.ebayHTMLEditorAddImage').on('click.ebayHTMLEditorAddImage',function(){
-					$btn.hide();
-					$btn.closest('fieldset').find("[data-app-role='addServiceInputs']").slideDown();
-					});
+			ebayServiceAddShow : function($ele,P)	{
+				$ele.hide().closest('fieldset').find("[data-app-role='addServiceInputs']").slideDown();
 				}, //ebayServiceAddShow
 
 
