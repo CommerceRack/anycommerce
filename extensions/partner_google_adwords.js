@@ -43,7 +43,7 @@ var google_adwords = function(_app) {
 			startExtension : {
 				onSuccess : function (){
 					if(_app.templates && _app.templates.checkoutTemplate){
-						_app.templates.checkoutTemplate.on('complete.googleadwords',function($ele,P){
+						_app.templates.checkoutTemplate.on('complete.googleadwords',function(event,$ele,P){
 							var order = _app.data['order|'+P.orderID];
 							google_conversion_value = order.sum.items_total;
 							_app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');

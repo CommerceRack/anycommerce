@@ -68,18 +68,18 @@ if(buySAFE.Hash.length > 0)	{
 	//the showContent function may have already executed prior to startExtension getting executed.
 	WriteBuySafeKickers();
 
-	_app.templates.productTemplate.on('complete.buysafe',function($ele,P) {
+	_app.templates.productTemplate.on('complete.buysafe',function(event,$ele,P) {
 //		_app.u.dump("Execute WriteBuySafeKicker");
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
-	_app.templates.cartTemplate.on('complete.buysafe',function($ele,P) {
+	_app.templates.cartTemplate.on('complete.buysafe',function(event,$ele,P) {
 		//buysafe trigger goes here.
 		WriteBuySafeKickers();
 		})
 	
 								
-	_app.templates.checkoutTemplate.on('complete.buysafe',function($ele,P){
+	_app.templates.checkoutTemplate.on('complete.buysafe',function(event,$ele,P){
 		
 		_app.u.dump("BEGIN buysafe_guarantee code pushed on order_create.checkoutCompletes");
 		var order = _app.data['order|'+P.orderID].cart;
