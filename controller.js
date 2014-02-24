@@ -528,7 +528,6 @@ _app.u.throwMessage(responseData); is the default error handler.
 					if(_rtag.templateID && !_rtag.templateid)	{_rtag.templateid = _rtag.templateID} //anycontent used templateID. tlc uses templateid. rather than put this into the core tranlsator, it's here as a stopgap.
 //anycontent will disable hideLoading and loadingBG classes.
 //to maintain flexibility, pass all anycontent params in thru _tag
-dump(" -> _rtag: "); dump(_rtag);
 					$target.tlc(_rtag);
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);

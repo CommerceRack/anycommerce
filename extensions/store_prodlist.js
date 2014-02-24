@@ -183,7 +183,7 @@ A special translate template for product so that reviews can be merged into the 
 */
 		translateTemplate : {
 			onSuccess : function(tagObj)	{
-//				_app.u.dump("BEGIN _app.ext.store_prodlist.callbacks.translateTemplate.onSuccess");
+//				_app.u.dump("BEGIN _app.ext.store_prodlist.callbacks.translateTemplate.onSuccess ");
 //				_app.u.dump(tagObj);
 //				_app.u.dump(" -> tagObj.datapointer = "+tagObj.datapointer);
 //				_app.u.dump(" -> tagObj.parentID = "+tagObj.parentID+" and $(#"+tagObj.parentID+").length: "+$('#'+tagObj.parentID).length);
@@ -196,11 +196,12 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
 
-				var $product =(tagObj.jqObj instanceof jQuery) ? tagObj.jqObj :  $(_app.u.jqSelector('#',tagObj.parentID));
+				var $product = tagObj.jqObj.removeClass();
 				var $prodlist = $product.parent();
+dump(" ------------------------------------------------------- ");
+				$product.tlc({'dataset':tmp,'verb':'translate'}).attr('data-template-role','listitem');
 				
-				$product.anycontent({'datapointer':tagObj.datapointer}).attr('data-template-role','listitem');
-				
+
 				$prodlist.data('pageProductLoaded',($prodlist.data('pageProductLoaded') + 1)); //tracks if page is done.
 				$prodlist.data('totalProductLoaded',($prodlist.data('totalProductLoaded') + 1)); //tracks if entire list is done. handy for last page which may have fewer than an entire pages worth of data.
 				if(($prodlist instanceof jQuery && $prodlist.data('pageProductLoaded')) && (($prodlist.data('pageProductLoaded') == $prodlist.data('prodlist').items_per_page) || ($prodlist.data('totalProductLoaded') == $prodlist.data('prodlist').total_product_count)))	{
@@ -267,6 +268,7 @@ A special translate template for product so that reviews can be merged into the 
 				//need to keep admin and quickstart both running.
 //				dump(" data.value: "); dump(data.value);
 				data.bindData.loadsTemplate = data.bindData.templateid; // ### TODO -> once the prodlist code is updated, this can be ditched.
+				data.value = data.value[0]; // compensate for extra nested of object data.
 				this.productList($tag,data);
 				},
 			productList : function($tag,data)	{
@@ -296,7 +298,7 @@ will remove the add to cart button if the item is not purchaseable.
 
 */
 
-			addToCartButton : function($tag,data)	{
+			addtocartbutton : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
 //				_app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
@@ -480,12 +482,11 @@ if no parentID is set, then this function gets the data into memory for later us
 */
 			getProductDataForList : function(plObj,$tag,Q)	{
 //				_app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]"); _app.u.dump(plObj);
-
 				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
 				if(plObj && plObj.csv)	{
-//					_app.u.dump(" -> csv defined. length: "+plObj.csv.length);
-					var pageCSV = this.getSkusForThisPage(plObj);
+//					_app.u.dump(" -> csv defined. length: "+plObj.csv.length); _app.u.dump(plObj.csv);
+					var pageCSV = this.getSkusForThisPage(plObj); 
 					var L = pageCSV.length;
 					var call = 'appProductGet';  //this call is used unless variations or inventory are needed. this call is 'light' and just gets basic info.
 					if(Number(plObj.withVariations) + Number(plObj.withInventory) + Number(plObj.withReviews) > 0)	{
@@ -499,9 +500,12 @@ if no parentID is set, then this function gets the data into memory for later us
 							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':magic.inspect('#'+this.getSkuSafeIdForList(plObj.parentID,pageCSV[i]))}
 							}
 						else if(plObj.parentID)	{
-							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':$(plObj.placeholders[i]),'parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])}
+//							_app.u.dump(" -> parentID is set.");
+							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':$(plObj.placeholders[i])}
 							}
-						else	{}
+						else	{
+							_app.u.dump(" -> no parentID set. item not queued.");
+							}
 						numRequests += _app.ext.store_prodlist.calls[call].init({
 							"pid":pageCSV[i],
 							"withVariations":plObj.withVariations,
@@ -510,6 +514,7 @@ if no parentID is set, then this function gets the data into memory for later us
 							},_tag, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
+				
 				if(numRequests > 0)	{_app.model.dispatchThis(Q)}
 				return numRequests;
 				}, //getProductDataForList
@@ -602,13 +607,8 @@ params that are missing will be auto-generated.
 							$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
 							}
 						}
-//The timeout was here because of an issue where the placeholders were getting nuked. That issue was caused by translateTemplate doing a replace.
-//that code was changed in 201239 (as was this function) so the timeout was commented out. This comment is here in case the change to translateFunction is changed back.
-//					setTimeout(function(){
-						_app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
-//						},1000);
 					 //will render individual product, if data already present or fetch data and render as part of response.
-
+					_app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
 					}
 				else	{
 					_app.u.throwGMessage("WARNING: store_prodlist.u.buildProductList is missing some required fields. Obj follows: ");

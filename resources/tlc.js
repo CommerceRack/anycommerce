@@ -138,40 +138,40 @@ var tlc = function()	{
 // would return an object.
 //	this.gatherDatapointers = function(){}'
 
-
 	this.translate = function($ele,dataset)	{
+//		dump(" -> dataset: "); dump(dataset);
 		if($ele instanceof jQuery && dataset)	{
-			
+			var _self = this;
+			$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
+				var $tag = $(this), tlc = $tag.data('tlc');
+	//			dump("----------------> start new $tag <-----------------");
+				var commands = false;
+				try{
+					commands = window.pegParser.parse(tlc);
+					}
+				catch(e)	{
+					dump(_self.buildErrorMessage(e)); dump(tlc);
+					}
+	
+				if(commands && !$.isEmptyObject(commands))	{
+					_self.executeCommands(commands,{
+						tags : {
+							'$tag' : $tag
+							}, //an object of tags.
+						focusTag : '$tag' //the pointer to the tag that is currently in focus.
+						},dataset);
+					}
+				else	{
+					dump("couldn't parse a tlc",'warn');
+					//could not parse tlc. error already reported.
+					}
+	//			dump("----------------> end $tag <-----------------");
+				});
 			}
 		else	{
 			dump(" -> Either $ele is not an instance of jquery ["+($ele instanceof jQuery)+"] or an empty dataset was passed into tlc.translate. dataset follows:"); dump(dataset);
 			}
-		var _self = this;
-		$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
-			var $tag = $(this), tlc = $tag.data('tlc');
-//			dump("----------------> start new $tag <-----------------");
-			var commands = false;
-			try{
-				commands = window.pegParser.parse(tlc);
-				}
-			catch(e)	{
-				dump(_self.buildErrorMessage(e)); dump(tlc);
-				}
 
-			if(commands && !$.isEmptyObject(commands))	{
-				_self.executeCommands(commands,{
-					tags : {
-						'$tag' : $tag
-						}, //an object of tags.
-					focusTag : '$tag' //the pointer to the tag that is currently in focus.
-					},dataset);
-				}
-			else	{
-				dump("couldn't parse a tlc",'warn');
-				//could not parse tlc. error already reported.
-				}
-//			dump("----------------> end $tag <-----------------");
-			});
 		}
 
 
@@ -392,7 +392,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "blank":
 				if(p1 == ''){r = true;}; break;
 			case "notblank":
-				if(!p1 || p1 == 0){r = true;}; break; //==, not ===, because zero could be passed in as a string.
+				if(p1 || p1 == 0){r = true;}; break; //==, not ===, because zero could be passed in as a string.
 			case "null":
 				if(p1 == null){r = true;}; break;
 			case "notnull":
@@ -413,6 +413,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "or":
 				if(p1 != null){r = true;}; break; // ### FUTURE -> not done.
 */			}
+		dump(" -> comparison: "+op+" and r: "+r);
 		return r;
 		}
 
@@ -584,7 +585,7 @@ command (everything else that's supported).
 				}
 			}
 		else	{
-			dump(" -> invalid core  format specified.",'warn');
+			dump(" -> invalid core format ["+format+"] specified.",'warn');
 			//invalid format specified.
 			}
 		return r;
@@ -789,7 +790,7 @@ command (everything else that's supported).
 	this.getBinds = function(templateid)	{
 		var _self = this; //'this' context is lost within each loop.
 		var $t = _self.getTemplateInstance(templateid), bindArr = new Array();
-	
+
 		$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 			var $tag = $(this), tlc = $tag.data('tlc');
 //			dump("----------------> start new $tag <-----------------");

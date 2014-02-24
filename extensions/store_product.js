@@ -271,7 +271,7 @@ addToCart : function (pid,$form){
 //creates some required form inputs.
 //the ID on the product_id input should NOT be changed without updating the addToCart call (which uses this id to obtain the pid).
 
-			atcForm : function($tag,data)	{
+			atcform : function($tag,data)	{
 				$tag.append("<input type='hidden' name='sku' value='"+data.value+"' />");
 				},
 			

@@ -550,7 +550,7 @@ need to be customized on a per-ria basis.
 //This function works in conjuction with the showContent/showPage and buildQueriesFromTemplate functions.
 //the parent and subcategory data (appNavcatDetail) must be in memory already for this to work right.
 //data.value is the category object. data.bindData is the bindData obj.
-			subcategoryList : function($tag,data)	{
+			subcategorylist : function($tag,data)	{
 //				dump("BEGIN control.renderFormats.subcats");
 //				dump(data.value);
 				var L = data.value.length;
@@ -583,13 +583,13 @@ need to be customized on a per-ria basis.
 //likely to be used in prodcats if/when it's built.s
 //here, on 'could' disable the display if they didn't want hidden cats to show in the breadcrumb.
 			cattext : function($tag,data)	{
-				dump(" -> value: "); dump(data.value);
+//				dump(" -> value: "); dump(data.value);
 				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
 				_app.renderFormats.text($tag,data);
 				},
 
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
-			searchLink : function($tag,data){
+			searchlink : function($tag,data){
 				var keywords = data.value.replace(/ /g,"+"),
 				infoObj = {'KEYWORDS':keywords}
 				if(data.bindData.elasticAttr){
@@ -600,7 +600,7 @@ need to be customized on a per-ria basis.
 					});
 				}, //searchLink
 
-			cpsiaWarning : function($tag,data)	{
+			cpsiawarning : function($tag,data)	{
 
 				var warnings = {
 					'choking_hazard_balloon' : 'Choking Hazard Balloon',
@@ -620,7 +620,7 @@ need to be customized on a per-ria basis.
 
 				},
 
-			addPicSlider : function($tag,data)	{
+			addpicslider : function($tag,data)	{
 //				dump("BEGIN quickstart.renderFormats.addPicSlider: "+data.value);
 				if(typeof _app.data['appProductGet|'+data.value] == 'object')	{
 					var pdata = _app.data['appProductGet|'+data.value]['%attribs'];
@@ -637,7 +637,7 @@ need to be customized on a per-ria basis.
 				},
 
 //no click event is added to this. do that on a parent element so that this can be recycled.
-			youtubeThumbnail : function($tag,data)	{
+			youtubethumbnail : function($tag,data)	{
 				$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
 				return true;
 				}, //youtubeThumbnail
@@ -646,7 +646,7 @@ need to be customized on a per-ria basis.
 // when using @products in a categoryDetail object, use productList as the renderFormat
 // this function gets executed after the request has been made, in the showPageContent response. for this reason it should NOT BE MOVED to store_search
 // ## this needs to be upgraded to use _app.ext.store_search.u.getElasticResultsAsJQObject
-			productSearch : function($tag,data)	{
+			productsearch : function($tag,data)	{
 //				dump("BEGIN quickstart.renderFormats.productSearch");
 				data.bindData = _app.renderFunctions.parseDataBind($tag.attr('data-bind'));
 //				dump(data);
@@ -728,7 +728,7 @@ fallback is to just output the value.
 				}, //banner
 				
 //could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
-			legacyURLToRIA : function($tag,data)	{
+			legacyurltoria : function($tag,data)	{
 				if(data.value == '#')	{
 					$tag.removeClass('pointer');
 					}
@@ -743,7 +743,7 @@ fallback is to just output the value.
 
 //use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
 // render format will also hide the button if the user is not logged in.
-			moveToWishlistButton : function($tag,data)	{
+			movetowishlistbutton : function($tag,data)	{
 //nuke remove button for coupons.
 				if(data.value.stid[0] == '%')	{$tag.remove()} //coupon.
 				else if(data.value.asm_master)	{$tag.remove()} //assembly 'child'.
@@ -760,7 +760,7 @@ fallback is to just output the value.
 //This is for use on a category or search results page.
 //changes the text on the button based on certain attributes.
 //_app.ext.quickstart.u.handleAddToCart($(this),{'action':'modal'});
-			addToCartButton : function($tag,data)	{
+			addtocartbutton : function($tag,data)	{
 //				dump("BEGIN store_product.renderFunctions.addToCartButton");
 
 //if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
@@ -836,7 +836,7 @@ fallback is to just output the value.
 
 //pass in the sku for the bindata.value so that the original data object can be referenced for additional fields.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
-			priceRetailSavingsDifference : function($tag,data)	{
+			priceretailsavingsdifference : function($tag,data)	{
 				var o; //output generated.
 				var pData = _app.data['appProductGet|'+data.value]['%attribs'];
 	//use original pdata vars for display of price/msrp. use parseInts for savings computation only.
@@ -854,7 +854,7 @@ fallback is to just output the value.
 
 //pass in the sku for the bindata.value so that the original data object can be referenced for additional fields.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
-			priceRetailSavingsPercentage : function($tag,data)	{
+			priceretailsavingspercentage : function($tag,data)	{
 				var o; //output generated.
 				var pData = _app.data['appProductGet|'+data.value]['%attribs'];
 	//use original pdata vars for display of price/msrp. use parseInts for savings computation only.
