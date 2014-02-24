@@ -1,7 +1,6 @@
 <div id="pageTemplateSites" class="ui-widget">
 
-	<div data-tlc="bind $var '.*favorites'; if(is $var --notblank) {{ apply --show; }}; apply --append;">
-<!--		<h2>Favorite Domains</h2>-->
+	<div data-tlc="bind $var '.*favorites'; if(is $var --notblank) {{ apply --show; }};">
 		<ul data-tlc="bind $var '.*favorites'; controller#loop --templateid='domainListFavoriteTemplate'; apply --append;" class="marginTop listStyleNone ui-widget noPadOrMargin clearfix" data-app-role="domainListFavorites"></ul>
 	</div>
 	
@@ -29,7 +28,7 @@
 		<img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="160" width="160">
 		</div>
 		
-		<div data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domain'; apply --append;" class="positionAbsolute positionTop positionRight stdPadding"><!-- stdPadding aligns this button w/ host-buttons -->
+		<div data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domain';" class="positionAbsolute positionTop positionRight stdPadding"><!-- stdPadding aligns this button w/ host-buttons -->
 			<button data-app-click="admin_sites|domainPutInFocus" data-text="false" data-icon-primary="ui-icon-check" class="applyButton">Use Domain</button>
 		</div>
 		
@@ -42,16 +41,18 @@
 
 <table>
 <!-- used in 'sites' tab for list of all domains -->
-<tbody><tr id="sitesDomainRowTemplate">
+<tbody>
+<tr id="sitesDomainRowTemplate">
 	<td class="alignCenter width1"><img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="40" width="80"></td>
 	<td data-tlc="bind $var '.DOMAINNAME'; apply --append;"></td>
 	<td data-tlc="bind $var '.PRT'; apply --append;"></td>
 	<td class="alignRight">
-		<button data-app-event="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check">Use Domain</button>
-		<button data-app-event="admin_sites|adminDomainToggleFavoriteExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-tag">Tag as Favorite</button>
+		<button data-app-click="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check">Use Domain</button>
+		<button data-app-click="admin_sites|adminDomainToggleFavoriteExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-tag" data-tlc="bind $var '.IS_FAVORITE'; if (is $var --eq=1) {{ apply --add --class='ui-state-highlight'; }};">Tag as Favorite</button>
 	</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 
 
 
@@ -181,7 +182,7 @@
 	<td data-tlc="bind $var '.PATH'; apply --append;"></td>
 	<td data-tlc="bind $var '.TARGETURL'; apply --append;"></td>
 	<td>
-	<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
+	<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
 	</td>
 </tr>
 
@@ -206,38 +207,38 @@
 
 
 
-<div id="domainCreateTemplate">
-<form action="#" onsubmit="return false" data-app-submit="admin|submitForm">
+<div id='domainCreateTemplate'>
+<form action='#' onSubmit='return false' data-app-submit='admin|submitForm'>
 
-<input name="_macrobuilder" value="admin_sites|adminDomainMacroCreate" type="hidden">
-<input name="_tag/callback" value="showMessaging" type="hidden">
-<input name="_tag/restoreInputsFromTrackingState" value="1" type="hidden">
-<input name="_tag/removeFromDOMItemsTaggedForDelete" value="1" type="hidden">
-<input name="_tag/jqObjEmpty" value="true" type="hidden">
-<input name="_tag/message" value="The domain has been added." type="hidden">
+<input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='The domain has been added.' />
 
-<fieldset class="labelsAsBreaks alignedLabels">
+<fieldset class='labelsAsBreaks alignedLabels'>
 	
 	<label>
 		<span>Type</span>
-		<select name="domaintype" required="required" data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
-			<option value="DOMAIN-DELEGATE" data-show-panel="domainCreateDomaintypeDelegate">Delegate domain</option>
-			<option value="DOMAIN-RESERVE">Reserve test domain</option>
+		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
+			<option value='DOMAIN-DELEGATE' data-show-panel='domainCreateDomaintypeDelegate'>Delegate domain</option>
+			<option value='DOMAIN-RESERVE'>Reserve test domain</option>
 		</select>
 	</label>
 
-	<div data-panel-id="domainCreateDomaintypeDelegate" class="displayNone domainCreateDomaintype">
+	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
 	<label>
 		<span>Domain</span>
-		<input required="required" data-validation-rules="skipIfHidden" name="DOMAINNAME" value="" type="text">
+		<input type='text' required="required" data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
 	</label>
 	</div>
 	
 	
 </fieldset>
 
-<div class="buttonset alignRight">
-	<button class="applyButton">Save Domain</button>
+<div class='buttonset alignRight'>
+	<button class='applyButton'>Save Domain</button>
 </div>
 
 </form>
@@ -245,26 +246,26 @@
 
 
 
-<div id="domainAddUpdateHostTemplate">
-<form action="#" onsubmit="return false" class="labelsAsBreaks alignedLabels">
-	<input data-tlc="bind $var '.DOMAINNAME'; apply --select=$var; apply --append;" name="DOMAINNAME" type="hidden">
+<div id='domainAddUpdateHostTemplate'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
 
 	<fieldset>
 	
 	<label>
 		<span>Host name</span>
-		<input data-tlc="bind $var '.HOSTNAME'; apply --select=$var; apply --append;" name="HOSTNAME" required="required" type="text">
+		<input type='text' name='HOSTNAME' data-bind="var: host(HOSTNAME); format:popVal;" required='required'  />
 	</label>
 <!-- the save for this looks for specific host types to generate the macro. don't change these without updating admin_config.u.domainAddUpdateHost -->
 	<label>
 		<span>Host Type</span>
-		<select data-tlc="bind $var '.HOSTTYPE'; apply --select=$var; apply --append;" name="HOSTTYPE" data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required="required">
-			<option value="">Please choose</option>
-			<option value="APPTIMIZER" data-show-panel="domainNewHostTypeSITEPTR,domainForceHTTPS">Apptimizer</option>
-			<option value="REDIR" data-show-panel="domainNewHostTypeREDIR">Redirect</option>
-			<option value="VSTORE" data-show-panel="domainNewHostTypeVSTORE" class="showForZoovyOnly">V-Store</option>
-			<option value="VSTORE-APP" data-show-panel="domainNewHostTypeVSTORE" class="showForZoovyOnly" style="display:block;">V-Store/App</option><!-- inline css to override a behavior w/ showforzoovyonly. ### FUTURE -> fix -->
-			<option value="CUSTOM">Custom</option>
+		<select name='HOSTTYPE' data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
+			<option value=''>Please choose</option>
+			<option value='APPTIMIZER' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Apptimizer</option>
+			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
+			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store</option>
+			<option value='VSTORE-APP' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly' style='display:block;'>V-Store/App</option><!-- inline css to override a behavior w/ showforzoovyonly. ### FUTURE -> fix -->
+			<option value='CUSTOM'>Custom</option>
 		</select>
 	</label>
 
@@ -272,31 +273,31 @@
 
 
 <!-- these are the 'panels' for the host type select list -->
-	<div data-panel-id="domainNewHostTypeSITEPTR" class="displayNone domainNewHostSelectType">
+	<div data-panel-id='domainNewHostTypeSITEPTR' class='displayNone domainNewHostSelectType'>
 
 
 
 		<label>
 			<span>Project Source: </span>
-			<select name="project_source" data-input-change="panel-selector" data-panel-selector=".domainNewHostProjectSource">
-				<option value="project" data-show-panel="domainNewHostProjectSource_project">Existing project</option>
-				<option value="template" data-show-panel="domainNewHostProjectSource_template">New project from Template</option>
+			<select name='project_source' data-input-change="panel-selector" data-panel-selector=".domainNewHostProjectSource">
+				<option value='project' data-show-panel='domainNewHostProjectSource_project'>Existing project</option>
+				<option value='template' data-show-panel='domainNewHostProjectSource_template'>New project from Template</option>
 			</select>
 		
 		</label>
 		
 	
-		<label class="domainNewHostProjectSource" data-panel-id="domainNewHostProjectSource_project">
+		<label class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_project'>
 			<span>Project Reference</span>
-			<select data-tlc="bind $var '.@PROJECTS'; controller#optionsfromlist; apply --append;" name="PROJECT">
-			<option value=""></option>
+			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsFromList; value:UUID; text:TITLE;">
+			<option value=''></option>
 			</select>
 		</label>
 		
-		<label data-app-role="hostTemplateListContainer" class="domainNewHostProjectSource" data-panel-id="domainNewHostProjectSource_template">
+		<label data-app-role='hostTemplateListContainer'  class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_template'>
 			<span>Template List</span>
-			<select data-tlc="bind $var '.@TEMPLATES'; controller#optionsfromlist; apply --append;" name="TEMPLATE">
-			<option value=""></option>
+			<select name='TEMPLATE' data-bind="var: project(@TEMPLATES); format: optionsFromList; value:SUBDIR; text:SUBDIR;">
+			<option value=''></option>
 			</select>
 		</label>
 
@@ -305,37 +306,37 @@
 		
 	</div>
 
-	<div data-panel-id="domainForceHTTPS" class="displayNone domainNewHostSelectType">
+	<div data-panel-id='domainForceHTTPS' class='displayNone domainNewHostSelectType'>
 	<label>
-		<input data-tlc="bind $var '.force_https'; apply --select=$var; apply --append;" name="force_https" class="applyAnycb" type="checkbox">
+		<input type='checkbox' name='force_https' class='applyAnycb' data-bind="var: host(force_https); format:popVal;" />
 		Force https
 	</label>
 	
 	</div>
 
 
-	<div data-panel-id="domainNewHostTypeREDIR" class="displayNone domainNewHostSelectType">
+	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
 		<label>
 			<span>Redirect</span>
-			<input data-tlc="bind $var '.REDIR'; apply --select=$var; apply --append;" name="REDIR" value="" type="url">
+			<input type='url' name='REDIR' value='' data-bind="var:host(REDIR); format:popVal;" />
 		</label>
 	</div>
 
-	<div data-panel-id="domainNewHostTypeVSTORE" class="displayNone domainNewHostSelectType hint" data-table-role="container">
+	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint' data-table-role='container'>
 
-	<fieldset class="alignedInputs" data-table-role="inputs">
+	<fieldset class='alignedInputs' data-table-role='inputs'>
 		<legend>Rewrite Rules</legend>
 		<label>
 			<span>Incoming URL</span>
-			<input required="required" name="PATH" value="" type="url">
+			<input type='url' required='required' name='PATH' value='' />
 		</label>
 		<label>
 			<span>Rewrite to</span>
-			<input required="required" name="TARGETURL" value="" type="url">
+			<input type='url' required='required' name='TARGETURL' value='' />
 		</label>
-		<button data-app-click="admin_config|dataTableAddUpdate" class="applyButton" data-text="true" data-form-skipreset="true">Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
+		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton' data-text='true' data-form-skipreset='true'>Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
 		
-		<table class="marginTop applyAnytable gridTable fullWidth" data-app-role="dataTable">
+		<table class='marginTop applyAnytable gridTable fullWidth' data-app-role='dataTable'>
 		<thead>
 		<tr>
 			<td>Incoming URL</td>
@@ -343,7 +344,7 @@
 			<td></td>
 		</tr>
 		</thead>
-		<tbody data-tlc="bind $var '.@REWRITES'; controller#loop --templateid='domainManagerRewriteRowTemplate'; apply --append;" data-app-role="domainRewriteRulesTbody" data-table-role="content"></tbody>
+		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody' data-table-role='content'></tbody>
 		</table>
 
 
@@ -351,7 +352,7 @@
 
 	</div>
 	
-	<fieldset data-app-role="sslInputsContainer" class="alignedInputs">
+	<fieldset data-app-role='sslInputsContainer' class='alignedInputs'>
 		<legend>SSL Certificate</legend>
 <!--
 There are five components to SSL.
@@ -363,14 +364,14 @@ There are five components to SSL.
 -->
 		<label>
 			<span>Certificate</span>
-			<textarea data-tlc="bind $var '.CRT'; apply --select=$var; apply --append;" name="CRT" rows="6"></textarea>
+			<textarea data-bind="var: host(CRT); format:popVal;" name='CRT' rows='6'></textarea>
 			
 		</label>
 		<label>
 			<span>Key</span>
-			<textarea data-tlc="bind $var '.KEY'; apply --select=$var; apply --append;" name="KEY" rows="6"></textarea>
+			<textarea data-bind="var: host(KEY); format:popVal;" name='KEY' rows='6'></textarea>
 		</label>
-		<button class="applyButton" data-text="true" data-icon-primary="ui-icon-key" data-app-click="admin_sites|cryptoToolMakeKeyShow">Make Key</button>
+		<button class='applyButton' data-text='true' data-icon-primary='ui-icon-key' data-app-click='admin_sites|cryptoToolMakeKeyShow'>Make Key</button>
 	</fieldset>
 
 
@@ -378,10 +379,15 @@ There are five components to SSL.
 
 
 
-	<div class="buttonset alignRight"></div><!-- save button added here w/ JS -->
+	<div class='buttonset alignRight'></div><!-- save button added here w/ JS -->
 	
 </form>
 </div>
+
+
+
+
+
 
 <!--
 this is opened in a dialog and appended to the parent fieldset so that cryptToolMakeKeyExec is within context of the parent form.
@@ -570,7 +576,7 @@ That's also why the template does not contain a form
 
 
 <table>
-<tbody id="projectsListTemplate">
+<tbody id="projectsListTemplate" data-element='project'>
 <tr>
 	<td data-tlc="bind $var '.TITLE'; apply --append;" class="isSearchable"></td>
 	<td data-tlc="bind $var '.TYPE'; apply --append;" class="isSearchable"></td>

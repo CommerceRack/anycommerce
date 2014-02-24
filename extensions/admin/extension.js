@@ -1234,7 +1234,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
-		companyLogo : function($tag,data)	{
+		companylogo : function($tag,data)	{
 			if(data.value.LOGO)	{
 				data.value = data.value.LOGO;
 				_app.renderFormats.imageURL($tag,data);
