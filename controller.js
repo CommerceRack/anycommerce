@@ -2900,7 +2900,6 @@ return $r;
 		loop : function(data,thisTLC)	{
 			var r = false;
 			var $tmp = $("<div>");
-//			dump(data);
 // SANITY -> the peg file is nesting the returned array value 1 extra level deep, hence the extra [0] below. if the loop suddenly stops working, remove the [0].
 //			dump(data);
 //			dump(" ---------- ARGS "); dump(data.command.args);
@@ -2911,7 +2910,7 @@ return $r;
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
 				for(var i in arr)	{
 					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
-					$tmp.tlc({'templateid':argObj.templateid.value,'dataset':arr[i],'dataAttribs':arr[i]});
+					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
 					}
 				r = $tmp.children();
 				}
