@@ -45,7 +45,7 @@ Block
   = "{{" _ statements:(StatementList _)? "}}" {
       return {
         type: "Block",
-        statements: statements !== null ? statements[0] : []
+        statements: statements !== null ? statements[0][0] : []
       };
     }
 
