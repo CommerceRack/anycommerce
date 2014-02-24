@@ -43,7 +43,7 @@ adminApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js
 	}]);
 
 //required for init. don't change from 0.
-//adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js',function(){window.myCreole = new Parse.Simple.Creole();}]); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/tlc.js']); //used pretty early in process..
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/anycontent.js']);
