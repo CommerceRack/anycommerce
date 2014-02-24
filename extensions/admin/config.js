@@ -1301,7 +1301,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 // SANITY -> 201352 changed this from $("[data-table-role='inputs']",$DTC) to closest. that requires that $ele is INSIDE the inputs. If this causes issues (required from shipping/coupons rules), then add a data attribute on $ele to allow for $ele to be outside and use $("[data-table-role='inputs']",$DTC).
 					$inputContainer = $ele.closest("[data-table-role='inputs']"), //likely a fieldset, but that's not a requirement. //$("[data-table-role='inputs']",$DTC)
 					$dataTbody = $("tbody[data-table-role='content']",$DTC);
-				
+				dump(" -> $inputContainer instanceof jQuery: "+($inputContainer instanceof jQuery));
 				if($inputContainer.length && $dataTbody.length)	{
 //					_app.u.dump(" -> all necessary jquery objects found.");
 					if($dataTbody.data('bind'))	{
