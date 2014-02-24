@@ -538,7 +538,8 @@ command (everything else that's supported).
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
-//		dump("Now we bind"); dump(cmd);
+//		dump("Now we bind"); // dump(dataset);
+//		dump(" jsonpath: "+jsonPath(dataset, '$'+cmd.Src.value));
 		//scalar type means get the value out of the data object.
 		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(dataset, '$'+cmd.Src.value) : cmd.Src.value;
 		globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
@@ -546,7 +547,7 @@ command (everything else that's supported).
 		}
 	
 	this.handleType_IF = function(cmd,globals,dataset)	{
-//		dump("BEGIN handleIF"); dump(cmd);
+//		dump("BEGIN handleIF"); //dump(cmd);
 		var p1; //first param for comparison.
 		var args = cmd.When.args;
 		var action = 'IsTrue'; //will be set to false on first false (which exits loop);
@@ -562,21 +563,22 @@ command (everything else that's supported).
 			else	{
 				dump("In tlc.handleType_IF, an unhandled type was set on the if",'warn');
 				}
-			
+//			dump(" -> p1: "+p1);
 			for(var i = 1, L = 2; i < L; i += 1)	{
-	//			dump(" -> args[i].type: "+args[i].type); dump(cmd); 
-				if(this.comparison(args[i].key,p1,(args[i].value && args[i].value) ? args[i].value.value : null))	{}
+				var p2;
+				if(args[i].type == 'longopt')	{
+					p2 = (args[i].value == null) ? args[i].value : args[i].value.value;
+					}
+				else {p2 = args[i].value || null}
+				if(this.comparison(args[i].key,p1,p2))	{}
 				else {
 					action = 'IsFalse';
 					break;
 					}
 				}
+//			dump(" -> action: "+action);
 			if(cmd[action])	{
-	//			dump(' -> cmd[action]'); dump(cmd[action].statements[0]);
-				for(var i = 0, L = cmd[action].statements[0].length; i < L; i += 1)	{
-					this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO  !!! -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
-					}
-				
+				this.executeCommands(cmd[action].statements,globals,dataset);
 				}
 			else	{} //would get here if NOT true, but no isFalse was set. I guess technically you could also get here if isTrue and no isTrue set.
 			}
@@ -767,7 +769,7 @@ command (everything else that's supported).
 
 //can be triggered by runTLC OR by handleType_Block.
 	this.executeCommands = function(commands,globals,dataset)	{
-//		dump(" -> running tlcInstance.executeCommands"); dump(dataset);
+//		dump(" -> running tlcInstance.executeCommands"); //dump(commands);
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		var theseGlobals = $.extend(true,{
 			binds : {}, //an object of all the binds set in args.
@@ -803,6 +805,7 @@ command (everything else that's supported).
 	
 //This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.
 	this.getBinds = function(templateid)	{
+		
 		var _self = this; //'this' context is lost within each loop.
 		var $t = _self.getTemplateInstance(templateid), bindArr = new Array();
 
