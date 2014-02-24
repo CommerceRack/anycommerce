@@ -94,7 +94,7 @@ used, but not pre-loaded.
 										_app.data[rd.datapointer]['*favorites'].push(domains[i]);
 										}
 									}
-								$target.tlc({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
+								$target.tlc({'templateid':'pageTemplateSites','datapointer':rd.datapointer});
 								_app.u.handleButtons($target);
 								}
 							}
@@ -125,6 +125,9 @@ used, but not pre-loaded.
 						dataset : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList)
 						});
 					_app.u.handleButtons($target);
+					if(_app.vars.domain)	{
+						$("[data-app-role='domainListNonFavorites']",$target).find("tbody[data-domainname='"+_app.vars.domain+"']").find("button[data-app-click='admin_sites|domainPutInFocus']").addClass('ui-state-focus');
+						}
 					}}},'mutable');
 				_app.model.dispatchThis('mutable');
 				}
@@ -139,24 +142,76 @@ used, but not pre-loaded.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-
-				projectbuttons : function($tag,data)	{
-					var $menu = $("<menu \/>").addClass('projectMenu').hide();
-					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.value.GITHUB_REPO)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
+			projectidpretty : function($tag,data)	{
+				dump(" BEGIN projectidpretty");
+				var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
+				if(_app.data.adminProjectList && _app.data.adminProjectList['@PROJECTS'])	{
+					dump(" projects ARE in memory");
+					var index = _app.ext.admin.u.getIndexInArrayByObjValue(_app.data.adminProjectList['@PROJECTS'],'UUID',data.value);
+					dump(" -> index: "+index);
+					if(index === 0 || index >= 1)	{
+						if(_app.data.adminProjectList['@PROJECTS'][index].TITLE)	{
+							o = _app.data.adminProjectList['@PROJECTS'][index].TITLE;
+							}
 						}
-					if(data.value.LINK)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
-						}
-					$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
+					}
+				$tag.text(o);
+				},
+			projectbuttons : function($tag,data)	{
+				var $menu = $("<menu \/>").addClass('projectMenu').hide();
+				$tag.css('position','relative');  //so menu appears where it should.
+				if(data.value.GITHUB_REPO)	{
+					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+					}
+				if(data.value.LINK)	{
+					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+					}
+				$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
 
+				$menu.menu();
+				$tag.append($menu);
+				$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
+				var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
+				$button.on('click',function(){
+					$menu.closest('table').find('menu.projectMenu').hide(); //close any open menus.
+					$menu.show();
+					$( document ).one( "click", function() {
+						$menu.hide();
+						});
+					return false;
+					})
+				$tag.append($button);
+				},
+
+			//pass in HOSTTYPE as data.
+			apphostbuttons : function($tag,data)	{
+				var $menu = $("<menu \/>").addClass('appHostMenu').hide();
+				$tag.css('position','relative');  //so menu appears where it should.
+
+				if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
+					$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+
+					if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
+// * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
+//							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						}
+					else	{
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+						}
+					}
+				if($menu.children().length)	{
 					$menu.menu();
-					$tag.append($menu);
+					$tag.append($menu); //so menu appears where it should.
 					$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
 					var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
 					$button.on('click',function(){
-						$menu.closest('table').find('menu.projectMenu').hide(); //close any open menus.
+						$menu.closest('table').find('menu.appHostMenu').hide(); //close any open menus.
 						$menu.show();
 						$( document ).one( "click", function() {
 							$menu.hide();
@@ -164,47 +219,11 @@ used, but not pre-loaded.
 						return false;
 						})
 					$tag.append($button);
-					},
-
-				//pass in HOSTTYPE as data.
-				apphostbuttons : function($tag,data)	{
-					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
-					$tag.css('position','relative');  //so menu appears where it should.
-
-					if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
-						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
-
-						if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
-// * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
-//							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-							$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
-							}
-						else	{
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
-							}
-						}
-					if($menu.children().length)	{
-						$menu.menu();
-						$tag.append($menu); //so menu appears where it should.
-						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
-						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
-						$button.on('click',function(){
-							$menu.closest('table').find('menu.appHostMenu').hide(); //close any open menus.
-							$menu.show();
-							$( document ).one( "click", function() {
-								$menu.hide();
-								});
-							return false;
-							})
-						$tag.append($button);
-						}
-					else	{
-						//host/domain isn't app based.
-						}
 					}
+				else	{
+					//host/domain isn't app based.
+					}
+				}
 
 			}, //renderFormats
 
