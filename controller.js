@@ -22,7 +22,7 @@
 
 function initApp(params) {
 	params = params || {};
-	console.log(" -> into initApp");
+
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
@@ -743,15 +743,15 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						r = true;
 						}
 					else	{
-						console.warn("In _addInitOrHash, for route "+obj.route+" type was set as "+obj.type+" which is not valid");
+						_app.u.dump("In _addInitOrHash, for route "+obj.route+" type was set as "+obj.type+" which is not valid","warn");
 						}				
 					}
 				else	{
-					console.warn("In _addInitOrHash, type ["+obj.type+"] or route ["+obj.route+"] or callback [typeof: "+(typeof obj.callback)+"] was not defined and all are required.");
+					_app.u.dump("In _addInitOrHash, type ["+obj.type+"] or route ["+obj.route+"] or callback [typeof: "+(typeof obj.callback)+"] was not defined and all are required.","warn");
 					}
 				}
 			else	{
-				console.warn("In _addInitOrHash, method ["+method+"] and/or mode ["+mode+"] either not specified or not valid.");
+				_app.u.dump("In _addInitOrHash, method ["+method+"] and/or mode ["+mode+"] either not specified or not valid.","warn");
 				}
 			return r;
 			},
@@ -826,8 +826,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 				}
 			else	{
-				console.warn("for route "+routeObj.route+", routeObj.type is not set ["+routeObj.type+"] OR typeof is not a function ["+(typeof _app.router.matchFunctions[routeObj.type])+"].");
-				console.dir(routeObj);
+				_app.u.dump("for route "+routeObj.route+", routeObj.type is not set ["+routeObj.type+"] OR typeof is not a function ["+(typeof _app.router.matchFunctions[routeObj.type])+"].","warn");
+				_app.u.dump(routeObj);
 				}
 			return r;
 			},
@@ -850,20 +850,19 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			//if the callback is a string, then it should correspond to a handler.
 			if(routeObj.callback)	{
 				if(typeof routeObj.callback === 'string')	{
-					console.log(" -> callback is a string: "+routeObj.callback)
 					if(_app.router.aliases[routeObj.callback])	{
 						_app.router.aliases[routeObj.callback](routeObj);
 						}
 					else	{
 						//no matching handler found.
-						console.warn("In _executeCallback, handler ["+routeObj.callback+"] specified does not exist.");
+						_app.u.dump("In _executeCallback, handler ["+routeObj.callback+"] specified does not exist.","warn");
 						}
 					}
 				else if(typeof routeObj.callback == 'function')	{
 					routeObj.callback(routeObj);
 					}
 				else	{
-					console.error("In _execute handler, invalid type for routeObj.callback. typeof: "+(typeof routeObj.callback));
+					_app.u.dump("In _execute handler, invalid type for routeObj.callback. typeof: "+(typeof routeObj.callback),"error");
 					//unrecognized type for calback.
 					}
 				}
@@ -888,7 +887,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			},
 	
 		init : function()	{
-			console.log(" -> Router init executed");
+
 			//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
 			$.extend(_app.router.initObj,{
 				location : document.location,
@@ -901,7 +900,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				_app.router._executeCallback(routeObj);
 				}
 			else	{
-				console.log(" -> Uh Oh! no valid route found for "+location.hash);
+				_app.u.dump(" -> Uh Oh! no valid route found for "+location.hash);
 				//what to do here?
 				}
 	//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
@@ -915,18 +914,17 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(routeObj)	{
 					routeObj.hash = location.hash;
 					routeObj.hashParams = (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(location.hash.split("?")[1]) : {});
-//					console.log(" -> WOOT! valid route!"); // console.dir(routeObj);
 					_app.router._executeCallback(routeObj);
 					}
 				else	{
-					console.log(" -> Uh Oh! no valid route found for "+location.hash);
+					_app.u.dump(" -> Uh Oh! no valid route found for "+location.hash);
 					if(typeof _app.router.aliases['404'] == 'function')	{
 						_app.router._executeCallback({'callback':'404','hash':location.hash});
 						}
 					}
 				}
 			else	{
-				console.log(" -> not a hashbang");
+				_app.u.dump(" -> not a hashbang");
 				//is not a hashbang. do nothing.
 				}
 			}
@@ -1014,7 +1012,7 @@ Some utilities for loading external files, such as .js, .css or even extensions.
 			else	{
 				//can't load a script without url being set.
 				//not sure how I want to handle this yet.
-				console.warn('loadscript run but no URL passed.');
+				_app.u.dump('loadscript run but no URL passed.','warn');
 				}
 			},
 
@@ -2084,7 +2082,7 @@ VALIDATION
 				else if(type == 'greet')	{
 					console.log("%c\n\n"+msg+"\n\n",'color: purple; font-weight: bold;')
 					}
-				else if(typeof console[type] == 'function')	{
+				else if(typeof console[type] === 'function')	{
 					console[type](msg);
 					}
 				else	{} //hhhhmm... unsupported type.

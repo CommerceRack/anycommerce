@@ -1794,8 +1794,8 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 							success = true;
 							}
 						catch(e)	{
-							console.warn("Could not build pegParser.");
-							console.error(buildErrorMessage(e));
+							_app.u.dump("Could not build pegParser.","warn");
+							_app.u.dump(buildErrorMessage(e),"error");
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");
