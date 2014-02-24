@@ -17,23 +17,27 @@
 			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
 				//first, resolve 'dataset' so that singular object can be used for any translations.
 				if(o.datapointer)	{
-					o.dataset = $._app.data[o.datapointer];
+					$.extend(o.dataset,$._app.data[o.datapointer]);
 					}
 				if(!$.isEmptyObject(o.extendByDatapointers))	{
 					this._handleDatapointers();
 					}
 				
+//				dump(" -> verb: "+o.verb); dump(o.dataset);
 				if(o.verb == 'transmogrify')	{
 					var $instance = this.transmogrify();
 					this._handleDataAttribs($instance);
-					this.element.append($instance);					
+					this.element.append($instance);		
 					}
 				else if(o.verb == 'translate')	{
 //					dump(" -> o.dataset"); dump(o.dataset);
-					this.translate();
+					var $instance = this.translate();
+					this._handleDataAttribs($instance);
 					}
 				else if(o.verb == 'template')	{
-					this.element.append(this.template());
+					var $instance = this.template();
+					this._handleDataAttribs($instance);
+					this.element.append($instance);
 					}
 				else	{
 					dump("in tlc() jquery function, an invalid verb ["+o.verb+"] was specified.","warn");
@@ -64,7 +68,7 @@
 		_handleDataAttribs : function($tag)	{
 			var o = this.options;
 	//		_app.u.dump(" -> eleAttr is NOT empty");
-			if(!$.isEmptyObject(o.dataAttribs))	{
+			if(!$.isEmptyObject(o.dataAttribs) && $tag instanceof jQuery)	{
 				var tmp = {};
 				for(var index in o.dataAttribs)	{
 					if(typeof o.dataAttribs[index] == 'object')	{
@@ -79,7 +83,7 @@
 					}
 				if(!$.isEmptyObject(tmp)){
 	//				dump(" -> obj: "); dump(tmp);
-					$tag.attr(tmp).data(o.dataAttribs); //applied to firstChild because that's the instance of the template.
+					$tag.attr(tmp).data(o.dataAttribs);
 					}
 
 				}
@@ -88,7 +92,7 @@
 			return new tlc().getTemplateInstance(this.options.templateid);
 			},
 		translate : function()	{
-			new tlc().translate(this.element,this.options.dataset);
+			return new tlc().translate(this.element,this.options.dataset);
 			},
 		transmogrify : function()	{
 			var self = this;
@@ -118,8 +122,11 @@ var tlc = function()	{
 		}
 
 	this.createTemplate = function(templateid)	{
-		var $tmp = $($._app.u.jqSelector('#',templateid));
-		return $._app.model.makeTemplate($tmp,templateid);
+		if(templateid)	{
+			var $tmp = $($._app.u.jqSelector('#',templateid));
+			return $._app.model.makeTemplate($tmp,templateid);
+			}
+		else	{dump("Unable to execute maketemplate in tlc.createTemplate because no templateid was specified."); return false;}
 		}
 	
 	this.getTemplateInstance = function(templateid)	{
@@ -180,8 +187,6 @@ var tlc = function()	{
 // ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
 	this.runTLC = function(P)	{
 
-//		this.data = P.data || {};
-		
 //		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
 		
 		var _self = this; //'this' context is lost within each loop.
@@ -212,7 +217,7 @@ var tlc = function()	{
 		if(vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
 		var url = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename']
 		//don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
-		return "http://www.sporks.zoovy.com/media/img/-/"+url.substr(1); //### TODO -> obviously, we don't want sporks info in URL.
+		return (location.protocol == 'https:' ? 'https://' : 'http://')+$._app.vars.media-host+"/media/img/-/"+url.substr(1);
 		}
 
 /*
@@ -378,6 +383,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = false;
 		switch(op)	{
 			case "eq":
+//				console.log(" -> eq","p1 = "+p1,"p2 = "+p2);
 				if(p1 == p2){ r = true;} break;
 			case "ne":
 				if(p1 != p2){ r = true;} break;
@@ -413,7 +419,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "or":
 				if(p1 != null){r = true;}; break; // ### FUTURE -> not done.
 */			}
-		dump(" -> comparison: "+op+" and r: "+r);
+//		dump(" -> comparison: "+op+" and r: "+r);
 		return r;
 		}
 
@@ -545,26 +551,35 @@ command (everything else that's supported).
 		var args = cmd.When.args;
 		var action = 'IsTrue'; //will be set to false on first false (which exits loop);
 		//NOTE -> change '2' to args.length to support multiple args. ex: if (is $var --lt='100' --gt='5') {{ apply --append; }};
-		for(var i = 0, L = 2; i < L; i += 1)	{
-			if(args[i].type == 'variable')	{
-				p1 = globals.binds[args[i].value];
+
+//SANITY -> in args, args[0] is the variable declaration (type/value).  args[1]+ is the comparison (key, type, value where key = comparison operand).
+		
+		if(args.length)	{
+			if(args[0].type == 'variable')	{
+//				dump(" -> args[0].value: "+args[0].value);
+				p1 = globals.binds[args[0].value];
 				}
 			else	{
+				dump("In tlc.handleType_IF, an unhandled type was set on the if",'warn');
+				}
+			
+			for(var i = 1, L = 2; i < L; i += 1)	{
+	//			dump(" -> args[i].type: "+args[i].type); dump(cmd); 
 				if(this.comparison(args[i].key,p1,(args[i].value && args[i].value) ? args[i].value.value : null))	{}
 				else {
 					action = 'IsFalse';
 					break;
 					}
 				}
-			}
-		if(cmd[action])	{
-//			dump(' -> cmd[action]'); dump(cmd[action].statements[0]);
-			for(var i = 0, L = cmd[action].statements[0].length; i < L; i += 1)	{
-				this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO  !!! -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
+			if(cmd[action])	{
+	//			dump(' -> cmd[action]'); dump(cmd[action].statements[0]);
+				for(var i = 0, L = cmd[action].statements[0].length; i < L; i += 1)	{
+					this.executeCommands(cmd[action].statements[0][i],globals,dataset); // ### TODO  !!! -> the statements are being returned nested 1 level deep in an otherwise empty array. bug.
+					}
+				
 				}
-			
+			else	{} //would get here if NOT true, but no isFalse was set. I guess technically you could also get here if isTrue and no isTrue set.
 			}
-		else	{} //would get here if NOT true, but no isFalse was set. I guess technically you could also get here if isTrue and no isTrue set.
 		return (action == 'isTrue' ? true : false);
 		}
 
