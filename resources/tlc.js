@@ -6,7 +6,7 @@
 			dataset : {}, //used to interpolate the template. can be passed in directly or can be set w/ datapointer/extendByDatapointers
 			datapointer : null, //can be used to set data. ($._app.data[datapointer] )
 			extendByDatapointers : new Array(), //an array of datapointers. will merge all the data into one object prior to translation
-//if dataAttribs is set, these will be added to this.element as both attributes data- .  data- will be prepended if not already set.
+//if dataAttribs is set, these will be added to this.element as both s data- .  data- will be prepended if not already set.
 			dataAttribs : null,
 			verb : 'transmogrify' //acceptable values are transmogrify, translate or template (transmogrify requires template and does both apply template and translate).
 			// for verb, may later offer a dwiw which tries to intelligently guess what to do. 
@@ -78,7 +78,7 @@
 						tmp[((index.indexOf('data-') === 0) ? '' : 'data-' + index).toLowerCase()] = o.dataAttribs[index]
 						}
 					else	{
-						//can't have non-alphanumeric characters in attribute
+						//can't have non-alphanumeric characters in 
 						}
 					}
 				if(!$.isEmptyObject(tmp)){
@@ -212,7 +212,7 @@ var tlc = function()	{
 		return r;
 		}
 
-//The vars object should match up to what the attributes are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
+//The vars object should match up to what the s are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
 	this.makeImageURL	= function(vars)	{
 		if(vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
 		var url = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename']
@@ -246,7 +246,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 				}
 
 			if(argObj.default)	{
-				dump(" -> use attributes of tag to build image path");
+				dump(" -> use s of tag to build image path");
 				//here need to check if default is set to a tag. not sure how, docs are not specific.
 				if($tag.is('img'))	{
 					mediaParams = {'width':$tag.attr('width'),'height':$tag.attr('height'),'data-bgcolor':$tag.data('bgcolor'),'data-minimal':$tag.data('minimal'),'data-filename':globals.binds[argObj.media]};
@@ -254,7 +254,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 					}
 				else	{
 					r = false;
-					//the command to pull attributes from the tag is invalid because the tag isn't an image.
+					//the command to pull s from the tag is invalid because the tag isn't an image.
 					}
 				}
 			else	{
@@ -350,7 +350,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 				// ### TODO -> not done yet.
 				break;  
 			case 'attrib':
-				$tag.attr(argObj.attrib.value,globals.binds[globals.focusBind]);
+				$tag.attr(argObj.attrib,globals.binds[globals.focusBind]);
 				break;
 			}
 		}

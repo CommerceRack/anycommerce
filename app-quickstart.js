@@ -283,7 +283,7 @@ document.write = function(v){
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
 //				dump("Rendering product template for: "+pid);
-				tagObj.jqObj.tlc({'translateOnly':true,'dataset':tmp});
+				tagObj.jqObj.tlc({'verb':'translate','dataset':tmp});
 				tagObj.pid = pid;
 				//build queries will validate the namespaces used AND also fetch the parent product if this item is a child.
 				_app.ext.quickstart.u.buildQueriesFromTemplate(tagObj);
@@ -578,6 +578,26 @@ need to be customized on a per-ria basis.
 						}
 					}
 				}, //subcategoryList
+
+//set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
+//used for displaying a  series of tags, such as on the product detail page. Will show any tag enabled.
+//on bind-data, set maxTagsShown to 1 to show only 1 tag
+		addtagspans : function($tag,data)	{
+			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9','IS_FRESH','IS_SHIPFREE');
+//			var csv = data.value.split(',');
+			var L = whitelist.length;
+			var tagsDisplayed = 0;
+			var maxTagsShown = _app.u.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : whitelist.length; //default to showing all enabled tags.
+			var spans = ""; //1 or more span tags w/ appropriate tag class applied
+			for(var i = 0; i < L; i += 1)	{
+				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
+					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
+					tagsDisplayed += 1;
+					}
+				if(tagsDisplayed >= maxTagsShown)	{break;} //exit early once enough tags are displayed.
+				}
+			$tag.append(spans);
+			}, //addTagSpans
 
 //if first char is a !, hide that char, then render as text. used in breadcrumb
 //likely to be used in prodcats if/when it's built.s
@@ -1079,7 +1099,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					
 					}
 				else if(infoObj.parentID && typeof _app.ext.quickstart.pageTransition == 'function')	{
-					_app.ext.quickstart.pageTransition($old,$('#'+infoObj.parentID));
+					dump(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>> length: "+$(_app.u.jqSelector('#',infoObj.parentID)).length);
+					_app.ext.quickstart.pageTransition($old,$(_app.u.jqSelector('#',infoObj.parentID)));
 					}
 				else if(infoObj.parentID)	{
 //no page transition specified. hide old content, show new. fancy schmancy.
@@ -2169,7 +2190,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				else	{
 					infoObj.templateID = infoObj.templateID || 'productTemplate';
 					infoObj.state = 'init';
-					parentID = infoObj.templateID+"_"+_app.u.makeSafeHTMLId(pid);
+					parentID = infoObj.templateID+"_"+pid;
 					infoObj.parentID = parentID;
 					
 					var $product = $(_app.u.jqSelector('#',parentID));
@@ -2178,8 +2199,11 @@ effects the display of the nav buttons only. should be run just after the handle
 	
 //no need to render template again.
 					if(!$product.length){
-//						$product = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID});
-						$product.tcl({templateid:infoObj.templateID,dataAttribs:{'id':parentID}});
+						dump(" -> product is NOT on the DOM yet. Add it.");
+						var $tmp = $("<div \/>");
+						$tmp.tlc({templateid:infoObj.templateID,'verb':'template'});
+						$product = $tmp.children();
+						$product.attr('id',infoObj.parentID);
 						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
 						_app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
@@ -2199,6 +2223,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						_app.model.dispatchThis();
 						}
 					else	{
+						dump(" -> product is already on the DOM. bring it into focus");
 						infoObj.datapointer = 'appProductGet|'+infoObj.pid; //here so datapoitner is available in renderFunctions.
 //typically, the onComplete get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.

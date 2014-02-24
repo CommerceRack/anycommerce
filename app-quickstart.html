@@ -321,8 +321,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 
-	<div data-tlc="bind $var '.%attribs.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
-		<div data-tlc="bind $var '.%attribs.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
+	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
+		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank){{ apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
@@ -489,7 +489,7 @@ this will likely become more flexible in the future. ###
 	
 	<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
 	
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; controller#addtagspans; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#addtagspans; apply --append;" class="tagsContainer"></div>
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
 	
 	</div>
@@ -507,7 +507,7 @@ this will likely become more flexible in the future. ###
 		</td>
 	
 		<td class="prodSummaryContainer marginBottom no_underline">
-		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
+		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 	
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.%attribs.pid'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="stid"></h5>
@@ -635,7 +635,7 @@ this will likely become more flexible in the future. ###
 	<td class="imageContainer">
 <div>
 
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; controller#addtagspans; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
+	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#addtagspans; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
 	<div data-tlc="bind $var '.%attribs.pid'; quickstart#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
 
 </div>
