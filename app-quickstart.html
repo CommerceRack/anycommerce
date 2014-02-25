@@ -323,7 +323,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
 		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank){{ apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank){{bind $var '.%attribs.zoovy:prod_image1'}}; if(is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --show;}};"></h5>
@@ -489,18 +489,18 @@ this will likely become more flexible in the future. ###
 	
 	<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
 	
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#addtagspans; apply --append;" class="tagsContainer"></div>
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#addtagspans;" class="tagsContainer"></div>
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
 	
 	</div>
 	
 		<div data-tlc="bind $var '.%attribs.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" class="prodThumbs">
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({&quot;pid&quot;:$(this).parent().attr(&quot;data-pid&quot;),&quot;int&quot;:&quot;2&quot;});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image2'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'2'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image2';  if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({&quot;pid&quot;:$(this).parent().attr(&quot;data-pid&quot;),&quot;int&quot;:&quot;3&quot;});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'3'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({&quot;pid&quot;:$(this).parent().attr(&quot;data-pid&quot;),&quot;int&quot;:&quot;4&quot;});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'4'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
 		</div>
 	
@@ -508,10 +508,10 @@ this will likely become more flexible in the future. ###
 	
 		<td class="prodSummaryContainer marginBottom no_underline">
 		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
-	
+
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.%attribs.pid'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="stid"></h5>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; format --prepend='Mfg: '; quickstart#searchlink  --legacy; apply --append;"></h5>
+			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; format --prepend='Mfg: '; quickstart#searchlink  --legacy;"></h5>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid'; format --prepend='Mfg ID: '; if (is $var --notblank;) {{apply --append;}};"></h5>
 		</div>
 	
@@ -519,8 +519,8 @@ this will likely become more flexible in the future. ###
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="basePrice"></h4>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; format --prepend='MSRP: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="prodMSRP"></h5>
 			<span class="savings">
-				<span data-tlc="bind $var '.%attribs.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-				<span data-tlc="bind $var '.%attribs.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
+				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
+				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
 			</span>
 		</div>
 		<div class="socialLinks"></div>
@@ -571,11 +571,11 @@ this will likely become more flexible in the future. ###
 	
 		<ul class="tabs">
 			<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{ apply --show; }}; if (is $var --notblank;) {{apply --append;}};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank) {{ apply --show; }}; if (is $var --notblank;) {{apply --append;}};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{render --wiki='quickstart'; apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank) {{ apply --show; }};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
 			<li class="prodReviewsTab"><a href="#prodReviews">Reviews</a></li>
-			<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }}; if (is $var --notblank;) {{apply --append;}};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }}; if (is $var --notblank;) {{apply --append;}};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
+			<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
 		</ul>
 	
 		<div class="tabContent" data-anytab-content="prodDesc">
@@ -1141,7 +1141,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<button data-tlc="cco#cartitemremovebutton  --legacy; apply --append;" class="floatRight removeButton" data-bind="format:cartItemRemoveButton; extension:cco; useParentData:true;" data-app-click="cco|cartItemRemove">Remove Item From Cart</button>
 		<button data-tlc="quickstart#movetowishlistbutton  --legacy; apply --append;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:quickstart; useParentData:true;">Move to Wishlist</button>
 
-		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --blank) {{bind $var 'product(%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
+		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank) {{bind $var 'product(%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
 
 		<h4 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h4>
 

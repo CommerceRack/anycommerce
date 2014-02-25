@@ -214,10 +214,29 @@ var tlc = function()	{
 
 //The vars object should match up to what the s are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
 	this.makeImageURL	= function(vars)	{
-		if(vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
-		var url = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename']
-		//don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
-		return (location.protocol == 'https:' ? 'https://' : 'http://')+$._app.vars.media-host+"/media/img/-/"+url.substr(1);
+		if(vars['data-bgcolor'] && vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
+		var url = '';
+//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
+//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
+		if($._app.u.thisIsAnAdminSession())	{
+			if(location.protocol === 'file:')	{
+				url = 'http:\/\/'+(_app.vars.domain);
+				}
+			else	{
+				url = 'https:\/\/'+($._app.vars['media-host'] || $._app.data['adminDomainList']['media-host']);
+				}
+			//make sure domain ends in a /
+			if(url.charAt(url.length) != '/')	{
+				url+="\/"
+				}
+			url += "media\/img\/"+$._app.vars.username+"\/";
+			}
+		else	{
+			url = (location.protocol === 'https:') ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
+			url += "media\/img\/"+$._app.vars.username+"\/";
+			}
+		var sising = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename'];
+		return url+sizing.substr(1); //don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
 		}
 
 /*
@@ -233,7 +252,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = true,filePath;
 		argObj.media = argObj.media || {};
 		var mediaParams;
-		if(argObj.media.type == 'variable' && globals.binds[argObj.media.value])	{
+		
+		if(argObj.media == 'var' && globals.binds[argObj.media])	{
 			//build filepath for media lib
 			//default = true is use focusTag. default = $tag says to use another, already defined, tag so focus shifts within this function, but focusTag does NOT change.
 			if(typeof argObj.default === 'string')	{
@@ -258,7 +278,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 					}
 				}
 			else	{
-				mediaParams = {'width':argObj.width.value,'height':argObj.height.value,'data-bgcolor':argObj.bgcolor.value,'data-minimal':(argObj.minimal ? argObj.minimal.value : 0),'data-filename':globals.binds[argObj.media.value]};
+				mediaParams = {'width':argObj.width,'height':argObj.height,'data-bgcolor':argObj.bgcolor,'data-minimal':(argObj.minimal ? argObj.minimal : 0),'data-filename':globals.binds[argObj.media]};
 				filePath = this.makeImageURL(mediaParams);
 				}
 			}
@@ -270,6 +290,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			//either media or src left blank. OR media is tru and the var specified doesn't exist.
 			dump("Something was missing for apply_img.\nif media.type == 'variable' then globals.binds[argObj.media.value] must be set.\nor src not specified on appy img OR media is set but globals.binds is not.");
 			dump("globals: "); dump(globals);
+			dump(" -> argObj: "); dump(argObj);
 			}
 
 		if(filePath && formatter == 'img')	{
@@ -381,9 +402,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.comparison = function(op,p1,p2)	{
 		var r = false;
+//		console.log(" -> op: "+op,"p1 = "+p1,"p2 = "+p2);
 		switch(op)	{
 			case "eq":
-//				console.log(" -> eq","p1 = "+p1,"p2 = "+p2);
+
 				if(p1 == p2){ r = true;} break;
 			case "ne":
 				if(p1 != p2){ r = true;} break;
@@ -398,7 +420,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "blank":
 				if(p1 == ''){r = true;}; break;
 			case "notblank":
-				if(p1 || p1 == 0){r = true;}; break; //==, not ===, because zero could be passed in as a string.
+				if(p1 !== false){r = true;}; break;
 			case "null":
 				if(p1 == null){r = true;}; break;
 			case "notnull":

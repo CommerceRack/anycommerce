@@ -858,7 +858,7 @@ fallback is to just output the value.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
 			priceretailsavingsdifference : function($tag,data)	{
 				var o; //output generated.
-				var pData = _app.data['appProductGet|'+data.value]['%attribs'];
+				var pData = data.value;
 	//use original pdata vars for display of price/msrp. use parseInts for savings computation only.
 				var price = Number(pData['zoovy:base_price']);
 				var msrp = Number(pData['zoovy:prod_msrp']);
@@ -876,7 +876,7 @@ fallback is to just output the value.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
 			priceretailsavingspercentage : function($tag,data)	{
 				var o; //output generated.
-				var pData = _app.data['appProductGet|'+data.value]['%attribs'];
+				var pData = data.value;
 	//use original pdata vars for display of price/msrp. use parseInts for savings computation only.
 				var price = Number(pData['zoovy:base_price']);
 				var msrp = Number(pData['zoovy:prod_msrp']);
