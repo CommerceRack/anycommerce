@@ -320,8 +320,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
 
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
-	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink; apply --attrib='href';">THIS</a>
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
+	
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink; apply --attrib='href';" class="blockLink">
 		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank){{bind $var '.%attribs.zoovy:prod_image1'}}; if(is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
@@ -332,7 +332,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --class='review_'; }};" class="reviewSprite"></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
-	</div>
+	</a>
 	
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
