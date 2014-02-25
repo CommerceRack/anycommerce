@@ -320,7 +320,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
 
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
-
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink; apply --attrib='href';">THIS</a>
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" onclick="showContent('product',{'pid':$(this).attr('data-pid')})" class="pointer">
 		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank){{bind $var '.%attribs.zoovy:prod_image1'}}; if(is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
