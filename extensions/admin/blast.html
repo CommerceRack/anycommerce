@@ -42,7 +42,7 @@ stuff
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 <label>
 	<span>Message source:</span>
-	<select name='MSGID' data-bind="var: emailList(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
+	<select name='MSGID' data-tlc="bind $var '@MSGS'; admin_blast#msgsasoptions; apply --append;" data-app-event="admin_blast|toggleEmailInputValuesBySource">
 		<option value='BLANK'>blank</option>
 	</select>
 </label>
@@ -66,7 +66,7 @@ stuff
 </label>
 </fieldset>
 
-<button data-app-event="admin|execBlastToolSend">send email</button>
+<button data-app-click="admin|execBlastToolSend" class='applyButton'>send email</button>
 
 </form>
 </div>

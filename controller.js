@@ -541,7 +541,7 @@ _app.u.throwMessage(responseData); is the default error handler.
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.tlc, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
 					}
 				},
 			onError : function(rd)	{

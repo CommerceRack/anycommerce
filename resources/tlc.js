@@ -573,8 +573,10 @@ command (everything else that's supported).
 //		dump("Now we bind"); // dump(dataset);
 //		dump(" jsonpath: "+jsonPath(dataset, '$'+cmd.Src.value));
 		//scalar type means get the value out of the data object.
+		//jsonpath nests returned values in an array.
 		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(dataset, '$'+cmd.Src.value)[0] : cmd.Src.value;
-		dump(" -> cmd.Src.value = "+cmd.Src.value+" = "); dump(globals.binds[cmd.Set.value])
+
+//		dump(" -> cmd.Src.value = "+cmd.Src.value+" = "); dump(globals.binds[cmd.Set.value])
 		globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
 		return cmd.Set.value;
 		}

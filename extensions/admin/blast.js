@@ -92,33 +92,36 @@ var admin_blast = function(_app) {
 				},
 
 
-
-			showBlastTool : function($target,vars)	{
-				vars = vars || {};
-				if(vars.object)	{
+			// opens a 'send message' tool. can be sent via email for now. later will support SMS, push notification, etc.
+			//params wants an 'object' and a 'partition'. Partition is passed because, in the case of orders, you may be working with an order from another partition.
+			blastTool : function($target,params)	{
+				params = params || {};
+				if(params.object && Number(params.partition) >= 0)	{
 //listType must match one of these. an array is used because there will be more types:
 //  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
 					var validObjects = ['ORDER','CUSTOMER']; 
-					if($.inArray(vars.object,validObjects) >= 0)	{
-				
+					if($.inArray(params.object,validObjects) >= 0)	{
+
 						$target.showLoading({'message':'Fetching list of email messages/content'});
 
 						_app.model.addDispatchToQ({
 							"_cmd":"adminBlastMsgList",
 							"_tag":{
-								"datapointer":"adminBlastMsgList|"+_app.vars.partition,
+								"datapointer":"adminBlastMsgList|"+params.partition,
+								"jqObj" : $target,
+								"templateid" : "blastToolTemplate",
 								"callback":'tlc'}
 							},"mutable");
 						_app.model.dispatchThis("mutable");
 						
 						}
 					else	{
-						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
+						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, invalid object ['+params.object+'] specified.'})
 						}
 				
 					}
 				else	{
-					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, listType ['+vars.listType+'] or partition ['+vars.partition+'] not specified.'})
+					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, vars.object ['+params.object+'] or partition ['+params.partition+'] not specified.'})
 					}
 				
 				
@@ -133,7 +136,21 @@ var admin_blast = function(_app) {
 //renderFormats are what is used to actually output data.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
-		renderFormats : {
+		tlcFormats : {
+
+//used for adding email message types to a select menu.
+//designed for use with the vars object returned by a adminEmailList _cmd
+			msgsasoptions : function(data,thisTLC)	{
+				var val = data.globals.binds[data.globals.focusBind];
+				dump(" -> val: "); dump(val);
+				var L = val.length;
+				var $tmp = $("<select>");
+	//adminEmailListIndex below is used to lookup by index the message in the list object.
+				for(var i = 0; i < L; i += 1)	{
+					$tmp.append($("<option \/>").val(val[i].MSGID).text(val[i].MSGTITLE || val[i].MSGID).data({'MSGID':val[i].MSGID,'adminEmailListIndex':i}));
+					}
+				return $tmp.children();
+				}
 
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -159,6 +176,28 @@ var admin_blast = function(_app) {
 					}
 				}, //msgDetailView
 
+//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
+			toggleEmailInputValuesBySource : function($ele)	{
+					var
+						$option = $("option:selected",$ele),
+						datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
+						$form = $option.closest('form');
+
+					if($option.val() == 'BLANK')	{
+						$form.find("[name='body']").val(""); //clear the form.
+						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
+						$(".msgType",$form).empty();
+						}
+					else if(datapointer && _app.data[datapointer])	{
+						$form.find("[name='BODY']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
+						$form.find("[name='SUBJECT']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
+						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
+						$(".msgType",$form).text($form.find("[name='MSGID']").val());
+						}
+					else	{
+						$form.anymessage({'gMessage':true,'message':"In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or _app.data[datapointer] is undefined ["+typeof _app.data[datapointer]+"]."});
+						}
+				}, //orderEmailCustomChangeSource
 
 //vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
 			execBlastToolSend : function($btn,vars){

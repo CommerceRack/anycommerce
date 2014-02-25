@@ -1278,15 +1278,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 			$tag.wrap("<a href='http://"+_app.vars.domain+"/media/merchant/"+_app.vars.username+"/"+data.value+"' data-gallery='gallery'>");
 			},
 
-//used for adding email message types to a select menu.
-//designed for use with the vars object returned by a adminEmailList _cmd
-		emailMessagesListOptions : function($tag,data)	{
-			var L = data.value.length;
-//adminEmailListIndex below is used to lookup by index the message in the list object.
-			for(var i = 0; i < L; i += 1)	{
-				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
-				}
-			},
+
 
 
 //very simple data to list function. no template needed (or allowed. use processList for that).
@@ -4150,30 +4142,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 
-//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
-			"toggleEmailInputValuesBySource" : function($select)	{
-				$select.off('change.toggleEmailInputValuesBySource').on('change.toggleEmailInputValuesBySource',function(){
-					var
-						$option = $("option:selected",$(this)),
-						datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
-						$form = $option.closest('form');
 
-					if($option.val() == 'BLANK')	{
-						$form.find("[name='body']").val(""); //clear the form.
-						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
-						$(".msgType",$form).empty();
-						}
-					else if(datapointer && _app.data[datapointer])	{
-						$form.find("[name='BODY']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
-						$form.find("[name='SUBJECT']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
-						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
-						$(".msgType",$form).text($form.find("[name='MSGID']").val());
-						}
-					else	{
-						$form.anymessage({'gMessage':true,'message':"In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or _app.data[datapointer] is undefined ["+typeof _app.data[datapointer]+"]."});
-						}
-					})
-				}, //orderEmailCustomChangeSource
 
 // add this to the button that this is applied to: class='applyButton' data-text='false' data-icon-primary='ui-icon-seek-next'
 			toggleDMI : function($ele,p)	{

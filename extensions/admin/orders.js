@@ -2364,10 +2364,6 @@ else	{
 					})
 				}, //orderEmailCustomSend
 
-//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
-			"orderEmailCustomChangeSource" : function($select)	{
-				_app.ext.admin.e.toggleEmailInputValuesBySource($select);
-				}, //orderEmailCustomChangeSource
 
 //
 			"orderEmailShowMessageList" : function($btn){
