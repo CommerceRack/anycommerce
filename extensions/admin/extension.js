@@ -44,10 +44,8 @@ var admin = function(_app) {
 //		'achievementsListTemplate',
 		
 		'messageListTemplate',
-		'messageDetailTemplate',
-		
-		'mailToolTemplate'
-		
+		'messageDetailTemplate'
+	
 //		'projectsListTemplate',
 //		'projectDetailTemplate',
 //		'projectCreateTemplate',
@@ -1194,6 +1192,25 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 
 
 
+
+
+
+	tlcFormats : {
+		
+		smartLoop : function()	{
+
+
+
+			}
+		
+		},
+
+
+
+
+
+
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -1722,50 +1739,6 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 				_app.u.handleButtons($target);
 				},
 
-			showMailTool : function(vars)	{
-				vars = vars || {};
-				if(vars.listType && Number(vars.partition) >= 0)	{
-				//listType must match one of these. an array is used because there will be more types:
-				//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
-					var types = ['ORDER','CUSTOMER']; 
-					if($.inArray(vars.listType,types) >= 0)	{
-				
-						var $mailTool = $('#mailTool');
-						if($mailTool.length)	{
-							$mailTool.empty();
-							}
-						else	{
-							$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
-							$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
-							}
-				
-						$mailTool.dialog('open');
-				
-						$mailTool.showLoading({'message':'Fetching list of email messages/content'});
-						_app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
-							$mailTool.hideLoading();
-							if(_app.model.responseHasErrors(rd)){
-								$mailTool.anymessage({'message':rd})
-								}
-							else	{
-								$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
-								_app.u.handleAppEvents($mailTool,vars);
-								}
-							}},'mutable');
-						_app.model.dispatchThis('mutable');
-						
-						}
-					else	{
-						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
-						}
-				
-					}
-				else	{
-					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, listType ['+vars.listType+'] or partition ['+vars.partition+'] not specified.'})
-					}
-				
-				
-				},
 
 
 /*
@@ -4054,44 +4027,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$btn.off('click.execDialogClose').on('click.execDialogClose',function(event){
 					event.preventDefault();
 					$btn.closest(".ui-dialog-content").dialog('close');
-					});
-				},
-
-//vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
-			execMailToolSend : function($btn,vars){
-				$btn.button();
-				$btn.off('click.execMailToolSend').on('click.execMailToolSend',function(event){
-					event.preventDefault();
-					vars = vars || {};
-					var $form = $btn.closest('form');
-
-					if(vars.listType)	{
-						if(_app.u.validateForm($form))	{
-							_app.ext.admin.u.sendEmail($form,vars);	
-
-//handle updating the email message default if it was checked. this runs independant of the email send (meaning this may succeed but the send could fail).
-							if($("[name='updateSystemMessage']",$form).is(':checked') && $("[name='MSGID']",$form).val() != 'BLANK')	{
-								frmObj.PRT = vars.partition;
-								frmObj.TYPE = vars.listType; //Don't pass a blank FORMAT, must be set to correct type.
-								delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-								_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-									if(_app.model.responseHasErrors(rd)){
-										$form.anymessage({'message':rd});
-										}
-									else	{
-										$form.anymessage(_app.u.successMsgObject(frmObj.MSGID+" message has been updated."));
-										}
-									}},'immutable');
-								}
-							
-							_app.model.dispatchThis('immutable');
-							}
-						else	{} //validateForm handles error display.
-
-						}
-					else	{
-						$form.anymessage({'message':'In admin.e.execMailToolSend, no list type specified in vars for app event.'});
-						}
 					});
 				},
 

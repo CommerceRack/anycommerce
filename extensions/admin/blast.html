@@ -1,7 +1,22 @@
-<div id='blastManagerTemplate'>
+<div id='blastManagerTemplate' data-app-role='slimLeftContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
-		<ul data-app-role='blastMsgMenu'></ul>
+
+		<h2>Order</h2>
+		<div>
+			<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
+		</div>
+
+		<h2>Customer</h2>
+		<div>
+			<ul data-app-role="blastmessages_ACCOUNT" class='noPadOrMargin listStyleNone'></ul>
+		</div>
+
+		<h2>Product</h2>
+		<div>
+			<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
+		</div>
+
 	</section>
 	
 	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
@@ -10,4 +25,48 @@
 		</div>
 	</section>
 
+</div>
+
+
+<div id='blastMessageDetailTemplate'>
+
+stuff
+</div>
+
+
+
+
+
+<div id='blastToolTemplate'>
+<form action='#'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+<label>
+	<span>Message source:</span>
+	<select name='MSGID' data-bind="var: emailList(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
+		<option value='BLANK'>blank</option>
+	</select>
+</label>
+
+<label>
+	<span>Subject:</span>
+	<input type='text' name='SUBJECT' required='required' maxlength="100" />
+</label>
+
+<label>
+	<span>Message:</span>
+	<textarea name='BODY' rows='10' required='required'></textarea>
+</label>
+</fieldset>
+
+
+<fieldset class='updateSystemMessageContainer marginBottom'>
+<label>
+	<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
+	Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
+</label>
+</fieldset>
+
+<button data-app-event="admin|execBlastToolSend">send email</button>
+
+</form>
 </div>
