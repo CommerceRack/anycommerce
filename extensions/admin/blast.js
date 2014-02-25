@@ -52,7 +52,18 @@ var admin_blast = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-
+			blastMessages : function($target,params)	{
+				$target.showLoading({"message":"Fetching list of messages"});
+				_app.model.addDispatchToQ({
+					"_cmd":"adminBlastMsgList",
+					"_tag":{
+						"templateid" : "blastManagerTemplate",
+						"datapointer":"adminBlastMsgList|"+app.vars.partition,
+						"callback":"tlc"
+						}
+					},"mutable");
+				_app.model.dispatchThis("mutable");
+				}
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
