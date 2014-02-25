@@ -908,7 +908,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			},
 	
 		handleHashChange : function()	{
-			if(location.hash.indexOf('#!') == 0)	{
+			//_ignoreHashChange set to true to disable the router.  be careful.
+			if(location.hash.indexOf('#!') == 0  && !_app.vars.ignoreHashChange)	{
 				// ### TODO -> test this with hash params set by navigateTo. may need to uri encode what is after the hash.
 				var routeObj = _app.router._getRouteObj(location.hash.substr(2),'hash'); //if we decide to strip trailing slash, use .replace(/\/$/, "")
 				if(routeObj)	{
@@ -924,7 +925,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 				}
 			else	{
-				_app.u.dump(" -> not a hashbang");
+				if(_app.vars.ignoreHashChange)	{_app.u.dump(" -> ignoreHashChange is true. Router is disabled.")}
+				else	{_app.u.dump(" -> not a hashbang")}
 				//is not a hashbang. do nothing.
 				}
 			}
@@ -2898,11 +2900,9 @@ return $r;
 		loop : function(data,thisTLC)	{
 			var r = false;
 			var $tmp = $("<div>");
-// SANITY -> the peg file is nesting the returned array value 1 extra level deep, hence the extra [0] below. if the loop suddenly stops working, remove the [0].
-//			dump(data);
-//			dump(" ---------- ARGS "); dump(data.command.args);
+
 			var
-				arr = data.globals.binds[data.globals.focusBind][0], 
+				arr = data.globals.binds[data.globals.focusBind], 
 				argObj = thisTLC.args2obj(data.command.args);
 			if(argObj.templateid)	{
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
