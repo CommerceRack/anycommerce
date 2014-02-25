@@ -3,6 +3,7 @@ dataTLC
 
 grammar
  = cmd:(IfStatement) _ lb* { return cmd; }
+ / cmd:(WhileLoopStatement) _ lb* { return cmd; }
  / cmd:(BindStatement) _ lb* { return cmd; } 
  / cmd:(command) _ lb* { return cmd; }
 
@@ -29,7 +30,7 @@ BindStatement
   }
 
 
-
+// if (command) {{ }} else {{ }};
 IfStatement
   = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
       return ({
@@ -39,6 +40,17 @@ IfStatement
         IsFalse: elseStatement !== null ? elseStatement[3] : null
       });
    }
+
+// while (something) {{ inner loop }};
+WhileLoopStatement
+  = "while" _ "(" _ condition:command _ ")" _ whileStatement:Block lb+ {
+      return ({
+        type: "WHILE",
+        While: condition,
+        Loop: whileStatement,
+      });
+   }
+
 
 
 Block
@@ -172,4 +184,3 @@ _
 
 lb
  = ";"
-

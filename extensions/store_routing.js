@@ -71,7 +71,14 @@ var store_routing = function(_app) {
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
+		
+		tlcFormats : {
+			productlink : function(data, thisTLC){
+				return _app.ext.store_routing.u.productLink(data.globals.binds.pid, data.globals.binds.seo);
+				
+				}
+		},
+		
 		renderFormats : {
 			productLink : function($tag, data){
 				var href="#!/product/";
@@ -103,6 +110,10 @@ var store_routing = function(_app) {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
+			productLink : function(pid, seo){
+				var href="#!/product/"+pid+"/"+(seo ? encodeURI(seo) :"");
+				return href;
+				} 
 			}, //u [utilities]
 
 		e : {

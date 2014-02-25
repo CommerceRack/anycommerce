@@ -177,6 +177,7 @@ these get used just about everywhere. leave these fairly generic
 and override using classes or id's as needed.
 
 */
+a.blockLink {border:none; display:block;}
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
