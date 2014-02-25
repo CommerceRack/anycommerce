@@ -151,7 +151,8 @@ var tlc = function()	{
 			var _self = this;
 			$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 				var $tag = $(this), tlc = $tag.data('tlc');
-	//			dump("----------------> start new $tag <-----------------");
+//			dump("----------------> start new $tag <-----------------");
+//			dump(" >>>>>>>>>>" + $(this).data('tlc'));
 				var commands = false;
 				try{
 					commands = window.pegParser.parse(tlc);
@@ -214,29 +215,36 @@ var tlc = function()	{
 
 //The vars object should match up to what the s are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
 	this.makeImageURL	= function(vars)	{
-		if(vars['data-bgcolor'] && vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
-		var url = '';
-//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
-//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
-		if($._app.u.thisIsAnAdminSession())	{
-			if(location.protocol === 'file:')	{
-				url = 'http:\/\/'+(_app.vars.domain);
+		var r;
+		if(vars['data-filename'])	{
+			if(vars['data-bgcolor'] && vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
+			var url = '';
+	//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
+	//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
+			if($._app.u.thisIsAnAdminSession())	{
+				if(location.protocol === 'file:')	{
+					url = 'http:\/\/'+(_app.vars.domain);
+					}
+				else	{
+					url = 'https:\/\/'+($._app.vars['media-host'] || $._app.data['adminDomainList']['media-host']);
+					}
+				//make sure domain ends in a /
+				if(url.charAt(url.length) != '/')	{
+					url+="\/"
+					}
+				url += "media\/img\/"+$._app.vars.username+"\/";
 				}
 			else	{
-				url = 'https:\/\/'+($._app.vars['media-host'] || $._app.data['adminDomainList']['media-host']);
+				url = (location.protocol === 'https:') ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
+				url += "media\/img\/"+$._app.vars.username+"\/";
 				}
-			//make sure domain ends in a /
-			if(url.charAt(url.length) != '/')	{
-				url+="\/"
-				}
-			url += "media\/img\/"+$._app.vars.username+"\/";
+			var sizing = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename'];
+			r = url+(sizing.substr(1)); //don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
 			}
 		else	{
-			url = (location.protocol === 'https:') ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
-			url += "media\/img\/"+$._app.vars.username+"\/";
+			
 			}
-		var sising = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename'];
-		return url+sizing.substr(1); //don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
+		return r
 		}
 
 /*
@@ -420,7 +428,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "blank":
 				if(p1 == ''){r = true;}; break;
 			case "notblank":
-				if(p1 !== false){r = true;}; break;
+				if(p1 != false){r = true;}; break;
 			case "null":
 				if(p1 == null){r = true;}; break;
 			case "notnull":
@@ -488,7 +496,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 		return r;
 		} //truncate
 
-
+//TLC/Render formats could be stores in 1 of a variety of places.  Either in extension.renderFormats, extension.tlcFormats, controller.tlcFormats, controller.renderFormats or within tlc itself (core).
+//The function uses the tlc statement to determine where to get the formatting function from and then to execute that format.
+// extension#format indicate the extension and function name.
+// --legacy indicates it's a renderFormat. if legacy isn't set, it's a tlc format.
 	this.format_from_module = function(cmd,globals,dataset)	{
 //		dump(" -> non 'core' based format. not handled yet"); // dump(' -> cmd'); dump(cmd); dump(' -> globals'); dump(globals);
 //		dump(" -> cmd.args: "); dump(cmd.args);
@@ -505,7 +516,6 @@ This one block should get called for both img and imageurl but obviously, imageu
 				}
 			}
 		else	{
-	
 			if(cmd.module == 'controller')	{
 				moduleFormats = $._app.tlcFormats
 				}
@@ -634,7 +644,7 @@ command (everything else that's supported).
 //may be able to merge this with the handleCommand_format. We'll see after the two are done and if the params passed into the functions are the same or no.
 // NOTE -> stopped on 'apply' for now. B is going to change the way the grammer hands back the response. Once he does that, I'll need to flatten the array into a hash to easily test if 'empty' or some other verb is set.
 	this.handleCommand_apply = function(cmd,globals)	{
-//		dump(" -> BEGIN handleCommand_apply");// dump(cmd);
+//		dump(" -> BEGIN handleCommand_apply"); dump(cmd);
 		var r = true;
 		if(cmd.module == 'core')	{
 			var
@@ -672,7 +682,7 @@ command (everything else that's supported).
 
 				}
 			else if(numVerbs === 0)	{
-				dump("For command: "+cmd+" no verb was specified on the apply. Exactly 1 verb must be specified.",'warn');
+				dump("For the following command no verb was specified on the apply. Exactly 1 verb must be specified.",'warn'); dump(cmd); dump(argObj);
 				}
 			else	{
 				dump("For command (below) either more than 1 verb or more than 1 formatter was specified on the apply. Exactly 1 of each is allowed per command.",'warn');
@@ -694,25 +704,26 @@ command (everything else that's supported).
 
 	
 	this.handleCommand_render = function(cmd,globals){
-		var r, argObj = this.args2obj(cmd.args), value = globals.binds[globals.focusbind]; //an object is used to easily check if specific apply commands are present
+		dump(">>>>> BEGIN tlc.handleCommand_render. value: "); dump(globals.binds[globals.focusBind]);
+		var argObj = this.args2obj(cmd.args); //an object is used to easily check if specific apply commands are present
 //		dump(" -> cmd: "); dump(cmd);
-		if(argObj.wiki)	{
-			var $tmp = $("<div>").append(value);
-			//r = wikify($tmp.text()); //###TODO -> 
-			globals.tags[globals.focusTag] = $tmp.html();
+		if(globals.tags[globals.focusTag])	{
+			if(argObj.wiki)	{
+				var $tmp = $("<div>").append(globals.tags[globals.focusTag]);
+				//r = wikify($tmp.text()); //###TODO -> 
+				globals.tags[globals.focusTag] = $tmp.html();
+				}
+			else if(argObj.html)	{
+				//if the content is already html, shouldn't have to do anything to it.
+				}
+			else if(argObj.dwiw)	{
+				// ###TODO -> need to determine if content is wiki or html.
+				}
+			else	{
+				//unrecognized command.
+				}
 			}
-		else if(argObj.html)	{
-			r = value; //if the content is already html, shouldn't have to do anything to it.
-			}
-		else if(argObj.dwiw)	{
-			// ###TODO -> need to determine if content is wiki or html.
-			r = value;
-			}
-		else	{
-			//unrecognized command.
-			r = value;
-			}
-		return r;
+		return globals.tags[globals.focusTag];
 		}
 		
 	this.handleCommand_stringify = function(cmd,globals)	{
@@ -807,7 +818,7 @@ command (everything else that's supported).
 			if(commands[i].type == 'command')	{
 				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
 				else	{
-					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
+//					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
 					//handleCommand returned a false. That means either an error occured OR this executed a renderFormat. stop processing.
 					break;
 					}
@@ -833,7 +844,7 @@ command (everything else that's supported).
 
 		$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 			var $tag = $(this), tlc = $tag.data('tlc');
-//			dump("----------------> start new $tag <-----------------");
+
 			var commands = false;
 			try{
 				commands = window.pegParser.parse(tlc);
@@ -853,7 +864,6 @@ command (everything else that's supported).
 				dump("couldn't parse a tlc",'warn');
 				//could not parse tlc. error already reported.
 				}
-//			dump("----------------> end $tag <-----------------");
 			});
 		return bindArr;
 		} //end getBinds

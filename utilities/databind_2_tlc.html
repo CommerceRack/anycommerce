@@ -148,7 +148,11 @@ function doIt2It()	{
 
 
 		if(odb.var)	{
-			command += "bind $var '"+(odb.var.split('(')[0] == 'product' ? '.%attribs' : '')+'.'+parseDataVar(odb.var)+"'; ";
+			var value = parseDataVar(odb.var);
+			if(odb.var.split('(')[0] == 'product' && value != pid)	{
+				value = '%attribs.'+value;
+				}
+			command += "bind $var '."+value+"'; ";
 			}
 
 		if(odb.defaultVar)	{

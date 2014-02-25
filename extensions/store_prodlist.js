@@ -299,7 +299,7 @@ will remove the add to cart button if the item is not purchaseable.
 */
 
 			addtocartbutton : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+//				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton");
 //				_app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
 				var showATC = true;
@@ -342,7 +342,7 @@ _app.ext.quickstart.u.handlePageContent('product',pid)
 					$tag.replaceWith("<span class='notAvailable'>not available</span>");
 					}
 //				_app.u.dump(" -> ID at end: "+$tag.attr('id'));
-				} //addToCartButton
+				} //addtocartbutton
 			},
 
 

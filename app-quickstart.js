@@ -582,7 +582,7 @@ need to be customized on a per-ria basis.
 //set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
 //used for displaying a  series of tags, such as on the product detail page. Will show any tag enabled.
 //on bind-data, set maxTagsShown to 1 to show only 1 tag
-		addtagspans : function($tag,data)	{
+		tags : function($tag,data)	{
 			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9','IS_FRESH','IS_SHIPFREE');
 //			var csv = data.value.split(',');
 			var L = whitelist.length;
@@ -597,7 +597,7 @@ need to be customized on a per-ria basis.
 				if(tagsDisplayed >= maxTagsShown)	{break;} //exit early once enough tags are displayed.
 				}
 			$tag.append(spans);
-			}, //addTagSpans
+			}, //tags
 
 //if first char is a !, hide that char, then render as text. used in breadcrumb
 //likely to be used in prodcats if/when it's built.s
@@ -781,7 +781,7 @@ fallback is to just output the value.
 //changes the text on the button based on certain attributes.
 //_app.ext.quickstart.u.handleAddToCart($(this),{'action':'modal'});
 			addtocartbutton : function($tag,data)	{
-//				dump("BEGIN store_product.renderFunctions.addToCartButton");
+//				dump("BEGIN store_product.renderFunctions.addtocartbutton");
 
 //if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
 				
@@ -852,7 +852,7 @@ fallback is to just output the value.
 						}
 					}
 //				dump(" -> ID at end: "+$tag.attr('id'));
-				}, //addToCartButton
+				}, //addtocartbutton
 
 //pass in the sku for the bindata.value so that the original data object can be referenced for additional fields.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
@@ -1150,7 +1150,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 
 //context should be a container element that has 1 or more forms within it.
 //will look for inputs w/ qtyChanged class. Anything with that class is assumed to be an add to cart form and is treated as such.
-// the atcQuantityInput renderFormat in store_product will auto-add that class on change.
+// the atcquantityinput renderFormat in store_product will auto-add that class on change.
 			bulkAddItemsToCart : function($context,_tag)	{
 				if($context)	{
 					var $inputs = $(".qtyChanged",$context);

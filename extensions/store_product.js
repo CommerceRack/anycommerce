@@ -275,7 +275,7 @@ addToCart : function (pid,$form){
 				$tag.append("<input type='hidden' name='sku' value='"+data.value+"' />");
 				},
 			
-			reviewList : function($tag,data)	{
+			reviewlist : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFormats.reviewList");
 				var templateID = data.bindData.loadsTemplate;
 //				_app.u.dump(data.value)
@@ -286,7 +286,7 @@ addToCart : function (pid,$form){
 				return L;
 				},
 
-			quantityDiscounts : function($tag,data)	{
+			quantitydiscounts : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFormats.quantityDiscounts");
 //				_app.u.dump("value: "+data.value);
 				var o = ''; //what is output;
@@ -322,7 +322,7 @@ addToCart : function (pid,$form){
 				$tag.append(o);
 				},
 
-			simpleInvDisplay : function($tag,data)	{
+			simpleinvdisplay : function($tag,data)	{
 //data.value = available inventory
 //				_app.u.dump("BEGIN store_product.renderFunctions.invAvail.");
 				if(data.value > 0)
@@ -332,7 +332,7 @@ addToCart : function (pid,$form){
 				},
 
 //data.value should be entire product object.
-			detailedInvDisplay : function($tag,data)	{
+			detailedinvdisplay : function($tag,data)	{
 				var pid = data.value.pid;
 				if(pid && data.value['@inventory'] && data.value['@inventory'][pid])	{
 					$tag.append("<div>Available Inventory: "+data.value['@inventory'][pid].inv+"<\/div>");
@@ -353,10 +353,10 @@ addToCart : function (pid,$form){
 				else	{
 					$tag.append("Unable to determine inventory count");
 					}
-				}, //detailedInvDisplay
+				}, //detailedinvdisplay
 
 //add all the necessary fields for quantity inputs.
-			atcQuantityInput : function($tag,data)	{
+			atcquantityinput : function($tag,data)	{
 				var $input = $("<input \/>",{'name':'qty'});
 				if(_app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
 					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
@@ -377,8 +377,8 @@ addToCart : function (pid,$form){
 // in this case, we aren't modifying an attribute of $tag, we're appending to it. a lot.
 //this code requires the includes.js file.
 //it loops through the products options and adds them to the fieldset (or whatever $tag is, but a fieldset is a good idea).
-			atcVariations : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFormats.atcVariations");
+			atcvariations : function($tag,data)	{
+//				_app.u.dump("BEGIN store_product.renderFormats.atcvariations");
 				var pid = data.value; 
 				var formID = $tag.closest('form').attr('id'); //move up the dom tree till the parent form is found
 				$tag.empty(); /* prodlist fix */
@@ -412,8 +412,8 @@ $display.appendTo($tag);
 
 
 //will remove the add to cart button if the item is not purchaseable.
-			addToCartButton : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+			addtocartbutton : function($tag,data)	{
+//				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton"); dump(data.value);
 //				_app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
 				var pData = _app.data['appProductGet|'+pid];
@@ -431,7 +431,7 @@ $display.appendTo($tag);
 					}
 
 //				_app.u.dump(" -> ID at end: "+$tag.attr('id'));
-				} //addToCartButton
+				} //addtocartbutton
 
 			},
 
