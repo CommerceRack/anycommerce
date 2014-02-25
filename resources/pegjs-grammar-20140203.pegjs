@@ -60,6 +60,7 @@ StatementList
 
 Statement
   = Block
+  / BindStatement+
   / command+
   
 
