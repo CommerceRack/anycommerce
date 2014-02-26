@@ -529,6 +529,7 @@ _app.u.throwMessage(responseData); is the default error handler.
 //anycontent will disable hideLoading and loadingBG classes.
 //to maintain flexibility, pass all anycontent params in thru _tag
 					$target.tlc(_rtag);
+					$target.anyform(_rtag);
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 
