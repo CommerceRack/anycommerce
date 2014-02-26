@@ -266,21 +266,21 @@ used to organize content when a category is clicked.
 each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
-<div id="categoryTemplate" class="loadingBG categoryTemplate">
+<div id="categoryTemplate" class=" categoryTemplate">
 
-	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
+	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
-	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy; apply --append;" src="images/blank.gif" alt="">
+	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="">
 
 	<h2 data-tlc="bind $var '.%page.header'; if (is $var --notblank;) {{apply --append;}};"></h2>
 
-	<p data-tlc="bind $var '.%page.description'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
-	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul><!-- outputs a list of subcategories -->
+	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul><!-- outputs a list of subcategories -->
 
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withreviews='1' --withinventory='1' --withvariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
+	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withreviews='1' --withinventory='1' --withvariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
 
-	<p data-tlc="bind $var '.%page.description2'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<p data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
 
 </div>
@@ -508,7 +508,7 @@ this will likely become more flexible in the future. ###
 		</td>
 	
 		<td class="prodSummaryContainer marginBottom no_underline">
-		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+	<!--	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
@@ -532,7 +532,7 @@ this will likely become more flexible in the future. ###
 		</table>
 	
 	
-		<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency marginBottom"></div>
+		<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{ format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="latency marginBottom"></div>
 		<div data-app-role="timeInTransit" class="displayNone"></div>
 	
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
@@ -545,7 +545,7 @@ this will likely become more flexible in the future. ###
 	
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_cpsiawarning'; quickstart#cpsiawarning  --legacy; apply --append;"></div>
 		<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; format --prepend='Quantity Discounts:'; store_product#quantitydiscounts  --classname='marginBottom' --legacy; apply --append;"></div>
-	
+	-->
 		<section class="marginBottom">
 			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' from '; apply --append;}};"></span>
@@ -741,7 +741,6 @@ if you change these, you should move them above this comment so that when you (o
 
 
 
-<!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id="companyTemplate" class="clearfix">
 
 	<div class="sideline">
@@ -786,7 +785,7 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div id="faqArticle" class="displayNone textContentArea">
 			<h1>Frequently Asked Questions</h1>
-			<div id="faqContent" class="loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
+			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
 		</div>
 
 
@@ -859,7 +858,6 @@ if you change these, you should move them above this comment so that when you (o
 
 
 
-<!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id="customerTemplate" class="clearfix">
 
 	<div class="sideline">
@@ -958,16 +956,16 @@ subscribeListsArticle is used for authenticated buyers
 
 		<div id="listsArticle" class="displayNone textContentArea">
 			<h1>List Manager</h1>
-			<div id="listsContainer" class="prodlist loadingBG"></div>
+			<div id="listsContainer" class="prodlist "></div>
 
-			<div id="listEditorContainer" class="displayNone loadingBG"></div><!-- editor for a given list gets added here -->
+			<div id="listEditorContainer" class="displayNone "></div><!-- editor for a given list gets added here -->
 
 		</div>
 
 		<div id="forgetmeArticle" class="displayNone textContentArea">
 			<h1>Your 'Forget Me' list</h1>
 			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
-			<ul id="forgetmeContainer" class="prodlist loadingBG">
+			<ul id="forgetmeContainer" class="prodlist ">
 			</ul>
 		</div>
 

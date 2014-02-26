@@ -214,7 +214,7 @@ document.write = function(v){
 				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
 					_app.u.dump(" -> existing cart is valid. add to cart manager");
 					if($('#cartMessenger').length)	{
-						_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
+						_app.model.addCart2Session(_rtag.cartid); //this function updates _app.vars.carts
 						_app.ext.cart_message.u.initCartMessenger(_rtag.cartid,$('#cartMessenger')); //starts the cart message polling
 						}
 					else	{
