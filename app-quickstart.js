@@ -333,6 +333,7 @@ document.write = function(v){
 
 // passing in unsanitized tagObj caused an issue with showPageContent
 				_app.ext.quickstart.u.buildQueriesFromTemplate($.extend(true, {}, tagObj));
+				dump(" ----> queries were just built");
 				_app.model.dispatchThis();
 				},
 			onError : function(responseData)	{
@@ -355,6 +356,7 @@ document.write = function(v){
 
 					tagObj.dataset = $.extend({},_app.data['appNavcatDetail|'+tagObj.navcat],{'%page':_app.data['appPageGet|'+tagObj.navcat]['%page']},{'session':_app.ext.quickstart.vars.session});
 					delete tagObj.datapointer; //delete this to be sure tlc uses dataset.
+					tagObj.verb = 'translate';
 //					dump(" -> tagObj: "); dump(tagObj);
 
 /*					if(tagObj.lists.length)	{
@@ -1099,7 +1101,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					
 					}
 				else if(infoObj.parentID && typeof _app.ext.quickstart.pageTransition == 'function')	{
-					dump(" >>>>>>>>>>>>>>>>>>>>>>>>>>>>> length: "+$(_app.u.jqSelector('#',infoObj.parentID)).length);
+//					dump(" -> parentID.length: "+$(_app.u.jqSelector('#',infoObj.parentID)).length);
 					_app.ext.quickstart.pageTransition($old,$(_app.u.jqSelector('#',infoObj.parentID)));
 					}
 				else if(infoObj.parentID)	{
@@ -2813,7 +2815,7 @@ buyer to 'take with them' as they move between  pages.
 						}
 					else	{
 //						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
-						var $content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID});
+						var $content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID,'verb':'template'});
 //if dialog is set, we've entered this function through showPageInDialog.
 //content gets added immediately to the dialog.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.

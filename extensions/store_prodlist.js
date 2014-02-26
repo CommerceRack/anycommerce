@@ -268,7 +268,7 @@ A special translate template for product so that reviews can be merged into the 
 				//need to keep admin and quickstart both running.
 //				dump(" data.value: "); dump(data.value);
 				data.bindData.loadsTemplate = data.bindData.templateid; // ### TODO -> once the prodlist code is updated, this can be ditched.
-				data.value = data.value[0]; // compensate for extra nested of object data.
+				data.value = data.value;
 				this.productList($tag,data);
 				},
 			productList : function($tag,data)	{

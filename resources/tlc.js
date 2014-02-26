@@ -130,6 +130,10 @@ var tlc = function()	{
 		}
 	
 	this.getTemplateInstance = function(templateid)	{
+		if($._app.vars.debug == 'tlc')	{
+			dump(" -> tlc.getTemplateInstance was executed for templateid: "+templateid);
+			}
+
 		var r; //what is returned. either a jquery instance of the template OR false (invalid template)
 		if(templateid && $._app.templates[templateid])	{
 			r = $._app.templates[templateid].clone(true);
@@ -152,7 +156,9 @@ var tlc = function()	{
 			$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 				var $tag = $(this), tlc = $tag.data('tlc');
 //			dump("----------------> start new $tag <-----------------");
-//			dump(" >>>>>>>>>>" + $(this).data('tlc'));
+			if($._app.vars.debug == 'tlc')	{
+				dump(" >>>>> " + $(this).data('tlc'));
+				}
 				var commands = false;
 				try{
 					commands = window.pegParser.parse(tlc);
@@ -428,7 +434,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "blank":
 				if(p1 == ''){r = true;}; break;
 			case "notblank":
-				if(p1 != false){r = true;}; break;
+				if(p1 == false || p1 == 'undefined' || p1 == null){r = false;}
+				else	{r = true;}
+				break;
 			case "null":
 				if(p1 == null){r = true;}; break;
 			case "notnull":

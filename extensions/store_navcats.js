@@ -204,7 +204,7 @@ templateID - the template id used (from _app.templates)
 
 			categorylist : function($tag,data)	{
 //				dump(" BEGIN store_navcats.renderFormats.categorylist");
-				data.value = data.value[0]; // ### TODO -> data is returned nested an extra level deep. this compensates. that bug in peg needs to be addressed.
+				data.value = data.value;
 //				dump(" -> data.value"); dump(data.value);
 				if(typeof data.value == 'object' && data.value.length > 0)	{
 					var L = data.value.length;

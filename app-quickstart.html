@@ -233,10 +233,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id="homepageTemplate" class="homeTemplate">
 	
-	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
+	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
 
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
-	<p data-tlc="bind $var '.%page.description'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
+
+	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
 <!--
@@ -295,7 +296,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <li id="categoryListTemplate">
 	<div onclick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class="pointer">
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="120" width="120"></div>
-		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;"></span></div>
+		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
 	</div>
 </li>
 
@@ -330,7 +331,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></h6>
 		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --class='review_'; }};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</a>
 	
@@ -360,7 +361,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></h6>
 
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --class='review_'; }}; if (is $var --notblank;) {{apply --append;}};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 	
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 	
@@ -401,7 +402,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				</div>
 			</div>
 		</div>
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --class='review_'; }}; if (is $var --notblank;) {{apply --append;}};" class="reviewSprite floatRight"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
 
@@ -659,7 +660,7 @@ this will likely become more flexible in the future. ###
 	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency"></div>
 
 	<section class="marginBottom">
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{ apply --add --class='review_'; }};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --append=' from ';apply --append;}};"></span>
 	</section>
 
