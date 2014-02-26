@@ -1554,7 +1554,7 @@ _app.model.dispatchThis('immutable');
 							_app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
 							_app.model.addDispatchToQ({
 								'_cmd':'adminCustomerRemove',
-								'cid' : CID,
+								'CID' : CID,
 								'_tag':	{
 									'datapointer' : 'adminCustomerRemove',
 									'callback':function(rd){
