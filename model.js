@@ -1081,6 +1081,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 // check to see if the cartID is already in carts. if so, remove old and add new id to top.
 // do we want a 'bringCartIntoFocus', which would move a cart id to the top? wait and see if it's necessary.
 		addCart2Session : function(cartID)	{
+//			_app.u.dump(">>>>>>>> BEGIN addCart2Session: "+cartID);
 			var carts = _app.vars.carts || this.dpsGet('app','carts') || [];
 //each cart id should only be in carts once. if the cart id is already present, remove it.
 			var index = $.inArray(cartID,carts);

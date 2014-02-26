@@ -351,7 +351,7 @@ for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
 -->
 <li id="productListTemplateATC" class="loadingBG  ">
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};">
+	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';">
 
 		<div class="prodThumbContainer floatLeft">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
@@ -376,7 +376,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 
 <li id="productListTemplateBuyerList" class="loadingBG clearfix">
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};">
+	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';">
 
 		<div class="prodThumbContainer floatLeft">
 			<div class="ui-widget ui-widget-content ui-corner-all">
@@ -480,7 +480,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" id="productTemplate" class="productPage">
+<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
 
 	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
 	
@@ -568,7 +568,7 @@ this will likely become more flexible in the future. ###
 	or the tab clicked won't open the right content.
 	It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
 	-->
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" class="prodTabs tabbedProductContent applyAnytabs">
+	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodTabs tabbedProductContent applyAnytabs">
 	
 		<ul class="tabs">
 			<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
@@ -580,7 +580,7 @@ this will likely become more flexible in the future. ###
 		</ul>
 	
 		<div class="tabContent" data-anytab-content="prodDesc">
-			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki; apply --append;}};"></div>
+			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 		</div>
 	
 		<div class="tabContent" data-anytab-content="prodSpecs">
@@ -594,7 +594,7 @@ this will likely become more flexible in the future. ###
 	
 		<div class="tabContent" data-anytab-content="prodReviews">
 	
-			<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; if (is $var --notblank;) {{apply --append;}};" class="clearfix alignRight">
+			<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="clearfix alignRight">
 				<button class="applyButton" data-app-click="store_crm|productReviewShow">Write Review</button>
 			</div>
 	

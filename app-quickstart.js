@@ -114,42 +114,23 @@ var quickstart = function(_app) {
 				else if(cartID = _app.u.getParameterByName('cartID'))	{
 					dump(' -> cart id was specified on the URI');
 					}
+				else if(cartID = _app.model.fetchCartID())	{
+					dump(" -> cartID obtained from fetchCartID. cartid: "+cartID);
+					//no need to add this cartID to the session/vars.carts, because that's where fetch gets it from.
+					}
 				else	{}
 
 				if(_app.vars.apptimizer === true) {$.support.onpopstate = false} //disable uri rewrite and rely on hashChange
 
-				initCM = function(cartID)	{
-					if($('#cartMessenger').length)	{
-						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
-						}
-					else	{
-						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
-						}
-					}
-
-
-
 				if(cartID)	{
-					dump(" -> cartID is set, init messenger");
-					_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
-					initCM(cartID);
-					}
-				else if(cartID = _app.model.fetchCartID())	{
-					dump(" -> cartID obtained from fetchCartID. cartid: "+cartID);
-					//no need to add this cartID to the session/vars.carts, because that's where fetch gets it from.
-					initCM(cartID);
+					dump(" -> cartID is set, validate.");
+					// the addCart2CM uses the 'appCartExists' datapointer. if it changes here, update the callback.
+					_app.model.addDispatchToQ({"_cmd":"appCartExists",_cartid:cartID,"_tag":{"datapointer":"appCartExists","cartid":cartID,"callback":"addCart2CM","extension":"quickstart"}},"mutable");
+					//do not set cart ID in session until it validates.
 					}
 				else	{
 					dump(" -> no cart found. create a new one");
-					_app.calls.appCartCreate.init({'callback':function(rd)	{
-						if(_app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							//appCartCreate automatically updates session/vars.carts
-							initCM(_app.model.fetchCartID());
-							}
-						}},'mutable');
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');
 					}
 
 //technically, a session lasts until the browser is closed. if fresh data is desired on refresh, uncomment the following few lines.
@@ -227,7 +208,38 @@ document.write = function(v){
 				}
 			}, //startMyProgram 
 
-			
+		addCart2CM : {
+			onSuccess : function(_rtag){
+				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
+				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
+					_app.u.dump(" -> existing cart is valid. add to cart manager");
+					if($('#cartMessenger').length)	{
+						_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
+						_app.ext.cart_message.u.initCartMessenger(_rtag.cartid,$('#cartMessenger')); //starts the cart message polling
+						}
+					else	{
+						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
+						}
+					}
+				else if(_rtag.datapointer == 'appCartExists')	{
+					_app.u.dump(" -> existing cart was NOT valid. Fetch a new cartid");
+					_app.model.removeCartFromSession(_rtag.cartid); //this will ensure the cart isn't used again.
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');//The cart that was passed was exired in invalid.
+					}
+				else	{
+					_app.u.dump(" -> cart has been created.");
+					//this was a appCartCreate.
+					if($('#cartMessenger').length)	{
+						_app.ext.cart_message.u.initCartMessenger(_app.model.fetchCartID(),$('#cartMessenger')); //starts the cart message polling
+						}
+					else	{
+						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
+						}
+					}
+				}
+			},
+		
+		
 //optional callback  for appCategoryList in app init which will display the root level categories in element w/ id: tier1categories 
 		showRootCategories : {
 			onSuccess : function()	{
