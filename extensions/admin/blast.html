@@ -42,8 +42,8 @@ stuff
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 <label>
 	<span>Message source:</span>
-	<select name='MSGID' data-tlc="bind $var '@MSGS'; admin_blast#msgsasoptions; apply --append;" data-app-event="admin_blast|toggleEmailInputValuesBySource">
-		<option value='BLANK'>blank</option>
+	<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|toggleEmailInputValuesBySource">
+		<option value='BLANK' selected="selected">blank</option>
 	</select>
 </label>
 
