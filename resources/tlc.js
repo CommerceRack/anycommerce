@@ -92,6 +92,7 @@
 			return new tlc().getTemplateInstance(this.options.templateid);
 			},
 		translate : function()	{
+			if($._app.vars.debug == 'tlc')	{dump(" dataset for tlc: "); dump(this.options.dataset);}
 			return new tlc().translate(this.element,this.options.dataset);
 			},
 		transmogrify : function()	{
@@ -209,11 +210,21 @@ var tlc = function()	{
 		} //runTLC
 
 //used in 'apply' and possibly elsewhere. changes the args arrays into a single object for easy lookup.
-	this.args2obj = function(args)	{
+	this.args2obj = function(args,globals)	{
+//		dump(" ----> args: "); dump(args); 
 		var r = {};
 		if(!$.isEmptyObject(args))	{
 			for(var i = 0, L = args.length; i < L; i += 1)	{
-				r[args[i].key] = (args[i].value == null) ? true : args[i].value.value; //some keys, like append or media, have no value and will be set to null.
+				var type = (args[i].type == 'longopt' && args[i].value) ? args[i].value.type : args[i].type;
+				dump(" -> type: "+type);
+				if(args[i].value == null)	{r[args[i].key] = true} //some keys, like append or media, have no value and will be set to null.
+				else if(type == 'variable')	{
+					r[args[i].key] = globals.binds[args[i].value.value];
+					}
+				else	{
+					r[args[i].key] = args[i].value.value;
+					}
+//				r[args[i].key+"_type"] = (args[i].type == 'longopt') ? args[i].value.type : args[i].type;
 				}
 			}
 		return r;
@@ -357,6 +368,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 			//add and remove work w/ either 'tag' or 'class'.
 			case 'add' : 
+				dump(" -> got this far.  argObj: "); dump(argObj);
 				if(argObj.class)	{$tag.addClass(argObj.class)}
 				else if(argObj.tag)	{
 					// ### TODO -> not done yet. what to do? add a tag? what tag? where does it come from?
@@ -511,7 +523,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 	this.format_from_module = function(cmd,globals,dataset)	{
 //		dump(" -> non 'core' based format. not handled yet"); // dump(' -> cmd'); dump(cmd); dump(' -> globals'); dump(globals);
 //		dump(" -> cmd.args: "); dump(cmd.args);
-		var moduleFormats, argObj = this.args2obj(cmd.args);
+		var moduleFormats, argObj = this.args2obj(cmd.args,globals);
 		var r = true; //what is returned. if false is returned, the rest of the statement is NOT executed.
 // ### FUTURE -> once renderFormats are no longer supported, won't need argObj or the 'if' for legacy (tho it could be left to throw a warning)
 		if(argObj.legacy)	{
@@ -661,7 +673,7 @@ command (everything else that's supported).
 			var
 				verbs = new Array('empty','hide','show','add','remove','prepend','append','replace','input-value','select','state','attrib'),
 				formatters = new Array('img','imageurl','text','html'),
-				argObj = this.args2obj(cmd.args), //an object is used to easily check if specific apply commands are present
+				argObj = this.args2obj(cmd.args,globals), //an object is used to easily check if specific apply commands are present
 				$tag = globals.tags[(argObj.tag || globals.focusTag)],
 				numVerbs = 0, numFormatters = 0, theVerb = null, theFormatter = null;
 
@@ -716,7 +728,7 @@ command (everything else that's supported).
 	
 	this.handleCommand_render = function(cmd,globals){
 //		dump(">>>>> BEGIN tlc.handleCommand_render. value: "); dump(globals.binds[globals.focusBind]);
-		var argObj = this.args2obj(cmd.args); //an object is used to easily check if specific apply commands are present
+		var argObj = this.args2obj(cmd.args,globals); //an object is used to easily check if specific apply commands are present
 //		dump(" -> cmd: "); dump(cmd);
 		if(globals.tags[globals.focusTag])	{
 			if(argObj.wiki)	{
@@ -792,7 +804,7 @@ myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the 
 	this.handleCommand_datetime = function(cmd,globals)	{
 
 		var value = globals.binds[globals.focusBind];
-		var argObj = this.args2obj(cmd.args), d = new Date(value*1000);
+		var argObj = this.args2obj(cmd.args,globals), d = new Date(value*1000);
 
 
 		if(isNaN(d.getMonth()+1))	{
