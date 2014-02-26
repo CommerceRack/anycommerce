@@ -715,14 +715,18 @@ command (everything else that's supported).
 
 	
 	this.handleCommand_render = function(cmd,globals){
-		dump(">>>>> BEGIN tlc.handleCommand_render. value: "); dump(globals.binds[globals.focusBind]);
+//		dump(">>>>> BEGIN tlc.handleCommand_render. value: "); dump(globals.binds[globals.focusBind]);
 		var argObj = this.args2obj(cmd.args); //an object is used to easily check if specific apply commands are present
 //		dump(" -> cmd: "); dump(cmd);
 		if(globals.tags[globals.focusTag])	{
 			if(argObj.wiki)	{
-				var $tmp = $("<div>").append(globals.tags[globals.focusTag]);
+				var $tmp = $("<div>").append(globals.binds[globals.focusBind]);
+var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
+myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+
 				//r = wikify($tmp.text()); //###TODO -> 
-				globals.tags[globals.focusTag] = $tmp.html();
+				globals.binds[globals.focusBind] = $tmp.html();
+				$tmp.empty().remove();
 				}
 			else if(argObj.html)	{
 				//if the content is already html, shouldn't have to do anything to it.
