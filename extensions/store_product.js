@@ -288,13 +288,14 @@ addToCart : function (pid,$form){
 
 			quantitydiscounts : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFormats.quantityDiscounts");
-//				_app.u.dump("value: "+data.value);
+				_app.u.dump("value: "+data.value);
 				var o = ''; //what is output;
 				
 				var dArr = data.value.split(',');
 				var tmp,num;
 				var L = dArr.length;
 //## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
+// sample data: 2/$30,4/$20,10=$3.50
 				for(var i = 0; i < L; i += 1)	{
 					if(dArr[i].indexOf('=') > -1)	{
 //						_app.u.dump(' -> treat as =');
@@ -307,8 +308,8 @@ addToCart : function (pid,$form){
 //						_app.u.dump(' -> treat as /');
 						tmp = dArr[i].split('/');
 						o += "<div>buy "+tmp[0]+"+ for ";
-						if(tmp[1].indexOf('$') >= 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
-//						_app.u.dump(" -> tmp[1] = "+tmp[1]);
+						if(tmp[1].indexOf('$') == 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
+						_app.u.dump(" -> tmp[1] = "+tmp[1]);
 						num = Number(tmp[1]) / Number(tmp[0])
 //						_app.u.dump(" -> number = "+num);
 						o += _app.u.formatMoney(num,'$','') //test spork 1000
@@ -319,7 +320,7 @@ addToCart : function (pid,$form){
 						}
 					tmp = ''; //reset after each loop.
 					}
-				$tag.append(o);
+				$tag.append("<div class='marginBottom'>"+o+"<\/div>").prepend("<h3>Quantity Discounts: <\/h3>");
 				},
 
 			simpleinvdisplay : function($tag,data)	{
