@@ -216,7 +216,7 @@ var tlc = function()	{
 		if(!$.isEmptyObject(args))	{
 			for(var i = 0, L = args.length; i < L; i += 1)	{
 				var type = (args[i].type == 'longopt' && args[i].value) ? args[i].value.type : args[i].type;
-				dump(" -> type: "+type);
+//				dump(" -> type: "+type);
 				if(args[i].value == null)	{r[args[i].key] = true} //some keys, like append or media, have no value and will be set to null.
 				else if(type == 'variable')	{
 					r[args[i].key] = globals.binds[args[i].value.value];
@@ -278,7 +278,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		argObj.media = argObj.media || {};
 		var mediaParams;
 		
-		if(argObj.media == 'var' && globals.binds[argObj.media])	{
+		if(argObj.media)	{
 			//build filepath for media lib
 			//default = true is use focusTag. default = $tag says to use another, already defined, tag so focus shifts within this function, but focusTag does NOT change.
 			if(typeof argObj.default === 'string')	{
@@ -294,7 +294,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 				dump(" -> use s of tag to build image path");
 				//here need to check if default is set to a tag. not sure how, docs are not specific.
 				if($tag.is('img'))	{
-					mediaParams = {'width':$tag.attr('width'),'height':$tag.attr('height'),'data-bgcolor':$tag.data('bgcolor'),'data-minimal':$tag.data('minimal'),'data-filename':globals.binds[argObj.media]};
+					mediaParams = {'width':$tag.attr('width'),'height':$tag.attr('height'),'data-bgcolor':$tag.data('bgcolor'),'data-minimal':$tag.data('minimal'),'data-filename':argObj.media};
 					filePath = this.makeImageURL(mediaParams);
 					}
 				else	{
@@ -303,7 +303,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 					}
 				}
 			else	{
-				mediaParams = {'width':argObj.width,'height':argObj.height,'data-bgcolor':argObj.bgcolor,'data-minimal':(argObj.minimal ? argObj.minimal : 0),'data-filename':globals.binds[argObj.media]};
+				mediaParams = {'width':argObj.width,'height':argObj.height,'data-bgcolor':argObj.bgcolor,'data-minimal':(argObj.minimal ? argObj.minimal : 0),'data-filename':argObj.media};
 				filePath = this.makeImageURL(mediaParams);
 				}
 			}
@@ -368,7 +368,6 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 			//add and remove work w/ either 'tag' or 'class'.
 			case 'add' : 
-				dump(" -> got this far.  argObj: "); dump(argObj);
 				if(argObj.class)	{$tag.addClass(argObj.class)}
 				else if(argObj.tag)	{
 					// ### TODO -> not done yet. what to do? add a tag? what tag? where does it come from?
