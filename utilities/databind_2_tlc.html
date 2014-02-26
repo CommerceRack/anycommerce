@@ -104,10 +104,6 @@ function upgradeRenderFormat(odb)	{
 			r = "quickstart#addtagspans; "; break;
 		case 'addClass':
 			r = "if(is $var --notblank) {{ apply --class='"+odb.className+"'; }}; "; break;
-		case 'wiki':
-			r = "render --wiki='quickstart'; "; break;
-		case 'truncText':
-			r = "format --truncate='"+odb.numCharacters+"'; "; break;
 		case 'selectedOptionsDisplay':
 			r = "controller#selectedoptionsdisplay;  "; break;
 		case 'epoch2pretty':
@@ -122,8 +118,6 @@ function upgradeRenderFormat(odb)	{
 			r = "apply --attrib='"+odb.attribute+"'; "; break;
 		case 'loadsTemplate':
 			r = "transmogrify '"+odb.loadsTemplate+"'; "; break;
-		case 'money':
-			r = "format --currency='USD'; "; break;
 		case 'processList':
 			r = "controller#loop --templateid='"+odb.loadsTemplate+"'; "; break;
 			break;
@@ -149,7 +143,7 @@ function doIt2It()	{
 
 		if(odb.var)	{
 			var value = parseDataVar(odb.var);
-			if(odb.var.split('(')[0] == 'product' && value != pid)	{
+			if(odb.var.split('(')[0] == 'product' && value != 'pid')	{
 				value = '%attribs.'+value;
 				}
 			command += "bind $var '."+value+"'; ";
@@ -162,26 +156,43 @@ function doIt2It()	{
 			command += "if(is $var --blank) {{bind var '"+odb.defaultValue+"';}}; "
 			}
 
-		if(odb.pretext)	{
-			command += "format --prepend='"+(odb.pretext.charAt(0) == ' ' ? odb.pretext.substr(1) : odb.pretext)+"'; " //for pretext, the leading whitespace is probably not desired in most cases.
-			}
-
-		if(odb.posttext)	{
-			command += "format --append='"+odb.posttext+"'; "; //here, leading whitespace is probably desired and the trailing whitespace isn't likely to hurt anything.
-			}
-
 
 /*
-// the original behavior of a data-bind was to skip the output if the value was not set. That is not true in TLC.
-// so put the 'apply' into an if. Of course, some
+the original behavior of a data-bind was to skip the output if the value was not set. That is not true in TLC.
+so put the 'apply' into an if.
+All formatting needs to be in here too.  If set before the if, $var will have a value and the if will be entered.
+truncText, which was a command previously, is now a format.
+money is also a format
 */
 function wrappedApply(db)	{
+	console.log(db);
 	var r = "";
-	if(db.showIfSet || db.showIfMatch || db.hideIfSet || db.addClass || db.assignAttribute || db.setVal || db.popVal)	{
+	if(db.format == 'showIfSet'|| db.format == 'assignAttribute' || db.format == 'setVal' || db.format == 'db.popVal' || db.format == 'db.showIfMatch' || db.format == 'db.hideIfSet' || db.format == 'db.addClass' )	{//
 		//these already have apply.
 		}
 	else	{
-		r = "if (is $var --notblank;) {{apply --append;}};"
+		r = "if (is $var --notblank;) {{";
+		
+		if(db.format == 'wiki')	{
+			r += "render --wiki='"+((db.wikiFormats == 'myRIA') ? 'quickstart' : db.wikiFormats)+"'; ";
+			}
+		else if(db.format == 'truncText')	{
+			r += "format --truncate='"+odb.numCharacters+"'; ";
+			}
+		else if(db.format == 'money')	{
+			r += "format --currency='USD'; ";
+			}
+		else {} //text format.
+
+		if(odb.pretext)	{
+			r += "format --prepend='"+(db.pretext.charAt(0) == ' ' ? db.pretext.substr(1) : db.pretext)+"'; " //for pretext, the leading whitespace is probably not desired in most cases.
+			}
+
+		if(odb.posttext)	{
+			r += "format --append='"+db.posttext+"'; "; //here, leading whitespace is probably desired and the trailing whitespace isn't likely to hurt anything.
+			}
+		
+		r += "apply --append;}};"
 		}
 	return r;	
 	}
@@ -200,15 +211,15 @@ function wrappedApply(db)	{
 				console.log("%cThe format ["+odb.format+"] was rewritten as ["+format+"] to conform to the tlcformat naming conventions.",'color: darkorange; font-weight: bold;')
 				rfChanges[format] = true; //add to tracked list of changes so each format is only displayed once.
 				}
-			command += odb.extension+"#";
+			command += ((odb.extension == 'myRIA') ? 'quickstart' : odb.extension)+"#";
 			command += format+' ';
 			command += buildParams(odb);
 			command += " --legacy; apply --append;";
 			}
 		else	{
-			if(odb.format == 'text')	{
+			if(odb.format == 'text' || odb.format == 'wiki' || odb.format == 'truncText' || odb.format == 'money')	{
 				//this is the default. no special formatting or anything else is necessary.
-				command += wrappedApply();
+				command += wrappedApply(odb);
 				}
 			else if(upgradeRenderFormat(odb))	{
 				command += upgradeRenderFormat(odb);
