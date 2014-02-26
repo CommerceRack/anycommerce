@@ -508,7 +508,7 @@ this will likely become more flexible in the future. ###
 		</td>
 	
 		<td class="prodSummaryContainer marginBottom no_underline">
-	<!--	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
@@ -544,8 +544,8 @@ this will likely become more flexible in the future. ###
 		</form>
 	
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_cpsiawarning'; quickstart#cpsiawarning  --legacy; apply --append;"></div>
-		<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; format --prepend='Quantity Discounts:'; store_product#quantitydiscounts  --classname='marginBottom' --legacy; apply --append;"></div>
-	-->
+		<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; store_product#quantitydiscounts  --legacy; apply --append;"></div>
+	
 		<section class="marginBottom">
 			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' from '; apply --append;}};"></span>
