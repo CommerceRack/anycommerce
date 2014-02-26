@@ -2894,9 +2894,9 @@ return $r;
 
 
 	tlcFormats : {
-		//tlcFormats return the updated 'value' (essentially, what they want added to the DOM)
+//The tlc should, for the most part, just update the bind that's in focus. It can do more, but that's the intent.
+//They should return a boolean. True will continue executing the rest of the statement. False will end it.
 		loop : function(data,thisTLC)	{
-			var r = false;
 			var $tmp = $("<div>");
 
 			var
@@ -2908,12 +2908,12 @@ return $r;
 					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
 					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
 					}
-				r = $tmp.children();
+				data.globals.binds[data.globals.focusBind] = $tmp.children();
 				}
 			else	{
 				dump("No template specified",warn); dump(data);
 				}
-			return r;
+			return true;
 			}
 		},
 

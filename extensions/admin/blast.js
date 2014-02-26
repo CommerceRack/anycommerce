@@ -144,7 +144,7 @@ var admin_blast = function(_app) {
 //used for adding email message types to a select menu.
 //designed for use with the vars object returned by a adminEmailList _cmd
 			msgsasoptions : function(data,thisTLC)	{
-				var val = data.globals.binds[data.globals.focusBind], r;
+				var val = data.globals.binds[data.globals.focusBind];
 				if(val)	{
 					var L = val.length;
 					var $tmp = $("<select>");
@@ -152,12 +152,11 @@ var admin_blast = function(_app) {
 					for(var i = 0; i < L; i += 1)	{
 						$tmp.append($("<option \/>").val(val[i].MSGID).text(val[i].MSGTITLE || val[i].MSGID.substring(val[i].MSGID.indexOf('.')+1).toLowerCase()));
 						}
-					r = $tmp.children();
+					globals.binds[globals.focusBind] = $tmp.children();
 					}
 				else	{
-					r = false;
 					}
-				return r;
+				return true;
 				}
 
 			}, //renderFormats

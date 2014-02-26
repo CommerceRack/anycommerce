@@ -544,7 +544,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 			else	{}
 	
 			if(moduleFormats && typeof moduleFormats[cmd.name] === 'function')	{
-				globals.binds[globals.focusBind] = moduleFormats[cmd.name]({'command':cmd,'globals':globals,'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset)},this); // ### TODO -> discuss. this passes in entire data object if no bind is present.
+				r = moduleFormats[cmd.name]({'command':cmd,'globals':globals,'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset)},this); // ### TODO -> discuss. this passes in entire data object if no bind is present.
+				
 				//tlcFormats do NOT kill the rest of the statement like legacy/renderformats do.
 				}
 			else if(moduleFormats)	{
@@ -567,6 +568,7 @@ BIND (setting a var)
 IF (conditional logic) 
 Block (set for the statements inside an IF IsTrue or IsFalse). contains an array of statements.
 command (everything else that's supported).
+returning a 'false' here will exit the statement loop.
 */
 
 	this.handleType_command = function(cmd,globals,dataset)	{
@@ -574,7 +576,7 @@ command (everything else that's supported).
 //		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
 		try{
 			if(cmd.module == 'core' && typeof this['handleCommand_'+cmd.name] == 'function')	{
-				this['handleCommand_'+cmd.name](cmd,globals)
+				this['handleCommand_'+cmd.name](cmd,globals);
 				}
 			else	{
 				r = this.format_from_module(cmd,globals,dataset);
@@ -584,6 +586,7 @@ command (everything else that's supported).
 			dump("An error occured when attempting to execute the command. command follows: ");
 			dump(cmd);
 			dump(e);
+			r = false; //will stop processing of statement.
 			}
 		return r;
 		}

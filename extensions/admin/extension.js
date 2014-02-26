@@ -1198,7 +1198,7 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 	tlcFormats : {
 		// ### FUTURE -> this is not done yet.
 		smartLoop : function(data,thisTLC)	{
-			var r = false;
+
 			var $tmp = $("<div>");
 
 			var
@@ -1219,12 +1219,12 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
 					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
 					}
-				r = $tmp.children();
+				data.globals.binds[data.globals.focusBind] = $tmp.children();
 				}
 			else	{
 				dump("No template specified",warn); dump(data);
 				}
-			return r;
+			return true;
 			}
 		
 		},

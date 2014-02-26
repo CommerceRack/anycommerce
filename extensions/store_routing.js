@@ -74,8 +74,8 @@ var store_routing = function(_app) {
 		
 		tlcFormats : {
 			productlink : function(data, thisTLC){
-				return _app.ext.store_routing.u.productLink(data.globals.binds.pid, data.globals.binds.seo);
-				
+				data.globals.binds[data.globals.focusBind] =  _app.ext.store_routing.u.productLink(data.globals.binds.pid, data.globals.binds.seo);
+				return true;
 				}
 		},
 		
