@@ -57,7 +57,7 @@
 
 
 <div id='blastToolTemplate'>
-<form action='#' data-app-submit="admin|execBlastToolSend">
+<form action='#'>
 	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.PRT'; apply --select;" />
 	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.OBJECT'; apply --select;" />
 	<input type='hidden' name='FORMAT' value='HTML5' />
@@ -65,7 +65,7 @@
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>
 			<span>Recipient:</span>
-			<select name='RECIPIENT' data-tlc="bind $var '.RECIPIENT'; apply --select;" data-panel-selector=".blastToolRecipientInputs" data-input-change='show-panel'>
+			<select name='RECIPIENT' required='required' data-tlc="bind $var '.RECIPIENT'; apply --select;" data-panel-selector=".blastToolRecipientInputs" data-input-change='show-panel'>
 				<option value='EMAIL' selected="selected">mass email</option>
 				<option value='CUSTOMER' selected="selected" data-show-panel='blastToolCustomerInputs'>a customer</option>
 				<option value='GCN' selected="selected">GCN</option>
@@ -84,12 +84,12 @@
 		
 		<label class='blastToolRecipientInputs displayNone' data-panel-id='blastToolCustomerInputs'>
 			<span>Email address:</span>
-			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" class='skipIfHidden'  /><!-- if recipient is passed into the mail tool, this will be visible but disabled. -->
+			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" data-validation-rules='skipIfHidden'  /><!-- if recipient is passed into the mail tool, this will be visible but disabled. -->
 		</label>
 	</fieldset>
 	
-	<fieldset data-app-role='blastToolMsgContent'>
-		
+	<fieldset data-app-role='blastToolMsgContent'  class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+	<!-- any content that is message specific (should get changed when msgid changes) should be within this fieldset -->
 		<label>
 			<span>Subject:</span>
 			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.SUBJECT'; apply --select;" />
@@ -109,7 +109,7 @@
 	</label>
 	</fieldset>
 
-<button class='applyButton'>send email</button>
+	<button class='applyButton' data-app-click="admin_blast|msgBlastSendExec">Send Email</button>
 
 </form>
 </div>

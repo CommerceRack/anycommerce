@@ -533,9 +533,6 @@ _app.u.throwMessage(responseData); is the default error handler.
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 
-					if(_rtag.applyEditTrackingToInputs)	{
-						$target.anyform({'trackEdits':true});
-						}
 //allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
 					if(typeof _rtag.onComplete == 'function')	{
 						_rtag.onComplete(_rtag);

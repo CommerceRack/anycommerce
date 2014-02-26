@@ -211,19 +211,21 @@ var admin_blast = function(_app) {
 
 //vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
 			msgBlastSendExec : function($ele,P){
-				e.preventDefault();
 				P = P || {};
+				P.preventDefault();
 				var $form = $ele.closest('form');
 
 				if(_app.u.validateForm($form))	{
-					
+					alert('not done yet');
+//					_app.model.addDispatchToQ($.extend($form.serializeJSON(),{"_cmd":"adminBlastMsgSend","_tag":{"callback":"showMessaging","message":"Your message has been sent.","jqObj":$form,"jqObjEmpty":true}}),"immutable");
+//					_app.model.dispatchThis("immutable");
 					}
 				else	{
 					//validate form handles error display.
 					}
 
 
-							_app.ext.admin.u.sendEmail($form,vars);	
+//							_app.ext.admin.u.sendEmail($form,vars);	
 				} //msgBlastSendExec
 			} //e [app Events]
 		} //r object.
