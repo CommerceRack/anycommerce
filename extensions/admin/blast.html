@@ -30,7 +30,26 @@
 
 <div id='blastMessageDetailTemplate'>
 
-stuff
+
+
+<form action='#' data-app-submit="admin|execMsgBlastUpdateExec">
+<fieldset>
+	<legend data-tlc="bind $var '.MSGID'; apply --select;"></legend>
+
+	<label>
+		<span>Subject:</span>
+		<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.SUBJECT'; apply --select;" />
+	</label>
+	
+	<label>
+		<span>Message:</span>
+		<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.BODY'; apply --select;"></textarea>
+	</label>
+</fieldset>
+</form>
+
+
+
 </div>
 
 
@@ -38,35 +57,59 @@ stuff
 
 
 <div id='blastToolTemplate'>
-<form action='#'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
-<label>
-	<span>Message source:</span>
-	<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|toggleEmailInputValuesBySource">
-		<option value='BLANK' selected="selected">blank</option>
-	</select>
-</label>
+<form action='#' data-app-submit="admin|execBlastToolSend">
+	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.PRT'; apply --select;" />
+	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.OBJECT'; apply --select;" />
+	<input type='hidden' name='FORMAT' value='HTML5' />
 
-<label>
-	<span>Subject:</span>
-	<input type='text' name='SUBJECT' required='required' maxlength="100" />
-</label>
+	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+		<label>
+			<span>Recipient:</span>
+			<select name='RECIPIENT' data-tlc="bind $var '.RECIPIENT'; apply --select;" data-panel-selector=".blastToolRecipientInputs" data-input-change='show-panel'>
+				<option value='EMAIL' selected="selected">mass email</option>
+				<option value='CUSTOMER' selected="selected" data-show-panel='blastToolCustomerInputs'>a customer</option>
+				<option value='GCN' selected="selected">GCN</option>
+				<option value='APNS' selected="selected">APNS</option>
+				<option value='ADN' selected="selected">ADN</option>
+			</select>
+		</label>
+		
+		
+		<label>
+			<span>Message source:</span>
+			<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|toggleEmailInputValuesBySource">
+				<option value='BLANK' selected="selected">blank</option>
+			</select>
+		</label>
+		
+		<label class='blastToolRecipientInputs displayNone' data-panel-id='blastToolCustomerInputs'>
+			<span>Email address:</span>
+			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" class='skipIfHidden'  /><!-- if recipient is passed into the mail tool, this will be visible but disabled. -->
+		</label>
+	</fieldset>
+	
+	<fieldset data-app-role='blastToolMsgContent'>
+		
+		<label>
+			<span>Subject:</span>
+			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.SUBJECT'; apply --select;" />
+		</label>
+		
+		<label>
+			<span>Message:</span>
+			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.BODY'; apply --select;"></textarea>
+		</label>
+	</fieldset>
 
-<label>
-	<span>Message:</span>
-	<textarea name='BODY' rows='10' required='required'></textarea>
-</label>
-</fieldset>
 
+	<fieldset class='updateSystemMessageContainer marginBottom'>
+	<label>
+		<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
+		Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
+	</label>
+	</fieldset>
 
-<fieldset class='updateSystemMessageContainer marginBottom'>
-<label>
-	<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
-	Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
-</label>
-</fieldset>
-
-<button data-app-click="admin|execBlastToolSend" class='applyButton'>send email</button>
+<button class='applyButton'>send email</button>
 
 </form>
 </div>

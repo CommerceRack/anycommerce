@@ -70,7 +70,7 @@ var admin_blast = function(_app) {
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
 									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+msgs[i].MSGID.substr(msgs[i].OBJECT.length + 1).toLowerCase()+"<\/li>")	
+										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].TITLE || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>")	
 										}
 									}
 								$(".slimLeftNav",$target).accordion();
@@ -97,11 +97,11 @@ var admin_blast = function(_app) {
 			blastTool : function($target,params)	{
 				params = params || {};
 				_app.u.addEventDelegation($target);
-				if(params.object && Number(params.partition) >= 0)	{
+				if(params.OBJECT && Number(params.PRT) >= 0)	{
 //listType must match one of these. an array is used because there will be more types:
 //  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
 					var validObjects = ['ORDER','CUSTOMER']; 
-					if($.inArray(params.object,validObjects) >= 0)	{
+					if($.inArray(params.OBJECT,validObjects) >= 0)	{
 
 						$target.showLoading({'message':'Fetching list of email messages/content'});
 // ### TODO -> support caching on this datapointer.
@@ -111,20 +111,25 @@ var admin_blast = function(_app) {
 								"datapointer":"adminBlastMsgList|"+params.partition,
 								"jqObj" : $target,
 								"templateid" : "blastToolTemplate",
+								"dataset" : params,
 								"onComplete" : function(){
-									$("[name='MSGID']").val('BLANK'); //for some reason, the tlcFormat is selecting the last option added as 'selected'.
+									$("[name='MSGID']",$target)
+										.val('BLANK') //for some reason, the tlcFormat is selecting the last option added as 'selected'.
+										.find('option').not("[value='BLANK']").each(function(){
+											var msgObject = $(this).val().split('.')[0];
+											if(msgObject != params.OBJECT)	{$(this).hide();}
+											});
 									},
 								"callback":'tlc'}
 							},"mutable");
 						_app.model.dispatchThis("mutable");
-						
 						}
 					else	{
-						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, invalid object ['+params.object+'] specified.'})
+						$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, invalid OBJECT ['+params.OBJECT+'] specified.'})
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, vars.object ['+params.object+'] or partition ['+params.partition+'] not specified.'})
+					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, vars.OBJECT ['+params.OBJECT+'] or partition ['+params.PRT+'] not specified.'})
 					}
 				}
 			}, //Actions
@@ -145,7 +150,7 @@ var admin_blast = function(_app) {
 					var $tmp = $("<select>");
 		//adminEmailListIndex below is used to lookup by index the message in the list object.
 					for(var i = 0; i < L; i += 1)	{
-						$tmp.append($("<option \/>").val(val[i].MSGID).text(val[i].MSGTITLE || val[i].MSGID));
+						$tmp.append($("<option \/>").val(val[i].MSGID).text(val[i].MSGTITLE || val[i].MSGID.substring(val[i].MSGID.indexOf('.')+1).toLowerCase()));
 						}
 					r = $tmp.children();
 					}
@@ -200,46 +205,26 @@ var admin_blast = function(_app) {
 					}
 				}, //orderEmailCustomChangeSource
 
+			execMsgBlastUpdateExec : function($ele,P)	{
+				alert('not done yet');
+				},
+
 //vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
-			execBlastToolSend : function($btn,vars){
-				$btn.button();
-				$btn.off('click.execMailToolSend').on('click.execMailToolSend',function(event){
-					event.preventDefault();
-					vars = vars || {};
-					var $form = $btn.closest('form');
+			msgBlastSendExec : function($ele,P){
+				e.preventDefault();
+				P = P || {};
+				var $form = $ele.closest('form');
 
-					if(vars.listType)	{
-						if(_app.u.validateForm($form))	{
+				if(_app.u.validateForm($form))	{
+					
+					}
+				else	{
+					//validate form handles error display.
+					}
+
+
 							_app.ext.admin.u.sendEmail($form,vars);	
-
-//handle updating the email message default if it was checked. this runs independant of the email send (meaning this may succeed but the send could fail).
-							if($("[name='updateSystemMessage']",$form).is(':checked') && $("[name='MSGID']",$form).val() != 'BLANK')	{
-								frmObj.PRT = vars.partition;
-								frmObj.TYPE = vars.listType; //Don't pass a blank FORMAT, must be set to correct type.
-								delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-								_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-									if(_app.model.responseHasErrors(rd)){
-										$form.anymessage({'message':rd});
-										}
-									else	{
-										$form.anymessage(_app.u.successMsgObject(frmObj.MSGID+" message has been updated."));
-										}
-									}},'immutable');
-								}
-							
-							_app.model.dispatchThis('immutable');
-							}
-						else	{} //validateForm handles error display.
-
-						}
-					else	{
-						$form.anymessage({'message':'In admin.e.execMailToolSend, no list type specified in vars for app event.'});
-						}
-					});
-				}
-
-
-			
+				} //msgBlastSendExec
 			} //e [app Events]
 		} //r object.
 	return r;

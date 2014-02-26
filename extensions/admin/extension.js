@@ -1196,11 +1196,35 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 
 
 	tlcFormats : {
-		
-		smartLoop : function()	{
+		// ### FUTURE -> this is not done yet.
+		smartLoop : function(data,thisTLC)	{
+			var r = false;
+			var $tmp = $("<div>");
+
+			var
+				arr = data.globals.binds[data.globals.focusBind], 
+				argObj = thisTLC.args2obj(data.command.args);
+
+			var filter = data.args.filter;
+			var filterby = data.args.filterby;
+			if(!filterby)	{
+				if(filter)	{_app.u.dump("In process list, a 'filter' was passed, but no filterby was specified, so the filter was ignored.\ndatabind: \n"+$tag.data('bind'),'warn');}
+				filter = undefined;
+				} //can't run a filter without a filterby. filter is keyed off of later.
 
 
-
+			if(argObj.templateid)	{
+//				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
+				for(var i in arr)	{
+					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
+					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
+					}
+				r = $tmp.children();
+				}
+			else	{
+				dump("No template specified",warn); dump(data);
+				}
+			return r;
 			}
 		
 		},
