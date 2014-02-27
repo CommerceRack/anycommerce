@@ -814,11 +814,11 @@ myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the 
 			}
 //### FUTURE
 //		else if(argObj.out-strftime)	{}
-		else if (argObj.out.value == 'pretty')	{
+		else if (argObj.out == 'pretty')	{
 			var shortMon = new Array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec');
 			value = (shortMon[d.getMonth()])+" "+d.getDate()+" "+d.getFullYear()+ " "+d.getHours()+":"+((d.getMinutes()<10?'0':'') + d.getMinutes());
 			}
-		else if(argObj.out.value == 'mdy')	{
+		else if(argObj.out == 'mdy')	{
 			value = (d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
 			}
 		else	{
