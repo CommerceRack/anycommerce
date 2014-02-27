@@ -91,11 +91,11 @@ function upgradeRenderFormat(odb)	{
 			console.warn("The following data-bind was using 'stufflist', which is a deprecated list format. The data-bind was upgraded to 'loop', but this does not behave in the exact same manner. You should investigate this further (most likely update the template that contained this element from quickstart (or whatever extension loaded it).");
 			r = "controller#loop --templateid='"+odb.loadsTemplate+"'; "; break;
 		case 'showIfSet':
-			r = "if(is $var --notblank) {{ apply --show; }}; "; break;
+			r = "if(is $var --notblank;) {{ apply --show; }}; "; break;
 		case 'showIfMatch':
-			r = "if(is $var --eq='"+odb.matchValue+"') {{ apply --show; }}; "; break;
+			r = "if(is $var --eq='"+odb.matchValue+"';) {{ apply --show; }}; "; break;
 		case 'hideIfSet':
-			r = "if(is $var --notblank) {{ apply --hide; }}; "; break;
+			r = "if(is $var --notblank;) {{ apply --hide; }}; "; break;
 		case 'optionsFromList':
 			r = "controller#optionsfromlist; "; break;
 		case 'youtubeVideo':
@@ -103,7 +103,7 @@ function upgradeRenderFormat(odb)	{
 		case 'addTagSpans':
 			r = "quickstart#addtagspans; "; break;
 		case 'addClass':
-			r = "if(is $var --notblank) {{ apply --class='"+odb.className+"'; }}; "; break;
+			r = "if(is $var --notblank;) {{ apply --class='"+odb.className+"'; }}; "; break;
 		case 'selectedOptionsDisplay':
 			r = "controller#selectedoptionsdisplay;  "; break;
 		case 'epoch2pretty':
@@ -154,10 +154,10 @@ function doIt2It()	{
 			}
 
 		if(odb.defaultVar)	{
-			command += "if(is $var --blank) {{"+buildBind(odb.defaultVar)+"}}; "
+			command += "if(is $var --blank;) {{"+buildBind(odb.defaultVar)+";}}; "
 			}
 		if(odb.defaultValue)	{
-			command += "if(is $var --blank) {{bind var '"+odb.defaultValue+"';}}; "
+			command += "if(is $var --blank;) {{bind var '"+odb.defaultValue+"';}}; "
 			}
 
 
@@ -207,13 +207,13 @@ function wrappedApply(db)	{
 		if(odb.format == 'imageURL')	{
 			var bgcolor = odb.bgcolor ? odb.bgcolor : '#ffffff';
 			if(bgcolor.charAt(0) != '#')	{bgcolor = '#'+bgcolor} //regularize data.
-			command += "if (is $var --notblank;) {{ apply --img --media=$var --width="+(odb.width ? odb.width : $tag.width())+" --height="+(odb.height ? odb.height : $tag.height())+" --bgcolor='"+bgcolor+"' --replace;}}"
+			command += "if (is $var --notblank;) {{ apply --img --media=$var --width="+(odb.width ? odb.width : $tag.width())+" --height="+(odb.height ? odb.height : $tag.height())+" --bgcolor='"+bgcolor+"' --replace;}};"
 			//special case for image handling.
 			}
 		else if(odb.extension)	{
 			var format = odb.format.toLowerCase().replace(/[^a-z]/g,''); //only lowercase characters are allowed. no numbers or special characters either.
 			if(format != odb.format && !rfChanges[format])	{
-				console.log("%cThe format ["+odb.format+"] was rewritten as ["+format+"] to conform to the tlcformat naming conventions.",'color: darkorange; font-weight: bold;')
+				console.log("%cThe format ["+odb.format+"] in extension "+odb.extension+" was rewritten as ["+format+"] to conform to the tlcformat naming conventions.",'color: darkorange; font-weight: bold;')
 				rfChanges[format] = true; //add to tracked list of changes so each format is only displayed once.
 				}
 			command += ((odb.extension == 'myRIA') ? 'quickstart' : odb.extension)+"#";
@@ -244,6 +244,9 @@ function wrappedApply(db)	{
 
 		if(odb.useParentData)	{
 			console.warn("On the following renderformat, useParentData is set. That case isn't handled just yet. the data-bind was left in place to make it easier to find/update.\ndatabind: "+$tag.data('bind'));
+			}
+		else if(odb.forceRender)	{
+			console.warn("On the following renderformat, forceRender is set. That case isn't handled just yet. the data-bind was left in place to make it easier to find/update.\ndatabind: "+$tag.data('bind'));
 			}
 		else	{
 			$tag.removeAttr('data-bind');
