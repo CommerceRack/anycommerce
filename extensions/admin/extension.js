@@ -3938,7 +3938,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 //for delegated events. Also triggered by process form.
 			submitForm : function($ele,p)	{
 				var $form = $ele.closest('form');
-				
+				p.preventDefault();
 				if($ele.data('skipvalidation') || _app.u.validateForm($form))	{					
 					if(_app.ext.admin.a.processForm($form,'immutable',p))	{
 						$form.showLoading({'message':'Updating...'});	
@@ -3949,6 +3949,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 						}
 					}
 				else	{} //validateForm handles error display.
+				return false;
 				},
 
 

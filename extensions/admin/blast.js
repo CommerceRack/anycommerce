@@ -83,9 +83,12 @@ var admin_blast = function(_app) {
 //used in the blast message list tool for editing a specific message.			
 			blastMessagesDetail : function($target,params)	{
 				dump(" -> params: "); dump(params);
+				$target.showLoading({"message":"Fetching message detail"});
 				_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":params.msgid,"_tag":{
 					"datapointer":"blastMessagesDetail|"+params.msgid,
 					"jqObj" : $target,
+					"trackEdits" : true,
+					"templateid" : "blastMessageDetailTemplate",
 					"callback":'tlc'}
 					},"mutable");
 				_app.model.dispatchThis("mutable");
@@ -97,6 +100,10 @@ var admin_blast = function(_app) {
 			blastTool : function($target,params)	{
 				params = params || {};
 				_app.u.addEventDelegation($target);
+				if($target.closest('.ui-dialog-content').length){} //in a dialog, no extra styling necessary.
+				else	{
+					$target.addClass('ui-widget ui-widget-content stdPadding');
+					}
 				if(params.OBJECT && Number(params.PRT) >= 0)	{
 //listType must match one of these. an array is used because there will be more types:
 //  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
@@ -152,7 +159,7 @@ var admin_blast = function(_app) {
 					for(var i = 0; i < L; i += 1)	{
 						$tmp.append($("<option \/>").val(val[i].MSGID).text(val[i].MSGTITLE || val[i].MSGID.substring(val[i].MSGID.indexOf('.')+1).toLowerCase()));
 						}
-					globals.binds[globals.focusBind] = $tmp.children();
+					data.globals.binds[data.globals.focusBind] = $tmp.children();
 					}
 				else	{
 					}
@@ -173,17 +180,18 @@ var admin_blast = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
-			
+//exexuted in the message list view.
+//will bring a message into focus in the content area in an editor.
 			msgDetailView : function($ele,P)	{
 				if($ele.data('msgid'))	{
-					_app.ext.admin_blast.a.blastMessagesDetail($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentSection']"),{'msgid':$ele.data('msgid')});
+					_app.ext.admin_blast.a.blastMessagesDetail($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentContainer']").empty(),{'msgid':$ele.data('msgid')});
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_blast.e.msgDetailView, no data.msgid set on trigger element.","gMessage":true});
 					}
 				}, //msgDetailView
 
-//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
+//applied to the select list that contains the list of email messages in the blast tool. on change, it puts the message body into the textarea.
 			toggleEmailInputValuesBySource : function($ele)	{
 				var
 					msgid = $("option:selected",$ele).val(),
@@ -195,7 +203,12 @@ var admin_blast = function(_app) {
 					$(".msgType",$form).empty();
 					}
 				else	{
-					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":msgid,"_tag":{"datapointer":"adminBlastMsgDetail|"+msgid,"callback":'tlc','jqObj':$form}},"mutable");
+					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":msgid,"_tag":{
+						"datapointer":"adminBlastMsgDetail|"+msgid,
+						"callback":'tlc',
+						"verb" : "translate",
+						'jqObj':$("[data-app-role='blastToolMsgContent']",$form).showLoading({"message":"Fetching message detail"})
+						}},"mutable");
 					_app.model.dispatchThis("mutable");
 //					$form.find("[name='BODY']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
 //					$form.find("[name='SUBJECT']").val(_app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
@@ -203,10 +216,6 @@ var admin_blast = function(_app) {
 					$(".msgType",$form).text(msgid);
 					}
 				}, //orderEmailCustomChangeSource
-
-			execMsgBlastUpdateExec : function($ele,P)	{
-				alert('not done yet');
-				},
 
 //vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
 			msgBlastSendExec : function($ele,P){

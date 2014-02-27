@@ -28,27 +28,35 @@
 </div>
 
 
-<div id='blastMessageDetailTemplate'>
 
 
 
-<form action='#' data-app-submit="admin|execMsgBlastUpdateExec">
-<fieldset>
+<div id='blastMessageDetailTemplate' class='clearfix'>
+
+<form action='#' data-app-submit='admin|submitForm'>
+<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select;"  />
+
+<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
 	<legend data-tlc="bind $var '.MSGID'; apply --select;"></legend>
 
 	<label>
 		<span>Subject:</span>
-		<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.SUBJECT'; apply --select;" />
+		<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
 	</label>
 	
 	<label>
 		<span>Message:</span>
-		<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.BODY'; apply --select;"></textarea>
+		<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
 	</label>
 </fieldset>
+
+<button data-app-role='saveButton' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
 </form>
-
-
 
 </div>
 
@@ -57,10 +65,17 @@
 
 
 <div id='blastToolTemplate'>
-<form action='#'>
-	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.PRT'; apply --select;" />
-	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.OBJECT'; apply --select;" />
+<form action='#' novalidate="novalidate">
+	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.%MSG.PRT'; apply --select;" />
+	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.%MSG.OBJECT'; apply --select;" />
 	<input type='hidden' name='FORMAT' value='HTML5' />
+
+	<input type='hidden' name='_cmd' value='adminBlastMsgSend' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+	<input type='hidden' name='_tag/persistent' value='true' /><!-- leaves success present. important cuz form is NOT cleared so user can easily send another message -->
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
 
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>
@@ -92,12 +107,12 @@
 	<!-- any content that is message specific (should get changed when msgid changes) should be within this fieldset -->
 		<label>
 			<span>Subject:</span>
-			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.SUBJECT'; apply --select;" />
+			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
 		</label>
 		
 		<label>
 			<span>Message:</span>
-			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.BODY'; apply --select;"></textarea>
+			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
 		</label>
 	</fieldset>
 
@@ -109,7 +124,7 @@
 	</label>
 	</fieldset>
 
-	<button class='applyButton' data-app-click="admin_blast|msgBlastSendExec">Send Email</button>
+	<button class='applyButton' data-app-click="admin|submitForm">Send Email</button>
 
 </form>
 </div>
