@@ -206,7 +206,7 @@ A special translate template for product so that reviews can be merged into the 
 				$prodlist.data('totalProductLoaded',($prodlist.data('totalProductLoaded') + 1)); //tracks if entire list is done. handy for last page which may have fewer than an entire pages worth of data.
 				if(($prodlist instanceof jQuery && $prodlist.data('pageProductLoaded')) && (($prodlist.data('pageProductLoaded') == $prodlist.data('prodlist').items_per_page) || ($prodlist.data('totalProductLoaded') == $prodlist.data('prodlist').total_product_count)))	{
 //					_app.u.dump($._data($prodlist[0],'events')); //how to see what events are tied to an element. not a supported method.
-					$prodlist.trigger('complete.prodlist');
+					$prodlist.trigger('listcomplete');
 					}
 
 
