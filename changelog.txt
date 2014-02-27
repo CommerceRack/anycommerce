@@ -7,9 +7,19 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 
 201402
+
 GLOBAL
 	introduction of a new templating language, data-tlc. Data-bind will be supported for another few versions.
 
+ADMIN
+	new email manager interface.
+	new email send interface.
+
+QUICKSTART
+	update to the new TLC template language.
+	search ul's no longer require an ID.
+	prodsearch render format now supports listcomplete, run after the list is done (whether it has product or not).
+	prodlist render format 'complete' event changed to 'listcomplete'.
 
 
 201401

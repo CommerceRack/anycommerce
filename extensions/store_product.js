@@ -415,11 +415,10 @@ $display.appendTo($tag);
 
 //will remove the add to cart button if the item is not purchaseable.
 			addtocartbutton : function($tag,data)	{
-				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton"); dump(data.value);
+//				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton"); dump(data.value);
 				var pid = data.value;
 				var pData = _app.data['appProductGet|'+pid];
 				if(_app.ext.store_product.u.productIsPurchaseable(pid))	{
-					_app.u.dump(" >>>>>>>>>>>>>> product IS purchaseable");
 					if(pData && pData['%attribs'] && pData['%attribs']['is:preorder'])	{
 						$tag.addClass('preorderButton').text('value', 'Preorder');
 						}
