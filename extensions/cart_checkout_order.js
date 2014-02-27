@@ -399,7 +399,7 @@ left them be to provide guidance later.
 						$c.empty().showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
 						_app.calls.cartDetail.init($c.data('cartid'),{
-							'callback':'anycontent',
+							'callback':'tlc',
 							'onComplete' : function(){
 								$cart.trigger('complete',$.extend(true,{},P,event));
 								},
@@ -411,10 +411,10 @@ left them be to provide guidance later.
 					$cart.on('refresh.cart',function(event,P){
 						var $c = $(this);
 						$c.intervaledEmpty();
-						if($c.data('anycontent'))	{$c.anycontent('destroy')}
+						if($c.data('tlc'))	{$c.tlc('destroy')}
 						//w/ no destroy here, refresh will use what's in memory IF it's available. If not, it will fetch the cart.
 						_app.calls.cartDetail.init($c.data('cartid'),{
-							'callback':'anycontent',
+							'callback':'tlc',
 							'onComplete' : function(){
 								$cart.trigger('complete',$.extend(true,{},P,event));
 								},

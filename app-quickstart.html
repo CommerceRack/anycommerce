@@ -232,18 +232,19 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id="homepageTemplate" class="homeTemplate">
-	
+<!--	
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
 
 	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
+-->
+	<ul oncomplete="alert('woot');" data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --header='Best Sellers' --size='8' --templateid='productListTemplateResultsNoPreview';" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
 <!--
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: quickstart; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
-	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
+	
 -->
 <!-- a sample of how to get a 'list' src onto the page. -->
 <!--
@@ -444,12 +445,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
 	<div onclick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class="pointer">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.images'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
-		<h5 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
+		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
 
-		<h6 data-tlc="bind $var '.%attribs.base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h6>
+		<h6 data-tlc="bind $var '.base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h6>
 	</div>
 	<div class="hideInMinimalMode pointer moreDetails" onclick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>

@@ -129,6 +129,14 @@ function upgradeRenderFormat(odb)	{
 	return r;
 	}
 
+function buildBind(dbVar)	{
+	var value = parseDataVar(dbVar);
+	if(dbVar.split('(')[0] == 'product' && value != 'pid')	{
+		value = '%attribs.'+value;
+		}
+	return "bind $var '."+value+"'; ";
+	}
+
 function doIt2It()	{
 	var template = $('#databindContent').val();
 	var $t = $("<div>").append($(template)); //parent div created so that .html returns entire template.
@@ -142,15 +150,11 @@ function doIt2It()	{
 
 
 		if(odb.var)	{
-			var value = parseDataVar(odb.var);
-			if(odb.var.split('(')[0] == 'product' && value != 'pid')	{
-				value = '%attribs.'+value;
-				}
-			command += "bind $var '."+value+"'; ";
+			command += buildBind(odb.var);
 			}
 
 		if(odb.defaultVar)	{
-			command += "if(is $var --blank) {{bind $var '"+odb.defaultVar+"';}}; "
+			command += "if(is $var --blank) {{"+buildBind(odb.defaultVar)+"}}; "
 			}
 		if(odb.defaultValue)	{
 			command += "if(is $var --blank) {{bind var '"+odb.defaultValue+"';}}; "
@@ -165,7 +169,6 @@ truncText, which was a command previously, is now a format.
 money is also a format
 */
 function wrappedApply(db)	{
-	console.log(db);
 	var r = "";
 	if(db.format == 'showIfSet'|| db.format == 'assignAttribute' || db.format == 'setVal' || db.format == 'db.popVal' || db.format == 'db.showIfMatch' || db.format == 'db.hideIfSet' || db.format == 'db.addClass' )	{//
 		//these already have apply.
@@ -191,7 +194,9 @@ function wrappedApply(db)	{
 		if(odb.posttext)	{
 			r += "format --append='"+db.posttext+"'; "; //here, leading whitespace is probably desired and the trailing whitespace isn't likely to hurt anything.
 			}
-		
+		if(odb.className)	{
+			r += "apply --add --class='"+db.className+"'; ";
+			}
 		r += "apply --append;}};"
 		}
 	return r;	
@@ -202,7 +207,7 @@ function wrappedApply(db)	{
 		if(odb.format == 'imageURL')	{
 			var bgcolor = odb.bgcolor ? odb.bgcolor : '#ffffff';
 			if(bgcolor.charAt(0) != '#')	{bgcolor = '#'+bgcolor} //regularize data.
-			command += "apply --img --media=$var --width="+(odb.width ? odb.width : $tag.width())+" --height="+(odb.height ? odb.height : $tag.height())+" --bgcolor='"+bgcolor+"' --replace;"
+			command += "if (is $var --notblank;) {{ apply --img --media=$var --width="+(odb.width ? odb.width : $tag.width())+" --height="+(odb.height ? odb.height : $tag.height())+" --bgcolor='"+bgcolor+"' --replace;}}"
 			//special case for image handling.
 			}
 		else if(odb.extension)	{
@@ -214,7 +219,7 @@ function wrappedApply(db)	{
 			command += ((odb.extension == 'myRIA') ? 'quickstart' : odb.extension)+"#";
 			command += format+' ';
 			command += buildParams(odb);
-			command += " --legacy; apply --append;";
+			command += " --legacy;"; //legacy ends the statement processing, so no apply is necessary.
 			}
 		else	{
 			if(odb.format == 'text' || odb.format == 'wiki' || odb.format == 'truncText' || odb.format == 'money')	{
@@ -223,7 +228,10 @@ function wrappedApply(db)	{
 				}
 			else if(upgradeRenderFormat(odb))	{
 				command += upgradeRenderFormat(odb);
-				command += wrappedApply(odb);
+				if(odb.format == 'popVal' || odb.format == 'setVal' || odb.format == 'loadsTemplate')	{}
+				else	{
+					command += wrappedApply(odb);
+					}
 				}
 			else	{
 				console.warn("Something went wrong.  The following line did not specify an extension and the renderFormat was not handled in upgradeRenderFormat.\ndatabind: "+$tag.data('bind'));

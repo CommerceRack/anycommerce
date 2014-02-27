@@ -182,40 +182,20 @@ document.write = function(v){
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				_app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"quickstart"},'mutable');
-
-				_app.model.addDispatchToQ({"_cmd":"whoAmI","_tag":{"datapointer":"whoAmI",callback:function(rd){
-					var page = _app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
-	
-					if(page.pageType == 'cart' || page.pageType == 'checkout')	{
-	//if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
-						}
-					else if(cartID)	{
-						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
-						_app.model.dispatchThis('mutable');
-						}
-					else	{} //no cart to go get. cartCreate already been added to Q by now.
-					
-					_app.ext.quickstart.u.bindNav('#appView .bindByAnchor');
-					_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
-
-					if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete(page)}; //gets run after app has been init
-					_app.ext.quickstart.thirdParty.init();
-					
-					}}},"mutable"); //used to determine if user is logged in or not.
-
-
 				_app.model.dispatchThis('mutable');
 				}
 			}, //startMyProgram 
 
 		addCart2CM : {
 			onSuccess : function(_rtag){
+				var cartID = false;
 				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
 				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
 					_app.u.dump(" -> existing cart is valid. add to cart manager");
 					if($('#cartMessenger').length)	{
-						_app.model.addCart2Session(_rtag.cartid); //this function updates _app.vars.carts
-						_app.ext.cart_message.u.initCartMessenger(_rtag.cartid,$('#cartMessenger')); //starts the cart message polling
+						cartID = _rtag.cartid;
+						_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
+						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						}
 					else	{
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
@@ -230,12 +210,38 @@ document.write = function(v){
 					_app.u.dump(" -> cart has been created.");
 					//this was a appCartCreate.
 					if($('#cartMessenger').length)	{
-						_app.ext.cart_message.u.initCartMessenger(_app.model.fetchCartID(),$('#cartMessenger')); //starts the cart message polling
+						cartID = _app.model.fetchCartID();
+						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						}
 					else	{
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
 						}
 					}
+				
+				
+				if(cartID)	{
+					_app.model.addDispatchToQ({"_cmd":"whoAmI",_cartid : cartID, "_tag":{"datapointer":"whoAmI",callback:function(rd){
+						var page = _app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+		
+						if(page.pageType == 'cart' || page.pageType == 'checkout')	{
+		//if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
+							}
+						else if(cartID)	{
+							_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
+							_app.model.dispatchThis('mutable');
+							}
+						else	{} //no cart to go get. cartCreate already been added to Q by now.
+						
+						_app.ext.quickstart.u.bindNav('#appView .bindByAnchor');
+						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
+	
+						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete(page)}; //gets run after app has been init
+						_app.ext.quickstart.thirdParty.init();
+						
+						}}},"mutable"); //used to determine if user is logged in or not.
+					_app.model.dispatchThis('mutable');
+					}
+				
 				}
 			},
 		
@@ -554,6 +560,20 @@ need to be customized on a per-ria basis.
 				$n.fadeIn(1000)
 				}
 			}, //pageTransition
+
+
+
+		tlcFormats : {
+			
+			searchbytag : function(data,thisTLC)	{
+				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
+				var query = {"size":(argObj.size || 4),"mode":"elastic-native","filter":{"term":{"tags":argObj.tag}}};
+				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+argObj.tag,'templateID':argObj.templateid,'extension':'store_search','callback':'handleElasticResults','list':data.globals.tags[data.globals.focusTag]},argObj));
+				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
+				}
+
+			},
+
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
