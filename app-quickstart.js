@@ -816,7 +816,7 @@ fallback is to just output the value.
 //changes the text on the button based on certain attributes.
 //_app.ext.quickstart.u.handleAddToCart($(this),{'action':'modal'});
 			addtocartbutton : function($tag,data)	{
-				dump("BEGIN store_product.renderFunctions.addtocartbutton");
+//				dump("BEGIN store_product.renderFunctions.addtocartbutton");
 
 //if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
 				
@@ -825,7 +825,7 @@ fallback is to just output the value.
 				inv = _app.ext.store_product.u.getProductInventory(pid),
 				$form = $tag.closest('form');
 				
-				dump(" -> $form.length: "+$form.length);
+//				dump(" -> $form.length: "+$form.length);
 				
 //				if(_app.model.fetchData('appProductGet|'+pid))	{}
 				if(data.bindData.isElastic)	{
@@ -2826,7 +2826,7 @@ buyer to 'take with them' as they move between  pages.
 //best practice would be to NOT call this function directly. call showContent.
 
 			showPage : function(infoObj)	{
-				//dump("BEGIN quickstart.u.showPage("+infoObj.navcat+")");
+//				dump("BEGIN quickstart.u.showPage("+infoObj.navcat+")");
 
 				var catSafeID = infoObj.navcat;
 				if(!catSafeID)	{
@@ -2845,6 +2845,9 @@ buyer to 'take with them' as they move between  pages.
 					infoObj.state = 'init';
 					var parentID = infoObj.parentID || infoObj.templateID+'_'+_app.u.makeSafeHTMLId(catSafeID);
 					var $parent = $(_app.u.jqSelector('#',parentID));
+					
+					dump(" -> $parent.length: "+$parent.length);
+					
 					infoObj.parentID = parentID;
 					_app.renderFunctions.handleTemplateEvents($parent,infoObj);
 //only have to create the template instance once. showContent takes care of making it visible again. but the onComplete are handled in the callback, so they get executed here.
@@ -2857,23 +2860,21 @@ buyer to 'take with them' as they move between  pages.
 						}
 					else	{
 //						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
-						var $content = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID,'verb':'template'});
+						$parent = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID,'verb':'template'});
 //if dialog is set, we've entered this function through showPageInDialog.
 //content gets added immediately to the dialog.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
-						if(infoObj.dialogID)	{$('#'+infoObj.dialogID).append($content)}
+						if(infoObj.dialogID)	{$('#'+infoObj.dialogID).append($parent)}
 						else	{
-							$content.addClass('displayNone'); //hidden by default for page transitions.
-							$('#mainContentArea').append($content);
+							$parent.addClass('displayNone'); //hidden by default for page transitions.
+							$('#mainContentArea').append($parent);
 							}
-						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$content});
+						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$parent});
 						_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
 						_app.model.dispatchThis();
 						}
-
-
 					}
-				return $content;
+				return $parent;
 				}, //showPage
 
 
