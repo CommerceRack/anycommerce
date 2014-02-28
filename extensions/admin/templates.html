@@ -268,8 +268,9 @@ SETUP PAGE TEMPLATE
 
 <div id='pageSetupTemplate' class='page pageSetup'>
 
+<div class='floatPanel'>
 
-	<div id="manage" class='ui-widget floatPanel'>
+	<div id="manage" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
@@ -295,8 +296,28 @@ SETUP PAGE TEMPLATE
 		</div>
 	</div><!-- /manage -->
 
+	
+	<div id="developer" class='ui-widget'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Developer Tools</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!ext/admin_tools/showPrivateFiles'); return false;">Private Files <!-- (beta) --></a>
+			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a>
+			<div class="helper marginBottom">Use this to easily custom integrations or apps</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a>
+			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
+		</div>
+	</div><!-- /developer -->
 
-	<div id="properties" class='ui-widget floatPanel'>
+</div>
+<div class='floatPanel'>
+
+	<div id="properties" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Store Properties</h3>
 		</div>
@@ -321,58 +342,8 @@ SETUP PAGE TEMPLATE
 			<div class="helper marginBottom">Manage your global product variations</div>
 		</div>
 	</div><!-- /properties -->
-	
 
-	<div id="account" class='ui-widget floatPanel'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Account Settings</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showContactInformation'); return false;">Contact Information</a>
-			<div class="helper marginBottom">Change Administrative/Billing Information</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showBillingHistory'); return false;">Billing History</a>
-			<div class="helper marginBottom">View your billing history, update payment information.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showGlobalSettings'); return false;">Global Settings</a>
-			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showNotifications'); return false;">Notifications</a>
-			<div class="helper marginBottom">Configure notifications based on system events.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showPartitionManager'); return false;">Partitions</a>
-			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
-
-			<a href="#" onClick="navigateTo('#!ext/admin_user/showUserManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a>
-			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
-			
-			<a href="#" onClick="navigateTo('#!/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a>
-			<div class="helper marginBottom">You should change your password every 60 days.</div>
-
-		</div>
-	</div><!-- /account -->
-
-
-	<div id="developer" class='ui-widget floatPanel'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Developer Tools</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!ext/admin_tools/showPrivateFiles'); return false;">Private Files <!-- (beta) --></a>
-			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a>
-			<div class="helper marginBottom">Use this to easily custom integrations or apps</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a>
-			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
-		</div>
-	</div><!-- /developer -->
-
-
-	<div id="vstore" class='ui-widget floatPanel showForZoovyOnly'>
+	<div id="vstore" class='ui-widget showForZoovyOnly'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>vStore</h3>
 		</div>
@@ -422,6 +393,47 @@ SETUP PAGE TEMPLATE
 			<div class="helper marginBottom">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
 		</div>
 	</div><!-- /vstore -->
+
+
+</div>
+<div class='floatPanel'>
+
+	<div id="account" class='ui-widget'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Account Settings</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showContactInformation'); return false;">Contact Information</a>
+			<div class="helper marginBottom">Change Administrative/Billing Information</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showBillingHistory'); return false;">Billing History</a>
+			<div class="helper marginBottom">View your billing history, update payment information.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showGlobalSettings'); return false;">Global Settings</a>
+			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showNotifications'); return false;">Notifications</a>
+			<div class="helper marginBottom">Configure notifications based on system events.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showPartitionManager'); return false;">Partitions</a>
+			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
+
+			<a href="#" onClick="navigateTo('#!ext/admin_user/showUserManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a>
+			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
+			
+			<a href="#" onClick="navigateTo('#!/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a>
+			<div class="helper marginBottom">You should change your password every 60 days.</div>
+
+		</div>
+	</div><!-- /account -->
+
+
+</div>
+
+
+
+
 
 </div>
 
