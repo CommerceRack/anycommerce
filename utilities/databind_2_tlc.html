@@ -241,7 +241,6 @@ function wrappedApply(db)	{
 //		console.log($tag.data('bind')); 
 //		console.log(command);// console.log("  ");
 
-
 		if(odb.useParentData)	{
 			console.warn("On the following renderformat, useParentData is set. That case isn't handled just yet. the data-bind was left in place to make it easier to find/update.\ndatabind: "+$tag.data('bind'));
 			}
@@ -254,7 +253,7 @@ function wrappedApply(db)	{
 
 		$tag.attr('data-tlc',command);
 		})
-	$('#grammarContent').val($t.html())
+	$('#grammarContent').val($t.html());
 	}
 </script>
 
