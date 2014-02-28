@@ -2901,7 +2901,7 @@ return $r;
 
 			var
 				arr = data.globals.binds[data.globals.focusBind], 
-				argObj = thisTLC.args2obj(data.command.args);
+				argObj = thisTLC.args2obj(data.command.args,data.globals);
 			if(argObj.templateid)	{
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
 				for(var i in arr)	{
