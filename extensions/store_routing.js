@@ -74,8 +74,16 @@ var store_routing = function(_app) {
 		
 		tlcFormats : {
 			productlink : function(data, thisTLC){
-				data.globals.binds[data.globals.focusBind] =  _app.ext.store_routing.u.productLink(data.globals.binds.pid, data.globals.binds.seo);
-				return true;
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(args.pid && args.seo){
+					data.globals.binds[data.globals.focusBind] =  _app.ext.store_routing.u.productLink(args.pid, args.seo);
+					return true;
+					} 
+				else {
+					dump('-> store_routing productlink tlcformat: The PID or SEO content was not provided in the tlc.');
+					//stop execution of the commands.  throw a tantrum.
+					return false;
+					}
 				}
 		},
 		
