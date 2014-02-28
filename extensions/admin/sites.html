@@ -300,10 +300,6 @@
 			<option value=''></option>
 			</select>
 		</label>
-
-
-		
-		
 	</div>
 
 	<div data-panel-id='domainForceHTTPS' class='displayNone domainNewHostSelectType'>
@@ -314,7 +310,6 @@
 	
 	</div>
 
-
 	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
 		<label>
 			<span>Redirect</span>
@@ -322,8 +317,10 @@
 		</label>
 	</div>
 
+	<!--
+	NOTE: this doesn't work, we'll just have people use CSV for vstore from	now on.
+	
 	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint' data-table-role='container'>
-
 	<fieldset class='alignedInputs' data-table-role='inputs'>
 		<legend>Rewrite Rules</legend>
 		<label>
@@ -347,10 +344,9 @@
 		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody' data-table-role='content'></tbody>
 		</table>
 
-
 	</fieldset>
-
 	</div>
+	-->
 	
 	<fieldset data-app-role='sslInputsContainer' class='alignedInputs'>
 		<legend>SSL Certificate</legend>
