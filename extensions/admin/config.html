@@ -2611,8 +2611,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<span>Capture Funds:</span>
 		<select name="cc_instant_capture" required='required' data-bind='var: payment(cc_instant_capture); format:popVal;'>
 			<option value="" disabled='disabled'>Please Choose</option>
-			<option value="ALWAYS">Instant Capture (authorization and transfer of funds occurs at time of checkout)</option>
-			<option value="NEVER">Delayed Capture (only authorization occurs at checkout, funds transferred later by merchant)</option>
+			<option value="ALWAYS">Instant Capture (authorization and funds transfer at checkout)</option>
+			<option value="NEVER">Delayed Capture (authorization at checkout, funds transferred by merchant)</option>
 			<option value="NOAUTH_DELAY">No Authorization (store in wallet then process later)</option>
 		</select>
 		
