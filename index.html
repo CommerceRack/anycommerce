@@ -1255,7 +1255,7 @@ this will likely become more flexible in the future. ###
 				<div data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></div>
 				<div class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></div>
 			</div>
-			<div class="mobileProdDesc marginTop">
+			<div class="displayNone displayBlockNMobile mobileProdDesc marginTop">
 				<div class="mobileProdDescTitle">Description:</div>
 				<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 			</div>
@@ -1265,18 +1265,22 @@ this will likely become more flexible in the future. ###
 				<div class="prodPageMFG">Manufacturer: <span data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA;'></span></div>
 				<div>Manufacturer ID: <span data-bind='var: product(zoovy:prod_mfgid); format:text;'></span></div>
 			</div>
-			<div class="similarItemsSection displayNone" data-bind="var: product(zoovy:related_products); format:showIfSet;">
-				<h1>Related Products:</h1>
-				<ul class='listStyleNone clearfix noPadOrMargin similarProductList randomList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateSimilarItems;hide_pagination:true;hide_summary:true; withReviews:1;"></ul>
+			<div class="displayNone displayBlockMobile">
+				<div class="similarItemsSection displayNone" data-bind="var: product(zoovy:related_products); format:showIfSet;">
+					<h1>Related Products:</h1>
+					<ul class='listStyleNone clearfix noPadOrMargin similarProductList randomList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateSimilarItems;hide_pagination:true;hide_summary:true; withReviews:1;"></ul>
+				</div>
 			</div>
-			<div class="prodPageReviewSection marginBottom displayNone" data-bind="var: reviews(reviews.@reviews); format:showIfSet;">
-				<h1 class="marginTop">Customer Reviews</h1>
-				<div class="prodReviewContainer">
-					<div class="productReviewListHeader">
-						<h1 data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: Reviews;'></h1>
-						<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
+			<div class="displayNone displayBlockMobile">
+				<div class="prodPageReviewSection marginBottom displayNone" data-bind="var: reviews(reviews.@reviews); format:showIfSet;">
+					<h1 class="marginTop">Customer Reviews</h1>
+					<div class="prodReviewContainer">
+						<div class="productReviewListHeader">
+							<h1 data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: Reviews;'></h1>
+							<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
+						</div>
+						<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateZephyr; before:<h2>Most Helpful Reviews</h2>;"></ul>
 					</div>
-					<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateZephyr; before:<h2>Most Helpful Reviews</h2>;"></ul>
 				</div>
 			</div>
 			
