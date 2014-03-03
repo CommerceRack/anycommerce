@@ -143,27 +143,27 @@ PRODUCT FINDER/CHOOSER
 
 
 <div id='productTemplateChooser'>
-<table>
-<tr>
-	<td>
-<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
-	</td>
-	<td>
-	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	
-	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfg); format:text; pretext: Mfg: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
-	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
-	
-	
-	
-	</td>
-</tr>
-</table>
-<div data-bind='useParentData:true; format:detailedinvdisplay; extension:store_product;' class='inventory'></div>
-	<form action='#' onSubmit="return false;" class='chooserAddToCartForm'>
+	<table>
+	<tr>
+		<td>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		</td>
+		<td>
+		<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+		
+		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfg); format:text; pretext: Mfg: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		
+		
+		
+		</td>
+	</tr>
+	</table>
+	<div data-bind='useParentData:true; format:detailedinvdisplay; extension:store_product;' class='inventory stdPadding'></div>
+	<form action='#' onSubmit="return false;" class='chooserAddToCartForm stdPadding'>
 	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='sku' />
 		<fieldset data-bind='var: product(pid); format:atcvariations; extension:store_product;' class='borderNone'></fieldset>
 		

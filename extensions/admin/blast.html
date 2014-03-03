@@ -1,30 +1,34 @@
 <div id='blastManagerTemplate' data-app-role='slimLeftContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
-
-		<h2>Order</h2>
-		<div>
-			<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
+		<div class='accordion marginBottom'>
+			<h2>Order</h2>
+			<div>
+				<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Customer</h2>
+			<div>
+				<ul data-app-role="blastmessages_ACCOUNT" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Product</h2>
+			<div>
+				<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
+			</div>
 		</div>
-
-		<h2>Customer</h2>
-		<div>
-			<ul data-app-role="blastmessages_ACCOUNT" class='noPadOrMargin listStyleNone'></ul>
+		<!-- a container is necessary around this button for positioning of the menu -->
+		<div class='buttonset'>
+			<button class='applyButton' data-icon-secondary='ui-icon-triangle-1-s' data-icon-primary='ui-icon-plus' data-text='true' data-app-click='admin|showMenu'>Add Message</button>
+			<menu data-app-role='messageBlastCreateList' class='displayNone'>
+				<li><a href='#' data-msgtype='ORDER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Order</a></li>
+				<li><a href='#' data-msgtype='CUSTOMER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Customer</a></li>
+				<li><a href='#' data-msgtype='PRODUCT' data-app-click='admin_blast|adminBlastMsgCreateShow'>Product</a></li>
+			</menu>
 		</div>
-
-		<h2>Product</h2>
-		<div>
-			<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
-		</div>
-
 	</section>
 	
 	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
-		<div>
-		
-		<button>Add Message</button>
-		
-		</div>
 		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
 		<!-- page contents will go here -->
 		</div>
@@ -33,71 +37,143 @@
 </div>
 
 
+<div id='blastMessageAddTemplate'>
+	<form action='#' data-app-submit='admin_blast|adminBlastMsgCreateExec' novalidate>
+	<input type='hidden' name='msgtype' data-tlc="bind $var '.msgtype'; apply --select;" />
+	<fieldset class='labelsAsBreaks alignedLabels'>
+		<label>
+			<span>Message id</span>
+			<span data-tlc="bind $var '.msgtype'; format --append='.'; apply --append;"></span>
+			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='requied' />
+		</label>
+		<button class='applyButton'>Create</button>
+	</fieldset>
+	</form>
+</div>
 
+
+<div id='blastMessageSendTestTemplate'>
+	<form action='#' class='labelsAsBreaks alignedLabels'>
+
+	<input type='hidden' name='_cmd' value='adminBlastMsgSend' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your test message has been sent.' />
+
+	<fieldset>
+		<label>
+			<span>Receiver</span>
+			<select name='RECEIVER' data-panel-selector=".blastMsgReceiverInputs" data-input-change='show-panel'>
+				<option>please choose</option>
+				<option value='EMAIL'  data-show-panel='blastMsgReceiverEmail'>Email</option>
+				<option value='CUSTOMER' data-show-panel='blastMsgReceiverCustomer'>Customer</option>
+				<optgroup label="Push Notifications">
+					<option value='GCN'>Google</option>
+					<option value='APNS'>Apple</option>
+					<option value='ADN'>Amazon</option>
+				</optgroup>
+			</select>
+		</label>
+
+	<div class='blastMsgReceiverInputs'  data-panel-id='blastMsgReceiverEmail'>
+		<label>
+			<span>Email</span>
+			<input type='email' name='EMAIL' required='required' data-validation-rules='skipIfHidden' />
+		</label>
+	</div>
+
+	<div class='blastMsgReceiverInputs label'  data-panel-id='blastMsgReceiverCustomer'>
+		<label>
+			<span>Customer id</span>
+			<input type='number' name='CID' required='required' data-validation-rules='skipIfHidden' />
+		</label>
+
+		<div>
+			find customer id by email 
+			<input type='email' name='emailForSearch' />
+			<button class='applyButton' data-text='false' data-icon-primary='ui-icon-search' data-app-click="admin_blast|adminBlastCustomerFind">search</button>
+		</div>
+	
+	</div>
+
+	</fieldset>
+
+	<div class='buttonset'>
+		<button class='applyButton'  data-app-click='admin|submitForm'>Send</button>
+	</div>
+	</form>
+</div>
 
 
 <div id='blastMessageDetailTemplate' class='clearfix'>
 
-<form action='#' data-app-submit='admin|submitForm'>
-<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select;"  />
-
-<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
-<input type='hidden' name='_tag/callback' value='showMessaging' />
-<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
-<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-
-
-<ul>
-	<li>Message</li>
-	<li>Email</li>
-	<li>Push</li>
-<!--	<li>SMS</li>-->
-</ul>
-
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
-	<legend data-tlc="bind $var '.MSGID'; apply --select;"></legend>
-
-	<label>
-		<span>From:</span>
-		<input type='text' name='%META.email_from' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select;" />
-	</label>
-	<label>
-		<span>bcc:</span>
-		<input type='text' name='%META.email_bcc' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select;" />
-	</label>
-
-
-	<label>
-		<span>Subject:</span>
-		<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
-	</label>
+	<form action='#' data-app-submit='admin|submitForm' novalidate='novalidate'>
+	<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select;"  />
 	
-	<label>
-		<span>Message:</span>
-		<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
-	</label>
-</fieldset>
+	<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
-<div class='buttonset'>
-	
-	<button data-icon-secondary='ui-icon-arrow-s' data-text='true'>Send Test (activates dd)</button><!--
+	<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
+		<h2 data-tlc="bind $var '.MSGID'; apply --select;"></h2>
+		<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-text='true' data-app-click='admin_blast|adminBlastMsgSendTestShow'>Send Test</button>
+	</div>
+
+
+	<div class='applyAnytabs labelsAsBreaks alignedLabels alignedInputs'>
+		<!-- tabs for editor -->
+		<ul>
+			<li><a href='#message'>Message</a></li>
+			<li><a href='#email'>Email</a></li>
+			<li><a href='#push'>Push</a></li>
+		<!--	<li>SMS</li>-->
+		</ul>
+
+		<fieldset data-anytab-content='email'>
+		
+			<label>
+				<span>From:</span>
+				<input type='text' name='%META.email_from' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select;" />
+			</label>
+			<label>
+				<span>bcc:</span>
+				<input type='text' name='%META.email_bcc' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select;" />
+			</label>
+		
+		</fieldset>
+
+		<fieldset data-anytab-content='message'>
+
+			<label>
+				<span>Subject:</span>
+				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
+			</label>
+			
+			<label>
+				<span>Message:</span>
+				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
+			</label>
+
+		</fieldset>
+		
+		<fieldset data-anytab-content='push'>
+		Push notification inputs
+		</fieldset>
+
+	</div>	
+		<!--
 	to: email, GCM(google cloud messaging), APNS (apple push notification) ADN
 	based on selection, shows appropriate input. 
 	for test, send type  'EMAIL' or 'CUSTOMER' and then EMAIL='something@somewhere.com' or CUSTOMER=CID
 -->
-	<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
+	</form>
 </div>
-
-</form>
-
-</div>
-
-
 
 
 
 <div id='blastToolTemplate'>
-<form action='#' novalidate="novalidate">
+<form action='#' novalidate>
 	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.%MSG.PRT'; apply --select;" />
 	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.%MSG.OBJECT'; apply --select;" />
 	<input type='hidden' name='FORMAT' value='HTML5' />
@@ -111,13 +187,15 @@
 
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>
-			<span>Recipient:</span>
-			<select name='RECIPIENT' required='required' data-tlc="bind $var '.RECIPIENT'; apply --select;" data-panel-selector=".blastToolRecipientInputs" data-input-change='show-panel'>
+			<span>Receiver:</span>
+			<select name='RECEIVER' required='required' data-tlc="bind $var '.RECEIVER'; apply --select;" data-panel-selector=".blastToolReceiverInputs" data-input-change='show-panel'>
 				<option value='EMAIL' selected="selected" data-show-panel='blastToolEmailInputs'>Email</option>
 				<option value='CUSTOMER' selected="selected">Customer</option>
-				<option value='GCN' selected="selected">GCN</option>
-				<option value='APNS' selected="selected">APNS</option>
-				<option value='ADN' selected="selected">ADN</option>
+				<optgroup label="Push Notifications">
+					<option value='GCN'>Google</option>
+					<option value='APNS'>Apple</option>
+					<option value='ADN'>Amazon</option>
+				</optgroup>
 			</select>
 		</label>
 		
@@ -129,7 +207,7 @@
 			</select>
 		</label>
 		
-		<label class='blastToolRecipientInputs displayNone' data-panel-id='blastToolEmailInputs'>
+		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolEmailInputs'>
 			<span>Email address:</span>
 			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" data-validation-rules='skipIfHidden'  /><!-- if recipient is passed into the mail tool, this will be visible but disabled. -->
 		</label>
@@ -160,3 +238,5 @@
 
 </form>
 </div>
+
+

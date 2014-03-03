@@ -3766,10 +3766,18 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars.handleAppEvents = (vars.handleAppEvents == false) ? false : true; //default to runing anycontent. if no templateID specified, won't run.
 
 				var $D = $("<div \/>").attr('title',vars.title);
-				if(vars.anycontent && vars.templateID)	{
+				
+				if(!$.isEmptyObject(vars.tlc))	{
+					$D.tlc(vars.tlc);
+					}
+				else if(vars.anycontent && vars.templateID)	{
 //					_app.u.dump(" -> vars: "); _app.u.dump(vars);
 					$D.anycontent(vars);
 					}
+				else	{
+					//no templating/interpolation necessary.
+					}
+
 				$D.dialog({
 					modal: true,
 					width : '90%',
@@ -3799,7 +3807,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 					_app.u.handleAppEvents($D,vars);
 					}
 				_app.u.addEventDelegation($D);
+				$D.anyform();
 				_app.u.handleCommonPlugins($D);
+				_app.u.handleButtons($D);
 				return $D;
 				} //dialogCreate
 
@@ -3824,7 +3834,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 		e : {
 			
 			showMenu : function($ele,p)	{
-				_app.u.dump("admin.e.showMenu (Click!)");
+//				_app.u.dump("admin.e.showMenu (Click!)");
 //If you open a menu, then immediately open another with no click anywhere between, the first menu doesn't get closed. the hide() below resolves that.
 				$('menu.adminMenu:visible').hide();
 				var $menu = $ele.next('menu');
@@ -3833,9 +3843,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$menu.menu().addClass('adminMenu');
 					$ele.parent().css('position','relative');
 					}
-				$( document ).one( "click", function() {
-					$menu.hide();
-					});
+// ** 201402 -> the menu, when opening a dialog, was not closing
+				$menu.on('click','a, button',function(){$menu.hide();});
+				$( document ).one( "click", function() {$menu.hide();});
 				$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200,'top':25,'right':0}).show();
 				return false;
 				},

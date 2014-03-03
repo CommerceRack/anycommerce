@@ -18,7 +18,7 @@
 
 
 var admin_blast = function(_app) {
-	var theseTemplates = new Array('blastManagerTemplate','blastMessageDetailTemplate','blastToolTemplate');
+	var theseTemplates = new Array('blastManagerTemplate','blastMessageAddTemplate','blastMessageSendTestTemplate','blastMessageDetailTemplate','blastToolTemplate');
 	var r = {
 
 
@@ -56,7 +56,8 @@ var admin_blast = function(_app) {
 				$target.showLoading({"message":"Fetching list of messages"});
 				$target.tlc({'templateid':'blastManagerTemplate','verb':'template'});
 				_app.u.addEventDelegation($target);
-				
+				_app.u.handleButtons($target);
+				$(".slimLeftNav .accordion",$target).accordion();
 				_app.model.addDispatchToQ({
 					"_cmd":"adminBlastMsgList",
 					"_tag":{
@@ -73,16 +74,18 @@ var admin_blast = function(_app) {
 										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].TITLE || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>")	
 										}
 									}
-								$(".slimLeftNav",$target).accordion();
+								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
+								// the accordion does get initiated here because the left column looked out of place for too long.
+								$(".slimLeftNav .accordion",$target).accordion('refresh');
 								}
 							}
 						}
 					},"mutable");
 				_app.model.dispatchThis("mutable");
-				},
+				}, //blastMessagesList
+
 //used in the blast message list tool for editing a specific message.			
 			blastMessagesDetail : function($target,params)	{
-				dump(" -> params: "); dump(params);
 				$target.showLoading({"message":"Fetching message detail"});
 				_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":params.msgid,"_tag":{
 					"datapointer":"blastMessagesDetail|"+params.msgid,
@@ -92,8 +95,7 @@ var admin_blast = function(_app) {
 					"callback":'tlc'}
 					},"mutable");
 				_app.model.dispatchThis("mutable");
-				},
-
+				}, //blastMessageDetail
 
 			// opens a 'send message' tool. can be sent via email for now. later will support SMS, push notification, etc.
 			//params wants an 'object' and a 'partition'. Partition is passed because, in the case of orders, you may be working with an order from another partition.
@@ -138,7 +140,7 @@ var admin_blast = function(_app) {
 				else	{
 					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, vars.OBJECT ['+params.OBJECT+'] or partition ['+params.PRT+'] not specified.'})
 					}
-				}
+				} //blastTool
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -164,7 +166,7 @@ var admin_blast = function(_app) {
 				else	{
 					}
 				return true;
-				}
+				} //msgsasoptions
 
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -183,13 +185,73 @@ var admin_blast = function(_app) {
 //exexuted in the message list view.
 //will bring a message into focus in the content area in an editor.
 			msgDetailView : function($ele,P)	{
+				$ele.closest('.slimLeftNav').find('.ui-state-focus').removeClass('ui-state-focus');
 				if($ele.data('msgid'))	{
+					$ele.addClass('ui-state-focus');
 					_app.ext.admin_blast.a.blastMessagesDetail($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentContainer']").empty(),{'msgid':$ele.data('msgid')});
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_blast.e.msgDetailView, no data.msgid set on trigger element.","gMessage":true});
 					}
 				}, //msgDetailView
+
+			adminBlastMsgSendTestShow : function($ele,P)	{
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Send Blast Test",
+					tlc : {'templateid' : 'blastMessageSendTestTemplate','verb':'template'},
+					handleAppEvents : false //defaults to true
+					});
+				$('form',$D).append("<input type='hidden' name='MSGID' value='"+($ele.closest('form').find("[name='MSGID']").val())+"' />");
+				$D.dialog('option','width',($(document.body).width() < 350 ? '90%' : 350));
+				$D.dialog('open');
+				},
+
+			adminBlastMsgCreateExec : function($ele,P)	{
+				var $form = $ele.closest('form');
+				if(_app.u.validateForm($form))	{
+					var sfo = $form.serializeJSON();
+					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+"."+sfo.msgid, "_tag":{"callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$('#globalMessaging').anymessage(_app.u.successMsgObject('The message has been added.'));
+							$ele.closest('.ui-dialog-content').dialog('close');
+							navigateTo("#!ext/admin_blast/blastMessagesList");
+							}
+						}}},"immutable");
+					_app.model.dispatchThis("immutable");
+					}
+				else	{
+					//validateForm will handle error display.
+					}
+				return false;
+				},
+
+			adminBlastCustomerFind : function($ele,P)	{
+				var $form = $ele.closest('form'); //used for context.
+				_app.ext.admin_customer.a.customerSearch({'searchfor':$("input[name='emailForSearch']",$form).val(),'scope':'EMAIL'},function(customer){
+					$("input[name='CID']",$form).val(customer.CID);
+					});
+				},
+
+			adminBlastMsgCreateShow : function($ele,P)	{
+				if($ele.data('msgtype'))	{
+					var $D = _app.ext.admin.i.dialogCreate({
+						title : "Create New Blast Message",
+						tlc : {'templateid':'blastMessageAddTemplate',dataset : {'msgtype':$ele.data('msgtype')}},
+						anycontent : false, //the dialogCreate params are passed into anycontent
+						handleAppEvents : false //defaults to true
+						});
+					$D.dialog('option','width',($(document.body).width() < 350 ? '90%' : 350));
+					$D.dialog('open');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_blast.e.msgTestShow, no data.receiver set on trigger element.","gMessage":true});
+					}
+				return false;
+				},
 
 //applied to the select list that contains the list of email messages in the blast tool. on change, it puts the message body into the textarea.
 			toggleEmailInputValuesBySource : function($ele)	{
@@ -231,9 +293,7 @@ var admin_blast = function(_app) {
 				else	{
 					//validate form handles error display.
 					}
-
-
-//							_app.ext.admin.u.sendEmail($form,vars);	
+//				_app.ext.admin.u.sendEmail($form,vars);	
 				} //msgBlastSendExec
 			} //e [app Events]
 		} //r object.
