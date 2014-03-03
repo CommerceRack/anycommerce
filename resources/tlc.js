@@ -22,8 +22,9 @@
 				if(!$.isEmptyObject(o.extendByDatapointers))	{
 					this._handleDatapointers();
 					}
-				
-//				dump(" -> verb: "+o.verb); dump(o.dataset);
+				if($._app.vars.debug == 'tlc')	{
+					dump("BEGIN tlc _init. verb: "+o.verb); dump(o.dataset);
+					}
 				if(o.verb == 'transmogrify')	{
 					var $instance = this.transmogrify();
 					this._handleDataAttribs($instance);
