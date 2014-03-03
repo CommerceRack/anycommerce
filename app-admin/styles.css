@@ -89,14 +89,13 @@ class can also be applied to a 1 item per row list.
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-a, .lookLikeLink, .ui-widget-content a 	{cursor:pointer; color:#7398a5; text-decoration:none;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a, .lookLikeLink, .ui-widget-content a 	{cursor:pointer; color:#7398a5; text-decoration:none; outline: 0;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
 
 a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
 .opacity50	{
-	-ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=50)"; /* IE 8 */
 	-moz-opacity: 0.5; /* Netscape */
 	-khtml-opacity: 0.5; /* Safari 1.x */
 	opacity: 0.5;	/* Good browsers */
@@ -912,6 +911,11 @@ h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0;
 
 
 .slimLeftNav	{float: left; width:20%;}
+
+/* the way accordion is used here, no left/right padding is desired. the padding is added to the inner elements so their focus state can go to the edges */
+.slimLeftNav .ui-accordion-content	{padding:.3em 0;}
+.slimLeftNav .ui-accordion-content li {padding:.2em 1em;}
+
 .slimLeftContentSection	{float: right; width:75%;}
 .slimLeftContent	{min-height:250px;} /* minheight here for showLoading */
 
@@ -1188,7 +1192,8 @@ NOTIFICATIONS
 		}  
 	
 	.twoColumn.column2 {float:right;}
-
+	.slimLeftNav	{width:30%;}
+	.slimLeftContentSection	{float: right; width:68%;}
 	}
 
 
