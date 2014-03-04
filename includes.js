@@ -237,7 +237,7 @@ renderOptionIMGSELECT: function(pog) {
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 
-	$imageDiv = $('<div>').addClass('imageselect_image');
+	var $imageDiv = $('<div>').addClass('imageselect_image');
 	$imageDiv.html(makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"id":"selectImg_"+pogid}));
 	$imageDiv.appendTo($parentDiv);
 //	dump('END renderOptionIMGSELECT for pog '+pog.id);
@@ -1006,18 +1006,18 @@ this was necessary because otherwise the converted html was output as <a href...
             		suffix = phrase;
             		}
 
-			
+				dump(' -> operation: '+operation+' and linkCmdPointer'+linkCmdPointer+' and suffix: '+suffix+' and phrase: '+phrase);
 				switch(operation) {
 					case ":url" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":url"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":url"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
 						else
 							output = "<a href=\""+suffix+"\" target='_blank'>"+phrase+"</a>";
 						break;
 
 					case ":search" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":search"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase);
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":search"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":search"](suffix,phrase);
 						else
 							output = "<a href=\""+domain+"search.cgis?KEYWORDS="+suffix+"\">"+phrase+"</a>";
 						break;
@@ -1025,24 +1025,24 @@ this was necessary because otherwise the converted html was output as <a href...
 
 					case ":category" :
 						if(suffix.indexOf('.') != 0) {suffix = "."+suffix} //make sure category suffixes (safe id) start with .
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":category"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":category"](suffix,phrase); 
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":category"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":category"](suffix,phrase); 
 						else
 							output = "<a href=\""+domain+"/category/"+suffix+"/\">"+phrase+"</a>";
 						break
 
 					
 					case ":product" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":product"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":product"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":product"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":product"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/product/"+suffix+"/\">"+phrase+"</a>"
 						break;
 
 
 					case ":customer" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":customer"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":customer"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":customer"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":customer"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/customer/"+suffix+"/\">"+phrase+"</a>"
 						break;					
@@ -1050,23 +1050,23 @@ this was necessary because otherwise the converted html was output as <a href...
 
 					case ":popup" :
 //						dump(":popup suffix: "+suffix);
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":popup"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":popup"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":popup"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":popup"](suffix,phrase)
 						else
 							output = "<a href=\""+suffix+"\" target='popup'>"+phrase+"</a>";
 						break;
 
 					case ":policy" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":policy"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":policy"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":policy"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":policy"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/policy/"+suffix+"/\">"+phrase+"</a>"
 						break;		
 
 
 					case ":app" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":app"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":app"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":app"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":app"](suffix,phrase)
 						else	{
 							dump("WARNING! no app handle/token specified (required per app): "+chunk);
 							output = phrase;

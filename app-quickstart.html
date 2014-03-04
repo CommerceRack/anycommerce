@@ -322,9 +322,9 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --show;}};"></h5>
+		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
 
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></h6>
+		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='Our Price: '; apply --append;}};"></h6>
 		
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
@@ -334,9 +334,6 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<input name="qty" value="1" type="hidden">
 		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;">more details</button>
 	</form>
-
-		<h2 data-tlc="bind $var '.pid'; apply --append;"></h2>
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_name'; stringify $var; apply --append;">
 
 </li>
 
@@ -354,7 +351,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
 
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></h6>
+		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
 
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 	
@@ -401,7 +398,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
 
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></h6>
+		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
 
 
 	</div>
@@ -425,12 +422,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id="productListTemplateResults" class="loadingBG searchResultsProduct ">
 	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.images'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
-		<h5 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
+		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
 
-		<h6 data-tlc="bind $var '.%attribs.base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h6>
+		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
 		
 	</div>
 	<div class="hideInMinimalMode pointer moreDetails" onclick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
@@ -439,12 +436,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
 	<div onclick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class="pointer">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
 		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
 
-		<h6 data-tlc="bind $var '.base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h6>
+		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
 	</div>
 	<div class="hideInMinimalMode pointer moreDetails" onclick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>
@@ -513,7 +510,7 @@ this will likely become more flexible in the future. ###
 	
 		<div class="priceContainer marginBottom">
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: '; apply --append;}};" class="prodMSRP"></h5>
+			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
 			<span class="savings">
 				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
 				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
@@ -565,7 +562,6 @@ this will likely become more flexible in the future. ###
 	-->
 	
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodTabs tabbedProductContent applyAnytabs">
-	<!--
 		<ul class="tabs">
 			<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
 			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
@@ -605,19 +601,16 @@ this will likely become more flexible in the future. ###
 		<div class="tabContent" data-anytab-content="prodAccessories">
 	<ul data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --withreviews='1' --withinventory='1' --withvariations='1' --templateid='productListTemplateATC'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist"></ul>
 		</div>
-	-->
-	
-	
 	
 	</div>
 	
 		</td>
 	</tr>
-	</tbody></table><!--
+	</tbody></table>
 	<div class="prodlistRelatedContainer">
 		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --before='<h2>Similar Items</h2>' --withreviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 	</div>
--->
+
 
 </div><!-- productTemplate -->
 
@@ -641,12 +634,12 @@ this will likely become more flexible in the future. ###
 
 	<td class="prodSummaryContainer marginBottom no_underline">
 	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
-	<h6 data-tlc="bind $var '.pid'; format --prepend='Sku#: '; if (is $var --notblank;) {{apply --append;}};" class="ztable_row_small stid"></h6>
+	<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku#: ';apply --append;}};" class="ztable_row_small stid"></h6>
 
 
 	<div class="priceContainer">
-		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; format --prepend='Our Price: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="basePrice"></h4>
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; format --prepend='MSRP: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="prodMSRP"></h5>
+		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
+		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
 		<span class="savings">
 			<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
 			<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
@@ -660,7 +653,7 @@ this will likely become more flexible in the future. ###
 		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --append=' from ';apply --append;}};"></span>
 	</section>
 
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{ render --wiki='quickstart';apply --append;}};"></div>
+	<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 
 	</td>
 </tr>
@@ -879,7 +872,7 @@ subscribeListsArticle is used for authenticated buyers
 -->
 		<div id="newsletterArticle" class="displayNone textContentArea">
 			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div data-tlc="transmogrify 'subscribeFormTemplate'; if (is $var --notblank;) {{apply --append;}};"></div>
+			<div data-tlc="transmogrify templateid='subscribeFormTemplate'; apply --append;"></div>
 		</div>
 
 		<div id="subscriberListsArticle" class="displayNone textContentArea">
@@ -928,7 +921,7 @@ subscribeListsArticle is used for authenticated buyers
 
 
 		<div id="invoiceArticle" class="displayNone textContentArea">
-			<div data-tlc="transmogrify 'invoiceTemplate'; if (is $var --notblank;) {{apply --append;}};" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
+			<div data-tlc="transmogrify --templateid='invoiceTemplate'; apply --append;" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
 		</div>
 
 
@@ -1072,19 +1065,19 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 <section class="cartSummary marginBottom">
 
-	<div data-tlc="bind $var '.sum/items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
 
-	<div data-tlc="bind $var '.sum/tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
 
 	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipInfoById; extension:cco;"></div>
 
-	<div data-tlc="bind $var '.sum/order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
 
-	<div data-tlc="bind $var '.sum/gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --add --class='orderGiftcardTotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum/pnt_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Reward Points: '; apply --add --class='rewardPointsTotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum/rmc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Returns Credit: '; apply --add --class='returnsCreditTotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --add --class='orderGiftcardTotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.pnt_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Reward Points: '; apply --add --class='rewardPointsTotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.rmc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Returns Credit: '; apply --add --class='returnsCreditTotal'; apply --append;}};"></div>
 
-	<div data-tlc="bind $var '.sum/balance_due_total'; cco#orderbalance  --classname='orderBalanceDue' --hidezero='false' --currencysign='$' --legacy;"></div>
+	<div data-tlc="bind $var '.sum.balance_due_total'; cco#orderbalance  --classname='orderBalanceDue' --hidezero='false' --currencysign='$' --legacy;"></div>
 
 </section>
 
@@ -1093,7 +1086,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div class="cartZipCodeContainer marginBottom">
 		<label for="data-ship_zip">Zip/Postal Code:</label>
-		<input data-tlc="bind $var '.ship/postal'; if(is $var --blank) {{bind $var '.bill/postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
 	</div>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
@@ -1112,7 +1105,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	
 			<span id="inStoreCheckoutButton thisButton" title="proceed to secure checkout"><button class="applyButton ui-state-highlight checkoutButton" onclick="showContent('checkout',{});">Store Checkout</button></span>
 	
-			<span data-tlc="bind $var '.cart/cartid'; cco#paypalecbutton  --legacy;" id="paypalECButton" class="thisButton"></span>
+			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalECButton" class="thisButton"></span>
 	
 		</div>
 
@@ -1139,17 +1132,17 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<button data-tlc="cco#cartitemremovebutton  --legacy;" class="floatRight removeButton" data-bind="format:cartItemRemoveButton; extension:cco; useParentData:true;" data-app-click="cco|cartItemRemove">Remove Item From Cart</button>
 		<button data-tlc="quickstart#movetowishlistbutton  --legacy;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:quickstart; useParentData:true;">Move to Wishlist</button>
 
-		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank) {{bind $var 'product(%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
+		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank) {{bind $var 'product(.%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
 
-		<h4 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h4>
+		<h4 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h4>
 
-		<div data-tlc="bind $var '.%attribs.sku'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="ztable_row_small stid"></div>
+		<div data-tlc="bind $var '.sku'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="ztable_row_small stid"></div>
 
 		<div>
 		qty: <input data-tlc="cco#cartitemqty  --legacy;" class="qtyInput numberInput" data-app-change="cco|cartItemUpdateExec" data-bind="format:cartItemQty;extension:cco;useParentData:true;" name="quantity" type="number">
 		<button class="displayNone">update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-tlc="bind $var '.%attribs.price'; format --prepend='x '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
-		<span data-tlc="bind $var '.%attribs.extended'; format --prepend='= '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
+		<span data-tlc="bind $var '.price'; format --prepend='x '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
+		<span data-tlc="bind $var '.extended'; format --prepend='= '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
 
 		</div>
 
@@ -1347,18 +1340,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id="billAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
 	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
 	<div class="addressFullname">
-		<span data-tlc="bind $var '.bill/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
-		<span data-tlc="bind $var '.bill/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
+		<span data-tlc="bind $var '.bill.firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
+		<span data-tlc="bind $var '.bill.lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
 	</div>
 	<div class="address">
-		<div data-tlc="bind $var '.bill/address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
-		<div data-tlc="bind $var '.bill/address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
+		<div data-tlc="bind $var '.bill.address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
+		<div data-tlc="bind $var '.bill.address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
 
-		<span data-tlc="bind $var '.bill/city'; if (is $var --notblank;) {{apply --append;}};" title="city"></span>,
-		<span data-tlc="bind $var '.bill/region'; if (is $var --notblank;) {{apply --append;}};" title="state"></span>.
-		<span data-tlc="bind $var '.bill/postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
-		<div data-tlc="bind $var '.bill/countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
-
+		<span data-tlc="bind $var '.bill.city'; if (is $var --notblank;) {{format --append=', '; apply --append;}};" title="city"></span>,
+		<span data-tlc="bind $var '.bill.region'; if (is $var --notblank;) {{format --append='. '; apply --append;}};" title="state"></span>.
+		<span data-tlc="bind $var '.bill.postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
+		<div data-tlc="bind $var '.bill.countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
 	</div>
 
 </address>
@@ -1368,17 +1360,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id="shipAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
 	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
 	<div class="addressFullname">
-		<span data-tlc="bind $var '.ship/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
-		<span data-tlc="bind $var '.ship/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
+		<span data-tlc="bind $var '.ship.firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
+		<span data-tlc="bind $var '.ship.lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
 	</div>
 	<div class="address">
-		<div data-tlc="bind $var '.ship/address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
-		<div data-tlc="bind $var '.ship/address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
+		<div data-tlc="bind $var '.ship.address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
+		<div data-tlc="bind $var '.ship.address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
 
-		<span data-tlc="bind $var '.ship/city'; if (is $var --notblank;) {{apply --append;}};" title="city"></span>,
-		<span data-tlc="bind $var '.ship/region'; if (is $var --notblank;) {{apply --append;}};" title="state"></span>.
-		<span data-tlc="bind $var '.ship/postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
-		<div data-tlc="bind $var '.ship/countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
+		<span data-tlc="bind $var '.ship.city'; if (is $var --notblank;) {{format --append=', '; apply --append;}};" title="city"></span>,
+		<span data-tlc="bind $var '.ship.region'; if (is $var --notblank;) {{format --append='. '; apply --append;}};" title="state"></span>.
+		<span data-tlc="bind $var '.ship.postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
+		<div data-tlc="bind $var '.ship.countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
 
 	</div>
 
@@ -1395,9 +1387,9 @@ The 'data-action' attribute is used to assign an onclick.
 		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
 		</div>
 	
-		<h3 data-tlc="bind $var '.order/flow/pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
-		<h5 data-tlc="bind $var '.order/sum/order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
-		<h5 data-tlc="bind $var '.order/sum/balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>
+		<h3 data-tlc="bind $var '.order.flow.pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
+		<h5 data-tlc="bind $var '.order.sum.order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
+		<h5 data-tlc="bind $var '.order.sum.balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>
 
 	</div>
 
@@ -1405,40 +1397,40 @@ The 'data-action' attribute is used to assign an onclick.
 
 		<address class="billAddress">
 		<b>
-			<span data-tlc="bind $var '.order/bill/firstname'; format --prepend='Bill To: '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/bill/lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.firstname'; format --prepend='Bill To: '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
 		</b>
-		<div data-tlc="bind $var '.order/bill/address1'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div data-tlc="bind $var '.order/bill/address2'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.bill.address1'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.bill.address2'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div>
-			<span data-tlc="bind $var '.order/bill/city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/bill/region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/bill/postal'; if(is $var --blank) {{bind $var 'order(order/data.bill_int_zip)';}}; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.postal'; if(is $var --blank) {{bind $var 'order(order.data.bill_int_zip)';}}; if (is $var --notblank;) {{apply --append;}};"></span>
 		</div>
-		<div data-tlc="bind $var '.order/bill/countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.bill.countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</address>
-		
+
 		<address class="shipAddress">
 		<b>
-			<span data-tlc="bind $var '.order/ship/firstname'; format --prepend='Ship To: '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/ship/lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.ship.firstname'; format --prepend='Ship To: '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.ship.lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
 		</b>
-		<div data-tlc="bind $var '.order/ship/address1'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div data-tlc="bind $var '.order/ship/address2'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.ship.address1'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.ship.address2'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div>
-			<span data-tlc="bind $var '.order/ship/city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/ship/region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order/ship/postal'; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.ship.city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.ship.region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.ship.postal'; if (is $var --notblank;) {{apply --append;}};"></span>
 		</div>
-		<div data-tlc="bind $var '.order/ship/countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div data-tlc="bind $var '.order.ship.countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</address>
 
 	</section>
 
 	<section class="orderContentsProdlistContainer">
-	<ul data-tlc="bind $var '.order/tracking'; store_crm#ordertrackinglinks  --before='<h4>Shipping:</h4>' --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
+	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --before='<h4>Shipping:</h4>' --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
 	<table class="listStyleNone lineItemProdlist">
-		<tbody data-tlc="bind $var '.order/@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
+		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
 	</table>
 	</section>
 

@@ -1015,8 +1015,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'search':
 	//					dump(" -> Got to search case.");	
-						_app.ext.quickstart.u.showSearch(infoObj);
-						$new = 'mainContentArea_search';
+						$new = _app.ext.quickstart.u.showSearch(infoObj);
 						break;
 	
 					case 'customer':
@@ -1384,23 +1383,23 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 								$detail.anymessage({'message':rd});
 								}
 							else	{
-								$detail.tlc({'templateID':'productTemplateQuickView','dataset' : _app.data[rd.datapointer]})
+								$detail.tlc({'templateid':'productTemplateQuickView','dataset' : _app.data[rd.datapointer]})
 								}
 
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
-dump(" -> liIndex: "+liIndex)
+//dump(" -> liIndex: "+liIndex);
 setTimeout(function(){
 	if(liIndex === 0)	{
-		$('.prevButton',$parent).button("option", "disabled", true);
-		$('.nextButton',$parent).button("option", "disabled", false);
+		$('.prevButton',$parent).button('disable');
+		$('.nextButton',$parent).button('enable');
 		}
 	else if(liIndex == ($("ul",$liContainer).children().length))	{
-		$('.prevButton',$parent).button("option", "disabled", false);
-		$('.nextButton',$parent).button("option", "disabled", true);
+		$('.prevButton',$parent).button('enable');
+		$('.nextButton',$parent).button('disable');
 		}
 	else	{
-		$('.prevButton',$parent).button("option", "disabled", false);
-		$('.nextButton',$parent).button("option", "disabled", false);
+		$('.prevButton',$parent).button('enable');
+		$('.nextButton',$parent).button('enable');
 		}
 },300);
 							}
@@ -1721,6 +1720,7 @@ $target.tlc({
 //used in results page if the preview mode feature is enabled.
 			revertPageFromPreviewMode : function($parent)	{
 				if(typeof $parent == 'object')	{
+					var 
 					$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
 					$detail = $('.previewProductDetail',$parent); //target for content.
 
@@ -2343,11 +2343,10 @@ effects the display of the nav buttons only. should be run just after the handle
 
 //only create instance once.
 				if($page.length)	{
-					_app.ext.quickstart.u.revertPageFromPreviewMode($('#mainContentArea_search'));
+					_app.ext.quickstart.u.revertPageFromPreviewMode($page);
 					}
 				else	{
-					$('#mainContentArea').tlc({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
-					$page = $('#mainContentArea_search');
+					$page = new tlc().runTLC({'templateid':infoObj.templateID,'verb':'template'}).attr('id','mainContentArea_search').appendTo('#mainContentArea');
 					}
 
 //add item to recently viewed list IF it is not already in the list.

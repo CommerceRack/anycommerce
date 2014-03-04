@@ -459,7 +459,8 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				for(var i = 0; i < L; i += 1)	{
 					pid = _app.data[P.datapointer].hits.hits[i]['_id'];
 //					_app.u.dump(" -> "+i+" pid: "+pid);
-					$r.append(_app.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,_app.data[P.datapointer].hits.hits[i]['_source']));
+					$r.append(new tlc().runTLC({'templateid':P.templateID,'dataset':_app.data[P.datapointer].hits.hits[i]['_source']}).attr('data-pid',pid).removeClass('loadingBG'));
+//					$r.append(_app.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,_app.data[P.datapointer].hits.hits[i]['_source']));
 					}
 				return $r.children();
 				},

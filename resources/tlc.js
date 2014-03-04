@@ -190,7 +190,6 @@ var tlc = function()	{
 
 		}
 
-
 //This is where the magic happens. Run this and the translated template will be returned.
 // p.dataset is the data object. dataset was used instead of data to make it easier to search for.
 // ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
@@ -480,7 +479,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 //passing the command into this will verify that the format exists (whether it be core or not)
 
 	this.format_currency = function(arg,globals)	{
-		var r = "$"+globals.binds[globals.focusBind]+" ("+arg.value.value+")";
+		var r = "$"+globals.binds[globals.focusBind]; //+" ("+arg.value.value+")";
 		globals.binds[globals.focusBind] = r
 		return r;
 		} //currency
@@ -591,7 +590,7 @@ returning a 'false' here will exit the statement loop.
 			}
 		return r;
 		}
-
+// ### TODO -> need to support bind ~form '#myFormID';, which would create a new 'tag' called form pointing to #myFormID, which MUST be scoped within templateid.
 	this.handleType_BIND = function(cmd,globals,dataset)	{
 //		dump("Now we bind"); dump(dataset);
 //		dump(" jsonpath: "+jsonPath(dataset, '$'+cmd.Src.value));
@@ -735,13 +734,15 @@ returning a 'false' here will exit the statement loop.
 //		dump(" -> cmd: "); dump(cmd);
 		if(globals.tags[globals.focusTag])	{
 			if(argObj.wiki)	{
-				var $tmp = $("<div>").append(globals.binds[globals.focusBind]);
-var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
-myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
-
-				//r = wikify($tmp.text()); //###TODO -> 
-				globals.binds[globals.focusBind] = $tmp.html();
-				$tmp.empty().remove();
+				if(globals.binds[globals.focusBind])	{
+					var $tmp = $("<div>").append(globals.binds[globals.focusBind]);
+					var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
+					myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+					//r = wikify($tmp.text()); //###TODO -> 
+					globals.binds[globals.focusBind] = $tmp.html();
+					$tmp.empty().remove();
+					}
+				else	{} //value is empty. not much to do here.
 				}
 			else if(argObj.html)	{
 				//if the content is already html, shouldn't have to do anything to it.
@@ -762,9 +763,10 @@ myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the 
 		}
 
 	this.handleCommand_transmogrify = function(cmd,globals)	{
+		// ### TODO -> allow for a $var to be set to determine what data should be passed into runTLC. ex: transmogrify $var --templateid='someTemplate'
 //		dump(" ->>>>>>> templateid: "+cmd.args[0].value); //dump(this.args2obj(cmd.args));
 		var tmp = new tlc();
-		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:cmd.args[0].value,data:this.data}));
+		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:cmd.args[0].value,dataset:this.dataset}));
 		//this will backically instantate a new tlc (or whatever it's called)
 		}
 

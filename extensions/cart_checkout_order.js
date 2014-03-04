@@ -1164,7 +1164,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				},
 
 //data.value should be the item object from the cart.
-			cartItemRemoveButton : function($tag,data)	{
+			cartitemremovebutton : function($tag,data)	{
 				if(data.value.stid[0] == '%')	{$tag.remove()} //no remove button for coupons.
 				else if(data.value.asm_master)	{$tag.remove()} //no remove button for assembly 'children'
 				else	{
@@ -1173,7 +1173,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					}
 				},
 
-			cartItemQty : function($tag,data)	{
+			cartitemqty : function($tag,data)	{
 				$tag.val(data.value.qty);
 //for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
 				if((data.value.stid && data.value.stid[0] == '%') || data.value.asm_master)	{
@@ -1247,7 +1247,7 @@ in a reorder, that data needs to be converted to the variations format required 
 
 //for displaying order balance in checkout order totals.
 //changes value to 0 for negative amounts. Yes, this can happen.			
-			orderBalance : function($tag,data)	{
+			orderbalance : function($tag,data)	{
 				var o = '';
 				var amount = data.value;
 //				_app.u.dump('BEGIN _app.renderFunctions.format.orderBalance()');
@@ -1281,7 +1281,7 @@ in a reorder, that data needs to be converted to the variations format required 
 
 //displays the shipping method followed by the cost.
 //is used in cart summary total during checkout.
-			shipInfoById : function($tag,data)	{
+			shipinfobyid : function($tag,data)	{
 				var o = '';
 				var shipMethods = data.value['@SHIPMETHODS'];
 				if(shipMethods)	{
