@@ -16,7 +16,7 @@ Where I left off:
 
 -->
 <div id='checkoutTemplate' class='checkoutFormContainer' data-app-role='checkout'>
-	<form action='#' data-skipvalidation='1' novalidate="novalidate" onsubmit="return false;"><!-- skipvalidation is checked for on the quick add to cart. -->
+	<form action='#' data-skipvalidation='1' novalidate onsubmit="return false;"><!-- skipvalidation is checked for on the quick add to cart. -->
 	<table class='fullWidth'>
 	<tr>
 		<td class='valignTop twoColumn'>
@@ -313,8 +313,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
 	<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
-	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
-	</td>
+	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptioselectedoptionsdisplay/td>
 	<td class='alignRight'>
 		<input type='number' class='smallInput' name='qty' step='1' size='3' min='0' data-bind="var: product(qty); format:popVal;" data-app-change="order_create|cartItemUpdateExec" />
 	</td>
@@ -602,7 +601,7 @@ If this gets recycled, test in order history after making changes.
 	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 	</div>
 
-	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
 
 
 

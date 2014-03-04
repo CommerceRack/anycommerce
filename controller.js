@@ -3047,7 +3047,7 @@ $tmp.empty().remove();
 			}, //truncText
 
 //used in a cart or invoice spec to display which options were selected for a stid.
-		selectedOptionsDisplay : function($tag,data)	{
+		selectedoptionsdisplay : function($tag,data)	{
 			var o = '';
 			for(var key in data.value) {
 //				_app.u.dump("in for loop. key = "+key);

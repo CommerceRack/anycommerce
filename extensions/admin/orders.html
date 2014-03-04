@@ -599,7 +599,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span data-bind='var: order(sku); format:text; className: stid;'></span></td><!-- stid has mkt data on it. use sku -->
 	<td>
 		<div data-bind='var: order(prod_name); format:text; '></div>
-		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
 	</td>	
 
 	<td data-bind="format:orderEditQtyInput; extension:admin_orders; useParentData:true;"></td>
@@ -638,7 +638,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5></td>
 	<td>
 		<div data-bind='var: order(prod_name); format:text; '></div>
-		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
 	</td>
 	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
 	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
@@ -943,7 +943,7 @@ some legacy html tags to make this print friendly.
 <table>
 	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
 		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
-		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
 </td>
 		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
 		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
@@ -1033,7 +1033,7 @@ This should get moved to orders when order is taken over
 	
 	<td valign='top'>
 	<div data-bind='var: product(prod_name); format:text; '></div>
-	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
 	</td>
 
 	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>

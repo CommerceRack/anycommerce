@@ -236,14 +236,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
 
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
+	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hidesummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
 	<ul id='test' data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --title='Best Sellers' --size='8' --templateid='productListTemplateResultsNoPreview';" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	<!--
-	<ul data-tlc="bind $var '.$listName.@products'; store_prodlist#productlist  --hidesummary='1' --withreviews='1' --withvariations='1' --withinventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList" data-bind="var: list($somelistname.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-tlc="bind $var '.$listName.@products'; store_prodlist#productlist  --hidesummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 	-->
 </div>
 
@@ -273,7 +273,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul><!-- outputs a list of subcategories -->
 
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withreviews='1' --withinventory='1' --withvariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
+	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withReviews='1' --withInventory='1' --withVariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
 
 	<p data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
@@ -326,13 +326,13 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='Our Price: '; apply --append;}};"></h6>
 		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank;) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</a>
 	
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
-		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;">more details</button>
+		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button>
 	</form>
 
 </li>
@@ -353,12 +353,12 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
 
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank;) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 	
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 	
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
+			<fieldset data-tlc="if(is $var --blank;) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
 	
 			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 		</form>
@@ -394,7 +394,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				</div>
 			</div>
 		</div>
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank;) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
 
@@ -483,17 +483,17 @@ this will likely become more flexible in the future. ###
 	<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
 	
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer"></div>
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
 	
 	</div>
 	
 		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodThumbs">
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'2'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image2';  if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'2'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image2';  if(is $var --notblank;){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'3'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'3'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; if(is $var --notblank;){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'4'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
+	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'4'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; if(is $var --notblank;){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
 	
 		</div>
 	
@@ -520,7 +520,7 @@ this will likely become more flexible in the future. ###
 	
 	
 		<table class="marginBottom fullWidth gridTable" data-app-role="childrenSiblingsContainer">
-			<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hidesummary='true' --withinventory='1' --withvariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
+			<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hidesummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
 		</table>
 	
 	
@@ -530,7 +530,7 @@ this will likely become more flexible in the future. ###
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
 	
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="if(is $var --blank) {{bind var '1';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='1' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:1;" class="borderNone"></fieldset>
+			<fieldset data-tlc="if(is $var --blank;) {{bind var '1';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='1' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:1;" class="borderNone"></fieldset>
 	
 			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 		</form>
@@ -539,7 +539,7 @@ this will likely become more flexible in the future. ###
 		<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; store_product#quantitydiscounts  --legacy; apply --append;"></div>
 	
 		<section class="marginBottom">
-			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
+			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank;) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' from '; apply --append;}};"></span>
 		</section>
 	
@@ -564,11 +564,11 @@ this will likely become more flexible in the future. ###
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodTabs tabbedProductContent applyAnytabs">
 		<ul class="tabs">
 			<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank) {{ apply --show; }};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank;) {{apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank;) {{ apply --show; }};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
 			<li class="prodReviewsTab"><a href="#prodReviews">Reviews</a></li>
-			<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
+			<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
+			<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank;) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
 		</ul>
 	
 		<div class="tabContent" data-anytab-content="prodDesc">
@@ -599,7 +599,7 @@ this will likely become more flexible in the future. ###
 		</div>
 	
 		<div class="tabContent" data-anytab-content="prodAccessories">
-	<ul data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --withreviews='1' --withinventory='1' --withvariations='1' --templateid='productListTemplateATC'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist"></ul>
+			<ul data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --withReviews='1' --withInventory='1' --withVariations='1' --templateid='productListTemplateATC'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist"></ul>
 		</div>
 	
 	</div>
@@ -608,7 +608,7 @@ this will likely become more flexible in the future. ###
 	</tr>
 	</tbody></table>
 	<div class="prodlistRelatedContainer">
-		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --before='<h2>Similar Items</h2>' --withreviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
+		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --before='<h2>Similar Items</h2>' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 	</div>
 
 
@@ -649,7 +649,7 @@ this will likely become more flexible in the future. ###
 	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency"></div>
 
 	<section class="marginBottom">
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank;) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --append=' from ';apply --append;}};"></span>
 	</section>
 
@@ -1086,7 +1086,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div class="cartZipCodeContainer marginBottom">
 		<label for="data-ship_zip">Zip/Postal Code:</label>
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank;) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
 	</div>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
@@ -1132,7 +1132,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<button data-tlc="cco#cartitemremovebutton  --legacy;" class="floatRight removeButton" data-bind="format:cartItemRemoveButton; extension:cco; useParentData:true;" data-app-click="cco|cartItemRemove">Remove Item From Cart</button>
 		<button data-tlc="quickstart#movetowishlistbutton  --legacy;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:quickstart; useParentData:true;">Move to Wishlist</button>
 
-		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank) {{bind $var 'product(.%attribs.zoovy:prod_image1)';}}; apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
+		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;) {{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;) {{apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
 
 		<h4 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h4>
 
@@ -1161,12 +1161,12 @@ used on a product layout. Some product have 'children' which may represent the s
 <table>
 <tbody><tr id="productListTemplateChildren">
 	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=45 --height=45 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="45" width="45"></td>
-	<td data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></td>
+	<td data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank;) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></td>
 	<td>
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 
 		<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-		<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
+		<fieldset data-tlc="if(is $var --blank;) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
 
 		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 	</form>
@@ -1182,7 +1182,7 @@ used on a product layout. Some product have 'children' which may represent the s
 <ul>
 	<li id="productReviewsTemplateDetail" class="reviewLineItem clearfix">
 	<ul class="prodReviewInfo">
-		<li data-tlc="bind $var '.RATING'; if(is $var --notblank) {{ apply --add --class='review_'; }};" class="reviewSprite"></li>
+		<li data-tlc="bind $var '.RATING'; if(is $var --notblank;) {{ apply --add --class='review_'; }};" class="reviewSprite"></li>
 		<li data-tlc="bind $var '.CUSTOMER_NAME'; if (is $var --notblank;) {{apply --append;}};"></li>
 		<li data-tlc="bind $var '.LOCATION'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></li>
 		<li data-tlc="bind $var '.CREATED_GMT'; if (is $var --notblank;) {{datetime --out='mdy'; format --prepend='on '; apply --append;}};"></li>
@@ -1405,7 +1405,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<div>
 			<span data-tlc="bind $var '.order.bill.city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
 			<span data-tlc="bind $var '.order.bill.region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.bill.postal'; if(is $var --blank) {{bind $var 'order(order.data.bill_int_zip)';}}; if (is $var --notblank;) {{apply --append;}};"></span>
+			<span data-tlc="bind $var '.order.bill.postal'; if(is $var --blank;) {{bind $var 'order(order.data.bill_int_zip)';}}; if (is $var --notblank;) {{apply --append;}};"></span>
 		</div>
 		<div data-tlc="bind $var '.order.bill.countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
 		</address>

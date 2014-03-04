@@ -1,6 +1,6 @@
 <div id="pageTemplateSites" class="ui-widget">
 
-	<div data-tlc="bind $var '.*favorites'; if(is $var --notblank) {{ apply --show; }};">
+	<div data-tlc="bind $var '.*favorites'; if(is $var --notblank;) {{ apply --show; }};">
 		<ul data-tlc="bind $var '.*favorites'; controller#loop --templateid='domainListFavoriteTemplate'; apply --append;" class="marginTop listStyleNone ui-widget noPadOrMargin clearfix" data-app-role="domainListFavorites"></ul>
 	</div>
 	
@@ -230,7 +230,7 @@
 	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
 	<label>
 		<span>Domain</span>
-		<input type='text' required="required" data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
+		<input type='text' required data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
 	</label>
 	</div>
 	
@@ -612,7 +612,7 @@ That's also why the template does not contain a form
 <fieldset class="labelsAsBreaks alignedLabels alignedInputs">
 	<label>
 	<span>Project title</span>
-	<input name="title" required="required" type="text">
+	<input name="title" required type="text">
 	<span class="toolTip" title="ex: domain.com master">?</span>
 	</label>
 
@@ -631,7 +631,7 @@ That's also why the template does not contain a form
 
 	<label>
 	<span>GitHub repo</span>
-	<input name="repo" maxlength="128" required="required" type="url">
+	<input name="repo" maxlength="128" required type="url">
 	</label>
 	<p class="hint">ex: http://github.com/yourname/project.git<br>
 	At this time only GITHUB hosted projects with public http urls are supported.
