@@ -615,7 +615,6 @@ returning a 'false' here will exit the statement loop.
 				//jsonpath nests returned values in an array.
 				globals.binds[cmd.Set.value] = jsonPath(dataset, '$'+cmd.Src.value)[0];
 				}
-			
 			globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
 			if($._app.vars.debug == 'tlc')	{
 				dump("Now we bind "+cmd.Src.value+' to binds['+cmd.Set.value+'] with value: '+jsonPath(dataset, '$'+cmd.Src.value)[0]); // dump(dataset);
@@ -859,7 +858,8 @@ returning a 'false' here will exit the statement loop.
 	this.executeCommands = function(commands,globals,dataset)	{
 //		dump(" -> running tlcInstance.executeCommands"); //dump(commands);
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
-		var theseGlobals = $.extend(true,{
+		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
+		var theseGlobals = $.extend({
 			binds : {}, //an object of all the binds set in args.
 			tags : {
 				'$tag' : ''
