@@ -1502,7 +1502,15 @@ _app.model.dispatchThis('immutable');
 //				_app.u.dump("BEGIN admin_prodedit.u.handleOptionEditorInputs. type: "+data.type); _app.u.dump(data);
 				$("[name='html']",$target).val(unescape($("[name='html']",$target).val()))
 	//an inventory-able option does not have price or weight modifiers. price and weight are set by STID in the inventory panel.
-				if(Number(data.inv))	{} else {$('.nonInvOnly',$target).removeClass('displayNone')}
+				if(Number(data.inv))	{
+					$('.invOnly',$target).show();
+					$('.nonInvOnly',$target).hide();
+					}
+				else {
+					$('.nonInvOnly',$target).show();
+					$('.invOnly',$target).hide();
+					}
+				
 				if(data.type == 'imgselect' || data.type == 'imggrid')	{
 	//				_app.u.dump(" -> type is image based. show image inputs.");
 					$('.imgOnly',$target).removeClass('displayNone');
