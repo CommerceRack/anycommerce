@@ -23,7 +23,7 @@
 					this._handleDatapointers();
 					}
 				if($._app.vars.debug == 'tlc')	{
-					dump("BEGIN tlc _init. verb: "+o.verb); dump(o.dataset);
+					dump("BEGIN tlc _init. verb: "+o.verb); dump(o.dataset,'debug');
 					}
 				if(o.verb == 'transmogrify')	{
 					var $instance = this.transmogrify();
@@ -117,6 +117,7 @@
 //interpolates all data-tlc on that template.
 //returns the template.
 var tlc = function()	{
+	
 //used w/ peg parser for tlc errors.
 	this.buildErrorMessage = function(e) {
 		dump(e);
@@ -144,6 +145,7 @@ var tlc = function()	{
 			r = $._app.templates[templateid].clone(true);
 			}
 		else	{r = false} //invalid template.
+		this.element = r; //create a global reference to the element that's being translated. allows bind ~tag to be scoped.
 		return r;
 		}
 
@@ -194,13 +196,10 @@ var tlc = function()	{
 // p.dataset is the data object. dataset was used instead of data to make it easier to search for.
 // ### TODO -> once all the legacy transmogrify's are gone, change this command to transmogrify
 	this.runTLC = function(P)	{
-
 //		var startTime = new Date().getTime(); // dump("BEGIN runTLC: "+startTime); // ### TESTING -> this is not necessary for deployment.
-		
-		var _self = this; //'this' context is lost within each loop.
-		var $t = _self.getTemplateInstance(P.templateid);
+		var $t = this.getTemplateInstance(P.templateid);
 		if($t instanceof jQuery)	{
-			_self.translate($t,P.dataset);
+			this.translate($t,P.dataset);
 			}
 		else	{
 			//invalid template
@@ -216,11 +215,16 @@ var tlc = function()	{
 		if(!$.isEmptyObject(args))	{
 			for(var i = 0, L = args.length; i < L; i += 1)	{
 				var type = (args[i].type == 'longopt' && args[i].value) ? args[i].value.type : args[i].type;
-//				dump(" -> type: "+type);
-				if(args[i].value == null)	{r[args[i].key] = true} //some keys, like append or media, have no value and will be set to null.
+				dump(" -> type: "+type);
+				if(type == 'tag')	{
+					r.tag = args[i].value.tag;
+					r[args[i].value.tag] = globals.tags[args[i].value.tag];
+					}
+				else if(args[i].value == null)	{r[args[i].key] = true} //some keys, like append or media, have no value and will be set to null.
 				else if(type == 'variable')	{
 					r[args[i].key] = globals.binds[args[i].value.value];
 					}
+				
 				else	{
 					r[args[i].key] = args[i].value.value;
 					}
@@ -233,6 +237,7 @@ var tlc = function()	{
 //The vars object should match up to what the s are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
 	this.makeImageURL	= function(vars)	{
 		var r;
+//		dump(" >>>>>>>>>>>> BEGIN tlc.makeImageURL");
 		if(vars['data-filename'])	{
 			if(vars['data-bgcolor'] && vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
 			var url = '';
@@ -274,6 +279,7 @@ if neither media or src, something is amiss.
 This one block should get called for both img and imageurl but obviously, imageurl only returns the url.
 */
 	this.apply_formatter_img = function(formatter,$tag,argObj,globals)	{
+//		dump(" >>>>>>>>>>>> BEGIN tlc.apply_formatter_img");
 		var r = true,filePath;
 		argObj.media = argObj.media || {};
 		var mediaParams;
@@ -376,7 +382,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case 'remove':
 				if(argObj.class)	{$tag.removeClass(argObj.class)}
 				else if(argObj.tag)	{
-					$tag.remove();
+					globals.tags[argObj.tag].remove();
 					}
 				else	{
 					dump("For apply, the verb was set to remove, but neither a tag or class were defined. argObj follows:",'warn'); dump(argObj);
@@ -427,7 +433,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.comparison = function(op,p1,p2)	{
 		var r = false;
-//		console.log(" -> op: "+op,"p1 = "+p1,"p2 = "+p2);
+		
 		switch(op)	{
 			case "eq":
 
@@ -468,7 +474,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "or":
 				if(p1 != null){r = true;}; break; // ### FUTURE -> not done.
 */			}
-//		dump(" -> comparison: "+op+" and r: "+r);
+		if($._app.vars.debug == 'tlc')	{
+			dump(" -> op: "+op+" and p1 = "+p1+" and p2 = "+p2+" and r = "+r);
+			}
 		return r;
 		}
 
@@ -590,22 +598,35 @@ returning a 'false' here will exit the statement loop.
 			}
 		return r;
 		}
+
 // ### TODO -> need to support bind ~form '#myFormID';, which would create a new 'tag' called form pointing to #myFormID, which MUST be scoped within templateid.
 	this.handleType_BIND = function(cmd,globals,dataset)	{
-//		dump("Now we bind"); dump(dataset);
-//		dump(" jsonpath: "+jsonPath(dataset, '$'+cmd.Src.value));
-		//scalar type means get the value out of the data object.
-		//jsonpath nests returned values in an array.
-		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(dataset, '$'+cmd.Src.value)[0] : cmd.Src.value;
-		if($._app.vars.debug == 'tlc')	{
-			dump(" -> cmd.Src.value = "+cmd.Src.value+" = "); dump(globals.binds[cmd.Set.value]);
+		// bind $var '#someSelector' returns Set.type == tag
+		if(cmd.Set.type == 'tag')	{
+			globals.tags[cmd.Set.tag] = $($._app.u.jqSelector(cmd.Src.value.charAt(0),cmd.Src.value.substr(1)),this.element);
+			globals.focusTag = cmd.Set.tag;
 			}
-		globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
+		else	{
+			// bind $var ~tag; returns Src.type == tag.
+			if(cmd.Src.type == 'tag')	{
+				globals.binds[cmd.Set.value] = globals.tags[cmd.Src.tag];
+				}
+			else	{
+				//jsonpath nests returned values in an array.
+				globals.binds[cmd.Set.value] = jsonPath(dataset, '$'+cmd.Src.value)[0];
+				}
+			
+			globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
+			if($._app.vars.debug == 'tlc')	{
+				dump("Now we bind "+cmd.Src.value+' to binds['+cmd.Set.value+'] with value: '+jsonPath(dataset, '$'+cmd.Src.value)[0]); // dump(dataset);
+				console.debug(globals);
+				}
+			}
 		return cmd.Set.value;
 		}
 	
 	this.handleType_IF = function(cmd,globals,dataset)	{
-//		dump("BEGIN handleIF"); //dump(cmd);
+//		dump("BEGIN handleIF"); console.debug(globals);
 		var p1; //first param for comparison.
 		var args = cmd.When.args;
 		var action = 'IsTrue'; //will be set to false on first false (which exits loop);
@@ -772,6 +793,7 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleCommand_is = function(cmd,globals)	{
+		dump("BEGIN tlc.handlecommand_is");
 		var value = globals.binds[globals.focusBind], r = false;
 		for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 			value = this.comparison(cmd.args[i].key,value,cmd.args[i].value.value);
@@ -851,7 +873,7 @@ returning a 'false' here will exit the statement loop.
 			if(commands[i].type == 'command')	{
 				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
 				else	{
-//					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
+					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
 					//handleCommand returned a false. That means either an error occured OR this executed a renderFormat. stop processing.
 					break;
 					}
@@ -865,13 +887,11 @@ returning a 'false' here will exit the statement loop.
 			else	{
 				//unrecognized type.
 				}
-
 			}
 		}
 	
 //This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.
 	this.getBinds = function(templateid)	{
-		
 		var _self = this; //'this' context is lost within each loop.
 		var $t = _self.getTemplateInstance(templateid), bindArr = new Array();
 
