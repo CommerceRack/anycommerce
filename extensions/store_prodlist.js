@@ -508,8 +508,8 @@ if no parentID is set, then this function gets the data into memory for later us
 							}
 						numRequests += _app.ext.store_prodlist.calls[call].init({
 							"pid":pageCSV[i],
+							"withReviews":plObj.withReviews, 
 							"withVariations":plObj.withVariations,
-							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
 							},_tag, Q);  //tagObj not passed if parentID not set. 
 						}
@@ -617,37 +617,7 @@ params that are missing will be auto-generated.
 //				_app.u.dump(" -> r = "+r);
 				}, //buildProductList
 
-/*
-This is executed when the page is changed in a prodlist.
-initially, this was how product lists were handled, the the productList renderFormat was introduced.
-need to remove duplicate code from this and the renderFormat. ###
-*/
-/*
-			handleProductList : function(parentID)	{
-				var r = 0; //returns the number of requests.
-//				_app.u.dump("BEGIN _app.ext.store_prodlist.u.handleProductList");
-//				_app.u.dump(" -> parent = "+parentID);
-				var $parent = $('#'+parentID).empty(); 
-				var csvArray = new Array();
-				if(_app.ext.store_prodlist.vars[parentID].items_per_page >= _app.ext.store_prodlist.vars[parentID].csv.length)	{
-//					_app.u.dump(' -> single page product list');
-					csvArray = _app.ext.store_prodlist.vars[parentID].csv
-					}
-				else	{
-//in a multipage format, just request the pids of the page in focus.
-//					_app.u.dump(' -> multi page product list.');
-					csvArray = _app.ext.store_prodlist.vars[parentID].csv.slice(_app.ext.store_prodlist.vars[parentID].page_start_point - 1,_app.ext.store_prodlist.vars[parentID].page_end_point);
-					if(!_app.ext.store_prodlist.vars[parentID].hide_summary)	{
-						$('.mpControlContainer').empty().remove();
-						$parent.before(_app.ext.store_prodlist.u.showMPControls(parentID,'header'));
-						$parent.after(_app.ext.store_prodlist.u.showMPControls(parentID,'footer'));
-						}
-					}
-//now that we have our prodlist, get the product data and add it to the DOM.
-				r = _app.ext.store_prodlist.u.getProductDataForList(csvArray,parentID);
-				return r;
-				},
-*/
+
 
 /*
 function is executed both from the next/previous buttons and list of page links.
