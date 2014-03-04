@@ -448,7 +448,7 @@ it is a parent
 it has no inventory AND inventory matters to merchant 
 */
 			productIsPurchaseable : function(pid)	{
-				_app.u.dump("BEGIN store_product.u.productIsPurchaseable");
+//				_app.u.dump("BEGIN store_product.u.productIsPurchaseable");
 				var r = true;  //returns true if purchaseable, false if not or error.
 				if(!pid)	{
 					_app.u.dump("ERROR! pid not passed into store_product.u.productIsPurchaseable");
