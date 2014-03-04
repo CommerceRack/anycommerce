@@ -443,7 +443,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "false":
 				if(!p1){r = true;}; break;
 			case "blank":
-				if(p1 == ''){r = true;}; break;
+				if(p1 == '' || p1 == undefined){r = true;}; break;
 			case "notblank":
 				if(p1 == false || p1 == 'undefined' || p1 == null){r = false;}
 				else	{r = true;}
@@ -597,8 +597,9 @@ returning a 'false' here will exit the statement loop.
 		//scalar type means get the value out of the data object.
 		//jsonpath nests returned values in an array.
 		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? jsonPath(dataset, '$'+cmd.Src.value)[0] : cmd.Src.value;
-
-//		dump(" -> cmd.Src.value = "+cmd.Src.value+" = "); dump(globals.binds[cmd.Set.value]);
+		if($._app.vars.debug == 'tlc')	{
+			dump(" -> cmd.Src.value = "+cmd.Src.value+" = "); dump(globals.binds[cmd.Set.value]);
+			}
 		globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
 		return cmd.Set.value;
 		}
