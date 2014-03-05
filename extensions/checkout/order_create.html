@@ -16,7 +16,7 @@ Where I left off:
 
 -->
 <div id="checkoutTemplate" class="checkoutFormContainer" data-app-role="checkout">
-	<form action="#" data-skipvalidation="1" novalidate="" onsubmit="return false;"><!-- skipvalidation is checked for on the quick add to cart. -->
+	<form action="#" data-skipvalidation="1" novalidate onsubmit="return false;"><!-- skipvalidation is checked for on the quick add to cart. -->
 	<table class="fullWidth">
 	<tbody><tr>
 		<td class="valignTop twoColumn">
@@ -139,7 +139,7 @@ Where I left off:
 	
 	<div data-app-role="login" class="clearfix marginBottom">
 	
-		<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required="required" name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"> <button class="applyButton" data-app-click="order_create|adminCustomerLookup">Lookup</button><br>
+		<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"> <button class="applyButton" data-app-click="order_create|adminCustomerLookup">Lookup</button><br>
 		<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox">Create account</label>
 	</div>
 
@@ -165,25 +165,25 @@ This template is also used in the myAccount page, which is why a default using _
 
 <section id="chkoutAddressBillTemplate" class="addressForm">
 
-	<div><input data-tlc="bind $var '.bill.firstname'; if(is $var --blank;) {{bind $var '.bill_firstname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="bill/firstname" required="required" value="" type="text"></div>
-	<div><input data-tlc="bind $var '.bill.lastname'; if(is $var --blank;) {{bind $var '.bill_lastname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="bill/lastname" required="required" value="" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.firstname'; if(is $var --blank;) {{bind $var '.bill_firstname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="bill/firstname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.lastname'; if(is $var --blank;) {{bind $var '.bill_lastname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="bill/lastname" required value="" type="text"></div>
 
 	<div class="bill_company"><input data-tlc="bind $var '.bill.company'; if(is $var --blank;) {{bind $var '.bill_company'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<div><input data-tlc="bind $var '.bill.address1'; if(is $var --blank;) {{bind $var '.bill_address1'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address1" placeholder="address" required="required" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.address1'; if(is $var --blank;) {{bind $var '.bill_address1'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div><input data-tlc="bind $var '.bill.address2'; if(is $var --blank;) {{bind $var '.bill_address2'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address2" placeholder="address 2" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
-	<div><input data-tlc="bind $var '.bill.city'; if(is $var --blank;) {{bind $var '.bill_city'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/city" placeholder="city" required="required" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.city'; if(is $var --blank;) {{bind $var '.bill_city'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
-	<div><input data-tlc="bind $var '.bill.region'; if(is $var --blank;) {{bind $var '.bill_region'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/region" placeholder="state/region" required="required" size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.region'; if(is $var --blank;) {{bind $var '.bill_region'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
 	<!-- postal not required for international. don't add it. -->
-	<div><input data-tlc="bind $var '.bill.postal'; if(is $var --blank;) {{bind $var '.bill_postal'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/postal" placeholder="zip/postal code" required="required" size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.postal'; if(is $var --blank;) {{bind $var '.bill_postal'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div class="billCountry" data-app-role="billCountry"><select data-tlc="bind $var '.'; cco#countriesasoptions  --shiptype='bill' --legacy;" data-legacy-useparentdata="true" name="bill/countrycode" placeholder="country" required="required" data-app-change="order_create|execCountryUpdate"></select></div>
 
-	<div><input data-tlc="bind $var '.bill.phone'; if(is $var --blank;) {{bind $var '.bill_phone'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/phone" placeholder="phone number" required="required" value="" type="tel"> <span class="hint zhint">in case of billing/delivery problems</span></div>
+	<div><input data-tlc="bind $var '.bill.phone'; if(is $var --blank;) {{bind $var '.bill_phone'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/phone" placeholder="phone number" required value="" type="tel"> <span class="hint zhint">in case of billing/delivery problems</span></div>
 
 </section>
 
@@ -198,21 +198,21 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 
 <section id="chkoutAddressShipTemplate" class="addressForm">
 
-	<div><input data-tlc="bind $var '.ship.firstname'; if(is $var --blank;) {{bind $var '.ship_firstname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="ship/firstname" required="required" value="" type="text"></div>
-	<div><input data-tlc="bind $var '.ship.lastname'; if(is $var --blank;) {{bind $var '.ship_lastname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="ship/lastname" required="required" value="" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.firstname'; if(is $var --blank;) {{bind $var '.ship_firstname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="ship/firstname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.lastname'; if(is $var --blank;) {{bind $var '.ship_lastname'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="ship/lastname" required value="" type="text"></div>
 
 	<div class="bill_company"><input data-tlc="bind $var '.ship.company'; if(is $var --blank;) {{bind $var '.ship_company'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<div><input data-tlc="bind $var '.ship.address1'; if(is $var --blank;) {{bind $var '.ship_address1'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address1" placeholder="address" required="required" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.address1'; if(is $var --blank;) {{bind $var '.ship_address1'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div><input data-tlc="bind $var '.ship.address2'; if(is $var --blank;) {{bind $var '.ship_address2'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address2" placeholder="address 2" value="" type="text"></div>
 
-	<div><input data-tlc="bind $var '.ship.city'; if(is $var --blank;) {{bind $var '.ship_city'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/city" placeholder="city" required="required" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.city'; if(is $var --blank;) {{bind $var '.ship_city'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
-	<div><input data-tlc="bind $var '.ship.region'; if(is $var --blank;) {{bind $var '.ship_region'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/region" placeholder="state/region" required="required" size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.region'; if(is $var --blank;) {{bind $var '.ship_region'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	
-	<div><input data-tlc="bind $var '.ship.postal'; if(is $var --blank;) {{bind $var '.ship_postal'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/postal" placeholder="zip/postal code" required="required" size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.postal'; if(is $var --blank;) {{bind $var '.ship_postal'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div class="shipCountry" data-app-role="shipCountry"><select data-tlc="bind $var '.'; cco#countriesasoptions  --shiptype='ship' --legacy;" data-legacy-useparentdata="true" name="ship/countrycode" placeholder="country" data-app-change="order_create|execCountryUpdate"></select></div>
 
@@ -222,8 +222,8 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 <!-- a panel that only appears in 'nice' -->
 <section id="chkoutAccountCreateTemplate">
 
-<div><input data-tlc="bind $var '.want.new_password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="8" placeholder="password" required="required" name="want/new_password" size="12" type="password"> <span class="hint">must be at least 8 characters</span></div>
-<div><input data-tlc="bind $var '.want.new_password2'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="8" placeholder="verify password" required="required" name="want/new_password2" size="12" type="password"></div>
+<div><input data-tlc="bind $var '.want.new_password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="8" placeholder="password" required name="want/new_password" size="12" type="password"> <span class="hint">must be at least 8 characters</span></div>
+<div><input data-tlc="bind $var '.want.new_password2'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="8" placeholder="verify password" required name="want/new_password2" size="12" type="password"></div>
 <label>Recovery Question
 <select data-tlc="bind $var '.want.recovery_hint'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/recovery_hint">
 	<option value="2">Name of your favorite childhood pet?</option>
@@ -233,7 +233,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 </select>
 </label>
 
-<input data-tlc="bind $var '.want.recovery_answer'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="recovery answer" required="required" value="" name="want/recovery_answer" maxlength="20" size="20" type="text">
+<input data-tlc="bind $var '.want.recovery_answer'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="recovery answer" required value="" name="want/recovery_answer" maxlength="20" size="20" type="text">
 
 </section>
 
@@ -313,7 +313,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.%attribs.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
 	<div data-tlc="bind $var '.%attribs.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
 	<div data-tlc="bind $var '.%attribs.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
-	<div data-tlc="bind $var '.%options'; " class="prodOptions" alignright'="">
+	<div data-tlc="bind $var '.%options'; " class="prodOptions alignRight">
 		<input data-tlc="bind $var '.%attribs.qty'; if(is $var --notblank;) {{apply --select=$var;}}; " class="smallInput" name="qty" step="1" size="3" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
 	</div></td>
 	<td class="alignRight">
@@ -406,11 +406,11 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <!-- there is display logic looking for the number of address elements in addressExists. do not change element try w/out updating display logic. -->
 <address id="chkoutBuyerAddressTemplate" class="ui-widget ui-widget-content ui-corner-all stdPadding">
-	<div data-tlc="bind $var '.bill_address1'; if(is $var --blank;) {{bind $var '.ship_address1'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
-	<div data-tlc="bind $var '.bill_postal'; if(is $var --blank;) {{bind $var '.ship_postal'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.bill/address1'; if(is $var --blank;) {{bind $var '.ship/address1'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.bill/postal'; if(is $var --blank;) {{bind $var '.ship/postal'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
 	<div class="clearfix">
-		<button class="floatRight applyButton" data-app-role="addressSelectButton" data-app-click="order_create|execBuyerAddressSelect" data-icon="false" data-icon-primary="ui-icon-check">Use This Address</button>
-		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|adminAddressCreateUpdateShow" data-icon="false" data-icon-primary="ui-icon-pencil" data-mode="update">Edit This Address</button>
+		<button class="floatRight applyButton" data-app-click="order_create|execBuyerAddressSelect" data-icon="false" data-icon-primary="ui-icon-check">Use This Address</button>
+		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|showBuyerAddressUpdate" data-icon="false" data-icon-primary="ui-icon-pencil">Edit This Address</button>
 	</div>
 </address>
 
@@ -431,7 +431,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <div id="chkoutBuyerWalletListItem">
 	<label>
-		<input data-tlc="bind $var '.ID'; apply --input-value; " name="want/payby" value="" type="radio">
+		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio">
 		<span data-tlc="bind $var '.TD'; if (is $var --notblank;) {{apply --append;}};"></span>
 		<span data-tlc="bind $var '.TD'; cco#walletnameintoicon  --legacy;"></span>
 	</label>

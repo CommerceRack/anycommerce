@@ -1464,7 +1464,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
 
 					_app.ext.cco.calls.cartSet.init({"bill/email":$email.val(),"_cartid":$checkout.data('cartid')}) //whether the login succeeds or not, set bill/email in the cart.
-					_app.model.addDispatchToQ({"_cmd":"appBuyerLogin","login":$email.val(),"password":$password.val(),"_tag":{"datapointer":"appBuyerLogin","callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"appBuyerLogin","login":$email.val(),"password":$password.val(),'method':'unsecure',"_tag":{"datapointer":"appBuyerLogin","callback":function(rd){
 						$('body').hideLoading();
 						if(_app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 						else	{
@@ -1490,7 +1490,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							_app.model.dispatchThis('immutable');
 							$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 							}						
-						}}},"mutable");
+						}}},"immutable");
 					_app.calls.cartDetail.init($checkout.data('cartid'),{},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
 					_app.model.dispatchThis('immutable');
 					}
@@ -1630,6 +1630,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				_app.ext.order_create.u.handleCommonPanels($form);
 				_app.model.dispatchThis('immutable');
 				}, //execCouponAdd
+//executed on a giftcard when it is in the list of payment methods.
+			addGiftcardPaymethodAsPayment : function($ele,p)	{
+				var $checkout = $ele.closest("[data-app-role='checkout']");
+				_app.ext.cco.calls.cartGiftcardAdd.init($ele.attr('data-giftcard-id'),$checkout.data('cartid'),{'callback':'updateAllPanels','jqObj':$checkout},'immutable');
+				_app.model.dispatchThis('immutable');
+				},
 
 			execGiftcardAdd : function($ele,p)	{
 				var $fieldset = $ele.closest('fieldset'),
@@ -2066,8 +2072,23 @@ _app.model.dispatchThis('passive');
 						}
 					else if(L > 0)	{
 						for(var i = 0; i < L; i += 1)	{
-	//onClick event is added through an app-event. allows for app-specific events.
-							$r.append("<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' name='want/payby' value='"+pMethods[i].id+"' />"+pMethods[i].pretty+"<\/label></div>");
+							var $div = $("<div class='headerPadding' data-app-role='paymentMethodContainer'>");
+							var $label = $("<label \/>");
+							if(pMethods[i].id.indexOf("GIFTCARD") === 0)	{
+								//onClick event is added through an app-event. allows for app-specific events.
+								$("<button \/>")
+									.text('add')
+									.attr({'title':'Apply this giftcard towards this purchase','data-giftcard-id':pMethods[i].id.split(':')[1]})
+									.button({icons: {primary: "ui-icon-cart"},text: true})
+									.addClass('isGiftcard')
+									.appendTo($label);
+								}
+							else	{
+								//onClick event is added through an app-event. allows for app-specific events.
+								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' />");
+								}
+							$label.append(pMethods[i].pretty).appendTo($div);
+							$div.appendTo($r);
 							}
 						}
 					else	{
@@ -2123,6 +2144,7 @@ _app.model.dispatchThis('passive');
 					cartData = _app.data['cartDetail|'+data.value];
 					pMethods = _app.data['appPaymentMethods|'+data.value]['@methods'];
 					o = _app.ext.order_create.u.buildPaymentOptionsAsRadios(pMethods,cartData.want.payby);
+					$("button[data-giftcard-id]").attr('data-app-click','addGiftcardPaymethodAsPayment');
 					$(":radio",o).each(function(){
 						$(this).attr('data-app-change','order_create|shipOrPayMethodSelectExec');
 						});

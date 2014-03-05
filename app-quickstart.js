@@ -3099,6 +3099,7 @@ else	{
 					var sfo = $ele.serializeJSON();
 					_app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":_app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
 					sfo._cmd = "appBuyerLogin";
+					sfo.method = 'unsecure';
 					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart'}
 					_app.model.addDispatchToQ(sfo,"immutable");
 					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
