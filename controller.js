@@ -2994,8 +2994,8 @@ do's should modify $tag or apply the value.
 				}
 			},
 
-//EX:  data-bind='var: (@LIST);format:optionsFromList; text:pretty; value:safeid;'
-		optionsFromList : function($tag,data)	{
+//EX:  data-bind='var: (@LIST);format:optionsfromlist; text:pretty; value:safeid;'
+		optionsfromlist : function($tag,data)	{
 			for(var index in data.value)	{
 				$("<option \/>").val((data.bindData.value) ? data.value[index][data.bindData.value] : data.value[index]).text((data.bindData.text) ? data.value[index][data.bindData.text] : data.value[index]).appendTo($tag);
 				}

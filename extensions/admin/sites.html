@@ -289,14 +289,14 @@
 	
 		<label class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_project'>
 			<span>Project Reference</span>
-			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsFromList; value:UUID; text:TITLE;">
+			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsfromlist; value:UUID; text:TITLE;">
 			<option value=''></option>
 			</select>
 		</label>
 		
 		<label data-app-role='hostTemplateListContainer'  class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_template'>
 			<span>Template List</span>
-			<select name='TEMPLATE' data-bind="var: project(@TEMPLATES); format: optionsFromList; value:SUBDIR; text:SUBDIR;">
+			<select name='TEMPLATE' data-bind="var: project(@TEMPLATES); format: optionsfromlist; value:SUBDIR; text:SUBDIR;">
 			<option value=''></option>
 			</select>
 		</label>

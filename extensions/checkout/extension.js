@@ -1632,9 +1632,15 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				}, //execCouponAdd
 //executed on a giftcard when it is in the list of payment methods.
 			addGiftcardPaymethodAsPayment : function($ele,p)	{
-				var $checkout = $ele.closest("[data-app-role='checkout']");
-				_app.ext.cco.calls.cartGiftcardAdd.init($ele.attr('data-giftcard-id'),$checkout.data('cartid'),{'callback':'updateAllPanels','jqObj':$checkout},'immutable');
-				_app.model.dispatchThis('immutable');
+				if($ele.attr('data-giftcard-id'))	{
+					$ele.button('disable');
+					var $checkout = $ele.closest("[data-app-role='checkout']");
+					_app.ext.cco.calls.cartGiftcardAdd.init($ele.attr('data-giftcard-id'),$checkout.data('cartid'),{'callback':'updateAllPanels','extension':'order_create','jqObj':$checkout},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In order_create.e.addGiftcardPaymethodAsPayment, data-giftcard-id is not set on trigger element.","gMessage":true});
+					}
 				},
 
 			execGiftcardAdd : function($ele,p)	{
@@ -2144,7 +2150,7 @@ _app.model.dispatchThis('passive');
 					cartData = _app.data['cartDetail|'+data.value];
 					pMethods = _app.data['appPaymentMethods|'+data.value]['@methods'];
 					o = _app.ext.order_create.u.buildPaymentOptionsAsRadios(pMethods,cartData.want.payby);
-					$("button[data-giftcard-id]").attr('data-app-click','addGiftcardPaymethodAsPayment');
+					$("button[data-giftcard-id]",o).attr('data-app-click','order_create|addGiftcardPaymethodAsPayment');
 					$(":radio",o).each(function(){
 						$(this).attr('data-app-change','order_create|shipOrPayMethodSelectExec');
 						});

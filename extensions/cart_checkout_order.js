@@ -1265,7 +1265,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					o += _app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
 					}
 				
-				$tag.text(o);  //update DOM.
+				$tag.text("Balance due: "+o);  //update DOM.
 //				_app.u.dump('END _app.renderFunctions.format.orderBalance()');
 				}, //orderBalance
 

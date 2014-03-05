@@ -854,7 +854,7 @@ ACHIEVEMENTS
 	<legend>General Properties</legend>
 	<label>
 		<span>Domain/Profile:</span>
-		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsFromList; text:DOMAINNAME; value:DOMAINNAME;" />
+		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsfromlist; text:DOMAINNAME; value:DOMAINNAME;" />
 			<option></option>
 		</select>
 	</label>
@@ -879,7 +879,7 @@ ACHIEVEMENTS
 	
 	<label>
 		<span>Feed Link</span>
-			<input type="text" name="LINK" value="" data-bind="var: rss(LINK); format: popVal;" readonly="readonly" />
+			<input type="text" name="LINK" value="" data-bind="var: rss(LINK); format: popVal;" readonly />
 			<span class="toolTip" title="The URL to your store, or for this promotion.">?</span>
 	</label>
 	<label>
@@ -907,7 +907,7 @@ ACHIEVEMENTS
 
 	<label>
 		<span>Source List:</span>
-		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsFromList;">
+		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsfromlist;">
 			<option></option>
 		</select>
 		<span class="toolTip" title="The list from which this RSS feed is built (where the product come from).">?</span>
@@ -920,7 +920,7 @@ ACHIEVEMENTS
 	
 	<label>
 		<span>Pricing Schedule:</span>
-		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option>none</option>
 		</select>
 	</label>

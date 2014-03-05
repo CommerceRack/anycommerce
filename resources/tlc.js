@@ -257,8 +257,9 @@ var tlc = function()	{
 	//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
 	//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
 			if($._app.u.thisIsAnAdminSession())	{
-				if(location.protocol === 'file:')	{
-					url = 'http:\/\/'+(_app.vars.domain);
+				//this is for quickstart local testing.
+				if(location.protocol === 'file:' && $._app.vars.domain)	{
+					url = 'http:\/\/'+($._app.vars.domain);
 					}
 				else	{
 					url = 'https:\/\/'+($._app.vars['media-host'] || $._app.data['adminDomainList']['media-host']);
@@ -466,6 +467,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "notblank":
 				if(p1 == false || p1 == 'undefined' || p1 == null){r = false;}
 				else	{r = true;}
+//				dump(" -> p1: "+p1+' and r: '+r);
 				break;
 			case "null":
 				if(p1 == null){r = true;}; break;

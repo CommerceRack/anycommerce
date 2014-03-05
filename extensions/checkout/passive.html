@@ -289,16 +289,16 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 -->
 <table>
 <tbody><tr id="chkoutCartItemTemplate">
-	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --blank;) {{bind $var '.%attribs.%attribs.zoovy:prod_image1'; }}; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50"></td>
+	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;) {{bind $var '.%attribs.zoovy:prod_image1'; }}; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50"></td>
 	<td>
-	<div data-tlc="bind $var '.%attribs.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
-	<div data-tlc="bind $var '.%attribs.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
-	<div data-tlc="bind $var '.%attribs.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
-	<div data-tlc="bind $var '.%options'; " class="prodOptions"></div>
+	<div data-tlc="bind $var '.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
+	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="prodOptions"></div>
 	</td>
-	<td class="alignRight"><span data-tlc="bind $var '.%attribs.qty'; if (is $var --notblank;) {{apply --append;}};"></span></td>
-	<td class="alignRight"><span data-tlc="bind $var '.%attribs.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span></td>
-	<td class="alignRight"><span data-tlc="bind $var '.%attribs.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span></td>
+	<td class="alignRight"><span data-tlc="bind $var '.qty'; if (is $var --notblank;) {{apply --append;}};"></span></td>
+	<td class="alignRight"><span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span></td>
+	<td class="alignRight"><span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span></td>
 </tr>
 </tbody></table>
 
@@ -564,25 +564,21 @@ If this gets recycled, test in order history after making changes.
 	
 <div class="infoContainer">
 
-	<h3 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h3>
-	<div data-tlc="bind $var '.%attribs.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="ztable_row_small stid"></div>
-
+	<h3 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h3>
+	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="ztable_row_small stid"></div>
+	
 	<div>
-	<span data-tlc="bind $var '.%attribs.qty'; if (is $var --notblank;) {{format --prepend='qty: '; apply --append;}};"></span>
-	<span data-tlc="bind $var '.%attribs.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
-	<span data-tlc="bind $var '.%attribs.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.qty'; if (is $var --notblank;) {{format --prepend='qty: '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
 	</div>
-
-	<div data-tlc="bind $var '.%attribs.%options'; " class="ztable_row_small prodOptions"></div>
-
-
-
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="ztable_row_small prodOptions"></div>
 	
 </div>
 	</td>
 	
 	<td class="alignRight hide4Print">
-	<button data-tlc="bind $var '.%attribs.product'; apply --attrib='data-pid'; " class="writeReview applyButton" data-app-click="store_crm|showWriteReview">Write Review</button>	
+	<button data-tlc="bind $var '.product'; apply --attrib='data-pid'; " class="writeReview applyButton" data-app-click="store_crm|showWriteReview">Write Review</button>	
 	</td>
 
 

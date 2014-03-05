@@ -598,7 +598,7 @@ keep all inputs within one fieldset for the save function.
 
 	<label data-app-role='pricingScheduleContainer'>
 		<span>Pricing Schedule:</span>
-		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select>
 	</label>
@@ -740,7 +740,7 @@ keep all inputs within one fieldset for the save function.
 	<div class='marginBottom' data-table-role='inputs'>
 		<label>
 			<span>Country</span>
-			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
+			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsfromlist; text:Z; value:ISOX;">
 				<option value=''>none</option>
 			</select>
 		</label>
@@ -2683,7 +2683,7 @@ SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
 <section class='ui-widget twoColumn labelsAsBreaks alignedLabels' >
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate="novalidate">
+	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate>
 
 	<input type='hidden' name='enable' value='1' />
 	<fieldset>

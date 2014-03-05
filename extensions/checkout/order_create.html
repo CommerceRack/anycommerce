@@ -308,18 +308,18 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 -->
 <table>
 <tbody><tr id="chkoutCartItemTemplate">
-	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --blank;) {{bind $var '.%attribs.%attribs.zoovy:prod_image1'; }}; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50"></td>
+	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;) {{bind $var '.%attribs.zoovy:prod_image1'; }}; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50"></td>
 	<td>
-	<div data-tlc="bind $var '.%attribs.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
-	<div data-tlc="bind $var '.%attribs.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
-	<div data-tlc="bind $var '.%attribs.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
-	<div data-tlc="bind $var '.%options'; " class="prodOptions alignRight">
-		<input data-tlc="bind $var '.%attribs.qty'; if(is $var --notblank;) {{apply --select=$var;}}; " class="smallInput" name="qty" step="1" size="3" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
-	</div></td>
+	<div data-tlc="bind $var '.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
+	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
+	
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist;" class="prodOptions alignRight"></div></td>
+	<td><input data-tlc="bind $var '.qty'; apply --select=$var;" class="smallInput" name="qty" step="1" size="3" min="0" data-app-change="order_create|cartItemUpdateExec" type="number"></td>
 	<td class="alignRight">
-		<input data-tlc="bind $var '.%attribs.price'; if(is $var --notblank;) {{apply --select=$var;}}; " class="smallInput" name="price" step=".01" size="8" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
+		<input data-tlc="bind $var '.price'; apply --select=$var;" class="smallInput" name="price" step=".01" size="8" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
 	</td>
-	<td class="alignRight"><span data-tlc="bind $var '.%attribs.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span></td>
+	<td class="alignRight"><span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span></td>
 	<td><button data-tlc="bind $var '.'; cco#cartitemremovebutton  --legacy;" data-legacy-useparentdata="true" class="floatRight removeButton" data-app-click="cco|cartItemRemove">Remove Item From Cart</button></td>
 </tr>
 </tbody></table>
@@ -376,12 +376,12 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.'; cco#shipinfobyid  --legacy;" data-legacy-useparentdata="true" class="orderShipping"></div>
 	<div data-tlc="bind $var '.sum.hnd_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Handling: '; apply --add --class='hndTotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum.gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --add --class='orderGiftcardTotal'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.sum.gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.pnt_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Reward Points: '; apply --add --class='rewardPointsTotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.rmc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Returns Credit: '; apply --add --class='returnsCreditTotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.spc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Specialty: '; apply --add --class='spcTotal'; apply --append;}};"></div>
 
-	<div data-tlc="bind $var '.sum.balance_due_total'; cco#orderbalance  --classname='orderBalanceDue' --hidezero='false' --currencysign='$' --legacy;"></div>
+	<div class='orderBalanceDue' data-tlc="bind $var '.sum.balance_due_total'; cco#orderbalance --hidezero='false' --currencysign='$' --legacy;"></div>
 
 	<div class="couponEntryContainer clearfix marginBottom" data-app-role="couponContainer">
 		<label for="coupon">Coupon/Promo Code:</label>
@@ -406,13 +406,14 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <!-- there is display logic looking for the number of address elements in addressExists. do not change element try w/out updating display logic. -->
 <address id="chkoutBuyerAddressTemplate" class="ui-widget ui-widget-content ui-corner-all stdPadding">
-	<div data-tlc="bind $var '.bill/address1'; if(is $var --blank;) {{bind $var '.ship/address1'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
-	<div data-tlc="bind $var '.bill/postal'; if(is $var --blank;) {{bind $var '.ship/postal'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.bill_address1'; if(is $var --blank;) {{bind $var '.ship_address1'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.bill_postal'; if(is $var --blank;) {{bind $var '.ship_postal'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
 	<div class="clearfix">
-		<button class="floatRight applyButton" data-app-click="order_create|execBuyerAddressSelect" data-icon="false" data-icon-primary="ui-icon-check">Use This Address</button>
-		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|showBuyerAddressUpdate" data-icon="false" data-icon-primary="ui-icon-pencil">Edit This Address</button>
+		<button class="floatRight applyButton" data-app-role="addressSelectButton" data-app-click="order_create|execBuyerAddressSelect" data-icon="false" data-icon-primary="ui-icon-check">Use This Address</button>
+		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|adminAddressCreateUpdateShow" data-icon="false" data-icon-primary="ui-icon-pencil" data-mode="update">Edit This Address</button>
 	</div>
 </address>
+
 
 
 
@@ -591,23 +592,24 @@ If this gets recycled, test in order history after making changes.
 	
 <div class="infoContainer">
 
-	<h3 data-tlc="bind $var '.%attribs.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h3>
-	<div data-tlc="bind $var '.%attribs.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="ztable_row_small stid"></div>
-
+	<h3 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h3>
+	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="ztable_row_small stid"></div>
+	
 	<div>
-	<span data-tlc="bind $var '.%attribs.qty'; if (is $var --notblank;) {{format --prepend='qty: '; apply --append;}};"></span>
-	<span data-tlc="bind $var '.%attribs.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
-	<span data-tlc="bind $var '.%attribs.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.qty'; if (is $var --notblank;) {{format --prepend='qty: '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
+	<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
 	</div>
-
-	<div data-tlc="bind $var '.%attribs.%options'; " class="ztable_row_small prodOptions"></div>
-
-
-
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="ztable_row_small prodOptions"></div>
 	
 </div>
 	</td>
 	
+	<td class="alignRight hide4Print">
+	<button data-tlc="bind $var '.product'; apply --attrib='data-pid'; " class="writeReview applyButton" data-app-click="store_crm|showWriteReview">Write Review</button>	
+	</td>
+
+
 	</tr>
 </tbody></table>
 
