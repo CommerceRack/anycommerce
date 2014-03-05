@@ -371,7 +371,7 @@ addToCart : function (pid,$form){
 					$input.attr({'type':'hidden'}).appendTo($tag); //add so that handleaddtocart doesn't throw error that no qty input is present
 					}
 //set this. because the name is shared by (potentially) a lot of inputs, the browser 'may' use the previously set value (like if you add 1 then go to another page, all the inputs will be set to 1. bad in a prodlist format)
-				$input.val(data.bindData.defaultValue || 0); 
+				$input.val(data.bindData.defaultvalue || 0); 
 				},
 
 
