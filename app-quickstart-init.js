@@ -123,3 +123,35 @@ myApp.u.appInitComplete = function()	{
 		else	{$('.ocmFacebookComment').hide()}
 		});
 	}
+
+
+
+
+
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+//it'll also handle the old 'meta' uri params.
+myApp.router.appendInit({
+	'type':'function',
+	'route': function(v){
+		return {'init':true} //returning anything but false triggers a match.
+		},
+	'callback':function(f,g){
+		g = g || {};
+		if(document.location.hash)	{
+			myApp.router.handleHashChange();
+			}
+		else	{
+			showContent('homepage');
+			}
+		if(g.uriParams && g.uriParams.meta)	{
+			myApp.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
+			}
+		if(g.uriParams && g.uriParams.meta_src)	{
+			myApp.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
+			}
+		}
+	});
+
+
+
+

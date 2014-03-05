@@ -1492,15 +1492,6 @@ $target.tlc({
 				if(_app.u.buyerIsAuthenticated())  {
 					_app.ext.quickstart.u.handleLoginActions();
 					}
-
-/* this needs to get executed in the route				
-				if(infoObj.uriParams.meta)	{
-					_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
-					}
-				if(infoObj.uriParams.meta_src)	{
-					_app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
-					}
-*/
 				},
 
 

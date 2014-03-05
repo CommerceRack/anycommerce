@@ -849,7 +849,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			if(routeObj.callback)	{
 				if(typeof routeObj.callback === 'string')	{
 					if(_app.router.aliases[routeObj.callback])	{
-						_app.router.aliases[routeObj.callback](routeObj);
+						_app.router.aliases[routeObj.callback](routeObj,_app.router.initObj);
 						}
 					else	{
 						//no matching handler found.
@@ -857,7 +857,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						}
 					}
 				else if(typeof routeObj.callback == 'function')	{
-					routeObj.callback(routeObj);
+					routeObj.callback(routeObj,_app.router.initObj);
 					}
 				else	{
 					_app.u.dump("In _execute handler, invalid type for routeObj.callback. typeof: "+(typeof routeObj.callback),"error");
@@ -875,11 +875,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
 				else	{
 					if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-			//	app.u.dump(ps);
 					uriParams = {}
 					uriParams = _app.u.kvp2Array(ps);
 					}
-			//	app.u.dump(uriParams);
 				}
 			return uriParams;
 			},
@@ -888,7 +886,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 
 			//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
 			$.extend(_app.router.initObj,{
-				location : document.location,
 				hash : location.hash,
 				uriParams : _app.router.getURIParams(),
 				hashParams : (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(decodeURIComponent(location.hash.split("?")[1])) : {})
@@ -3002,7 +2999,6 @@ do's should modify $tag or apply the value.
 			},
 
 		youtubevideo : function($tag,data){
-			dump(" -------------------------------------------------------");
 			var width = data.bindData.width ? data.bindData.width : 560
 			var height = data.bindData.height ? data.bindData.height : 315
 			var r = "<iframe style='z-index:1;' width='"+width+"' height='"+height+"' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
