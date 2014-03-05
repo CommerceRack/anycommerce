@@ -896,7 +896,9 @@ returning a 'false' here will exit the statement loop.
 			if(commands[i].type == 'command')	{
 				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
 				else	{
-					dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
+					if($._app.vars.debug == 'tlc')	{
+						dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
+						}
 					//handleCommand returned a false. That means either an error occured OR this executed a renderFormat. stop processing.
 					break;
 					}
