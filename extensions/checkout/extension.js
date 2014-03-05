@@ -215,7 +215,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
-				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData}); //show invoice
+				$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart id, if necessary (admin doesn't auto-create a new one).
 
@@ -1038,7 +1038,8 @@ note - the order object is available at _app.data['order|'+P.orderID]
 //							_app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(_app.data[rd.datapointer]['@ITEMS'].length || _app.u.thisIsAnAdminSession())	{
 								_app.u.dump(" -> cart has items or this is an admin session. cartID: "+cartID);
-								var $checkoutContents = _app.renderFunctions.transmogrify({},'checkoutTemplate',_app.ext.order_create.u.extendedDataForCheckout(cartID));
+//								var $checkoutContents = _app.renderFunctions.transmogrify({},'checkoutTemplate',_app.ext.order_create.u.extendedDataForCheckout(cartID));
+								var $checkoutContents = new tlc().runTLC({'templateid':'checkoutTemplate','dataset':_app.ext.order_create.u.extendedDataForCheckout(cartID)})
 								
 								$checkoutContents.data('cartid',cartID);
 
@@ -1180,9 +1181,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				if(orderID)	{
 					var $orderContent = $("[data-app-role='orderContents']:first",$ele.closest("[data-app-role='orderContainer']")).show();
 					_app.ext.admin.calls.adminOrderDetail.init(orderID,{
-						'callback' : 'anycontent',
+						'callback' : 'tlc',
 						'jqObj' : $orderContent,
-						'translateOnly' : true
+						'verb' : 'translate'
 						},'mutable');
 					_app.model.dispatchThis('mutable');
 					}
@@ -1854,7 +1855,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
-						$fieldset.anycontent({'data' : _app.ext.order_create.u.extendedDataForCheckout(cartID)});
+						$fieldset.tlc({'verb' : 'translate','dataset' : _app.ext.order_create.u.extendedDataForCheckout(cartID)});
 						} //populates the template.
 					
 					for(var i = 0; i < L; i += 1)	{
@@ -2095,7 +2096,7 @@ _app.model.dispatchThis('passive');
 
 		renderFormats : {
 //pass the cart(cart/cartid); in for the databind var. Multiple pieces of data are required for this render format (want/shipping_id and @SHIPMETHODS).
-			shipMethodsAsRadioButtons : function($tag,data)	{
+			shipmethodsasradiobuttons : function($tag,data)	{
 				var o = '',sMethods,L;
 				sMethods = data.value['@SHIPMETHODS'];
 				if(sMethods && sMethods.length)	{
@@ -2112,9 +2113,9 @@ _app.model.dispatchThis('passive');
 				if(data.value.want && data.value.want.shipping_id)	{
 					$("input[value='"+data.value.want.shipping_id+"']",$tag).prop('checked','checked').closest('li').addClass('selected ui-state-active');
 					}
-				}, //shipMethodsAsRadioButtons
+				}, //shipmethodsasradiobuttons
 
-			payMethodsAsRadioButtons : function($tag,data)	{
+			paymethodsasradiobuttons : function($tag,data)	{
 //				_app.u.dump('BEGIN _app.ext.order_create.renderFormats.payOptionsAsRadioButtons');
 //				_app.u.dump(data);
 				var o = '', cartData,pMethods;
@@ -2127,10 +2128,10 @@ _app.model.dispatchThis('passive');
 						});
 					}
 				else	{
-					o = $("<div \/>").anymessage({'persistent':true,'message':'In order_create.renderFormats.payMethodsAsRadioButtons, cartDetail|'+data.value+' ['+( typeof _app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof _app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
+					o = $("<div \/>").anymessage({'persistent':true,'message':'In order_create.renderFormats.paymethodsasradiobuttons, cartDetail|'+data.value+' ['+( typeof _app.data['cartDetail|'+data.value] )+'] and/or appPaymentMethods|'+data.value+' ['+( typeof _app.data['appPaymentMethods|'+data.value] )+'] not found in memory. Both are required.','gMessage':true});
 					}
 				$tag.html(o);
-				} //payMethodsAsRadioButtons
+				} //paymethodsasradiobuttons
 			
 
 			
