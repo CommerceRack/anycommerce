@@ -549,7 +549,11 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = true; //what is returned. if false is returned, the rest of the statement is NOT executed.
 // ### FUTURE -> once renderFormats are no longer supported, won't need argObj or the 'if' for legacy (tho it could be left to throw a warning)
 		if(argObj.legacy)	{
-			if($._app.ext[cmd.module] && $._app.ext[cmd.module].renderFormats && typeof $._app.ext[cmd.module].renderFormats[cmd.name] == 'function')	{
+			if(cmd.module == 'controller' && typeof $._app.renderFormats[cmd.name] == 'function')	{
+				$._app.renderFormats[cmd.name](globals.tags[globals.focusTag],{'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset),'bindData':argObj});
+				r = false; //when a renderFormat is executed, the rest of the statement is not run. renderFormats aren't designed to work with this and their predicability is unknown. so is their life expectancy.
+				}
+			else if($._app.ext[cmd.module] && $._app.ext[cmd.module].renderFormats && typeof $._app.ext[cmd.module].renderFormats[cmd.name] == 'function')	{
 				$._app.ext[cmd.module].renderFormats[cmd.name](globals.tags[globals.focusTag],{'value': (globals.focusBind ? globals.binds[globals.focusBind] : dataset),'bindData':argObj})
 				r = false; //when a renderFormat is executed, the rest of the statement is not run. renderFormats aren't designed to work with this and their predicability is unknown. so is their life expectancy.
 				}
