@@ -120,8 +120,6 @@ var quickstart = function(_app) {
 					}
 				else	{}
 
-				if(_app.vars.apptimizer === true) {$.support.onpopstate = false} //disable uri rewrite and rely on hashChange
-
 				if(cartID)	{
 					dump(" -> cartID is set, validate.");
 					// the addCart2CM uses the 'appCartExists' datapointer. if it changes here, update the callback.
@@ -149,26 +147,6 @@ if(_app.u.getParameterByName('debug'))	{
 	_app.ext.quickstart.u.bindNav('.debug .bindByAnchor');
 	$('body').css('padding-bottom',$('.debug').last().height());
 	}
-
-//attach an event to the window that will execute code on 'back' some history has been added to the history.
-if($.support.onpopstate)	{
-	window.onpopstate = function(event) { 
-		_app.ext.quickstart.u.handlePopState(event.state);
-		}
-	}
-//if popstate isn't supporeted, hashchange will use the anchor.
-else if ($.support.onhashchange)	{ // does the browser support the hashchange event?
-	_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
-	window.onhashchange = function () {
-		_app.ext.quickstart.u.handleHashState();
-		}
-	}
-else	{
-	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistent':true});
-	// wow. upgrade your browser. should only get here if older than:
-	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
-	}
-
 
 document.write = function(v){
 	dump("document.write was executed. That's bad mojo. Rewritten to $('body').append();",'warn');
@@ -221,21 +199,14 @@ document.write = function(v){
 				
 				if(cartID)	{
 					_app.model.addDispatchToQ({"_cmd":"whoAmI",_cartid : cartID, "_tag":{"datapointer":"whoAmI",callback:function(rd){
-						var page = _app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
-		
-						if(page.pageType == 'cart' || page.pageType == 'checkout')	{
-		//if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
-							}
-						else if(cartID)	{
-							_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
-							_app.model.dispatchThis('mutable');
-							}
-						else	{} //no cart to go get. cartCreate already been added to Q by now.
+						_app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
+						_app.model.dispatchThis('mutable');
 						
-						_app.ext.quickstart.u.bindNav('#appView .bindByAnchor');
-						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
+//						_app.ext.quickstart.u.bindNav('#appView .bindByAnchor');
+//						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
 	
-						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete(page)}; //gets run after app has been init
+						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete()}; //gets run after app has been init
 						_app.ext.quickstart.thirdParty.init();
 						
 						}}},"mutable"); //used to determine if user is logged in or not.
@@ -1103,26 +1074,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 
-//if back is set to zero, no push state or hash state change is desired.  This is used in cases where a dialog is displaying the data.
-				if(infoObj.back === 0)	{
-					r = false;
-					}
-				else	{
-					r = _app.ext.quickstart.u.addPushState(infoObj);
-					}
-				
-//r will = true if pushState isn't working (IE or local). so the hash is updated instead.
-//				dump(" -> R: "+r+" and infoObj.back: "+infoObj.back);
-				if(r == true && infoObj.back == -1)	{
-					var hash = _app.ext.quickstart.u.getHashFromPageInfo(infoObj);
-//					dump(" -> hash from infoObj: "+hash);
-//see if hash on URI matches what it should be and if not, change. This will only impact browsers w/out push/pop state support.
-					if(hash != window.location.hash)	{
-						_ignoreHashChange = true; //make sure changing the hash doesn't execute our hashChange code.
-						window.location.hash = hash;
-						}
-					}
-
 				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : 0},1000)} //new page content loading. scroll to top.				
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
@@ -1530,7 +1481,7 @@ $target.tlc({
 
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
-			handleAppInit : function(infoObj)	{
+			handleAppInit : function()	{
 //dump("BEGIN quickstart.u.handleAppInit");
 				
 				var L = _app.rq.length-1;
@@ -1538,42 +1489,18 @@ $target.tlc({
 					_app.u.loadResourceFile(_app.rq[i]);
 					_app.rq.splice(i, 1); //remove once handled.
 					}
-				
-				if(typeof infoObj != 'object')	{infoObj = {}}
-				infoObj = this.detectRelevantInfoToPage(window.location.href); 
-				infoObj.back = 0; //skip adding a pushState on initial page load.
-//getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-				infoObj.uriParams = {};
-				var ps = window.location.href; //param string. find a regex for this to clean it up.
-				if(ps.indexOf('?') >= 1)	{
-					ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-					if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-
-					try {
-						infoObj.uriParams = _app.u.kvp2Array(ps);
-						}
-					catch(err){
-//we lost the URI params to kvp2Array
-						}
-					}
-
-//				dump(" -> infoObj.uriParams:"); dump(infoObj.uriParams);
-				if(infoObj.uriParams.meta)	{
-					_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
-					}
-
-				if(infoObj.uriParams.meta_src)	{
-					_app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
-					}
-
 				if(_app.u.buyerIsAuthenticated())  {
 					_app.ext.quickstart.u.handleLoginActions();
 					}
 
-//				dump(" -> infoObj follows:");
-//				dump(infoObj);
-				_app.ext.quickstart.a.showContent('',infoObj);
-				return infoObj //returning this saves some additional looking up in the appInit
+/* this needs to get executed in the route				
+				if(infoObj.uriParams.meta)	{
+					_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
+					}
+				if(infoObj.uriParams.meta_src)	{
+					_app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
+					}
+*/
 				},
 
 
@@ -1837,7 +1764,7 @@ $target.tlc({
 // EX:  pass: {pageType:company,show:contact} and return: #company?show=contact
 // EX:  pass: {pageType:product,pid:TEST} and return: #product?pid=TEST
 // if a valid hash can't be built, false is returned.
-
+// this is still used for the banner element.
 			getHashFromPageInfo : function(infoObj)	{
 //				dump("BEGIN quickstart.u.getHashFromPageInfo");
 				var r = false; //what is returned. either false if no match or hash (#company?show=contact)
@@ -2027,114 +1954,6 @@ $target.tlc({
 				else if(infoObj.page)	{r = 'company'}
 				return r;
 				},
-				
-				
-
-/*
-
-#########################################     FUNCTIONS FOR DEALING WITH CHANGING URL or HASH (popstate)
-
-*/
-
-				
-				
-//Executed instead of handlePopState if popState isn't supporeted (ex: IE < 10).
-// from the hash, formatted as #company?show=returns, it determines pageType (company)
-// a pageInfo (pio) object is created and validated (pageInfo will be set to false if invalid)
-//showcontent is NOT executed if pio is not valid (otherwise every anchor would execute a showContent - that would be bad.)
-// _ignoreHashChange is set to true if the hash is changed w/ js instead of an anchor or some other browser related event.
-// this keeps the code inside handleHashState from being triggered when no update desired.
-// ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
-
-			handleHashState : function()	{
-//				dump("BEGIN quickstart.u.handleHashState");
-				var hash = window.location.hash;
-				var pio = this.getPageInfoFromHash(hash); //if not valid pageInfo hash, false is returned
-//				dump(" -> hash: "+hash);
-				if(!$.isEmptyObject(pio) && _ignoreHashChange === false)	{
-					showContent('',pio);
-					}
-				_ignoreHashChange = false; //always return to false so it isn't "left on" by accident.
-				},
-
-//infoObj is an object that gets passed into a pushState in 'addPushState'.  pageType and pageInfo are the only two params currently.
-//https://developer.mozilla.org/en/DOM/window.onpopstate
-			handlePopState : function(infoObj)	{
-//				dump("BEGIN handlePopState");
-//				dump(infoObj);
-
-//on initial load, infoObj will be blank.
-				if(infoObj)	{
-					infoObj.back = 0;
-					_app.ext.quickstart.a.showContent('',infoObj);
-//					dump("POPSTATE Executed.  pageType = "+infoObj.pageType+" and pageInfo = "+infoObj.pageInfo);
-					}
-				else	{
-//					dump(" -> no event.state (infoObj) defined.");
-					}
-				},
-
-
-
-//pass in the 'state' object. ex: {'pid':'somesku'} or 'catSafeID':'.some.safe.path'
-//will add a pushstate to the browser for the back button and change the URL
-//http://spoiledmilk.dk/blog/html5-changing-the-browser-url-without-refreshing-page
-//when a page is initially loaded or reloaded, infoObj.back is set to zero. This won't stop the addition of a popState, but will instead replace the most recent popstate.
-//this ensures there is always a popstate (content won't get loaded properly if there's no object) and that no duplicates are created.
-
-
-			addPushState : function(infoObj)	{
-//				dump("BEGIN addPushState. ");
-				var useAnchor = false; //what is returned. set to true if pushState not supported
-				var title = infoObj.pageInfo;
-				var historyFunction = infoObj.back == 0 ? 'replaceState' : 'pushState'; //could be changed to replaceState if back == 0;
-				var fullpath = ''; //set to blank by default so += does not start w/ undefined
-//for 404 pages, leave url as is for troubleshooting purposes (more easily track down why page is 404)	
-				if(infoObj.pageType == '404')	{
-					fullpath = window.location.href;
-					}
-				else	{
-					if('https:' == document.location.protocol)	{
-						fullpath = zGlobals.appSettings.https_app_url;
-						}
-					else	{
-						fullpath = zGlobals.appSettings.http_app_url;
-						}
-	//				dump(infoObj);
-	//handle cases where the homepage is treated like a category page. happens in breadcrumb.
-					if(infoObj.navcat == '.')	{
-						infoObj.pageType = 'homepage'
-						}
-					else	{
-						fullpath += this.buildRelativePath(infoObj);
-						}
-					if(typeof infoObj.uriParams == 'string' && _app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams.encodeURI()} //add params back on to url.
-					else if(typeof infoObj.uriParams == 'object' && !$.isEmptyObject(infoObj.uriParams)) {
-//will convert uri param object into uri friendly key value pairs.						
-						fullpath += '?';
-						var params = $.map(infoObj.uriParams, function(n, i){
-							return i+"="+n;
-							}).join("&");
-						fullpath += params;
-						}
-					}
-//!!! need to find an IE8 friendly way of doing this.  This code caused a script error					
-//				document.getElementsByTagName('title')[0].innerHTML = fullpath; //doing this w/ jquery caused IE8 to error. test if changed.
-				
-// *** 201401 During search the infoObj.list jquery object was uncloneable, so the addPushState was failing and users could not use the back button to go back to search pages -mc
-				var obj = _app.u.getBlacklistedObject(infoObj, ["list"]);
-				try	{
-					window.history[historyFunction](obj, title, fullpath);
-					}
-				catch(err)	{
-					//Handle errors here
-					useAnchor = true;
-					}
-				return useAnchor;
-				},
-
-
-
 
 /*
 

@@ -103,7 +103,7 @@ myApp.u.showProgress = function(progress)	{
 
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
-myApp.u.appInitComplete = function(P)	{
+myApp.u.appInitComplete = function()	{
 	myApp.u.dump("Executing myAppIsLoaded code...");
 	
 	myApp.ext.order_create.checkoutCompletes.push(function(vars,$checkout){

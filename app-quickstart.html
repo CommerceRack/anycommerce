@@ -358,7 +358,7 @@ container ul should have lineItemProdlist class on it instead of productList
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 	
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
+			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
 	
 			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 		</form>
@@ -530,7 +530,7 @@ this will likely become more flexible in the future. ###
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
 	
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="if(is $var --blank) {{bind var '1';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='1' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:1;" class="borderNone"></fieldset>
+			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone"></fieldset>
 	
 			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 		</form>
@@ -589,19 +589,18 @@ this will likely become more flexible in the future. ###
 			<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="clearfix alignRight">
 				<button class="applyButton" data-app-click="store_crm|productReviewShow">Write Review</button>
 			</div>
-	
+
 			<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
-	
 		</div>
 	
 		<div class="tabContent" data-anytab-content="prodVideo">
-			<div data-tlc="bind $var '.%attribs.youtube:videoid'; controller#youtubevideo; if (is $var --notblank;) {{apply --append;}};"></div>
+			<div data-tlc="bind $var '.%attribs.youtube:videoid'; controller#youtubevideo --legacy;"></div>
 		</div>
-	
+
 		<div class="tabContent" data-anytab-content="prodAccessories">
 			<ul data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist  --hidepagination='true' --hidesummary='true' --withReviews='1' --withInventory='1' --withVariations='1' --templateid='productListTemplateATC'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist"></ul>
 		</div>
-	
+
 	</div>
 	
 		</td>
@@ -1167,7 +1166,7 @@ used on a product layout. Some product have 'children' which may represent the s
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 
 		<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-		<fieldset data-tlc="if(is $var --blank) {{bind var '0';}}; format --prepend='Quantity: '; store_product#atcquantityinput  --defaultvalue='0' --legacy; apply --append;" data-bind="useParentData:true; format:atcquantityinput; extension:store_product; pretext:Quantity: ; defaultValue:0;" class="borderNone"></fieldset>
+		<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
 
 		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 	</form>

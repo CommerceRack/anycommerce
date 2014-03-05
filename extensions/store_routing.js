@@ -51,7 +51,23 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'match','exact':'/checkout/','callback':'checkout'});
 				_app.router.appendHash({'type':'match','exact':'/cart/','callback':'cart'});
 				_app.router.appendHash({'type':'match','route':'/search/{{KEYWORDS}}/','callback':'search'});
-				
+
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+_app.router.appendInit({
+	'type':'function',
+	'route': function(v){
+		return {'init':true} //returning anything but false triggers a match.
+		},
+	'callback':function(f){
+		if(document.location.hash)	{
+			_app.router.handleHashChange();
+			}
+		else	{
+			showContent('homepage');
+			}
+		}
+	});
+
 				r = true;
 
 				return r;
