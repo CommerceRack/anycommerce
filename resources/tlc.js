@@ -210,19 +210,32 @@ var tlc = function()	{
 
 //used in 'apply' and possibly elsewhere. changes the args arrays into a single object for easy lookup.
 	this.args2obj = function(args,globals)	{
-//		dump(" ----> args: "); dump(args); 
+//		dump("BEGIN tlc.args2obj"); // console.debug(args); 
 		var r = {};
 		if(!$.isEmptyObject(args))	{
 			for(var i = 0, L = args.length; i < L; i += 1)	{
 				var type = (args[i].type == 'longopt' && args[i].value) ? args[i].value.type : args[i].type;
-				dump(" -> type: "+type);
+//				dump(i+") type: "+type+" and key: "+args[i].key);
 				if(type == 'tag')	{
 					r.tag = args[i].value.tag;
 					r[args[i].value.tag] = globals.tags[args[i].value.tag];
 					}
 				else if(args[i].value == null)	{r[args[i].key] = true} //some keys, like append or media, have no value and will be set to null.
 				else if(type == 'variable')	{
-					r[args[i].key] = globals.binds[args[i].value.value];
+					//this handles how most variables are passed in.
+					if(args[i].key)	{
+						r[args[i].key] = globals.binds[args[i].value.value];
+						}
+					//this handles some special cases, like:  transmogrify $var --templateid='chkoutAddressBillTemplate';
+					else if(typeof args[i].value == 'string')	{
+						r.variable = args[i].value;
+						r[args[i].value] = globals.binds[args[i].value];
+						}
+					else	{
+						dump("in args2obj, type is set to variable, but no key is set AND the value is not a string.","warn");
+						dump(args[i],"debug")
+						//something unexpected happened.  no key. value is an object.
+						}
 					}
 				
 				else	{
@@ -611,6 +624,9 @@ returning a 'false' here will exit the statement loop.
 			if(cmd.Src.type == 'tag')	{
 				globals.binds[cmd.Set.value] = globals.tags[cmd.Src.tag];
 				}
+			else if(cmd.Src.value == '.')	{
+				globals.binds[cmd.Set.value] = dataset; //this is effectively the old 'useParentData'
+				}
 			else	{
 				//jsonpath nests returned values in an array.
 				globals.binds[cmd.Set.value] = jsonPath(dataset, '$'+cmd.Src.value)[0];
@@ -785,9 +801,14 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleCommand_transmogrify = function(cmd,globals)	{
 		// ### TODO -> allow for a $var to be set to determine what data should be passed into runTLC. ex: transmogrify $var --templateid='someTemplate'
-//		dump(" ->>>>>>> templateid: "+cmd.args[0].value); //dump(this.args2obj(cmd.args));
+		var argObj = this.args2obj(cmd.args,globals);
+//		dump(" ->>>>>>> templateid: "+cmd.args[0].value); 
+		var dataset = {};
+		if(argObj.variable && argObj[argObj.variable])	{
+			dataset = argObj[argObj.variable];
+			}
 		var tmp = new tlc();
-		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:cmd.args[0].value,dataset:this.dataset}));
+		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:argObj.templateid,dataset:dataset}));
 		//this will backically instantate a new tlc (or whatever it's called)
 		}
 
