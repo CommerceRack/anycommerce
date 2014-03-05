@@ -133,7 +133,8 @@ function upgradeRenderFormat(odb)	{
 
 function buildBind(dbVar)	{
 	var value = parseDataVar(dbVar);
-	if(dbVar.split('(')[0] == 'product' && value != 'pid')	{
+	//the data-bind rendering engine would auto-dive into %attribs if the namespace was product. no mas.
+	if(dbVar.split('(')[0] == 'product' && value != 'pid' && value.indexOf('%attribs') < 0)	{
 		value = '%attribs.'+value;
 		}
 	return "bind $var '."+(value || "")+"'; ";
