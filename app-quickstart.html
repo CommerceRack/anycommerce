@@ -1069,7 +1069,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
 
-	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipInfoById; extension:cco;"></div>
+	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipinfobyid; extension:cco;"></div>
 
 	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
 
@@ -1089,7 +1089,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
 	</div>
 
-	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
+	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
 </section>
 
 <section class="marginBottom">
@@ -1105,7 +1105,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	
 			<span id="inStoreCheckoutButton thisButton" title="proceed to secure checkout"><button class="applyButton ui-state-highlight checkoutButton" onclick="showContent('checkout',{});">Store Checkout</button></span>
 	
-			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalECButton" class="thisButton"></span>
+			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
 	
 		</div>
 

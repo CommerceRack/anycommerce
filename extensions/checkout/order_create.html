@@ -181,7 +181,7 @@ This template is also used in the myAccount page, which is why a default using _
 	<!-- postal not required for international. don't add it. -->
 	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); defaultVar: cart(bill_postal); format:popVal;' maxlength='10'  data-app-blur='order_create|execAddressUpdate' /></div>
 
-	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='useParentData:true; format:countriesAsOptions; extension: cco; shiptype:bill;' required='required' data-app-change="order_create|execCountryUpdate" ></select></div>
+	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' placeholder='country' data-bind='useParentData:true; format:countriesasoptions; extension: cco; shiptype:bill;' required='required' data-app-change="order_create|execCountryUpdate" ></select></div>
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill_phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
@@ -214,7 +214,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 	
 	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship_postal); format:popVal;' maxlength='10' data-app-blur='order_create|execAddressUpdate'/></div>
 
-	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='useParentData:true; format:countriesAsOptions; extension: cco; shiptype:ship;'  data-app-change="order_create|execCountryUpdate" ></select></div>
+	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' placeholder='country' data-bind='useParentData:true; format:countriesasoptions; extension: cco; shiptype:ship;'  data-app-change="order_create|execCountryUpdate" ></select></div>
 
 </section>
 
@@ -246,7 +246,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 -->
 
 <div id='chkoutMethodsShipTemplate'>
-	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipMethodsAsRadioButtons; extension: order_create;' ></ul>
+	<ul class='noPadOrMargin listStyleNone' data-bind='useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;' ></ul>
 </div>
 
 
@@ -285,7 +285,7 @@ do NOT change any div id's or messaging will not work properly.
 		
 		<h2 data-app-role='nonStoredPaymentsHeader' class='displayNone'>More Payment Choices</h2>
 		<div data-app-role='nonStoredPaymentsContent'>
-			<div data-bind='var: cart(cart/cartid); format:payMethodsAsRadioButtons; extension: order_create;'></div>
+			<div data-bind='var: cart(cart/cartid); format:paymethodsasradiobuttons; extension: order_create;'></div>
 		</div>
 		
 		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Stored Payments</h2>
@@ -374,7 +374,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	<div class='orderShipping' data-bind='useParentData:true; format:shipInfoById; extension:cco;'></div>
+	<div class='orderShipping' data-bind='useParentData:true; format:shipinfobyid; extension:cco;'></div>
 	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
@@ -434,7 +434,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<label>
 		<input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:setVal;" />
 		<span data-bind="var: wallet(TD); format:text;"></span>
-		<span data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></span>
+		<span data-bind="var: wallet(TD); format: walletnameintoicon; extension:cco;"></span>
 	</label>
 </div>
 
