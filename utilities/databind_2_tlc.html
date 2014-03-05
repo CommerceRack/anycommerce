@@ -65,6 +65,7 @@ function parseDataVar(v)	{
 	var r; //what is returned.
 	if(v)	{
 		r = v.replace(/.*\(|\)/gi,'');
+		r = r.replace(/\//g, '.'); //cart and order used slashes.
 		}
 	else	{r = false;}
 	return r;
@@ -111,11 +112,14 @@ function upgradeRenderFormat(odb)	{
 		case 'setVal':
 			r = "apply --input-value; "; break;
 		case 'popVal':
-			r = "apply --select=$var; "; break;
+			r = "if(is $var --notblank;) {{apply --select=$var;}}; "; break;
 		case 'assignAttribute':
 			r = "apply --attrib='"+odb.attribute+"'; "; break;
 		case 'loadsTemplate':
-			r = "transmogrify '"+odb.loadsTemplate+"'; "; break;
+			r = '';
+			if(odb.var || odb.useParentData)	{} //bind is already set.
+			else	{r += buildBind("");}
+			r += "transmogrify $var --templateid='"+odb.loadsTemplate+"'; apply --append;"; break;
 		case 'processList':
 			r = "controller#loop --templateid='"+odb.loadsTemplate+"'; "; break;
 			break;
@@ -132,13 +136,14 @@ function buildBind(dbVar)	{
 	if(dbVar.split('(')[0] == 'product' && value != 'pid')	{
 		value = '%attribs.'+value;
 		}
-	return "bind $var '."+value+"'; ";
+	return "bind $var '."+(value || "")+"'; ";
 	}
 
 function doIt2It()	{
 	var template = $('#databindContent').val();
 	var $t = $("<div>").append($(template)); //parent div created so that .html returns entire template.
 	var rfChanges = {};
+	var useParentData = 0;
 	$("[data-bind]",$t).each(function(){
 		var $tag = $(this);
 		//old: var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;
@@ -146,13 +151,16 @@ function doIt2It()	{
 		var odb = parseDataBind($tag.data('bind')); // Old Data Bind. sure.
 		var command = '', hasIf = false;
 
-
+		if(odb.useParentData)	{
+			useParentData++;
+			command += buildBind("");
+			}
 		if(odb.var)	{
 			command += buildBind(odb.var);
 			}
-
-		if(odb.defaultVar)	{
-			command += "if(is $var --blank;) {{"+buildBind(odb.defaultVar)+";}}; "
+		// the != is here to help w/ some checkout templates where the default var and the var are exactly the same. Adds unnecessary weight.
+		if(odb.defaultVar && odb.defaultVar != odb.var)	{
+			command += "if(is $var --blank;) {{"+buildBind(odb.defaultVar)+"}}; "
 			}
 		if(odb.defaultValue)	{
 			command += "if(is $var --blank;) {{bind var '"+odb.defaultValue+"';}}; "
@@ -226,6 +234,7 @@ function wrappedApply(db)	{
 				}
 			else if(upgradeRenderFormat(odb))	{
 				command += upgradeRenderFormat(odb);
+				//stufflist and processList get the apply --append because they now execute a tlc format.
 				if(odb.format == 'popVal' || odb.format == 'setVal' || odb.format == 'loadsTemplate')	{}
 				else	{
 					command += wrappedApply(odb);
@@ -240,17 +249,21 @@ function wrappedApply(db)	{
 //		console.log(command);// console.log("  ");
 
 		if(odb.useParentData)	{
-			console.warn("On the following renderformat, useParentData is set. That case isn't handled just yet. the data-bind was left in place to make it easier to find/update.\ndatabind: "+$tag.data('bind'));
+			$tag.attr('data-legacy-useparentdata','true');
 			}
 		else if(odb.forceRender)	{
-			console.warn("On the following renderformat, forceRender is set. That case isn't handled just yet. the data-bind was left in place to make it easier to find/update.\ndatabind: "+$tag.data('bind'));
-			}
-		else	{
-			$tag.removeAttr('data-bind');
+			console.warn("On the following renderformat, forceRender was set. That case must be handled manually.  "
+			+" Adjust your TLC statement accordingly. The element was tagged with data-legacy-forcerender.\ndatabind: "
+			+$tag.data('bind'));
+			$tag.attr('data-legacy-forcerender','true');
 			}
 
+		$tag.removeAttr('data-bind');
 		$tag.attr('data-tlc',command);
-		})
+		});
+	if(useParentData)	{
+		console.warn("On "+useParentData+" element(s), useParentData was enabled. You should double check the tlc and test these elements to ensure they still work the way they should. The elements have been tagged with data-legacy-useparentdata to make them easy to find.");
+		}
 	$('#grammarContent').val($t.html());
 	}
 </script>
