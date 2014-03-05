@@ -3001,19 +3001,13 @@ do's should modify $tag or apply the value.
 				}
 			},
 
-//for embedding. There is an action for showing a youtube video in an iframe in quickstart.
-// hint: set the action as an onclick and set attribute youtube:video id on element and use jquery to pass it in. 
-//ex: data-bind='var:product(youtube:videoid);format:assignAttribute; attribute:data-videoid;' onClick="_app.ext.quickstart.a.showYoutubeInModal($(this).attr('data-videoid'));
-		youtubeVideo : function($tag,data){
+		youtubevideo : function($tag,data){
+			dump(" -------------------------------------------------------");
 			var width = data.bindData.width ? data.bindData.width : 560
 			var height = data.bindData.height ? data.bindData.height : 315
 			var r = "<iframe style='z-index:1;' width='"+width+"' height='"+height+"' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
 			$tag.append(r);
 			},
-
-
-
-		
 
 
 //if classname is set in the bindData, it'll be concatonated with the value so that specific classes can be defined.
