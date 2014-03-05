@@ -380,7 +380,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.handle_apply_verb = function(verb,$tag,argObj,globals){
 		switch(verb)	{
-//new Array('empty','hide','show','add','remove','prepend','append','replace','input-value','select','state','attrib'),
+//new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
 			case 'hide': $tag.hide(); break;
 			case 'show': $tag.show(); break;
@@ -405,7 +405,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case 'prepend': $tag.prepend(globals.binds[globals.focusBind]); break;
 			case 'append': $tag.append(globals.binds[globals.focusBind]); break;
 			case 'replace': $tag.replaceWith(globals.binds[globals.focusBind]); break;
-			case 'input-value':
+			case 'inputvalue':
 				$tag.val(globals.binds[globals.focusBind]);
 				break;
 			case 'select' :
@@ -710,7 +710,7 @@ returning a 'false' here will exit the statement loop.
 		var r = true;
 		if(cmd.module == 'core')	{
 			var
-				verbs = new Array('empty','hide','show','add','remove','prepend','append','replace','input-value','select','state','attrib'),
+				verbs = new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 				formatters = new Array('img','imageurl','text','html'),
 				argObj = this.args2obj(cmd.args,globals), //an object is used to easily check if specific apply commands are present
 				$tag = globals.tags[(argObj.tag || globals.focusTag)],
