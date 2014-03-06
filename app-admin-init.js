@@ -132,6 +132,16 @@ adminApp.u.showProgress = function(progress)	{
 
 //don't execute script till both jquery AND the dom are ready.
 
+adminApp.cmr.push(['cart.orderCreate',function(message,$context){
+	if(message.who != 'ADMIN')	{
+		//cart was checked out by someone else.
+		//leave the dialog open so communication can continue, but pull the cart from the session. and 'lock' the edit cart button.
+		$("button[data-app-role='cartEditButton']").button('disable');
+		adminApp.model.removeCartFromSession($context.data('cartid'));
+		dump(" -------> cart.orderCreate cartMessage received. Cart dropped: "+$context.data('cartid'));
+		}
+	}]);
+
 adminApp.cmr.push(["view",function(message,$context){
 	var $history = $("[data-app-role='messageHistory']",$context);
 	var $o = "<p class='chat_post'><span class='from'>"+message.FROM+"<\/span><span class='view_post'>sent page view:<br \/>";

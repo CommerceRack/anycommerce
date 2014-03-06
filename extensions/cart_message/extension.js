@@ -113,7 +113,9 @@ jqObj -> this is the chat dialog/context, not the message history pane, because 
 								}
 							}
 //now queue up the next request.
-						_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);
+						if(_app.ext.cart_message.vars.carts[cartID])	{
+							_app.ext.cart_message.u.fetchCartMessages(_app.ext.cart_message.vars.carts[cartID].frequency,_rtag.jqObj);
+							}
 						
 						}
 					else	{
@@ -161,6 +163,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					$("[data-app-role='messageHistory']",$context).append("<p class='cart_item_append'>"+opts.FROM+" has added item "+opts.sku+" to the cart.<\/p>");
 					},
 				'chat.post' : function(message,$context)	{
+					dump(message);
 					//do not clear textarea for message input here. this gets run on the receiving side too and could clear something that was being written by the recipient of the chat.post.
 					var $history = $("[data-app-role='messageHistory']",$context);
 					$history.append("<p class='chat_post'><span class='from'>"+message.FROM+"<\/span> "+message.message+"<\/p>");
