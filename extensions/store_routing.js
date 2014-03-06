@@ -164,6 +164,23 @@ optional params:
 				},
 			categoryAnchor : function(path,seo)	{
 				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
+				},
+			searchAnchor : function(type,value)	{
+				var r;
+				if(type == 'tag')	{
+					r = '#!search/tag/'+value;
+					}
+				else if(type == 'keywords')	{
+					r = '#!search/keywords/'+value;
+					}
+// ### FUTURE -> support ability to search for a match on a specific attribute.
+//				else if(type == 'attrib')	{
+//					r = '#!search/attrib/' ... some key value pair.
+//					}
+				else	{
+					//unrecognized type
+					}
+				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
 				}
 			}, //u [utilities]
 
