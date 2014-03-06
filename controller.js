@@ -2075,10 +2075,15 @@ VALIDATION
 //used frequently to throw errors or debugging info at the console.
 //called within the throwError function too
 		dump : function(msg,type)	{
-			type = type || 'log'; //supported types are 'warn' and 'error'
+			// * 201402 -> the default type for an object was changed to debug to take less room in the console. dir is still available if passed as type.
+			type = type || (typeof msg == 'object') ? 'debug' : 'log'; //supported types are 'warn' and 'error'
 //if the console isn't open, an error occurs, so check to make sure it's defined. If not, do nothing.
 			if(typeof console != 'undefined')	{
-				if(typeof console.dir == 'function' && typeof msg == 'object')	{
+// ** 201402 -> moved the type check to the top so that it gets priority (otherwise setting debug on an object is overridden by dir)
+				if(type && typeof console[type] === 'function')	{
+					console[type](msg);
+					}
+				else if(typeof console.dir == 'function' && typeof msg == 'object')	{
 				//IE8 doesn't support console.dir.
 					console.dir(msg);
 					}
@@ -2088,9 +2093,6 @@ VALIDATION
 					}
 				else if(type == 'greet')	{
 					console.log("%c\n\n"+msg+"\n\n",'color: purple; font-weight: bold;')
-					}
-				else if(typeof console[type] === 'function')	{
-					console[type](msg);
 					}
 				else	{} //hhhhmm... unsupported type.
 					

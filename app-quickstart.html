@@ -463,7 +463,7 @@ this will likely become more flexible in the future. ###
 
 
 <div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
-
+	<div data-tlc="set $bob '1234';"></div>
 	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
 	
 	<table class="prodViewerContainer">
@@ -861,7 +861,7 @@ subscribeListsArticle is used for authenticated buyers
 -->
 		<div id="newsletterArticle" class="displayNone textContentArea">
 			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div data-tlc="transmogrify --templateid='subscribeFormTemplate'; apply --append;"></div>
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
 		</div>
 
 		<div id="subscriberListsArticle" class="displayNone textContentArea">
@@ -910,7 +910,7 @@ subscribeListsArticle is used for authenticated buyers
 
 
 		<div id="invoiceArticle" class="displayNone textContentArea">
-			<div data-tlc="transmogrify --templateid='invoiceTemplate'; apply --append;" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='invoiceTemplate'; apply --append;" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
 		</div>
 
 

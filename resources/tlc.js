@@ -380,6 +380,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		}
 
 	this.handle_apply_verb = function(verb,$tag,argObj,globals){
+		// ### TODO -> need to update the verbs to support apply $someothervar
 		switch(verb)	{
 //new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
@@ -618,7 +619,6 @@ returning a 'false' here will exit the statement loop.
 		return r;
 		}
 
-// ### TODO -> need to support bind ~form '#myFormID';, which would create a new 'tag' called form pointing to #myFormID, which MUST be scoped within templateid.
 	this.handleType_BIND = function(cmd,globals,dataset)	{
 		// bind $var '#someSelector' returns Set.type == tag
 		if(cmd.Set.type == 'tag')	{
@@ -644,6 +644,10 @@ returning a 'false' here will exit the statement loop.
 				}
 			}
 		return cmd.Set.value;
+		}
+	
+	this.handleType_SET = function(cmd,globals,dataset)	{
+		globals.binds[cmd.Set.value] = cmd.Src.value;
 		}
 	
 	this.handleType_IF = function(cmd,globals,dataset)	{
@@ -805,16 +809,12 @@ returning a 'false' here will exit the statement loop.
 		return globals.binds[globals.focusBind];
 		}
 
+
+// the proper syntax is as follows:   bind $var '.'; transmogrify --templateid='someTemplate' --dataset=$var;
 	this.handleCommand_transmogrify = function(cmd,globals)	{
-		// ### TODO -> allow for a $var to be set to determine what data should be passed into runTLC. ex: transmogrify $var --templateid='someTemplate'
 		var argObj = this.args2obj(cmd.args,globals);
-//		dump(" ->>>>>>> templateid: "+cmd.args[0].value); 
-		var dataset = {};
-		if(argObj.variable && argObj[argObj.variable])	{
-			dataset = argObj[argObj.variable];
-			}
 		var tmp = new tlc();
-		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:argObj.templateid,dataset:dataset}));
+		globals.tags[globals.focusTag].append(tmp.runTLC({templateid:argObj.templateid,dataset:argObj.dataset}));
 		//this will backically instantate a new tlc (or whatever it's called)
 		}
 
@@ -913,8 +913,13 @@ returning a 'false' here will exit the statement loop.
 			else if(commands[i].type == 'BIND')	{
 				this['handleType_BIND'](commands[i],theseGlobals,dataset);
 				}
+			else if(commands[i].type == 'SET')	{
+				this['handleType_SET'](commands[i],theseGlobals,dataset);
+				}
 			else	{
 				//unrecognized type.
+				dump("There was an unrecognized command type specified in a tlc statement. type: "+commands[i].type+". cmd follows:","warn");
+				dump(cmd);
 				}
 			}
 		}

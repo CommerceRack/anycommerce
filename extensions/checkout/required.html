@@ -17,7 +17,7 @@ item list and summary are separate just to give more control over location.
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom">
 		<legend class="headerPadding">Email / Account Login</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
 		<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
 			Not you? <span class="lookLikeLink zlink">click here</span>.
 		</div>
@@ -27,7 +27,7 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAccountCreate" class="displayNone marginBottom">
 		<legend class="headerPadding">Account Creation</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -40,7 +40,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="bill">Add New Address</button></div>
 		
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
 		
 		<div data-app-role="billToShipContainer">
 		<label>
@@ -55,7 +55,7 @@ item list and summary are separate just to give more control over location.
 	<fieldset data-app-role="chkoutAddressShip" data-app-addresstype="ship" class="displayNone marginBottom">
 		<legend class="headerPadding">Shipping Address</legend>
 		<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
 		<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
 	</fieldset>
 
@@ -63,14 +63,14 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom displayNone">
 		<legend class="headerPadding">Shipping Methods</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
 	
 	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom displayNone">
 		<legend class="headerPadding">Payment Choices</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -78,7 +78,7 @@ item list and summary are separate just to give more control over location.
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutNotes" class="marginBottom displayNone">
 		<legend class="headerPadding">Order Notes/Special Instructions</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -86,7 +86,7 @@ item list and summary are separate just to give more control over location.
 <!-- line items -->	
 	<fieldset data-app-role="chkoutCartItemsList" class="marginBottom displayNone">
 		<legend class="headerPadding">Contents</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -94,7 +94,7 @@ item list and summary are separate just to give more control over location.
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom displayNone">
 		<legend class="headerPadding">Summary</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 	</form>

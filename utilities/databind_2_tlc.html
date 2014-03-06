@@ -119,7 +119,7 @@ function upgradeRenderFormat(odb)	{
 			r = '';
 			if(odb.var || odb.useParentData)	{} //bind is already set.
 			else	{r += buildBind("");}
-			r += "transmogrify $var --templateid='"+odb.loadsTemplate+"'; apply --append;"; break;
+			r += "transmogrify --dataset=$var --templateid='"+odb.loadsTemplate+"'; apply --append;"; break;
 		case 'processList':
 			r = "controller#loop --templateid='"+odb.loadsTemplate+"'; "; break;
 			break;

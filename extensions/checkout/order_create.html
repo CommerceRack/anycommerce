@@ -28,14 +28,14 @@ Where I left off:
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Email / Account Login</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
 	</fieldset>
 
 
 
 	<fieldset data-app-role="chkoutAccountCreate" class="displayNone marginBottom ui-widget-content">
 		<legend class="smallPadding">Account Creation</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -48,7 +48,7 @@ Where I left off:
 		
 		<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|adminAddressCreateUpdateShow" data-mode="create" data-app-addresstype="bill">Add New Address</button></div>
 		
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
 		
 		<div data-app-role="billToShipContainer">
 		<label>
@@ -63,7 +63,7 @@ Where I left off:
 	<fieldset data-app-role="chkoutAddressShip" data-app-addresstype="ship" class="displayNone marginBottom ui-widget-content">
 		<legend class="smallPadding">Shipping Address</legend>
 		<div data-tlc="bind $var '.@SHIP'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
 		<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
 	</fieldset>
 
@@ -71,14 +71,14 @@ Where I left off:
 
 	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Shipping Methods</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
 	
 	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Payment Choices</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
@@ -86,7 +86,7 @@ Where I left off:
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutNotes" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Order Notes/Special Instructions</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 	
@@ -97,7 +97,7 @@ Where I left off:
 	<fieldset data-app-role="chkoutCartItemsList" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Contents</legend>
 		
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent marginBottom"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent marginBottom"></div>
 
 	</fieldset>
 
@@ -106,7 +106,7 @@ Where I left off:
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom ui-widget-content">
 		<legend class="smallPadding">Summary</legend>
-		<div data-tlc="bind $var '.'; transmogrify $var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
