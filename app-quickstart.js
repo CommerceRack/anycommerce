@@ -143,8 +143,6 @@ if(_app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+_app.model.version+" and release: "+_app.vars.release+"</div>");
 	$('.debugQuickLinks','.debug').menu().css({'width':'150px'});
 	$('button','.debug').button();
-
-	_app.ext.quickstart.u.bindNav('.debug .bindByAnchor');
 	$('body').css('padding-bottom',$('.debug').last().height());
 	}
 
@@ -203,8 +201,7 @@ document.write = function(v){
 						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
 						_app.model.dispatchThis('mutable');
 						
-//						_app.ext.quickstart.u.bindNav('#appView .bindByAnchor');
-//						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
+						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
 	
 						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete()}; //gets run after app has been init
 						_app.ext.quickstart.thirdParty.init();
@@ -2015,8 +2012,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						if(index < 0)	{index = csv.length - 1} //after first product, jump to last
 						else if(index >= csv.length)	{index = 0} //afer last item, jump to first.
 						else	{} //leave index alone.
-						
-						showContent('product',{'pid':csv[index]});
+						document.location.hash = _app.ext.store_routing.u.productAnchor(csv[index]);
 						}
 					else	{} //non category datapointer. really should never get here.
 					}
@@ -2118,15 +2114,13 @@ effects the display of the nav buttons only. should be run just after the handle
 					var $nav = $('#companyNav ul:first',$mcac);
 //builds the nav menu.
 					$('.textContentArea',$mcac).not('.disabled').each(function(){
-						$nav.append("<li><a href='#company?show="+$(this).attr('id').replace('Article','')+"'>"+($('h1:first',$(this)).text())+"</a></li>");
+						$nav.append("<li><a href='#!company/"+$(this).attr('id').replace('Article','')+"'>"+($('h1:first',$(this)).text())+"</a></li>");
 						});
 
 					$('#mainContentArea').append($mcac);
 
 					_app.u.handleCommonPlugins($mcac);
 					_app.u.handleButtons($mcac);
-
-					_app.ext.quickstart.u.bindNav('#companyNav a');
 					}
 
 				if(_app.ext.quickstart.u.showArticleIn($mcac,infoObj))	{
@@ -2320,7 +2314,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					$customer = $tmp.children();
 					$customer.attr({id:infoObj.parentID});
 					$('#mainContentArea').append($customer);
-					_app.ext.quickstart.u.bindNav('#customerNav a');
 					_app.u.handleCommonPlugins($customer);
 					_app.u.handleButtons($customer);
 					}
@@ -2483,26 +2476,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				return P;
 			}, //parseAnchor
 			
-//selector is a jquery selector. could be as simple as .someClass or #someID li a
-//will add an onclick event of showContent().  uses the href value to set params.
-//href should be ="#customer?show=myaccount" or "#company?show=shipping" or #product?pid=PRODUCTID" or #category?navcat=.some.cat.id
-			bindNav : function(selector)	{
-//				dump("BEGIN bindNav ("+selector+")");
-				$(selector).each(function(){
-					var $this = $(this);
-//					dump($this.attr('href'));
-					var P = _app.ext.quickstart.u.parseAnchor($this.attr('href'));
-					if(P.pageType == 'category' && P.navcat && P.navcat != '.'){
-//for bindnavs, get info to have handy. add to passive Q and It'll get dispatched by a setInterval.
-_app.calls.appNavcatDetail.init({'path':P.navcat,'detail':'max'},{},'passive');
-						}
-					$this.click(function(event){
-//						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
-						return _app.ext.quickstart.a.showContent('',P)
-						});
-					});
-				}, //bindNav
-
 /*
 will close any open modals. 
 by closing modals only (instead of all dialogs), we can use dialogs to show information that we want to allow the

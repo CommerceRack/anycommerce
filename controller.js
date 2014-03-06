@@ -790,13 +790,22 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				return r;
 				},
 			'match' : function(routeObj,hash){
-				var pattern = routeObj.route.replace(/{{(.*?)}}/g,'([^\\/]+)');
-				if(routeObj.route.charAt(routeObj.route.length - 1) == '*' )	{pattern += "(/\?.*)?";} //allows for wildcards to be set. so admin/ext/a?some=params can be declared w/ admin/{{ext}}/{{a}}*
-				var r = false, regex = new RegExp(pattern), isMatch = regex.exec(hash);
-	//regex.exec[0] will be the match value. so comparing that to the hash will ensure no substring matches get thru.
-	//substring matches can be accomplished w/ a regex in the route.
-				if(isMatch && isMatch[0] == hash)	{
-					r = {'match' : isMatch, 'params' : _app.router._buildMatchParams(routeObj.route,hash,isMatch.splice(1))}; //isMatch is spliced because the first val is the 'match value'.
+				var r;
+				if(routeObj.route == '')	{r = false; dump("routeobj.route was blank"); dump(routeObj);} //can't 'match' against blank.
+				else if(routeObj.route)	{
+					var pattern = routeObj.route.replace(/{{(.*?)}}/g,'([^\\/]+)');
+					if(routeObj.route.charAt(routeObj.route.length - 1) == '*' )	{pattern += "(/\?.*)?";} //allows for wildcards to be set. so admin/ext/a?some=params can be declared w/ admin/{{ext}}/{{a}}*
+					var r = false, regex = new RegExp(pattern), isMatch = regex.exec(hash);
+		//regex.exec[0] will be the match value. so comparing that to the hash will ensure no substring matches get thru.
+		//substring matches can be accomplished w/ a regex in the route.
+					if(isMatch && isMatch[0] == hash)	{
+						r = {'match' : isMatch, 'params' : _app.router._buildMatchParams(routeObj.route,hash,isMatch.splice(1))}; //isMatch is spliced because the first val is the 'match value'.
+						}
+					}
+				else	{
+					//unknown error.
+					dump("in matchFunctions.match, an unknown error occured based on the value of routeObj.route: "+routeObj.route); dump(routeObj);
+					r = false
 					}
 				return r;
 				},
@@ -817,6 +826,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 		_doesThisRouteMatchHash : function(routeObj,hash)	{
 			var r = null;
 			routeObj = routeObj || {};
+			//don't test for .route here because it could be blank, and that's valid.
 			if(routeObj.type && typeof _app.router.matchFunctions[routeObj.type] == 'function')	{
 				r = _app.router.matchFunctions[routeObj.type](routeObj,hash);
 				if(r)	{
@@ -824,7 +834,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 				}
 			else	{
-				_app.u.dump("for route "+routeObj.route+", routeObj.type is not set ["+routeObj.type+"] OR typeof is not a function ["+(typeof _app.router.matchFunctions[routeObj.type])+"].","warn");
+				_app.u.dump("for route ["+routeObj.route+"], routeObj.type is not set ["+routeObj.type+"] OR typeof is not a function ["+(typeof _app.router.matchFunctions[routeObj.type])+"].","warn");
 				_app.u.dump(routeObj);
 				}
 			return r;

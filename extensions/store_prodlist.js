@@ -653,8 +653,9 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 					}
 				else	{
 //					$output = _app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+					$output = $("<div \/>");
 					$output.tlc({
-						'templateid' : mpControlSpec,
+						'templateid' : 'mpControlSpec',
 						'dataset' : plObj,
 						'dataAttribs' : {'id':'mpControl_'+plObj.parentID+'_'+location}
 						})

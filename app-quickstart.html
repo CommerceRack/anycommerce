@@ -262,7 +262,7 @@ each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
 <div id="categoryTemplate" class=" categoryTemplate">
-
+	
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
 	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="">
@@ -289,18 +289,18 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id="categoryListTemplate">
-	<div onclick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class="pointer">
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="120" width="120"></div>
 		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
-	</div>
+	</a>
 </li>
 
 
 <li id="categoryListTemplateRootCats">
-	<div onclick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class="pointer">
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="35" width="35"></div>
 		<div class="catName"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;"></span></div>
-	</div>
+	</a>
 </li>
 
 </ul>
@@ -375,21 +375,10 @@ container ul should have lineItemProdlist class on it instead of productList
 				<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=160 --height=160 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="160" width="160">
 				<div class="buttonList ui-widget ui-widget-header ui-corner-all alignCenter">
 
-<button class="ui-state-default ui-corner-all" title="add item to cart" onclick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
-<span class="ui-icon ui-icon-cart"></span>
-</button>
-
-<button class="ui-state-default ui-corner-all" title="more information" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">
-<span class="ui-icon ui-icon-info"></span>
-</button>
-
-<button class="ui-state-default ui-corner-all" title="write a review for this item" data-app-click="store_crm|productReviewShow">
-<span class="ui-icon ui-icon-star"></span>
-</button>
-
-<button class="ui-state-default ui-corner-all" title="remove item from list" data-app-click="store_crm|productBuyerListRemoveExec">
-<span class="ui-icon ui-icon-trash"></span>
-</button>
+<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class='applyButton' data-text='true' data-icon-primary='ui-icon-cart'>Add To Cart</a>
+<a href='#' data-app-click="quickstart|quickviewShow" class='applyButton' data-text='true' data-icon-primary='ui-icon-info'>Details</a>
+<a href='#' data-app-click="store_crm|productReviewShow" class='applyButton' data-text='true' data-icon-primary='ui-icon-star'>Write Review</a>
+<a href='#' data-app-click="store_crm|productBuyerListRemoveExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash'>Remove From List</a>
 
 				</div>
 			</div>
@@ -430,11 +419,11 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
 		
 	</div>
-	<div class="hideInMinimalMode pointer moreDetails" onclick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
-	<div onclick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class="pointer">
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer">
 		<div class="prodThumbContainer">
 		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
@@ -442,8 +431,8 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
 
 		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-	</div>
-	<div class="hideInMinimalMode pointer moreDetails" onclick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+	</a>
+	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
 </li>
 </ul>
 
@@ -722,7 +711,7 @@ if you change these, you should move them above this comment so that when you (o
 <!--  used in breadcrumb -->
 <ul>
 	<li id="breadcrumbTemplate">
-	<a data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;" href="#" onclick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});"></a>
+	<a data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;" data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';"></a>
 	</li>
 </ul>
 
@@ -853,11 +842,11 @@ if you change these, you should move them above this comment so that when you (o
 	<ul class="listStyleNone noPadOrMargin">
 <!-- before restoring this, test cuz news form on left was causing some conflicts
 		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
-		<li><a href="#customer?show=myaccount">My Account</a></li>
-		<li><a href="#customer?show=changepassword">Change Password</a></li>
-		<li><a href="#customer?show=orders">Order History</a></li>
-		<li><a href="#customer?show=lists">Manage Lists</a></li>
-		<li class="hideIfLoggedOut"><a href="#customer?show=logout">Log Out</a></li>
+		<li><a href="#!customer/myaccount">My Account</a></li>
+		<li><a href="#!customer/changepassword">Change Password</a></li>
+		<li><a href="#!customer/orders">Order History</a></li>
+		<li><a href="#!customer/lists">Manage Lists</a></li>
+		<li class="hideIfLoggedOut"><a href="#!customer/logout">Log Out</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -1102,7 +1091,9 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
 			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogClose">Continue Shopping</button></span>
 	
-			<span id="inStoreCheckoutButton thisButton" title="proceed to secure checkout"><button class="applyButton ui-state-highlight checkoutButton" onclick="showContent('checkout',{});">Store Checkout</button></span>
+			<span id="inStoreCheckoutButton thisButton" title="proceed to secure checkout">
+				<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
+			</span>
 	
 			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
 	
@@ -1515,7 +1506,7 @@ The 'data-action' attribute is used to assign an onclick.
 		</div><!-- /recoverPasswordContainer -->
 
 		<div>
-		<button class='applyButton' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+		<a class='applyButton' href='#!customer/newsletter'>Create Account</a>
 		</div>
 	</div>
 
@@ -1535,11 +1526,11 @@ The 'data-action' attribute is used to assign an onclick.
 <ul class='debugQuickLinks'>
 	<li>Store Links
 	<ul>
-		<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
-		<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
-		<li><a href='#' onClick="return showContent('cart',{'show':'bob'});">Cart</a></li>
-		<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
-		<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
+		<li><a href='#!home'>Homepage</a></li>
+		<li><a href='#!customer/orders'>Orders</a></li>
+		<li><a href='#!cart' >Cart</a></li>
+		<li><a href='#!company'>Returns</a></li>
+		<li><a href='#!company/privacy'>Privacy</a></li>
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>
