@@ -1932,6 +1932,16 @@ vars.findertype is required. acceptable values are:
 				},
 
 
+			tlcTest : function($target,P)	{
+				
+				setTimeout(function(){
+					console.clear();
+					dump(" -> console cleared by tlcTest.",'greet');
+					$target.tlc({'templateid':'tlctest','dataset':_app.data.adminDomainList});
+					},500); //slight delay to make sure data is in memory and all the doc.writes are done throwing garbage at the console.
+				
+				},
+
 			showRSS : function($target)	{
 				_app.ext.admin.i.DMICreate($target,{
 					'header' : 'RSS Feeds',

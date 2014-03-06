@@ -251,7 +251,7 @@ var tlc = function()	{
 	this.makeImageURL	= function(vars)	{
 		var r;
 //		dump(" >>>>>>>>>>>> BEGIN tlc.makeImageURL");
-		if(vars['data-filename'])	{
+		if(vars['data-media'])	{
 			if(vars['data-bgcolor'] && vars['data-bgcolor'].charAt(0) == '#')	{vars['data-bgcolor'] = vars['data-bgcolor'].substr(1)}
 			var url = '';
 	//In an admin session, the config.js isn't loaded. The secure domain is set as a global var when a domain is selected or can be retrieved from adminDomainList
@@ -274,7 +274,7 @@ var tlc = function()	{
 				url = (location.protocol === 'https:') ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
 				url += "media\/img\/"+$._app.vars.username+"\/";
 				}
-			var sizing = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-filename'];
+			var sizing = (vars.width ? "-W"+vars.width : "")+(vars.height ? "-H"+vars.height : "")+(vars['data-bgcolor'] ? "-B"+vars['data-bgcolor'] : "")+(vars['data-minimal'] ? "-M" : "")+"/"+vars['data-media'];
 			r = url+(sizing.substr(1)); //don't want the first character to be a -. all params are optional, stripping first char is the most efficient way to build the path.
 			}
 		else	{
@@ -300,21 +300,30 @@ This one block should get called for both img and imageurl but obviously, imageu
 		
 		if(argObj.media)	{
 			//build filepath for media lib
-			//default = true is use focusTag. default = $tag says to use another, already defined, tag so focus shifts within this function, but focusTag does NOT change.
-			if(typeof argObj.default === 'string')	{
-				if(globals.tags[argObj.default])	{
-					$tag = globals.tags[argObj.default]
+			if(argObj.imgdefault === true)	{} //use the tag in focus to build image attributes. ex:  --imgdefault
+			else if(argObj.imgdefault)	{
+				//tag value was passed. ex: --imgdefault=~someothertag
+				if(globals.tags[argObj.imgdefault])	{
+					$tag = globals.tags[argObj.imgdefault]
 					}
 				else	{
 					dump("Formatter img/imageurl specified "+argObj.default+" as the tag src, but that tag has not been defined",'warn');
 					}
 				}
+			else	{} //image attributes will be passed.
+			//### TODO -> need support for 'alt' as a variable.
+			//build the mediaParams from the arguments first.  THEN if imgdefault is set, override individually.
+			mediaParams = {'width':argObj.width,'height':argObj.height,'data-bgcolor':argObj.bgcolor,'data-minimal':(argObj.minimal ? argObj.minimal : 0),'data-media':argObj.media};
+			filePath = this.makeImageURL(mediaParams);
 
-			if(argObj.default)	{
-				dump(" -> use s of tag to build image path");
-				//here need to check if default is set to a tag. not sure how, docs are not specific.
+			//okay, now build the media params object.
+			if(argObj.imgdefault)	{
 				if($tag.is('img'))	{
-					mediaParams = {'width':$tag.attr('width'),'height':$tag.attr('height'),'data-bgcolor':$tag.data('bgcolor'),'data-minimal':$tag.data('minimal'),'data-filename':argObj.media};
+					if($tag.attr('width'))	{mediaParams.width = $tag.attr('width')}
+					if($tag.attr('height'))	{mediaParams.height = $tag.attr('height')}
+					if($tag.attr('data-bgcolor'))	{mediaParams.bgcolor = $tag.attr('data-bgcolor')}
+					if($tag.attr('data-minimal'))	{mediaParams.minimal = $tag.attr('data-minimal')}
+					if($tag.attr('alt'))	{mediaParams.minimal = $tag.attr('alt')}
 					filePath = this.makeImageURL(mediaParams);
 					}
 				else	{
@@ -323,8 +332,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 					}
 				}
 			else	{
-				mediaParams = {'width':argObj.width,'height':argObj.height,'data-bgcolor':argObj.bgcolor,'data-minimal':(argObj.minimal ? argObj.minimal : 0),'data-filename':argObj.media};
-				filePath = this.makeImageURL(mediaParams);
+				//defaults are already created. move along...
 				}
 			}
 		else if(argObj.src && argObj.src.value)	{
@@ -345,7 +353,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 		else if(filePath)	{
 			r = filePath;
 			}
-		else	{} //some error occured. should have already been written to console by now.
+		else	{
+			r = false;
+			} //some error occured. should have already been written to console by now.
 
 		return r;
 		}
@@ -379,8 +389,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 			}
 		}
 
-	this.handle_apply_verb = function(verb,$tag,argObj,globals){
-		// ### TODO -> need to update the verbs to support apply $someothervar
+	this.handle_apply_verb = function(verb,argObj,globals){
+		// ### TODO -> need to update the verbs to support apply ~someothertag --dataset=$var --someVerb
+		var $tag = globals.tags[globals.focusTag];
 		switch(verb)	{
 //new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
@@ -645,11 +656,23 @@ returning a 'false' here will exit the statement loop.
 			}
 		return cmd.Set.value;
 		}
-	
+
+	this.handleType_FOREACH = function(cmd,globals,dataset)	{
+		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
+		for(var index in globals.binds[cmd.Members.value])	{
+			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different here than the rest of the tlc statement.
+			newGlobals.binds = {};
+			newGlobals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
+			newGlobals.focusBind = cmd.Set.value;
+			this.executeCommands(cmd.Loop.statements,newGlobals,globals.binds[cmd.Members.value][index]);
+			}
+		return cmd.Set.value;
+		}
+
 	this.handleType_SET = function(cmd,globals,dataset)	{
 		globals.binds[cmd.Set.value] = cmd.Src.value;
 		}
-	
+
 	this.handleType_IF = function(cmd,globals,dataset)	{
 //		dump("BEGIN handleIF"); console.debug(globals);
 		var p1; //first param for comparison.
@@ -750,7 +773,7 @@ returning a 'false' here will exit the statement loop.
 					this.handle_apply_formatter(theFormatter,$tag,argObj,globals);
 					}
 				
-				this.handle_apply_verb(theVerb,$tag,argObj,globals);
+				this.handle_apply_verb(theVerb,argObj,globals);
 
 				}
 			else if(numVerbs === 0)	{
@@ -907,19 +930,13 @@ returning a 'false' here will exit the statement loop.
 					break;
 					}
 				}
-			else if(commands[i].type == 'IF')	{
-				this['handleType_IF'](commands[i],theseGlobals,dataset);
-				}
-			else if(commands[i].type == 'BIND')	{
-				this['handleType_BIND'](commands[i],theseGlobals,dataset);
-				}
-			else if(commands[i].type == 'SET')	{
-				this['handleType_SET'](commands[i],theseGlobals,dataset);
+			else if(typeof this['handleType_'+commands[i].type] === 'function')	{
+				this['handleType_'+commands[i].type](commands[i],theseGlobals,dataset);
 				}
 			else	{
 				//unrecognized type.
 				dump("There was an unrecognized command type specified in a tlc statement. type: "+commands[i].type+". cmd follows:","warn");
-				dump(cmd);
+				dump(commands);
 				}
 			}
 		}

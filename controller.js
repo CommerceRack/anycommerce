@@ -2076,7 +2076,7 @@ VALIDATION
 //called within the throwError function too
 		dump : function(msg,type)	{
 			// * 201402 -> the default type for an object was changed to debug to take less room in the console. dir is still available if passed as type.
-			type = type || (typeof msg == 'object') ? 'debug' : 'log'; //supported types are 'warn' and 'error'
+			if(!type)	{type = (typeof msg == 'object') ? 'debug' : 'log';} //supported types are 'warn' and 'error'
 //if the console isn't open, an error occurs, so check to make sure it's defined. If not, do nothing.
 			if(typeof console != 'undefined')	{
 // ** 201402 -> moved the type check to the top so that it gets priority (otherwise setting debug on an object is overridden by dir)
