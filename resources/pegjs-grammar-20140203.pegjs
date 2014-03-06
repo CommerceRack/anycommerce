@@ -4,6 +4,7 @@ dataTLC
 grammar
  = cmd:(IfStatement) _ lb* { return cmd; }
  / cmd:(WhileLoopStatement) _ lb* { return cmd; }
+ / cmd:(ForeachLoopStatement) _ lb* { return cmd; }
  / cmd:(BindStatement) _ lb* { return cmd; } 
  / cmd:(setStatement) _ lb* { return cmd; } 
  / cmd:(command) _ lb* { return cmd; }
@@ -56,6 +57,17 @@ WhileLoopStatement
       });
    }
 
+
+// foreach $item in $items {{ inner loop }};
+ForeachLoopStatement
+  = "foreach" _ set:(variable) _ "in" _ members:(variable) _ loop:Block lb+ {
+      return ({
+        type: "FOREACH",
+        Set: set,
+        Members: members,
+        Loop: loop,
+      });
+   }
 
 
 Block
@@ -189,3 +201,4 @@ _
 
 lb
  = ";"
+
