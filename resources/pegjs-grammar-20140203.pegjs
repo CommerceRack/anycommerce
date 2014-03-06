@@ -5,6 +5,7 @@ grammar
  = cmd:(IfStatement) _ lb* { return cmd; }
  / cmd:(WhileLoopStatement) _ lb* { return cmd; }
  / cmd:(BindStatement) _ lb* { return cmd; } 
+ / cmd:(varStatement) _ lb* { return cmd; } 
  / cmd:(command) _ lb* { return cmd; }
 
 command
@@ -29,6 +30,10 @@ BindStatement
   return { type:"BIND", Set:set, Src:src }
   }
 
+varStatement
+ = "var" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
+  return { type:"VAR", Set:set, Src:src }
+  }
 
 // if (command) {{ }} else {{ }};
 IfStatement
