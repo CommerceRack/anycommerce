@@ -167,12 +167,19 @@ document.write = function(v){
 				var cartID = false;
 //				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
 				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
-					_app.u.dump(" -> existing cart is valid. add to cart manager");
+					_app.u.dump(" -> existing cart is valid. add to cart manager"); 
 					if($('#cartMessenger').length)	{
 						cartID = _rtag.cartid;
 						_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
 						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
-						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]});
+						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);
+						$("textarea[name='message']",'#cartmessenger').on('keypress',function(event){
+							if (event.keyCode == 13) {
+								$("[data-app-role='messageSubmitButton']",$(this).closest('form')).trigger('click');
+								return false;
+								}
+							return true;
+							});
 						}
 					else	{
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
@@ -1048,7 +1055,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'cart':
-						infoObj.performJumpToTop = (infoObj.show === 'inline' ? true : false); //dont jump to top.
 						$new = _app.ext.quickstart.u.showCart(infoObj);
 						break;
 
@@ -1559,8 +1565,8 @@ $target.tlc({
 //				dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; dump('transition suppressed: showing modal cart.');}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading same category.");}
+//				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; dump('transition suppressed: showing modal cart.');}
+				if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading same category.");}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading homepage.");}
 				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; dump("transition suppressed: reloading same product.");}
 				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; dump("transition suppressed: changing company articles.");}
@@ -2212,42 +2218,37 @@ elasticsearch.size = 50;
 //				dump("BEGIN quickstart.u.showCart"); dump(infoObj);
 				if(typeof infoObj != 'object'){var infoObj = {}}
 				infoObj.templateID = 'cartTemplate';
-				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
-				infoObj.back = (infoObj.show == 'inline') ? -1 : 0;
+				infoObj.parentID = 'mainContentArea_cart';
 				infoObj.state = 'init'; //needed for handleTemplateEvents.
 				
 				var $cart = $('#'+infoObj.parentID);
 				
 				_app.renderFunctions.handleTemplateEvents($cart,infoObj);
 
-				if(infoObj.show == 'inline')	{
 //only create instance once.
-					$cart = $('#mainContentArea_cart');
-					if($cart.length)	{
-						//show cart
-						$cart.hide().trigger('refresh');
-						infoObj.state = 'complete';
-						_app.renderFunctions.handleTemplateEvents($cart,infoObj);
-						}
-					else	{
-						infoObj.cartid = _app.model.fetchCartID();
-						$cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
-						$cart.hide().on('complete',function(){
-							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
-								$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
-								});
-							});
-						$cart.attr({'id':infoObj.parentID});
-						$cart.appendTo("#mainContentArea");
-						}
-//This will load the cart from memory, if set. otherwise it will fetch it.
-//so if you need to update the cart, run a destroy prior to showCart.
-					$cart.trigger((_app.data.cartDetail ? 'refresh' : 'fetch'),{'Q':'mutable'});
-					_app.model.dispatchThis();
+				$cart = $('#mainContentArea_cart');
+				if($cart.length)	{
+					//show cart
+					$cart.hide().trigger('refresh');
+					infoObj.state = 'complete';
+					_app.renderFunctions.handleTemplateEvents($cart,infoObj);
 					}
 				else	{
-					_app.ext.quickstart.u.showCartInModal(infoObj);
+					infoObj.cartid = _app.model.fetchCartID();
+					$cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
+					$cart.hide().on('complete',function(){
+						$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
+							$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
+							});
+						});
+					$cart.attr({'id':infoObj.parentID});
+					$cart.appendTo("#mainContentArea");
 					}
+//This will load the cart from memory, if set. otherwise it will fetch it.
+//so if you need to update the cart, run a destroy prior to showCart.
+				$cart.trigger((_app.data['cartDetail|'+infoObj.cartid] ? 'refresh' : 'fetch'),{'Q':'mutable'});
+				_app.model.dispatchThis();
+
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
 				_app.renderFunctions.handleTemplateEvents($cart,infoObj);
 				return $cart;
@@ -2997,10 +2998,13 @@ else	{
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
-							showContent('cart',{'show':$ele.data('show')});
+							_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+							dump(" ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
 							}
 						}},'immutable');
 					_app.model.dispatchThis('immutable');
+					
 					}
 				else	{} //do nothing, the validation handles displaying the errors.
 				},

@@ -34,6 +34,7 @@ var cart_message = function(_app) {
 			init : {
 				onSuccess : function()	{
 					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+					window.cartMessagePush = _app.ext.cart_message.u.cartMessagePush; //global shortcut.
 					_app.cmr = _app.cmr || [];
 //					_app.u.dump(" -> _app.cmr: "); _app.u.dump(_app.cmr);
 					var L = _app.cmr.length;
@@ -154,6 +155,10 @@ some defaults are present, but they can be overwritten by the app easily enough.
 				'chat.join' : function(message,$context)	{
 					$("[data-app-role='messageInput']",$context).show();
 					$("[data-app-role='messageHistory']",$context).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+					},
+				'cart.itemAppend' : function(opts,$context)	{
+					$("[data-app-role='messageInput']",$context).show();
+					$("[data-app-role='messageHistory']",$context).append("<p class='cart_item_append'>"+opts.FROM+" has added item "+opts.sku+" to the cart.<\/p>");
 					},
 				'chat.post' : function(message,$context)	{
 					//do not clear textarea for message input here. this gets run on the receiving side too and could clear something that was being written by the recipient of the chat.post.
@@ -278,7 +283,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 				showAdminCMUI : function(cartID)	{
 					if(cartID)	{
 						var $UI = $("<div \/>");
-						$UI.attr({'title':'CM: '+cartID,'id':'CM_'+cartID});
+						$UI.attr({'title':'CM: '+cartID,'id':'CM_'+cartID,'data-cartid':cartID});
 						$UI.anycontent({'templateID':'adminCartMessageTemplate'}).showLoading({'message':'Fetching cart detail'});
 						_app.ext.cart_message.u.initCartMessenger(cartID,$("[data-app-role='cartMessenger']",$UI)); //starts the cart message polling. needs to be after the anycontent.
 						$UI.dialog({
@@ -289,6 +294,15 @@ some defaults are present, but they can be overwritten by the app easily enough.
 								_app.ext.cart_message.u.destroyCartMessenger($("[data-app-role='cartMessenger']",$(this)).data('cartid')); //kills the cart message polling
 								}
 							});
+
+						$("textarea[name='message']",$UI).on('keypress',function(event){
+							if (event.keyCode == 13) {
+								$("[data-app-role='messageSubmitButton']",$(this).closest('form')).trigger('click');
+								return false;
+								}
+							return true;
+							});
+
 						_app.model.addCart2Session(cartID); //update _app.vars.carts
 						_app.u.handleButtons($UI);
 						_app.u.addEventDelegation($UI);
@@ -330,6 +344,25 @@ some defaults are present, but they can be overwritten by the app easily enough.
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 			u : {
+				//cartMessagePush is here for doing quick, no nonsense updates to the cart message Q. no callbacks.
+				//a global alias is created for this:  cartMessagePush
+				//cartid and what are required. ex:  cartMessagePush(cartid,'cart.orderCreated');
+				//P is optional and can support 'message' or 'vars'.
+				cartMessagePush : function(cartid,what,P)	{
+					P = P || {};
+					if(cartid && what)	{
+						P._cmd = 'cartMessagePush';
+						P.what = what;
+						P._cartid = cartid;
+						_app.model.addDispatchToQ(P,'mutable');
+						_app.model.dispatchThis('mutable');
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In cartMessagePush, either cartid ["+cartid+"] or what ["+what+"] were left blank. both are required.","gMessage":true});
+						dump("In cartMessagePush, either cartid ["+cartid+"] or what ["+what+"] were left blank.",'debug');
+						}
+					},
+				
 /*
 to immediately fetch the messages, pass in zero as 'when'.
 This intentionally does NOT reset the polling var. If that needs to be reset, set it when this function is called.
@@ -394,7 +427,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 		e : {
 			adminCartInteract : function($ele,p)	{
 				var cartid = $ele.closest("[data-cartid]").data('cartid');
-				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartid},'mutable');
+				cartMessagePush(cartid,'chat.join');
 				_app.ext.cart_message.a.showAdminCMUI(cartid);
 				},
 
@@ -441,8 +474,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var sku = $("input[name='sku']",'#chooserResultContainer').val();
 				//cart id on parent set by gotoProductShowChooser
-				_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'goto.product','vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')},'immutable');
-				_app.model.dispatchThis('immutable');
+				cartMessagePush(cartid,'goto.product',{'vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')});
 				$('#prodFinder').anymessage({'message':'Product '+sku+' sent to buyer.','errtype':'done'});
 				},
 
@@ -458,8 +490,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				var $fieldset = $ele.closest('fieldset'), cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(_app.u.validateForm($fieldset) && cartID)	{
 					var $message = $ele.closest('fieldset').find("[name='message']");
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.post','message':$message.val(),'_cartid':cartID},'immutable');
-					_app.model.dispatchThis('immutable');
+					cartMessagePush(cartID,'chat.post',{'message':$message.val()});
 					_app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
 					$message.val(""); //reset textarea.
 					}
@@ -494,8 +525,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 				p.preventDefault();
 				var cartID = $ele.closest("[data-app-role='cartMessenger']").data('cartid');
 				if(cartID)	{
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'chat.join','_cartid':cartID},'immutable');
-					_app.model.dispatchThis('immutable');
+					cartMessagePush(cartID,'chat.join');
 					_app.ext.cart_message.u.fetchCartMessages(0,$ele.closest("[data-app-role='cartMessenger']"));
 					$ele.hide();
 					}

@@ -217,6 +217,11 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				$checkout.empty();
 				$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
 
+//This will add a cart message. handy if the buyer and merchant are dialoging.
+				if(cartMessagePush in window)	{
+					cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
+					}
+
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart id, if necessary (admin doesn't auto-create a new one).
 
 				_app.model.removeCartFromSession(oldCartID); //keep this remove high in code so that if anything else goes wrong, this still gets done.

@@ -169,9 +169,9 @@ calls should always return the number of dispatches needed. allows for cancellin
 
 		cartSet : {
 			init : function(obj,_tag,Q)	{
-				if(obj._cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+obj._cartid,_app))	{
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':obj._cartid},'immutable');
-					}
+//				if(obj._cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+obj._cartid,_app))	{
+//					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','_cartid':obj._cartid},'immutable');
+//					}
 				obj["_cmd"] = "cartSet";
 				obj._tag = _tag || {};
 				_app.model.addDispatchToQ(obj,Q || 'immutable');
@@ -1369,13 +1369,13 @@ in a reorder, that data needs to be converted to the variations format required 
 				}, //cartItemUpdateExec
 			//will post the input to the cart, passively.
 			cartSetAttrib : function($ele,p)	{
-				var cartid = $ele.closest("[data-cartid]").data('cartid');
+				var cartid = $ele.data('cartid') || $ele.closest("[data-cartid]").data('cartid');
 				if(cartid)	{
 					var cmdObj = {
 						_cartid : cartid
 						};
-					$cmdObj[$ele.attr('name')] = $ele.val();
-					_app.ext.cco.calls.cartSet.init(cmdObj,{},'passive');
+					cmdObj[$ele.attr('name')] = $ele.val();
+					_app.ext.cco.calls.cartSet.init(cmdObj,{},'passive'); _app.model.dispatchThis('passive');
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In cco.e.cartSetAttib, unable to ascertain cart id. Be sure data-cartid is set on/above trigger element.","gMessage":true});
