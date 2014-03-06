@@ -172,6 +172,7 @@ document.write = function(v){
 						cartID = _rtag.cartid;
 						_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
 						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]});
 						}
 					else	{
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
@@ -2013,6 +2014,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						else if(index >= csv.length)	{index = 0} //afer last item, jump to first.
 						else	{} //leave index alone.
 						document.location.hash = _app.ext.store_routing.u.productAnchor(csv[index]);
+
 						}
 					else	{} //non category datapointer. really should never get here.
 					}
@@ -2406,7 +2408,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								$(document.body).removeClass('buyerLoggedIn');
 								$('.username').empty();
 								_app.u.logBuyerOut();
-								showContent('homepage',{});
+								document.location.hash = '';
 								break;
 							default:
 								dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
@@ -2575,7 +2577,7 @@ buyer to 'take with them' as they move between  pages.
 						}
 					$("<li \/>").on('click',function(){
 						$('.productSearchKeyword').val('"+keywords+"');
-						showContent('search',{'KEYWORDS':'"+keywords+"'});
+						document.location.hash = _app.ext.store_routing.u.searchAnchor('keywords',keywords);
 						return false;
 						}).text(keywords).appendTo($o);
 					}
@@ -2953,7 +2955,7 @@ else	{
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
-							showContent('cart');
+							document.location.hash = '#!cart';
 							}
 						});
 					}

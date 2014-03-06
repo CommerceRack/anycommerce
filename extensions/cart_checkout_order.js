@@ -1367,6 +1367,20 @@ in a reorder, that data needs to be converted to the variations format required 
 					//cartItemUpdate will handle error display.
 					}
 				}, //cartItemUpdateExec
+			//will post the input to the cart, passively.
+			cartSetAttrib : function($ele,p)	{
+				var cartid = $ele.closest("[data-cartid]").data('cartid');
+				if(cartid)	{
+					var cmdObj = {
+						_cartid : cartid
+						};
+					$cmdObj[$ele.attr('name')] = $ele.val();
+					_app.ext.cco.calls.cartSet.init(cmdObj,{},'passive');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In cco.e.cartSetAttib, unable to ascertain cart id. Be sure data-cartid is set on/above trigger element.","gMessage":true});
+					}
+				},
 
 			cartZipUpdateExec : function($ele,p)	{
 				_app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');

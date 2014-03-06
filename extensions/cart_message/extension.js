@@ -284,6 +284,8 @@ some defaults are present, but they can be overwritten by the app easily enough.
 						$UI.dialog({
 							'width' : '30%',
 							'close' : function(event,ui)	{
+								//log that the admin is leaving.
+								_app.ext.cart_message.cmResponse['chat.exit']("The admin has left the chat.",$UI);
 								_app.ext.cart_message.u.destroyCartMessenger($("[data-app-role='cartMessenger']",$(this)).data('cartid')); //kills the cart message polling
 								}
 							});

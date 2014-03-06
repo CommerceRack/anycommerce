@@ -175,6 +175,7 @@ ANIMATION TESTING
 			<textarea name='message' required='required' class='fullWidth' rows='5' placeholder='send a message'></textarea>
 			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send Message</button>
 		</fieldset>
+		<input type='text' name='bill/firstname' value='' data-tlc="bind $var 'bill.firstname'; apply --select=$var;" data-app-blur='cco|cartSetAttrib' />
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
 		<button class='applyButton displayNone show4ActiveChat' data-app-click="quickstart|cartMessagePageSend" title='Show the associate what page I am on.'>Send Page</button>
 		<button data-app-click="cart_message|cartCSRShortcutExec" class='applyButton hide4ActiveChat'>Cart Shortcut</button><!-- if the buyer is already on the phone w/ the merchant, they could use this so the admin can access the cart -->
@@ -860,7 +861,7 @@ subscribeListsArticle is used for authenticated buyers
 -->
 		<div id="newsletterArticle" class="displayNone textContentArea">
 			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div data-tlc="transmogrify templateid='subscribeFormTemplate'; apply --append;"></div>
+			<div data-tlc="transmogrify --templateid='subscribeFormTemplate'; apply --append;"></div>
 		</div>
 
 		<div id="subscriberListsArticle" class="displayNone textContentArea">
