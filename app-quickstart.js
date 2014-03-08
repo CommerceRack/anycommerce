@@ -2741,6 +2741,8 @@ else if(tagObj.navcat)	{
 		numRequests += _app.ext.store_navcats.calls.appPageGet.init({'PATH':tagObj.navcat,'@get':pageAttributes});
 		}
 
+
+	}
 	if(numRequests > 0)	{
 		delete tagObj.datapointer; //delete datapointer or ping will save over it.
 		_app.calls.ping.init(tagObj);
@@ -2750,8 +2752,6 @@ else if(tagObj.navcat)	{
 		}		
 
 	return numRequests;
-
-	}
 
 
 				}, //buildQueriesFromTemplate
