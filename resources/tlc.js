@@ -515,26 +515,36 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.format_currency = function(argObj,globals)	{
 		var r = "$"+globals.binds[argObj.bind]; //+" ("+arg.value.value+")";
-		globals.binds[argObj.bind] = r
 		return r;
 		} //currency
+
 	this.format_prepend = function(argObj,globals)	{
 		var r = arg.value.value+globals.binds[argObj.bind];
-		globals.binds[argObj.bind] = r
 		return r;
 		} //prepend
+
 	this.format_append = function(argObj,globals)	{
 		var r = globals.binds[argObj.bind]+arg.value.value;
-		globals.binds[argObj.bind] = r
 		return r;
 		} //append
+
 	this.format_length = function(argObj,globals)	{
 		var r;
 		if(globals.binds[argObj.bind])	{r = globals.binds[argObj.bind].length;}
 		else	{r = 0;}
-		globals.binds[argObj.bind] = r
 		return r;
 		} //length
+
+	//will return the first X characters of a string where X = value passed in --chop
+	this.format_chop = function(argObj,globals)	{
+		var r = globals.binds[argObj.bind];
+		if(globals.binds[argObj.bind] && Number(argObj.chop) && globals.binds[argObj.bind].length > argObj.chop)	{
+			r = globals.binds[argObj.bind].toString();
+			r = r.substr(0,Number(argObj.chop));
+			}
+		return r;
+		}//chop
+	
 	this.format_truncate = function(argObj,globals)	{
 		var
 			r = globals.binds[argObj.bind].toString(), //what is returned. Either original value passed in or a truncated version of it.
@@ -546,16 +556,25 @@ This one block should get called for both img and imageurl but obviously, imageu
 				r = r.substring(0, len); //Truncate the content of the string
 				r = $.trim(r.replace(/\w+$/, '')); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
 				r += '&#8230;'; //Add an ellipses to the end
-				globals.binds[argObj.bind] = r;
 				}
 			}
 		return r;
 		} //truncate
+
 	this.format_uriencode = function(argObj,globals)	{
 		var r = encodeURI(globals.binds[argObj.bind]);
-		globals.binds[argObj.bind] = r
 		return r;
 		} //truncate
+
+
+/* //////////////////////////////     SETs (these are formats permitted on a set command) 	 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
+
+	this.set_split = function(arg,globals)	{
+		var argObj = this.arg2obj(arg);
+		dump(argObj);
+		}
+
+
 
 //TLC/Render formats could be stores in 1 of a variety of places.  Either in extension.renderFormats, extension.tlcFormats, controller.tlcFormats, controller.renderFormats or within tlc itself (core).
 //The function uses the tlc statement to determine where to get the formatting function from and then to execute that format.
@@ -683,7 +702,10 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleType_SET = function(cmd,globals,dataset)	{
-		globals.binds[cmd.Set.value] = cmd.Src.value;
+		dump(" --------> got to handleType_SET");
+		var r = globals.binds[cmd.args[1].value];
+		
+		globals.binds[cmd.args[0].value] = r;
 		}
 
 	this.handleType_IF = function(cmd,globals,dataset)	{
@@ -725,27 +747,27 @@ returning a 'false' here will exit the statement loop.
 		return (action == 'isTrue' ? true : false);
 		}
 
-	
-
 
 /* //////////////////////////////     COMMAND HANDLERS		 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 
 	this.handleCommand_format = function(cmd,globals)	{
-		var format = cmd.args[0].key, r;
-//		dump(' -> cmd: '); dump(cmd);
-		if(cmd.module == 'core' && this['format_'+format])	{
-			var argObj = args2Obj(cmd.args[i],globals);
-			argObj.bind = (argObj.type) ? argObj.value : globals.focusBind; //what variable is being affected by the format.
+		var r;
+		var argObj = this.args2obj(cmd.args,globals);
+		argObj.bind = (argObj.type) ? argObj.value : globals.focusBind; //what variable is being affected by the format.
+		if(cmd.module == 'core')	{
+			//sequence is important here, so args MUST be processed in order. can't loop thru argObj for this.
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-				try	{
-					this['format_'+argObj.key](argObj,globals);
+				//key will be set for the args that are a format. there may be non 'key' args, such as putting a variable into scope.
+				if(cmd.args[i].key && typeof this['format_'+cmd.args[i].key] == 'function')	{
+					try	{
+						globals.binds[argObj.bind] = this['format_'+cmd.args[i].key](argObj,globals);
+						}
+					catch(e)	{}
 					}
-				catch(e)	{}
 				}
 			}
 		else	{
-			dump(" -> invalid core format ["+format+"] specified.",'warn');
-			//invalid format specified.
+			//currently, only core formats are supported.
 			}
 		return r;
 		}
@@ -934,7 +956,7 @@ returning a 'false' here will exit the statement loop.
 			},globals);
 
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
-//			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
+			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
 				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
 				else	{

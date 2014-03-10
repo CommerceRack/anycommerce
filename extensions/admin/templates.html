@@ -1132,9 +1132,10 @@ format $tender --path='.tender';
 $tender = 'cash' at the end.
 -->
 <h3 data-tlc="bind $var '.media-host'; apply --append;">media host: </h3>
+<h4 data-tlc="set $var 'my|little|buttercup' --split='|';">media host: </h4>
 <table>
-<tbody data-tlc="bind $items '.@DOMAINS'; foreach $item in $items {{export '%domain' $item;}};"></tbody>
-<!-- transmogrify --templateid='tlclisttest' --dataset=$item; apply --append; -->
+<!--<tbody data-tlc="bind $items '.@DOMAINS'; foreach $item in $items {{export '%domain' $item;}};"></tbody>
+ transmogrify --templateid='tlclisttest' --dataset=$item; apply --append; -->
 </table>
 </div>
 
