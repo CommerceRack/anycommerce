@@ -2645,7 +2645,7 @@ buyer to 'take with them' as they move between  pages.
 						}
 					else	{
 //						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
-						$parent = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID,'verb':'template'});
+						$parent = $("<div>",{id:parentID,"data-catsafeid":catSafeID}).tlc({templateid:infoObj.templateID,'verb':'template'}).children();
 //if dialog is set, we've entered this function through showPageInDialog.
 //content gets added immediately to the dialog.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
@@ -2741,6 +2741,8 @@ else if(tagObj.navcat)	{
 		numRequests += _app.ext.store_navcats.calls.appPageGet.init({'PATH':tagObj.navcat,'@get':pageAttributes});
 		}
 
+
+	}
 	if(numRequests > 0)	{
 		delete tagObj.datapointer; //delete datapointer or ping will save over it.
 		_app.calls.ping.init(tagObj);
@@ -2750,8 +2752,6 @@ else if(tagObj.navcat)	{
 		}		
 
 	return numRequests;
-
-	}
 
 
 				}, //buildQueriesFromTemplate
