@@ -1116,9 +1116,25 @@ data-contentloaded is used to determine if dynamic content has already been load
 <h1>Some TLC for testing. execute this with #!/ext/admin/tlcTest</h1>
 <h2>Data src is adminDomainList. pretty much can guarantee it's in memory.</h2>
 <br><br>
+<!--
+export -> new 'type'
+templateidexist -> part of an IS.
+chop -> if chop = 10, returns the first ten characters.
+split -> param on SET
+length -> format
+path
+
+
+path: (format $domain --path='.DOMAINNAME'; )
+$payment = { 'tender'=>'cash', 'key'='value' };
+set $tender $payment;
+format $tender --path='.tender';
+$tender = 'cash' at the end.
+-->
 <h3 data-tlc="bind $var '.media-host'; apply --append;">media host: </h3>
 <table>
-<tbody data-tlc="bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};"></tbody>
+<tbody data-tlc="bind $items '.@DOMAINS'; foreach $item in $items {{export '%domain' $item;}};"></tbody>
+<!-- transmogrify --templateid='tlclisttest' --dataset=$item; apply --append; -->
 </table>
 </div>
 

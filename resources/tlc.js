@@ -513,25 +513,32 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 //passing the command into this will verify that the format exists (whether it be core or not)
 
-	this.format_currency = function(arg,globals)	{
-		var r = "$"+globals.binds[globals.focusBind]; //+" ("+arg.value.value+")";
-		globals.binds[globals.focusBind] = r
+	this.format_currency = function(argObj,globals)	{
+		var r = "$"+globals.binds[argObj.bind]; //+" ("+arg.value.value+")";
+		globals.binds[argObj.bind] = r
 		return r;
 		} //currency
-	this.format_prepend = function(arg,globals)	{
-		var r = arg.value.value+globals.binds[globals.focusBind];
-		globals.binds[globals.focusBind] = r
+	this.format_prepend = function(argObj,globals)	{
+		var r = arg.value.value+globals.binds[argObj.bind];
+		globals.binds[argObj.bind] = r
 		return r;
 		} //prepend
-	this.format_append = function(arg,globals)	{
-		var r = globals.binds[globals.focusBind]+arg.value.value;
-		globals.binds[globals.focusBind] = r
+	this.format_append = function(argObj,globals)	{
+		var r = globals.binds[argObj.bind]+arg.value.value;
+		globals.binds[argObj.bind] = r
 		return r;
 		} //append
-	this.format_truncate = function(arg,globals)	{
+	this.format_length = function(argObj,globals)	{
+		var r;
+		if(globals.binds[argObj.bind])	{r = globals.binds[argObj.bind].length;}
+		else	{r = 0;}
+		globals.binds[argObj.bind] = r
+		return r;
+		} //length
+	this.format_truncate = function(argObj,globals)	{
 		var
-			r = globals.binds[globals.focusBind].toString(), //what is returned. Either original value passed in or a truncated version of it.
-			len = arg.value.value;
+			r = globals.binds[argObj.bind].toString(), //what is returned. Either original value passed in or a truncated version of it.
+			len = arg.value;
 		if(!len || isNaN(len)){}
 		else if(r.length <= len){}
 		else	{
@@ -539,14 +546,14 @@ This one block should get called for both img and imageurl but obviously, imageu
 				r = r.substring(0, len); //Truncate the content of the string
 				r = $.trim(r.replace(/\w+$/, '')); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
 				r += '&#8230;'; //Add an ellipses to the end
-				globals.binds[globals.focusBind] = r;
+				globals.binds[argObj.bind] = r;
 				}
 			}
 		return r;
 		} //truncate
-	this.format_uriencode = function(arg,globals)	{
-		var r = encodeURI(globals.binds[globals.focusBind]);
-		globals.binds[globals.focusBind] = r
+	this.format_uriencode = function(argObj,globals)	{
+		var r = encodeURI(globals.binds[argObj.bind]);
+		globals.binds[argObj.bind] = r
 		return r;
 		} //truncate
 
@@ -628,6 +635,12 @@ returning a 'false' here will exit the statement loop.
 			r = false; //will stop processing of statement.
 			}
 		return r;
+		}
+
+	this.handleType_EXPORT = function(cmd,globals,dataset)	{
+		var argObj = this.args2obj(cmd.args,globals);
+//		dump(" --------> "); dump(argObj);
+		dataset[cmd.args.value] = argsObj.dataset;
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
@@ -721,9 +734,11 @@ returning a 'false' here will exit the statement loop.
 		var format = cmd.args[0].key, r;
 //		dump(' -> cmd: '); dump(cmd);
 		if(cmd.module == 'core' && this['format_'+format])	{
+			var argObj = args2Obj(cmd.args[i],globals);
+			argObj.bind = (argObj.type) ? argObj.value : globals.focusBind; //what variable is being affected by the format.
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				try	{
-					this['format_'+cmd.args[i].key](cmd.args[i],globals);
+					this['format_'+argObj.key](argObj,globals);
 					}
 				catch(e)	{}
 				}
