@@ -14,12 +14,16 @@ GLOBAL
 ADMIN
 	new email manager interface.
 	new email send interface.
+	enhancements to cart messaging.
 
 QUICKSTART
 	update to the new TLC template language.
 	search ul's no longer require an ID.
 	prodsearch render format now supports listcomplete, run after the list is done (whether it has product or not).
 	prodlist render format 'complete' event changed to 'listcomplete'.
+	cart template now has a 'refresh' button.
+	Integrated new router. big changes on how to link to pages (no more showContent).
+	enhancements to cart messaging.
 
 
 201401
