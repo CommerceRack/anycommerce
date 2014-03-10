@@ -6,7 +6,7 @@ grammar
  / cmd:(WhileLoopStatement) _ lb* { return cmd; }
  / cmd:(ForeachLoopStatement) _ lb* { return cmd; }
  / cmd:(BindStatement) _ lb* { return cmd; } 
- / cmd:(setStatement) _ lb* { return cmd; } 
+ / cmd:(SetStatement) _ lb* { return cmd; } 
  / cmd:(command) _ lb* { return cmd; }
 
 command
@@ -31,9 +31,9 @@ BindStatement
   return { type:"BIND", Set:set, Src:src }
   }
 
-setStatement
- = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
-  return { type:"SET", Set:set, Src:src }
+SetStatement
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) _ args:((ws+ value)+)? _ lb+ {
+  return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
   }
 
 // if (command) {{ }} else {{ }};
