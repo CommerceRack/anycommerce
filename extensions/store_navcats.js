@@ -253,9 +253,8 @@ templateID - the template id used (from _app.templates)
 								reachedRoot = (zGlobals.appSettings.rootcat === s);
 								}
 							if(reachedRoot) {
-								//_app.u.dump(" -> "+i+" s(path): "+s);
-								//_app.u.dump(_app.data['appNavcatDetail|'+s]);
-								$tag.append(_app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,_app.data['appNavcatDetail|'+s]));
+//								$tag.append(_app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,_app.data['appNavcatDetail|'+s]));
+								$tag.append(new tlc().runTLC({templateid : data.bindData.templateid, dataset : _app.data['appNavcatDetail|'+s]}).attr({'id':'.','catsafeid':s}));
 								}
 							if(i!=0)
 							s += '.';

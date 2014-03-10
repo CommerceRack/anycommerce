@@ -2715,34 +2715,12 @@ else if(tagObj.navcat)	{
 				}
 			}
 		else	{}
-/*
-### TODO -> these should probably be moved to the renderFormat since w/out a namespace, we won't know for sure what we're dealing w/
-		else if(namespace == 'elastic-native')	{
-//			dump(" -> Elastic-native namespace");
-			elementID = $focusTag.attr('id');
-			if(elementID)	{
-				numRequests += _app.ext.store_search.calls.appPublicProductSearch.init(jQuery.parseJSON(attribute),{'datapointer':'appPublicSearch|'+elementID,'templateID':bindData.loadsTemplate});
-				tagObj.searchArray.push('appPublicSearch|'+elementID); //keep a list of all the searches that are being done. used in callback.
-				}
-			}
-
-
-			else if(namespace == 'list' && attribute.charAt(0) == '$')	{
-				var listPath = attribute.split('.')[0]
-				
-				numRequests += _app.ext.calls.appNavcatDetail.init({'path':listPath,'detail':'fast'});
-				}
-
-			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{
-				numRequests += _app.ext.store_navcats.u.addQueries4BreadcrumbToQ(catSafeID).length;
-				}
-*/
+		//Get category detail for this tree.
+		numRequests += _app.ext.store_navcats.u.addQueries4BreadcrumbToQ(tagObj.navcat).length;
 		}
 	if(pageAttributes.length)	{
 		numRequests += _app.ext.store_navcats.calls.appPageGet.init({'PATH':tagObj.navcat,'@get':pageAttributes});
 		}
-
-
 	}
 	if(numRequests > 0)	{
 		delete tagObj.datapointer; //delete datapointer or ping will save over it.

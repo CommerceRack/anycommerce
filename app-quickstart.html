@@ -712,7 +712,7 @@ if you change these, you should move them above this comment so that when you (o
 <!--  used in breadcrumb -->
 <ul>
 	<li id="breadcrumbTemplate">
-	<a data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;" data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';"></a>
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category'; apply --attrib='href'; bind $pretty '.pretty'; quickstart#cattext  --legacy; apply --append;"></a>
 	</li>
 </ul>
 
