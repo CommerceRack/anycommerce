@@ -44,7 +44,7 @@ ExportStatement
 // ** SET ** 
 // set $dst $src --path='.xyz';
 SetStatement
- = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) _ args:((ws+ value)+)? _ lb+ {
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) args:((ws+ value)+)? _ lb+ {
   return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
   }
 
