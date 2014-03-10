@@ -2955,6 +2955,7 @@ do's should modify $tag or apply the value.
 				data.bindData.h = $tag.attr('height');
 				data.bindData.tag = 0;
 				$tag.attr('src',_app.u.makeImage(data.bindData)); //passing in bindData allows for using
+				$tag.attr('data-media',data.value); //used w/ media library. will b set by tlc.
 				}
 			else	{
 //				$tag.css('display','none'); //if there is no image, hide the src. 
