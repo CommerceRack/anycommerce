@@ -7,6 +7,7 @@ grammar
  / cmd:(ForeachLoopStatement) _ lb* { return cmd; }
  / cmd:(BindStatement) _ lb* { return cmd; } 
  / cmd:(SetStatement) _ lb* { return cmd; } 
+ / cmd:(ExportStatement) _ lb* { return cmd; } 
  / cmd:(command) _ lb* { return cmd; }
 
 command
@@ -31,6 +32,17 @@ BindStatement
   return { type:"BIND", Set:set, Src:src }
   }
 
+
+// ** EXPORT **
+// export 'dataset-var' $var
+ExportStatement
+= "export" _ set:(variable / tag) _ src:(variable / scalar ) _ lb+ {
+  return { type:"EXPORT", Set:set, Src:src }
+  }
+
+
+// ** SET ** 
+// set $dst $src --path='.xyz';
 SetStatement
  = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) _ args:((ws+ value)+)? _ lb+ {
   return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
