@@ -14,7 +14,7 @@
 		_init : function(){
 			var o = this.options;
 			//one of these three must be set or running this doesn't really serve any purpose.
-			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(extendByDatapointers))	{
+			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(o.extendByDatapointers))	{
 				//first, resolve 'dataset' so that singular object can be used for any translations.
 				if(o.datapointer)	{
 					$.extend(o.dataset,$._app.data[o.datapointer]);
