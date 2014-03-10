@@ -530,7 +530,7 @@ this will likely become more flexible in the future. ###
 	
 		<section class="marginBottom">
 			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' from '; apply --append;}};"></span>
+			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews'; apply --append;}};"></span>
 		</section>
 	
 		<menu data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="CRMButtonMenu">
@@ -639,7 +639,7 @@ this will likely become more flexible in the future. ###
 
 	<section class="marginBottom">
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --append=' from ';apply --append;}};"></span>
+		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews' ;apply --append;}};"></span>
 	</section>
 
 	<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
