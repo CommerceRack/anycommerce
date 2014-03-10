@@ -18,7 +18,7 @@
 
 
 var admin_blast = function(_app) {
-	var theseTemplates = new Array('blastManagerTemplate','blastMessageAddTemplate','blastMessageSendTestTemplate','blastMessageDetailTemplate','blastToolTemplate');
+	var theseTemplates = new Array('blastManagerTemplate','blastMessageAddTemplate','blastMessageSendTestTemplate','blastMessageDetailTemplate','blastToolTemplate','blastMacroRowTemplate','adminBlastMacroCreateUpdateTemplate','blastMacroProperyEditorTemplate');
 	var r = {
 
 
@@ -33,9 +33,26 @@ var admin_blast = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/blast.html',theseTemplates);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
-				r = true;
-
-				return r;
+				_app.formatRules.blastMacroMacroID = function($input,$err){
+					var val = $input.val(), valid = true;
+					dump(" -> val.charAt(val.length - 1): "+val.charAt(val.length - 1));
+					if(val.charAt(0) == '%' && val.charAt(val.length - 1) == '%')	{
+						if(/^[a-zA-Z0-9%]*$/.test(val) == true) {
+							valid = true;
+							}
+						else	{
+							$err.append('spaces and special characters not allowed.');
+							valid = false;
+							}
+						}
+					else	{
+						$err.append('The macro id must begin and end with a %');
+						valid = false;
+						}
+					return valid;
+					}
+				
+				return true;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
@@ -140,7 +157,33 @@ var admin_blast = function(_app) {
 				else	{
 					$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin_blast.a.blastTool, vars.OBJECT ['+params.OBJECT+'] or partition ['+params.PRT+'] not specified.'})
 					}
-				} //blastTool
+				}, //blastTool
+
+			blastMacroProperyEditor : function($target,params)	{
+				if($target.closest('.ui-dialog-content').length)	{}
+				else	{$target.addClass('ui-widget ui-widget-content stdPadding ui-corner-all')}
+				$target.showLoading({"message":"Fetching macro properties"});
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","templateid":"blastMacroProperyEditorTemplate","jqObj":$target,"trackChanges":true}},"mutable");
+				_app.model.dispatchThis("mutable");
+				_app.u.addEventDelegation($target);
+				},
+
+			blastMacroEditor : function($target,params)	{
+				var $table = _app.ext.admin.i.DMICreate($target,{
+					'header' : 'Blast Macro Editor',
+					'className' : 'blastMacroManager',
+					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>","<button data-app-click='admin_blast|blastMacroProperyEditorShow' class='applyButton' data-icon-primary='ui-icon-pencil'>Global Properties</button>","<button class='applyButton' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_blast|blastMacroAddShow'>Add Macro<\/button>"],
+					'thead' : ['Title','Macro','Created','User',''],
+					'tbodyDatabind' : "var: users(@MACROS); format:processList; loadsTemplate:blastMacroRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminBlastMacroList', //this is partition specific. if we start storing this locally, add prt to datapointer.
+						'_tag' : {
+							'datapointer' : 'adminBlastMacroList'},
+							}
+						});
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis('mutable');
+				}, //blastMacroEditor
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -294,7 +337,79 @@ var admin_blast = function(_app) {
 					//validate form handles error display.
 					}
 //				_app.ext.admin.u.sendEmail($form,vars);	
-				} //msgBlastSendExec
+				}, //msgBlastSendExec
+
+/* blast macro */
+
+			blastMacroProperyEditorShow : function()	{
+
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Add Macro",
+					'showLoading' : false,
+					handleAppEvents : false //defaults to true
+					});
+				
+				$D.dialog('open');
+				_app.ext.admin_blast.a.blastMacroProperyEditor($D);
+				
+
+				
+				},
+
+			blastMacroDeleteConfirm : function($ele,P)	{
+				var macroid = $ele.closest('tr').data('macroid');
+				var $D = _app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete macro "+macroid+"? There is no undo for this action.",
+					"removeButtonText" : "Remove", //will default if blank
+					"title" : "Remove Macro "+macroid, //will default if blank
+					removeFunction : function()	{
+						_app.model.addDispatchToQ({"_cmd":"adminBlastMacroRemove","MACROID":macroid,"_tag":{"callback":function(rd){
+							//if the macro has a panel open, close it.
+							var $panel = $(_app.u.jqSelector('#','macro_'+macroid));
+							if($panel.length)	{
+								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
+								}
+							
+							$D.dialog('close'); 
+							$("#globalMessaging").anymessage({"message":"The macro has been deleted.","errtype":"success"});
+							//hide the row. no need to refresh the whole list.
+							$ele.closest('tr').slideUp();
+							
+							}}},"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					});
+				},
+
+			blastMacroUpdateShowPanel : function($ele,P)	{
+				var macroid = $ele.closest('tr').data('macroid');
+				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'adminBlastMacroCreateUpdateTemplate',
+					'panelID' : 'macro_'+macroid,
+					'header' : 'Edit Macro: '+macroid,
+					'handleAppEvents' : false,
+					'data' : {}
+					});
+				$panel.tlc({'verb':'translate','dataset':_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminBlastMacroList']['@MACROS'],'MACROID',macroid)});
+				$('form',$panel).append("<input type='hidden' name='_cmd' value='adminBlastMacroUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The macro has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$("input[name='MACROID']",$panel).prop('disabled','disabled');
+				_app.u.handleCommonPlugins($panel);
+				_app.u.handleButtons($panel);
+				},
+
+			blastMacroAddShow : function($ele,P)	{
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Add Macro",
+					'templateID' : 'adminBlastMacroCreateUpdateTemplate',
+					'showLoading' : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$('form',$D).append("<input type='hidden' name='_cmd' value='adminBlastMacroCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The macro has been created' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/persistent' value='true' />");
+				$D.dialog('open');
+				}
+
+
 			} //e [app Events]
 		} //r object.
 	return r;

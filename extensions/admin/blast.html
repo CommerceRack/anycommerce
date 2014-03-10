@@ -240,3 +240,81 @@
 </div>
 
 
+
+<div id='adminBlastMacroCreateUpdateTemplate'>
+
+<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm'>
+
+
+
+	<label>
+		<span>Title</span>
+		<input type='text' name='TITLE' required='required' value='' data-tlc="bind $var '.TITLE'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>Macro ID</span>
+		<input type='text' name='MACROID' required='required' value='' data-tlc="bind $var '.MACROID'; apply --select=$var;" data-format-rules='blastMacroMacroID' data-input-keyup="format" data-input-format='uppercase' />
+		<span class='toolTip' title="This is the value that will be substituted in the body of the message. ex: %ORDERID%. Must begin and end with a percent sign and contain no other special characters or spaces.">?</span>
+	</label>
+	<label>
+		<span>Body</span>
+		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;"></textarea>
+	</label>
+	<div class='buttonset'>
+		<button class='applyButton'>Save</button>
+	</div>
+</form>
+
+</div>
+
+
+<!-- these templates are used as part of DMI, so they're bind, not tlc -->
+<table>
+<tr id='blastMacroRowTemplate'>
+	<td data-bind="var: macro(TITLE); format:text;"></td>
+	<td data-bind="var: macro(MACROID); format:text;"></td>
+	<td data-bind="var: macro(CREATED_TS); format:text;"></td>
+	<td data-bind="var: macro(LUSER); format:text;"></td>
+	<td class='alignRight'>
+		<button data-icon-primary='ui-icon-trash' data-text='false' class='applyButton' data-app-click='admin_blast|blastMacroDeleteConfirm'>Delete</button>
+		<button data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-app-click='admin_blast|blastMacroUpdateShowPanel'>Edit</button>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='blastMacroProperyEditorTemplate'>
+<form data-app-submit="admin|submitForm" class='labelsAsBreaks' action='#'>
+
+<input type='hidden' name='_cmd' value='adminBlastMacroPropertyUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+<fieldset>
+	<p>The following fields are all optional, but highly recommended.</p>
+	<label>
+		<span>Domain</span>
+		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
+		<span class='toolTip' title="You should start this with www.  You do NOT need to add the http:// or https://">?</span>
+	</label>
+	<label>
+		<span>Phone</span>
+		<input type='tel' name='PRT.PHONE' value='' data-tlc="bind $var '.%PRT.PHONE'; apply --select=$var;" />
+		<span class='toolTip' title="This should include the area code, if applicable.">?</span>
+	</label>
+	<label>
+		<span>Email</span>
+		<input type='email' name='PRT.EMAIL' value='' data-tlc="bind $var '.%PRT.EMAIL'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>Mailing Address</span>
+		<textarea name='PRT.MAILADDR' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" />
+	</label>
+</fieldset>
+
+	<div class='buttonset'><button class='applyButton'>Save</button></div>
+
+</form>
+</div>
