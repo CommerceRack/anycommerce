@@ -326,7 +326,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 <section data-tlc="bind $var '.cart.cartid'; apply --attrib='data-cartid'; " id="chkoutCartContentsTemplate" data-template-role="cart">
-	<div data-tlc="bind $var '.cart.cartid'; if (is $var --notblank;) {{format --prepend='Cart ID: '; apply --append;}};" class="marginBottom"></div>
+	<div data-tlc="bind $var '.cart.cartid'; if (is $var --notblank;) {{format --prepend='Cart ID: '; apply --append;}};" class="marginBottom smallButton"></div>
 	<table class="fullWidth gridTable applyAnytable marginBottom">
 	<thead>
 	<tr>
@@ -388,7 +388,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<input name="coupon" size="8" data-input-keyup="trigger-button-id" data-trigger-button-id="execCouponAdd" data-input-format="alphanumeric" type="text">
 		<span class="applyButton" data-app-click="order_create|execCouponAdd" data-button-id="execCouponAdd">add</span>
 	</div>
-
+	<!-- will appear if company field is populated AND payment method is NOT PO -->
 	<div data-app-role="referenceNumber" class="displayNone">
 		<label>Purchase Order/Reference #: </label>
 		<input type'text'="" name="want/reference_number" size="12">

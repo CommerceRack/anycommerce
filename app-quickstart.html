@@ -1049,7 +1049,10 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 <div class="cartSummaryTotalsContainer">
 	<div class="ui-widget ui-corner-all">
-		<h2 class="ui-widget-header ui-helper-clearfix ui-corner-all ui-header stdPadding">Cart Totals</h2>
+		<div class='ui-widget-header ui-corner-top ui-header smallPadding smallButton'>
+			<button class='applyButton cartRefreshButton' data-text='false' data-icon-primary='ui-icon-refresh' data-app-click="cco|cartFetchExec">Refresh Cart</button>
+			<h2>Cart Totals</h2>
+		</div>
 		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
 
 <section class="cartSummary marginBottom">

@@ -1317,6 +1317,11 @@ in a reorder, that data needs to be converted to the variations format required 
 		
 		e : {
 			
+			cartFetchExec : function($ele,p)	{
+				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+				_app.model.dispatchThis('immutable');
+				},
+			
 			cartItemRemove	: function($ele,p)	{
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{

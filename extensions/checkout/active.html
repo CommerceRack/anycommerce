@@ -334,15 +334,16 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<input name="coupon" size="8" data-input-keyup="trigger-button-id" data-trigger-button-id="execCouponAdd" data-input-format="alphanumeric" type="text">
 		<button class="applyButton" data-app-click="order_create|execCouponAdd" data-button-id="execCouponAdd">add</button>
 	</div>
+	<!-- will appear if company field is populated AND payment method is NOT PO -->
+	<div data-app-role="referenceNumber" class="displayNone">
+		<label>Purchase Order/Reference #: </label>
+		<input type'text'="" name="want/reference_number" size="12">
+	</div>
 
 	<button class="applyButton ui-state-highlight" data-app-click="order_create|execCartOrderCreate">
 		Place Order
 	</button>
 
-<div data-app-role="referenceNumber" class="displayNone">
-	<label>Purchase Order/Reference #: </label>
-	<input type'text'="" name="want/reference_number" size="12">
-</div>
 
 
 </section>

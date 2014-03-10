@@ -133,7 +133,7 @@ and offMenu is toggle off, hiding the change button.
 .stdMargin	{margin:1em;}
 .headerPadding	{padding: .2em .4em;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
 .stdPadding	{padding:1em;}
-
+.smallPadding	{padding:.5em;}
 .fullWidth	{width:100%;}
 
 
@@ -321,9 +321,9 @@ cartTemplate
 
 
 .cartContainer	{width:100%;}
-
 #mainContentArea_cart .continueShoppingButton	{display:none;} /* used in modal cart only */
 
+.cartSummaryTotalsContainer .ui-widget .cartRefreshButton	{margin: -4px 0 0 0; float:right;}
 /*
 
 CUSTOMER PAGES
