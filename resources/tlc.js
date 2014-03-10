@@ -462,7 +462,6 @@ This one block should get called for both img and imageurl but obviously, imageu
 		
 		switch(op)	{
 			case "eq":
-
 				if(p1 == p2){ r = true;} break;
 			case "ne":
 				if(p1 != p2){ r = true;} break;
@@ -488,6 +487,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "regex":
 				var regex = new RegExp(p2);
 				if(regex.exec(p1))	{r = true;}
+				break;
+			case 'templateidexists':
+				r = (this.getTemplateInstance(p1)) ? true : false;
 				break;
 			case "notregex":
 				var regex = new RegExp(p2);
@@ -519,12 +521,12 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //currency
 
 	this.format_prepend = function(argObj,globals)	{
-		var r = arg.value.value+globals.binds[argObj.bind];
+		var r = argObj.prepend+globals.binds[argObj.bind];
 		return r;
 		} //prepend
 
 	this.format_append = function(argObj,globals)	{
-		var r = globals.binds[argObj.bind]+arg.value.value;
+		var r = globals.binds[argObj.bind]+argObj.append;
 		return r;
 		} //append
 
@@ -548,13 +550,18 @@ This one block should get called for both img and imageurl but obviously, imageu
 	this.format_truncate = function(argObj,globals)	{
 		var
 			r = globals.binds[argObj.bind].toString(), //what is returned. Either original value passed in or a truncated version of it.
-			len = arg.value;
+			len = argObj.truncate;
 		if(!len || isNaN(len)){}
 		else if(r.length <= len){}
 		else	{
+			len = Number(len);
 			if (r.length > len) {
 				r = r.substring(0, len); //Truncate the content of the string
-				r = $.trim(r.replace(/\w+$/, '')); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
+				var tr = $.trim(r.replace(/\w+$/, '')); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
+				//make sure that the trimmed response is not zero length. If it is, tr is ignored and the response 'may' be chopped in the middle of a word. better than a blank trim.
+				if(tr.length)	{
+					r = tr;
+					}
 				r += '&#8230;'; //Add an ellipses to the end
 				}
 			}
@@ -569,11 +576,21 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 /* //////////////////////////////     SETs (these are formats permitted on a set command) 	 \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ */
 
-	this.set_split = function(arg,globals)	{
-		var argObj = this.arg2obj(arg);
-		dump(argObj);
+	this.set_split = function(argObj,globals)	{
+		var r;
+		if(globals.binds[argObj.bind] && argObj['split'])	{
+			r = globals.binds[argObj.bind].split(argObj['split']);
+			}
+		else	{
+			r = globals.binds[argObj.bind];
+			}
+		return r;
 		}
 
+	this.set_path = function(argObj,globals,dataset)	{
+		dataset[argObj.path] = globals.binds[argObj.bind];
+		return globals.binds[argObj.bind]; //no manipulation of the data occured so return unmolested var. 
+		}
 
 
 //TLC/Render formats could be stores in 1 of a variety of places.  Either in extension.renderFormats, extension.tlcFormats, controller.tlcFormats, controller.renderFormats or within tlc itself (core).
@@ -702,10 +719,20 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleType_SET = function(cmd,globals,dataset)	{
-		dump(" --------> got to handleType_SET");
-		var r = globals.binds[cmd.args[1].value];
-		
-		globals.binds[cmd.args[0].value] = r;
+		globals.binds[cmd.Set.value] = cmd.Src.value; //have to set this here so that the set_ functions have something to reference.
+		globals.focusBind = cmd.Set.value;
+		if(cmd.args)	{
+			var argObj = this.args2obj(cmd.args,globals);
+			argObj.bind = cmd.Set.value;
+			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
+				if(cmd.args[i].key && typeof this['set_'+cmd.args[i].key] == 'function')	{
+					try	{
+						globals.binds[cmd.Set.value] = this['set_'+cmd.args[i].key](argObj,globals,dataset);
+						}
+					catch(e)	{}
+					}
+				}
+			}
 		}
 
 	this.handleType_IF = function(cmd,globals,dataset)	{
@@ -956,7 +983,7 @@ returning a 'false' here will exit the statement loop.
 			},globals);
 
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
-			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
+//			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
 				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
 				else	{
