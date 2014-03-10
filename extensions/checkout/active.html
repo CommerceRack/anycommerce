@@ -116,7 +116,7 @@ item list and summary are separate just to give more control over location.
 	</div>
 
 	<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
-	<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox">Create account</label>
+	<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
 </div>
 
 </section>
@@ -382,7 +382,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <div id="chkoutBuyerWalletListItem">
 	<label>
-		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio">
+		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio" data-app-change='order_create|shipOrPayMethodSelectExec'>
 		<span data-tlc="bind $var '.TD'; if (is $var --notblank;) {{apply --append;}};"></span>
 		<span data-tlc="bind $var '.TD'; cco#walletnameintoicon  --legacy;"></span>
 	</label>

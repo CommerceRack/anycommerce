@@ -662,6 +662,13 @@ payment options, pricing, etc
 					$("[data-app-role='username']",$fieldset).hide();
 					$("[data-app-role='loginPasswordContainer']",$fieldset).show();
 					}
+				// ** 201402
+				//if the user is logged in, make sure the 'create account' checkbox is NOT checked.
+				//otherwise, if checked=checked is set to enable account create by default and a user logs in, the checked box will cause validation error on a hidden panel.
+				if(_app.u.buyerIsAuthenticated())	{
+					$("input[name='want/create_customer']",$fieldset).prop('checked',false);
+					}
+				
 				_app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //preflight
 
@@ -670,8 +677,11 @@ payment options, pricing, etc
 				
 				var authState = _app.u.determineAuthentication(),
 				createCustomer = formObj['want/create_customer'];
-
-				if(authState == 'authenticated' || authState == 'thirdPartyGuest'  || _app.ext.cco.u.thisSessionIsPayPal())	{
+				
+				if(_app.u.buyerIsAuthenticated())	{
+					$fieldset.hide();
+					}
+				else if(authState == 'thirdPartyGuest'  || _app.ext.cco.u.thisSessionIsPayPal())	{
 					$fieldset.hide();
 					}
 				else {

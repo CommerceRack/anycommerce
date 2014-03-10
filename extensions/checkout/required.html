@@ -388,7 +388,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <div id="chkoutBuyerWalletListItem">
 	<label>
-		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio">
+		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio" data-app-change='order_create|shipOrPayMethodSelectExec'>
 		<span data-tlc="bind $var '.TD'; if (is $var --notblank;) {{apply --append;}};"></span>
 		<span data-tlc="bind $var '.TD'; cco#walletnameintoicon  --legacy;"></span>
 	</label>
