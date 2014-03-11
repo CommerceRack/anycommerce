@@ -2474,7 +2474,7 @@ else	{
 						}
 //build shipping macro/call, if necessary. Only add if inputs have changed.
 					if($("[name='sum/shp_carrier']",$parent).hasClass('edited') || $("[name='sum/shp_method']",$parent).hasClass('edited') || $("[name='sum/shp_total']",$parent).hasClass('edited'))	{
-						macros.push("SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier=SLOW&sum/shp_method="+frmObj['sum/shp_method']);
+						macros.push("SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier="+frmObj['sum/shp_carrier']+"&sum/shp_method="+frmObj['sum/shp_method']);
 						}
 
 					if(macros.length)	{
