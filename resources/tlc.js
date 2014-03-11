@@ -361,7 +361,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		}
 	
 	this.apply_verb_select = function($tag,argObj,globals)	{
-		var dataValue = globals.binds[globals.focusBind]; //shortcut.
+		var dataValue = argObj['select']; //shortcut.
+		dump(" -> value for --select: "+dataValue);
 		if($tag.is(':checkbox'))	{
 			if(dataValue == "" || Number(dataValue) === 0)	{
 				$tag.prop({'checked':false,'defaultChecked':false}); //have to handle unchecking in case checked=checked when template created.
