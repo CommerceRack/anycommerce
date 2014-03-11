@@ -331,9 +331,9 @@ var admin_customer = function(_app) {
 					'thead' : ['Topic','Question','Priority',''],
 					'tbodyDatabind' : "var: users(@detail); format:processList; loadsTemplate:faqResultsRowTemplate;",
 					'cmdVars' : {
-						'_cmd' : 'appFAQs',
+						'_cmd' : 'adminFAQList',
 						'_tag' : {
-							'datapointer' : 'appFAQs'  //NOTE -> renderFormats.faqTopic uses this datapointer.
+							'datapointer' : 'adminFAQList'  //NOTE -> renderFormats.faqTopic uses this datapointer.
 							}
 						}
 					});
@@ -563,7 +563,7 @@ $D is returned.
 			//passed the topic id, which is used to look up the topic_title
 			faqTopic : function($tag,data)	{
 				var topicID = data.value; //shortcut.
-				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.appFAQs['@topics'],'TOPIC_ID',topicID);
+				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminFAQList['@topics'],'TOPIC_ID',topicID);
 				if(topic && topic.TOPIC_TITLE)	{
 					$tag.append(topic.TOPIC_TITLE);
 					}
@@ -637,8 +637,24 @@ $D is returned.
 					newSfo['@updates'].push("SET/EXPIRES?expires="+sfo.expires+"&note="+sfo.expires_note);
 					}
 				return newSfo;
-				} //adminGiftcardMacro
-			
+				}, //adminGiftcardMacro
+	
+			'adminFAQMacro' : function(sfo,$form)	{
+				_app.u.dump("BEGIN admin_wholesale.macrobuilders.adminFAQMacro");
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminFAQMacro',
+					'ID':sfo.ID,
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+
+//				if($("[name='balance']",$form).hasClass('edited'))	{
+//					newSfo['@updates'].push("SET/BALANCE?balance="+sfo.balance+"&note="+sfo.balance_note);
+//					}
+				return newSfo;
+				} //adminGiftcardMacro		
 			},
 			
 			
@@ -1928,7 +1944,7 @@ _app.model.dispatchThis('immutable');
 					'handleAppEvents' : false,
 					'data' : {}
 					});
-				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['appFAQs']['@detail'],'ID',faqid),{'topics':_app.data['appFAQs']['@topics']})});
+				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminFAQList']['@detail'],'ID',faqid),{'topics':_app.data['adminFAQList']['@topics']})});
 				$('form',$panel).append("<input type='hidden' name='_cmd' value='adminFAQUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				_app.u.handleCommonPlugins($panel);
 				_app.u.handleButtons($panel);
