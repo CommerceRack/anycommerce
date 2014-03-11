@@ -78,7 +78,7 @@ additionally, will apply some conditional form logic.
 
 //don't want to double-delegate. make sure no parent already has delegation run. a class is used as it's more efficient and can be trusted because it's added programatically.
 			if($t.closest('.anyformEnabled').length >= 1)	{
-				dump("anyform was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED.");
+				dump("anyform was run on an element that already (or one of it's parents) has events delegated. DELEGATION SKIPPED. TriggerFormEvents will still be run so that the display properties (et all) are updated.");
 				}
 			else	{
 				$t.addClass('anyformEnabled'); //this class is used both to determine if events have already been added AND for some form actions to use in closest.
