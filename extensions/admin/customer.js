@@ -100,7 +100,6 @@ var admin_customer = function(_app) {
 					$("[name='searchfor']",$target).val(vars.searchfor);
 					$("button[data-app-role='customerSearchButton']:first",$target).trigger('click');
 					}
-				
 				}, //showCustomerManager
 
 //in obj, currently only CID and partition are required.
@@ -319,6 +318,29 @@ var admin_customer = function(_app) {
 				}, //showReviewsManager
 
 
+			faqManager : function($target,params)	{
+				$target.empty();
+				_app.ext.admin.i.DMICreate($target,{
+					'header' : 'FAQ Manager',
+					'handleAppEvents' : false,
+					'className' : 'faqManager',
+					'controls' : "",
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>New Topic<\/button>"],
+					'thead' : ['Topic','Question','Priority',''],
+					'tbodyDatabind' : "var: users(@detail); format:processList; loadsTemplate:faqResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'appFAQs',
+						'_tag' : {
+							'datapointer' : 'appFAQs'  //NOTE -> renderFormats.faqTopic uses this datapointer.
+							}
+						}
+					});
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis('mutable');
+				}, //showReviewsManager
+
 //obj should contain CID. likely will include partition soon too.
 // ### FUTURE -> this works, but should probably be updated to use submitForm and refreshCustomerPanel as submit/click events.
 			showAddWalletModal : function(obj,$walletPanel)	{
@@ -520,9 +542,35 @@ $D is returned.
 			
 			}, //Actions
 
+////////////////////////////////////   TLCFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		tlcFormats : {
+			
+			topicloop : function(data,thisTLC)	{
+				dump(" -> data.globals: "); dump(data.globals);
+				var T = data.globals.binds[data.globals.focusBind], L = T.length, $tmp = $("<select \/>");
+				for(var i = 0; i < L; i += 1)	{
+					$("<option>"+T[i].TOPIC_TITLE+"</option>").val(T[i].TOPIC_ID).appendTo($tmp);
+					}
+				data.globals.binds[data.globals.focusBind] = $tmp.children();
+				return true;
+				}
+			
+			},
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			//passed the topic id, which is used to look up the topic_title
+			faqTopic : function($tag,data)	{
+				var topicID = data.value; //shortcut.
+				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.appFAQs['@topics'],'TOPIC_ID',topicID);
+				if(topic && topic.TOPIC_TITLE)	{
+					$tag.append(topic.TOPIC_TITLE);
+					}
+				else	{
+					$tag.append(topicID);
+					}
+				},
 
 			orderHistoryTotal : function($tag,data)	{
 				_app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
@@ -1845,9 +1893,46 @@ _app.model.dispatchThis('immutable');
 				else	{
 					$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 					}
-				} //orderCustomerEdit
+				}, //orderCustomerEdit
+
+			faqQuestionDeleteConfirm : function($ele,P)	{
+				var faqid = $ele.closest('tr').data('id');
+				var $D = _app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete faq "+faqid+"? There is no undo for this action.",
+					"removeButtonText" : "Remove", //will default if blank
+					"title" : "Remove faq "+faqid, //will default if blank
+					removeFunction : function()	{
+						_app.model.addDispatchToQ({"_cmd":"adminFAQRemove","ID":faqid,"_tag":{"callback":function(rd){
+							//if the macro has a panel open, close it.
+							var $panel = $(_app.u.jqSelector('#','faq_'+faqid));
+							if($panel.length)	{
+								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
+								}
+							$D.dialog('close'); 
+							$("#globalMessaging").anymessage({"message":"The faq has been deleted.","errtype":"success"});
+							//hide the row. no need to refresh the whole list.
+							$ele.closest('tr').slideUp();
+							}}},"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					});
+				},
 
 
+			faqQuestionUpdateShow : function($ele,P)	{
+				var faqid = $ele.closest('tr').data('id');
+				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'faqAddUpdateTemplate',
+					'panelID' : 'faq_'+faqid,
+					'header' : 'Edit faq: '+faqid,
+					'handleAppEvents' : false,
+					'data' : {}
+					});
+				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['appFAQs']['@detail'],'ID',faqid),{'topics':_app.data['appFAQs']['@topics']})});
+				$('form',$panel).append("<input type='hidden' name='_cmd' value='adminFAQUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				_app.u.handleCommonPlugins($panel);
+				_app.u.handleButtons($panel);
+				},
 
 
 			} //e [app Events]

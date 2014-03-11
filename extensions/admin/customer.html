@@ -1302,3 +1302,37 @@ Coming Soon
 	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
 </tr>
 </table>
+
+
+
+
+<!-- FAQ manager -->
+
+<table>
+<tr id='faqResultsRowTemplate'>
+	<td data-bind='var: faq(TOPIC_ID); format:faqTopic; extension:admin_customer;'></td>
+	<td data-bind='var: faq(QUESTION); format:text;'></td>
+	<td data-bind='var: faq(PRIORITY); format:text;'></td>
+	<td>
+		<button data-app-click="admin_customer|faqQuestionDeleteConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete FAQ</button>
+		<button data-app-click="admin_customer|faqQuestionUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit FAQ</button>
+	</td>
+</tr>
+</table>
+
+<div id='faqAddUpdateTemplate'>
+	<form class='labelsAsBreaks alignedLabels'>
+	<label>
+		<select data-tlc="bind $val '.TOPIC_ID'; bind $topics '.topics'; admin_customer#topicloop; apply --append; apply --select=$val;">
+			<option selected='selected'>Please choose</option>
+		</select>
+	</label>
+	<label>
+		<textarea placeholder='question' name='question' class='fullWidth' data-tlc="bind $val '.QUESTION'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<textarea placeholder='answer' name='answer'  class='fullWidth' data-tlc="bind $val '.ANSWER'; apply --select=$val;"></textarea>
+	</label>
+	
+	</form>
+</div>
