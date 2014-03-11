@@ -1571,6 +1571,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$("[name='SCHEDULE']",$panel).val();
 						}
 					_app.u.handleButtons($panel);
+					$panel.anyform(); //form delegation is already present, but this will trigger the defaults.
 					}
 				else	{
 					$DMI.anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, rulesmode ['+$ele.data('rulesmode')+'] on trigger element is either missing or invalid. Only coupons and shipping are acceptable values.','gMessage':true});
