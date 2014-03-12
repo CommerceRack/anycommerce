@@ -64,24 +64,6 @@ var admin_orders = function(_app) {
 			}, //init
 
 
-		mergeDataForBulkPrint : {
-			
-			onSuccess : function(tagObj){
-				var tmpData = {};
-				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
-				//this is because a template only wants to be parsed once.
-				if(tagObj.merge)	{
-					tmpData = $.extend(_app.data[tagObj.datapointer],_app.data[tagObj.merge]);
-					}
-				else	{
-					tmpData =_app.data[tagObj.datapointer];
-					}
-				var $print = _app.renderFunctions.transmogrify({},tagObj.templateID,tmpData);
-				$print.addClass('pageBreak'); //ensures template is on it's own page.
-				$('#printContainer').append($print);
-				}
-			},
-
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
@@ -208,12 +190,19 @@ $.contextMenu({
 			}
 		},
 	'items' : {
-		"customer_edit": {name: "Edit Customer"},
-		"ticket_create": {name: "Create CRM Ticket"},
-		"customer_blast": {name: "Email Customer"},
+		"customer_edit": {name: "Edit customer"},
+		"ticket_create": {name: "Create CRM ticket"},
+		"customer_blast": {name: "Email customer"},
 		"sep1": "---------",
-		"order_flagaspaid": {name: "Flag as Paid"},
-		"order_pool_change": {name: "Change Pool",
+		"print" : {
+			"name":"Print",
+			"items" : {
+				"print_invoice" : {"name" : "Invoice"},
+				"print_packslip" : {"name" : "Packing slip"}
+				}
+			},
+		"order_flagaspaid": {name: "Flag as paid"},
+		"order_pool_change": {name: "Change pool",
 			"items": pools2Object()
 			}
 		}
@@ -239,7 +228,42 @@ else	{
 
 
 				}
-			} //listOrders
+			}, //listOrders
+
+//By the time this callback is executed, both the order AND the printable message should be in memory.
+//this is called within the printOrders utility.
+		printOrders : {
+			onSuccess : function(_rtag){
+
+				function getObj(html,dataset)	{
+					//each order is put within a container the pageBreak class so that each printed item is on it's own page.
+					var $tmp = $("<div \/>").addClass('pageBreak').html(html).tlc({'verb':'translate','dataset':dataset});
+					return $tmp;
+					}
+
+				if(_rtag.orders && _rtag.orders.length && _rtag.printable){
+					var L = _rtag.orders.length, $printme = $("<div \/>");
+					var printables = 0; //incremented w/ each order successfully added to the printme element.
+					for(var i = 0; i < L; i += 1)	{
+						var PRT = _app.data['adminOrderDetail|'+_rtag.orders[i]]._PRT || 0;
+						$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Rendering '+_rtag.printable.toLowerCase());
+						try	{
+							$printme.append(getObj(_app.data['adminBlastMsgDetail|'+PRT+'|PRINTABLE.'+_rtag.printable]['%MSG'].BODY,_app.data['adminOrderDetail|'+_rtag.orders[i]]));
+							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Sent to print.');
+							printables++;
+							}
+						catch(e)	{
+							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Error! '+e);
+							}
+						}
+					
+					if(printables)	{
+						_app.u.printByjqObj($printme);
+						}
+					}
+				}
+			}	//printOrders
+		
 		}, //callbacks
 
 
@@ -962,6 +986,13 @@ if giftcard is on there, no paypal will appear.
 							'orderid':$row.data('orderid')
 							});
 						break;
+					case 'print_invoice':
+						_app.ext.admin_orders.u.printOrders([$row.data('orderid')],{printable:"INVOICE"});
+						break;
+					
+					case 'print_packslip':
+						_app.ext.admin_orders.u.printOrders([$row.data('orderid')],{printable:"PACKSLIP"});
+						break;
 					
 					case 'customer_blast':
 						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':$row.data('prt'),'RECEIVER':'CUSTOMER','CID':$row.data('cid')});
@@ -1312,62 +1343,6 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
 				},
 
-//currently, this requires that the order_create extension has been added.
-//This groups all the invoices into 1 div and adds pagebreaks via css.
-//for this reason, the individual print functions for invoice/packslip are not recycled
-			bulkOrdersPrint : function(CMD)	{
-				var $orders = $('.ui-selected','#orderListTableBody'),
-				templateID = undefined, //what template will be used.
-				sDomains = {}; //a list of the sdomains. each domain added once. done to optimize dispatches so each sdoamin/profile data only requested once.
-				
-				if($orders.length)	{
-					if(CMD == 'PRNT|INVOICE')	{
-						templateID = "invoiceTemplate";
-						}
-					else if(CMD == 'PRNT|PACKSLIP')	{
-						templateID = "packslipTemplate"
-						}
-					else	{_app.u.throwGMessage("In admin_orders.u.bulkOrdersPrint, CMD value is unsupported.")} //unsupported CMD.
-					
-					if(templateID)	{
-						$('#printContainer').empty(); //clean out any previously printed content.
-						$('body').showLoading({'message':'Generating file for print'});
-						
-						_app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
-						
-						$orders.each(function(){
-							var $order = $(this);
-							var sdomain = $order.data('sdomain');
-							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
-							else if(sdomain)	{
-								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								_app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
-								}
-							else	{
-								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
-								}
-							_app.model.destroy('adminOrderDetail|'+$order.data('orderid')); //get a clean copy of the order.
-							_app.ext.admin.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
-							})
-						_app.calls.ping.init({'callback':function(responseData){
-							$('body').hideLoading();
-							if(_app.model.responseHasErrors(responseData)){
-								_app.u.throwMessage(responseData);
-								}
-							else	{
-//							$('#printContainer').show(); //here for troubleshooting.
-								_app.u.printByjqObj($('#printContainer'));
-								}
-							}},'immutable');
-						_app.model.dispatchThis('immutable');
-						}
-					else	{} //error occured. no templateID defined. error message already displayed.
-					}
-				else	{
-					_app.u.throwMessage('Please select at least one row.');
-					}
-				}, //bulkOrdersPrint
-
 
 //run this to change the pool for a specific order.
 //this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
@@ -1549,9 +1524,81 @@ $('.editable',$container).each(function(){
 				else	{
 					$mainCol.anymessage({'message':'In admin_orders.u.changeOMMode, invalid mode ['+mode+'] set. must be order or item.','gMessage':true});
 					}
-				}
+				},
 			
+//orders should be an array of order id's.
+// vars.printable should be set to what printable message format is to be used. ex: PACKSLIP
+//will go fetch all the orders. Will use the orders to determine which partition messaging needs to be retrieved.
+//will then execute the printOrders callback, which will add all the invoices to the print div and print.
+			printOrders : function(orders,vars)	{
+				vars = vars || {};
+				if(orders && orders.length)	{
+					if(vars.printable)	{
+						var $dialog = $("<div \/>",{'title':'Print Status'}).dialog({
+							autoOpen: true,
+							width: 250
+							});
+						var $ul = $("<ul \/>").appendTo($dialog);
+						//The first thing that needs to be done is to get all the order details. Then we can use these to see how many partitions worth of msg.printable we need to gather.
+						var
+							L = orders.length,
+							okOrders = new Array(), //list of orders that were retrieved w/out error.
+							prts = new Array(); //list of partitions that the orders belong to. necessary for fetching appopriate blast message.
+						prts.push(0); //the zero partition is used when no partition can be ascertained. Added to array to ensure the default printable message is retrieved.
+						for(var i = 0; i < L; i += 1)	{
 
+function handleOrder(orderid){
+	$ul.append("<li data-orderid='"+orderid+"'>"+orderid+" - <span class='status'>Fetching<\/span><\s/li>");
+	_app.ext.admin.calls.adminOrderDetail.init(orderid,{callback : function(rd){
+		if(_app.model.responseHasErrors(rd)){
+			$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('error!').end().anymessage(rd);
+			}
+		else	{
+			dump(" -> order fetch callback. orderid: "+orderid);
+			okOrders.push(orderid);
+			if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderid+".our.domain",_app))	{
+				$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('processing...');
+				var dObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',_app.data['adminOrderDetail|'+orderid].our.domain);
+	//										dump(dObj);
+				if(dObj && dObj.PRT >= 0)	{
+					_app.data['adminOrderDetail|'+orderid]._PRT = dObj.PRT; //add this to order in memory for quick lookup in printOrders callback.
+					if($.inArray(dObj.PRT,prts) < 0)	{prts.push(dObj.PRT);}
+					}
+				}
+			}		
+		}},'mutable');
+	}
+handleOrder(orders[i]);
+
+							}
+//now fetch the printable message for each partition being used.
+						_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":function(rd){
+							dump(" -> Got to ping callback");
+							if(okOrders.length)	{
+								//no orders came back without errors.
+								for(var i = 0; i < prts.length; i += 1)	{
+									_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","PRT":prts[i],"MSGID":"PRINTABLE."+vars.printable,"_tag":{
+										"datapointer":"adminBlastMsgDetail|"+prts[i]+"|PRINTABLE."+vars.printable
+										}},"mutable");
+									}
+								_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":"printOrders","extension":"admin_orders","orders":okOrders,"printable":vars.printable,"jqObj":$dialog}},"mutable");
+								_app.model.dispatchThis("mutable");
+								}
+							else	{
+								//no orders were retrieved. errors are already displayed.
+								}
+							}}},"mutable");
+						_app.model.dispatchThis('mutable');
+	
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_orders.u.printOrders, vars.printable was blank.","gMessage":true});
+						}
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_orders.u.printOrders, no orders were passed.","gMessage":true});
+					}
+				}
 
 
 			}, //u
@@ -1662,7 +1709,12 @@ $('.editable',$container).each(function(){
 								break;
 							
 							case 'PRNT':
-								_app.ext.admin_orders.u.bulkOrdersPrint(command);
+//								_app.ext.admin_orders.u.bulkOrdersPrint(command);
+								var orders = new Array();
+								$('.ui-selected','#orderListTableBody').each(function(){
+									orders.push($(this).data('orderid'));
+									});
+								_app.ext.admin_orders.u.printOrders(orders,{printable:command.split('|')[1]});
 								break;
 				
 							default:
@@ -1837,57 +1889,11 @@ $('.editable',$container).each(function(){
 			orderPrint : function($ele,p)	{
 
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
-				if(orderID && $ele.data('loadstemplate'))	{
-// SANITY -> browsers didn't like it when the popup was triggered after an ajax request. so instead, we open the popup right away, then populate the content later, followed by the print cmd.
-
-// ### FUTURE -> the iframe code below is a new approach to printing.  needs testing. -> worked on PC chrome and firefox. Worked on iphone safari. did NOT work on android chrome for ericH. that needs more testing.
-//var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($("#printContainer").empty()); //the print container.  emptied to make sure anything leftover from last print is gone.
-//$iframe.contents().find('body').append('<h1>JT WAS HERE!</h1>')
-//$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
-//window.frames["printContainerIframe"].focus(); window.frames["printContainerIframe"].print();
-
-					var popup = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
-					if(popup)	{
-						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
-						var domain, $pop = $(popup.document);
-						if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderID+".our.domain",_app))	{
-							domain = _app.data['adminOrderDetail|'+orderID].our.domain;
-							}
-						else if(domain = $ele.closest("[data-domain]").data('domain'))	{}
-						else	{} //hhhmm.. no domain available. that means no branding.
-						
-						if(domain)	{
-							_app.calls.appProfileInfo.init({'domain':domain},{},'mutable'); //have this handy for any orders with no domain.
-							}
-						_app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
-						_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
-							if(_app.model.responseHasErrors(rd)){
-								$('body',$pop).html("").anymessage({'message':rd});
-								}
-							else	{
-								var tmpData = {};
-								if(domain)        {
-									tmpData = $.extend(true,{},_app.data[rd.datapointer],_app.data['appProfileInfo|'+domain]);
-									}
-								else        {
-									tmpData = _app.data[rd.datapointer];
-									}
-								$('body',$pop).html(_app.renderFunctions.transmogrify({},$ele.data('loadstemplate'),tmpData));
-								popup.focus();
-								popup.print();
-								popup.close();
-								}
-							}},'mutable');
-						_app.model.dispatchThis('mutable');
-						
-						}
-					else	{
-						//unable to open a popup.
-						}
-
+				if(orderID && $ele.data('printable'))	{
+					_app.ext.admin_orders.u.printOrders([orderID],{'printable':$ele.data('printable')});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-loadstemplate ["+$ele.data('loadstemplate')+"] not set on trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-printable ["+$ele.data('printable')+"] not set on trigger element.","gMessage":true});
 					}
 				},
 /*
@@ -2110,23 +2116,6 @@ $('.editable',$container).each(function(){
 						}
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
-
-			"orderPrintInvoice" : function($btn){
-				$btn.button();
-				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
-					event.preventDefault();
-					_app.ext.admin_orders.e.orderPrint($btn,event);
-					});
-				}, //orderPrintInvoice
-
-			"orderPrintPackSlip" : function($btn){
-				$btn.button();
-				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
-					event.preventDefault();
-//					_app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
-					_app.ext.admin_orders.e.orderPrint($btn,event);
-					});
-				}, //orderPrintPackSlip
 
 			"orderBlastSend" : function($btn){
 				$btn.button();
