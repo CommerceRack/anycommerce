@@ -1417,8 +1417,8 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 
 			printByjqObj : function($ele)	{
 				var printWin = false;
-				if($ele && $ele.length)	{
-					var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
+				if($ele && $ele instanceof jQuery)	{
+/*					var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
 					html+= $ele.html();
 					html+="</body></html>";
 					
@@ -1431,21 +1431,28 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 						printWin.print();
 						printWin.close();
 						}
+*/
+
+var $pc = $("#printContainer");
+if($pc.length)	{
+	$pc.empty(); //emptied to make sure anything leftover from last print is gone.
+	}
+else	{
+	$pc = $("<div \/>",{'id':'printContainer'}).css('display','none').appendTo(document.body);
+	}
+var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($pc);
+$iframe.contents().find('body').append($ele.html());
+$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
+window.frames["printContainerIframe"].focus();
+window.frames["printContainerIframe"].print();
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In _app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
 					}
 				return printWin;
 				},
-
-			printByElementID : function(id)	{
-				if(id && $(_app.u.jqSelector('#',id)).length)	{
-					_app.u.printByjqObj($(_app.u.jqSelector('#',id)));
-					}
-				else	{
-					_app.u.dump("WARNING! - printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
-					}
-				}, //printByElementID
 
 //pass in "_app.data.something.something" as s (string) and this will test to make sure it exists.
 //co (Context Object) is an optional param to search within. ex:  thisNestedExists("data.something.something",_app) will look for _app.data.somthing.something and return true if it exists or false if it doesn't.
