@@ -1221,7 +1221,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				},
 
 			cartItemAppendSKU : function($ele,p)	{
+//				dump("BEGIN order_create.e.cartItemAppendSKU");
 				p.skuArr = [$ele.closest("[data-sku]").data('sku')];
+//				dump(" -> p.skuArr: "); dump(p.skuArr);
 				this.cartItemAppendAllSKUsFromOrder($ele,p);
 				},
 
@@ -1269,6 +1271,40 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					//cartItemUpdate will handle error display.
 					}
 				}, //cartItemUpdateExec
+
+
+			cartShippingSave : function($ele,p)	{
+				p.preventDefault();
+				var
+					$container = $ele.closest("[data-app-role='customShipMethodContainer']"),
+					cartid = $ele.closest(":data(cartid)").data('cartid'),
+					sfo = $container.serializeJSON();
+					
+				$('.ui-state.error',$container).removeClass('ui-state-error'); //remove any previous errors.
+				if(sfo['sum/shp_carrier'] && sfo['sum/shp_method'] && sfo['sum/shp_total'])	{
+					_app.model.addDispatchToQ({
+						'_cmd':'adminCartMacro',
+						'_cartid' : cartid,
+						'_tag' : {},
+						"@updates" : ["SETSHIPPING?"+$.param(sfo)]
+						},'immutable');
+					_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
+					_app.model.dispatchThis('immutable');
+					}
+				else	{
+					//handle errors.
+					if($("[name='sum/shp_carrier']",$container).val())	{}
+					else	{$("[name='sum/shp_carrier']",$container).addClass('ui-state-error')}
+
+					if($("[name='sum/shp_method']",$container).val())	{}
+					else	{$("[name='sum/shp_method']",$container).addClass('ui-state-error')}
+
+					if($("[name='sum/shp_total']",$container).val())	{}
+					else	{$("[name='sum/shp_total']",$container).addClass('ui-state-error')}
+					}
+
+				}, //orderSummarySave
+
 
 			cartItemAddFromForm : function($ele,p)	{
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");

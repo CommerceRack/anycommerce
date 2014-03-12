@@ -1,5 +1,8 @@
 <!--
 
+This layout is used in the ADMIN interface. It should not be selected on the storefront
+
+
 Each panel (fieldset) loads it's own template within the panelContent so that as needed, the panel can be easily updated.
 This also allows for messaging to be easily added to the fieldset that is NOT impacted by a template being updated.
 The name of the role in the fieldset matches the template (ex: chkoutPreflight = chkoutPreflightTemplate).
@@ -247,6 +250,21 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 
 <div id="chkoutMethodsShipTemplate">
 	<ul data-tlc="bind $var '.'; order_create#shipmethodsasradiobuttons  --legacy;" data-legacy-useparentdata="true" class="noPadOrMargin listStyleNone"></ul>
+	<hr />
+	<p>Use the form below to set a new shipping amount. Selected method above will be ignored.</p>
+	<div data-app-role='customShipMethodContainer'>
+	<!-- ### TODO -> this needs an 'undo' feature because selecting a new method doesn't save over this -->
+	<select data-tlc="bind $var '.sum.shp_carrier'; if(is $var --notblank;) {{apply --select=$var;}}; " name="sum/shp_carrier" class='skipTrack'>
+		<option value="SLOW">slow</option>
+		<option value="FAST">fast</option>
+		<option value="CPU">customer pickup</option>
+		<option value="ELSE">other</option>
+	</select>
+	<input data-tlc="bind $var '.sum.shp_method'; if(is $var --notblank;) {{apply --select=$var;}}; "  class='skipTrack' name="sum/shp_method" size="15" type="text">
+	<input data-tlc="bind $var '.sum.shp_total'; if(is $var --notblank;) {{apply --select=$var;}}; " class="smallInput skipTrack" name="sum/shp_total" size="5" step="0.01" min="0" type="number">
+	<button class='applyButton' data-app-click="order_create|cartShippingSave">Apply</button>
+	</div>
+
 </div>
 
 
@@ -266,7 +284,7 @@ do NOT change any div id's or messaging will not work properly.
 
 	<div class="giftCardContainer" data-app-role="giftcardContainer">
 	<label for="giftcardCode">Gift Certificate Code:</label>
-	<input name="giftcard" size="16" data-input-keyup="trigger-button-id" data-input-format="alphanumeric" data-trigger-button-id="execGiftcardAdd" type="text">
+	<input name="giftcard" size="16" class='skipTrack' data-input-keyup="trigger-button-id" data-input-format="alphanumeric" data-trigger-button-id="execGiftcardAdd" type="text">
 	<button class="applyButton" data-app-click="order_create|execGiftcardAdd" data-button-id="execGiftcardAdd">add</button> 
 	<small data-app-role="giftcardHint" class="zhint hint displayNone">if you wish to combine gift cards with another payment method, enter them here</small>
 	</div>
@@ -314,10 +332,10 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
 	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
 	
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist;" class="prodOptions alignRight"></div></td>
-	<td><input data-tlc="bind $var '.qty'; apply --select=$var;" class="smallInput" name="qty" step="1" size="3" min="0" data-app-change="order_create|cartItemUpdateExec" type="number"></td>
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist --legacy;" class="prodOptions alignRight"></div></td>
+	<td><input data-tlc="bind $var '.qty'; apply --select=$var;" class="smallInput skipTrack" name="qty" step="1" size="3" min="0" data-app-change="order_create|cartItemUpdateExec" type="number"></td>
 	<td class="alignRight">
-		<input data-tlc="bind $var '.price'; apply --select=$var;" class="smallInput" name="price" step=".01" size="8" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
+		<input data-tlc="bind $var '.price'; apply --select=$var;" class="smallInput skipTrack" name="price" step=".01" size="8" min="0" data-app-change="order_create|cartItemUpdateExec" type="number">
 	</td>
 	<td class="alignRight"><span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span></td>
 	<td><button data-tlc="bind $var '.'; cco#cartitemremovebutton  --legacy;" data-legacy-useparentdata="true" class="floatRight removeButton" data-app-click="cco|cartItemRemove">Remove Item From Cart</button></td>
@@ -354,9 +372,9 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 			<input name="override" value="1" type="hidden">
 			<input data-tlc="bind $var '.cart.cartid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="_cartid" value="" type="hidden"><!-- used in store_product.u.handleAddToCart -->
 	
-		<label><span>Qty:</span><input class="smallInput" step="1" min="0" name="qty" size="3" value="1" type="number"></label>
-		<label><span>SKU:</span><input name="sku" size="10" type="text"></label><!-- do not force 'pid' formatting, this could be a sku -->
-		<label><span>Price: </span><input class="price smallInput" size="5" name="price" step="0.01" min="0" type="number"></label>
+		<label><span>Qty:</span><input class="smallInput skipTrack" step="1" min="0" name="qty" size="3" value="1" type="number"></label>
+		<label><span>SKU:</span><input name="sku" class='skipTrack' size="10" type="text"></label><!-- do not force 'pid' formatting, this could be a sku -->
+		<label><span>Price: </span><input class="price smallInput skipTrack" size="5" name="price" step="0.01" min="0" type="number"></label>
 		<span class="applyButton" data-app-click="order_create|cartItemAddFromForm">Add</span>
 	</div>
 	
@@ -373,7 +391,13 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	
 	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.'; cco#shipinfobyid  --legacy;" data-legacy-useparentdata="true" class="orderShipping"></div>
+	
+	<div>
+		<span data-tlc="bind $method '.sum.shp_method'; apply --append;"></span>
+		<span data-tlc="bind $carrier '.sum.shp_carrier'; if (is $var --notblank;) {{format --prepend='(' --append='): '; apply --append;}};"></span>
+		<span data-tlc="bind $var '.sum.shp_total'; if (is $var --notblank;) {{format --currency='USD' --prepend=': '; apply --append;}};"></span>
+	</div>
+	
 	<div data-tlc="bind $var '.sum.hnd_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Handling: '; apply --add --class='hndTotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --append;}};"></div>
@@ -600,7 +624,7 @@ If this gets recycled, test in order history after making changes.
 	<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
 	<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
 	</div>
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="ztable_row_small prodOptions"></div>
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist --legacy; " class="ztable_row_small prodOptions"></div>
 	
 </div>
 	</td>

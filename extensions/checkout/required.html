@@ -291,7 +291,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
 	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
 	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="prodOptions"></div>
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist --legacy; " class="prodOptions"></div>
 	</td>
 	<td class="alignRight"><span data-tlc="bind $var '.qty'; if (is $var --notblank;) {{apply --append;}};"></span></td>
 	<td class="alignRight"><span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span></td>
@@ -561,7 +561,7 @@ If this gets recycled, test in order history after making changes.
 	<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
 	<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
 	</div>
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="ztable_row_small prodOptions"></div>
+	<div data-tlc="bind $var '.%options'; controller#optionsfromlist --legacy; " class="ztable_row_small prodOptions"></div>
 	
 </div>
 	</td>
