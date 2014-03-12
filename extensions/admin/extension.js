@@ -265,52 +265,6 @@ var admin = function(_app) {
 			}, //adminDomainList
 
 
-//PRT and TYPE (ex: ORDER) are required params
-		adminEmailList : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-//				_app.u.dump(" -> obj:"+Number(obj.PRT)); _app.u.dump(obj); _app.u.dump(_tag);
-				if(obj && (Number(obj.PRT) >= 0) && obj.TYPE)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminEmailList|"+obj.PRT+"|"+obj.TYPE;
-					
-					if(_app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					else	{
-						_app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminEmailList, PRT ["+obj.PRT+"] and TYPE ["+obj.TYPE+"] are required and one was not set."});
-					}
-				return r; 
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminEmailList";
-				obj._tag = _tag;
-				_app.model.addDispatchToQ(obj,Q || 'mutable');
-				}			
-			}, //adminEmailList
-
-		adminEmailSave : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(obj && Number(obj.PRT) >= 0 && obj.MSGID && obj.TYPE)	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminEmailSave, no object ["+typeof obj+"] or object.PRT ["+obj.PRT+"] or object.MSGID ["+obj.MSGID+"] not passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminEmailSave';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminEmailSave';
-				_app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //adminEmailSave
-
 //get a list of newsletter subscription lists.
 		adminNewsletterList : {
 			init : function(_tag,Q)	{
@@ -3284,46 +3238,6 @@ else	{
 				},
 
 //$t is 'this' which is the button.
-
-
-
-
-//as more listTypes are added, make sure the call uses immutable.
-//vars should contain listType, partition and then depending on the list type, CID or OrderID.
-			sendEmail : function($form,vars)	{
-
-				if($form && typeof vars == 'object')	{
-					var sfo = $form.serializeJSON(),
-					numDispatches = 0,
-					callback = function(rd)	{
-						$form.hideLoading();
-						if(_app.model.responseHasErrors(rd)){
-							$form.anymessage({'message':rd});
-							}
-						else	{
-							$form.empty().anymessage(_app.u.successMsgObject('Your email has been sent.'));
-							}						
-						}
-				
-					$form.showLoading({'message':'Sending Email'});
-					
-					if(vars.listType == 'CUSTOMER' && vars.CID)	{
-						numDispatches += _app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,['SENDEMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.
-						}
-					else if(vars.listType == 'ORDER' && vars.orderID)	{
-						numDispatches += _app.ext.admin.calls.adminCustomerUpdate.init(vars.orderID,['EMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.						
-						}
-					else	{
-						$form.hideLoading();
-						$form.anymessage({'gMessage':true,'persistent':true,'message':'In admin.u.sendEmail, based on listType, required var(s) were missing. Here is what was set: '+(typeof vars === 'object' ? JSON.stringify(vars) : vars)});
-						}
-					
-					}
-				else	{
-					$form.anymessage({'gMessage':true,'message':'In admin.u.sendEmail, either $form ['+typeof $form+'] or vars.CID ['+vars.CID+'] not set.'});
-					}
-				return numDispatches;
-				},
 
 			
 			fetchRSSDataSources : function(Q)	{

@@ -111,7 +111,6 @@ var admin_customer = function(_app) {
 					if(Number(obj.CID) > 0)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 //partition allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
-						_app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || _app.vars.partition},{},'mutable');
 						_app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 // always obtain a new copy of the customer record. May have been updated by another process.
 						_app.model.destroy("adminCustomerDetail|"+obj.CID);
@@ -1822,9 +1821,17 @@ _app.model.dispatchThis('immutable');
 				
 				}, //saveOrgToField
 			
-			showMailTool : function($ele,P)	{
+			showBlastTool : function($ele,P)	{
 				P.preventDefault();
-				_app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':_app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
+				var CID = $ele.closest("[data-cid]").data('cid');
+				if(CID && _app.data['adminCustomerDetail|'+CID])	{
+					_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'CUSTOMER','PRT':_app.data['adminCustomerDetail|'+CID]._PRT,'EMAIL':_app.data['adminCustomerDetail|'+CID]._EMAIL,'RECEIVER':'CUSTOMER','CID':CID});
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_customer.e.showBlastTool, unable to ascertain CID ["+CID+"] or customer record not in memory.","gMessage":true});
+					}
+				
+//				_app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':_app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //showMailTool
 
 			showOrgChooser : function($ele,P)	{

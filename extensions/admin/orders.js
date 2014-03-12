@@ -28,40 +28,13 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function(_app) {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	vars : {
 		"pools" : ['RECENT','PENDING','PREORDER','BACKORDER','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
-		"emailMessages" : {
-			'ORDER.CONFIRM':'Order created',
-			'ORDER.CUSTOM_MESSAGE1' : 'Order custom 1',
-			'ORDER.CONFIRM_DENIED' : 'Order confirmation w/payment denied',
-			'ORDER.ARRIVED.AMZ' : 'Order arrived: Amazon follow up',
-			'ORDER.ARRIVED.BUY' : 'Order arrived: Buy.com follow up',
-			'ORDER.ARRIVED.EBF' : 'Order arrived: eBay follow up',
-			'ORDER.ARRIVED.WEB' : 'Order arrived: website follow up',
-			'ORDER.FEEDBACK.AMZ' : 'Amazon Feedback request',
-			'ORDER.FEEDBACK.EBAY' : 'eBay Feedback request',
-			'ORDER.NOTE' : 'Order %ORDERID%',
-			'ORDER.SHIPPED' : 'Order %ORDERID% shipped',
-			'ORDER.SHIPPED.EBAY' : 'Your eBay order has been shipped.',
-			'ORDER.SHIPPED.AMZ' : 'Your Amazon order has been shipped.',
-			'ORDER.MERGED' : 'Your order has been merged',
-			'ORDER.SPLIT' : 'Changes to your order',
-			'ORDER.PAYMENT_REMINDER' : 'Payment reminder',
-			'ORDER.MOVE.APPROVED' : 'Order %ORDERID% approved',
-			'ORDER.MOVE.RECENT' : 'Order %ORDERID% backordered',
-			'ORDER.MOVE.COMPELTED' : 'Order %ORDERID% completed',
-			'ORDER.MOVE.CANCEL' : 'Order %ORDERID% cancelled',
-			'ORDER.MOVE.PENDING' : 'Order %ORDERID% pending',
-			'ORDER.MOVE.PREORDER' : 'Order %ORDERID% preordered',
-			'ORDER.MOVE.PROCESSING' : 'Order %ORDERID% processing',
-			'ORDER.MOVE.RECENT' : 'Order %ORDERID% moved to recent',
-			'CUSTOMMESSAGE' : 'Custom/Edit message' //if this changes, change class here in orders css: .orderManagerTable .bulkEditMenu .emailmsg_custommessage
-			},
 		"markets" : {
 			'ebay' : 'eBay',
 			'amazon' : 'Amazon'
@@ -125,36 +98,6 @@ var admin_orders = function(_app) {
 				}		
 			}, //orderPoolChanged
 
-//executed per order lineitem on a sendmail macro for order update.
-// on success, if the row is still selected, change the icon from loading back to selected. if not selected, drop icon
-//on error, show an error icon in the first column, but suppress the error message from being loaded in THAT column, which is a small spot to put a message.
-		handleSendEmail : {
-			onSuccess : function(tagObj)	{
-//				_app.u.dump("BEGIN admin_orders.callsbacks.handleSendEmail.onSuccess"); _app.u.dump(tagObj);
-				var $td = $(_app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)');
-//restore selected icon IF row is still selected.
-				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
-				else	{$td.html("")}
-				$td.parent().attr('data-status',''); //reset status.
-				},
-			onError : function(responseData)	{
-//				_app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); _app.u.dump(responseData);
-//change the status icon to notify user something went wrong on this update.
-//also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
-				var $row = $(_app.u.jqSelector('#',responseData._rtag.targetID));
-				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
-				_app.ext.admin_orders.u.unSelectRow($row);
-				delete responseData._rtag.targetID; //don't want the message here.
-				_app.u.throwMessage(responseData);
-				}		
-			}, //handleSendEmail
-
-		handleSendEmailFromEdit : {
-			onSuccess : function(tagObj)	{
-				$('body').hideLoading();
-				_app.u.throwMessage(_app.u.successMsgObject("Your email has been sent."));
-				}
-			}, //handleSendEmail
 
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
@@ -248,15 +191,6 @@ function pools2Object()	{
 	return r;
 	}
 
-function messages2Object()	{
-	var r = {};
-	for(var key in _app.ext.admin_orders.vars.emailMessages)	{
-		r["customer_email|"+key] = {'name' : _app.ext.admin_orders.vars.emailMessages[key]}
-		}
-	return r;
-	}
-
-// * 201338 -> updated contextual menu library and the code here. MUCH more efficient method. page loaded faster after this enhancement.
 $.contextMenu({
 	'selector' : '.adminOrderLineItem',
 	'callback' : function(key,options)	{
@@ -276,10 +210,7 @@ $.contextMenu({
 	'items' : {
 		"customer_edit": {name: "Edit Customer"},
 		"ticket_create": {name: "Create CRM Ticket"},
-		"customer_email": {
-			"name": "Email Customer", 
-			"items": messages2Object()
-            },
+		"customer_blast": {name: "Email Customer"},
 		"sep1": "---------",
 		"order_flagaspaid": {name: "Flag as Paid"},
 		"order_pool_change": {name: "Change Pool",
@@ -350,12 +281,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 				$("[data-app-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
 				$("[data-app-role='admin_orders|itemUpdateBulkEditMenu']",$target).menu().hide();
-
-				//Adds the click events to the order bulk update dropdown menu. The render format that generates the list is shared, so the events are added separately.
-				$("[data-app-role='bulkEmailMessagesList']",$target).find('a').each(function(){
-					$(this).attr('data-app-click','admin_orders|bulkImpactOrderItemListExec');
-					})
-
 
 //note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
 //because it requires a slight drag before the 'select' is triggered.
@@ -438,6 +363,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 					
 //go get the list of orders and any other necessary data
 				_app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
+				
 				_app.ext.admin_orders.a.showOrderList(P.filters);
 				_app.u.addEventDelegation($target);
 				$target.anyform();
@@ -448,42 +374,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 				}
 //			_app.u.dump("END initOrderManager");
 			}, //initOrderManager
-
-//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
-//though not a modal, only one can be open at a time.
-		showCustomMailEditor : function(orderID, prt)	{
-			if(orderID && Number(prt) >= 0)	{
-				var $target = $('#orderEmailCustomMessage');
-				if($target.length)	{$target.empty();}
-				else	{
-					$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
-					$target.dialog({'width':500,'height':500,'autoOpen':false});
-					}
-	
-				$target.dialog('open');
-				$target.showLoading({'message':'Fetching list of email messages/content'});
-	
-				_app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-					$target.hideLoading();
-					if(_app.model.responseHasErrors(rd)){
-						if(rd._rtag && rd._rtag.selector)	{
-							$(_app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
-							}
-						_app.u.throwMessage(rd);
-						}
-					else	{
-						$target.append(_app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',_app.data[rd.datapointer]));
-						_app.u.handleAppEvents($target);
-						}
-		
-					}},'mutable');
-				_app.model.dispatchThis('mutable');
-				}
-			else	{
-				_app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
-				}
-			},
-
 
 
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
@@ -525,7 +415,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 						var
 							orderData = _app.data[rd.datapointer];
-							orderData.emailMessages = _app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 
 //trigger the editable regions
 						_app.ext.admin_orders.u.makeEditable($("[data-app-role='orderUpdateNotesContainer']",$order),{'inputType':'textarea'});
@@ -804,15 +693,6 @@ else	{
 				}
 			},
 
-//used for adding email message types to the actions dropdown.
-//recycled in list mode and edit mode. #MAIL| is important in list mode and stripped in edit mode during click event.
-//designed for use with the vars object in this extension, not the newer adminEmailList _cmd
-//this is shared, so do NOT add an app-click to the li here, do it with JS. -> used by bulk edit AND in order edit.
-		emailMessagesListItems : function($tag,data)	{
-			for(var key in data.value)	{
-				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"' >"+data.value[key]+" ("+key+")</a></li>");
-				}
-			},
 
 		fetchAndDisplayPayMethods : function($tag,data)	{
 			$tag.showLoading({'message':'Fetching payment methods for order'});
@@ -1083,15 +963,8 @@ if giftcard is on there, no paypal will appear.
 							});
 						break;
 					
-					case 'customer_email':
-						var MSG = action.split('|')[1];
-						if(MSG == 'CUSTOMMESSAGE')	{
-							_app.ext.admin_orders.a.showCustomMailEditor($row.data('orderid'),$row.data('prt'));
-							}
-						else	{
-							_app.ext.admin_orders.u.sendOrderMail($row.data('orderid'),MSG,$row);
-							_app.model.dispatchThis('immutable');
-							}
+					case 'customer_blast':
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':$row.data('prt'),'RECEIVER':'CUSTOMER','CID':$row.data('cid')});
 						break;
 					
 					case 'order_flagaspaid':
@@ -1439,38 +1312,6 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
 				},
 
-			
-			
-//orderid and msgID are required.
-			sendOrderMail : function(orderID,msgID,$row)	{
-				if(msgID && orderID && $row.length){
-					if($row)	{$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>")}
-					else	{}// see how this is used outside the list. may want to use this to trigger a showLoading.
-					_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
-					}
-				else	{
-					_app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
-					}
-				},
-
-			bulkSendOrderMail : function(CMD)	{
-				var $orders = $('.ui-selected','#orderListTableBody');
-				var msgID = CMD.substring(5);
-				if(!$orders.length)	{
-					_app.u.throwMessage("Please select at least 1 order");
-					}
-//msgID is set and exists.
-				else if(msgID && _app.ext.admin_orders.vars.emailMessages[msgID])	{
-					$orders.each(function(){
-						_app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID,$(this));
-						});
-					_app.model.dispatchThis('immutable');
-					}
-				else	{
-					_app.u.throwGMessage("In admin_orders.u.bulkSendOrderMail, unable to ascertain msg type. command = "+command+" and msgID = "+msgID);
-					}
-				},
-
 //currently, this requires that the order_create extension has been added.
 //This groups all the invoices into 1 div and adds pagebreaks via css.
 //for this reason, the individual print functions for invoice/packslip are not recycled
@@ -1515,7 +1356,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 								}
 							else	{
 //							$('#printContainer').show(); //here for troubleshooting.
-								_app.u.printByElementID('printContainer');
+								_app.u.printByjqObj($('#printContainer'));
 								}
 							}},'immutable');
 						_app.model.dispatchThis('immutable');
@@ -1820,16 +1661,8 @@ $('.editable',$container).each(function(){
 								_app.model.dispatchThis('immutable');
 								break;
 							
-							case 'MAIL':
-								_app.ext.admin_orders.u.bulkSendOrderMail(command);
-								break;
-
 							case 'PRNT':
 								_app.ext.admin_orders.u.bulkOrdersPrint(command);
-								break;
-				
-							case 'BTCH':
-								alert('woot!');
 								break;
 				
 							default:
@@ -2002,7 +1835,7 @@ $('.editable',$container).each(function(){
 
 
 			orderPrint : function($ele,p)	{
-				dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID && $ele.data('loadstemplate'))	{
 // SANITY -> browsers didn't like it when the popup was triggered after an ajax request. so instead, we open the popup right away, then populate the content later, followed by the print cmd.
@@ -2295,119 +2128,32 @@ $('.editable',$container).each(function(){
 					});
 				}, //orderPrintPackSlip
 
-			"orderEmailSend" : function($btn){
+			"orderBlastSend" : function($btn){
 				$btn.button();
 //simply trigger the dropdown on the next button in the set.
-				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
-					_app.u.dump(" -> orderEmailSend clicked.");
+				$btn.off('click.orderBlastSend').on('click.orderBlastSend',function(event){
 					event.preventDefault();
-					$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").trigger('click');
-					_app.u.dump(" -> $btn.parent().find('[data-app-event='orderEmailShowMessageList']').length: "+$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").length);
-					});
 
+					var orderID = $btn.closest("[data-orderid]").data('orderid');
 
-				}, //orderEmailSend
-
-			"orderEmailCustomSend" : function($btn)	{
-				$btn.button();
-				$btn.off('click.orderEmailCustomSend').on('click.orderEmailCustomSend',function(event){
-					event.preventDefault();
-					var $form = $btn.parents('form'),
-					frmObj = $form.serializeJSON(),
-					orderID = $btn.closest("[data-orderid]").data('orderid');
-					partition = $btn.closest("[data-prt]").data('prt');
-					
-					$('body').showLoading({'message':'Sending custom message for order '+orderID});
-					
-					if(!$.isEmptyObject(frmObj) && orderID && frmObj.SUBJECT && frmObj.BODY && frmObj.BODY.length > 1)	{
-						_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?body="+encodeURIComponent(frmObj.BODY)+"&subject="+encodeURIComponent(frmObj.SUBJECT)],{'callback':function(rd){
-$('body').hideLoading();
-if(_app.model.responseHasErrors(rd)){
-	rd.parentID = 'orderEmailCustomMessage';
-	_app.u.throwMessage(rd);
-	}
-else	{
-	var msgObj = _app.u.successMsgObject("Thank you, your message has been sent.");
-	$('#orderEmailCustomMessage').empty();
-	msgObj.parentID = 'orderEmailCustomMessage';
-	_app.u.throwMessage(msgObj);
-	}
-							}});
-//						_app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
-						if(frmObj.updateSystemMessage && frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
-//							_app.u.dump(" -> updating default system messaging");
-							frmObj.PRT = partition;
-							frmObj.TYPE = 'ORDER'; //Don't pass a blank FORMAT, must be set to correct type.
-							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-//							_app.u.dump(" -> frmObj: "); _app.u.dump(frmObj);
-							_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-								if(_app.model.responseHasErrors(rd)){
-									rd.parentID = 'orderEmailCustomMessage';
-									_app.u.throwMessage(rd);
-									}
-								else	{
-									var msgObj = _app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
-									msgObj.parentID = 'orderEmailCustomMessage';
-									
-									_app.u.throwMessage(msgObj);
-									}
-								}},'immutable');
-							}
-						
-						_app.model.dispatchThis('immutable')
-						}
-					else	{
-						_app.u.throwGMessage("In admin_orders.e.orderEmailCustomSend, both subject ["+frmObj.subject+"] and body are required and one was empty OR app was unable to ascertain the order id ["+orderID+"]");
-						_app.u.dump("In the following object, body param MUST be present and have a length > 1"); _app.u.dump(frmObj);
-						}
-					
-					})
-				}, //orderEmailCustomSend
-
-
-//
-			"orderEmailShowMessageList" : function($btn){
-				
-				$btn.button({text: false,icons: {primary: "ui-icon-triangle-1-s"}})
-
-				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-				var menu = $btn.parent().next('ul').menu().hide();
-				menu.css({'position':'absolute','width':'300px','z-index':'10000'}).parent().css('position','relative');
-				
-				menu.find('li a').each(function(){
-					$(this).off('click.sendmail').on('click.sendmail',function(event){
-						event.preventDefault();
-						if($(this).attr('href') == '#MAIL|CUSTOMMESSAGE')	{
-							_app.ext.admin_orders.a.showCustomMailEditor(orderID,_app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
+					if(orderID && _app.data['adminOrderDetail|'+orderID])	{
+						var partition = _app.vars.partition;
+						var email = _app.data['adminOrderDetail|'+orderID].bill.email || _app.data['adminOrderDetail|'+orderID].customer.login || "";
+						var CID = _app.data['adminOrderDetail|'+orderID].customer.cid;
+						var domain = _app.data['adminOrderDetail|'+orderID].our.domain; //used to fetch the partition.
+						if(domain)	{
+							partition = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain).PRT;
 							}
 						else	{
-							$('body').showLoading({'message':'Emailing customer [message: '+$(this).attr('href').substring(6)+']'});
-//substring(6) on the link below strips #MAIL| from the url
-							_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
-							_app.model.dispatchThis('immutable');
+							_app.u.dump(" -> could not ascertain domain for order. using partition in focus.");
 							}
-						});
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':partition,'EMAIL':email,'RECEIVER':'EMAIL','CID':CID});
+						}
+					else	{
+						_app.u.dump(" -> could not ascertain orderid for order or the order is not in memory.",'error');
+						}
 					});
-
-
-//simply trigger the dropdown on the next button in the set.
-				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){
-					_app.u.dump(" -> orderEmailShowMessageList clicked.");
-					$btn.button();
-					event.preventDefault();
-                    menu.show().position({
-                        my: "right top",
-                        at: "right bottom",
-                        of: this
-	                    });
-//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
-					setTimeout(function(){$(document).one( "click", function() {menu.hide();});},1000);
-					});
-
-				$btn.parent().buttonset();
-
-				}, //orderEmailShowMessageList
-
+				}, //orderBlastSend
 
 
 			orderSearch : function($ele,P)	{

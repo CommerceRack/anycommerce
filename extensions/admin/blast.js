@@ -69,6 +69,7 @@ var admin_blast = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+			//shows the lists of all blast messages and the means to edit each one individually.
 			blastMessagesList : function($target,params)	{
 				$target.showLoading({"message":"Fetching list of messages"});
 				$target.tlc({'templateid':'blastManagerTemplate','verb':'template'});
@@ -104,7 +105,8 @@ var admin_blast = function(_app) {
 				_app.model.dispatchThis("mutable");
 				}, //blastMessagesList
 
-//used in the blast message list tool for editing a specific message.			
+			//used in the blast message list tool for editing a specific message.			
+			//can be used outside that interface by calling directly.
 			blastMessagesDetail : function($target,params)	{
 				$target.showLoading({"message":"Fetching message detail"});
 				_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":params.msgid,"_tag":{
@@ -121,6 +123,7 @@ var admin_blast = function(_app) {
 			//params wants an 'object' and a 'partition'. Partition is passed because, in the case of orders, you may be working with an order from another partition.
 			blastTool : function($target,params)	{
 				params = params || {};
+//				dump("BEGIN blast.a.blastTool"); dump(params);
 				_app.u.addEventDelegation($target);
 				if($target.closest('.ui-dialog-content').length){} //in a dialog, no extra styling necessary.
 				else	{
@@ -129,7 +132,7 @@ var admin_blast = function(_app) {
 				if(params.OBJECT && Number(params.PRT) >= 0)	{
 //listType must match one of these. an array is used because there will be more types:
 //  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
-					var validObjects = ['ORDER','CUSTOMER']; 
+					var validObjects = ['ORDER','CUSTOMER','TICKET','PRODUCT','SUPPLY']; 
 					if($.inArray(params.OBJECT,validObjects) >= 0)	{
 
 						$target.showLoading({'message':'Fetching list of email messages/content'});
@@ -145,6 +148,7 @@ var admin_blast = function(_app) {
 									$("[name='MSGID']",$target)
 										.val('BLANK') //for some reason, the tlcFormat is selecting the last option added as 'selected'.
 										.find('option').not("[value='BLANK']").each(function(){
+											//filter out objects that don't match.
 											var msgObject = $(this).val().split('.')[0];
 											if(msgObject != params.OBJECT)	{$(this).hide();}
 											});
@@ -197,7 +201,6 @@ var admin_blast = function(_app) {
 		tlcFormats : {
 
 //used for adding email message types to a select menu.
-//designed for use with the vars object returned by a adminEmailList _cmd
 			msgsasoptions : function(data,thisTLC)	{
 				var val = data.globals.binds[data.globals.focusBind];
 				if(val)	{
@@ -220,6 +223,16 @@ var admin_blast = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			showBlastToolInDialog : function(params)	{
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : params.title || "Send Blast",
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$D.dialog('open');
+				_app.ext.admin_blast.a.blastTool($D,params); ///###TODO -> need to get partition.
+				
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
@@ -299,8 +312,8 @@ var admin_blast = function(_app) {
 				return false;
 				},
 
-//applied to the select list that contains the list of email messages in the blast tool. on change, it puts the message body into the textarea.
-			toggleEmailInputValuesBySource : function($ele)	{
+//applied to the select list that contains the list of messages in the blast tool. on change, it puts the message body into the textarea.
+			updateBlastInputsBySource : function($ele,P)	{
 				var
 					msgid = $("option:selected",$ele).val(),
 					$form = $ele.closest('form');
@@ -339,7 +352,6 @@ var admin_blast = function(_app) {
 				else	{
 					//validate form handles error display.
 					}
-//				_app.ext.admin.u.sendEmail($form,vars);	
 				}, //msgBlastSendExec
 
 /* blast macro */

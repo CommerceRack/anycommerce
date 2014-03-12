@@ -21,14 +21,20 @@
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
+	
+			<h2>Supply Chain</h2>
+			<div>
+				<ul data-app-role="blastmessages_SUPPLY" class='noPadOrMargin listStyleNone'></ul>
+			</div>
 		</div>
 		<!-- a container is necessary around this button for positioning of the menu -->
 		<div class='buttonset'>
 			<button class='applyButton' data-icon-secondary='ui-icon-triangle-1-s' data-icon-primary='ui-icon-plus' data-text='true' data-app-click='admin|showMenu'>Add Message</button>
 			<menu data-app-role='messageBlastCreateList' class='displayNone'>
-				<li><a href='#' data-msgtype='ORDER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Order</a></li>
 				<li><a href='#' data-msgtype='CUSTOMER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Customer</a></li>
+				<li><a href='#' data-msgtype='ORDER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Order</a></li>
 				<li><a href='#' data-msgtype='PRODUCT' data-app-click='admin_blast|adminBlastMsgCreateShow'>Product</a></li>
+				<li><a href='#' data-msgtype='SUPPLY' data-app-click='admin_blast|adminBlastMsgCreateShow'>Supply</a></li>
 				<li><a href='#' data-msgtype='TICKET' data-app-click='admin_blast|adminBlastMsgCreateShow'>Ticket</a></li>
 			</menu>
 		</div>
@@ -196,7 +202,7 @@
 			<span>Receiver:</span>
 			<select name='RECEIVER' required='required' data-tlc="bind $var '.RECEIVER'; apply --select=$var;" data-panel-selector=".blastToolReceiverInputs" data-input-change='show-panel'>
 				<option value='EMAIL' selected="selected" data-show-panel='blastToolEmailInputs'>Email</option>
-				<option value='CUSTOMER' selected="selected">Customer</option>
+				<option value='CUSTOMER' selected="selected" data-show-panel='blastToolCustomerInputs'>Customer</option>
 				<optgroup label="Push Notifications">
 					<option value='GCN'>Google</option>
 					<option value='APNS'>Apple</option>
@@ -204,19 +210,24 @@
 				</optgroup>
 			</select>
 		</label>
-		
-		
+
+		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolEmailInputs'>
+			<span>Email address:</span>
+			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" data-validation-rules='skipIfHidden' data-tlc="bind $var '.EMAIL'; apply --select=$var;" />
+		</label>
+
+		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolCustomerInputs'>
+			<span>Customer ID:</span>
+			<input type='number' step='1' min='0' name='CID' required='required' maxlength="10" required="required" data-validation-rules='skipIfHidden' data-tlc="bind $var '.CID'; apply --select=$var;" />
+		</label>
+
 		<label>
 			<span>Message source:</span>
-			<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|toggleEmailInputValuesBySource">
+			<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|updateBlastInputsBySource">
 				<option value='BLANK' selected="selected">blank</option>
 			</select>
 		</label>
-		
-		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolEmailInputs'>
-			<span>Email address:</span>
-			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" data-validation-rules='skipIfHidden'  /><!-- if recipient is passed into the mail tool, this will be visible but disabled. -->
-		</label>
+
 	</fieldset>
 	
 	<fieldset data-app-role='blastToolMsgContent'  class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
@@ -235,8 +246,8 @@
 
 	<fieldset class='updateSystemMessageContainer marginBottom'>
 	<label>
-		<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
-		Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
+		<!-- <input type='checkbox' name='updateSystemMessage' disabled='disabled' />-->
+		<!-- Save these changes to the message <span class='msgType'></span> for all future emailsthe .msgType is used to populate the message ID in focus. -->
 	</label>
 	</fieldset>
 
@@ -302,7 +313,7 @@
 	<legend>Properties</legend>
 	<label>
 		<span>Syntax</span>
-		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.PRT.LINKSYNTAX'; apply --select=$var;">
+		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.%PRT.LINKSYNTAX'; apply --select=$var;">
 			<option value='APP'>App</option>
 			<option value='VSTORE'>Vstore</option>
 		</select>

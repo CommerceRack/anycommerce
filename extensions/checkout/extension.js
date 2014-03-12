@@ -2133,8 +2133,7 @@ _app.model.dispatchThis('passive');
 							var $label = $("<label \/>");
 							if(pMethods[i].id.indexOf("GIFTCARD") === 0)	{
 								//onClick event is added through an app-event. allows for app-specific events.
-								$("<button \/>")
-									.text('add')
+								$("<button>Add</button>")
 									.attr({'title':'Apply this giftcard towards this purchase','data-giftcard-id':pMethods[i].id.split(':')[1]})
 									.button({icons: {primary: "ui-icon-cart"},text: true})
 									.addClass('isGiftcard')
