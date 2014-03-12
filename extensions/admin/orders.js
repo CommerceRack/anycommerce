@@ -459,6 +459,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 						_app.u.handleCommonPlugins($order);
 						_app.u.handleAppEvents($order);
+						_app.u.handleButtons($order);
 
 //now is the time on sprockets when we enhance.
 
