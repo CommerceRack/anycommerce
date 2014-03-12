@@ -1466,7 +1466,6 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					if (!o) {o= null; break;}
 					}
 				return o;
-	
 				}, //getObjValFromString
 
 			getDomainFromURL : function(URL)	{
@@ -1675,6 +1674,15 @@ AUTHENTICATION/USER
 				}, //determineAuthentication
 	
 	
+			hash2kvp : function(hash,encode)	{
+				encode = (encode === false) ? false : true;
+				var str = [];
+				for(var p in hash)
+					if (hash.hasOwnProperty(p)) {
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(hash[p]));
+					}
+				return str.join('&');
+				},
 	
 //pass in an array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)

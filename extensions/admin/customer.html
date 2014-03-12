@@ -1313,7 +1313,7 @@ Coming Soon
 	<td data-bind='var: faq(TOPIC_ID); format:faqTopic; extension:admin_customer;'></td>
 	<td data-bind='var: faq(QUESTION); format:text;'></td>
 	<td data-bind='var: faq(PRIORITY); format:text;'></td>
-	<td>
+	<td class='alignRight'>
 		<button data-app-click="admin_customer|faqQuestionDeleteConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete FAQ</button>
 		<button data-app-click="admin_customer|faqQuestionUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit FAQ</button>
 	</td>
@@ -1321,18 +1321,26 @@ Coming Soon
 </table>
 
 <div id='faqAddUpdateTemplate'>
-	<form class='labelsAsBreaks alignedLabels'>
+	<form class='labelsAsBreaks alignedLabels' data-app-submit="admin|submitForm">
+	<input type='hidden' name='FAQ_ID' value='' data-tlc="bind $val '.FAQ_ID'; apply --select=$val;" />
+	
 	<label>
-		<select data-tlc="bind $val '.TOPIC_ID'; bind $topics '.topics'; admin_customer#topicloop; apply --append; apply --select=$val;">
-			<option selected='selected'>Please choose</option>
+		<select name='TOPIC_ID' data-tlc="bind $val '.TOPIC_ID'; bind $topics '.@TOPICS'; admin_customer#topicloop; apply --append; apply --select=$val;">
+			
 		</select>
 	</label>
 	<label>
-		<textarea placeholder='question' name='question' class='fullWidth' data-tlc="bind $val '.QUESTION'; apply --select=$val;"></textarea>
+		<textarea placeholder='question' name='QUESTION' class='fullWidth' data-tlc="bind $val '.QUESTION'; apply --select=$val;"></textarea>
 	</label>
 	<label>
-		<textarea placeholder='answer' name='answer'  class='fullWidth' data-tlc="bind $val '.ANSWER'; apply --select=$val;"></textarea>
+		<textarea placeholder='answer' name='ANSWER'  class='fullWidth' data-tlc="bind $val '.ANSWER'; apply --select=$val;"></textarea>
 	</label>
-	
+	<label>
+		<textarea placeholder='keywords' name='KEYWORDS'  class='fullWidth' data-tlc="bind $val '.KEYWORDS'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<input type='number' min='0' step='1' placeholder='priority' name='PRIORITY' data-tlc="bind $val '.PRIORITY'; apply --select=$val;" value='0' />
+	</label>
+	<button class='applyButton' data-app-role='saveButton'>Save</button>
 	</form>
 </div>

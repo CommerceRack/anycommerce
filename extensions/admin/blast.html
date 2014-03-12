@@ -16,6 +16,11 @@
 			<div>
 				<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
 			</div>
+	
+			<h2>Ticket</h2>
+			<div>
+				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
+			</div>
 		</div>
 		<!-- a container is necessary around this button for positioning of the menu -->
 		<div class='buttonset'>
@@ -24,6 +29,7 @@
 				<li><a href='#' data-msgtype='ORDER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Order</a></li>
 				<li><a href='#' data-msgtype='CUSTOMER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Customer</a></li>
 				<li><a href='#' data-msgtype='PRODUCT' data-app-click='admin_blast|adminBlastMsgCreateShow'>Product</a></li>
+				<li><a href='#' data-msgtype='TICKET' data-app-click='admin_blast|adminBlastMsgCreateShow'>Ticket</a></li>
 			</menu>
 		</div>
 	</section>
@@ -39,7 +45,7 @@
 
 <div id='blastMessageAddTemplate'>
 	<form action='#' data-app-submit='admin_blast|adminBlastMsgCreateExec' novalidate>
-	<input type='hidden' name='msgtype' data-tlc="bind $var '.msgtype'; apply --select;" />
+	<input type='hidden' name='msgtype' data-tlc="bind $var '.msgtype'; apply --select=$var;" />
 	<fieldset class='labelsAsBreaks alignedLabels'>
 		<label>
 			<span>Message id</span>
@@ -107,7 +113,7 @@
 <div id='blastMessageDetailTemplate' class='clearfix'>
 
 	<form action='#' data-app-submit='admin|submitForm' novalidate='novalidate'>
-	<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select;"  />
+	<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select=$var;"  />
 	
 	<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -115,7 +121,7 @@
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
 	<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
-		<h2 data-tlc="bind $var '.MSGID'; apply --select;"></h2>
+		<h2 data-tlc="bind $var '.MSGID'; apply --select=$var;"></h2>
 		<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight applyButton' data-text='true' data-app-click='admin_blast|adminBlastMsgSendTestShow'>Send Test</button>
 	</div>
@@ -134,11 +140,11 @@
 		
 			<label>
 				<span>From:</span>
-				<input type='text' name='%META.email_from' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select;" />
+				<input type='text' name='%META.email_from' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select=$var;" />
 			</label>
 			<label>
 				<span>bcc:</span>
-				<input type='text' name='%META.email_bcc' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select;" />
+				<input type='text' name='%META.email_bcc' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select=$var;" />
 			</label>
 		
 		</fieldset>
@@ -147,12 +153,12 @@
 
 			<label>
 				<span>Subject:</span>
-				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
+				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
 			</label>
 			
 			<label>
 				<span>Message:</span>
-				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
+				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
 			</label>
 
 		</fieldset>
@@ -174,8 +180,8 @@
 
 <div id='blastToolTemplate'>
 <form action='#' novalidate>
-	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.%MSG.PRT'; apply --select;" />
-	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.%MSG.OBJECT'; apply --select;" />
+	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.%MSG.PRT'; apply --select=$var;" />
+	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.%MSG.OBJECT'; apply --select=$var;" />
 	<input type='hidden' name='FORMAT' value='HTML5' />
 
 	<input type='hidden' name='_cmd' value='adminBlastMsgSend' />
@@ -188,7 +194,7 @@
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>
 			<span>Receiver:</span>
-			<select name='RECEIVER' required='required' data-tlc="bind $var '.RECEIVER'; apply --select;" data-panel-selector=".blastToolReceiverInputs" data-input-change='show-panel'>
+			<select name='RECEIVER' required='required' data-tlc="bind $var '.RECEIVER'; apply --select=$var;" data-panel-selector=".blastToolReceiverInputs" data-input-change='show-panel'>
 				<option value='EMAIL' selected="selected" data-show-panel='blastToolEmailInputs'>Email</option>
 				<option value='CUSTOMER' selected="selected">Customer</option>
 				<optgroup label="Push Notifications">
@@ -217,12 +223,12 @@
 	<!-- any content that is message specific (should get changed when msgid changes) should be within this fieldset -->
 		<label>
 			<span>Subject:</span>
-			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select;" />
+			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
 		</label>
 		
 		<label>
 			<span>Message:</span>
-			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.%MSG.BODY'; apply --select;"></textarea>
+			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
 		</label>
 	</fieldset>
 
@@ -292,7 +298,18 @@
 <input type='hidden' name='_tag/message' value='Your changes have been saved.' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
+<fieldset class='floatRight width50'>
+	<legend>Properties</legend>
+	<label>
+		<span>Syntax</span>
+		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.PRT.LINKSYNTAX'; apply --select=$var;">
+			<option value='APP'>App</option>
+			<option value='VSTORE'>Vstore</option>
+		</select>
+</fieldset>
+
 <fieldset>
+	<legend>Contact</legend>
 	<p>The following fields are all optional, but highly recommended.</p>
 	<label>
 		<span>Domain</span>
@@ -313,6 +330,9 @@
 		<textarea name='PRT.MAILADDR' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" />
 	</label>
 </fieldset>
+
+
+
 
 	<div class='buttonset'><button class='applyButton'>Save</button></div>
 

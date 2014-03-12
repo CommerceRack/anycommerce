@@ -327,9 +327,9 @@ var admin_customer = function(_app) {
 					'controls' : "",
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
-						"<button data-text='true' data-icon-primary='ui-icon-arrowstop-1-s'>New Topic<\/button>"],
+						"<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click='admin_customer|faqTopicAddNewShow'>New Topic<\/button>"],
 					'thead' : ['Topic','Question','Priority',''],
-					'tbodyDatabind' : "var: users(@detail); format:processList; loadsTemplate:faqResultsRowTemplate;",
+					'tbodyDatabind' : "var: users(@FAQS); format:processList; loadsTemplate:faqResultsRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminFAQList',
 						'_tag' : {
@@ -546,10 +546,10 @@ $D is returned.
 		tlcFormats : {
 			
 			topicloop : function(data,thisTLC)	{
-				dump(" -> data.globals: "); dump(data.globals);
+//				dump(" -> data.globals: "); dump(data.globals);
 				var T = data.globals.binds[data.globals.focusBind], L = T.length, $tmp = $("<select \/>");
 				for(var i = 0; i < L; i += 1)	{
-					$("<option>"+T[i].TOPIC_TITLE+"</option>").val(T[i].TOPIC_ID).appendTo($tmp);
+					$("<option>"+T[i].TITLE+"</option>").val(T[i].TOPIC_ID).appendTo($tmp);
 					}
 				data.globals.binds[data.globals.focusBind] = $tmp.children();
 				return true;
@@ -563,9 +563,9 @@ $D is returned.
 			//passed the topic id, which is used to look up the topic_title
 			faqTopic : function($tag,data)	{
 				var topicID = data.value; //shortcut.
-				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminFAQList['@topics'],'TOPIC_ID',topicID);
-				if(topic && topic.TOPIC_TITLE)	{
-					$tag.append(topic.TOPIC_TITLE);
+				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminFAQList['@TOPICS'],'TOPIC_ID',topicID);
+				if(topic && topic.TITLE)	{
+					$tag.append(topic.TITLE);
 					}
 				else	{
 					$tag.append(topicID);
@@ -640,19 +640,14 @@ $D is returned.
 				}, //adminGiftcardMacro
 	
 			'adminFAQMacro' : function(sfo,$form)	{
-				_app.u.dump("BEGIN admin_wholesale.macrobuilders.adminFAQMacro");
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
 				var newSfo = {
 					'_cmd':'adminFAQMacro',
-					'ID':sfo.ID,
 					'_tag':sfo._tag,
 					'@updates':new Array()
-					}; 
-
-//				if($("[name='balance']",$form).hasClass('edited'))	{
-//					newSfo['@updates'].push("SET/BALANCE?balance="+sfo.balance+"&note="+sfo.balance_note);
-//					}
+					};
+				newSfo['@updates'].push("FAQ-UPDATE?"+_app.u.hash2kvp(_app.u.getWhitelistedObject(sfo,['FAQ_ID','QUESTION','ANSWER','TOPIC_ID','PRIORITY','KEYWORDS'])));
 				return newSfo;
 				} //adminGiftcardMacro		
 			},
@@ -1910,7 +1905,36 @@ _app.model.dispatchThis('immutable');
 					$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 					}
 				}, //orderCustomerEdit
-
+			
+			faqTopicAddNewShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Create a new FAQ Topic",
+					showLoading : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				
+				$D.append("<form><input type='text' data-input-keyup='format' data-input-format='alphanumeric,uppercase' name='TITLE' \/><br \/><\/form>");
+				$D.anyform();
+				$("<button \/>").text('save').button().on('click',function(event){
+					event.preventDefault();
+					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE"+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$('#globalMessaging').anymessage(_app.u.successMsgObject('Topic has been created.'));
+							$D.dialog('close');
+							}
+						}}},"mutable");
+					_app.model.dispatchThis("mutable");
+					}).appendTo($('form',$D));
+				$D.dialog('option','width',250);
+				$D.dialog('open');
+				},
+			
 			faqQuestionDeleteConfirm : function($ele,P)	{
 				var faqid = $ele.closest('tr').data('id');
 				var $D = _app.ext.admin.i.dialogConfirmRemove({
@@ -1936,7 +1960,7 @@ _app.model.dispatchThis('immutable');
 
 
 			faqQuestionUpdateShow : function($ele,P)	{
-				var faqid = $ele.closest('tr').data('id');
+				var faqid = $ele.closest('tr').data('faq_id');
 				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
 					'templateID' : 'faqAddUpdateTemplate',
 					'panelID' : 'faq_'+faqid,
@@ -1944,10 +1968,11 @@ _app.model.dispatchThis('immutable');
 					'handleAppEvents' : false,
 					'data' : {}
 					});
-				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminFAQList']['@detail'],'ID',faqid),{'topics':_app.data['adminFAQList']['@topics']})});
-				$('form',$panel).append("<input type='hidden' name='_cmd' value='adminFAQUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminFAQList']['@FAQS'],'FAQ_ID',faqid),{'@TOPICS':_app.data['adminFAQList']['@TOPICS']})});
+				$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				_app.u.handleCommonPlugins($panel);
 				_app.u.handleButtons($panel);
+				$panel.anyform({'trackEdits':true});
 				},
 
 

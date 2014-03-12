@@ -74,7 +74,9 @@ var admin_blast = function(_app) {
 				$target.tlc({'templateid':'blastManagerTemplate','verb':'template'});
 				_app.u.addEventDelegation($target);
 				_app.u.handleButtons($target);
-				$(".slimLeftNav .accordion",$target).accordion();
+				$(".slimLeftNav .accordion",$target).accordion({
+					heightStyle: "content"
+					});
 				_app.model.addDispatchToQ({
 					"_cmd":"adminBlastMsgList",
 					"_tag":{
@@ -87,8 +89,9 @@ var admin_blast = function(_app) {
 							else	{
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
+									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
 									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].TITLE || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>")	
+										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
 										}
 									}
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
