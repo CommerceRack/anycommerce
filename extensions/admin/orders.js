@@ -248,7 +248,8 @@ else	{
 						var PRT = _app.data['adminOrderDetail|'+_rtag.orders[i]]._PRT || 0;
 						$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Rendering '+_rtag.printable.toLowerCase());
 						try	{
-							$printme.append(getObj(_app.data['adminBlastMsgDetail|'+PRT+'|PRINTABLE.'+_rtag.printable]['%MSG'].BODY,_app.data['adminOrderDetail|'+_rtag.orders[i]]));
+							// in an email, order tlc binds are prefixed with %ORDER, so the order object is passed in under %ORDER
+							$printme.append(getObj(_app.data['adminBlastMsgDetail|'+PRT+'|PRINTABLE.'+_rtag.printable]['%MSG'].BODY,{'%ORDER':_app.data['adminOrderDetail|'+_rtag.orders[i]]}));
 							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Sent to print.');
 							printables++;
 							}
