@@ -36,10 +36,9 @@ BindStatement
 // ** EXPORT **
 // export 'dataset-var' $var
 ExportStatement
-= "export" _ set:(variable / tag) _ src:(variable / scalar ) _ lb+ {
-  return { type:"EXPORT", Set:set, Src:src }
+= "export" _ set:(variable / tag) args:((ws+ value)+)? _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null }
   }
-
 
 // ** SET ** 
 // set $dst $src --path='.xyz';
