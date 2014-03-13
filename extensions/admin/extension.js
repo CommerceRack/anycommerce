@@ -3312,7 +3312,7 @@ else	{
 					}
 				}
 			else	{
-				$('#globalMessaging').anymessage({"message":"In admin_prodedit.u.getProductVariationByID, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
+				$('#globalMessaging').anymessage({"message":"In admin.u.getIndexInArrayByObjValue, either array or objkey ["+objkey+"] or objvalue ["+objvalue+"] not passed.","gMessage":true});
 				}
 //			_app.u.dump(" -> getIndexInArrayByObjValue r:"+r);
 			return r;

@@ -143,12 +143,12 @@ used, but not pre-loaded.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			projectidpretty : function($tag,data)	{
-				dump(" BEGIN projectidpretty");
+//				dump(" BEGIN projectidpretty");
 				var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
 				if(_app.data.adminProjectList && _app.data.adminProjectList['@PROJECTS'])	{
-					dump(" projects ARE in memory");
+//					dump(" projects ARE in memory");
 					var index = _app.ext.admin.u.getIndexInArrayByObjValue(_app.data.adminProjectList['@PROJECTS'],'UUID',data.value);
-					dump(" -> index: "+index);
+//					dump(" -> index: "+index);
 					if(index === 0 || index >= 1)	{
 						if(_app.data.adminProjectList['@PROJECTS'][index].TITLE)	{
 							o = _app.data.adminProjectList['@PROJECTS'][index].TITLE;
@@ -534,7 +534,7 @@ used, but not pre-loaded.
 				$("[data-app-role='domainDetailContainer']:visible",$ele.closest('table')).each(function(){$(this).slideUp('slow','',function(){
 					$(this).intervaledEmpty().tlc('destroy');
 					});}); //close any open rows. interface gets VERY crowded if more than one editor is open.
-				_app.u.dump(" -> wasVisible: "+wasVisible);
+
 				if(wasVisible)	{}//was open and has already been closed
 				else	{
 					$detail.show();
@@ -563,7 +563,7 @@ used, but not pre-loaded.
 						}
 					else	{}
 					}
-				}, //adminDomainDetailShow
+	 dump(" ----------> got here ");			}, //adminDomainDetailShow
 
 			domainView : function($ele,p)	{
 				var domainname = $ele.closest("[data-domainname]").data('domainname');
@@ -595,12 +595,13 @@ used, but not pre-loaded.
 					if($ele.data('mode') == 'update')	{
 // ### FUTURE -> this is gonna get more love soon.  When it does, for adding a template to a host, would be nice to remember which template was selected.
 						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
-						_app.u.dump(" -> data: ");_app.u.dump(data);
+						
 						title += ': '+(data.HOSTNAME.toString().toLowerCase())
 						}
 					
 					title += ' for '+domain
 					
+					_app.u.dump(" -> data: ");_app.u.dump(data);
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title': title,
 						'data' : data, //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
@@ -608,7 +609,7 @@ used, but not pre-loaded.
 						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
-
+					
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
 					var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
@@ -616,7 +617,7 @@ used, but not pre-loaded.
 							}
 						else	{
 							//success content goes here.
-							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).tlc({'datapointer':rd.datapointer});
+							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
 							if($ele.data('mode') == 'update')	{
 								$("input[name='PROJECT']",$D).val(_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
 								}
@@ -636,13 +637,13 @@ used, but not pre-loaded.
 					if(_app.model.fetchData('adminSiteTemplateList') == false)	{
 						_app.model.addDispatchToQ({'_cmd':'adminSiteTemplateList','_tag':{
 							'datapointer' : 'adminSiteTemplateList',
-							'callback' : 'tlc',
+							'callback' : 'anycontent',
 							'jqObj' : $("[data-app-role='hostTemplateListContainer']",$D)
 							}},'mutable'); //necessary for projects list in app based hosttypes.
 						_app.model.dispatchThis();
 						}
 					else	{
-						$("[data-app-role='hostTemplateListContainer']",$D).tlc({'datapointer' : 'adminSiteTemplateList'});
+						$("[data-app-role='hostTemplateListContainer']",$D).anycontent({'datapointer' : 'adminSiteTemplateList'});
 						}
 						
 					_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	_tag},'mutable'); //necessary for projects list in app based hosttypes.

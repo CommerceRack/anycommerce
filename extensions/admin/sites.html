@@ -155,7 +155,7 @@
 <tbody><tr id="domainListHostsRowTemplate" data-element="host">
 	<td data-tlc="bind $var '.HOSTNAME'; apply --append;"></td>
 	<td data-tlc="bind $var '.HOSTTYPE'; apply --append;"></td>
-	<td data-tlc="bind $var '.PROJECT'; admin_sites#projectidpretty  --legacy ; apply --append;"></td>
+	<td data-tlc="bind $var '.PROJECT'; if(is $var --notblank;){{admin_sites#projectidpretty  --legacy ; apply --append;}};"></td>
 	<td class="alignRight width50">
 	<span data-tlc="admin_sites#apphostbuttons  --useParentData='true' --legacy ; apply --append;" data-bind="useParentData:true; format:appHostButtons; extension:admin_sites;"></span>
 	<button class="applyButton" data-app-click="admin|tagRow4Remove" data-text="false" data-icon-primary="ui-icon-close">Delete this Host</button>
@@ -442,7 +442,7 @@ That's also why the template does not contain a form
 			
 			<label>
 				<span>Partition</span>
-				<select data-tlc="bind $var '.@PRTS'; controller#optionsfromlist; apply --append;" name="PRT"></select>
+				<select data-tlc="bind $var '.@PRTS'; controller#optionsfromlist --legacy --value='id' --text='id'; apply --append;" name="PRT"></select>
 			</label>
 			
 		</fieldset>
@@ -459,7 +459,7 @@ That's also why the template does not contain a form
 		<li><a href="#domainHosts">Hosts</a></li>
 		<li><a href="#domainEmail">Email</a></li>
 		<li><a href="#domainEvents">Events</a></li>
-		<li><a data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domainname'; apply --append;" href="#domainDiagnostics" data-app-click="admin_sites|adminDomainDiagnosticsShow">Diagnostics</a></li>
+		<li><a data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domainname'; apply --append;" href="#domainDiagnostics" data-app-click="admin_sites|adminDomainDiagnosticsShow">Diagnostics </a></li>
 <!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
 	</ul>
 	
