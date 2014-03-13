@@ -34,10 +34,11 @@ BindStatement
 
 
 // ** EXPORT **
-// export 'dataset-var' $var
+// export 'key' --dataset=$var
+// export '%key' --dataset=$var
 ExportStatement
-= "export" _ set:(variable / tag) args:((ws+ value)+)? _ lb+ {
-  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null }
+= "export" _ set:(scalar / variable) args:((ws+ value)+)+ _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null } 
   }
 
 // ** SET ** 
