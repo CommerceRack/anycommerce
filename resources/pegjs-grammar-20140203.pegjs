@@ -203,7 +203,7 @@ SourceCharacter
   = .
 
 ws
- = [ \t\n]
+ = [ \t\n\r]
 
 _
  = (ws / comment)*
