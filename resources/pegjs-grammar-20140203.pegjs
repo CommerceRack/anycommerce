@@ -101,10 +101,7 @@ StatementList
 
 Statement
   = Block
-  / BindStatement+
-  / command+
-  
-
+  / grammar+
 
 
 /* value types */
