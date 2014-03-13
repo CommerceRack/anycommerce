@@ -676,7 +676,7 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
 		var argObj = this.args2obj(cmd.args,globals);
-//		dump(" --------> "); dump(argObj);
+//SANITY -> dataset is the name of the param passed in.
 		dataset[cmd.args.value] = argsObj.dataset;
 		}
 
