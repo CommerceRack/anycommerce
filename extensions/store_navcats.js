@@ -153,11 +153,12 @@ templateID - the template id used (from _app.templates)
 //yes, actually have to make sure .pretty exists. no shit. this happeneed. errored cuz pretty wasn't set.
 				if(_app.data[tagObj.datapointer].pretty && _app.data[tagObj.datapointer].pretty.charAt(0) !== '!')	{
 //					_app.u.dump("store_navcats.callback.addCatToDom.onsuccess - Category ("+tagObj.datapointer+") is hidden.");
-					_app.renderFunctions.translateTemplate(_app.data[tagObj.datapointer],tagObj.parentID+"_"+tagObj.datapointer.split('|')[1]);
+//					_app.renderFunctions.translateTemplate(_app.data[tagObj.datapointer],tagObj.parentID+"_"+tagObj.datapointer.split('|')[1]);
+					$(_app.u.jqSelector('#',tagObj.parentID+"_"+tagObj.datapointer.split('|')[1])).tlc({'verb':'translate','datapointer':tagObj.datapointer});
 					}
 				else	{
 //					_app.u.dump(" -> cat '"+_app.data[tagObj.datapointer].pretty+"' is hidden. nuke it!");
-					$('#'+_app.u.makeSafeHTMLId(tagObj.parentID+"_"+tagObj.datapointer.split('|')[1])).empty().remove();
+					$(_app.u.jqSelector('#',tagObj.parentID+"_"+tagObj.datapointer.split('|')[1])).empty().remove();
 					}
 				}
 			},
@@ -385,7 +386,8 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 	//homepage is skipped. at this point we're dealing with subcat data and don't want 'homepage' to display among them
 							if(catsArray[i] != '.')	{
 								newParentID = tagObj.parentID+"_"+catsArray[i]
-								$parent.append(_app.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
+//								$parent.append(_app.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
+								$parent.append(new tlc().getTemplateInstance(tagObj.templateID).attr({"id":newParentID,"catsafeid":catsArray[i]}));
 								}
 							}
 	//if tagObj was passed in without .extend, the datapointer would end up being shared across all calls.
