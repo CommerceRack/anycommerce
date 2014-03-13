@@ -1019,7 +1019,7 @@ returning a 'false' here will exit the statement loop.
 				commands = window.pegParser.parse(tlc);
 				}
 			catch(e)	{
-				dump(_self.buildErrorMessage(e)); dump(tlc);
+				dump(_self.buildErrorMessage(e)); dump(tlc,'debug');
 				}
 			if(commands && !$.isEmptyObject(commands))	{
 				var L = commands.length;
