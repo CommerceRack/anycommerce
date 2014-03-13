@@ -1578,7 +1578,7 @@ handleOrder(orders[i]);
 							if(okOrders.length)	{
 								//no orders came back without errors.
 								for(var i = 0; i < prts.length; i += 1)	{
-									_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","PRT":prts[i],"MSGID":"PRINTABLE."+vars.printable,"_tag":{
+									_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","PRT":prts[i],"TLC":true,"MSGID":"PRINTABLE."+vars.printable,"_tag":{
 										"datapointer":"adminBlastMsgDetail|"+prts[i]+"|PRINTABLE."+vars.printable
 										}},"mutable");
 									}
