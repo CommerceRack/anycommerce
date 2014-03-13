@@ -116,6 +116,9 @@
 </div>
 
 
+
+
+
 <div id='blastMessageDetailTemplate' class='clearfix'>
 
 	<form action='#' data-app-submit='admin|submitForm' novalidate='novalidate'>
@@ -146,7 +149,7 @@
 		
 			<label>
 				<span>From:</span>
-				<input type='text' name='%META.email_from' required='required' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select=$var;" />
+				<input type='text' name='%META.email_from' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select=$var;" />
 			</label>
 			<label>
 				<span>bcc:</span>
