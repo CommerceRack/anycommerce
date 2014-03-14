@@ -252,13 +252,30 @@ $(document).ready(function(){
 		}
 		
 	//FACEBOOK COUPON HANDLING
-	var referral = document.referrer;
-	app.u.dump("User is coming from " + referral);	
+	//var showCart = function(){showContent('cart',{'show':'cart'})};
+	//setTimeout(showCart, 5000);
 	
-	if(referral.indexOf("www.facebook.com" !=-1)){
-		app.u.dump("User is coming from facebook. Add coupon.");
-	}
-	else{
-		app.u.dump("User is not coming from facebook. Do nothing.");
-	}
+	var facebookCoupon = function(){
+		var referral = document.referrer;
+		app.u.dump("User is coming from " + referral);	
+		
+		if(referral.indexOf("www.facebook.com") != -1){
+			app.u.dump("User is coming from facebook. Add coupon.");
+			app.ext.cco.calls.cartCouponAdd.init("FACEBOOK",{'callback':function(rd) {
+				if(app.model.responseHasErrors(rd)) {
+					$('#cartMessaging').anymessage({'message':rd})
+				}
+				else {
+					app.u.dump("Coupon added successfully")
+					//Do nothing
+				}
+			}});
+			app.model.dispatchThis('immutable');
+		}
+		else{
+			app.u.dump("User is not coming from facebook. Do nothing.");
+		}
+	};
+	
+	setTimeout(facebookCoupon, 5000);
 });

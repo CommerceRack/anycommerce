@@ -462,6 +462,27 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<div><img src='blank.gif' width='992' height='120' data-bind="var: category(%page.banner_wide1); format: banner; extension:myRIA; editor:banner;" /></div>
 -->
+<!--
+<button onClick='var referral = document.referrer;
+		app.u.dump("User is coming from " + referral);	
+		
+		if(referral.indexOf("www.facebook.com") != -1){
+			app.u.dump("User is coming from facebook. Add coupon.");
+			app.ext.cco.calls.cartCouponAdd.init("FACEBOOK",{"callback":function(rd) {
+				if(app.model.responseHasErrors(rd)) {
+					$("#cartMessaging").anymessage({"message":rd})
+				}
+				else {
+					app.u.dump("Coupon added successfully")
+					//Do nothing
+				}
+			}});
+			app.model.dispatchThis("immutable");
+		}
+		else{
+			app.u.dump("User is not coming from facebook. Do nothing.");
+		}'>Click here to add facebook coupon</button>
+        -->
 <div class="floatRight homeTextBannerBlock">
 	<img alt="Down Bedding - Manufacturer Direct" src="images/150x150_downlite_down_bedding.jpg" height="90" width="90">
 	<div class="textBlock"><h1>Down Bedding</h1><p>Enjoy the luxury of down bedding at home manufacturer direct. Offering hypoallergenic down bedding including limited edition and overstock down bedding choices. Click to learn about down bedding.</p></div>
