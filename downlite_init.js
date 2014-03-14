@@ -254,4 +254,11 @@ $(document).ready(function(){
 	//FACEBOOK COUPON HANDLING
 	var referral = document.referrer;
 	app.u.dump("User is coming from " + referral);	
+	
+	if(referral.indexOf("www.facebook.com")){
+		app.u.dump("User is coming from facebook. Add coupon.");
+	}
+	else{
+		app.u.dump("User is not coming from facebook. Do nothing.");
+	}
 });
