@@ -255,7 +255,7 @@ $(document).ready(function(){
 	var referral = document.referrer;
 	app.u.dump("User is coming from " + referral);	
 	
-	if(referral.indexOf("www.facebook.com")){
+	if(referral.indexOf("www.facebook.com" !=-1)){
 		app.u.dump("User is coming from facebook. Add coupon.");
 	}
 	else{
