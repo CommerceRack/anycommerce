@@ -250,4 +250,8 @@ $(document).ready(function(){
 			'modal' : true
 			});
 		}
-	});
+		
+	//FACEBOOK COUPON HANDLING
+	var referral = document.referrer;
+	app.u.dump("User is coming from " + referral);	
+});
