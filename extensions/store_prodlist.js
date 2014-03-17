@@ -196,7 +196,7 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
 
-				var $product = tagObj.jqObj.removeClass().attr('data-pid',pid);
+				var $product = tagObj.jqObj.removeClass('loadingBG').attr('data-pid',pid);
 				var $prodlist = $product.parent();
 
 				$product.tlc({'dataset':tmp,'verb':'translate'}).attr('data-template-role','listitem');
