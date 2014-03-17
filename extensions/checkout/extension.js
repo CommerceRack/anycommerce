@@ -229,7 +229,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //if a cart messenger is open, log the cart update.
 				if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':cartid},'immutable');
+					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
 					}
 
 				
