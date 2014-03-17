@@ -148,7 +148,6 @@ either templateID or (data or datapointer) are required.
 			},
 
 		_addNewTemplate : function()	{
-
 			var r = false; //what's returned. true if able to create template.
 			var $tmp = $($._app.u.jqSelector('#',this.options.templateID));
 			if($tmp.length > 0)	{
