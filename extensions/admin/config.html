@@ -3080,7 +3080,14 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 
+<!--
 
+
+IMPORTANT!!!!
+when adding a new plugin, make sure any private fields are saved with a ~ in front of them.  See facebook or amazon for examples
+
+
+-->
 
 
 <div id='pluginManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
@@ -3104,6 +3111,14 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<li data-plugin='platform_android' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Android</li>
 			<li data-plugin='platform_appleios' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Apple/iOS</li>
 		</ul>
+
+
+		<h4>Shipping</h4>
+		<ul>
+			<li data-plugin='shipstation.com' data-plugin-isglobal='true' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>ShipStation</li>
+			<li data-plugin='shipworks.com' data-plugin-isglobal='true' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>ShipWorks</li>
+		</ul>
+
 <!--
 		<h4>Infrastructure</h4>
 		<ul>
@@ -3191,6 +3206,46 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</label>
 
 	
+</fieldset>
+
+
+
+<fieldset id='pluginTemplate_shipworks.com'>
+	<input type='hidden' name='plugin' value='shipworks.com' />
+	<input type='hidden' name='global' value='1' />
+	<input type='hidden' name='username' value='shipworks' />
+	<p class='hint'>ShipWorks is a global setting, it is not partition specific</p>
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		Enable ShipWorks
+	</label>
+	<p>ShipWorks will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
+	<div class='label'><span>Username: </span>shipworks</div>
+	<div class='label smallButton'>
+		<span>Password</span>
+		<input type='text' data-minlength='20' name='password' data-bind="var: plugin(password); format:popVal;">
+		<button class='applyButton' data-app-click='admin_config|buildGUID' data-input-name='password' >Generate Password</button>
+	</div>
+	
+</fieldset>
+
+<fieldset id='pluginTemplate_shipstation.com'>
+	<input type='hidden' name='plugin' value='shipstation.com' />
+	<input type='hidden' name='global' value='1' />
+	<p class='hint'>ShipStation is a global setting, it is not partition specific</p>
+	<label>
+		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		Enable ShipStation
+	</label>
+
+	<p>ShipStation will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
+	<div class='label'><span>Username: </span>shipstation</div>
+	<div class='label smallButton'>
+		<span>Password</span>
+		<input type='text' data-minlength='20' name='password' data-bind="var: plugin(password); format:popVal;">
+		<button class='applyButton' data-app-click='admin_config|buildGUID' data-input-name='password' >Generate Password</button>
+	</div>
+
 </fieldset>
 
 

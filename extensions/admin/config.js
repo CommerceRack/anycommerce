@@ -180,6 +180,7 @@ var admin_config = function(_app) {
 //					_app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
 					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':_app.ext.admin_config.u.getPluginData(vars.plugin)});
 					_app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
 					$target.parent().find('.buttonset').show();
 //					_app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
 					_app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
@@ -1580,18 +1581,21 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 			pluginUpdateExec : function($ele,p)	{
 				var $form = $ele.closest('form');
-				$form.showLoading({'message':'Saving Changes'});
-				_app.model.addDispatchToQ({
-					'_cmd':'adminConfigMacro',
-					'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
-					'_tag':	{
-						'callback':'showMessaging',
-						'restoreInputsFromTrackingState' : true,
-						'message' : "Your changes have been saved.",
-						'jqObj' : $form
-						}
-					},'immutable');
-				_app.model.dispatchThis('immutable');
+				if(_app.u.validateForm($form))	{
+					$form.showLoading({'message':'Saving Changes'});
+					_app.model.addDispatchToQ({
+						'_cmd':'adminConfigMacro',
+						'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+						'_tag':	{
+							'callback':'showMessaging',
+							'restoreInputsFromTrackingState' : true,
+							'message' : "Your changes have been saved.",
+							'jqObj' : $form
+							}
+						},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else	{} //validate form will handle the error display.
 				},
 
 			pluginUpdateShow : function($ele,p)	{
@@ -1639,6 +1643,16 @@ when an event type is changed, all the event types are dropped, then re-added.
 					}
 				
 				}, //billingInvoiceViewDownload
+			
+			buildGUID : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if($ele.attr('data-input-name') && $("input[name='"+$ele.attr('data-input-name')+"']",$form).length)	{
+					$("input[name='"+$ele.attr('data-input-name')+"']",$form).val(_app.u.guidGenerator()).trigger('keyup')
+					}
+				else	{
+					$form.anymessage({"message":"In admin_config.e.buildGUID, either data-input-name ["+$ele.attr('data-input-name')+"] not set on trigger element or no input matching that name found within parent form."});
+					}
+				},
 			
 			billingHandleTabContents : function($ele,p)	{
 				var tab = $ele.closest('.ui-tabs-nav').find('.ui-state-active').data('anytabsTab');
