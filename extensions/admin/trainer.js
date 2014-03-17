@@ -181,7 +181,6 @@ if($trainer instanceof jQuery && $trainer.length)	{
 
 				//disable the 'next' button in the last trainer slide.
 				if( (thisTrainerIndex + 2) == slidesArr.length){
-					_app.u.dump(" --------> got here. length: "+$("button[data-app-click]",$trainer2Show).length);
 					$("button[data-verb='next']",$trainer2Show).button('disable');
 					}
 				}

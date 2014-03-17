@@ -1195,7 +1195,6 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 	renderFormats : {
 
 			macros2Buttons : function($tag,data)	{
-//				_app.u.dump(" got here"); _app.u.dump(data.value);
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					//currently, this is used in orders > routes

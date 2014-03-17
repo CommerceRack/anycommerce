@@ -563,7 +563,7 @@ used, but not pre-loaded.
 						}
 					else	{}
 					}
-	 dump(" ----------> got here ");			}, //adminDomainDetailShow
+	 			}, //adminDomainDetailShow
 
 			domainView : function($ele,p)	{
 				var domainname = $ele.closest("[data-domainname]").data('domainname');

@@ -3290,7 +3290,6 @@ $tmp.empty().remove();
 	formatRules : {
 
 		'CC' : function($input,$err)	{
-			_app.u.dump(" got here. is valid cc:  "+_app.u.isValidCC($input.val()));
 			var r = _app.u.isValidCC($input.val());
 			if(!r)	{$err.append('The credit card # provided is not valid')}
 			return r;
