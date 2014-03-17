@@ -162,11 +162,11 @@ used, but not pre-loaded.
 				$tag.css('position','relative');  //so menu appears where it should.
 				if(data.value.GITHUB_REPO)	{
 					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
-					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='project' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
 					}
 				if(data.value.LINK)	{
 					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
-					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+// -> Can't do a pull here  because the 'pull' goes to a dir that is host/domain specific. it isn't 'stored' till it's tied to a host/domain. A pull is specific to that host/domain.
 					}
 				$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
 
@@ -681,7 +681,7 @@ used, but not pre-loaded.
 							"_cmd":"adminProjectDetail",
 							"UUID":projectUUID,
 							"_tag": {
-								'callback':'anytlc',
+								'callback':'tlc',
 								jqObj:$detailRow,
 								'datapointer' : 'adminProjectDetail|'+projectUUID
 								}
