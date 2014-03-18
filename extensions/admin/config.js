@@ -150,40 +150,29 @@ var admin_config = function(_app) {
 		
 			showPluginManager : function($target)	{
 				$target.showLoading({'message':'Fetching Your Integration Data'});
-
+				_app.u.addEventDelegation($target);
 				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'plugins':1,
 					'_tag':{
-						'callback': function(rd)	{
-							if(_app.model.responseHasErrors(rd)){
-								$target.anymessage({'message':rd});
-								}
-							else	{
-								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
-								_app.u.addEventDelegation($target);
-								_app.u.handleButtons($target);
-								$("[data-app-role='slimLeftNav']",$target).accordion();
-								}
-							},
+						'callback': 'tlc',
+						'templateID' : 'pluginManagerPageTemplate',
+						'jqObj' : $target,
+						'onComplete' : function()	{$("[data-app-role='slimLeftNav']",$target).accordion();},
 						'datapointer':'adminConfigDetail|plugins'
 					}
 				},'mutable');
 				_app.model.dispatchThis('mutable');
-
 				},
 			
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
-				
 				if($target instanceof jQuery && vars.plugin)	{
-//					_app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
-					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':_app.ext.admin_config.u.getPluginData(vars.plugin)});
+					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({'domain':_app.vars.domain},_app.ext.admin_config.u.getPluginData(vars.plugin))});
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 					$target.parent().find('.buttonset').show();
-//					_app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
-					_app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+					$target.closest('form').anyform({'trackEdits':true});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set.","gMessage":true});

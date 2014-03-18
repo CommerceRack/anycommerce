@@ -3090,15 +3090,15 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->
 
 
-<div id='pluginManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+<div id="pluginManagerPageTemplate" class="page pageUser slimLeftContainer" data-app-role="slimLeftContainer">
 	
 
-	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+	<section class="slimLeftNav" data-app-role="slimLeftNav">
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin='auth_facebook' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Facebook</li>
-			<li data-plugin='auth_google' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Google</li>
+			<li data-plugin="auth_facebook" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
+			<li data-plugin="auth_google" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3107,16 +3107,16 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin='esp_awsses' data-app-click="admin_config|pluginUpdateShow" title='Amazon Simple Email Services' class='lookLikeLink'>Amazon SES</li>
-			<li data-plugin='platform_android' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Android</li>
-			<li data-plugin='platform_appleios' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Apple/iOS</li>
+			<li data-plugin="esp_awsses" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
+			<li data-plugin="platform_android" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
+			<li data-plugin="platform_appleios" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
 		</ul>
 
 
 		<h4>Shipping</h4>
 		<ul>
-			<li data-plugin='shipstation.com' data-plugin-isglobal='true' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>ShipStation</li>
-			<li data-plugin='shipworks.com' data-plugin-isglobal='true' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>ShipWorks</li>
+			<li data-plugin="shipstation.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
+			<li data-plugin="shipworks.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
 		</ul>
 
 <!--
@@ -3137,17 +3137,17 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->
 	</section>
 
-	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
+	<section class="slimLeftContentSection ui-widget" data-app-role="slimLeftContentSection">
 		<form onsubmit="return false">
-		<div class='ui-widget-header ui-corner-top'>
-			<h3 class='heading'>Edit:</h3>
+		<div class="ui-widget-header ui-corner-top">
+			<h3 class="heading">Edit:</h3>
 		</div>
-		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
-			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
+		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
+			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
+				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
-			<div data-app-role='slimLeftContent'>
+			<div data-app-role="slimLeftContent">
 			
 			
 			
@@ -3163,46 +3163,45 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </div>
 
 
-
-<fieldset id='pluginTemplate_esp_awsses'>
-	<input type='hidden' name='plugin' value='esp_awsses' />
+<fieldset id="pluginTemplate_esp_awsses">
+	<input name="plugin" value="esp_awsses" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 	<h3>Amazon Account Information</h3>
 	
-	<p class='hint'>Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effective bulk and transactional email sending service for businesses and developers.<br />
-	<a href='#' onClick="linkOffSite('http://aws.amazon.com/ses/','',true); return false;">Click here for signup / more details</a></p>
+	<p class="hint">Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effective bulk and transactional email sending service for businesses and developers.<br>
+	<a href="#" onclick="linkOffSite('http://aws.amazon.com/ses/','',true); return false;">Click here for signup / more details</a></p>
 	
 	<label>
 		<span>IAM username</span>
-		<input type='text' name='iam-username' value='' data-bind="var: plugin(iam-username); format:popVal;" />
+		<input data-tlc="bind $var '.iam-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="iam-username" value="" type="text">
 	</label>	
 	<label>
 		<span>SMTP username</span>
-		<input type='text' name='smtp-username' value='' data-bind="var: plugin(smtp-username); format:popVal;" />
+		<input data-tlc="bind $var '.smtp-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="smtp-username" value="" type="text">
 	</label>	
 	<label>
 		<span>SMTP password</span>
-		<input type='text' name='~smtp-password' value='' data-bind="var: plugin(~smtp-password); format:popVal;" />
+		<input data-tlc="bind $var '.~smtp-password'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~smtp-password" value="" type="text">
 	</label>
 
 
-	<h3 class='marginTop marginBottom'>Email Addresses</h3>
+	<h3 class="marginTop marginBottom">Email Addresses</h3>
 	<label>
 		<span>From email address (automated/orders)</span>
-		<input type='text' name='from_email_auto' value='' data-bind="var: plugin(from_email_auto); format:popVal;" /><span class='toolTip' title='Used by all automated mailings, such as order confirmations, password recovery, etc'>?</span>
+		<input data-tlc="bind $var '.from_email_auto'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_auto" value="" type="text"><span class="toolTip" title="Used by all automated mailings, such as order confirmations, password recovery, etc">?</span>
 	</label>
 
 	<label>
 		<span>From email address (campaigns)</span>
-		<input type='text' name='from_email_campaign' value='' data-bind="var: plugin(from_email_campaign); format:popVal;" /><span class='toolTip' title='used in conjunction with the outbound campaign mail system'>?</span>
+		<input data-tlc="bind $var '.from_email_campaign'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_campaign" value="" type="text"><span class="toolTip" title="used in conjunction with the outbound campaign mail system">?</span>
 	</label>
 	
 	<label>
 		<span>From email address (staff/support)</span>
-		<input type='text' name='from_email_support' value='' data-bind="var: plugin(from_email_support); format:popVal;" /><span class='toolTip' title='used in conjunction with the CRM system'>?</span>
+		<input data-tlc="bind $var '.from_email_support'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_support" value="" type="text"><span class="toolTip" title="used in conjunction with the CRM system">?</span>
 	</label>
 
 	
@@ -3210,80 +3209,82 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 
 
 
-<fieldset id='pluginTemplate_shipworks.com'>
-	<input type='hidden' name='plugin' value='shipworks.com' />
-	<input type='hidden' name='global' value='1' />
-	<input type='hidden' name='username' value='shipworks' />
-	<p class='hint'>ShipWorks is a global setting, it is not partition specific</p>
+<fieldset id="pluginTemplate_shipworks.com">
+	<input name="plugin" value="shipworks.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<input name="username" value="shipworks" type="hidden">
+	<p class="hint">ShipWorks is a global setting, it is not partition specific</p>
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable ShipWorks
 	</label>
 	<p>ShipWorks will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class='label'><span>Username: </span>shipworks</div>
-	<div class='label smallButton'>
+	<div class="label"><span>Username: </span>shipworks</div>
+	<div class="label smallButton">
 		<span>Password</span>
-		<input type='text' data-minlength='20' name='~password' data-bind="var: plugin(password); format:popVal;">
-		<button class='applyButton' data-app-click='admin_config|buildGUID' data-input-name='password' >Generate Password</button>
+		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	https://www.YOURDOMAIN.com/jsonapi/plugins/shipworks.xml
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
 </fieldset>
 
-<fieldset id='pluginTemplate_shipstation.com'>
-	<input type='hidden' name='plugin' value='shipstation.com' />
-	<input type='hidden' name='global' value='1' />
-	<p class='hint'>ShipStation is a global setting, it is not partition specific</p>
+<fieldset id="pluginTemplate_shipstation.com">
+	<input name="plugin" value="shipstation.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<p class="hint">ShipStation is a global setting, it is not partition specific</p>
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable ShipStation
 	</label>
 
 	<p>ShipStation will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class='label'><span>Username: </span>shipstation</div>
-	<div class='label smallButton'>
+	<div class="label"><span>Username: </span>shipstation</div>
+	<div class="label smallButton">
 		<span>Password</span>
-		<input type='text' data-minlength='20' name='~password' data-bind="var: plugin(password); format:popVal;">
-		<button class='applyButton' data-app-click='admin_config|buildGUID' data-input-name='password' >Generate Password</button>
+		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	https://www.YOURDOMAIN.com/jsonapi/plugins/shipstation.xml
+	
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+
 </fieldset>
 
 
 
-<fieldset id='pluginTemplate_auth_google'>
-	<input type='hidden' name='plugin' value='auth_google' />
+<fieldset id="pluginTemplate_auth_google">
+	<input name="plugin" value="auth_google" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Client ID</span>
-		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+		<input data-tlc="bind $var '.clientid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="clientid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Client secret</span>
-		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~clientsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~clientsecret" value="" type="text">
 	</label>
 	
 </fieldset>
 
-<fieldset id='pluginTemplate_auth_facebook'>
-	<input type='hidden' name='plugin' value='auth_facebook' />
+<fieldset id="pluginTemplate_auth_facebook">
+	<input name="plugin" value="auth_facebook" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>App ID</span>
-		<input type='text' name='appid' value='' data-bind="var: plugin(appid); format:popVal;" />
+		<input data-tlc="bind $var '.appid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="appid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>App secret</span>
-		<input type='text' name='~appsecret' value='' data-bind="var: plugin(~appsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~appsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~appsecret" value="" type="text">
 	</label>
 	
 </fieldset>
@@ -3291,49 +3292,48 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 
 
 
-<fieldset id='pluginTemplate_platform_android'>
-	<input type='hidden' name='plugin' value='platform_android' />
+<fieldset id="pluginTemplate_platform_android">
+	<input name="plugin" value="platform_android" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Client ID</span>
-		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+		<input data-tlc="bind $var '.clientid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="clientid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Client secret</span>
-		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~clientsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~clientsecret" value="" type="text">
 	</label>
 	
 </fieldset>
 
 
-<fieldset id='pluginTemplate_platform_appleios' class='alignedInputs alignedLabels'>
-	<input type='hidden' name='plugin' value='platform_appleios' />
+<fieldset id="pluginTemplate_platform_appleios" class="alignedInputs alignedLabels">
+	<input name="plugin" value="platform_appleios" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Password</span>
-		<input type='text' name='~passwd' value='' data-bind="var: plugin(~passwd); format:popVal;" />
+		<input data-tlc="bind $var '.~passwd'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~passwd" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Certificate</span>
-		<textarea name='~cert' data-bind="var: plugin(~cert); format:popVal;" rows='10'></textarea>
+		<textarea data-tlc="bind $var '.~cert'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~cert" rows="10"></textarea>
 	</label>
 	
 	<label>
 		<span>Key</span>
-		<textarea name='~key' data-bind="var: plugin(~key); format:popVal;" rows='10'></textarea>
+		<textarea data-tlc="bind $var '.~key'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~key" rows="10"></textarea>
 	</label>
 </fieldset>
-
 
 
 
