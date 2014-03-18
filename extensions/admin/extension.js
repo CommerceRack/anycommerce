@@ -4180,20 +4180,26 @@ dataAttribs -> an object that will be set as data- on the panel.
 					_app.ext.admin.u.jump2GoogleLogin(encodeURIComponent(btoa(JSON.stringify({"onReturn":"return2Domain","domain": location.origin+"/"+_app.model.version+"/index.html"})))); 
 					});
 				},
-
+// ** 201402 -> added isSearching/killSearch to avoid multiple concurrent searches which could crater the browser on large datasets.
 			tableFilter : function($ele,p)	{
 				var $table = $ele.closest("[data-tablefilter-role='container']").find("[data-tablefilter-role='table']");
 				if($('td.isSearchable',$table).length)	{
 					if($ele.val().length >= 2)	{
+//						dump(" -> tableFilter is searching: "+$table.data('isSearching'));
+						if($table.data('isSearching'))	{$table.data('killSearch',true)} //tells any search in progress to stop.
 //only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
 //the 'not' is to target only the first level of table contents, no nested data (used in domains, for example).
 						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector')+":visible" : 'tbody tr:visible'),$table).not('tbody tbody',$table).hide().data('hidden4Search',true);
+						var filter = $ele.val().toLowerCase();
+						$table.data('isSearching',true);
 						$('td.isSearchable',$table).each(function(){
-							if($(this).text().toLowerCase().indexOf($ele.val().toLowerCase()) >= 0)	{
+							if($table.data('killSearch') == true)	{$table.data('killSearch',false); return;} //exit search. likely a new search is starting.
+							if($(this).text().toLowerCase().indexOf(filter) >= 0)	{
 								$(this).closest(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector') : 'tr')).show();
 								$(this).addClass('queryMatch');
 								}
-							})
+							});
+						$table.data('isSearching',false);
 						}
 					else	{
 					//no query or short query. unhide any rows (query may have been removed).
