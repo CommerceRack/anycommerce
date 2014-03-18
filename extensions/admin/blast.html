@@ -148,11 +148,11 @@
 		<fieldset data-anytab-content='email'>
 		
 			<label>
-				<span>From:</span>
+				<span>From</span>
 				<input type='text' name='%META.email_from' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select=$var;" />
 			</label>
 			<label>
-				<span>bcc:</span>
+				<span>bcc</span>
 				<input type='text' name='%META.email_bcc' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select=$var;" />
 			</label>
 		
@@ -161,12 +161,17 @@
 		<fieldset data-anytab-content='message'>
 
 			<label>
-				<span>Subject:</span>
+				<span>Message ID</span>
+				<span data-tlc="bind $var '.%MSG.MSGID'; apply --append;"></span>
+			</label>
+
+			<label>
+				<span>Subject</span>
 				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
 			</label>
 			
 			<label>
-				<span>Message:</span>
+				<span>Message</span>
 				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
 			</label>
 
@@ -175,7 +180,7 @@
 		<fieldset data-anytab-content='push'>
 		
 			<label>
-				<span>Properties:</span>
+				<span>Properties</span>
 				<textarea name='%META.properties' rows='10' data-tlc="bind $var '.%MSG.%META.properties'; apply --select=$var;"></textarea>
 			</label>		
 		
