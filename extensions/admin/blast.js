@@ -90,7 +90,7 @@ var admin_blast = function(_app) {
 							else	{
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
-									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
+//									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
 									if(msgs[i].OBJECT)	{
 										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
 										}
@@ -114,6 +114,31 @@ var admin_blast = function(_app) {
 					"jqObj" : $target,
 					"trackEdits" : true,
 					"templateid" : "blastMessageDetailTemplate",
+					onComplete : function(rd){
+
+var $messageBody = $("textarea[name='BODY']",rd.jqobj);
+$messageBody.tinymce({
+//	valid_children : "head[style|meta|base],+body[style|meta|base]", //,body[style|meta|base] -> this seems to cause some dropped lines after an inline 'style'
+//	valid_elements: "*[*]",
+//	extended_valid_elements : "@[class]",
+	menubar : 'edit insert view format table tools',
+	visual: false, //turn off visual aids by default. menu choice will still show up.
+	keep_styles : true,
+	setup : function (editor) {
+        editor.on('change', function (e) {  
+            //your custom logic  
+			$messageBody.trigger('keyup'); //this triggers the keyup code on the original textarea for anyform/updating the save button.
+        })},
+	image_list: [],
+	plugins: [
+		"advlist autolink lists link charmap print preview anchor",
+		"searchreplace visualblocks code fullscreen", //fullpage is what allows for the doctype, head, body tags, etc.
+		"table contextmenu paste"
+		],
+	toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | code"
+	});
+
+						},
 					"callback":'tlc'}
 					},"mutable");
 				_app.model.dispatchThis("mutable");
