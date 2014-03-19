@@ -483,6 +483,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
 					_app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)','warn');
+					$('.ui-showloading').hideLoading(); //make sure all the showLoadings go away.
 					if(Q && Q.length)	{
 //						_app.u.dump(" -> Q.length: "+Q.length); _app.u.dump(Q);
 						for(var i = 0, L = Q.length; i < L; i += 1)	{
