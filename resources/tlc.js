@@ -57,14 +57,17 @@
 			//'data' could be a pointer, which we don't want to modify, so we extend a blank object and add data in the mix.
 			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
 			if(o.extendByDatapointers.length)	{
-				dump(" -> datapointers have been extended for tlc");
+//				dump(" -> datapointers have been extended for tlc");
 				var L = o.extendByDatapointers.length;
 				for(var i = 0; i < L; i += 1)	{
+//					dump(" -> o.extendByDatapointers[i]: "+o.extendByDatapointers[i]); dump($._app.data[o.extendByDatapointers[i]]);
+					
 					if($._app.data[o.extendByDatapointers[i]])	{
 						$.extend(true,this.options.dataset,$._app.data[o.extendByDatapointers[i]]);
 						}
 					}
 				}
+//			dump(" -> this.options.dataset: "); dump(this.options.dataset);
 			},
 		_handleDataAttribs : function($tag)	{
 			var o = this.options;

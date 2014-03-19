@@ -78,6 +78,11 @@ var admin_blast = function(_app) {
 				$(".slimLeftNav .accordion",$target).accordion({
 					heightStyle: "content"
 					});
+				$('form',$target).anyform({'trackEdits':true}); //for the globals.
+//retrieve the global settings.
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','blast':1,'_tag':{'datapointer':'adminConfigDetail|'+_app.vars.partition+'|blast'}},'mutable');
+				
+//and the list of messages.
 				_app.model.addDispatchToQ({
 					"_cmd":"adminBlastMsgList",
 					"_tag":{
@@ -88,16 +93,18 @@ var admin_blast = function(_app) {
 								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
+								$("form",$target).tlc({'verb':'translate','datapointer':'adminConfigDetail|'+_app.vars.partition+'|blast'}); //trnslate the globals.
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
 //									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
 									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
+										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
 										}
 									}
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
 								// the accordion does get initiated here because the left column looked out of place for too long.
 								$(".slimLeftNav .accordion",$target).accordion('refresh');
+								
 								}
 							}
 						}
@@ -109,34 +116,40 @@ var admin_blast = function(_app) {
 			//can be used outside that interface by calling directly.
 			blastMessagesDetail : function($target,params)	{
 				$target.showLoading({"message":"Fetching message detail"});
+				
+				//get the list of macros, but use a local copy if one is available.
+				if(_app.model.fetchData('adminBlastMacroList'))	{}
+				else	{_app.model.addDispatchToQ({'_cmd':'adminBlastMacroList','_tag':{'datapointer':'adminBlastMacroList'}},'mutable')}
+
 				_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","MSGID":params.msgid,"_tag":{
-					"datapointer":"blastMessagesDetail|"+params.msgid,
+					"datapointer":"adminBlastMsgDetail|"+params.msgid,
+					"extendByDatapointers" : ['adminBlastMacroList','adminConfigDetail|'+_app.vars.partition+'|blast'],
 					"jqObj" : $target,
 					"trackEdits" : true,
 					"templateid" : "blastMessageDetailTemplate",
 					onComplete : function(rd){
 
-var $messageBody = $("textarea[name='BODY']",rd.jqobj);
-$messageBody.tinymce({
-//	valid_children : "head[style|meta|base],+body[style|meta|base]", //,body[style|meta|base] -> this seems to cause some dropped lines after an inline 'style'
-//	valid_elements: "*[*]",
-//	extended_valid_elements : "@[class]",
-	menubar : 'edit insert view format table tools',
-	visual: false, //turn off visual aids by default. menu choice will still show up.
-	keep_styles : true,
-	setup : function (editor) {
-        editor.on('change', function (e) {  
-            //your custom logic  
-			$messageBody.trigger('keyup'); //this triggers the keyup code on the original textarea for anyform/updating the save button.
-        })},
-	image_list: [],
-	plugins: [
-		"advlist autolink lists link charmap print preview anchor",
-		"searchreplace visualblocks code fullscreen", //fullpage is what allows for the doctype, head, body tags, etc.
-		"table contextmenu paste"
-		],
-	toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | code"
-	});
+						var $messageBody = $("textarea[name='BODY']",rd.jqobj);
+						$messageBody.tinymce({
+						//	valid_children : "head[style|meta|base],+body[style|meta|base]", //,body[style|meta|base] -> this seems to cause some dropped lines after an inline 'style'
+						//	valid_elements: "*[*]",
+						//	extended_valid_elements : "@[class]",
+							menubar : 'edit insert view format table tools',
+							visual: false, //turn off visual aids by default. menu choice will still show up.
+							keep_styles : true,
+							setup : function (editor) {
+								editor.on('change', function (e) {  
+									//your custom logic  
+									$messageBody.trigger('keyup'); //this triggers the keyup code on the original textarea for anyform/updating the save button.
+								})},
+							image_list: [],
+							plugins: [
+								"advlist autolink lists link charmap print preview anchor",
+								"searchreplace visualblocks code fullscreen", //fullpage is what allows for the doctype, head, body tags, etc.
+								"table contextmenu paste"
+								],
+							toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link | code"
+							});
 
 						},
 					"callback":'tlc'}
@@ -204,11 +217,12 @@ $messageBody.tinymce({
 				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Blast Macro Editor',
 					'className' : 'blastMacroManager',
-					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>","<button data-app-click='admin_blast|blastMacroProperyEditorShow' class='applyButton' data-icon-primary='ui-icon-pencil'>Global Properties</button>","<button class='applyButton' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_blast|blastMacroAddShow'>Add Macro<\/button>"],
+					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>","<button data-app-click='admin_blast|blastMacroProperyEditorShow' class='applyButton' data-icon-primary='ui-icon-pencil'>Properties</button>","<button class='applyButton' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_blast|blastMacroAddShow'>Add Macro<\/button>"],
 					'thead' : ['Title','Macro','Created','User',''],
 					'tbodyDatabind' : "var: users(@MACROS); format:processList; loadsTemplate:blastMacroRowTemplate;",
 					'cmdVars' : {
 						'_cmd' : 'adminBlastMacroList', //this is partition specific. if we start storing this locally, add prt to datapointer.
+						'system' : 0, //exclude system messages.
 						'_tag' : {
 							'datapointer' : 'adminBlastMacroList'},
 							}
@@ -216,6 +230,7 @@ $messageBody.tinymce({
 				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
 				}, //blastMacroEditor
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -243,6 +258,20 @@ $messageBody.tinymce({
 				} //msgsasoptions
 
 			}, //renderFormats
+		
+		
+		macrobuilders : {
+			
+			'blastSet' : function(sfo,$form){
+				return {
+					'_cmd' : 'adminConfigMacro',
+					'@updates' : ["BLAST/SET?"+_app.u.hash2kvp(_app.u.getWhitelistedObject(sfo,['from_email']))],
+					'_tag' : sfo._tag
+					}
+				}
+			
+			},
+		
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //utilities are typically functions that are exected by an event or action.
@@ -280,6 +309,7 @@ $messageBody.tinymce({
 				}, //msgDetailView
 
 			adminBlastMsgSendTestShow : function($ele,P)	{
+				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
 					title : "Send Blast Test",
 					tlc : {'templateid' : 'blastMessageSendTestTemplate','verb':'template'},
@@ -318,6 +348,29 @@ $messageBody.tinymce({
 				_app.ext.admin_customer.a.customerSearch({'searchfor':$("input[name='emailForSearch']",$form).val(),'scope':'EMAIL'},function(customer){
 					$("input[name='CID']",$form).val(customer.CID);
 					});
+				},
+
+			adminBlastMsgRemoveConfirm : function($ele,P)	{
+				P.preventDefault();
+				//params also support anything in dialogCreate
+				if($ele.data('msgid'))	{
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
+						message : "Are you sure you want to remove message '"+$ele.data('msgid')+"'? There is no undo for this action.",
+						title : "Remove Message",
+						removeButtonText : "Remove Message",
+						removeFunction : function()	{
+							
+							_app.model.addDispatchToQ({"_cmd":"adminBlastMsgRemove","MSGID":$ele.data('msgid'),"_tag":{"callback":"showMessaging","jqObj":$('#globalMessaging'),"message":"The message has been deleted","onComplete":function(){
+								$D.dialog('close');
+								navigateTo("#!ext/admin_blast/blastMessagesList");
+								}}},"mutable");
+							_app.model.dispatchThis("mutable");
+							}
+						});
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_blast.e.adminBlastMsgRemoveConfirm, no data.msgid set on trigger element.","gMessage":true});
+					}
 				},
 
 			adminBlastMsgCreateShow : function($ele,P)	{
@@ -384,7 +437,7 @@ $messageBody.tinymce({
 			blastMacroProperyEditorShow : function()	{
 
 				var $D = _app.ext.admin.i.dialogCreate({
-					title : "Add Macro",
+					title : "Edit Properties",
 					'showLoading' : false,
 					handleAppEvents : false //defaults to true
 					});
