@@ -398,29 +398,7 @@ var admin = function(_app) {
 				obj["_tag"] = _tag;
 				_app.model.addDispatchToQ(obj,Q);
 				}
-			}, //adminUIProductPanelList
-
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIProductPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				if(obj && obj.panel && obj.pid && obj.sub)	{
-					_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-					if(obj['sub'])	{
-						_tag.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
-						}
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					_app.u.throwGMessage("In admin.calls.adminUIProductPanelExecute, required param (panel, pid or sub) left blank. see console."); _app.u.dump(obj);
-					}
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIProductPanelExecute";
-				obj["_tag"] = _tag;
-				_app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelExecute
+			}, //adminUIBuilderPanelExecute
 
 		adminPriceScheduleList : {
 			init : function(_tag,q)	{
