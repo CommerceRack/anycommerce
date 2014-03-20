@@ -2377,7 +2377,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 										populateBuyerProdlist(data[i].id,rd.jqObj)
 										}
 									_app.model.dispatchThis('mutable');
-									$('.applyAccordion',rd.jqObj).accordion();
+									$('.applyAccordion',rd.jqObj).accordion({heightStyle: "content"});
 									}}},"mutable");
 								break;
 							case 'myaccount':
