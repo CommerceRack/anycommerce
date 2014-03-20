@@ -372,18 +372,7 @@ will output a newsletter form into 'parentid' using 'templateid'.
 				return numRequests;
 				},
 
-			getBuyerListsAsUL : function(datapointer)	{
 
-				var data = _app.data[datapointer]['@lists']; //shortcut
-				var L = data.length;
-				var $r = $("<ul>");
-				var $li; //recycled
-				for(var i = 0; i < L; i += 1)	{
-					$li = $("<li\/>").data("buyerlistid",data[i].id).text(data[i].id+" ("+data[i].items+" items)");
-					$li.appendTo($r);
-					}
-				return $r;
-				},
 
 /*
 The list object returned on a buyerProductListDetail is not a csv or even a string of skus, it's an array of objects, each object containing information
