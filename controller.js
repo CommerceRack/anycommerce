@@ -328,14 +328,17 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 			dispatch : function(obj,_tag){
 				_app.u.dump("Attempting to log in");
 				obj._cmd = 'authAdminLogin';
-				if(obj.authtype == 'md5')	{
+				obj.authid = obj.password;
+				obj.authtype = 'password';
+// ** 201402 -> md5 is no longer used for login. 
+/*				if(obj.authtype == 'md5')	{
 					_app.vars.userid = obj.userid.toLowerCase();	 // important!
 					obj.ts = _app.u.ymdNow();
 					obj.authid = Crypto.MD5(obj.password+obj.ts);
 					obj.device_notes = "";
 					delete obj.password;
 					}
-
+*/
 				obj._tag = _tag || {};
 				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true OR it's passed in _tag
 				_app.model.addDispatchToQ(obj,'immutable');
