@@ -162,9 +162,9 @@ var tlc = function()	{
 			var _self = this;
 			$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 				var $tag = $(this), tlc = $tag.data('tlc');
-//			dump("----------------> start new $tag <-----------------");
+//			
 			if($._app.vars.debug == 'tlc')	{
-				dump(" >>>>> " + $(this).data('tlc'));
+				dump("----------------> start new $tag. tlc: "+$(this).data('tlc')+" <-----------------");
 				}
 				var commands = false;
 				try{
@@ -949,25 +949,27 @@ returning a 'false' here will exit the statement loop.
 	this.handleCommand_datetime = function(cmd,globals)	{
 
 		var value = globals.binds[globals.focusBind];
-		var argObj = this.args2obj(cmd.args,globals), d = new Date(value*1000);
-
-
-		if(isNaN(d.getMonth()+1))	{
-			dump("In handleCommand_datetime, value ["+value+"] is not a valid time format for Date()",'warn');
+		if(value)	{
+			var argObj = this.args2obj(cmd.args,globals), d = new Date(value*1000);
+	
+	
+			if(isNaN(d.getMonth()+1))	{
+				dump("In handleCommand_datetime, value ["+value+"] is not a valid time format for Date()",'warn');
+				}
+	//### FUTURE
+	//		else if(argObj.out-strftime)	{}
+			else if (argObj.out == 'pretty')	{
+				var shortMon = new Array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec');
+				value = (shortMon[d.getMonth()])+" "+d.getDate()+" "+d.getFullYear()+ " "+d.getHours()+":"+((d.getMinutes()<10?'0':'') + d.getMinutes());
+				}
+			else if(argObj.out == 'mdy')	{
+				value = (d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
+				}
+			else	{
+				//invalid or no 'out' specified.
+				}
+			globals.binds[globals.focusBind] = value;
 			}
-//### FUTURE
-//		else if(argObj.out-strftime)	{}
-		else if (argObj.out == 'pretty')	{
-			var shortMon = new Array('Jan','Feb','Mar','Apr','May','June','July','Aug','Sep','Oct','Nov','Dec');
-			value = (shortMon[d.getMonth()])+" "+d.getDate()+" "+d.getFullYear()+ " "+d.getHours()+":"+((d.getMinutes()<10?'0':'') + d.getMinutes());
-			}
-		else if(argObj.out == 'mdy')	{
-			value = (d.getMonth()+1)+"/"+d.getDate()+"/"+d.getFullYear();
-			}
-		else	{
-			//invalid or no 'out' specified.
-			}
-		globals.binds[globals.focusBind] = value;
 		return value;
 		}
 

@@ -366,6 +366,12 @@ CUSTOMER PAGES
 #buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}
 
 
+/* buyer lists */
+.smallButtonList .ui-button-icon-only {width:1.4em}
+.smallButtonList .ui-button-icon-only .ui-button-text	{height:1.4em; padding:0;}
+
+.buyerList .prodThumbContainer	{position:relative;}
+
 
 /*
 
