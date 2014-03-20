@@ -12,15 +12,18 @@ GLOBAL
 	introduction of a new templating language, data-tlc. Data-bind will be supported for another few versions.
 
 ADMIN
-	new email manager interface in utilities
+	new plugins for shipping: ShipWorks and ShipStation.
+	new email manager interface in utilities.
 	new interface for building/managing macros (define custom macros!) and blast 'send' properties in utilities.
 	new email send interface (linked from orders and customer editor).
 	enhancements to cart messaging (more admin events get logged).
 	A plethora of bug fixes.
-	orders - custom invoice and packslip now supported!
+	Login page 'recover password' is restored and working.
+	Change password on setup page now works.
+	orders - custom invoice and packslip now supported for web printing!
 		- customize your invoice and packing slip through utilities -> email messaging (in order menu)
 		- new popup-less print method (we tested FF, Chrome and IE, plus iOS7. still printing issues in droid/chrome)
-		- print option added as contextual menu
+		- print option added as contextual menu in order list
 
 QUICKSTART
 	update to the new TLC template language.
