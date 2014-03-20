@@ -105,6 +105,12 @@ var admin_config = function(_app) {
 				_app.u.handleButtons($target);
 				},
 
+			passwordUpdate : function($target,P)	{
+				$target.tlc({'templateid':'passwordUpdateTemplate','verb':'template'});
+				_app.u.handleButtons($target);
+				_app.u.addEventDelegation($target);
+				},
+
 			showNotifications : function($target)	{
 				$target.intervaledEmpty();
 				_app.u.addEventDelegation($target);
@@ -1672,7 +1678,28 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					else	{}
 					}
-				} //billingHandleTabContents
+				}, //billingHandleTabContents
+
+			adminPasswordUpdateExec : function($ele,p)	{
+				p.preventDefault();
+				var  $form = $ele.closest('form'), sfo = $form.serializeJSON();
+				
+				if(_app.u.validateForm($form))	{
+					dump(" -> passed standard validation");
+					if(sfo.oldpassword == sfo.newpassword1)	{
+						$form.anymessage({'errtype':'youerr','message':'The old password can not match the new password'});
+						}
+					else if(sfo.newpassword1 != sfo.newpassword2)	{
+						$form.anymessage({'errtype':'youerr','message':'The values you entered for the new password do not match. Please make sure the value for password and password again are exactly the same.'});
+						}
+					else	{
+						_app.model.addDispatchToQ({"_cmd":"adminPasswordUpdate","old":sfo.oldpassword,"new":sfo.newpassword1,"_tag":{"callback":"showMessaging","jqObj":$form,"message":"Your password has been changed."}},"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					}
+				else	{} //validate handles error display.
+				return false;
+				}
 
 
 			} //e [app Events]

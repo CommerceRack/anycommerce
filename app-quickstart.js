@@ -530,6 +530,7 @@ need to be customized on a per-ria basis.
 		pageTransition : function($o,$n)	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 			if($o.length)	{
+				dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
 				}
 			else	{

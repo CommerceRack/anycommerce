@@ -3889,7 +3889,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 
 			showPasswordRecover : function($btn)	{
-				$btn.button();
 				$btn.off('click.showPasswordRecover').on('click.showPasswordRecover',function(event){
 					event.preventDefault();
 					_app.u.handleAppEvents($('#appPasswordRecover'));
@@ -3906,7 +3905,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					event.preventDefault();
 					var $form = $btn.closest('form');
 					if(_app.u.validateForm($form))	{
-						_app.model.addDispatchToQ({"_cmd":"authPasswordReset","login":$("[name='login']",$form),"_tag":{"datapointer":"authPasswordReset"}},"immutable");
+						_app.model.addDispatchToQ({"_cmd":"authPasswordRecover","email":$("[name='email']",$form).val(),"_tag":{"datapointer":"authPasswordRecover","callback":"showMessaging","jqObj":$form,"message":"A temporary password has been emailed to the address provided."}},"immutable");
 						_app.model.dispatchThis('immutable');
 						}
 					else	{} //validateForm handles error display.

@@ -3604,3 +3604,30 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </div>
 
 
+
+<div id='passwordUpdateTemplate' class='ui-widget'>
+
+<form data-app-submit='admin_config|adminPasswordUpdateExec' class='ui-widget-content stdPadding'>
+<fieldset class='labelsAsBreaks alignedLabels'>
+	<legend>Update Password</legend>
+	<p>New passwords must be a minimum of eight characters.  It is recommended that you use mixed case, one number and one special character in your password. This will make it more secure.</p>
+	<label>
+		<span class='prompt'>Old password</span>
+		<input type='password' name='oldpassword' required='required' value='' />
+		<span class='hint'>if you are using a temporary password issued as part of a recovery, it will work</span>
+	</label>
+
+	<label>
+		<span class='prompt'>New password</span>
+		<input type='password' name='newpassword1' value='' required='required' data-minlength='8' />
+	</label>
+	<label>
+		<span class='prompt'>New password again</span>
+		<input type='password' name='newpassword2' value='' required='required' data-minlength='8' />
+	</label>
+
+	<input type='submit' value='Change Password' class='applyButton' />
+</fieldset>
+</form>
+
+</div>
