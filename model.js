@@ -484,6 +484,11 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
 					_app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)','warn');
 					$('.ui-showloading').hideLoading(); //make sure all the showLoadings go away.
+					//brian says that an error 10 will always ONLY be for admin. 2014-03-20
+					if(responseData.errid == 10)	{
+						_app.u.dump(" -> errid of 10 corresponds to an expired token. ");
+						_app.ext.admin.callbacks.handleLogout.onSuccess({"msg":"You were logged out because the token you were using has expired. Please log in to continue."});
+						}
 					if(Q && Q.length)	{
 //						_app.u.dump(" -> Q.length: "+Q.length); _app.u.dump(Q);
 						for(var i = 0, L = Q.length; i < L; i += 1)	{

@@ -786,13 +786,14 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				}
 			}, //showDataHTML
 
-
+//this callback is called directly by the model when an error 10 occurs.
+//no tagObj is passed into the function. test the model code after making changes here.
 		handleLogout : {
 			onSuccess : function(tagObj)	{
 				_app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
 				_app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
 				if($.support['sessionStorage'])	{sessionStorage.clear();}
-				document.location = 'admin_logout.html'
+				document.location = 'admin_logout.html' + (tagObj.msg ? "?msg="+encodeURIComponent(tagObj.msg) : "");
 				}
 			},
 //in cases where the content needs to be reloaded after making an API call, but when a navigateTo directly won't do (because of sequencing, perhaps)
