@@ -164,7 +164,7 @@ var tlc = function()	{
 				var $tag = $(this), tlc = $tag.data('tlc');
 //			
 			if($._app.vars.debug == 'tlc')	{
-				dump("----------------> start new $tag. tlc: "+$(this).data('tlc')+" <-----------------");
+				dump("----------------> start new $tag. tlc: \n"+$(this).data('tlc')+" <-----------------");
 				}
 				var commands = false;
 				try{
@@ -680,7 +680,7 @@ returning a 'false' here will exit the statement loop.
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
 		var argObj = this.args2obj(cmd.args,globals);
 //SANITY -> dataset is the name of the param passed in.
-		dataset[cmd.args.value] = argsObj.dataset;
+		dataset[cmd.args.value] = argObj.dataset;
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
@@ -759,14 +759,16 @@ returning a 'false' here will exit the statement loop.
 //			dump(" -> p1: "+p1);
 			for(var i = 1, L = 2; i < L; i += 1)	{
 				var p2;
-				if(args[i].type == 'longopt')	{
-					p2 = (args[i].value == null) ? args[i].value : args[i].value.value;
-					}
-				else {p2 = args[i].value || null}
-				if(this.comparison(args[i].key,p1,p2))	{}
-				else {
-					action = 'IsFalse';
-					break;
+				if(args[i])	{
+					if(args[i].type == 'longopt')	{
+						p2 = (args[i].value == null) ? args[i].value : args[i].value.value;
+						}
+					else {p2 = args[i].value || null}
+					if(this.comparison(args[i].key,p1,p2))	{}
+					else {
+						action = 'IsFalse';
+						break;
+						}
 					}
 				}
 //			dump(" -> action: "+action);

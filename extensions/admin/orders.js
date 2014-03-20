@@ -255,6 +255,7 @@ else	{
 							}
 						catch(e)	{
 							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Error! '+e);
+							dump(" -> Error thrown by print: "); dump(e);
 							}
 						}
 					
