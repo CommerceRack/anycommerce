@@ -24,6 +24,7 @@ ADMIN
 		- customize your invoice and packing slip through utilities -> email messaging (in order menu)
 		- new popup-less print method (we tested FF, Chrome and IE, plus iOS7. still printing issues in droid/chrome)
 		- print option added as contextual menu in order list
+	new button in the coupon and shipping interface for downloading the rules (creates a batch process).
 
 QUICKSTART
 	update to the new TLC template language.
