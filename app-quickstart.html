@@ -1428,7 +1428,7 @@ The 'data-action' attribute is used to assign an onclick.
 	</section>
 
 	<section class="orderContentsProdlistContainer">
-	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --prepend='<h4>Shipping:</h4>' --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
+	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
 	<table class="listStyleNone lineItemProdlist">
 		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
 	</table>
