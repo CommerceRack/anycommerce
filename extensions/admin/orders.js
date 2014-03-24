@@ -260,7 +260,8 @@ else	{
 						}
 					
 					if(printables)	{
-						_app.u.printByjqObj($printme);
+						_app.u.printByjqObj($printme); //commented out for testin.
+//						$(document.body).append($printme);
 						}
 					}
 				}
@@ -1576,7 +1577,7 @@ handleOrder(orders[i]);
 							}
 //now fetch the printable message for each partition being used.
 						_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":function(rd){
-							dump(" -> Got to ping callback");
+//							dump(" -> Got to ping callback");
 							if(okOrders.length)	{
 								//no orders came back without errors.
 								for(var i = 0; i < prts.length; i += 1)	{

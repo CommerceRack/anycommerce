@@ -31,7 +31,7 @@
 					this.element.append($instance);		
 					}
 				else if(o.verb == 'translate')	{
-//					dump(" -> o.dataset"); dump(o.dataset);
+//					dump(" -> o.dataset"); dump(o.dataset); dump(this.element.html(),'debug');
 					var $instance = this.translate();
 					this._handleDataAttribs($instance);
 					}
@@ -680,7 +680,7 @@ returning a 'false' here will exit the statement loop.
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
 		var argObj = this.args2obj(cmd.args,globals);
 //SANITY -> dataset is the name of the param passed in.
-		dataset[cmd.args.value] = argObj.dataset;
+		dataset[cmd.Set.value] = argObj.dataset;
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
@@ -712,11 +712,13 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_FOREACH = function(cmd,globals,dataset)	{
 		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
+//		dump(" -> into FOREACH"); dump(cmd.Members,'debug');
 		for(var index in globals.binds[cmd.Members.value])	{
-			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different here than the rest of the tlc statement.
+			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
 			newGlobals.binds = {};
 			newGlobals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
 			newGlobals.focusBind = cmd.Set.value;
+//			dump(" -> index: "+index); dump(newGlobals);
 			this.executeCommands(cmd.Loop.statements,newGlobals,globals.binds[cmd.Members.value][index]);
 			}
 		return cmd.Set.value;
