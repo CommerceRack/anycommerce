@@ -31,7 +31,7 @@
 					this.element.append($instance);		
 					}
 				else if(o.verb == 'translate')	{
-//					dump(" -> o.dataset"); dump(o.dataset);
+//					dump(" -> o.dataset"); dump(o.dataset); dump(this.element.html(),'debug');
 					var $instance = this.translate();
 					this._handleDataAttribs($instance);
 					}
@@ -130,7 +130,8 @@ var tlc = function()	{
 	this.createTemplate = function(templateid)	{
 		if(templateid)	{
 			var $tmp = $($._app.u.jqSelector('#',templateid));
-			return $._app.model.makeTemplate($tmp,templateid);
+			this.handleTemplates($tmp); //make sure no <template>'s are inside the template or they could get added to the DOM multiple times.
+			return $tmp.length ? $._app.model.makeTemplate($tmp,templateid) : false;
 			}
 		else	{dump("Unable to execute maketemplate in tlc.createTemplate because no templateid was specified."); return false;}
 		}
@@ -152,6 +153,13 @@ var tlc = function()	{
 		return r;
 		}
 
+	this.handleTemplates = function($target)	{
+		$("template",$target).each(function(index){
+			//for a <template>, the content makes up the template itself. adding <template> back onto the DOM wouldn't accomplish much.
+			$._app.model.makeTemplate($(this).html(),$(this).attr('id'));
+			});
+		}
+
 // ### FUTURE -> allows --datapointer='appProductDetail' to be set and this could be used to gather what datasets should be acquired.
 // would return an object.
 //	this.gatherDatapointers = function(){}'
@@ -160,6 +168,7 @@ var tlc = function()	{
 //		dump(" -> dataset: "); dump(dataset);
 		if($ele instanceof jQuery && dataset)	{
 			var _self = this;
+			this.handleTemplates($ele); //create any required templates that are in the html. (email uses this).
 			$("[data-tlc]",$ele).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 				var $tag = $(this), tlc = $tag.data('tlc');
 //			
@@ -680,7 +689,7 @@ returning a 'false' here will exit the statement loop.
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
 		var argObj = this.args2obj(cmd.args,globals);
 //SANITY -> dataset is the name of the param passed in.
-		dataset[cmd.args.value] = argObj.dataset;
+		dataset[cmd.Set.value] = argObj.dataset;
 		}
 
 	this.handleType_BIND = function(cmd,globals,dataset)	{
@@ -712,11 +721,13 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_FOREACH = function(cmd,globals,dataset)	{
 		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
+//		dump(" -> into FOREACH"); dump(cmd.Members,'debug');
 		for(var index in globals.binds[cmd.Members.value])	{
-			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different here than the rest of the tlc statement.
+			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
 			newGlobals.binds = {};
 			newGlobals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
 			newGlobals.focusBind = cmd.Set.value;
+//			dump(" -> index: "+index); dump(newGlobals);
 			this.executeCommands(cmd.Loop.statements,newGlobals,globals.binds[cmd.Members.value][index]);
 			}
 		return cmd.Set.value;
