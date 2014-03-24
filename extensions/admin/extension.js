@@ -3723,6 +3723,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 			
 //for delegated events. Also triggered by process form.
+// $ele could be the form itself or the button.
 			submitForm : function($ele,p)	{
 				var $form = $ele.closest('form');
 				p.preventDefault();
