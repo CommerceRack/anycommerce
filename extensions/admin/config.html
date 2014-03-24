@@ -3177,32 +3177,33 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	
 	<label>
 		<span>IAM username</span>
-		<input data-tlc="bind $var '.iam-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="iam-username" value="" type="text">
+		<input length="25" data-tlc="bind $var '.iam-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="iam-username" value="" type="text">
 	</label>	
 	<label>
 		<span>SMTP username</span>
-		<input data-tlc="bind $var '.smtp-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="smtp-username" value="" type="text">
+		<input data-tlc="bind $var '.smtp-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="smtp-username" value=""
+		length="25" type="text">
 	</label>	
 	<label>
 		<span>SMTP password</span>
-		<input data-tlc="bind $var '.~smtp-password'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~smtp-password" value="" type="text">
+		<input length="50" data-tlc="bind $var '.~smtp-password'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~smtp-password" value="" type="text">
 	</label>
 
 
 	<h3 class="marginTop marginBottom">Email Addresses</h3>
 	<label>
 		<span>From email address (automated/orders)</span>
-		<input data-tlc="bind $var '.from_email_auto'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_auto" value="" type="text"><span class="toolTip" title="Used by all automated mailings, such as order confirmations, password recovery, etc">?</span>
+		<input length="30" data-tlc="bind $var '.from_email_auto'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_auto" value="" type="text"><span class="toolTip" title="Used by all automated mailings, such as order confirmations, password recovery, etc">?</span>
 	</label>
 
 	<label>
 		<span>From email address (campaigns)</span>
-		<input data-tlc="bind $var '.from_email_campaign'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_campaign" value="" type="text"><span class="toolTip" title="used in conjunction with the outbound campaign mail system">?</span>
+		<input length="30" data-tlc="bind $var '.from_email_campaign'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_campaign" value="" type="text"><span class="toolTip" title="used in conjunction with the outbound campaign mail system">?</span>
 	</label>
 	
 	<label>
 		<span>From email address (staff/support)</span>
-		<input data-tlc="bind $var '.from_email_support'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_support" value="" type="text"><span class="toolTip" title="used in conjunction with the CRM system">?</span>
+		<input length="30" data-tlc="bind $var '.from_email_support'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_support" value="" type="text"><span class="toolTip" title="used in conjunction with the CRM system">?</span>
 	</label>
 
 	
