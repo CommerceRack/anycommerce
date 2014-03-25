@@ -33,6 +33,7 @@ function runTests()	{
 	$._app = {'vars':{}} //tlc checks this for a debug var (not part of this test)
 	var dataset = {
 		'name' : 'bob',
+		longString : 'this is a long string to use for testing.',
 		number : 10,
 		smallArray : ["frank","albert","tom","harry"],
 		price : 24.95,

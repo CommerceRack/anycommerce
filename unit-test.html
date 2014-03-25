@@ -21,7 +21,7 @@
 <script src="resources/tlc.js"></script>
 <script src="resources/peg-0.8.0.js"></script>
 <script src="tests/tlc.js"></script>
-
+<h3>Version .01</h3>
 <h4>What follows is the template that gets translated for tlc.</h4>
 <h5>It must be visible because some individual tests check for display properties.</h5>
 <div id='sample-template'>
@@ -91,8 +91,9 @@
 		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; format --prepend='my name is '; apply --append;" data-testname="prepend" ></div>
 		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; format --append=' is my name'; apply --append;" data-testname="append" ></div>
 		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency" ></div>
-		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.smallArray'; format --length; apply --append;" data-testname="length" ></div>
-		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length" ></div>
+		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.smallArray'; format --length; apply --append;" data-testname="length (array)" ></div>
+		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length (string)" ></div>
+		<div data-testtype='output-compare' data-output='this is a l' data-tlc="bind $var '.longString'; format --chop='11'; apply --append;" data-testname="chop (string)" ></div>
 	</section>
 	
 	
