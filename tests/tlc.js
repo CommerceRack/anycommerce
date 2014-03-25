@@ -27,6 +27,10 @@ function loadGrammar()	{
 			}
 		});
 	}
+//dump is used in tlc 
+function dump(v)	{
+	if(typeof console != 'undefined')	{console.log(v)}
+	}
 
 
 function runTests()	{
@@ -35,6 +39,8 @@ function runTests()	{
 		'name' : 'bob',
 		longString : 'this is a long string to use for testing.',
 		number : 10,
+		blank : '',
+		'null' : null,
 		smallArray : ["frank","albert","tom","harry"],
 		price : 24.95,
 		'boolean-true' : true,
@@ -96,6 +102,15 @@ function runTests()	{
 	
 	test( "TLC Formats", function() {
 		$("[data-tlc]",'#format-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	
+	test( "TLC Math", function() {
+		$("[data-tlc]",'#math-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
