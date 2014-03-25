@@ -192,7 +192,7 @@ var tlc = function()	{
 						},dataset);
 					}
 				else	{
-					dump("couldn't parse a tlc",'warn');
+					dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 					//could not parse tlc. error already reported.
 					}
 	//			dump("----------------> end $tag <-----------------");
@@ -587,7 +587,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //truncate
 
 	this.format_uriencode = function(argObj,globals)	{
-		var r = encodeURI(globals.binds[argObj.bind]);
+		var r = encodeURIComponent(globals.binds[argObj.bind]);
 		return r;
 		} //truncate
 
@@ -940,30 +940,41 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleCommand_math = function(cmd,globals)	{
-		var value = Number(globals.binds[globals.focusBind]);
-		if(!isNaN(value))	{
+		var bind = Number(globals.binds[globals.focusBind]);
+		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-				switch(cmd.args[i].key)	{
-					case "add":
-						value += cmd.args[i].value.value; break;
-					case "sub":
-						value -= cmd.args[i].value.value; break;
-					case "mult":
-						value *= cmd.args[i].value.value; break;
-					case "div":
-						value /= cmd.args[i].value.value; break;
-					case "precision":
-						value = value.toFixed(cmd.args[i].value.value); break;
-					case "percent":
-						value = (value/100).toFixed(0); break;
+				var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
+//				console.log("MATH -> bind: "+bind,"value: "+value);
+//				console.log(" cmd.args[i].key -> "+cmd.args[i].key);
+				if(!isNaN(value))	{
+					switch(cmd.args[i].key)	{
+						case "add":
+							bind += value; break;
+						case "sub":
+							bind -= value; break;
+						case "mult":
+							bind *= value; break;
+						case "div":
+							bind /= value; break;
+						case "precision":
+							bind = bind.toFixed(value); break;
+// percentage is not currently supported.
+//						case "percent":
+//							bind = (bind/100).toFixed(0); break;
+						default:
+							dump("Unsupported method for math: "+cmd.args[i].key,'warn')
+						}
+					}
+				else	{
+					dump(" -> handleCommand_math was run on a value ["+value+" which is not a number.");
 					}
 				}
-			globals.binds[globals.focusBind] = value;
+			globals.binds[globals.focusBind] = bind;
 			}
 		else	{
-			dump(" -> handleCommand_math was run on a value ["+globals.binds[globals.focusBind]+" which is not a number.");
+			dump(" -> handleCommand_math was run on a bind ["+globals.binds[globals.focusBind]+" which is not a number.");
 			}
-		return value;
+		return bind;
 		}
 
 	this.handleCommand_datetime = function(cmd,globals)	{
@@ -1055,7 +1066,7 @@ returning a 'false' here will exit the statement loop.
 					}
 				}
 			else	{
-				dump("couldn't parse a tlc",'warn');
+				dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 				//could not parse tlc. error already reported.
 				}
 			});
