@@ -41,52 +41,63 @@ function runTests()	{
 	$('#sample-template').tlc({'verb':'translate','dataset':dataset});
 	
 	
+	
+	var testElement = function($ele)	{
+//		console.log(" -> $ele.data('testtype'): "+$ele.data('testtype'));
+		switch($ele.data('testtype'))	{
+			case 'unique':
+				//add this to an element that has it's own test. That way it doesn't throw a warning to the console.
+				break;
+			case 'output-compare':
+				ok( $ele.data('output') == $ele.text(), $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'visible':
+				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'add-class':
+				ok( $ele.hasClass($ele.data('class')) == true, $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'remove-class':
+				ok( $ele.hasClass($ele.data('class')) == false, $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'input-value':
+				ok( $ele.data('value') == $ele.val(), $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'is-checked':
+				ok( $ele.data('checked') == $ele.is(':checked'), $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'is-selected':
+				ok( $ele.data('selected') == $ele.is(':selected'), $ele.data('passedtext') || 'Passed!' );
+				break;
+			case 'attrib':
+				ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), $ele.data('passedtext') || 'Passed!' );
+				break;
+			
+			default:
+				console.warn("No valid test case for "+$ele.data('testtype'));
+			}
+		}
+	
 //first param is the pretty name of the test itself.
 //second param is function that contains actual testing code.
 	test( "TLC Verbs", function() {
-		
 		$("[data-tlc]",'#verb-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
-				switch($ele.data('testtype'))	{
-					case 'unique':
-						//add this to an element that has it's own test. That way it doesn't throw a warning to the console.
-						break;
-					case 'output-compare':
-						ok( $ele.data('output') == $ele.text(), "Passed!" );
-						break;
-					case 'visible':
-						ok( $ele.data('visible') == $ele.is(':visible'), "Passed!" );
-						break;
-					case 'add-class':
-						ok( $ele.hasClass($ele.data('class')) == true, "Passed!" );
-						break;
-					case 'remove-class':
-						ok( $ele.hasClass($ele.data('class')) == false, "Passed!" );
-						break;
-					case 'input-value':
-						ok( $ele.data('value') == $ele.val(), "Passed!" );
-						break;
-					case 'is-checked':
-						ok( $ele.data('checked') == $ele.is(':checked'), "Passed!" );
-						break;
-					case 'is-selected':
-						ok( $ele.data('selected') == $ele.is(':selected'), "Passed!" );
-						break;
-					case 'attrib':
-						ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), "Passed!" );
-						break;
-					
-					default:
-						console.warn("No valid test case for "+$ele.data('testtype'));
-					}
-				}
-			else	{
-				console.warn("The element with data-tlc [ "+ $ele.data('tlc') +" ] did not have a data-test set");
+				testElement($ele);
 				}
 			}); //loop
-
 		//now run the 'unique' tests.
-		ok($('#child-gets-replaced').html() == 'bob', "Passed!" );
+		ok($('#child-gets-replaced').html() == 'bob', "replace" );
 		});
+	
+	test( "TLC Formats", function() {
+		$("[data-tlc]",'#format-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	
 	}

@@ -537,6 +537,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //currency
 
 	this.format_prepend = function(argObj,globals)	{
+		console.log(" -> got to prepend. value: "+arg.type);
 		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
 		return r;
 		} //prepend
