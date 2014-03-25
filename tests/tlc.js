@@ -33,17 +33,19 @@ function runTests()	{
 	$._app = {'vars':{}} //tlc checks this for a debug var (not part of this test)
 	var dataset = {
 		'name' : 'bob',
-		number : 10
+		number : 10,
+		'boolean-true' : true,
+		'boolean-false' : false
 		}
-	var $template = $('#sample-template');
-	$template.tlc({'verb':'translate','dataset':dataset});
-	
 
+	$('#sample-template').tlc({'verb':'translate','dataset':dataset});
+	
+	
 //first param is the pretty name of the test itself.
 //second param is function that contains actual testing code.
 	test( "TLC Verbs", function() {
 		
-		$("[data-tlc]",$template).each(function(index){
+		$("[data-tlc]",'#verb-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				switch($ele.data('testtype'))	{
@@ -62,7 +64,19 @@ function runTests()	{
 					case 'remove-class':
 						ok( $ele.hasClass($ele.data('class')) == false, "Passed!" );
 						break;
-						
+					case 'input-value':
+						ok( $ele.data('value') == $ele.val(), "Passed!" );
+						break;
+					case 'is-checked':
+						ok( $ele.data('checked') == $ele.is(':checked'), "Passed!" );
+						break;
+					case 'is-selected':
+						ok( $ele.data('selected') == $ele.is(':selected'), "Passed!" );
+						break;
+					case 'attrib':
+						ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), "Passed!" );
+						break;
+					
 					default:
 						console.warn("No valid test case for "+$ele.data('testtype'));
 					}

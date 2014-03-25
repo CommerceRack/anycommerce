@@ -22,42 +22,74 @@
 <script src="resources/peg-0.8.0.js"></script>
 <script src="tests/tlc.js"></script>
 
-<h5>What follows is the template that gets translated for tlc.</h5>
-<h6>It must be visible because some individual tests check for display properties.</h6>
+<h4>What follows is the template that gets translated for tlc.</h4>
+<h5>It must be visible because some individual tests check for display properties.</h5>
 <div id='sample-template'>
-	<!-- append -->
-	<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --append;"></div><!-- simple append -->
-	<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --append;"></div><!-- simple append of a number -->
-	<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; apply --append;">my name is </div><!-- append with existing content -->
+	<section id='verb-tests'>
+		<h6>Used for verb tests</h6>
+		<!-- append -->
+		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --append;"></div><!-- simple append -->
+		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --append;"></div><!-- simple append of a number -->
+		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; apply --append;">my name is </div><!-- append with existing content -->
+		
+		<!-- prepend -->
+		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --prepend;"></div><!-- simple prepend -->
+		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --prepend;"></div><!-- simple prepend of a number -->
+		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; apply --prepend;"> is my name</div><!-- prepend with existing content -->
+		
+		<!-- empty -->
+		<div data-testtype='output-compare' data-output='' data-tlc="apply --empty;">this should be empty</div><!-- simple prepend -->
 	
-	<!-- prepend -->
-	<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --prepend;"></div><!-- simple prepend -->
-	<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --prepend;"></div><!-- simple prepend of a number -->
-	<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; apply --prepend;"> is my name</div><!-- prepend with existing content -->
+		<!-- show/hide -->
+		<div data-testtype='visible' data-visible='false' data-tlc="apply --hide;">this should be hidden</div><!-- simple prepend -->
+		<div data-testtype='visible' data-visible='true' style='display:none;' data-tlc="apply --show;">this should be visible</div><!-- simple prepend -->
+		
+		<!-- add -->
+		<div data-testtype='add-class' data-class='simple' data-visible='false' data-tlc="apply --add --class='simple';">should have 'simple' class.</div><!-- simple prepend -->
+		<!-- need an 'add tag' test -->
+		
+		<!-- remove -->
+		<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';">should not have 'simple' class.</div><!-- simple prepend -->
+		<div id='this-gets-removed' data-tlc="apply --remove --tag='$tag';">This should not be on the DOM.</div>
+		<!-- need a 'remove tag' test -->
 	
-	<!-- empty -->
-	<div data-testtype='output-compare' data-output='' data-tlc="apply --empty;">this should be empty</div><!-- simple prepend -->
-
-	<!-- show/hide -->
-	<div data-testtype='visible' data-visible='false' data-tlc="apply --hide;">this should be hidden</div><!-- simple prepend -->
-	<div data-testtype='visible' data-visible='true' style='display:none;' data-tlc="apply --show;">this should be visible</div><!-- simple prepend -->
+		<table>
+		<tr>
+			<td><input data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;"></td>
+			<td><input type='checkbox' data-testtype='is-checked' data-checked='true' data-tlc="bind $var '.boolean-true'; apply --select=$var;"> should be checked</td>
+			<td><input type='checkbox' data-testtype='is-checked' data-checked='false' checked='checked' data-tlc="bind $var '.boolean-false'; apply --select=$var;"> should NOT be checked</td>
+		</tr>
+		<tr>
+			<td><select data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;">
+				<option>Choose</option>
+				<option value='frank'>frank</option>
+				<option value='bob' data-tlc data-testtype='is-selected' data-selected='true'>bob</option><!-- data-tlc here just to trigger the test -->
+				<option value='harry' selected data-tlc data-testtype='is-selected' data-selected='false'>harry</option>
+			</select></td>
+			<td colspan='2'>
+				<input type='radio' name='something' value='frank' data-tlc="bind $var '.name'; apply --select=$var;" checked  data-testtype='is-checked' data-checked='false' />not selected
+				<input type='radio' name='something' value='bob' data-tlc="bind $var '.name'; apply --select=$var;"  data-testtype='is-checked' data-checked='true' />selected
+				<input type='radio' name='something' value='harry' data-tlc="bind $var '.name'; apply --select=$var;" />not selected
+			</td>
+		</tr>
+		<tr>
+			<td colspan='2'>
+			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --inputvalue=$var;"  data-testtype='input-value' data-value='bob' />value is 'gene' by default. should be 'bob' after tlc.
+			</td>
+			<td>
+			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --attrib='data-something';"  data-testtype='attrib' data-attrib='data-something' data-attribvalue='bob' />
+			</td>
+		</tr>
+		</table>
 	
-	<!-- add -->
-	<div data-testtype='add-class' data-class='simple' data-visible='false' data-tlc="apply --add --class='simple';">should have 'simple' class.</div><!-- simple prepend -->
-	<!-- need an 'add tag' test -->
-	
-	<!-- remove -->
-	<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';">should not have 'simple' class.</div><!-- simple prepend -->
-	<div id='this-gets-removed' data-tlc="apply --remove --tag='tag';">This should not be on the DOM.</div>
-	<!-- need a 'remove tag' test -->
+		<!-- replace -->
+		<div id='child-gets-replaced'><div data-testtype='unique' data-tlc="bind $var '.name'; apply --replace;">This should not be here.</div></div>
+	</section>
 
-	<div>
-		<input data-testtype='value-test' data-tlc="">
-	</div>
-
-
-	<!-- replace -->
-	<div id='child-gets-replaced'><div data-testtype='unique' data-tlc="bind $var '.name'; apply --replace;">This should not be here.</div></div>
+	<section id='format-tests'>
+		<h6>Used for format tests</h6>
+		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --append;"></div>
+	</section>
 	
 	
 	
