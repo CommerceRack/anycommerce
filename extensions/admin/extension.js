@@ -991,7 +991,12 @@ $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function
 		}
 	else if($tmp.attr('data-status') == 'error')	{
 		eCount += 1;
-		eReport += "<li>"+$tmp.attr('data-pid')+": "+_app.data[$tmp.attr('data-pointer')].errmsg+" ("+_app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+		if($tmp.attr('data-pointer') && _app.data[$tmp.attr('data-pointer')])	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": "+_app.data[$tmp.attr('data-pointer')].errmsg+" ("+_app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+			}
+		else	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": an unknown error has occured.<\/li>";
+			}
 		}
 	});
 
@@ -1055,12 +1060,12 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 			onError : function(d)	{
 //				_app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				var tmp = _app.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
+				var tmp = d._rtag.datapointer.split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
 //on an insert, the li will be in finderTargetList... but on a remove, the li will be in finderRemovedList_...
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
-				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':tagObj.datapointer});
+				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':d._rtag.datapointer});
 //				_app.u.dump(d);
 				}
 			}, //finderProductUpdate

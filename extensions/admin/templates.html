@@ -33,18 +33,18 @@ PRODUCT FINDER/CHOOSER
 
 <ul>
 	<li class='clearfix loadingBG stdListItem' id='adminProdStdForList'>
-	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
-	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
-	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
-	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
-	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+		<div class="removeProd" onclick="adminApp.ext.admin.u.removePidFromFinder($(this).closest(&quot;[data-pid]&quot;));"><span class="ui-icon ui-icon-closethick"></span></div>
+		<div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50">
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{apply --append;}};" class="pid"></div>
 	</li>
 
 	<li class='clearfix loadingBG simpleListItem' id='adminProdSimpleForList'>
-	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
-	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
-	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
-	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+		<div class="removeProd" onclick="adminApp.ext.admin.u.removePidFromFinder($(this).closest(&quot;[data-pid]&quot;));"><span class="ui-icon ui-icon-closethick"></span></div>
+		<div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{apply --append;}};" class="pid"></div>
 	</li>
 
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
