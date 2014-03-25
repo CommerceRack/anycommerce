@@ -237,6 +237,7 @@ var tlc = function()	{
 					//this handles how most variables are passed in.
 					if(args[i].key)	{
 						r[args[i].key] = globals.binds[args[i].value.value];
+						r.variable = (args[i].type == 'longopt' && args[i].value) ? args[i].value.value : args[i].value;
 						}
 					//this handles some special cases, like:  transmogrify $var --templateid='chkoutAddressBillTemplate';
 					else if(typeof args[i].value == 'string')	{
@@ -402,9 +403,11 @@ This one block should get called for both img and imageurl but obviously, imageu
 			}
 		}
 
-	this.handle_apply_verb = function(verb,argObj,globals){
+	this.handle_apply_verb = function(verb,argObj,globals,cmd){
 		// ### TODO -> need to update the verbs to support apply ~someothertag --dataset=$var --someVerb
 		var $tag = globals.tags[globals.focusTag];
+		var data = argObj.variable ? globals.binds[argObj.variable] : globals.binds[globals.focusBind];
+		
 		switch(verb)	{
 //new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
@@ -428,11 +431,11 @@ This one block should get called for both img and imageurl but obviously, imageu
 					}
 				break; 
 			
-			case 'prepend': $tag.prepend(globals.binds[globals.focusBind]); break;
-			case 'append': $tag.append(globals.binds[globals.focusBind]); break;
-			case 'replace': $tag.replaceWith(globals.binds[globals.focusBind]); break;
+			case 'prepend': $tag.prepend(data); break;
+			case 'append': $tag.append(data); break;
+			case 'replace': $tag.replaceWith(data); break;
 			case 'inputvalue':
-				$tag.val(globals.binds[globals.focusBind]);
+				$tag.val(data);
 				break;
 			case 'select' :
 				this.apply_verb_select($tag,argObj,globals); //will modify $tag.
@@ -441,7 +444,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 				// ### TODO -> not done yet.
 				break;  
 			case 'attrib':
-				$tag.attr(argObj.attrib,globals.binds[globals.focusBind]);
+				$tag.attr(argObj.attrib,data);
 				break;
 			}
 		}
@@ -534,12 +537,13 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //currency
 
 	this.format_prepend = function(argObj,globals)	{
-		var r = argObj.prepend+globals.binds[argObj.bind];
+		console.log(" -> got to prepend. value: "+arg.type);
+		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
 		return r;
 		} //prepend
 
-	this.format_append = function(argObj,globals)	{
-		var r = globals.binds[argObj.bind]+argObj.append;
+	this.format_append = function(argObj,globals,arg)	{
+		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
 		return r;
 		} //append
 
@@ -575,9 +579,11 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(tr.length)	{
 					r = tr;
 					}
-				r += '&#8230;'; //Add an ellipses to the end
+//	201402 -> bad idea to have this.  what if we're truncating a number. use format append.
+//				r += '&#8230;'; //Add an ellipses to the end
 				}
 			}
+//		dump(" -> what truncate returns: "+r);
 		return r;
 		} //truncate
 
@@ -668,7 +674,7 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_command = function(cmd,globals,dataset)	{
 		var r = true;
-//		dump(" -> cmd.name: "+cmd.name); //dump(cmd);
+//		dump(" -> cmd.name: "+cmd.name+" here are the globals: "); dump(globals);
 		try{
 			if(cmd.module == 'core' && typeof this['handleCommand_'+cmd.name] == 'function')	{
 				this['handleCommand_'+cmd.name](cmd,globals);
@@ -713,7 +719,8 @@ returning a 'false' here will exit the statement loop.
 			globals.focusBind = cmd.Set.value; // dump(" -> globals.focusBind: "+globals.focusBind);
 			if($._app.vars.debug == 'tlc')	{
 				dump("Now we bind "+cmd.Src.value+' to binds['+cmd.Set.value+'] with value: '+jsonPath(dataset, '$'+cmd.Src.value)[0]); // dump(dataset);
-				console.debug(globals);
+//				console.log(" -> globals: "); console.debug(globals);
+//				console.log(" -> cmd: "); console.debug(cmd);
 				}
 			}
 		return cmd.Set.value;
@@ -804,7 +811,8 @@ returning a 'false' here will exit the statement loop.
 				//key will be set for the args that are a format. there may be non 'key' args, such as putting a variable into scope.
 				if(cmd.args[i].key && typeof this['format_'+cmd.args[i].key] == 'function')	{
 					try	{
-						globals.binds[argObj.bind] = this['format_'+cmd.args[i].key](argObj,globals);
+//						dump(" -> cmd.args[i].key: "+cmd.args[i].key); dump(cmd.args[i]);
+						globals.binds[argObj.bind] = this['format_'+cmd.args[i].key](argObj,globals,cmd.args[i]);
 						}
 					catch(e)	{}
 					}
@@ -854,7 +862,7 @@ returning a 'false' here will exit the statement loop.
 					this.handle_apply_formatter(theFormatter,$tag,argObj,globals);
 					}
 				
-				this.handle_apply_verb(theVerb,argObj,globals);
+				this.handle_apply_verb(theVerb,argObj,globals,cmd);
 
 				}
 			else if(numVerbs === 0)	{
