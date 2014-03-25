@@ -34,6 +34,8 @@ function runTests()	{
 	var dataset = {
 		'name' : 'bob',
 		number : 10,
+		smallArray : ["frank","albert","tom","harry"],
+		price : 24.95,
 		'boolean-true' : true,
 		'boolean-false' : false
 		}
@@ -49,28 +51,28 @@ function runTests()	{
 				//add this to an element that has it's own test. That way it doesn't throw a warning to the console.
 				break;
 			case 'output-compare':
-				ok( $ele.data('output') == $ele.text(), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('output') == $ele.text(), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'visible':
-				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'add-class':
-				ok( $ele.hasClass($ele.data('class')) == true, $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.hasClass($ele.data('class')) == true, $ele.data('testname') || 'Passed!' );
 				break;
 			case 'remove-class':
-				ok( $ele.hasClass($ele.data('class')) == false, $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.hasClass($ele.data('class')) == false, $ele.data('testname') || 'Passed!' );
 				break;
 			case 'input-value':
-				ok( $ele.data('value') == $ele.val(), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('value') == $ele.val(), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'is-checked':
-				ok( $ele.data('checked') == $ele.is(':checked'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('checked') == $ele.is(':checked'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'is-selected':
-				ok( $ele.data('selected') == $ele.is(':selected'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('selected') == $ele.is(':selected'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'attrib':
-				ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), $ele.data('testname') || 'Passed!' );
 				break;
 			
 			default:

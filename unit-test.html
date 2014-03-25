@@ -28,56 +28,56 @@
 	<section id='verb-tests'>
 		<h6>Used for verb tests</h6>
 		<!-- append -->
-		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --append;" data-passedtext="simple append"></div>
-		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --append;" data-passedtext="simple append of a number"></div>
-		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; apply --append;" data-passedtext="append with existing content">my name is </div>
+		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --append;" data-testname="simple append"></div>
+		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --append;" data-testname="simple append of a number"></div>
+		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; apply --append;" data-testname="append with existing content">my name is </div>
 		
 		<!-- prepend -->
-		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --prepend;" data-passedtext="simple prepend"></div>
-		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --prepend;" data-passedtext="simple prepend of a number"></div>
-		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; apply --prepend;" data-passedtext="prepend with existing content"> is my name</div>
+		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $var '.name'; apply --prepend;" data-testname="simple prepend"></div>
+		<div data-testtype='output-compare' data-output='10' data-tlc="bind $var '.number'; apply --prepend;" data-testname="simple prepend of a number"></div>
+		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; apply --prepend;" data-testname="prepend with existing content"> is my name</div>
 		
 		<!-- empty -->
-		<div data-testtype='output-compare' data-output='' data-tlc="apply --empty;" data-passedtext="empty compare">this should be empty</div>
+		<div data-testtype='output-compare' data-output='' data-tlc="apply --empty;" data-testname="empty compare">this should be empty</div>
 	
 		<!-- show/hide -->
-		<div data-testtype='visible' data-visible='false' data-tlc="apply --hide;" data-passedtext="hide">this should be hidden</div>
-		<div data-testtype='visible' data-visible='true' style='display:none;' data-tlc="apply --show;" data-passedtext="show">this should be visible</div>
+		<div data-testtype='visible' data-visible='false' data-tlc="apply --hide;" data-testname="hide">this should be hidden</div>
+		<div data-testtype='visible' data-visible='true' style='display:none;' data-tlc="apply --show;" data-testname="show">this should be visible</div>
 		
 		<!-- add -->
-		<div data-testtype='add-class' data-class='simple' data-visible='false' data-tlc="apply --add --class='simple';" data-passedtext="add class">should have 'simple' class.</div>
+		<div data-testtype='add-class' data-class='simple' data-visible='false' data-tlc="apply --add --class='simple';" data-testname="add class">should have 'simple' class.</div>
 		<!-- need an 'add tag' test -->
 		
 		<!-- remove -->
-		<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';" data-passedtext="remove class">should not have 'simple' class.</div>
+		<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';" data-testname="remove class">should not have 'simple' class.</div>
 		<div id='this-gets-removed' data-tlc="apply --remove --tag='$tag';">This should not be on the DOM.</div>
 		<!-- need a 'remove tag' test -->
 	
 		<table>
 		<tr>
-			<td><input data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;" data-passedtext="select (set input value)"></td>
-			<td><input type='checkbox' data-testtype='is-checked' data-checked='true' data-tlc="bind $var '.boolean-true'; apply --select=$var;" data-passedtext="select (uncheck)"> should be checked</td>
-			<td><input type='checkbox' data-testtype='is-checked' data-checked='false' checked='checked' data-tlc="bind $var '.boolean-false'; apply --select=$var;" data-passedtext="select (checked)"> should NOT be checked</td>
+			<td><input data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;" data-testname="select (set input value)"></td>
+			<td><input type='checkbox' data-testtype='is-checked' data-checked='true' data-tlc="bind $var '.boolean-true'; apply --select=$var;" data-testname="select (uncheck)"> should be checked</td>
+			<td><input type='checkbox' data-testtype='is-checked' data-checked='false' checked='checked' data-tlc="bind $var '.boolean-false'; apply --select=$var;" data-testname="select (checked)"> should NOT be checked</td>
 		</tr>
 		<tr>
-			<td><select data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;" data-passedtext="select (set select option/value">
+			<td><select data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;" data-testname="select (set select option/value">
 				<option>Choose</option>
 				<option value='frank'>frank</option>
-				<option value='bob' data-tlc data-testtype='is-selected' data-selected='true' data-passedtext="select (option is selected)">bob</option><!-- data-tlc here just to trigger the test -->
-				<option value='harry' selected data-tlc data-testtype='is-selected' data-selected='false' data-passedtext="select (option is NOT selected)">harry</option>
+				<option value='bob' data-tlc data-testtype='is-selected' data-selected='true' data-testname="select (option is selected)">bob</option><!-- data-tlc here just to trigger the test -->
+				<option value='harry' selected data-tlc data-testtype='is-selected' data-selected='false' data-testname="select (option is NOT selected)">harry</option>
 			</select></td>
 			<td colspan='2'>
-				<input type='radio' name='something' value='frank' data-tlc="bind $var '.name'; apply --select=$var;" checked  data-testtype='is-checked' data-checked='false' data-passedtext="select (is not checked)" />not selected
-				<input type='radio' name='something' value='bob' data-tlc="bind $var '.name'; apply --select=$var;"  data-testtype='is-checked' data-checked='true' data-passedtext="select (is checked)" />selected
+				<input type='radio' name='something' value='frank' data-tlc="bind $var '.name'; apply --select=$var;" checked  data-testtype='is-checked' data-checked='false' data-testname="select (is not checked)" />not selected
+				<input type='radio' name='something' value='bob' data-tlc="bind $var '.name'; apply --select=$var;"  data-testtype='is-checked' data-checked='true' data-testname="select (is checked)" />selected
 				<input type='radio' name='something' value='harry' data-tlc="bind $var '.name'; apply --select=$var;" />not selected
 			</td>
 		</tr>
 		<tr>
 			<td colspan='2'>
-			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --inputvalue=$var;"  data-testtype='input-value' data-value='bob' data-passedtext="inputvalue" />value is 'gene' by default. should be 'bob' after tlc.
+			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --inputvalue=$var;"  data-testtype='input-value' data-value='bob' data-testname="inputvalue" />value is 'gene' by default. should be 'bob' after tlc.
 			</td>
 			<td>
-			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --attrib='data-something';"  data-testtype='attrib' data-attrib='data-something' data-attribvalue='bob' data-passedtext="attrib" />
+			<input type='radio' name='something' value='gene' data-tlc="bind $var '.name'; apply --attrib='data-something';"  data-testtype='attrib' data-attrib='data-something' data-attribvalue='bob' data-testname="attrib" />
 			</td>
 		</tr>
 		</table>
@@ -88,8 +88,11 @@
 
 	<section id='format-tests'>
 		<h6>Used for format tests</h6>
-		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name';format --prepend='my name is '; apply --append;"></div>
-		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name';format --append=' is my name'; apply --append;"></div>
+		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; format --prepend='my name is '; apply --append;" data-testname="prepend" ></div>
+		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; format --append=' is my name'; apply --append;" data-testname="append" ></div>
+		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency" ></div>
+		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.smallArray'; format --length; apply --append;" data-testname="length" ></div>
+		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length" ></div>
 	</section>
 	
 	
