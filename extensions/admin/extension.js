@@ -1319,6 +1319,10 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 //				dump("BEGIN navigateTo "+path);
 				opts = opts || {};
 				var newHash = path;
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent currently in focus. Works with a similar piece of code in execApp
+				$('.ui-tooltip',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).intervaledEmpty();
 //sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
 				if(path == document.location.hash)	{
 					adminApp.router.handleHashChange();
@@ -1384,6 +1388,12 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					tab = opts.tab || _app.ext.admin.vars.tab,
 					$tab = $(_app.u.jqSelector('#',tab+"Content")),
 					$target = $("<div \/>").addClass('contentContainer'); //content is added to a child, which is then added to the tab. ensures the tab container is left alone (no data or anything like that to get left over)
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent coming in to focus. There is some similar code in navigateTo
+				$('.ui-tooltip',$tab).intervaledEmpty();
+				
+				
 				if(ext && a && _app.u.thisNestedExists("ext."+ext+".a."+a,_app))	{
 					$tab.data('focusHash',"ext/"+ext+"/"+a); //remember what app is in focus so when tab is clicked, the correct hash can be displayed.
 					$tab.intervaledEmpty().append($target);
