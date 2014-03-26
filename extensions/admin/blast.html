@@ -30,11 +30,12 @@
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+<!--	
 			<h2>Supply Chain</h2>
 			<div>
 				<ul data-app-role="blastmessages_SUPPLY" class='noPadOrMargin listStyleNone'></ul>
 			</div>
+-->
 		</div>
 
 	</section>
@@ -96,8 +97,8 @@
 				<option value=''>please choose</option>
 				<option value='CUSTOMER'>Customer</option>
 				<option value='ORDER'>Order</option>
-				<option value='PRODUCT'>Product</option>
-				<option value='SUPPLY'>Supply</option>
+				<option value='PRODUCT'>Product</option><!--
+				<option value='SUPPLY'>Supply</option>-->
 				<option value='TICKET'>Ticket</option>
 			</select>
 		</label>
@@ -105,7 +106,8 @@
 
 		<label>
 			<span class='prompt'>Message id</span>
-			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='requied' />
+			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='required' />
+			<span class='toolTip' title="A short, alphanumeric ID for the message. The message type (order, customer, etc) will be automatically be prepended. The message ID should be short but descriptive of what the message will be used for. ex: CANCELLED or CLOSED">?</span>
 		</label>
 		<button class='applyButton'>Create</button>
 	</fieldset>
@@ -399,8 +401,9 @@
 <fieldset class='floatRight width50'>
 	<legend>Properties</legend>
 	<label>
-		<span>Syntax</span>
+		<span>Link Syntax</span>
 		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.%PRT.LINKSYNTAX'; apply --select=$var;">
+			<option value=''>None</option>
 			<option value='APP'>App</option>
 			<option value='VSTORE'>Vstore</option>
 		</select>

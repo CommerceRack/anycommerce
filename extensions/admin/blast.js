@@ -224,7 +224,7 @@ var admin_blast = function(_app) {
 				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Blast Macro Editor',
 					'className' : 'blastMacroManager',
-					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>","<button data-app-click='admin_blast|blastMacroProperyEditorShow' class='applyButton' data-icon-primary='ui-icon-pencil'>Properties</button>","<button class='applyButton' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_blast|blastMacroAddShow'>Add Macro<\/button>"],
+					'buttons' : ["<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>","<button class='applyButton' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_blast|blastMacroAddShow'>Add Macro<\/button>"],
 					'thead' : ['Title','Macro','Created','User',''],
 					'tbodyDatabind' : "var: users(@MACROS); format:processList; loadsTemplate:blastMacroRowTemplate;",
 					'cmdVars' : {
@@ -335,6 +335,7 @@ var admin_blast = function(_app) {
 						$target.tlc({'templateid':'blastMessageAddTemplate','verb':'template'});
 						$('form',$target).anyform();
 						_app.u.handleButtons($target);
+						_app.u.handleCommonPlugins($target);
 						}
 					else	{
 						$("#globalMessaging").anymessage({"message":"In admin_blast.e.adminBlastSettingsEdit, invalid data.setting ["+$ele.data('setting')+"] set on trigger element.","gMessage":true});
@@ -361,7 +362,7 @@ var admin_blast = function(_app) {
 				var $form = $ele.closest('form');
 				if(_app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
-					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+"."+sfo.msgid, "_tag":{"callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+".CUSTOM."+sfo.msgid, "_tag":{"callback":function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
