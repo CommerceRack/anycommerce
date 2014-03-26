@@ -107,7 +107,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 		<label><span>Email:</span><input size='20' type="email" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
 		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
 		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
-		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /></label>
+		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /> <span class='toolTip' title="Leave this field blank to leave the customer password 'as is'.  If you set a password here, the existing password will be removed in favor of what you entered. This field will always appear blank.">?</span></label>
 		<label data-bind="var:customer(INFO.IS_LOCKED); format:addClass;className:ui-state-error;"><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popVal;"> Lock customer account</label>
 	</fieldset>
 	</div>

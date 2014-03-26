@@ -1414,7 +1414,11 @@ _app.model.dispatchThis('immutable');
 						updates.push("CREATE?email="+formObj.email); //setting email @ create is required.
 						if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
 						if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
-						if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+						// *** 201402 -> macro ID for passwordreset changed to PASSWORD-SET
+						if(formObj.generatepassword)	{
+							updates.push("PASSWORD-SET?password=");
+							updates.push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
+							} //generate a random password
 						
 						// $('body').showLoading("Creating customer record for "+formObj.email);
 						_app.model.addDispatchToQ({
@@ -1518,7 +1522,8 @@ _app.model.dispatchThis('immutable');
 							}
 						else if($tag.is('input') || $tag.is('select'))	{
 							if($tag.attr('name') == 'password')	{
-								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); //password needs to be encoded (required for & and + to be acceptable password characters)
+								macros.push("PASSWORD-SET?password="+encodeURIComponent($tag.val())); //password needs to be encoded (required for & and + to be acceptable password characters)
+								macros.push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
 								}
 							else if(pr == 'general')	{
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
@@ -1574,7 +1579,7 @@ _app.model.dispatchThis('immutable');
 					$ele.closest('form').anymessage({'message':'In admin_customer.e.execCustomerEditorSave, unable to ascertain CID.','gMessage':true});
 					}
 				}, //customerEditorSave
-				
+
 			refreshCustomerPanel : function($ele,p){
 				var panel = $ele.data('panel');
 				if(panel)	{
@@ -1820,7 +1825,7 @@ _app.model.dispatchThis('immutable');
 					})
 				
 				}, //saveOrgToField
-			
+
 			showBlastTool : function($ele,P)	{
 				P.preventDefault();
 				var CID = $ele.closest("[data-cid]").data('cid');
