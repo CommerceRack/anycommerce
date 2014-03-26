@@ -46,7 +46,8 @@ function runTests()	{
 		smallHash : {'name':'ron','nickname' : 'tater salad'},
 		price : 24.95,
 		'boolean-true' : true,
-		'boolean-false' : false
+		'boolean-false' : false,
+		'string-false' : 'false'
 		}
 
 	$('#sample-template').tlc({'verb':'translate','dataset':dataset});
@@ -131,6 +132,14 @@ function runTests()	{
 		});
 	test( "TLC Stringify", function() {
 		$("[data-tlc]",'#stringify-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC Comparisons", function() {
+		$("[data-tlc]",'#comparison-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);

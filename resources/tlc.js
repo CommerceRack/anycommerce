@@ -407,7 +407,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		// ### TODO -> need to update the verbs to support apply ~someothertag --dataset=$var --someVerb
 		var $tag = globals.tags[globals.focusTag];
 		var data = argObj.variable ? globals.binds[argObj.variable] : globals.binds[globals.focusBind];
-		
+		//if the booleans are not stringified, append/prepend won't output them.
+		if(data === true || data === false)	{data = data.toString()}
 		switch(verb)	{
 //new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
@@ -475,7 +476,16 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.comparison = function(op,p1,p2)	{
 		var r = false;
-		
+
+		function blank(v)	{
+			var isBlank = false;
+			//not set and undefined are blank.  null or false is NOT blank.
+			if(v == 'false' || v === false || v == null)	{isBlank = false}
+			else if(v == '' || v == undefined)	{isBlank = true;}
+			else	{}
+			return  isBlank;
+			}
+
 		switch(op)	{
 			case "eq":
 				if(p1 == p2){ r = true;} break;
@@ -486,15 +496,15 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "lt":
 				if(Number(p1) < Number(p2)){r = true;} break;
 			case "true":
-				if(p1){r = true;}; break;
+				if(p1){r = true}; break;
 			case "false":
-				if(!p1){r = true;}; break;
+				if(p1 == false)	{r = true;} //non 'type' comparison in case the value 'false' is a string.
+				else if(!p1){r = true}; break;
 			case "blank":
-				if(p1 == '' || p1 == undefined){r = true;}; break;
+				r = blank(p1);
+				break;
 			case "notblank":
-				if(p1 == false || p1 == 'undefined' || p1 == null){r = false;}
-				else	{r = true;}
-//				dump(" -> p1: "+p1+' and r: '+r);
+				r = blank(p1) ? false : true; //return the opposite of blank.
 				break;
 			case "null":
 				if(p1 == null){r = true;}; break;
