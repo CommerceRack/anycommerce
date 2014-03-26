@@ -62,6 +62,10 @@ function runTests()	{
 			case 'output-compare':
 				ok( $ele.data('output') == $ele.text(), $ele.data('testname') || 'Passed!' );
 				break;
+			case 'string-compare':
+				//a separate test type was needed for stringify. data-compare="{'something'... was converted to an object by jquery.
+				ok( JSON.stringify($ele.data('string')) == $ele.text(), $ele.data('testname') || 'Passed!' );
+				break;
 			case 'visible':
 				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('testname') || 'Passed!' );
 				break;
