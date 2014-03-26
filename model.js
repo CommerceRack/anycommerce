@@ -635,9 +635,10 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
 			if(cmd == 'adminNavcatMacro')	{}
-			else if(this.cmdIsAnAdminUpdate(cmd))	{
-				r = false;
-				}
+// ** 201402 -> if they don't need to be saved to memory, don't put a datapointer on them. But allow them to be added if necessary.
+//			else if(this.cmdIsAnAdminUpdate(cmd))	{
+//				r = false;
+//				}
 			else	{
 				switch(cmd)	{
 					case 'appPageGet': //saved into category object earlier in process. redundant here.
