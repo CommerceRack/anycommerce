@@ -81,7 +81,7 @@ var admin_blast = function(_app) {
 				$('form',$target).anyform({'trackEdits':true}); //for the globals.
 //retrieve the global settings.
 				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','blast':1,'_tag':{'datapointer':'adminConfigDetail|'+_app.vars.partition+'|blast'}},'mutable');
-				
+
 //and the list of messages.
 				_app.model.addDispatchToQ({
 					"_cmd":"adminBlastMsgList",
@@ -124,6 +124,11 @@ var admin_blast = function(_app) {
 			//used in the blast message list tool for editing a specific message.			
 			//can be used outside that interface by calling directly.
 			blastMessagesDetail : function($target,params)	{
+				if($target.data('isTLC'))	{
+					$target.tlc('destroy');
+					}
+				dump("BEGIN blastMessagesDetal");
+				
 				$target.showLoading({"message":"Fetching message detail"});
 				
 				//get the list of macros, but use a local copy if one is available.
