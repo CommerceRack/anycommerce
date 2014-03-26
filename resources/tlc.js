@@ -477,7 +477,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 	this.comparison = function(op,p1,p2)	{
 		var r = false;
 
-		function blank(v)	{
+		function isBlank(v)	{
 			var isBlank = false;
 			//not set and undefined are blank.  null or false is NOT blank.
 			if(v == 'false' || v === false || v == null)	{isBlank = false}
@@ -501,10 +501,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(p1 == false)	{r = true;} //non 'type' comparison in case the value 'false' is a string.
 				else if(!p1){r = true}; break;
 			case "blank":
-				r = blank(p1);
+				r = isBlank(p1);
 				break;
 			case "notblank":
-				r = blank(p1) ? false : true; //return the opposite of blank.
+				r = isBlank(p1) ? false : true; //return the opposite of blank.
 				break;
 			case "null":
 				if(p1 == null){r = true;}; break;

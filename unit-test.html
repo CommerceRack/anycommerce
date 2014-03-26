@@ -131,58 +131,71 @@
 	
 	<section id='comparison-tests'>
 		<h6>Used for comparison tests in conjunction with 'is'</h6>
-		<div data-testtype='output-compare' data-output='= bob' data-tlc="bind $var '.name'; if(is $var --eq='bob') {{apply --append;}};" data-testname="eq w/ match" >= </div>
-		<div data-testtype='output-compare' data-output='= ' data-tlc="bind $var '.name'; if(is $var --eq='bobs') {{apply --append;}};" data-testname="eq w/out match" >= </div>
+		<ol>
+		<li data-testtype='output-compare' data-output='= bob' data-tlc="bind $var '.name'; if(is $var --eq='bob') {{apply --append;}};" data-testname="eq w/ match" >= </li>
+		<li data-testtype='output-compare' data-output='= ' data-tlc="bind $var '.name'; if(is $var --eq='bobs') {{apply --append;}};" data-testname="eq w/out match" >= </li>
 
-		<div data-testtype='output-compare' data-output='!= ' data-tlc="bind $var '.name'; if(is $var --ne='bob') {{apply --append;}};" data-testname="ne w/ match" >!= </div>
-		<div data-testtype='output-compare' data-output='!= bob' data-tlc="bind $var '.name'; if(is $var --ne='bobs') {{apply --append;}};" data-testname="ne w/out match" >!= </div>
+		<li data-testtype='output-compare' data-output='!= ' data-tlc="bind $var '.name'; if(is $var --ne='bob') {{apply --append;}};" data-testname="ne w/ match" >!= </li>
+		<li data-testtype='output-compare' data-output='!= bob' data-tlc="bind $var '.name'; if(is $var --ne='bobs') {{apply --append;}};" data-testname="ne w/out match" >!= </li>
 
-		<div data-testtype='output-compare' data-output='gt 10' data-tlc="bind $var '.number'; if(is $var --gt='9') {{apply --append;}};" data-testname="gt true" >gt </div>
-		<div data-testtype='output-compare' data-output='gt ' data-tlc="bind $var '.number'; if(is $var --gt='11') {{apply --append;}};" data-testname="gt false " >gt </div>
+		<li data-testtype='output-compare' data-output='gt 10' data-tlc="bind $var '.number'; if(is $var --gt='9') {{apply --append;}};" data-testname="gt true" >gt </li>
+		<li data-testtype='output-compare' data-output='gt ' data-tlc="bind $var '.number'; if(is $var --gt='11') {{apply --append;}};" data-testname="gt false " >gt </li>
 		
-		<div data-testtype='output-compare' data-output='lt 10' data-tlc="bind $var '.number'; if(is $var --lt='11') {{apply --append;}};" data-testname="lt true" >lt </div>
-		<div data-testtype='output-compare' data-output='lt ' data-tlc="bind $var '.number'; if(is $var --lt='9') {{apply --append;}};" data-testname="lt false " >lt </div>
+		<li data-testtype='output-compare' data-output='lt 10' data-tlc="bind $var '.number'; if(is $var --lt='11') {{apply --append;}};" data-testname="lt true" >lt </li>
+		<li data-testtype='output-compare' data-output='lt ' data-tlc="bind $var '.number'; if(is $var --lt='9') {{apply --append;}};" data-testname="lt false " >lt </li>
 <!-- true -->
-		<div data-testtype='output-compare' data-output='true true' data-tlc="bind $var '.boolean-true'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .boolean-true" >true </div>
-		<div data-testtype='output-compare' data-output='true bob' data-tlc="bind $var '.name'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .name" >true </div>
-		<div data-testtype='output-compare' data-output='true 10' data-tlc="bind $var '.number'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .number" >true </div>
-		<div data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.boolean-false'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .boolean-false" >true </div>
-		<div data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.blank'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .blank" >true </div>
-		<div data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.null'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .null" >true </div>
+		<li data-testtype='output-compare' data-output='true true' data-tlc="bind $var '.boolean-true'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .boolean-true" >true </li>
+		<li data-testtype='output-compare' data-output='true bob' data-tlc="bind $var '.name'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .name" >true </li>
+		<li data-testtype='output-compare' data-output='true 10' data-tlc="bind $var '.number'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .number" >true </li>
+		<li data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.boolean-false'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .boolean-false" >true </li>
+		<li data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.blank'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .blank" >true </li>
+		<li data-testtype='output-compare' data-output='true ' data-tlc="bind $var '.null'; if(is $var --true) {{apply --append;}};" data-testname="true - value from .null" >true </li>
 <!-- false -->
-		<div data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.boolean-true'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .boolean-true" >false </div>
-		<div data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.name'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .name" >false </div>
-		<div data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.number'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .number" >false </div>
-		<div data-testtype='output-compare' data-output='false false' data-tlc="bind $var '.boolean-false'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .boolean-false" >false </div>
-		<div data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.blank'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .blank" >false </div>
-		<div data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.null'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .null" >false </div>
+		<li data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.boolean-true'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .boolean-true" >false </li>
+		<li data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.name'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .name" >false </li>
+		<li data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.number'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .number" >false </li>
+		<li data-testtype='output-compare' data-output='false false' data-tlc="bind $var '.boolean-false'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .boolean-false" >false </li>
+		<li data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.blank'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .blank" >false </li>
+		<li data-testtype='output-compare' data-output='false ' data-tlc="bind $var '.null'; if(is $var --false) {{apply --append;}};" data-testname="false - value from .null" >false </li>
 <!-- blank -->
-		<div data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.boolean-true'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .boolean-true" >blank </div>
-		<div data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.name'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .name" >blank </div>
-		<div data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.number'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .number" >blank </div>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.boolean-true'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .boolean-true" >blank </li>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.name'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .name" >blank </li>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.number'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .number" >blank </li>
 		<!-- 'false' is currently treated as NOT blank -->
-		<div >
-			Blank Boolean false: 
-			<span data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.boolean-false'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .boolean-false">blank </span>
-		</div>
-		<div >
-			Blank String false: 
-			<span data-testtype='output-compare' data-output='string false blank ' data-tlc="bind $var '.string-false'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .string-false">string false blank </span>
-		</div>
-		<div data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.blank'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .blank" >blank </div>
-		<div data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.null'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .null" >blank </div>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.boolean-false'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .boolean-false">blank </li>
+		<li data-testtype='output-compare' data-output='string false blank ' data-tlc="bind $var '.string-false'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .string-false">string false blank </li>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.blank'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .blank" >blank </li>
+		<li data-testtype='output-compare' data-output='blank ' data-tlc="bind $var '.null'; if(is $var --blank) {{apply --append;}};" data-testname="blank - value from .null" >blank </li>
 <!-- notblank -->
-		<div data-testtype='output-compare' data-output='notblank true' data-tlc="bind $var '.boolean-true'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .boolean-true" >notblank </div>
-		<div data-testtype='output-compare' data-output='notblank bob' data-tlc="bind $var '.name'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .name" >notblank </div>
-		<div data-testtype='output-compare' data-output='notblank 10' data-tlc="bind $var '.number'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .number" >notblank </div>
-		<div>
-			Notblank Boolean false: 
-			<span  data-testtype='output-compare' data-output='notblank false' data-tlc="bind $var '.boolean-false'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .boolean-false">notblank </span>
-		</div>
-		<div data-testtype='output-compare' data-output='notblank ' data-tlc="bind $var '.blank'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .blank" >notblank </div>
-		<div data-testtype='output-compare' data-output='notblank ' data-tlc="bind $var '.null'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .null" >notblank </div>
+		<li data-testtype='output-compare' data-output='notblank true' data-tlc="bind $var '.boolean-true'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .boolean-true" >notblank </li>
+		<li data-testtype='output-compare' data-output='notblank bob' data-tlc="bind $var '.name'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .name" >notblank </li>
+		<li data-testtype='output-compare' data-output='notblank 10' data-tlc="bind $var '.number'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .number" >notblank </li>
+		<li data-testtype='output-compare' data-output='notblank false' data-tlc="bind $var '.boolean-false'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .boolean-false">notblank </li>
+		<li data-testtype='output-compare' data-output='notblank ' data-tlc="bind $var '.blank'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .blank" >notblank </li>
+		<li data-testtype='output-compare' data-output='notblank ' data-tlc="bind $var '.null'; if(is $var --notblank) {{apply --append;}};" data-testname="notblank - value from .null" >notblank </li>
 
-</div>
+<!-- null -->
+		<li data-testtype='output-compare' data-output='null ' data-tlc="bind $var '.boolean-true'; if(is $var --null) {{apply --append;}};" data-testname="null - value from .boolean-true" >null </li>
+		<li data-testtype='output-compare' data-output='null ' data-tlc="bind $var '.name'; if(is $var --null) {{apply --append;}};" data-testname="null - value from .name" >null </li>
+		<li data-testtype='output-compare' data-output='null ' data-tlc="bind $var '.number'; if(is $var --null) {{apply --append;}};" data-testname="null - value from .number" >null </li>
+		<li data-testtype='output-compare' data-output='null ' data-tlc="bind $var '.boolean-false'; if(is $var --null) {{apply --append;}};" data-testname="null - value from .boolean-false" >null </li>
+		<li data-testtype='output-compare' data-output='null ' data-tlc="bind $var '.blank'; if(is $var --null) {{bind $name '.name'; apply --append;}};" data-testname="null - value from .blank" >null </li>
+		<!-- .name is used for the actual output because testing for a blank against what would output as a blank could give inaccurate results. -->
+		<li data-testtype='output-compare' data-output='null bob' data-tlc="bind $var '.null'; if(is $var --null) {{bind $name '.name'; apply --append;}};" data-testname="null - value from .null" >null </li>
 
+<!-- notnull -->
+		<li data-testtype='output-compare' data-output='notnull true' data-tlc="bind $var '.boolean-true'; if(is $var --notnull) {{apply --append;}};" data-testname="notnull - value from .boolean-true" >notnull </li>
+		<li data-testtype='output-compare' data-output='notnull bob' data-tlc="bind $var '.name'; if(is $var --notnull) {{apply --append;}};" data-testname="notnull - value from .name" >notnull </li>
+		<li data-testtype='output-compare' data-output='notnull 10' data-tlc="bind $var '.number'; if(is $var --notnull) {{apply --append;}};" data-testname="notnull - value from .number" >notnull </li>
+		<li data-testtype='output-compare' data-output='notnull false' data-tlc="bind $var '.boolean-false'; if(is $var --notnull) {{apply --append;}};" data-testname="notnull - value from .boolean-false" >notnull </li>
+		<li data-testtype='output-compare' data-output='notnull bob' data-tlc="bind $var '.blank'; if(is $var --notnull) {{bind $name '.name'; apply --append;}};" data-testname="notnull - value from .blank" >notnull </li>
+		<!-- .name is used for the actual output because testing for a blank against what would output as a blank could give inaccurate results. -->
+		<li data-testtype='output-compare' data-output='notnull ' data-tlc="bind $var '.null'; if(is $var --notnull) {{bind $name '.name'; apply --append;}};" data-testname="notnull - value from .null" >notnull </li>
+		</ol>
+
+
+	</section>
+
+</div><!-- /sampleTemplate -->
 </body>
 </html>

@@ -82,6 +82,7 @@ var admin_support = function(_app) {
 				
 				_app.ext.admin_support.a.showHelpInterface($target,P);
 				
+				$target.append("<div class='clearfix'></div>");
 				
 				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Ticket Manager',
