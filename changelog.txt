@@ -10,11 +10,12 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 GLOBAL
 	introduction of a new templating language, data-tlc. Data-bind will be supported for another few versions.
+	introduction of unit-test for TLC (still in development).
 
 ADMIN
-	new plugins for shipping: ShipWorks and ShipStation.
-	new email manager interface in utilities.
-	new interface for building/managing macros (define custom macros!) and blast 'send' properties in utilities.
+	plugins section in setup renamed 'integrations'.
+	new integration for shipping: ShipWorks and ShipStation (in integrations).
+	new email manager interface in setup (store properties panel). Lots of new features here.
 	new email send interface (linked from orders and customer editor).
 	enhancements to cart messaging (more admin events get logged).
 	A plethora of bug fixes.
@@ -25,6 +26,13 @@ ADMIN
 		- new popup-less print method (we tested FF, Chrome and IE, plus iOS7. still printing issues in droid/chrome)
 		- print option added as contextual menu in order list
 	new button in the coupon and shipping interface for downloading the rules (creates a batch process).
+	downloads link moved to the vstore section of setup.
+	help docs added to support page and removed from header.
+	COD and CHKOD handling charge removed from UI (wasn't a supported feature).
+	changes to passwords for customers
+		- customer passwords are now more secure, they do NOT show up in the admin interface.
+		- temporary passwords can be created so admins can log in as customers.
+		- some changes to the customer editor to accomodate these password-related updates.
 
 QUICKSTART
 	update to the new TLC template language.
