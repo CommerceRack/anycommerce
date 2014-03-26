@@ -104,7 +104,16 @@ var admin_blast = function(_app) {
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
 								// the accordion does get initiated here because the left column looked out of place for too long.
 								$(".slimLeftNav .accordion",$target).accordion('refresh');
-								
+								//handle loading the content. 
+								if(params.msgid)	{
+									$("[data-msgid='"+_app.u.jqSelector('',params.msgid)+"']",$target).trigger('click').closest('.ui-accordion-content').prev('.ui-accordion-header').trigger('click');
+									}
+								else if(params.setting)	{
+									$("[data-setting='"+_app.u.jqSelector('',params.setting)+"']",$target).trigger('click');
+									}
+								else	{
+									$("[data-setting='general']",$target).trigger('click');
+									}
 								}
 							}
 						}
@@ -205,10 +214,8 @@ var admin_blast = function(_app) {
 				}, //blastTool
 
 			blastMacroProperyEditor : function($target,params)	{
-				if($target.closest('.ui-dialog-content').length)	{}
-				else	{$target.addClass('ui-widget ui-widget-content stdPadding ui-corner-all')}
 				$target.showLoading({"message":"Fetching macro properties"});
-				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","templateid":"blastMacroProperyEditorTemplate","jqObj":$target,"trackChanges":true}},"mutable");
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","templateid":"blastMacroProperyEditorTemplate","jqObj":$target,"trackEdits":true}},"mutable");
 				_app.model.dispatchThis("mutable");
 				_app.u.addEventDelegation($target);
 				},
@@ -308,6 +315,36 @@ var admin_blast = function(_app) {
 					}
 				}, //msgDetailView
 
+			adminBlastSettingsEdit : function($ele,P)	{
+				if($ele.data('setting'))	{
+					$ele.closest('.slimLeftNav').find('.ui-state-focus').removeClass('ui-state-focus');
+					$ele.addClass('ui-state-focus');
+					var $target = $ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContentContainer']").empty();
+					
+					if($ele.data('setting') == 'general')	{
+						$target.tlc({'templateid':'blastSettingsGlobalTemplate',"dataset":_app.data['adminConfigDetail|'+_app.vars.partition+'|blast']});
+						_app.u.handleCommonPlugins($target);
+						$('form',$target).anyform({trackEdits:true});
+						_app.u.handleButtons($target);
+						_app.ext.admin_blast.a.blastMacroProperyEditor($("[data-app-role='propertiesContainer']",$target));
+						}
+					else if($ele.data('setting') == 'macros')		{
+						_app.ext.admin_blast.a.blastMacroEditor($target);
+						}
+					else if($ele.data('setting') == 'addmessage')	{
+						$target.tlc({'templateid':'blastMessageAddTemplate','verb':'template'});
+						$('form',$target).anyform();
+						_app.u.handleButtons($target);
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_blast.e.adminBlastSettingsEdit, invalid data.setting ["+$ele.data('setting')+"] set on trigger element.","gMessage":true});
+						}
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_blast.e.adminBlastSettingsEdit, no data.setting set on trigger element.","gMessage":true});
+					}
+				},
+
 			adminBlastMsgSendTestShow : function($ele,P)	{
 				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
@@ -331,8 +368,7 @@ var admin_blast = function(_app) {
 						else	{
 							//sample action. success would go here.
 							$('#globalMessaging').anymessage(_app.u.successMsgObject('The message has been added.'));
-							$ele.closest('.ui-dialog-content').dialog('close');
-							navigateTo("#!ext/admin_blast/blastMessagesList");
+							navigateTo("#!ext/admin_blast/blastMessagesList?setting=addmessage");
 							}
 						}}},"immutable");
 					_app.model.dispatchThis("immutable");
@@ -373,22 +409,6 @@ var admin_blast = function(_app) {
 					}
 				},
 
-			adminBlastMsgCreateShow : function($ele,P)	{
-				if($ele.data('msgtype'))	{
-					var $D = _app.ext.admin.i.dialogCreate({
-						title : "Create New Blast Message",
-						tlc : {'templateid':'blastMessageAddTemplate',dataset : {'msgtype':$ele.data('msgtype')}},
-						anycontent : false, //the dialogCreate params are passed into anycontent
-						handleAppEvents : false //defaults to true
-						});
-					$D.dialog('option','width',($(document.body).width() < 350 ? '90%' : 350));
-					$D.dialog('open');
-					}
-				else	{
-					$("#globalMessaging").anymessage({"message":"In admin_blast.e.msgTestShow, no data.receiver set on trigger element.","gMessage":true});
-					}
-				return false;
-				},
 
 //applied to the select list that contains the list of messages in the blast tool. on change, it puts the message body into the textarea.
 			updateBlastInputsBySource : function($ele,P)	{
@@ -433,21 +453,6 @@ var admin_blast = function(_app) {
 				}, //msgBlastSendExec
 
 /* blast macro */
-
-			blastMacroProperyEditorShow : function()	{
-
-				var $D = _app.ext.admin.i.dialogCreate({
-					title : "Edit Properties",
-					'showLoading' : false,
-					handleAppEvents : false //defaults to true
-					});
-				
-				$D.dialog('open');
-				_app.ext.admin_blast.a.blastMacroProperyEditor($D);
-				
-
-				
-				},
 
 			blastMacroDeleteConfirm : function($ele,P)	{
 				var macroid = $ele.closest('tr').data('macroid');

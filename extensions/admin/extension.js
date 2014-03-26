@@ -3626,6 +3626,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 		e : {
 			
 			showMenu : function($ele,p)	{
+				p.preventDefault();
 //				_app.u.dump("admin.e.showMenu (Click!)");
 //If you open a menu, then immediately open another with no click anywhere between, the first menu doesn't get closed. the hide() below resolves that.
 				$('menu.adminMenu:visible').hide();
