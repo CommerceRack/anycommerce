@@ -243,11 +243,14 @@ var admin_config = function(_app) {
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$target.anycontent({'templateID':'paymentAvailabilityTemplate',data : payData});
 							break;
-						
-						
-						case 'CHECK':
+						// ** 201402 -> these payment types no longer support a handling fee.
 						case 'COD':
 						case 'CHKOD':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
+							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
+							break;
+						
+						case 'CHECK':
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentHandlingFeeTemplate',data : payData}).appendTo($target);
