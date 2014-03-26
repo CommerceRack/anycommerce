@@ -13,6 +13,7 @@
 			},
 		_init : function(){
 			var o = this.options;
+			this.element.data('isTLC',true);  //a data tag to key off of so a destroy can be run, if need be.
 			//one of these three must be set or running this doesn't really serve any purpose.
 			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(o.extendByDatapointers))	{
 				//first, resolve 'dataset' so that singular object can be used for any translations.
@@ -192,7 +193,7 @@ var tlc = function()	{
 						},dataset);
 					}
 				else	{
-					dump("couldn't parse a tlc",'warn');
+					dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 					//could not parse tlc. error already reported.
 					}
 	//			dump("----------------> end $tag <-----------------");
@@ -407,7 +408,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		// ### TODO -> need to update the verbs to support apply ~someothertag --dataset=$var --someVerb
 		var $tag = globals.tags[globals.focusTag];
 		var data = argObj.variable ? globals.binds[argObj.variable] : globals.binds[globals.focusBind];
-		
+		//if the booleans are not stringified, append/prepend won't output them.
+		if(data === true || data === false)	{data = data.toString()}
 		switch(verb)	{
 //new Array('empty','hide','show','add','remove','prepend','append','replace','inputvalue','select','state','attrib'),
 			case 'empty': $tag.empty(); break;
@@ -475,7 +477,16 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.comparison = function(op,p1,p2)	{
 		var r = false;
-		
+
+		function isBlank(v)	{
+			var isBlank = false;
+			//not set and undefined are blank.  null or false is NOT blank.
+			if(v == 'false' || v === false || v == null)	{isBlank = false}
+			else if(v == '' || v == undefined)	{isBlank = true;}
+			else	{}
+			return  isBlank;
+			}
+
 		switch(op)	{
 			case "eq":
 				if(p1 == p2){ r = true;} break;
@@ -486,15 +497,15 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "lt":
 				if(Number(p1) < Number(p2)){r = true;} break;
 			case "true":
-				if(p1){r = true;}; break;
+				if(p1){r = true}; break;
 			case "false":
-				if(!p1){r = true;}; break;
+				if(p1 == false)	{r = true;} //non 'type' comparison in case the value 'false' is a string.
+				else if(!p1){r = true}; break;
 			case "blank":
-				if(p1 == '' || p1 == undefined){r = true;}; break;
+				r = isBlank(p1);
+				break;
 			case "notblank":
-				if(p1 == false || p1 == 'undefined' || p1 == null){r = false;}
-				else	{r = true;}
-//				dump(" -> p1: "+p1+' and r: '+r);
+				r = isBlank(p1) ? false : true; //return the opposite of blank.
 				break;
 			case "null":
 				if(p1 == null){r = true;}; break;
@@ -536,9 +547,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 		return r;
 		} //currency
 
-	this.format_prepend = function(argObj,globals)	{
-		console.log(" -> got to prepend. value: "+arg.type);
-		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
+	this.format_prepend = function(argObj,globals,arg)	{
+		var r = (arg.type == 'longopt' ? arg.value.value : arg.value)+globals.binds[argObj.bind]
 		return r;
 		} //prepend
 
@@ -588,7 +598,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //truncate
 
 	this.format_uriencode = function(argObj,globals)	{
-		var r = encodeURI(globals.binds[argObj.bind]);
+		var r = encodeURIComponent(globals.binds[argObj.bind]);
 		return r;
 		} //truncate
 
@@ -941,30 +951,41 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleCommand_math = function(cmd,globals)	{
-		var value = Number(globals.binds[globals.focusBind]);
-		if(!isNaN(value))	{
+		var bind = Number(globals.binds[globals.focusBind]);
+		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-				switch(cmd.args[i].key)	{
-					case "add":
-						value += cmd.args[i].value.value; break;
-					case "sub":
-						value -= cmd.args[i].value.value; break;
-					case "mult":
-						value *= cmd.args[i].value.value; break;
-					case "div":
-						value /= cmd.args[i].value.value; break;
-					case "precision":
-						value = value.toFixed(cmd.args[i].value.value); break;
-					case "percent":
-						value = (value/100).toFixed(0); break;
+				var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
+//				console.log("MATH -> bind: "+bind,"value: "+value);
+//				console.log(" cmd.args[i].key -> "+cmd.args[i].key);
+				if(!isNaN(value))	{
+					switch(cmd.args[i].key)	{
+						case "add":
+							bind += value; break;
+						case "sub":
+							bind -= value; break;
+						case "mult":
+							bind *= value; break;
+						case "div":
+							bind /= value; break;
+						case "precision":
+							bind = bind.toFixed(value); break;
+// percentage is not currently supported.
+//						case "percent":
+//							bind = (bind/100).toFixed(0); break;
+						default:
+							dump("Unsupported method for math: "+cmd.args[i].key,'warn')
+						}
+					}
+				else	{
+					dump(" -> handleCommand_math was run on a value ["+value+" which is not a number.");
 					}
 				}
-			globals.binds[globals.focusBind] = value;
+			globals.binds[globals.focusBind] = bind;
 			}
 		else	{
-			dump(" -> handleCommand_math was run on a value ["+globals.binds[globals.focusBind]+" which is not a number.");
+			dump(" -> handleCommand_math was run on a bind ["+globals.binds[globals.focusBind]+" which is not a number.");
 			}
-		return value;
+		return bind;
 		}
 
 	this.handleCommand_datetime = function(cmd,globals)	{
@@ -972,8 +993,6 @@ returning a 'false' here will exit the statement loop.
 		var value = globals.binds[globals.focusBind];
 		if(value)	{
 			var argObj = this.args2obj(cmd.args,globals), d = new Date(value*1000);
-	
-	
 			if(isNaN(d.getMonth()+1))	{
 				dump("In handleCommand_datetime, value ["+value+"] is not a valid time format for Date()",'warn');
 				}
@@ -1056,7 +1075,7 @@ returning a 'false' here will exit the statement loop.
 					}
 				}
 			else	{
-				dump("couldn't parse a tlc",'warn');
+				dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 				//could not parse tlc. error already reported.
 				}
 			});

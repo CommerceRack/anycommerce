@@ -637,7 +637,18 @@ $D is returned.
 					}
 				return newSfo;
 				}, //adminGiftcardMacro
-	
+			'adminCustomerUpdatePassword' : function(sfo,$form)	{
+				sfo['@updates'] = new Array();
+				sfo._cmd = 'adminCustomerUpdate';
+				sfo['@updates'].push("PASSWORD-SET?password="+encodeURIComponent(sfo.password)); //password needs to be encoded (required for & and + to be acceptable password characters)
+				if(sfo.sendblast)	{
+					sfo['@updates'].push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
+					}
+				//these are no longer necessary.
+				delete sfo.sendblast;
+				delete sfo.password;
+				return sfo;
+				},
 			'adminFAQMacro' : function(sfo,$form)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
@@ -1414,7 +1425,11 @@ _app.model.dispatchThis('immutable');
 						updates.push("CREATE?email="+formObj.email); //setting email @ create is required.
 						if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
 						if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
-						if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+						// *** 201402 -> macro ID for passwordreset changed to PASSWORD-SET
+						if(formObj.generatepassword)	{
+							updates.push("PASSWORD-SET?password=");
+							updates.push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
+							} //generate a random password
 						
 						// $('body').showLoading("Creating customer record for "+formObj.email);
 						_app.model.addDispatchToQ({
@@ -1517,19 +1532,17 @@ _app.model.dispatchThis('immutable');
 								}
 							}
 						else if($tag.is('input') || $tag.is('select'))	{
-							if($tag.attr('name') == 'password')	{
-								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); //password needs to be encoded (required for & and + to be acceptable password characters)
-								}
-							else if(pr == 'general')	{
+							
+							if(pr == 'general')	{
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
 								}
 							else if(pr == 'newsletter')	{
 								general += $tag.attr('name')+"="+handleCheckbox($tag)+"&";
 								}
-						else if(pr == 'organization')	{
-//								_app.u.dump(" -> orgid being set to: "+$tag.val());
-								macros.push("LINKORG?orgid="+$tag.val());
-								}
+							else if(pr == 'organization')	{
+	//								_app.u.dump(" -> orgid being set to: "+$tag.val());
+									macros.push("LINKORG?orgid="+$tag.val());
+									}
 							else	{
 								$panel.anymessage({'message':'In admin_customer.e.adminEditorSave, panel role ['+pr+'] not an expected type'});
 								}
@@ -1574,7 +1587,7 @@ _app.model.dispatchThis('immutable');
 					$ele.closest('form').anymessage({'message':'In admin_customer.e.execCustomerEditorSave, unable to ascertain CID.','gMessage':true});
 					}
 				}, //customerEditorSave
-				
+
 			refreshCustomerPanel : function($ele,p){
 				var panel = $ele.data('panel');
 				if(panel)	{
@@ -1726,6 +1739,51 @@ _app.model.dispatchThis('immutable');
 					}).appendTo($modal);
 		
 				}, //execHintReset
+				
+			passwordChangeShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Change Password",
+					templateID : 'customerPasswordChangeTemplate',
+					showLoading : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$D.tlc({'verb':'translate','dataset':{'CID':$ele.closest("[data-cid]").data('cid')}});
+				$D.dialog('open');
+				},
+				//used in the customer editor to allow merchants to generate a temporary password. This would allow the merchant to log in AS the customer without changing their password.
+			passwordCreateTemporaryExec : function($ele,P)	{
+				P.preventDefault();
+				if($ele.hasClass('ui-button'))	{$ele.button('disable')} //prevent double-click.
+			
+				_app.model.addDispatchToQ({"_cmd":"adminCustomerUpdate","CID":$ele.closest("[data-cid]").data('cid'),"@updates":["PASSWORD-RECOVER"],"_tag":{
+					"datapointer":"adminCustomerUpdate",
+					"callback":function(rd){
+						if($ele.hasClass('ui-button'))	{$ele.button('enable')} //prevent double-click.
+						if(_app.model.responseHasErrors(rd)){
+							$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							if(_app.u.thisNestedExists("data."+rd.datapointer+".PASSWORD-RECOVER.password",_app))	{
+								$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({
+									'errtype':'success','iconClass':'app-icon-success',
+									'message' : 'Temporary password generated: '+_app.data[rd.datapointer]['PASSWORD-RECOVER'].password,
+									'persistant' : true,
+									'msgType' : 'success'
+									});
+								delete _app.data[rd.datapointer]; //no sense keeping this around.
+								}
+							else	{
+								$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({'message':'The call succeeded as expected, but the response format did not contain the temporary password as expected.','gMessage':true});
+								}
+							}
+						}
+					}},"mutable");
+				_app.model.dispatchThis("mutable");
+				//for success messaging: 
+				},
 
 			execNoteCreate : function($ele,P)	{
 				P.preventDefault();
@@ -1820,7 +1878,7 @@ _app.model.dispatchThis('immutable');
 					})
 				
 				}, //saveOrgToField
-			
+
 			showBlastTool : function($ele,P)	{
 				P.preventDefault();
 				var CID = $ele.closest("[data-cid]").data('cid');
@@ -1980,7 +2038,7 @@ _app.model.dispatchThis('immutable');
 				_app.u.handleCommonPlugins($panel);
 				_app.u.handleButtons($panel);
 				$panel.anyform({'trackEdits':true});
-				},
+				}
 
 
 			} //e [app Events]

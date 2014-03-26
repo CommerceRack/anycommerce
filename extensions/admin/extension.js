@@ -991,7 +991,12 @@ $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function
 		}
 	else if($tmp.attr('data-status') == 'error')	{
 		eCount += 1;
-		eReport += "<li>"+$tmp.attr('data-pid')+": "+_app.data[$tmp.attr('data-pointer')].errmsg+" ("+_app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+		if($tmp.attr('data-pointer') && _app.data[$tmp.attr('data-pointer')])	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": "+_app.data[$tmp.attr('data-pointer')].errmsg+" ("+_app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+			}
+		else	{
+			eReport += "<li>"+$tmp.attr('data-pid')+": an unknown error has occured.<\/li>";
+			}
 		}
 	});
 
@@ -1055,12 +1060,12 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 			onError : function(d)	{
 //				_app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				var tmp = _app.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
+				var tmp = d._rtag.datapointer.split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
 //on an insert, the li will be in finderTargetList... but on a remove, the li will be in finderRemovedList_...
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
-				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':tagObj.datapointer});
+				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':d._rtag.datapointer});
 //				_app.u.dump(d);
 				}
 			}, //finderProductUpdate
@@ -1314,6 +1319,10 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 //				dump("BEGIN navigateTo "+path);
 				opts = opts || {};
 				var newHash = path;
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent currently in focus. Works with a similar piece of code in execApp
+				$('.ui-tooltip',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).intervaledEmpty();
 //sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
 				if(path == document.location.hash)	{
 					adminApp.router.handleHashChange();
@@ -1379,6 +1388,12 @@ _app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.g
 					tab = opts.tab || _app.ext.admin.vars.tab,
 					$tab = $(_app.u.jqSelector('#',tab+"Content")),
 					$target = $("<div \/>").addClass('contentContainer'); //content is added to a child, which is then added to the tab. ensures the tab container is left alone (no data or anything like that to get left over)
+				
+				//* 201402 -> there's a bug in jquery UI that sometimes causes tooltips to not close (related to dynamic content).
+				//this will remove the tooltips for the tabContent coming in to focus. There is some similar code in navigateTo
+				$('.ui-tooltip',$tab).intervaledEmpty();
+				
+				
 				if(ext && a && _app.u.thisNestedExists("ext."+ext+".a."+a,_app))	{
 					$tab.data('focusHash',"ext/"+ext+"/"+a); //remember what app is in focus so when tab is clicked, the correct hash can be displayed.
 					$tab.intervaledEmpty().append($target);
@@ -3611,6 +3626,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 		e : {
 			
 			showMenu : function($ele,p)	{
+				p.preventDefault();
 //				_app.u.dump("admin.e.showMenu (Click!)");
 //If you open a menu, then immediately open another with no click anywhere between, the first menu doesn't get closed. the hide() below resolves that.
 				$('menu.adminMenu:visible').hide();

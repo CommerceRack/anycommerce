@@ -27,15 +27,27 @@ function loadGrammar()	{
 			}
 		});
 	}
+//dump is used in tlc 
+function dump(v)	{
+	if(typeof console != 'undefined')	{console.log(v)}
+	}
 
 
 function runTests()	{
 	$._app = {'vars':{}} //tlc checks this for a debug var (not part of this test)
 	var dataset = {
 		'name' : 'bob',
+		longString : 'this is a long string to use for testing.',
+		'epochts' : 1395787429,
 		number : 10,
+		blank : '',
+		'null' : null,
+		smallArray : ["frank","albert","tom","harry"],
+		smallHash : {'name':'ron','nickname' : 'tater salad'},
+		price : 24.95,
 		'boolean-true' : true,
-		'boolean-false' : false
+		'boolean-false' : false,
+		'string-false' : 'false'
 		}
 
 	$('#sample-template').tlc({'verb':'translate','dataset':dataset});
@@ -49,28 +61,32 @@ function runTests()	{
 				//add this to an element that has it's own test. That way it doesn't throw a warning to the console.
 				break;
 			case 'output-compare':
-				ok( $ele.data('output') == $ele.text(), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('output') == $ele.text(), $ele.data('testname') || 'Passed!' );
+				break;
+			case 'string-compare':
+				//a separate test type was needed for stringify. data-compare="{'something'... was converted to an object by jquery.
+				ok( JSON.stringify($ele.data('string')) == $ele.text(), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'visible':
-				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('visible') == $ele.is(':visible'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'add-class':
-				ok( $ele.hasClass($ele.data('class')) == true, $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.hasClass($ele.data('class')) == true, $ele.data('testname') || 'Passed!' );
 				break;
 			case 'remove-class':
-				ok( $ele.hasClass($ele.data('class')) == false, $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.hasClass($ele.data('class')) == false, $ele.data('testname') || 'Passed!' );
 				break;
 			case 'input-value':
-				ok( $ele.data('value') == $ele.val(), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('value') == $ele.val(), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'is-checked':
-				ok( $ele.data('checked') == $ele.is(':checked'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('checked') == $ele.is(':checked'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'is-selected':
-				ok( $ele.data('selected') == $ele.is(':selected'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.data('selected') == $ele.is(':selected'), $ele.data('testname') || 'Passed!' );
 				break;
 			case 'attrib':
-				ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), $ele.data('passedtext') || 'Passed!' );
+				ok( $ele.attr($ele.data('attrib')) == $ele.data('attribvalue'), $ele.data('testname') || 'Passed!' );
 				break;
 			
 			default:
@@ -90,9 +106,40 @@ function runTests()	{
 		//now run the 'unique' tests.
 		ok($('#child-gets-replaced').html() == 'bob', "replace" );
 		});
-	
 	test( "TLC Formats", function() {
 		$("[data-tlc]",'#format-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC Math", function() {
+		$("[data-tlc]",'#math-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});	
+	test( "TLC Time", function() {
+		$("[data-tlc]",'#time-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC Stringify", function() {
+		$("[data-tlc]",'#stringify-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC Comparisons", function() {
+		$("[data-tlc]",'#comparison-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);

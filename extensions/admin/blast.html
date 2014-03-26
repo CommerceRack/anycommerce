@@ -1,20 +1,16 @@
 <div id='blastManagerTemplate' data-app-role='slimLeftContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
-
-		<!-- a container is necessary around this button for positioning of the menu -->
-		<div class='buttonset marginBottom'>
-			<button class='applyButton' data-icon-secondary='ui-icon-triangle-1-s' data-icon-primary='ui-icon-plus' data-text='true' data-app-click='admin|showMenu'>Add Message</button>
-			<menu data-app-role='messageBlastCreateList' class='displayNone'>
-				<li><a href='#' data-msgtype='CUSTOMER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Customer</a></li>
-				<li><a href='#' data-msgtype='ORDER' data-app-click='admin_blast|adminBlastMsgCreateShow'>Order</a></li>
-				<li><a href='#' data-msgtype='PRODUCT' data-app-click='admin_blast|adminBlastMsgCreateShow'>Product</a></li>
-				<li><a href='#' data-msgtype='SUPPLY' data-app-click='admin_blast|adminBlastMsgCreateShow'>Supply</a></li>
-				<li><a href='#' data-msgtype='TICKET' data-app-click='admin_blast|adminBlastMsgCreateShow'>Ticket</a></li>
-			</menu>
-		</div>	
-	
 		<div class='accordion marginBottom'>
+			<h2>Settings</h2>
+			<div>
+				<ul class='noPadOrMargin listStyleNone'>
+					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
+					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
+					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Macros</li>
+				</ul>
+			</div>
+		
 			<h2>Order</h2>
 			<div>
 				<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
@@ -34,24 +30,34 @@
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+<!--	
 			<h2>Supply Chain</h2>
 			<div>
 				<ul data-app-role="blastmessages_SUPPLY" class='noPadOrMargin listStyleNone'></ul>
 			</div>
+-->
 		</div>
 
 	</section>
 	
 	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
-		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
+		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer clearfix' data-app-role='slimLeftContentContainer'>
 		<!-- page contents will go here -->
 		
+		
+		</div>
+	</section>
+
+</div>
+
+
+<div id='blastSettingsGlobalTemplate'>
+	<section>
 		<form data-app-submit='admin|submitForm'>
-<input type='hidden' name='_macrobuilder' value='admin_blast|blastSet' />
-<input type='hidden' name='_tag/callback' value='showMessaging' />
-<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
-<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+		<input type='hidden' name='_macrobuilder' value='admin_blast|blastSet' />
+		<input type='hidden' name='_tag/callback' value='showMessaging' />
+		<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+		<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
 		<fieldset class='labelsAsBreaks'>
 			<legend>Global Settings</legend>
@@ -63,24 +69,45 @@
 			</label>
 			
 		</fieldset>
-		<button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+		<!-- a container is necessary around this button for positioning of the menu -->
+		<div class='buttonset marginBottom'>
+			<button class='applyButton ' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+		</div>		
+		
 		</form>
-		
-		
-		</div>
 	</section>
+	
+	<section data-app-role='propertiesContainer'>
+	
+	
+	</section>
+
 
 </div>
 
 
+
 <div id='blastMessageAddTemplate'>
 	<form action='#' data-app-submit='admin_blast|adminBlastMsgCreateExec' novalidate>
-	<input type='hidden' name='msgtype' data-tlc="bind $var '.msgtype'; apply --select=$var;" />
-	<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<fieldset class='labelsAsBreaks'>
 		<label>
-			<span>Message id</span>
-			<span data-tlc="bind $var '.msgtype'; format --append='.'; apply --append;"></span>
-			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='requied' />
+			<span class='prompt'>Message type</span>
+			<select name='msgtype' required='required'>
+				<option value=''>please choose</option>
+				<option value='CUSTOMER'>Customer</option>
+				<option value='ORDER'>Order</option>
+				<option value='PRODUCT'>Product</option><!--
+				<option value='SUPPLY'>Supply</option>-->
+				<option value='TICKET'>Ticket</option>
+			</select>
+		</label>
+
+
+		<label>
+			<span class='prompt'>Message id</span>
+			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='required' />
+			<span class='toolTip' title="A short, alphanumeric ID for the message. The message type (order, customer, etc) will be automatically be prepended. The message ID should be short but descriptive of what the message will be used for. ex: CANCELLED or CLOSED">?</span>
 		</label>
 		<button class='applyButton'>Create</button>
 	</fieldset>
@@ -370,20 +397,22 @@
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Your changes have been saved.' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-
+<p class='hint clearfix marginBottom'>The following fields are all optional, but highly recommended. These settings are partition specific.</p>
 <fieldset class='floatRight width50'>
 	<legend>Properties</legend>
 	<label>
-		<span>Syntax</span>
+		<span>Link Syntax</span>
 		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.%PRT.LINKSYNTAX'; apply --select=$var;">
+			<option value=''>None</option>
 			<option value='APP'>App</option>
 			<option value='VSTORE'>Vstore</option>
 		</select>
+		<span class='toolTip' title="If all the hosts on this partition are apps, set this to app. If any are v-store, set this to vstore and be sure your app-based hosts are set to vstore/app.">?</span>
 </fieldset>
 
 <fieldset>
 	<legend>Contact</legend>
-	<p>The following fields are all optional, but highly recommended. These settings are partition specific.</p>
+	
 	<label>
 		<span>Domain</span>
 		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
@@ -407,7 +436,7 @@
 
 
 
-	<div class='buttonset'><button class='applyButton'>Save</button></div>
+	<div class='buttonset'><button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button></div>
 
 </form>
 </div>
