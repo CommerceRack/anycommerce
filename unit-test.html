@@ -110,13 +110,24 @@
 	-->
 	<section id='math-tests'>
 		<h6>Used for math tests</h6>
-		<div data-testtype='output-compare' data-output='20' data-tlc="bind $var '.number'; math --add='10'; apply --append;" data-testname="prepend" ></div>
-		<div data-testtype='output-compare' data-output='14.95' data-tlc="bind $var '.price'; math --sub='10'; apply --append;" data-testname="prepend" ></div>
-		<div data-testtype='output-compare' data-output='30' data-tlc="bind $var '.number'; math --mult='3'; apply --append;" data-testname="prepend" ></div>
-		<div data-testtype='output-compare' data-output='5' data-tlc="bind $var '.number'; math --div='2'; apply --append;" data-testname="prepend" ></div>
-		<div data-testtype='output-compare' data-output='25' data-tlc="bind $var '.price'; math --precision='0'; apply --append;" data-testname="prepend" ></div>
+		<div data-testtype='output-compare' data-output='20' data-tlc="bind $var '.number'; math --add='10'; apply --append;" data-testname="add" ></div>
+		<div data-testtype='output-compare' data-output='14.95' data-tlc="bind $var '.price'; math --sub='10'; apply --append;" data-testname="subtract" ></div>
+		<div data-testtype='output-compare' data-output='30' data-tlc="bind $var '.number'; math --mult='3'; apply --append;" data-testname="multiply" ></div>
+		<div data-testtype='output-compare' data-output='5' data-tlc="bind $var '.number'; math --div='2'; apply --append;" data-testname="divide" ></div>
+		<div data-testtype='output-compare' data-output='25' data-tlc="bind $var '.price'; math --precision='0'; apply --append;" data-testname="precision" ></div>
+	</section>
+
+	<section id='time-tests'>
+		<h6>Used for time tests</h6>
+		<div data-testtype='output-compare' data-output='3/25/2014' data-tlc="bind $var '.epochts'; datetime --out='mdy'; apply --append;" data-testname="datetime mdy" ></div>
+		<div data-testtype='output-compare' data-output='Mar 25 2014 15:43' data-tlc="bind $var '.epochts'; datetime --out='pretty'; apply --append;" data-testname="datetime pretty" ></div>
 	</section>
 	
+	<section id='stringify-tests'>
+		<h6>Used for time tests</h6>
+		<div data-testtype='output-compare' data-output='{"name":"ron","nickname":"tater salad"}' data-tlc="bind $var '.smallHash'; stringify; apply --append;" data-testname="stringify" ></div>
+	</section>
+
 </div>
 
 </body>

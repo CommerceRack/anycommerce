@@ -38,10 +38,12 @@ function runTests()	{
 	var dataset = {
 		'name' : 'bob',
 		longString : 'this is a long string to use for testing.',
+		'epochts' : 1395787429,
 		number : 10,
 		blank : '',
 		'null' : null,
 		smallArray : ["frank","albert","tom","harry"],
+		smallHash : {'name':'ron','nickname' : 'tater salad'},
 		price : 24.95,
 		'boolean-true' : true,
 		'boolean-false' : false
@@ -99,7 +101,6 @@ function runTests()	{
 		//now run the 'unique' tests.
 		ok($('#child-gets-replaced').html() == 'bob', "replace" );
 		});
-	
 	test( "TLC Formats", function() {
 		$("[data-tlc]",'#format-tests').each(function(index){
 			var $ele = $(this);
@@ -108,9 +109,24 @@ function runTests()	{
 				}
 			}); //loop
 		});
-	
 	test( "TLC Math", function() {
 		$("[data-tlc]",'#math-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});	
+	test( "TLC Time", function() {
+		$("[data-tlc]",'#time-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC Stringify", function() {
+		$("[data-tlc]",'#stringify-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);

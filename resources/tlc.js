@@ -982,8 +982,6 @@ returning a 'false' here will exit the statement loop.
 		var value = globals.binds[globals.focusBind];
 		if(value)	{
 			var argObj = this.args2obj(cmd.args,globals), d = new Date(value*1000);
-	
-	
 			if(isNaN(d.getMonth()+1))	{
 				dump("In handleCommand_datetime, value ["+value+"] is not a valid time format for Date()",'warn');
 				}
