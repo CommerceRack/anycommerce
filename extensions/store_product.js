@@ -361,7 +361,7 @@ addToCart : function (pid,$form){
 			atcquantityinput : function($tag,data)	{
 				var $input = $("<input \/>",{'name':'qty'});
 				if(_app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
-					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
+					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).addClass('numberInput').appendTo($tag);
 					$input.on('keyup.classChange',function(){
 						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
 						});
