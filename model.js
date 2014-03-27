@@ -1662,7 +1662,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 					
 					}
 				else	{
-					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
+//					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
 					}
 				}
 			else	{
@@ -1808,7 +1808,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 							}
 						catch(e)	{
 							_app.u.dump("Could not build pegParser.","warn");
-							_app.u.dump(buildErrorMessage(e),"error");
+//							_app.u.dump(buildErrorMessage(e),"error");
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");

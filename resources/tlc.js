@@ -12,7 +12,7 @@
 			// for verb, may later offer a dwiw which tries to intelligently guess what to do. 
 			},
 		_init : function(){
-			var o = this.options;
+			var o = this['options'];
 			this.element.data('isTLC',true);  //a data tag to key off of so a destroy can be run, if need be.
 			//one of these three must be set or running this doesn't really serve any purpose.
 			if(o.templateid || o.dataset || o.datapointer || !$.isEmptyObject(o.extendByDatapointers))	{
@@ -54,7 +54,7 @@
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			}, //_setOption
 		_handleDatapointers : function()	{
-			var o = this.options;
+			var o = this['options'];
 			//'data' could be a pointer, which we don't want to modify, so we extend a blank object and add data in the mix.
 			//add all the datapointers into one object. 'may' run into issues here if keys are shared. shouldn't be too much of an issue in the admin interface.
 			if(o.extendByDatapointers && o.extendByDatapointers.length)	{
@@ -64,14 +64,14 @@
 //					dump(" -> o.extendByDatapointers[i]: "+o.extendByDatapointers[i]); dump($._app.data[o.extendByDatapointers[i]]);
 					
 					if($._app.data[o.extendByDatapointers[i]])	{
-						$.extend(true,this.options.dataset,$._app.data[o.extendByDatapointers[i]]);
+						$.extend(true,this['options'].dataset,$._app.data[o.extendByDatapointers[i]]);
 						}
 					}
 				}
-//			dump(" -> this.options.dataset: "); dump(this.options.dataset);
+//			dump(" -> this['options'].dataset: "); dump(this['options'].dataset);
 			},
 		_handleDataAttribs : function($tag)	{
-			var o = this.options;
+			var o = this['options'];
 	//		_app.u.dump(" -> eleAttr is NOT empty");
 			if(!$.isEmptyObject(o.dataAttribs) && $tag instanceof jQuery)	{
 				var tmp = {};
@@ -94,19 +94,19 @@
 				}
 			},
 		template : function()	{
-			return new tlc().getTemplateInstance(this.options.templateid);
+			return new tlc().getTemplateInstance(this['options'].templateid);
 			},
 		translate : function()	{
-			if($._app.vars.debug == 'tlc')	{dump(" dataset for tlc: "); dump(this.options.dataset);}
-			return new tlc().translate(this.element,this.options.dataset);
+			if($._app.vars.debug == 'tlc')	{dump(" dataset for tlc: "); dump(this['options'].dataset);}
+			return new tlc().translate(this.element,this['options'].dataset);
 			},
 		transmogrify : function()	{
 			var self = this;
 //the tlc core code and this plugin are intentionally independant. allows tlc to be run directly. ex: buildQueriesFromTemplate
 			var instance = new tlc();
 			var $tmp = instance.runTLC({
-				templateid : self.options.templateid,
-				dataset : self.options.dataset
+				templateid : self['options'].templateid,
+				dataset : self['options'].dataset
 				});
 			return $tmp
 			}
@@ -124,7 +124,7 @@ var tlc = function()	{
 	
 //used w/ peg parser for tlc errors.
 	this.buildErrorMessage = function(e) {
-		dump(e);
+//		dump(e);
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
 
@@ -176,9 +176,12 @@ var tlc = function()	{
 			if($._app.vars.debug == 'tlc')	{
 				dump("----------------> start new $tag. tlc: \n"+$(this).data('tlc')+" <-----------------");
 				}
-				var commands = false;
+				var commands = {};
 				try{
-					commands = window.pegParser.parse(tlc);
+					//IE8 doesn't like .parse, wants 'parse'.
+					dump(" -> stringified tlc parse: "+JSON.stringify(window.pegParser['parse'](tlc)));
+					commands = window.pegParser['parse'](tlc);
+					
 					}
 				catch(e)	{
 					dump(_self.buildErrorMessage(e)); dump(tlc);
@@ -937,7 +940,7 @@ returning a 'false' here will exit the statement loop.
 
 	this.render_wiki = function(bind,argObj)	{
 		var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
-		myCreole.parse($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+		myCreole['parse']($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
 		//r = wikify($tmp.text()); //###TODO -> 
 		var r = $tmp.html();
 		$tmp.empty(); delete $tmp;
@@ -1102,7 +1105,7 @@ returning a 'false' here will exit the statement loop.
 
 			var commands = false;
 			try{
-				commands = window.pegParser.parse(tlc);
+				commands = window.pegParser['parse'](tlc);
 				}
 			catch(e)	{
 				dump(_self.buildErrorMessage(e)); dump(tlc,'debug');
