@@ -353,7 +353,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 					$tag = globals.tags[argObj.imgdefault]
 					}
 				else	{
-					dump("Formatter img/imageurl specified "+argObj.default+" as the tag src, but that tag has not been defined",'warn');
+					//ie8 wants 'default', not .default.
+					dump("Formatter img/imageurl specified "+argObj['default']+" as the tag src, but that tag has not been defined",'warn');
 					}
 				}
 			else	{} //image attributes will be passed.
@@ -450,13 +451,14 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 			//add and remove work w/ either 'tag' or 'class'.
 			case 'add' : 
-				if(argObj.class)	{$tag.addClass(argObj.class)}
+			//IE8 wants 'class' instead of .class.
+				if(argObj['class'])	{$tag.addClass(argObj['class'])}
 				else if(argObj.tag)	{
 					// ### TODO -> not done yet. what to do? add a tag? what tag? where does it come from?
 					}
 				break; 
 			case 'remove':
-				if(argObj.class)	{$tag.removeClass(argObj.class)}
+				if(argObj['class'])	{$tag.removeClass(argObj['class'])}
 				else if(argObj.tag)	{
 					globals.tags[argObj.tag].remove();
 					}
