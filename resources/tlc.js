@@ -957,7 +957,6 @@ returning a 'false' here will exit the statement loop.
 
 			if(key == 'html')	{} //don't need to to anything special for html.
 			else if(key == 'wiki')	{
-				console.log(" -----------> got here");
 				globals.binds[globals.focusBind] = this.render_wiki(globals.binds[globals.focusBind],argObj);
 				}
 			else	{
@@ -997,8 +996,6 @@ returning a 'false' here will exit the statement loop.
 		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
-//				console.log("MATH -> bind: "+bind,"value: "+value);
-//				console.log(" cmd.args[i].key -> "+cmd.args[i].key);
 				if(!isNaN(value))	{
 					switch(cmd.args[i].key)	{
 						case "add":
