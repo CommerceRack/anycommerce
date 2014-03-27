@@ -3118,6 +3118,7 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		<ul>
 			<li data-plugin="shipstation.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
 			<li data-plugin="shipworks.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
+			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
 <!--
@@ -3241,6 +3242,29 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	</div>
 	
 	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+
+</fieldset>
+
+<fieldset id="pluginTemplate_desktop.zoovy.com">
+	<input name="plugin" value="desktop.zoovy.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<p class="hint">Zoovy Integrate Desktop is a global setting, it is not partition specific</p>
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable Admin Sync
+	</label>
+
+	<p>Zoovy Desktop will request a username and password so it can access your store.
+	Use the username and password below: 
+	</p>
+	<div class="label"><span>Username: </span>username</div>
+	<div class="label smallButton">
+		<span>Password</span>
+		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
+	</div>
+	
+	<div data-tlc="bind $var '.domain';"></div>
 
 </fieldset>
 
