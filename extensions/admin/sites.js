@@ -390,22 +390,20 @@ used, but not pre-loaded.
 					_app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 //This will update the hosts tbody.
 					if($domainEditor instanceof jQuery)	{
-						var $tbody = $("tbody[data-app-role='domainsHostsTbody']",$domainEditor);
-						if($tbody.length)	{
-							$tbody.empty();
-							_app.model.addDispatchToQ({
-								'_cmd':'adminDomainDetail',
-								'DOMAINNAME':sfo.DOMAINNAME,
-								'_tag':	{
-									'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
-									'jqObj' : $tbody,
-									'callback' : 'tlc'
-									}
-								},'immutable');
+						$domainEditor.empty().showLoading({'message':'Updating host and refreshing content...'});
+						if($domainEditor.data('isTLC'))	{
+							$domainEditor.tlc('destroy'); //ensures fresh data is used.
 							}
-						else	{
-							_app.u.dump("In admin_sites.u.domainAddUpdateHost, $domainEditor was specified [length: "+$domainEditor.length+"], but tbody[data-app-role='domainsHostsTbody'] has no length, so the view will not be updated.","warn");
-							}
+						_app.model.addDispatchToQ({
+							'_cmd':'adminDomainDetail',
+							'DOMAINNAME':sfo.DOMAINNAME,
+							'_tag':	{
+								'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
+								'templateid' : 'domainUpdateTemplate',
+								'jqObj' : $domainEditor,
+								'callback' : 'tlc'
+								}
+							},'immutable');
 						}
 					
 					_app.model.dispatchThis('immutable');

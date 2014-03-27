@@ -2140,9 +2140,10 @@ _app.model.dispatchThis('passive');
 									.appendTo($label);
 								$label.append(pMethods[i].pretty).appendTo($div);
 								}
-							else if(pMethods[i].id.indexOf("WALLET") === 0)	{
+//this hid wallets in order processing.
+//							else if(pMethods[i].id.indexOf("WALLET") === 0)	{
 								//wallets are in the 'stored payments' panel. If they're shown here too, the input 'name' will be duplicated and selecting it will cause the 'other' input to be selected (and not this one)
-								}
+//								}
 							else	{
 								//onClick event is added through an app-event. allows for app-specific events.
 								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' />");

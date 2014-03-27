@@ -104,10 +104,10 @@ additionally, will apply some conditional form logic.
 
 //outside the app event delegation check for backwards compatiblity.
 //the track edit delegation is removed and added in case it's run more than once, so that each edit isn't double-counted.
-			if(self.options.trackEdits)	{
-				if(self.options.trackSelector)	{
+			if(self['options'].trackEdits)	{
+				if(self['options'].trackSelector)	{
 //					dump(" -> TrackSelector IS enabled");
-					$(self.options.trackSelector,$t).each(function(){
+					$(self['options'].trackSelector,$t).each(function(){
 						self._applyTracking4Edits($(this));
 						})
 					}
@@ -252,8 +252,8 @@ additionally, will apply some conditional form logic.
 		updateChangeCounts : function()	{
 //			dump(" -> anyform('updateChangeCounts') has been run");
 			var self = this;
-			if(self.options.trackSelector)	{
-				$(self.options.trackSelector,self.element).each(function(){
+			if(self['options'].trackSelector)	{
+				$(self['options'].trackSelector,self.element).each(function(){
 					var $ele = $(this);
 //if a changes container has been specified, update with the number of edits or hide if there are no edits.
 					if($ele.data('changes-container'))	{
@@ -271,7 +271,7 @@ additionally, will apply some conditional form logic.
 			else	{
 				self._updateSaveButtonInContext(this.element,"[data-app-role='saveButton']");
 				}
-			if(this.options.masterSaveSelector)	{
+			if(this['options'].masterSaveSelector)	{
 				self._updateSaveButtonInContext(this.element,"[data-app-role='masterSaveButton']");
 				}
 			},
@@ -486,7 +486,7 @@ pass in an event name and a function and it will be added as an eventAction.
 
 //adds the outer 'container' div around the message.
 		_getContainer : function()	{
-			return $("<div \/>").addClass("ui-widget ui-widget-content ui-widget-anymessage ui-corner-all marginBottom").css({'padding':'5px','min-height':'28px'}).addClass(this.options.containerClass);
+			return $("<div \/>").addClass("ui-widget ui-widget-content ui-widget-anymessage ui-corner-all marginBottom").css({'padding':'5px','min-height':'28px'}).addClass(this['options'].containerClass);
 			},
 
 
@@ -869,12 +869,12 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				self = this,
 				$buttonSet = $("<div \/>").addClass('ui-widget-anyupload-buttonset');
 
-			$buttonSet.append('<input type="file" class="ui-widget-anyfile-fileinput" '+(self.options.maxSelectableFiles === 1 ? '' : 'multiple' )+' name="files[]" style="display:none;" />');
+			$buttonSet.append('<input type="file" class="ui-widget-anyfile-fileinput" '+(self['options'].maxSelectableFiles === 1 ? '' : 'multiple' )+' name="files[]" style="display:none;" />');
 			$("<button \/>").text('Select Files').button({icons: {primary: "ui-icon-document"},text: true}).on('click',function(event){
 				event.preventDefault();
 				$(this).parent().find(".ui-widget-anyfile-fileinput").trigger('click');
 				}).appendTo($buttonSet);
-			if(self.options.autoUpload === false)	{
+			if(self['options'].autoUpload === false)	{
 				$("<button \/>").addClass('ui-widget-anyfile-uploadbutton').text('Start Upload').button({icons: {primary: "ui-icon-arrowthickstop-1-n"},text: true}).button('disable').on('click',function(event){
 					event.preventDefault();
 					self._sendFiles();
@@ -890,11 +890,11 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			var newFiles = new Array();
 			var errors = '';
 //filter by filetypes is any are specified.
-			if(typeof this.options.filetypes == 'object' && this.options.filetypes.length)	{
+			if(typeof this['options'].filetypes == 'object' && this['options'].filetypes.length)	{
 				console.log(" -> filetypes filter is ON and running.");
 				for(var i = 0, L = files.length; i < L; i += 1)	{
 //					console.log(i+"). filetype: "+files[i].type);
-					if($.inArray(files[i].type,this.options.filetypes) > -1)	{
+					if($.inArray(files[i].type,this['options'].filetypes) > -1)	{
 						newFiles.push(files[i]);
 						}
 					else	{
@@ -903,10 +903,10 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 					}
 				}
 //filter by fileclass if one is specified.
-			else if(typeof this.options.fileclass == 'string')	{
+			else if(typeof this['options'].fileclass == 'string')	{
 
 				for(var i = 0, L = files.length; i < L; i += 1)	{
-					if(files[i].type.indexOf(this.options.fileclass) > -1)	{
+					if(files[i].type.indexOf(this['options'].fileclass) > -1)	{
 						newFiles.push(files[i]);
 						}
 					else	{
@@ -919,7 +919,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				newFiles = files;
 				}
 			if(errors)	{
-				errors = "An invalid file type was found. Valid types include: "+(this.options.filetypes.join(''))+"<ol>"+errors+"</ol>";
+				errors = "An invalid file type was found. Valid types include: "+(this['options'].filetypes.join(''))+"<ol>"+errors+"</ol>";
 				this.element.append(errors);
 				}
 			return newFiles;
@@ -928,8 +928,8 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 		_buildPreviews : function(files,event,self){
 			var self = self || this;
 			var filteredFiles = self._filteredFiles(files);
-//			dump(" -> self.options.autoUpload: "+self.options.autoUpload);
-			if(self.options.autoUpload === false && filteredFiles.length)	{
+//			dump(" -> self['options'].autoUpload: "+self['options'].autoUpload);
+			if(self['options'].autoUpload === false && filteredFiles.length)	{
 				$('.ui-widget-anyfile-uploadbutton',self.element).button('enable');
 				}
 
@@ -937,12 +937,12 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				var file = filteredFiles[i];
 				var fileType = file.type.match('image.*') ? 'image' : 'file';
 
-				if(self.options.templateID)	{
+				if(self['options'].templateID)	{
 //					dump(" -> file: "); dump(file);
 					//create a template instance.  apply data('file') to it.  translate. then append to self.element.
 					//this can't be done till the plugin is in anyplugins or the 'app' calls wont work
-					var $ele = $._app.renderFunctions.createTemplateInstance(self.options.templateID,{'name':file.filename});
-					//transmogrify({'name':file.filename},self.options.templateID,{'name':file.filename,'Name':file.filename,'path':'i/imagenotfound'}); //Name is for media lib.
+					var $ele = $._app.renderFunctions.createTemplateInstance(self['options'].templateID,{'name':file.filename});
+					//transmogrify({'name':file.filename},self['options'].templateID,{'name':file.filename,'Name':file.filename,'path':'i/imagenotfound'}); //Name is for media lib.
 					self.element.append($ele);
 					$ele.anycontent({
 						data : {'name':file.name,'Name':file.name,'path':'i/imagenotfound','type':file.type,'size':file.size,'lastModifiedData':file.lastModifiedData},
@@ -982,10 +982,10 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //			console.log(" --------> fileChangeEvent triggered");
 			var files = event.target.files; // FileList object
 			self._buildPreviews(files,event);
-			if(typeof self.options.filesChange == 'function')	{
-				self.options.filesChange(event,files,{'container':self.element});
+			if(typeof self['options'].filesChange == 'function')	{
+				self['options'].filesChange(event,files,{'container':self.element});
 				}
-			if(self.options.instantUpload)	{
+			if(self['options'].instantUpload)	{
 				self._sendFiles();
 				}
 			},
@@ -998,7 +998,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 		_sendFiles : function()	{
 			var self = this;
 			dump("BEGIN anyfileupload._sendFiles.");
-			if(typeof self.options.ajaxRequest == 'function')	{
+			if(typeof self['options'].ajaxRequest == 'function')	{
 				dump(" -> ajaxRequest is defined as a function");
 				$(".newMediaFile",self.element).each(function(){
 					self._fileUpload($(this), $(this).data('file'));
@@ -1022,7 +1022,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			reader.onload = function(evt) {
 				dump("reader.onload function has been triggered.");
 				var filecontents;
-				if(self.options.encode == 'base64')	{
+				if(self['options'].encode == 'base64')	{
 					filecontents = btoa(evt.target.result);
 					}
 				else	{
@@ -1030,9 +1030,9 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 					}
 					
 				$ele.removeClass('newMediaFile').data('queued',true);
-				self.options.ajaxRequest($.extend(true,{
+				self['options'].ajaxRequest($.extend(true,{
 					'filename' : file.name,
-					'filecontents' : filecontents,
+					'filecontents' : filecontents
 					},file),{'container' : self.element,'fileElement':$ele});
 //				xhr.sendAsBinary(evt.target.result);
 				};
@@ -1042,14 +1042,14 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //executed when a file is dropped onto a dropzone.
 		_drop : function(event)	{
 			var self = this;
-			dump(" -> a file has been dropped into a dropzone. instantUpload: "+self.options.instantUpload);
+			dump(" -> a file has been dropped into a dropzone. instantUpload: "+self['options'].instantUpload);
 			event.preventDefault();
 			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
 			new self._buildPreviews(dt.files,event,self); // !!! revisit this. should pass in 'events' and 'ui' like other plugins. need to figure that out.
-			if(typeof self.options.filesChange == 'function')	{
-				self.options.filesChange(event,dt.files,{'container':self.element});
+			if(typeof self['options'].filesChange == 'function')	{
+				self['options'].filesChange(event,dt.files,{'container':self.element});
 				}
-			if(self.options.instantUpload)	{
+			if(self['options'].instantUpload)	{
 				self._sendFiles();
 				}
 			}, //_drop
@@ -1097,11 +1097,11 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			if($dropzone.data('widget-anydropzone'))	{} //already an anydropzone
 			else{
 				$dropzone.data('widget-anydropzone',true);
-				if(this.options.status instanceof jQuery)	{
+				if(this['options'].status instanceof jQuery)	{
 					dump(" -> status element IS defined.");
 					}
 
-				if(this.options.thumbList instanceof jQuery)	{
+				if(this['options'].thumbList instanceof jQuery)	{
 					dump(" -> thumblist element IS defined.");
 					}
 
@@ -1165,8 +1165,8 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			dump(" -> a file has been dropped into a dropzone.");
 			event.preventDefault();
 			var dt = event.originalEvent.dataTransfer; //moz def. wants to look in orginalEvent. docs online looked just in event.dataTransfer.
-			if(typeof this.options.drop === 'function')	{
-				new this.options.drop(dt.files,event,this); // !!! revisit this. should pass in 'events' and 'ui' like other plugins. need to figure that out.
+			if(typeof this['options'].drop === 'function')	{
+				new this['options'].drop(dt.files,event,this); // !!! revisit this. should pass in 'events' and 'ui' like other plugins. need to figure that out.
 				}
 			this._sendFiles();
 			}, //_drop
@@ -1419,7 +1419,7 @@ the cb itself is then hidden.
 				
 				var	
 					$toggle = $("<span \/>").data('cbName',this.element.attr('name')),
-					$toggleText = $("<span \/>").text(self.options.text.off);
+					$toggleText = $("<span \/>").text(self['options'].text.off);
 				
 				this.toggle = $toggle; //add to global object so it can be reliably referenced. can't use this.element.closest because cb is not inside toggle.
 
@@ -1454,10 +1454,10 @@ the cb itself is then hidden.
 				}
 			}, //_init
 		_turnOn : function()	{
-			this.toggle.find(".anycbText").text(this.options.text.on).addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right').animate({'left':-1},'fast');
+			this.toggle.find(".anycbText").text(this['options'].text.on).addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right').animate({'left':-1},'fast');
 			},
 		_turnOff : function()	{
-			this.toggle.find(".anycbText").text(this.options.text.off).addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left').animate({'left': (this.toggle.width() / 2)},'fast');
+			this.toggle.find(".anycbText").text(this['options'].text.off).addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left').animate({'left': (this.toggle.width() / 2)},'fast');
 			},
 		_handleDisable : function()	{
 			this.toggle.css({'opacity': this.element.prop('disabled') ? '0.5' : 1}); // ### TODO -> test in IE and Chrome and make sure opacity takes.
@@ -1582,7 +1582,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 
 				case 'settingsMenu':
-					$.extend(this.options.menu,value); //add the new menu to the existing menu object. will overwrite if one already exists.
+					$.extend(this['options'].menu,value); //add the new menu to the existing menu object. will overwrite if one already exists.
 					this._destroySettingsMenu();
 					this._buildSettingsMenu();
 					break;
@@ -1649,29 +1649,29 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 // ** 201324 -> added means of setting a default for 'persistent' state so a panel could be closed if it has never been opened before.
 		_handleInitialState : function()	{
-			if(this.options.state == 'persistent' && this.options.name && this.options.extension)	{
+			if(this['options'].state == 'persistent' && this['options'].name && this['options'].extension)	{
 //				dump(" -> using persistent settings");
-				var settings = $._app.model.dpsGet(this.options.extension,'anypanel');
-				if(settings && settings[this.options.name])	{
-					this.options.state = settings[this.options.name].state; //if not defined, default to expand.
+				var settings = $._app.model.dpsGet(this['options'].extension,'anypanel');
+				if(settings && settings[this['options'].name])	{
+					this['options'].state = settings[this['options'].name].state; //if not defined, default to expand.
 					}
-				else if(this.options.persistentStateDefault == 'expand' || this.options.persistentStateDefault == ' collapse') {
-					this.options.state = this.options.persistentStateDefault;
+				else if(this['options'].persistentStateDefault == 'expand' || this['options'].persistentStateDefault == ' collapse') {
+					this['options'].state = this['options'].persistentStateDefault;
 					}
 				else	{
-					this.options.state = 'expand';
+					this['options'].state = 'expand';
 					}
 				}
-//			dump("this.options.state: "+this.options.state);
-			if(this.options.state == 'collapse')	{ this.collapse();}
-			else if (this.options.state == 'expand')	{this.expand();}
+//			dump("this['options'].state: "+this['options'].state);
+			if(this['options'].state == 'collapse')	{ this.collapse();}
+			else if (this['options'].state == 'expand')	{this.expand();}
 			else	{
 				console.warn("unknown state passed into anypanel");
 				}
 			},
 
 		toggle : function(){
-			if(this.options.state == 'expand')	{this.collapse()}
+			if(this['options'].state == 'expand')	{this.collapse()}
 			else	{this.expand()}
 			},
 
@@ -1683,7 +1683,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			$('.ui-widget-header',this.element).addClass('ui-corner-bottom');
 			if(preserveState)	{}
 			else	{
-				this.options.state = 'collapse';
+				this['options'].state = 'collapse';
 				this._handlePersistentStateUpdate('collapse');
 				}
 			},
@@ -1692,23 +1692,23 @@ Additional a settings button can be added which will contain a dropdown of selec
 			$("[data-btn-action='toggle']",this.element).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false});
 			$('.ui-widget-content',this.element).slideDown();
 			$('.ui-widget-header',this.element).removeClass('ui-corner-bottom');
-			this.options.state = 'expand';
+			this['options'].state = 'expand';
 			this._handlePersistentStateUpdate('expand');
 			},
 
 		_handlePersistentStateUpdate : function(value)	{
 //			dump("BEGIN anypanel._handlePersistentStateUpdate");
 			var r = false; //will return true if a persistent update occurs.
-//			dump(" -> this.options.persistent: "+this.options.persistent);
+//			dump(" -> this['options'].persistent: "+this['options'].persistent);
 //			dump(" -> value: "+value);
-			if(this.options.persistent && value)	{
-				if(this.options.extension && this.options.name)	{
+			if(this['options'].persistent && value)	{
+				if(this['options'].extension && this['options'].name)	{
 					var settings = {};
-					settings[this.options.name] = {'state':value};
-					var newSettings = $.extend(true,$._app.model.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
-//					dump(' -> '+this.options.extension);
+					settings[this['options'].name] = {'state':value};
+					var newSettings = $.extend(true,$._app.model.dpsGet(this['options'].extension,'anypanel'),settings); //make sure panel object exits.
+//					dump(' -> '+this['options'].extension);
 //					dump(' -> newSettings:');	dump(newSettings);
-					$._app.model.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
+					$._app.model.dpsSet(this['options'].extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
 				else	{
@@ -1724,7 +1724,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 		_buildSettingsMenu : function()	{
 			var $ul = $("<ul \/>").css({'width':'200px'}),
-			sm = this.options.settingsMenu;
+			sm = this['options'].settingsMenu;
 
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
 			for(var index in sm)	{
@@ -1877,11 +1877,11 @@ supported options include tabID (given to the container), tabtext (what appears 
 //			dump('building sticktab');
 			var 
 				$sticky = $("<div \/>").css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
-				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
+				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this['options'].tabclass),
 				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode detailMode ui-widget ui-widget-content ui-corner-right");
 
 			this._addTabEvents($stickytab);
-			$stickytab.append("<div class='ui-widget-stickytab-tab-text'>"+this.options.tabtext+"</div>");
+			$stickytab.append("<div class='ui-widget-stickytab-tab-text'>"+this['options'].tabtext+"</div>");
 			$sticky.append($stickytab).append($stickyContent);
 			return $sticky;
 			},

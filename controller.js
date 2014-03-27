@@ -894,9 +894,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return uriParams;
 			},
-	
-		init : function()	{
 
+		init : function()	{
 			//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
 			$.extend(_app.router.initObj,{
 				hash : location.hash,
@@ -912,7 +911,23 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				//what to do here?
 				}
 	//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
-			window.addEventListener("hashchange", _app.router.handleHashChange, false);
+			if (window.addEventListener) {
+				console.log(" -> addEventListener is supported and added for hash change.");
+				window.addEventListener("hashchange", _app.router.handleHashChange, false);
+				}
+			//IE 8
+			else if(window.attachEvent)	{
+				//A little black magic here for IE8 due to a hash related bug in the browser.
+				//make sure a hash is set.  Then set the hash to itself (yes, i know, but that part is key). Then wait a short period and add the hashChange event.
+				window.location.hash = window.location.hash || '#!home'; //solve an issue w/ the hash change reloading the page.
+				window.location.hash = window.location.hash;
+				setTimeout(function(){
+					window.attachEvent("onhashchange", _app.router.handleHashChange);
+					},1000);
+				}
+			else	{
+				$("#globalMessaging").anymessage({"message":"Browser doesn't support addEventListener OR attachEvent.","gMessage":true});
+				}
 			},
 	
 		handleHashChange : function()	{
@@ -1154,7 +1169,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(_app.u.numberOfLoadedResourcesFromPass(0) == _app.vars.rq.length)	{
 					_app.vars.rq = null; //this is the tmp array used by handleRQ and numberOfResourcesFromPass. Should be cleared for next pass.
 					_app.model.addExtensions(_app.vars.extensions);
-					_app.router.init();
+					_app.router.init(); ///### FUTURE -> this should be in the app / app init, not here.
 					_app.u.handleRQ(1); //this will empty the RQ.
 					_app.rq.push = _app.u.loadResourceFile; //reassign push function to auto-add the resource.
 					}
@@ -1617,7 +1632,7 @@ URI PARAM
 			kvp2Array : function(s)	{
 				var r = false;
 				if(s && s.indexOf('=') > -1)	{
-					r = s?JSON.parse('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
+					r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
 					}
 				else	{}
 				return r;

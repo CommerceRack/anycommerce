@@ -1507,6 +1507,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 			
 // used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
 				containerZipDownloadExec : function($ele,P)	{
+					P.preventDefault();
 					var mode = $ele.data('mode'), data = $ele.closest('.buttonset').data();
 					if(!_app.ext.admin_template.u.missingParamsByMode(mode,data))	{
 						$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
@@ -1596,6 +1597,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 					},
 
 				adminEBAYProfilePreviewShow : function($ele,p)	{
+					p.preventDefault();
 						var $D = _app.ext.admin.i.dialogCreate({"title":"HTML Listing Preview"});
 						$D.dialog('open');
 //this is used in the product editor 
@@ -1666,6 +1668,7 @@ else	{
 					},
 
 				templateChooserShow : function($ele,p)	{
+					p.preventDefault();
 					if($ele.data('mode') == 'Campaign')	{
 						_app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
 						}
@@ -1689,6 +1692,7 @@ else	{
 					}, //templateChooserShow
 
 				templateEditorShow : function($ele,p)	{
+					p.preventDefault();
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
 						navigateTo('#!ext/admin_template/showTemplateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
@@ -1715,6 +1719,7 @@ else	{
 					}, //templateEditorShow
 					
 				containerFileUploadShow : function($ele,p)	{
+					p.preventDefault();
 					var mode = $ele.data('mode');
 					var data = $ele.closest('.buttonset').data();
 					

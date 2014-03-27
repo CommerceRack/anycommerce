@@ -210,7 +210,7 @@ function model(_app) {
 				
 //				_app.u.dump(index+"). "+_app.q[QID][index]._cmd+" status: "+_app.q[QID][index]._tag.status);
 				
-				if(_app.q[QID][index]._tag.status == 'queued')	{
+				if(_app.q[QID][index]._tag && _app.q[QID][index]._tag.status == 'queued')	{
 					_app.q[QID][index]._tag.status = "requesting";
 //					_app.u.dump(" -> new status: "+_app.q[QID][index]._tag.status);
 					if(puuid){_app.q[QID][index]._tag.pipeUUID = puuid}
@@ -1662,7 +1662,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 					
 					}
 				else	{
-					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
+//					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
 					}
 				}
 			else	{
@@ -1808,7 +1808,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 							}
 						catch(e)	{
 							_app.u.dump("Could not build pegParser.","warn");
-							_app.u.dump(buildErrorMessage(e),"error");
+//							_app.u.dump(buildErrorMessage(e),"error");
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");
