@@ -261,6 +261,38 @@ var tlc = function()	{
 		return r;
 		}
 
+	this.handleArg = function(arg,globals)	{
+		var r = {}; //what is returned.
+		var type = (arg.type == 'longopt' && arg.value) ? arg.value.type : arg.type;
+		if(type == 'tag')	{
+			r.tag = arg.value.tag;
+			r[arg.value.tag] = globals.tags[arg.value.tag];
+			}
+		else if(arg.value == null)	{r[arg.key] = true} //some keys, like append or media, have no value and will be set to null.
+		else if(type == 'variable')	{
+			//this handles how most variables are passed in.
+			if(arg.key)	{
+				r[arg.key] = globals.binds[arg.value.value];
+				r.variable = (arg.type == 'longopt' && arg.value) ? arg.value.value : arg.value;
+				}
+			//this handles some special cases, like:  transmogrify $var --templateid='chkoutAddressBillTemplate';
+			else if(typeof arg.value == 'string')	{
+				r.variable = arg.value;
+				r[arg.value] = globals.binds[arg.value];
+				}
+			else	{
+				dump("in handleArg, type is set to variable, but no key is set AND the value is not a string.","warn");
+				dump(arg);
+				//something unexpected happened.  no key. value is an object.
+				}
+			}
+		
+		else	{
+			r[arg.key] = arg.value.value;
+			}
+		return r;
+		}
+
 //The vars object should match up to what the s are on the image tag. It means the object used to create this instance can also be passed directly into a .attr()
 	this.makeImageURL	= function(vars)	{
 		var r;
@@ -453,7 +485,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.handle_apply_formatter = function(formatter,$tag,argObj,globals)	{
 		switch(formatter)	{
-			case 'text':
+/*			case 'text':
+				console.log(" -> argObj: "); console.debug(argObj);
 				if(globals.binds[argObj.text])	{
 					var $tmp = $("<div>").append(globals.binds[argObj.text]);
 					globals.binds[argObj.text] = $tmp.text();
@@ -466,7 +499,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case 'html':
 				globals.focusBind = argObj.html;
 				break;
-			case 'img':
+*/			case 'img':
 				globals.binds[globals.focusBind] = this.apply_formatter_img(formatter,$tag,argObj,globals);
 				break;
 			case 'imageurl':
@@ -896,34 +929,42 @@ returning a 'false' here will exit the statement loop.
 		return r;
 		}
 
+	this.render_text = function(bind,argObj)	{
+		return $('<div />').text(bind).html()
+		}
+
+	this.render_wiki = function(bind,argObj)	{
+		var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
+		myCreole.parse($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+		//r = wikify($tmp.text()); //###TODO -> 
+		var r = $tmp.html();
+		$tmp.empty(); delete $tmp;
+		return r;
+		}
+
 	
 	this.handleCommand_render = function(cmd,globals){
-//		dump(">>>>> BEGIN tlc.handleCommand_render. value: "); dump(globals.binds[globals.focusBind]);
-		var argObj = this.args2obj(cmd.args,globals); //an object is used to easily check if specific apply commands are present
-//		dump(" -> cmd: "); dump(cmd);
-		if(globals.tags[globals.focusTag])	{
-			if(argObj.wiki)	{
-				if(globals.binds[globals.focusBind])	{
-					var $tmp = $("<div>").append(globals.binds[globals.focusBind]);
-					var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
-					myCreole.parse($tmp[0], globals.binds[globals.focusBind],{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
-					//r = wikify($tmp.text()); //###TODO -> 
-					globals.binds[globals.focusBind] = $tmp.html();
-					$tmp.empty().remove();
-					}
-				else	{} //value is empty. not much to do here.
+		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
+		for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
+			argObj = this.handleArg(cmd.args[i],globals);
+			var key = cmd.args[i].key;
+			//if key is dwiw, needs to be changed to either html or text so that it can be properly displayed. this is guesswork, but that comes along with dwiw.
+			if(key == 'dwiw' && globals.binds[globals.focusBind].indexOf('<') >= 0)	{
+				key = 'html';
 				}
-			else if(argObj.html)	{
-				//if the content is already html, shouldn't have to do anything to it.
-				}
-			else if(argObj.dwiw)	{
-				// ###TODO -> need to determine if content is wiki or html.
+			else if(key == 'dwiw')	{key = 'text';}
+			else	{} //leave key alone.
+
+			if(key == 'html')	{} //don't need to to anything special for html.
+			else if(key == 'wiki')	{
+				globals.binds[globals.focusBind] = this.render_wiki(globals.binds[globals.focusBind],argObj);
 				}
 			else	{
-				//unrecognized command.
+				globals.binds[globals.focusBind] = this.render_text(globals.binds[globals.focusBind],argObj);
 				}
 			}
-		return globals.tags[globals.focusTag];
+
+		return globals.binds[globals.focusBind];
 		}
 		
 	this.handleCommand_stringify = function(cmd,globals)	{
@@ -955,8 +996,6 @@ returning a 'false' here will exit the statement loop.
 		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
-//				console.log("MATH -> bind: "+bind,"value: "+value);
-//				console.log(" cmd.args[i].key -> "+cmd.args[i].key);
 				if(!isNaN(value))	{
 					switch(cmd.args[i].key)	{
 						case "add":

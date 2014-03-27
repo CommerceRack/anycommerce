@@ -1415,20 +1415,26 @@ else	{
 
 //used in the order editor. executed whenever a change is made to update the number of changes in the 'save' button.
 			updateOrderChangeCount : function($t)	{
-				_app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
-				var $dialog = $t.closest("[data-orderid]"); //container dialog.
-				if($dialog.length)	{
-					_app.u.dump(" -> FOUND PARENT!");
-					var numEdits = $('.edited',$dialog).length;
-					_app.u.dump(" -> numEdits: "+numEdits);
-					var $count = $('.changeCount',$dialog);
-					$count.text(numEdits);
-					//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
-					if(numEdits > 0)	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
-					else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+				var numEdits = '';
+				if($t instanceof jQuery)	{
+					_app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
+					var $dialog = $t.closest("[data-orderid]"); //container dialog.
+					if($dialog.length)	{
+						_app.u.dump(" -> FOUND PARENT!");
+						numEdits = $('.edited',$dialog).length;
+						_app.u.dump(" -> numEdits: "+numEdits);
+						var $count = $('.changeCount',$dialog);
+						$count.text(numEdits);
+						//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
+						if(numEdits > 0)	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
+						else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.","gMessage":true});
+						}
 					}
 				else	{
-					_app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
+					$("#globalMessaging").anymessage({"message":"In admin_orders.u.updateOrderChangeCount, $t is not an instance of jQuery.","gMessage":true});
 					}
 				
 				return numEdits;
