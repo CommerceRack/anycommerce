@@ -179,7 +179,6 @@ var tlc = function()	{
 				var commands = {};
 				try{
 					//IE8 doesn't like .parse, wants 'parse'.
-					dump(" -> stringified tlc parse: "+JSON.stringify(window.pegParser['parse'](tlc)));
 					commands = window.pegParser['parse'](tlc);
 					
 					}
@@ -1103,7 +1102,7 @@ returning a 'false' here will exit the statement loop.
 		$("[data-tlc]",$t).addBack("[data-tlc]").each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 			var $tag = $(this), tlc = $tag.data('tlc');
 
-			var commands = false;
+			var commands = {};
 			try{
 				commands = window.pegParser['parse'](tlc);
 				}
