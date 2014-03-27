@@ -54,7 +54,7 @@
 		<!-- remove -->
 		<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';" data-testname="remove class">should not have 'simple' class.</div>
 		<div id='this-gets-removed' data-tlc="apply --remove --tag='$tag';">This should not be on the DOM.</div>
-		<!-- need a 'remove tag' test -->
+		
 	
 		<table>
 		<tr>
@@ -66,8 +66,8 @@
 			<td><select data-testtype='input-value' data-value='bob' data-tlc="bind $var '.name'; apply --select=$var;" data-testname="select (set select option/value">
 				<option>Choose</option>
 				<option value='frank'>frank</option>
-				<option value='bob' data-tlc data-testtype='is-selected' data-selected='true' data-testname="select (option is selected)">bob</option><!-- data-tlc here just to trigger the test -->
-				<option value='harry' selected data-tlc data-testtype='is-selected' data-selected='false' data-testname="select (option is NOT selected)">harry</option>
+				<option value='bob' data-testtype='is-selected' data-selected='true' data-testname="select (option is selected)">bob</option>
+				<option value='harry' selected data-testtype='is-selected' data-selected='false' data-testname="select (option is NOT selected)">harry</option>
 			</select></td>
 			<td colspan='2'>
 				<input type='radio' name='something' value='frank' data-tlc="bind $var '.name'; apply --select=$var;" checked  data-testtype='is-checked' data-checked='false' data-testname="select (is not checked)" />not selected
@@ -94,11 +94,11 @@
 		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; format --prepend='my name is '; apply --append;" data-testname="prepend" ></div>
 		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; format --append=' is my name'; apply --append;" data-testname="append" ></div>
 		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency" ></div>
-		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.smallArray'; format --length; apply --append;" data-testname="length (array)" ></div>
+		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.small-array'; format --length; apply --append;" data-testname="length (array)" ></div>
 		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length (string)" ></div>
-		<div data-testtype='output-compare' data-output='this is a l' data-tlc="bind $var '.longString'; format --chop='11'; apply --append;" data-testname="chop at 11" ></div>
-		<div data-testtype='output-compare' data-output='this is a' data-tlc="bind $var '.longString'; format --truncate='11'; apply --append;" data-testname="truncate at 11 (gets 9 chars)" ></div>
-		<div data-testtype='output-compare' data-output='this%20is%20a%20long%20string%20to%20use%20for%20testing.' data-tlc="bind $var '.longString'; format --uriencode; apply --append;" data-testname="uriencode" ></div>
+		<div data-testtype='output-compare' data-output='this is a l' data-tlc="bind $var '.long-string'; format --chop='11'; apply --append;" data-testname="chop at 11" ></div>
+		<div data-testtype='output-compare' data-output='this is a' data-tlc="bind $var '.long-string'; format --truncate='11'; apply --append;" data-testname="truncate at 11 (gets 9 chars)" ></div>
+		<div data-testtype='output-compare' data-output='this%20is%20a%20long%20string%20to%20use%20for%20testing.' data-tlc="bind $var '.long-string'; format --uriencode; apply --append;" data-testname="uriencode" ></div>
 	</section>
 	<!--
 	<section id='render-tests'>
@@ -125,7 +125,7 @@
 	
 	<section id='stringify-tests'>
 		<h6>Used for time tests</h6>
-		<div data-testtype='string-compare' data-string='{"name":"ron","nickname":"tater salad"}' data-tlc="bind $var '.smallHash'; stringify; apply --append;" data-testname="stringify" ></div>
+		<div data-testtype='string-compare' data-string='{"name":"ron","nickname":"tater salad"}' data-tlc="bind $var '.small-hash'; stringify; apply --append;" data-testname="stringify" ></div>
 	</section>
 
 	
@@ -191,10 +191,22 @@
 		<li data-testtype='output-compare' data-output='notnull bob' data-tlc="bind $var '.blank'; if(is $var --notnull) {{bind $name '.name'; apply --append;}};" data-testname="notnull - value from .blank" >notnull </li>
 		<!-- .name is used for the actual output because testing for a blank against what would output as a blank could give inaccurate results. -->
 		<li data-testtype='output-compare' data-output='notnull ' data-tlc="bind $var '.null'; if(is $var --notnull) {{bind $name '.name'; apply --append;}};" data-testname="notnull - value from .null" >notnull </li>
+
+<!-- regex -->
+<!-- ### TODO -> NOT DONE YET.  need regex, templateidexists and notregex -->
 		</ol>
-
-
 	</section>
+
+
+
+	<section id='render-tests'>
+		<h6>Used for render tests</h6>
+		
+		<div data-testtype='output-compare' data-output="<h1>This is some html</h1><p>Isn't it wonderful</p>" data-tlc="bind $var '.html'; render --text; apply --append;" data-testname="render as text"></div>
+		<!-- ### TODO -> need more wiki tests -->
+		<div data-testtype='output-compare' data-output="This is a wiki h1" data-tlc="bind $var '.wiki'; render --wiki; apply --append;" data-testname="render as wiki"></div>
+	</section>
+
 
 </div><!-- /sampleTemplate -->
 </body>

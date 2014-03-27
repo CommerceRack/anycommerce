@@ -34,17 +34,21 @@ function dump(v)	{
 
 
 function runTests()	{
+	window.myCreole = new Parse.Simple.Creole();
 	$._app = {'vars':{}} //tlc checks this for a debug var (not part of this test)
 	var dataset = {
 		'name' : 'bob',
-		longString : 'this is a long string to use for testing.',
+		'long-string' : 'this is a long string to use for testing.',
 		'epochts' : 1395787429,
-		number : 10,
-		blank : '',
+		'number' : 10,
+		'html' : "<h1>This is some html</h1><p>Isn't it wonderful</p>",
+		'wiki' : "= This is a wiki h1 =",
+		'wiki2' : "=This is a wiki h1=",
+		'blank' : '',
 		'null' : null,
-		smallArray : ["frank","albert","tom","harry"],
-		smallHash : {'name':'ron','nickname' : 'tater salad'},
-		price : 24.95,
+		'small-array' : ["frank","albert","tom","harry"],
+		'small-hash' : {'name':'ron','nickname' : 'tater salad'},
+		'price' : 24.95,
 		'boolean-true' : true,
 		'boolean-false' : false,
 		'string-false' : 'false'
@@ -97,7 +101,7 @@ function runTests()	{
 //first param is the pretty name of the test itself.
 //second param is function that contains actual testing code.
 	test( "TLC Verbs", function() {
-		$("[data-tlc]",'#verb-tests').each(function(index){
+		$("[data-testtype]",'#verb-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
@@ -107,7 +111,7 @@ function runTests()	{
 		ok($('#child-gets-replaced').html() == 'bob', "replace" );
 		});
 	test( "TLC Formats", function() {
-		$("[data-tlc]",'#format-tests').each(function(index){
+		$("[data-testtype]",'#format-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
@@ -115,7 +119,7 @@ function runTests()	{
 			}); //loop
 		});
 	test( "TLC Math", function() {
-		$("[data-tlc]",'#math-tests').each(function(index){
+		$("[data-testtype]",'#math-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
@@ -123,7 +127,7 @@ function runTests()	{
 			}); //loop
 		});	
 	test( "TLC Time", function() {
-		$("[data-tlc]",'#time-tests').each(function(index){
+		$("[data-testtype]",'#time-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
@@ -131,7 +135,7 @@ function runTests()	{
 			}); //loop
 		});
 	test( "TLC Stringify", function() {
-		$("[data-tlc]",'#stringify-tests').each(function(index){
+		$("[data-testtype]",'#stringify-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
@@ -139,7 +143,15 @@ function runTests()	{
 			}); //loop
 		});
 	test( "TLC Comparisons", function() {
-		$("[data-tlc]",'#comparison-tests').each(function(index){
+		$("[data-testtype]",'#comparison-tests').each(function(index){
+			var $ele = $(this);
+			if($ele.data('testtype'))	{
+				testElement($ele);
+				}
+			}); //loop
+		});
+	test( "TLC render", function() {
+		$("[data-testtype]",'#render-tests').each(function(index){
 			var $ele = $(this);
 			if($ele.data('testtype'))	{
 				testElement($ele);
