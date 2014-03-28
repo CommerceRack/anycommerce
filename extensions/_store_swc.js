@@ -82,6 +82,9 @@ var store_swc = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			showSizeChart : function(){
+				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
+				},
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"

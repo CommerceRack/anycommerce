@@ -33,6 +33,7 @@ a.redText{color:#7e0000}
 #search input{ border-radius:3px; border: 1px solid #b3b3b3;}
 
 #footer {color:white; padding: 20px 0px;}
+#footer a {color:white; text-decoration: none;}
 
 #footer .displayTableCell {padding: 4px 0px; font-size:.9em;}
 
