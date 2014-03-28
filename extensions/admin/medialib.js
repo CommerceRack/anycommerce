@@ -516,8 +516,15 @@ setTimeout(function(){
 							P.eleSelector = 'input_'+_app.u.guidGenerator();
 							strOrObj.attr('id',P.eleSelector);
 							}
+						if($image.data('media'))	{
+							//this is not the way to get the 'currently selected' to work.  P.src goes into legacy UI mode, which isn't the desired behavior.
+							//## TODO -> media is set on the image. Need to load the currently selected image into the media library header.
+//							P.src = $image.data('media');
+							}
 						}
 					else if(typeof strOrObj == 'string')	{P.src = strOrObj;}
+					else	{} //strOrObj is blank or an invalid format.
+					
 					_app.ext.admin_medialib.a.showMediaLib(P);
 					}
 				else	{

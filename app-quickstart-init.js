@@ -13,8 +13,14 @@ myApp.rq.push(['extension',0,'order_create','extensions/checkout/extension.js'])
 myApp.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
+//myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js']);
+
+myApp.rq.push(['extension',0,'store_swc','extensions/_store_swc.js']);
+//myApp.rq.push(['css',0,'lightbox/css/lightbox.css', 'lightboxCSS']); 
+myApp.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']); 
 
 myApp.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
+myApp.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 myApp.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);

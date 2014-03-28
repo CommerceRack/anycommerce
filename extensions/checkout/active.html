@@ -116,7 +116,7 @@ item list and summary are separate just to give more control over location.
 	</div>
 
 	<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
-	<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox">Create account</label>
+	<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
 </div>
 
 </section>
@@ -285,7 +285,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.prod_name'; if(is $var --blank;) {{bind $var '.description'; }}; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
 	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="stid"></div>
 	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="prodLatency"></div>
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="prodOptions"></div>
+	<div data-tlc="bind $var '.%options'; controller#selectedoptionsdisplay --legacy; " class="prodOptions"></div>
 	</td>
 	<td class="alignRight"><span data-tlc="bind $var '.qty'; if (is $var --notblank;) {{apply --append;}};"></span></td>
 	<td class="alignRight"><span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span></td>
@@ -334,15 +334,16 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<input name="coupon" size="8" data-input-keyup="trigger-button-id" data-trigger-button-id="execCouponAdd" data-input-format="alphanumeric" type="text">
 		<button class="applyButton" data-app-click="order_create|execCouponAdd" data-button-id="execCouponAdd">add</button>
 	</div>
+	<!-- will appear if company field is populated AND payment method is NOT PO -->
+	<div data-app-role="referenceNumber" class="displayNone">
+		<label>Purchase Order/Reference #: </label>
+		<input type'text'="" name="want/reference_number" size="12">
+	</div>
 
 	<button class="applyButton ui-state-highlight" data-app-click="order_create|execCartOrderCreate">
 		Place Order
 	</button>
 
-<div data-app-role="referenceNumber" class="displayNone">
-	<label>Purchase Order/Reference #: </label>
-	<input type'text'="" name="want/reference_number" size="12">
-</div>
 
 
 </section>
@@ -381,7 +382,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <div id="chkoutBuyerWalletListItem">
 	<label>
-		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio">
+		<input data-tlc="bind $var '.ID'; apply --inputvalue; " name="want/payby" value="" type="radio" data-app-change='order_create|shipOrPayMethodSelectExec'>
 		<span data-tlc="bind $var '.TD'; if (is $var --notblank;) {{apply --append;}};"></span>
 		<span data-tlc="bind $var '.TD'; cco#walletnameintoicon  --legacy;"></span>
 	</label>
@@ -422,7 +423,7 @@ do NOT change the input name or id or checkout will likely break.
 			<div data-tlc="bind $var '.payment_status_msg'; if (is $var --notblank;) {{apply --append;}};" class="zwarn"></div><!-- displays payment issues/errors -->
 		</div>
 		<div data-tlc="bind $var '.payment_status_detail'; if (is $var --notblank;) {{apply --append;}};" class="marginBottom"></div>
-		<div>You will receive an order confirmation email with details of your order</div>
+		<div>You will receive an order confirmation email with details of your order.</div>
 	</div>
 
 
@@ -487,7 +488,7 @@ do NOT change the input name or id or checkout will likely break.
 	
 		</td>
 		<td class="orderContentsProdlistContainer">
-		<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --before='<h4>Shipping:</h4>' --legacy;" class="displayNone noListStyle marginBottom"></ul>
+		<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks --legacy;" class="displayNone noListStyle marginBottom"></ul>
 		<table class="listStyleNone lineItemProdlist">
 		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
 		</table>
@@ -555,7 +556,7 @@ If this gets recycled, test in order history after making changes.
 	<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='x '; apply --append;}};"></span>
 	<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='= '; apply --append;}};"></span>
 	</div>
-	<div data-tlc="bind $var '.%options'; controller#optionsfromlist; " class="ztable_row_small prodOptions"></div>
+	<div data-tlc="bind $var '.%options'; controller#selectedoptionsdisplay --legacy; " class="ztable_row_small prodOptions"></div>
 	
 </div>
 	</td>

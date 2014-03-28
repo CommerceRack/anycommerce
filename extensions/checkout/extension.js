@@ -229,7 +229,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //if a cart messenger is open, log the cart update.
 				if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':cartid},'immutable');
+					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
 					}
 
 				
@@ -662,6 +662,13 @@ payment options, pricing, etc
 					$("[data-app-role='username']",$fieldset).hide();
 					$("[data-app-role='loginPasswordContainer']",$fieldset).show();
 					}
+				// ** 201402
+				//if the user is logged in, make sure the 'create account' checkbox is NOT checked.
+				//otherwise, if checked=checked is set to enable account create by default and a user logs in, the checked box will cause validation error on a hidden panel.
+				if(_app.u.buyerIsAuthenticated())	{
+					$("input[name='want/create_customer']",$fieldset).prop('checked',false);
+					}
+				
 				_app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //preflight
 
@@ -670,8 +677,11 @@ payment options, pricing, etc
 				
 				var authState = _app.u.determineAuthentication(),
 				createCustomer = formObj['want/create_customer'];
-
-				if(authState == 'authenticated' || authState == 'thirdPartyGuest'  || _app.ext.cco.u.thisSessionIsPayPal())	{
+				
+				if(_app.u.buyerIsAuthenticated())	{
+					$fieldset.hide();
+					}
+				else if(authState == 'thirdPartyGuest'  || _app.ext.cco.u.thisSessionIsPayPal())	{
 					$fieldset.hide();
 					}
 				else {
@@ -1211,7 +1221,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				},
 
 			cartItemAppendSKU : function($ele,p)	{
+//				dump("BEGIN order_create.e.cartItemAppendSKU");
 				p.skuArr = [$ele.closest("[data-sku]").data('sku')];
+//				dump(" -> p.skuArr: "); dump(p.skuArr);
 				this.cartItemAppendAllSKUsFromOrder($ele,p);
 				},
 
@@ -1259,6 +1271,40 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					//cartItemUpdate will handle error display.
 					}
 				}, //cartItemUpdateExec
+
+
+			cartShippingSave : function($ele,p)	{
+				p.preventDefault();
+				var
+					$container = $ele.closest("[data-app-role='customShipMethodContainer']"),
+					cartid = $ele.closest(":data(cartid)").data('cartid'),
+					sfo = $container.serializeJSON();
+					
+				$('.ui-state.error',$container).removeClass('ui-state-error'); //remove any previous errors.
+				if(sfo['sum/shp_carrier'] && sfo['sum/shp_method'] && sfo['sum/shp_total'])	{
+					_app.model.addDispatchToQ({
+						'_cmd':'adminCartMacro',
+						'_cartid' : cartid,
+						'_tag' : {},
+						"@updates" : ["SETSHIPPING?"+$.param(sfo)]
+						},'immutable');
+					_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
+					_app.model.dispatchThis('immutable');
+					}
+				else	{
+					//handle errors.
+					if($("[name='sum/shp_carrier']",$container).val())	{}
+					else	{$("[name='sum/shp_carrier']",$container).addClass('ui-state-error')}
+
+					if($("[name='sum/shp_method']",$container).val())	{}
+					else	{$("[name='sum/shp_method']",$container).addClass('ui-state-error')}
+
+					if($("[name='sum/shp_total']",$container).val())	{}
+					else	{$("[name='sum/shp_total']",$container).addClass('ui-state-error')}
+					}
+
+				}, //orderSummarySave
+
 
 			cartItemAddFromForm : function($ele,p)	{
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
@@ -2087,18 +2133,23 @@ _app.model.dispatchThis('passive');
 							var $label = $("<label \/>");
 							if(pMethods[i].id.indexOf("GIFTCARD") === 0)	{
 								//onClick event is added through an app-event. allows for app-specific events.
-								$("<button \/>")
-									.text('add')
+								$("<button>Add</button>")
 									.attr({'title':'Apply this giftcard towards this purchase','data-giftcard-id':pMethods[i].id.split(':')[1]})
 									.button({icons: {primary: "ui-icon-cart"},text: true})
 									.addClass('isGiftcard')
 									.appendTo($label);
+								$label.append(pMethods[i].pretty).appendTo($div);
 								}
+//this hid wallets in order processing.
+//							else if(pMethods[i].id.indexOf("WALLET") === 0)	{
+								//wallets are in the 'stored payments' panel. If they're shown here too, the input 'name' will be duplicated and selecting it will cause the 'other' input to be selected (and not this one)
+//								}
 							else	{
 								//onClick event is added through an app-event. allows for app-specific events.
 								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' />");
+								$label.append(pMethods[i].pretty).appendTo($div);
 								}
-							$label.append(pMethods[i].pretty).appendTo($div);
+							
 							$div.appendTo($r);
 							}
 						}

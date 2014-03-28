@@ -2,12 +2,13 @@ dataTLC
  = grammar+
 
 grammar
- = cmd:(IfStatement) _ lb* { return cmd; }
- / cmd:(WhileLoopStatement) _ lb* { return cmd; }
- / cmd:(ForeachLoopStatement) _ lb* { return cmd; }
- / cmd:(BindStatement) _ lb* { return cmd; } 
- / cmd:(setStatement) _ lb* { return cmd; } 
- / cmd:(command) _ lb* { return cmd; }
+ = _ cmd:(IfStatement) _ lb* { return cmd; }
+ / _ cmd:(WhileLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(ForeachLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(BindStatement) _ lb* { return cmd; } 
+ / _ cmd:(SetStatement) _ lb* { return cmd; } 
+ / _ cmd:(ExportStatement) _ lb* { return cmd; } 
+ / _ cmd:(command) _ lb* { return cmd; }
 
 command
  = _ module:([a-z_]+ "#")? cmd:[a-z?]+ args:((ws+ value)+)? _ lb* {
@@ -31,9 +32,20 @@ BindStatement
   return { type:"BIND", Set:set, Src:src }
   }
 
-setStatement
- = "set" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
-  return { type:"SET", Set:set, Src:src }
+
+// ** EXPORT **
+// export 'key' --dataset=$var
+// export '%key' --dataset=$var
+ExportStatement
+= "export" _ set:(scalar / variable) args:(ws+ value)+ _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null } 
+  }
+
+// ** SET ** 
+// set $dst $src --path='.xyz';
+SetStatement
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag / boolean / integer) args:((ws+ value)+)? _ lb+ {
+  return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
   }
 
 // if (command) {{ }} else {{ }};
@@ -89,10 +101,7 @@ StatementList
 
 Statement
   = Block
-  / BindStatement+
-  / command+
-  
-
+  / grammar+
 
 
 /* value types */
@@ -194,7 +203,7 @@ SourceCharacter
   = .
 
 ws
- = [ \t\n]
+ = [ \t\n\r]
 
 _
  = (ws / comment)*

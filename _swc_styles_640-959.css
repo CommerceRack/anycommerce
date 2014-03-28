@@ -1,0 +1,32 @@
+.displayNone_640{display:none;}
+
+.fixedContainer {
+	max-width:640px;
+	margin: auto;
+}
+
+#livechat {margin-left: 42px;}
+#mininav{font-size:.7em;}
+#contact{font-size:.7em;}
+#search input{ height:13px;}
+
+#footer > div{position:relative; height:136px;}
+.footerColumn {
+	position:absolute;
+	width:170px;
+}
+
+#footerLeft{left:0px;}
+#footerRight{right:0px;}
+#footerMiddle{left: 50%; margin-left:-85px;}
+
+.footerColumn h3 { letter-spacing:4px; font-size: .7em; padding: 2px 0px;}
+
+.homepageBanner {height:322px;}
+.homepageBanner .bannerImg{line-height:322px;}
+.blockLink, li.blockLink {width: 24%; margin: .5%;}
+
+.productListItem .prodInfo {height: 40px; padding: .2em 0em; font-size: .9em;}
+.productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
+
+.productPage .addtocartbutton{width:99px; height:31px; background:url(images/prodpages/add_to_cart_button_99x31.png) no-repeat;}

@@ -361,7 +361,7 @@ addToCart : function (pid,$form){
 			atcquantityinput : function($tag,data)	{
 				var $input = $("<input \/>",{'name':'qty'});
 				if(_app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
-					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
+					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).addClass('numberInput').appendTo($tag);
 					$input.on('keyup.classChange',function(){
 						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
 						});
@@ -634,7 +634,9 @@ NOTES
 						_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 						});
 					
-					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
+//					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
+					$parent.dialog('open').append(new tlc().getTemplateInstance(P.templateID).attr('data-pid',P.pid));
+					_app.u.handleCommonPlugins($parent);
 					P.state = 'init';
 					_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 					_app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
@@ -643,7 +645,7 @@ NOTES
 							}
 						else	{
 							$parent.dialog( "option", "title", _app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
-							$parent.anycontent({'templateID':P.templateID,'translateOnly':true,'datapointer':"appProductGet|"+P.pid});
+							$parent.tlc({'templateid':P.templateID,'verb':'translate','datapointer':"appProductGet|"+P.pid});
 							P.state = 'complete';
 							_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 							}

@@ -334,8 +334,42 @@ _app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 						_app.ext.admin_template.u.handleWizardProgressBar($("[data-app-role='progressBar']",$templateEditor));
 						}
 					});
-				} //initWizard
-			
+				}, //initWizard
+
+			invoiceEditor : function($target,params)	{
+				$target.addClass('ui-widget');
+				var $textarea = $("<textarea \/>").val("<b>Some Content</b>").appendTo($target);
+	//will need to make a resource call here and then load this as the callback, putting the body of the resource into the textarea.
+				var $buttonset = $("<div \/>").addClass('buttonset alignRight smallPadding ui-widget-content');
+				$("<button \/>").text('Cancel Changes').button().on('click',function(){
+					navigateTo("#!ext.admin_template.invoiceEditor");
+					}).appendTo($buttonset);
+
+				$("<button \/>").text('Save Changes').button().on('click',function(){
+					// ### TODO -> 
+					}).appendTo($buttonset);
+
+				$buttonset.prependTo($target); //add this to DOM after all the buttons have been added. minimized DOM updates.
+				
+				$textarea.tinymce({
+					valid_children : "head[style|meta|base],+body[style|meta|base]", //,body[style|meta|base] -> this seems to cause some dropped lines after an inline 'style'
+					valid_elements: "*[*]",
+					extended_valid_elements : "@[class]",
+					menubar : 'edit insert view format table tools',
+					height : ($(document.body).height() - $('#mastHead').outerHeight() - 200),
+					visual: false, //turn off visual aids by default. menu choice will still show up.
+					keep_styles : true,
+					image_list: [],
+					plugins: [
+						"_image advlist autolink lists link charmap print preview anchor",
+						"searchreplace visualblocks code fullscreen fullpage", //fullpage is what allows for the doctype, head, body tags, etc.
+						"media table contextmenu paste"
+						],
+					toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+					});	
+				
+				}
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -1473,6 +1507,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 			
 // used to download a zip file of a 'container' (which is a template saved into a profile or campaign).
 				containerZipDownloadExec : function($ele,P)	{
+					P.preventDefault();
 					var mode = $ele.data('mode'), data = $ele.closest('.buttonset').data();
 					if(!_app.ext.admin_template.u.missingParamsByMode(mode,data))	{
 						$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')).showLoading({'message':'Building a zip file. One moment please...'});
@@ -1562,6 +1597,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 					},
 
 				adminEBAYProfilePreviewShow : function($ele,p)	{
+					p.preventDefault();
 						var $D = _app.ext.admin.i.dialogCreate({"title":"HTML Listing Preview"});
 						$D.dialog('open');
 //this is used in the product editor 
@@ -1632,6 +1668,7 @@ else	{
 					},
 
 				templateChooserShow : function($ele,p)	{
+					p.preventDefault();
 					if($ele.data('mode') == 'Campaign')	{
 						_app.ext.admin_template.a.showTemplateChooserInModal({"mode":"Campaign","campaignid":$ele.closest("[data-campaignid]").data('campaignid')});
 						}
@@ -1655,6 +1692,7 @@ else	{
 					}, //templateChooserShow
 
 				templateEditorShow : function($ele,p)	{
+					p.preventDefault();
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
 						navigateTo('#!ext/admin_template/showTemplateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
@@ -1681,6 +1719,7 @@ else	{
 					}, //templateEditorShow
 					
 				containerFileUploadShow : function($ele,p)	{
+					p.preventDefault();
 					var mode = $ele.data('mode');
 					var data = $ele.closest('.buttonset').data();
 					

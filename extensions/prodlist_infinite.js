@@ -58,12 +58,7 @@ var prodlist_infinite = function(_app) {
 			onSuccess : function()	{
 //				_app.u.dump('BEGIN _app.ext.prodlist_infinite.init.onSuccess ');
 				return true;  //currently, there are no config or extension dependencies, so just return true. may change later.
-//unbind this from window anytime a category page is left.
-//NOTE! if infinite prodlist is used on other pages, remove run this on that template as well.
-				_app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-					$(window).off('scroll.infiniteScroll'); 
-					}]);
-				
+		
 //				_app.u.dump('END _app.ext.store_prodlist.init.onSuccess');
 				},
 			onError : function()	{
@@ -91,9 +86,10 @@ var prodlist_infinite = function(_app) {
 //that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
 
-			infiniteProductList : function($tag,data)	{
-//				_app.u.dump("BEGIN prodlist_infinite.renderFormats.infiniteProductList");
+			infiniteproductlist : function($tag,data)	{
+//				_app.u.dump("BEGIN prodlist_infinite.renderFormats.infiniteProductList"); dump(data);
 //				_app.u.dump(" -> data.bindData: "); _app.u.dump(data.bindData);
+				data.bindData.loadsTemplate = data.bindData.templateid;
 				if(_app.u.isSet(data.value))	{
 					data.bindData.csv = data.value;
 					$tag.data('bindData',data.bindData);
@@ -156,34 +152,27 @@ It is run once, executed by the renderFormat.
 				pageCSV = _app.ext.store_prodlist.u.getSkusForThisPage(plObj), //gets a truncated list based on items per page.
 				L = pageCSV.length;
 				$tag.data('prodlist',plObj); //sets data object on parent
+				var $template = new tlc().getTemplateInstance(plObj.loadsTemplate);
 
+				function handleProd(pid,$templateCopy)	{
+					$templateCopy.attr('data-pid',pid);
+					return _app.calls.appProductGet.init({"pid":pid,"withVariations":plObj.withVariations,"withInventory":plObj.withInventory},{'callback':'tlc',jqObj:$templateCopy,'verb':'translate'},'mutable');
+					}
 //Go get ALL the data and render it at the end. Less optimal from a 'we have it in memory already' point of view, but solves a plethora of other problems.
 				for(var i = 0; i < L; i += 1)	{
-					numRequests += _app.calls.appProductGet.init({
-						"pid":pageCSV[i],
-						"withVariations":plObj.withVariations,
-						"withInventory":plObj.withInventory
-						},{},'mutable');
+					numRequests += handleProd(pageCSV[i],$template.clone(true).appendTo($tag))
 					if(plObj.withReviews)	{
 						numRequests += _app.ext.store_prodlist.calls.appReviewsList.init(pageCSV[i],{},'mutable');
 						}
 					}
-				
+
 				var infiniteCallback = function(rd)	{
+					$('.loadingBG',$tag).removeClass('loadingBG');
 					$tag.data('isDispatching',false); //toggle T/F as a dispatch occurs so that only 1 infinite scroll dispatch occurs at a time.
 					if(_app.model.responseHasErrors(rd)){
 						$tag.parent().anymessage({'message':rd});
 						}
 					else	{
-						for(var i = 0; i < L; i += 1)	{
-// *** 201330 Uses $placeholders and the new insertProduct function to simulate aynchronous callback and preserve product order
-// while inserting products.  Before, if more appProductGet's were sent than could fit into a single pipeline, if the pipelined
-// request that held the "ping" with the infiniteCallback returned before another, the _app.data["appProductGet|"...] would return 
-// undefined and the callback would fail mid-append. 
-							var $placeholder = $('<span />');
-							$tag.append($placeholder);
-							_app.ext.prodlist_infinite.u.insertProduct(pageCSV[i], plObj, $placeholder);
-							}
 						_app.ext.prodlist_infinite.u.handleScroll($tag);
 						}				
 					}
@@ -207,8 +196,9 @@ It is run once, executed by the renderFormat.
 						data['reviews'] = _app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
 						data['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 						}
-														//if you want this list inventory aware, do you check here and skip the append below.
-					$placeholder.before(_app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+//if you want this list inventory aware, do you check here and skip the append below.
+//					$placeholder.before(_app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+					$placeholder.before(new tlc().getTemplateInstance(plObj.loadsTemplate).attr('data-pid',pid))
 					$placeholder.remove();
 					}
 				else if(attempts < 50){

@@ -328,14 +328,17 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 			dispatch : function(obj,_tag){
 				_app.u.dump("Attempting to log in");
 				obj._cmd = 'authAdminLogin';
-				if(obj.authtype == 'md5')	{
+				obj.authid = obj.password;
+				obj.authtype = 'password';
+// ** 201402 -> md5 is no longer used for login. 
+/*				if(obj.authtype == 'md5')	{
 					_app.vars.userid = obj.userid.toLowerCase();	 // important!
 					obj.ts = _app.u.ymdNow();
 					obj.authid = Crypto.MD5(obj.password+obj.ts);
 					obj.device_notes = "";
 					delete obj.password;
 					}
-
+*/
 				obj._tag = _tag || {};
 				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true OR it's passed in _tag
 				_app.model.addDispatchToQ(obj,'immutable');
@@ -891,9 +894,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return uriParams;
 			},
-	
-		init : function()	{
 
+		init : function()	{
 			//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
 			$.extend(_app.router.initObj,{
 				hash : location.hash,
@@ -909,7 +911,23 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				//what to do here?
 				}
 	//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
-			window.addEventListener("hashchange", _app.router.handleHashChange, false);
+			if (window.addEventListener) {
+				console.log(" -> addEventListener is supported and added for hash change.");
+				window.addEventListener("hashchange", _app.router.handleHashChange, false);
+				}
+			//IE 8
+			else if(window.attachEvent)	{
+				//A little black magic here for IE8 due to a hash related bug in the browser.
+				//make sure a hash is set.  Then set the hash to itself (yes, i know, but that part is key). Then wait a short period and add the hashChange event.
+				window.location.hash = window.location.hash || '#!home'; //solve an issue w/ the hash change reloading the page.
+				window.location.hash = window.location.hash;
+				setTimeout(function(){
+					window.attachEvent("onhashchange", _app.router.handleHashChange);
+					},1000);
+				}
+			else	{
+				$("#globalMessaging").anymessage({"message":"Browser doesn't support addEventListener OR attachEvent.","gMessage":true});
+				}
 			},
 	
 		handleHashChange : function()	{
@@ -1151,7 +1169,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(_app.u.numberOfLoadedResourcesFromPass(0) == _app.vars.rq.length)	{
 					_app.vars.rq = null; //this is the tmp array used by handleRQ and numberOfResourcesFromPass. Should be cleared for next pass.
 					_app.model.addExtensions(_app.vars.extensions);
-					_app.router.init();
+					_app.router.init(); ///### FUTURE -> this should be in the app / app init, not here.
 					_app.u.handleRQ(1); //this will empty the RQ.
 					_app.rq.push = _app.u.loadResourceFile; //reassign push function to auto-add the resource.
 					}
@@ -1360,7 +1378,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					type = ep.handleObj.origType; //use this if available. ep.type could be 'focusOut' instead of 'blur'.
 					}
 				
-				dump(" -> type: "+type);
+//				dump(" -> type: "+type);
 				
 				var r, actionsArray = $CT.attr('data-app-'+type).split(","), L = actionsArray.length; // ex: admin|something or admin|something, admin|something_else
 				for(var i = 0; i < L; i += 1)	{
@@ -1417,8 +1435,8 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 
 			printByjqObj : function($ele)	{
 				var printWin = false;
-				if($ele && $ele.length)	{
-					var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
+				if($ele && $ele instanceof jQuery)	{
+/*					var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
 					html+= $ele.html();
 					html+="</body></html>";
 					
@@ -1431,21 +1449,28 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 						printWin.print();
 						printWin.close();
 						}
+*/
+
+var $pc = $("#printContainer");
+if($pc.length)	{
+	$pc.empty(); //emptied to make sure anything leftover from last print is gone.
+	}
+else	{
+	$pc = $("<div \/>",{'id':'printContainer'}).css('display','none').appendTo(document.body);
+	}
+var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($pc);
+$iframe.contents().find('body').append($ele.html());
+$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
+window.frames["printContainerIframe"].focus();
+window.frames["printContainerIframe"].print();
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In _app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
 					}
 				return printWin;
 				},
-
-			printByElementID : function(id)	{
-				if(id && $(_app.u.jqSelector('#',id)).length)	{
-					_app.u.printByjqObj($(_app.u.jqSelector('#',id)));
-					}
-				else	{
-					_app.u.dump("WARNING! - printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
-					}
-				}, //printByElementID
 
 //pass in "_app.data.something.something" as s (string) and this will test to make sure it exists.
 //co (Context Object) is an optional param to search within. ex:  thisNestedExists("data.something.something",_app) will look for _app.data.somthing.something and return true if it exists or false if it doesn't.
@@ -1466,7 +1491,6 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 					if (!o) {o= null; break;}
 					}
 				return o;
-	
 				}, //getObjValFromString
 
 			getDomainFromURL : function(URL)	{
@@ -1608,7 +1632,7 @@ URI PARAM
 			kvp2Array : function(s)	{
 				var r = false;
 				if(s && s.indexOf('=') > -1)	{
-					r = s?JSON.parse('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }):{};
+					r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
 					}
 				else	{}
 				return r;
@@ -1675,6 +1699,15 @@ AUTHENTICATION/USER
 				}, //determineAuthentication
 	
 	
+			hash2kvp : function(hash,encode)	{
+				encode = (encode === false) ? false : true;
+				var str = [];
+				for(var p in hash)
+					if (hash.hasOwnProperty(p)) {
+					str.push(encodeURIComponent(p) + "=" + encodeURIComponent(hash[p]));
+					}
+				return str.join('&');
+				},
 	
 //pass in an array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)
@@ -2955,6 +2988,7 @@ do's should modify $tag or apply the value.
 				data.bindData.h = $tag.attr('height');
 				data.bindData.tag = 0;
 				$tag.attr('src',_app.u.makeImage(data.bindData)); //passing in bindData allows for using
+				$tag.attr('data-media',data.value); //used w/ media library. will b set by tlc.
 				}
 			else	{
 //				$tag.css('display','none'); //if there is no image, hide the src. 
@@ -3274,7 +3308,6 @@ $tmp.empty().remove();
 	formatRules : {
 
 		'CC' : function($input,$err)	{
-			_app.u.dump(" got here. is valid cc:  "+_app.u.isValidCC($input.val()));
 			var r = _app.u.isValidCC($input.val());
 			if(!r)	{$err.append('The credit card # provided is not valid')}
 			return r;

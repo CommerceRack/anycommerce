@@ -105,6 +105,12 @@ var admin_config = function(_app) {
 				_app.u.handleButtons($target);
 				},
 
+			passwordUpdate : function($target,P)	{
+				$target.tlc({'templateid':'passwordUpdateTemplate','verb':'template'});
+				_app.u.handleButtons($target);
+				_app.u.addEventDelegation($target);
+				},
+
 			showNotifications : function($target)	{
 				$target.intervaledEmpty();
 				_app.u.addEventDelegation($target);
@@ -150,39 +156,29 @@ var admin_config = function(_app) {
 		
 			showPluginManager : function($target)	{
 				$target.showLoading({'message':'Fetching Your Integration Data'});
-
+				_app.u.addEventDelegation($target);
 				_app.model.addDispatchToQ({
 					'_cmd':'adminConfigDetail',
 					'plugins':1,
 					'_tag':{
-						'callback': function(rd)	{
-							if(_app.model.responseHasErrors(rd)){
-								$target.anymessage({'message':rd});
-								}
-							else	{
-								$target.anycontent({'templateID' : 'pluginManagerPageTemplate','datapointer':rd.datapointer});
-								_app.u.addEventDelegation($target);
-								_app.u.handleButtons($target);
-								$("[data-app-role='slimLeftNav']",$target).accordion();
-								}
-							},
+						'callback': 'tlc',
+						'templateID' : 'pluginManagerPageTemplate',
+						'jqObj' : $target,
+						'onComplete' : function()	{$("[data-app-role='slimLeftNav']",$target).accordion();},
 						'datapointer':'adminConfigDetail|plugins'
 					}
 				},'mutable');
 				_app.model.dispatchThis('mutable');
-
 				},
 			
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
-				
 				if($target instanceof jQuery && vars.plugin)	{
-//					_app.u.dump(' -> templateID: '+'pluginTemplate_'+vars.plugintype+'_'+vars.plugin);
-					$target.empty().anycontent({'templateID':'pluginTemplate_'+vars.plugin,'data':_app.ext.admin_config.u.getPluginData(vars.plugin)});
+					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({'domain':_app.vars.domain},_app.ext.admin_config.u.getPluginData(vars.plugin))});
 					_app.u.handleCommonPlugins($target);
+					_app.u.handleButtons($target);
 					$target.parent().find('.buttonset').show();
-//					_app.u.dump(" -> $target.closest('form').length: "+$target.closest('form').length);
-					_app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+					$target.closest('form').anyform({'trackEdits':true});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set.","gMessage":true});
@@ -247,11 +243,14 @@ var admin_config = function(_app) {
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$target.anycontent({'templateID':'paymentAvailabilityTemplate',data : payData});
 							break;
-						
-						
-						case 'CHECK':
+						// ** 201402 -> these payment types no longer support a handling fee.
 						case 'COD':
 						case 'CHKOD':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
+							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
+							break;
+						
+						case 'CHECK':
 							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentHandlingFeeTemplate',data : payData}).appendTo($target);
@@ -497,6 +496,7 @@ var admin_config = function(_app) {
 					'header' : 'Coupon Manager', //left off because the interface is in a tab.
 					'className' : 'couponManager',
 					'buttons' : [
+						"<button data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/RULES' data-element data-export='coupon' data-whitelist='export' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download Coupon Rules<\/button>",
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh Coupon List<\/button>",
 						"<button data-app-click='admin_config|couponCreateShow' data-text='true' data-icon-primary='ui-icon-plus' class='applyButton'>Add Coupon<\/button>"
 						],
@@ -1571,6 +1571,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$("[name='SCHEDULE']",$panel).val();
 						}
 					_app.u.handleButtons($panel);
+					$panel.anyform(); //form delegation is already present, but this will trigger the defaults.
 					}
 				else	{
 					$DMI.anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, rulesmode ['+$ele.data('rulesmode')+'] on trigger element is either missing or invalid. Only coupons and shipping are acceptable values.','gMessage':true});
@@ -1579,18 +1580,21 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 			pluginUpdateExec : function($ele,p)	{
 				var $form = $ele.closest('form');
-				$form.showLoading({'message':'Saving Changes'});
-				_app.model.addDispatchToQ({
-					'_cmd':'adminConfigMacro',
-					'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
-					'_tag':	{
-						'callback':'showMessaging',
-						'restoreInputsFromTrackingState' : true,
-						'message' : "Your changes have been saved.",
-						'jqObj' : $form
-						}
-					},'immutable');
-				_app.model.dispatchThis('immutable');
+				if(_app.u.validateForm($form))	{
+					$form.showLoading({'message':'Saving Changes'});
+					_app.model.addDispatchToQ({
+						'_cmd':'adminConfigMacro',
+						'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+						'_tag':	{
+							'callback':'showMessaging',
+							'restoreInputsFromTrackingState' : true,
+							'message' : "Your changes have been saved.",
+							'jqObj' : $form
+							}
+						},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else	{} //validate form will handle the error display.
 				},
 
 			pluginUpdateShow : function($ele,p)	{
@@ -1639,6 +1643,16 @@ when an event type is changed, all the event types are dropped, then re-added.
 				
 				}, //billingInvoiceViewDownload
 			
+			buildGUID : function($ele,p)	{
+				var $form = $ele.closest('form');
+				if($ele.attr('data-input-name') && $("input[name='"+$ele.attr('data-input-name')+"']",$form).length)	{
+					$("input[name='"+$ele.attr('data-input-name')+"']",$form).val(_app.u.guidGenerator()).trigger('keyup')
+					}
+				else	{
+					$form.anymessage({"message":"In admin_config.e.buildGUID, either data-input-name ["+$ele.attr('data-input-name')+"] not set on trigger element or no input matching that name found within parent form."});
+					}
+				},
+			
 			billingHandleTabContents : function($ele,p)	{
 				var tab = $ele.closest('.ui-tabs-nav').find('.ui-state-active').data('anytabsTab');
 				var $tabContent = $ele.closest("[data-app-role='billingHistory']").find("[data-anytab-content='"+tab+"']:first");
@@ -1668,7 +1682,28 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					else	{}
 					}
-				} //billingHandleTabContents
+				}, //billingHandleTabContents
+
+			adminPasswordUpdateExec : function($ele,p)	{
+				p.preventDefault();
+				var  $form = $ele.closest('form'), sfo = $form.serializeJSON();
+				
+				if(_app.u.validateForm($form))	{
+					dump(" -> passed standard validation");
+					if(sfo.oldpassword == sfo.newpassword1)	{
+						$form.anymessage({'errtype':'youerr','message':'The old password can not match the new password'});
+						}
+					else if(sfo.newpassword1 != sfo.newpassword2)	{
+						$form.anymessage({'errtype':'youerr','message':'The values you entered for the new password do not match. Please make sure the value for password and password again are exactly the same.'});
+						}
+					else	{
+						_app.model.addDispatchToQ({"_cmd":"adminPasswordUpdate","old":sfo.oldpassword,"new":sfo.newpassword1,"_tag":{"callback":"showMessaging","jqObj":$form,"message":"Your password has been changed."}},"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					}
+				else	{} //validate handles error display.
+				return false;
+				}
 
 
 			} //e [app Events]

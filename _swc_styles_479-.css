@@ -1,0 +1,25 @@
+.displayNone_320{display:none;}
+.alignCenter_320{text-align:center;}
+.fixedContainer {
+	max-width:320px;
+	margin: auto;
+}
+
+#logo img {
+	height: 30px;
+}
+
+.footerColumn {width:320px;}
+
+.homepageBanner {height:322px;}
+.homepageBanner .bannerImg{line-height:322px; max-width: 100%;}
+.blockLink, li.blockLink {width: 32%; margin: .6%;}
+
+.productListItem .prodInfo {height: 40px; padding: .2em 0em; font-size: .9em;}
+.productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
+
+.categoryTemplate .catName {padding: .5em 0em;}
+
+.productTitle, .productInfo, .productTabs,.productImages {float: none; width:100%;}
+
+.productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}

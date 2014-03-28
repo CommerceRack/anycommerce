@@ -307,6 +307,7 @@ _rtag.jqObj.anyform({
 						});
 					}
 				$modal.empty().append(_app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'));
+				$modal.anyform();
 				_app.u.handleButtons($modal);
 				_app.u.addEventDelegation($modal); 
 				$modal.dialog('open');

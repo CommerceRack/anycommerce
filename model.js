@@ -210,7 +210,7 @@ function model(_app) {
 				
 //				_app.u.dump(index+"). "+_app.q[QID][index]._cmd+" status: "+_app.q[QID][index]._tag.status);
 				
-				if(_app.q[QID][index]._tag.status == 'queued')	{
+				if(_app.q[QID][index]._tag && _app.q[QID][index]._tag.status == 'queued')	{
 					_app.q[QID][index]._tag.status = "requesting";
 //					_app.u.dump(" -> new status: "+_app.q[QID][index]._tag.status);
 					if(puuid){_app.q[QID][index]._tag.pipeUUID = puuid}
@@ -483,6 +483,12 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
 					_app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)','warn');
+					$('.ui-showloading').hideLoading(); //make sure all the showLoadings go away.
+					//brian says that an error 10 will always ONLY be for admin. 2014-03-20
+					if(responseData.errid == 10)	{
+						_app.u.dump(" -> errid of 10 corresponds to an expired token. ");
+						_app.ext.admin.callbacks.handleLogout.onSuccess({"msg":"You were logged out because the token you were using has expired. Please log in to continue."});
+						}
 					if(Q && Q.length)	{
 //						_app.u.dump(" -> Q.length: "+Q.length); _app.u.dump(Q);
 						for(var i = 0, L = Q.length; i < L; i += 1)	{
@@ -629,9 +635,10 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
 			if(cmd == 'adminNavcatMacro')	{}
-			else if(this.cmdIsAnAdminUpdate(cmd))	{
-				r = false;
-				}
+// ** 201402 -> if they don't need to be saved to memory, don't put a datapointer on them. But allow them to be added if necessary.
+//			else if(this.cmdIsAnAdminUpdate(cmd))	{
+//				r = false;
+//				}
 			else	{
 				switch(cmd)	{
 					case 'appPageGet': //saved into category object earlier in process. redundant here.
@@ -1228,7 +1235,11 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 //templateID is how the template will be referenced in _app.templates.
 		makeTemplate : function($templateSpec,templateID)	{
 			var r = true; //what is returned. if a template is created, true is returned.
-			if(templateID && typeof $templateSpec == 'object')	{
+			if(templateID && $templateSpec)	{
+				if($templateSpec instanceof jQuery)	{}
+				else{
+					$templateSpec = $($templateSpec);
+					}
 				_app.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone(true); //events needs to be copied from original
 				_app.templates[templateID].removeAttr('id'); //get rid of the ID to reduce likelyhood of duplicate ID's on the DOM.
 				$('#'+templateID).empty().remove(); //here for templates created from existing DOM elements. They're removed to ensure no duplicate ID's exist.
@@ -1651,7 +1662,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 					
 					}
 				else	{
-					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
+//					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
 					}
 				}
 			else	{
@@ -1789,6 +1800,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
 						},
 					'success' : function(file){
+						var success;
 						try{
 							var pegParserSource = PEG.buildParser(file);
 							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
@@ -1796,7 +1808,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 							}
 						catch(e)	{
 							_app.u.dump("Could not build pegParser.","warn");
-							_app.u.dump(buildErrorMessage(e),"error");
+//							_app.u.dump(buildErrorMessage(e),"error");
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");

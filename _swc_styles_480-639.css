@@ -1,0 +1,30 @@
+.displayNone_480{display:none;}
+
+.fixedContainer {
+	max-width:480px;
+	margin: auto;
+}
+#mininav{font-size:.7em;}
+#contact{font-size:.7em;}
+#search input{ height:13px;}
+
+#footer > div{position:relative; height:136px;}
+.footerColumn {
+	position:absolute;
+	width:128px;
+}
+
+#footerLeft{left:0px;}
+#footerRight{right:0px;}
+#footerMiddle{left: 50%; margin-left:-64px;}
+
+.homepageBanner {height:322px;}
+.homepageBanner .bannerImg{line-height:322px; max-width: 100%;}
+.blockLink, li.blockLink {width: 32%; margin: .6%;}
+
+.productListItem .prodInfo {height: 40px; padding: .2em 0em; font-size: .9em;}
+.productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
+
+.categoryTemplate .catName {padding: .5em 0em;}
+
+.productPage .addtocartbutton{width:99px; height:31px; background:url(images/prodpages/add_to_cart_button_99x31.png) no-repeat;}

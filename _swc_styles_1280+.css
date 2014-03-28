@@ -1,0 +1,27 @@
+.displayNone_1280{display:none;}
+
+.fixedContainer {
+	max-width:1044px;
+	margin: auto;
+}
+#livechat {margin-left: 60px;}
+
+#search input{ height:21px;}
+
+#footer > div{position:relative; height:136px;}
+.footerColumn {
+	position:absolute;
+	width:256px;
+}
+
+#footerLeft{left:0px;}
+#footerRight{right:0px;}
+#footerMiddle{left: 50%; margin-left:-128px;}
+
+#mainContentArea, #globalMessaging {max-width:1280px; margin: auto;}
+
+.homepageBanner {height:322px;}
+.homepageBanner .bannerImg{line-height:322px;}
+.blockLink, li.blockLink {width: 24%; margin: .5%;}
+
+.productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}

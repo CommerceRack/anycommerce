@@ -896,6 +896,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					delete formObj['qty']; //admin UI for line item editing.	
 					delete formObj['price']; //admin UI for line item editing.
 
+					delete formObj['sum/shp_carrier']; //admin UI custom ship cost.
+					delete formObj['sum/shp_method'];
+					delete formObj['sum/shp_total'];
+					
 					_app.ext.cco.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
 				else	{
@@ -971,6 +975,7 @@ in a reorder, that data needs to be converted to the variations format required 
 //callback is executed as part of the cartDetail call, which is piggy backed w/ the append calls.
 //skuArr is an optional param. if set, only the items in skuArr will be appended to the cart.
 			appendOrderItems2Cart : function(vars,callback,skuArr)	{
+//				dump("BEGIN cco.u.appendOrderItems2Cart. skuArr: "); dump(skuArr);
 				vars = vars || {};
 				if(vars.orderid && vars.cartid)	{
 					var cmd; //the command used for the dispatch. varies based on whether this is admin or buyer.
@@ -994,7 +999,10 @@ in a reorder, that data needs to be converted to the variations format required 
 								else	{
 									var items = (cmd == 'adminOrderDetail') ? _app.data[rd.datapointer]['@ITEMS'] : _app.data[rd.datapointer].order['@ITEMS'], L = items.length;
 									for(var i = 0; i < L; i += 1)	{
-										if(skuArr.length && !$.inArray(items[i].sku,skuArr))	{} //skuArr is defined and this item is NOT in the array. do nothing.
+										dump(i+") items[i].sku: "+items[i].sku+" and inArray: "+$.inArray(items[i].sku,skuArr));
+										if(skuArr.length && $.inArray(items[i].sku,skuArr) < 0)	{
+											 //skuArr is defined and this item is NOT in the array. do nothing.
+											}
 										else	{
 											//skuArr is either not defined (append all sku's from order) OR skuArr is defined and this item is in that array. Either way, proceed w/ append.
 											var appendObj = _app.ext.cco.u.buildCartItemAppendObj(items[i],vars.cartid); //will generate a new uuid.
@@ -1317,6 +1325,11 @@ in a reorder, that data needs to be converted to the variations format required 
 		
 		e : {
 			
+			cartFetchExec : function($ele,p)	{
+				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+				_app.model.dispatchThis('immutable');
+				},
+			
 			cartItemRemove	: function($ele,p)	{
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
@@ -1386,7 +1399,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				_app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				_app.model.dispatchThis('immutable');
-				}, //cartZipUpdateExec
+				} //cartZipUpdateExec
 
 			}
 		
