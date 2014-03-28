@@ -183,7 +183,7 @@ var tlc = function()	{
 					
 					}
 				catch(e)	{
-					dump(_self.buildErrorMessage(e)); dump(tlc);
+					dump("TLC error: "+_self.buildErrorMessage(e)+" for: "+tlc);
 					}
 	
 				if(commands && !$.isEmptyObject(commands))	{

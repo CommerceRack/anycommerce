@@ -495,12 +495,16 @@ need to be customized on a per-ria basis.
 
 		pageTransition : function($o,$n)	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
-			if($o.length)	{
+			if($o instanceof jQuery)	{
 				dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
 				}
-			else	{
+			else if($n instanceof jQuery)	{
 				$n.fadeIn(1000)
+				}
+			else	{
+				//hhmm  not sure how or why we got here.
+				dump("WARNING! in pageTransition, neither $o nor $n were instances of jQuery.  how odd.",'warn');
 				}
 			}, //pageTransition
 
@@ -582,7 +586,9 @@ need to be customized on a per-ria basis.
 //here, on 'could' disable the display if they didn't want hidden cats to show in the breadcrumb.
 			cattext : function($tag,data)	{
 //				dump(" -> value: "); dump(data.value);
-				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
+				if(data.value && data.value[0] == '!')	{
+					data.value = data.value.substring(1)
+					}
 				_app.renderFormats.text($tag,data);
 				},
 
