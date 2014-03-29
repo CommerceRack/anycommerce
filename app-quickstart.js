@@ -120,6 +120,9 @@ var quickstart = function(_app) {
 					dump(" -> cartID obtained from fetchCartID. cartid: "+cartID);
 					//no need to add this cartID to the session/vars.carts, because that's where fetch gets it from.
 					}
+				else if(!$.support.localStorage)	{
+					cartID = _app.model.readCookie('_cart'); //support browsers w/out localstorage
+					}
 				else	{}
 
 				if(cartID)	{
@@ -218,6 +221,11 @@ document.write = function(v){
 						
 						}}},"mutable"); //used to determine if user is logged in or not.
 					_app.model.dispatchThis('mutable');
+
+					if(!$.support.localStorage)	{
+						_app.model.writeCookie('_cart',cartID); //support browsers w/ localstorage disabled.
+						}
+
 					}
 				
 				}
