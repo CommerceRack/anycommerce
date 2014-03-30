@@ -778,8 +778,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			},
 			
 		_buildMatchParams : function(route,hash,keysArr)	{
-			var regex = new RegExp(/{{(.*?)}}/g), vars = {};
-			var matchVarsArr = [];
+			var regex = new RegExp(/{{(.*?)}}/g), vars = {}, matchVarsArr = [], isMatch;
 			while(isMatch = regex.exec(route))	{matchVarsArr.push(isMatch[1]);} //isMatch[0] is the match value
 		
 			if(matchVarsArr && matchVarsArr.length)	{
@@ -810,7 +809,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 		//regex.exec[0] will be the match value. so comparing that to the hash will ensure no substring matches get thru.
 		//substring matches can be accomplished w/ a regex in the route.
 					if(isMatch && isMatch[0] == hash)	{
-						r = {'match' : isMatch, 'params' : _app.router._buildMatchParams(routeObj.route,hash,isMatch.splice(1))}; //isMatch is spliced because the first val is the 'match value'.
+						//IE8 requires the second param be passed into splice
+						r = {'match' : isMatch, 'params' : _app.router._buildMatchParams(routeObj.route,hash,isMatch.splice(1,1))}; //isMatch is spliced because the first val is the 'match value'.
 						}
 					}
 				else	{

@@ -508,7 +508,7 @@ need to be customized on a per-ria basis.
 				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
 				}
 			else if($n instanceof jQuery)	{
-				$n.fadeIn(1000)
+				$n.fadeIn(1000);
 				}
 			else	{
 				//hhmm  not sure how or why we got here.
@@ -1077,9 +1077,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						});
 					}
 				else if(infoObj.performTransition == false)	{
-					
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
+
 //					dump(" -> parentID.length: "+$(_app.u.jqSelector('#',infoObj.parentID)).length);
 					_app.ext.quickstart.pageTransition($old,$new);
 					}
