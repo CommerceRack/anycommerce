@@ -503,7 +503,8 @@ need to be customized on a per-ria basis.
 
 		pageTransition : function($o,$n)	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
-			if($o instanceof jQuery)	{
+//$o MAY be a jquery instance but have no length, so check both.
+			if($o instanceof jQuery && $o.length)	{
 				dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
 				}
@@ -2079,7 +2080,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				
 //Show one of the company pages. This function gets executed by showContent.
 //handleTemplateEvents gets executed in showContent, which should always be used to execute this function.
-// ** 201346 -> The company navlinks are now generated based on what articles are present and not disabled. built to allow for wizard to easily add new pages.
+//The company navlinks are generated based on what articles are present and not disabled. built to allow for wizard to easily add new pages.
 			showCompany : function(infoObj)	{
 				infoObj.show = infoObj.show || 'about'; //what page to put into focus. default to 'about us' page
 				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
