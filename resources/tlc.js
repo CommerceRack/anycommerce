@@ -518,8 +518,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 		function isBlank(v)	{
 			var isBlank = false;
 			//not set and undefined are blank.  null or false is NOT blank.
-			if(v == 'false' || v === false || v == null)	{isBlank = false}
-			else if(v == '' || v == undefined)	{isBlank = true;}
+			if(typeof v == 'undefined')	{isBlank = true;}
+			else if(v == 'false' || v === false || v == null)	{isBlank = false}
+			else if(v == '')	{isBlank = true;}
 			else	{}
 			return  isBlank;
 			}

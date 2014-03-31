@@ -44,6 +44,7 @@ function runTests()	{
 		'html' : "<h1>This is some html</h1><p>Isn't it wonderful</p>",
 		'wiki' : "= This is a wiki h1 =",
 		'wiki2' : "=This is a wiki h1=",
+//		'undefined' : undefined,  do NOT comment this out.  It's here to serve as a reminder that this is called but should NOT be defined. allows for testing on an undefined value.
 		'blank' : '',
 		'null' : null,
 		'small-array' : ["frank","albert","tom","harry"],
