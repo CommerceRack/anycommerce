@@ -2871,6 +2871,7 @@ else	{
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm will handle the error display.
+				return false;
 				},
 
 			accountPasswordRecoverSubmit : function($ele,p)	{
@@ -2891,13 +2892,16 @@ else	{
 					_app.model.dispatchThis('immutable');
 					}
 				else	{} //validateForm will handle the error display.
+				return false;
 				},
 	
 			cartShipMethodSelect : function($ele,P)	{
+				p.preventDefault();
 				var $cart = $ele.closest("[data-template-role='cart']");
 				_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
 				$cart.trigger('fetch',{'Q':'immutable'});
 				_app.model.dispatchThis('immutable');
+				return false;
 				},
 			
 			cartMessagePageSend : function($ele,p)	{
@@ -2917,17 +2921,22 @@ else	{
 						}
 					}},'passive');
 				_app.model.dispatchThis('passive');
+				return false;
 				},
 			
 			dialogCloseExec : function($ele,p)	{
 				$ele.closest('.ui-dialog-content').dialog('close');
+				return false;
 				},
 			
 			faqDetailShow : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.quickstart.a.showFAQbyTopic($ele.closest('[data-topicid]').data('topicid'));
+				return false;
 				},
 			
 			execOrder2Cart : function($ele,p)	{
+				p.preventDefault();
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID)	{
 					_app.ext.cco.u.appendOrderItems2Cart({orderid:orderID,cartid:_app.model.fetchCartID()},function(rd){
@@ -2942,14 +2951,19 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({'message':"In quickstart.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
 					}
+				return false;
 				}, //execOrder2Cart
 
 			orderDetailShow : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.quickstart.u.showOrderDetails($ele.closest("[data-app-role='orderLineitemContainer']"));
+				return false;
 				},
 
 			inlineProductPreviewShow : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.quickstart.a.handleProdPreview($ele.closest("[data-pid]").data('pid'));
+				return false;
 				},
 
 			passwordChangeSubmit : function($ele,p)	{
@@ -2958,6 +2972,7 @@ else	{
 					_app.ext.store_crm.u.handleChangePassword($ele,{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$ele});
 					}
 				else	{}
+				return false;
 				},
 
 			productAdd2Cart : function($ele,p)	{
@@ -2986,8 +3001,10 @@ else	{
 					
 					}
 				else	{} //do nothing, the validation handles displaying the errors.
+				return false;
 				},
 			productAdd2List : function($ele,p)	{
+				p.preventDefault();
 				var pid = $ele.closest("[data-pid]").data('pid');
 				if($ele.data('listid') && pid)	{
 					_app.ext.quickstart.a.add2BuyerList({sku:pid,'listid':$ele.data('listid')});
@@ -2995,24 +3012,30 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_crm.e.productAdd2List, unable to ascertain pid ["+pid+"] or data-listid was not set on trigger element.","gMessage":true});
 					}
+				return false;
 				},
 				
 			productPicsInModalShow : function($ele,p){
+				p.preventDefault();
 				_app.ext.store_product.u.showPicsInModal({"pid":$ele.closest("[data-pid]").data('pid')});
+				return false;
 				},
 
 			subscribeSubmit : function($ele,p)	{
 				p.preventDefault();
 				_app.ext.store_crm.u.handleSubscribe($ele.attr('id'));
+				return false;
 				},
 
 //add to form element. input name='KEYWORDS' is required for this simple search.
 			searchFormSubmit : function($ele,p)	{
 				p.preventDefault();
 				showContent('search',$ele.serializeJSON($ele));
+				return false;
 				},
 
 			showBuyerAddressUpdate : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.store_crm.u.showAddressEditModal({
 					'addressID' : $ele.closest("address").data('_id'),
 					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
@@ -3020,18 +3043,22 @@ else	{
 					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
 					showContent('customer',{'show':'myaccount'});
 					});
+				return false;
 				}, //showBuyerAddressUpdate
 
 			showBuyerAddressAdd : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.store_crm.u.showAddressAddModal({
 					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
 					},function(rd){
 					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
 					showContent('customer',{'show':'myaccount'});
-					})
+					});
+				return false;
 				}, //showBuyerAddressAdd
 
 			quickviewShow : function($ele,p)	{
+				p.preventDefault();
 				var PID = $ele.data('pid') || $ele.closest('[data-pid]').attr('data-pid');
 				var templateID = $ele.data('loadstemplate');
 				if(PID && templateID)	{
@@ -3040,6 +3067,7 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({"message":"In quickstart.e.quickviewShow, unable to ascertain PID ["+PID+"] or no data-loadstemplate set on trigger element.","gMessage":true});
 					}
+				return false;
 				}
 
 			}, // e/events
