@@ -16,23 +16,11 @@
 
 ************************************************************** */
 
-// Adding shuffle into jquery options
-(function($){
- 
-        $.fn.shuffle = function () {
-        var j;
-        for (var i = 0; i < this.length; i++) {
-            j = Math.floor(Math.random() * this.length);
-            $(this[i]).before($(this[j]));
-        }
-        return this;
-    };
- 
-})(jQuery);
 
 
 
-var store_zephyrapp = function() {
+
+var store_zephyrapp = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -47,39 +35,29 @@ var store_zephyrapp = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-					//run slideshow code
-					var $context = $(app.u.jqSelector('#',P.parentID));
-						if (!$('#slideshow', $context).hasClass('slideshowSet')){
-							$('#slideshow', $context).addClass('slideshowSet').cycle({
-								pause:  1,
-								pager:  '#slideshowNav'
-							});
-						}
-					}]);
-				
-				app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
+			
+				_app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
 					var $container = $('#recentlyViewedItemsContainer');
 					$container.show();
 					$("ul",$container).empty(); //empty product list
-					$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
+					$container.anycontent({data:_app.ext.myRIA.vars.session}); //build product list
 					}]);
 					
-				app.rq.push(['templateFunction','categoryTemplate','onCompletes', function(P){
+				_app.rq.push(['templateFunction','categoryTemplate','onCompletes', function(P){
 					var breadcrumb = P.navcat.split(".");
 					var topNavcat = "."+breadcrumb[1];
 					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').show();
 					}]);
 					
-				app.rq.push(['templateFunction','categoryTemplate','onDeparts', function(P){
+				_app.rq.push(['templateFunction','categoryTemplate','onDeparts', function(P){
 					var breadcrumb = P.navcat.split(".");
 					var topNavcat = "."+breadcrumb[1];
 					$('#sideBarLeft [data-navcat="'+topNavcat+'"] .subCatList').hide();
 					}]);	
 		
 					
-				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
 					$('#contentArea').removeClass('sideBarRightShow');
@@ -88,13 +66,13 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').hide();
 					
 					$('.randomList', $context).each(function(){
-						app.ext.store_zephyrapp.u.randomizeList($(this));
+						_app.ext.store_zephyr_app.u.randomizeList($(this));
 						});
 				}]);
 				
 				
-				app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').hide();
 					$('#contentArea').removeClass('sideBarRightShow');
@@ -103,14 +81,14 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').hide();
 				}]);
 				
-				app.rq.push(['templateFunction', 'cartTemplate', 'onCompletes',function(P){
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'cartTemplate', 'onCompletes',function(P){
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('.responsiveDropdown').hide();
 				}]);
 				
-				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
@@ -119,12 +97,12 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').show();
 					
 					$('.randomList', $context).each(function(){
-						app.ext.store_zephyrapp.u.randomizeList($(this));
+						_app.ext.store_zephyr_app.u.randomizeList($(this));
 						});
 				}]);	
 				
-				app.rq.push(['templateFunction', 'categoryTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'categoryTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
@@ -133,8 +111,8 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').show();
 				}]);
 				
-				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
@@ -143,8 +121,8 @@ var store_zephyrapp = function() {
 					$('.responsiveDropdown').show();
 				}]);
 				
-				app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
@@ -161,8 +139,8 @@ var store_zephyrapp = function() {
 	
 				}]);	
 				
-				app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('#sideBarRight').show();
 					$('#contentArea').removeClass('sideBarRightHide');
@@ -170,12 +148,12 @@ var store_zephyrapp = function() {
 				}]);
 				
 				$('.ddMenuBtn').on('click',function(event){
-					app.ext.store_zephyrapp.a.showDropDown($(this).parent());
+					_app.ext.store_zephyrapp.a.showDropDown($(this).parent());
 					event.stopPropagation();
 					});	
 					
-				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
+				_app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
 					
 					$('.childDropdown',$context).children().each(function(){
 						var pid=$(this).val();
@@ -184,7 +162,7 @@ var store_zephyrapp = function() {
 							
 							var tagObj = {
 								"callback":function(rd){
-									if(app.ext.store_product.u.productIsPurchaseable(pid)){
+									if(_app.ext.store_product.u.productIsPurchaseable(pid)){
 										// do nothing muy bueno
 										}
 									else{
@@ -193,8 +171,8 @@ var store_zephyrapp = function() {
 									}
 								}
 							
-							app.ext.store_product.calls.appProductGet.init(pid,tagObj,"immutable");
-							app.model.dispatchThis("immutable");
+							_app.ext.store_product.calls.appProductGet.init(pid,tagObj,"immutable");
+							_app.model.dispatchThis("immutable");
 							}
 						});
 					
@@ -205,12 +183,12 @@ var store_zephyrapp = function() {
 					}]);
 				
 				
-				app.rq.push(['templateFunction','customerTemplate','onCompletes',function(infoObj){
+				_app.rq.push(['templateFunction','customerTemplate','onCompletes',function(infoObj){
 					if(infoObj.show == 'login' && infoObj.callback){
 						$('#loginArticle form.loginForm').data('callback', infoObj.callback);
 						}
 					}]);
-				app.rq.push(['templateFunction','customerTemplate','onDeparts',function(infoObj){
+				_app.rq.push(['templateFunction','customerTemplate','onDeparts',function(infoObj){
 					$('#loginArticle form.loginForm').removeData('callback', infoObj.callback);
 					}]);
 				r = true;
@@ -222,13 +200,13 @@ var store_zephyrapp = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			},
 			startExtension: {
 				onSuccess : function()	{
-					var temp = JSON.parse(app.storageFunctions.readLocal('recentlyViewedItems'));
-					var oldTime = JSON.parse(app.storageFunctions.readLocal('timeStamp'));
+					var temp = JSON.parse(_app.storageFunctions.readLocal('recentlyViewedItems'));
+					var oldTime = JSON.parse(_app.storageFunctions.readLocal('timeStamp'));
 					var d = new Date().getTime();
 					if(d - oldTime > 90*24*60*60*1000) {
 						var expired = true;
@@ -237,12 +215,12 @@ var store_zephyrapp = function() {
 						var expired = false;
 					}
 					if(temp && !expired){
-						app.ext.myRIA.vars.session.recentlyViewedItems = temp;
-						app.u.dump(app.ext.myRIA.vars.session.recentlyViewedItems);
+						_app.ext.myRIA.vars.session.recentlyViewedItems = temp;
+						_app.u.dump(_app.ext.myRIA.vars.session.recentlyViewedItems);
 						var $container = $('#recentlyViewedItemsContainer');
 						$container.show();
 						$("ul",$container).empty(); //empty product list
-						$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
+						$container.anycontent({data:_app.ext.myRIA.vars.session}); //build product list
 					}
 				},
 				onError : function()	{
@@ -258,7 +236,7 @@ var store_zephyrapp = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showDropDown : function ($container) {
-				//app.u.dump('showing');
+				//_app.u.dump('showing');
 				//console.log($container.data('timeoutNoShow'));
 				if(!$container.data('timeoutNoShow') || $container.data('timeoutNoShow')=== "false") {
 					var $dropdown = $(".dropdown", $container);
@@ -284,7 +262,7 @@ var store_zephyrapp = function() {
 					
 					$('html, .ddMenuBtn').on('click.dropdown',function(){
 						//hide the dropdown
-						app.u.dump('hiding');
+						_app.u.dump('hiding');
 						$(".dropdown", $container).stop().animate({"height":"0px"}, 500);
 						$(".ddMenuBtn",$container).animate({"height":"36px"}, 500);
 						if($container.data('timeout') && $container.data('timeout')!== "false"){
@@ -331,7 +309,7 @@ var store_zephyrapp = function() {
 					// do nothing
 					}
 				else {
-					var inv = app.ext.store_product.u.getProductInventory(data.value.pid);
+					var inv = _app.ext.store_product.u.getProductInventory(data.value.pid);
 					if(inv > 0){
 						$tag.append('In Stock Now (Qty avail: '+inv+')');
 						}
@@ -347,7 +325,7 @@ var store_zephyrapp = function() {
 					// do nothing
 					}
 				else {
-					var inv = app.ext.store_product.u.getProductInventory(data.value.product);
+					var inv = _app.ext.store_product.u.getProductInventory(data.value.product);
 					if(inv > 0){
 						$tag.append('In Stock Now (Qty avail: '+inv+')');
 						}
@@ -368,38 +346,38 @@ var store_zephyrapp = function() {
 				$list.children().shuffle();
 				},
 			cacheRecentlyViewedItems: function ($container){
-				app.u.dump ('Caching product to recently viewed');
+				_app.u.dump ('Caching product to recently viewed');
 				var d = new Date().getTime();
-				app.storageFunctions.writeLocal('recentlyViewedItems', app.ext.myRIA.vars.session.recentlyViewedItems);
-				app.storageFunctions.writeLocal('timeStamp',d);// Add timestamp
+				_app.storageFunctions.writeLocal('recentlyViewedItems', _app.ext.myRIA.vars.session.recentlyViewedItems);
+				_app.storageFunctions.writeLocal('timeStamp',d);// Add timestamp
 				},
 			addItemToCart : function($form,obj){
 				var $childSelect = $('.prodChildren.active select', $form);
 				if($childSelect.length > 0){
 					if($childSelect.val()){
-						app.calls.cartItemAppend.init({"sku":$childSelect.val(), "qty":$('input[name=qty]',$form).val()},{},'immutable');
-						app.model.destroy('cartDetail');
-						app.calls.cartDetail.init({'callback':function(rd){
+						_app.calls.cartItemAppend.init({"sku":$childSelect.val(), "qty":$('input[name=qty]',$form).val()},{},'immutable');
+						_app.model.destroy('cartDetail');
+						_app.calls.cartDetail.init({'callback':function(rd){
 							if(obj.action === "modal"){
 								showContent('cart',obj);
 								}
 							}},'immutable');
-						app.model.dispatchThis('immutable');
+						_app.model.dispatchThis('immutable');
 						}
 					else {
-						$form.anymessage(app.u.errMsgObject("You must select an option"));
+						$form.anymessage(_app.u.errMsgObject("You must select an option"));
 						}
 					}
 				else {
-					app.ext.myRIA.u.addItemToCart($form, obj);
+					_app.ext.myRIA.u.addItemToCart($form, obj);
 					}
 				},
 			loginFormSubmit : function($form){
 				var formJSON = $form.serializeJSON();
-				app.u.dump(formJSON);
+				_app.u.dump(formJSON);
 				var errors = '';
 				var callback = $form.data('callback') || function(){showContent('customer',{'show':'myaccount'});};
-				if(app.u.isValidEmail(formJSON.login) == false){
+				if(_app.u.isValidEmail(formJSON.login) == false){
 					errors += "Please provide a valid email address<br \/>";
 					}
 				if(!formJSON.password)	{
@@ -407,15 +385,15 @@ var store_zephyrapp = function() {
 					}
 					
 				if(errors == ''){
-					app.calls.appBuyerLogin.init({"login":formJSON.login,"password":formJSON.password},{'callback':function(tagObj){
-						app.vars.cid = app.data[tagObj.datapointer].cid;
-						app.ext.myRIA.u.handleLoginActions();
+					_app.calls.appBuyerLogin.init({"login":formJSON.login,"password":formJSON.password},{'callback':function(tagObj){
+						_app.vars.cid = _app.data[tagObj.datapointer].cid;
+						_app.ext.myRIA.u.handleLoginActions();
 						callback();
 					}});
-					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
+					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+//					_app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					
-					app.model.dispatchThis('immutable');
+					_app.model.dispatchThis('immutable');
 					}
 				else {
 					$form.anymessage({'message':errors});
@@ -429,6 +407,24 @@ var store_zephyrapp = function() {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			
+			
+			revealation : function($ele,p)	{
+				p.preventDefault();
+				var $container = $ele.closest("[data-revealation-role='container']");
+				if($container.length)	{
+					var $content = $("[data-revealation-role='content']");
+					if($content.is(":visible"))	{$content.slideUp();}
+					else	{$content.slideDown();}
+					$("[data-app-click='store_zephyrapp|revealation']",$container).toggle();
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"For zephyr.e.revealation, no data-revealation-role='container' found as parent of trigger element.","gMessage":true});
+					}
+				return false;
+				}
+			
+			
 			} //e [app Events]
 		} //r object.
 	return r;

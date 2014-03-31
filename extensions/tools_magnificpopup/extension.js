@@ -21,19 +21,19 @@
 //	Intended as a free, open source alternative to 3rd party plugins like Magic Zoom Plus.
 //	Utilizes the Magnific Popup jQuery plugin: http://dimsemenov.com/plugins/magnific-popup/
 
-var tools_magnificpopup = function() {
+var tools_magnificpopup = function(_app) {
 	var r = {
 	callbacks : {
 		init : {
 			onSuccess : function()	{
 				var r = false;
 				
-				app.u.loadResourceFile(['script',0,'extensions/tools_magnificpopup/magnificpopup/jquery.magnificpopup.js']);
-				app.u.loadResourceFile(['css',0,'extensions/tools_magnificpopup/magnificpopup/magnificpopup.css','css-magnificpopup']);
+				_app.u.loadResourceFile(['script',0,'extensions/tools_magnificpopup/magnificpopup/jquery.magnificpopup.js']);
+				_app.u.loadResourceFile(['css',0,'extensions/tools_magnificpopup/magnificpopup/magnificpopup.css','css-magnificpopup']);
 				
-				app.rq.push (['templateFunction', 'productTemplate', 'onCompletes', function(P) {
-					var $context = $(app.u.jqSelector('#',P.parentID));
-					app.ext.tools_magnificpopup.u.callMagnificPopup($context);
+				_app.rq.push (['templateFunction', 'productTemplate', 'onCompletes', function(P) {
+					var $context = $(_app.u.jqSelector('#',P.parentID));
+					_app.ext.tools_magnificpopup.u.callMagnificPopup($context);
 				}]);
 				
 				r = true;
@@ -41,7 +41,7 @@ var tools_magnificpopup = function() {
 				return r;
 				},
 			onError : function()	{
-				app.u.dump('BEGIN tools_magnificpopup.callbacks.init.onError');
+				_app.u.dump('BEGIN tools_magnificpopup.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -52,7 +52,7 @@ var tools_magnificpopup = function() {
 
 		renderFormats : {
 			imageURL2Href : function($tag, data){
-				app.renderFormats.imageURL2Href($tag,data);
+				_app.renderFormats.imageURL2Href($tag,data);
 				
 				$tag.attr('data-magnificpopup','imgLink');
 				}
@@ -79,10 +79,10 @@ var tools_magnificpopup = function() {
 				}
 				else {
 					if(attempts > 40){
-						app.u.dump("Magnific Popup FAILED ");
+						_app.u.dump("Magnific Popup FAILED ");
 					}
 					else {
-						setTimeout(function(){app.ext.tools_magnificpopup.u.callMagnificPopup($context, attempts+1);}, 250);
+						setTimeout(function(){_app.ext.tools_magnificpopup.u.callMagnificPopup($context, attempts+1);}, 250);
 					}
 				}
 			}
