@@ -23,7 +23,7 @@ This extension is untested.
 
 */
 
-var google_adwords = function() {
+var google_adwords = function(_app) {
 	var r= {
 		vars : {
 
@@ -36,25 +36,24 @@ var google_adwords = function() {
 					return true;
 				},
 				onError : function() {
-					app.u.dump('BEGIN app.ext.google_adwords.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.google_adwords.callbacks.init.onError');
 				}
 			},
 			
 			startExtension : {
 				onSuccess : function (){
-					if(app.ext.myRIA && app.ext.myRIA.template){
-						app.ext.orderCreate.checkoutCompletes.push(function(P){
-							app.u.dump("BEGIN google_adwords code pushed on orderCreate.checkoutCompletes");
-							var order = app.data['order|'+P.orderID];
+					if(_app.templates && _app.templates.checkoutTemplate){
+						_app.templates.checkoutTemplate.on('complete.googleadwords',function(event,$ele,P){
+							var order = _app.data['order|'+P.orderID];
 							google_conversion_value = order.sum.items_total;
-							app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');
+							_app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');
 						});
 					} else	{
-						setTimeout(function(){app.ext.google_adwords.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){_app.ext.google_adwords.callbacks.startExtension.onSuccess()},250);
 					}
 				},
 				onError : function (){
-					app.u.dump('BEGIN app.ext.google_adwords.callbacks.startExtension.onError');
+					_app.u.dump('BEGIN _app.ext.google_adwords.callbacks.startExtension.onError');
 				}
 			}
 		}

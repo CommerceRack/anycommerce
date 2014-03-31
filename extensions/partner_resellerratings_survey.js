@@ -25,7 +25,7 @@ seller_id =  #####;
 */
 
 
-var resellerratings_survey = function() {
+var resellerratings_survey = function(_app) {
 	var r = {
 		
 		vars : {
@@ -37,24 +37,24 @@ var resellerratings_survey = function() {
 		callbacks : {
 			init : {
 				onSuccess : function()	{
-					app.rq.push(['css',0,'https://www.resellerratings.com/images/js/dhtml_survey.css','resellerratings_styles']);
+					_app.rq.push(['css',0,'https://www.resellerratings.com/images/js/dhtml_survey.css','resellerratings_styles']);
 					return true;
 					},
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN app.ext.store_navcats.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.store_navcats.callbacks.init.onError');
 					}
 				},
 
 			startExtension : {
 				onSuccess : function(){
 							
-app.ext.orderCreate.checkoutCompletes.push(function(P){
+_app.ext.order_create.checkoutCompletes.push(function(P){
 	//declared as window. to indicate they should be global.
 	window.__rr_inv = P.orderID;
 	window.__rr_email_pass = P.bill.email;
-	app.u.loadScript('https://www.resellerratings.com/images/js/popup_include.js');
+	_app.u.loadScript('https://www.resellerratings.com/images/js/popup_include.js');
 	}); // end .push
 
 					},

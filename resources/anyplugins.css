@@ -46,7 +46,7 @@
 .app-icon-fail-fatal, .app-icon-fatal, .app-icon-crashed {background-position:-204px -27px;} /* red circle flame */
 .app-icon-pause, .app-icon-challenge {background-position:-232px -27px;} /* orange circle pause */
 .app-icon-end {background-position:-262px -27px;} /* orange circle arrow east */
-.app-icon-skip {background-position:-291px -27px;} /* orange circle arrow northeast */
+.app-icon-skip, .app-icon-missing {background-position:-291px -27px;} /* orange circle arrow northeast */
 
 .app-icon-status {background-position:0 -56px;} /* blue circle gear */
 .app-icon-future {background-position:-29px -56px;} /* blue circle curly arrow */
@@ -97,3 +97,35 @@
 
 
 fieldset.ui-widget-anypanel	{border:none; padding:0; margin:0;} /* get rid of some browser defaults if fieldset is the container for anypanel. */
+
+
+
+
+
+/* ANYFILEUPLOAD */
+.fileUpload_default {
+    height: 45px;
+    border: 1px solid #ccc;
+    margin: 0px 0 5px 0;
+	}
+
+.fileUpload_file {
+    height: 45px;
+	width:45px;
+	background:url(images/file-45x45.png) no-repeat;
+	display:block;
+  }
+  
+.ui-widget-anyupload-buttonset	{
+	float:right;
+	}
+/*
+.ui-widget-anyupload-buttonset button.ui-button	{
+	font-size:.65em;
+	height:1.6em;	
+	}
+.ui-widget-anyupload-buttonset button.ui-button .ui-button-text	{
+	padding: 0 .7em 0 2.2em;
+	line-height:1.4em;
+	}
+*/

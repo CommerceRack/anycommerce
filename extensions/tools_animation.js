@@ -19,7 +19,7 @@
 
 
 
-var tools_animation = function() {
+var tools_animation = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 	
@@ -39,8 +39,8 @@ var tools_animation = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; 
-				app.ext.tools_animation.vars.anims = {};
-				app.ext.tools_animation.aq = {};
+				_app.ext.tools_animation.vars.anims = {};
+				_app.ext.tools_animation.aq = {};
 				//Must be accessed from the window namespace
 				window.animFrame = window.requestAnimationFrame ||
 					window.webkitRequestAnimationFrame ||
@@ -50,17 +50,17 @@ var tools_animation = function() {
 					function(callback){
 						window.setTimeout(callback, 1000/60);
 						};
-				app.ext.tools_animation.u.animLoop();
+				_app.ext.tools_animation.u.animLoop();
 				
 				//Set up delegated events
 				$('body').on('mouseenter.animation', '[data-animation-mouseenter]', function(){
 					var args = $(this).attr('data-animation-mouseenter');
 					
 					var anim = args.split('?')[0];
-					var params = app.u.kvp2Array(args.split('?')[1]);
+					var params = _app.u.kvp2Array(args.split('?')[1]);
 					
-					app.ext.tools_animation.u.stopAnim(anim);
-					app.ext.tools_animation.u.startAnim(anim, params);
+					_app.ext.tools_animation.u.stopAnim(anim);
+					_app.ext.tools_animation.u.startAnim(anim, params);
 					
 					});
 				
@@ -68,10 +68,10 @@ var tools_animation = function() {
 					var args = $(this).attr('data-animation-mouseout');
 					
 					var anim = args.split('?')[0];
-					var params = app.u.kvp2Array(args.split('?')[1]);
+					var params = _app.u.kvp2Array(args.split('?')[1]);
 					
-					app.ext.tools_animation.u.stopAnim(anim);
-					app.ext.tools_animation.u.startAnim(anim, params);
+					_app.ext.tools_animation.u.stopAnim(anim);
+					_app.ext.tools_animation.u.startAnim(anim, params);
 					
 					});
 				
@@ -80,7 +80,7 @@ var tools_animation = function() {
 				return r;
 				},
 			onError : function()	{
-				app.u.dump('BEGIN tools_animation.callbacks.init.onError');
+				_app.u.dump('BEGIN tools_animation.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -106,7 +106,7 @@ var tools_animation = function() {
 					}
 				else {
 					animation.currFrame = animation.frameCount-1;
-					app.ext.tools_animation.u.stopAnim(animKey);
+					_app.ext.tools_animation.u.stopAnim(animKey);
 					if(animation.animCallback && typeof animation.animCallback == 'function'){
 						animation.animCallback(animation);
 						}
@@ -124,7 +124,7 @@ var tools_animation = function() {
 					}
 				else {
 					animation.currFrame = 0;
-					app.ext.tools_animation.u.stopAnim(animKey);
+					_app.ext.tools_animation.u.stopAnim(animKey);
 					if(animation.animCallback && typeof animation.animCallback == 'function'){
 						animation.animCallback(animation);
 						}
@@ -132,7 +132,7 @@ var tools_animation = function() {
 				}
 			},
 		stop : function(animation, time, delta, animKey){
-			app.ext.tools_animation.u.stopAnim(animKey);
+			_app.ext.tools_animation.u.stopAnim(animKey);
 			if(animation.animCallback && typeof animation.animCallback == 'function'){
 				animation.animCallback(animation);
 				}
@@ -172,12 +172,12 @@ var tools_animation = function() {
 			
 			startAnim : function(animation, params){
 				params = params || {};
-				if(app.ext.tools_animation.vars.anims[animation]){
-					if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
-						params.animFunc = app.ext.tools_animation.animations[params.animFunc];
+				if(_app.ext.tools_animation.vars.anims[animation]){
+					if (params.animFunc && typeof params.animFunc == 'string' && _app.ext.tools_animation.animations[params.animFunc]){
+						params.animFunc = _app.ext.tools_animation.animations[params.animFunc];
 						}
-					if (params.animCallback && typeof params.animCallback == 'string' && app.ext.tools_animation.animCallbacks[params.animCallback]){
-						params.animCallback = app.ext.tools_animation.animCallbacks[params.animCallback];
+					if (params.animCallback && typeof params.animCallback == 'string' && _app.ext.tools_animation.animCallbacks[params.animCallback]){
+						params.animCallback = _app.ext.tools_animation.animCallbacks[params.animCallback];
 						}
 					if(params.start){
 						params.currFrame = Number(params.start);
@@ -185,18 +185,18 @@ var tools_animation = function() {
 						}
 					
 					for(var p in params){
-						app.ext.tools_animation.vars.anims[animation][p] = params[p];
+						_app.ext.tools_animation.vars.anims[animation][p] = params[p];
 					}
 				
-					app.ext.tools_animation.aq[animation] = app.ext.tools_animation.vars.anims[animation];
+					_app.ext.tools_animation.aq[animation] = _app.ext.tools_animation.vars.anims[animation];
 					}
 				else {
-					app.u.dump("-> ERROR app.ext.tools_animation.u.startAnim: Animation "+animation+" has not yet been loaded!");
+					_app.u.dump("-> ERROR _app.ext.tools_animation.u.startAnim: Animation "+animation+" has not yet been loaded!");
 					}
 				},
 				
 			stopAnim : function(animation){
-				delete app.ext.tools_animation.aq[animation];
+				delete _app.ext.tools_animation.aq[animation];
 				},
 			
 			loadAnim : function($tag, name, params){
@@ -224,56 +224,56 @@ var tools_animation = function() {
 					if(params.animFunc && typeof params.animFunc == 'function'){
 						animation.animFunc = params.animFunc;
 						}
-					else if (params.animFunc && typeof params.animFunc == 'string' && app.ext.tools_animation.animations[params.animFunc]){
-						animation.animFunc = app.ext.tools_animation.animations[params.animFunc];
+					else if (params.animFunc && typeof params.animFunc == 'string' && _app.ext.tools_animation.animations[params.animFunc]){
+						animation.animFunc = _app.ext.tools_animation.animations[params.animFunc];
 						}
 						
 					if(params.animCallback && typeof params.animCallback == 'function'){
 						animation.animCallback = params.animCallback;
 						}
-					else if (params.animCallback && typeof params.animCallback == 'string' && app.ext.tools_animation.animCallbacks[params.animCallback]){
-						animation.animCallback = app.ext.tools_animation.animCallbacks[params.animCallback];
+					else if (params.animCallback && typeof params.animCallback == 'string' && _app.ext.tools_animation.animCallbacks[params.animCallback]){
+						animation.animCallback = _app.ext.tools_animation.animCallbacks[params.animCallback];
 						}
 						
 					var xpos = animation.x1 + (animation.currFrame * (animation.width + animation.xGap));
 					animation.$tag.css('background', 'url('+animation.imgsrc+') no-repeat '+(-1*xpos)+'px '+(-1*animation.y)+'px');
 						
-					app.ext.tools_animation.vars.anims[name] = animation;
+					_app.ext.tools_animation.vars.anims[name] = animation;
 					}
 				else {
-					app.u.dump("-> ERROR app.ext.tools_animation.u.loadAnim: Some required parameters were left out");
+					_app.u.dump("-> ERROR _app.ext.tools_animation.u.loadAnim: Some required parameters were left out");
 					}
 				},
 			
 			animLoop : function(){
 				//Wake from our slumber
-				var newTime = app.ext.tools_animation.u.now();
-				if(!app.ext.tools_animation.metrics.lastFPSTime){
-					app.ext.tools_animation.metrics.lastFPSTime = newTime;
+				var newTime = _app.ext.tools_animation.u.now();
+				if(!_app.ext.tools_animation.metrics.lastFPSTime){
+					_app.ext.tools_animation.metrics.lastFPSTime = newTime;
 					}
 				//Delta in millis, so that frame duration can be specified in millis also
-				var delta = newTime - app.ext.tools_animation.metrics.lastTime
+				var delta = newTime - _app.ext.tools_animation.metrics.lastTime
 				
 				//Run the animations
-				for(var anim in app.ext.tools_animation.aq){
-					//app.ext.tools_animation.u.update(app.ext.tools_animation.aq[anim], newTime, delta);
-					app.ext.tools_animation.aq[anim].animFunc(app.ext.tools_animation.aq[anim], newTime, delta, anim);
+				for(var anim in _app.ext.tools_animation.aq){
+					//_app.ext.tools_animation.u.update(_app.ext.tools_animation.aq[anim], newTime, delta);
+					_app.ext.tools_animation.aq[anim].animFunc(_app.ext.tools_animation.aq[anim], newTime, delta, anim);
 					}
 				
 				//Update an report metrics
-				app.ext.tools_animation.metrics.frames++
-				app.ext.tools_animation.metrics.lastTime = newTime;
+				_app.ext.tools_animation.metrics.frames++
+				_app.ext.tools_animation.metrics.lastTime = newTime;
 				
-				if(newTime - app.ext.tools_animation.metrics.lastFPSTime >= 1000){
-					app.ext.tools_animation.metrics.fps = app.ext.tools_animation.metrics.frames;
-					app.ext.tools_animation.metrics.frames = 0;
-					app.ext.tools_animation.metrics.lastFPSTime = newTime;
-					if(app.ext.tools_animation.metrics.dumpMetrics){
-						app.u.dump("-> app.ext.tools_animation.metrics.fps at "+newTime+": "+app.ext.tools_animation.metrics.fps);
+				if(newTime - _app.ext.tools_animation.metrics.lastFPSTime >= 1000){
+					_app.ext.tools_animation.metrics.fps = _app.ext.tools_animation.metrics.frames;
+					_app.ext.tools_animation.metrics.frames = 0;
+					_app.ext.tools_animation.metrics.lastFPSTime = newTime;
+					if(_app.ext.tools_animation.metrics.dumpMetrics){
+						_app.u.dump("-> _app.ext.tools_animation.metrics.fps at "+newTime+": "+_app.ext.tools_animation.metrics.fps);
 						}
 					}
 				
-				window.animFrame(app.ext.tools_animation.u.animLoop);
+				window.animFrame(_app.ext.tools_animation.u.animLoop);
 				},
 				
 			now : function(){
