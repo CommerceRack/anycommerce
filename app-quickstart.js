@@ -946,7 +946,29 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.navcat = zGlobals.appSettings.rootcat;
 						$new = _app.ext.quickstart.u.showPage(infoObj);
 						break;
-
+					case 'static':
+						infoObj.pageType = 'static';
+						var parentID = infoObj.templateID+"_"+infoObj.id;
+						var $parent = $(_app.u.jqSelector('#',parentID));
+						if($parent.length > 0){
+							infoObj.state = 'init';
+							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
+							}
+						else {
+							$parent = new tlc().getTemplateInstance(infoObj.templateID);
+							infoObj.state = 'init';
+							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
+							if(infoObj.dataset){
+								dump(infoObj);
+								infoObj.verb = 'translate';
+								$parent.tlc(infoObj);
+								}
+							}
+						$new = $parent;
+						$('#mainContentArea').append($new);
+						infoObj.state = 'complete';
+						_app.renderFunctions.handleTemplateEvents($new,infoObj);
+						break;
 					case 'category':
 //add item to recently viewed list IF it is not already the most recent in the list.				
 //Originally, used: 						if($.inArray(infoObj.navcat,_app.ext.quickstart.vars.session.recentCategories) < 0)
