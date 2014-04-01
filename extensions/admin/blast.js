@@ -98,7 +98,7 @@ var admin_blast = function(_app) {
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
 //									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
 									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
+										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+" <span class='hint'>["+msgs[i].MSGID+"]<\/span><\/li>");
 										}
 									}
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
