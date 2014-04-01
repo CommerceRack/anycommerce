@@ -471,7 +471,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 			
 			case 'prepend': $tag.prepend(data); break;
 			case 'append': $tag.append(data); break;
-			case 'replace': $tag.replaceWith(data); break;
+			case 'replace': globals.tags[globals.focusTag] = $(data); $tag.replaceWith(globals.tags[globals.focusTag]);  break; //the object in memory must also be updated so that the rest of the tlc statement can modify it.
 			case 'inputvalue':
 				$tag.val(data);
 				break;
