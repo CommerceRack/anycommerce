@@ -951,7 +951,7 @@ returning a 'false' here will exit the statement loop.
 	this.handleCommand_render = function(cmd,globals){
 		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
 		for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-			argObj = this.handleArg(cmd.args[i],globals);
+			var argObj = this.handleArg(cmd.args[i],globals);
 			var key = cmd.args[i].key;
 			//if key is dwiw, needs to be changed to either html or text so that it can be properly displayed. this is guesswork, but that comes along with dwiw.
 			if(key == 'dwiw' && globals.binds[globals.focusBind].indexOf('<') >= 0)	{
