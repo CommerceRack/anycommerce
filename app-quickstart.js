@@ -528,7 +528,6 @@ need to be customized on a per-ria basis.
 				_app.model.dispatchThis('mutable');
 				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
 				}
-
 			},
 
 
@@ -573,22 +572,22 @@ need to be customized on a per-ria basis.
 //set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
 //used for displaying a  series of tags, such as on the product detail page. Will show any tag enabled.
 //on bind-data, set maxTagsShown to 1 to show only 1 tag
-		tags : function($tag,data)	{
-			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9','IS_FRESH','IS_SHIPFREE');
-//			var csv = data.value.split(',');
-			var L = whitelist.length;
-			var tagsDisplayed = 0;
-			var maxTagsShown = _app.u.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : whitelist.length; //default to showing all enabled tags.
-			var spans = ""; //1 or more span tags w/ appropriate tag class applied
-			for(var i = 0; i < L; i += 1)	{
-				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
-					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
-					tagsDisplayed += 1;
+			tags : function($tag,data)	{
+				var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9','IS_FRESH','IS_SHIPFREE');
+	//			var csv = data.value.split(',');
+				var L = whitelist.length;
+				var tagsDisplayed = 0;
+				var maxTagsShown = _app.u.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : whitelist.length; //default to showing all enabled tags.
+				var spans = ""; //1 or more span tags w/ appropriate tag class applied
+				for(var i = 0; i < L; i += 1)	{
+					if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
+						spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
+						tagsDisplayed += 1;
+						}
+					if(tagsDisplayed >= maxTagsShown)	{break;} //exit early once enough tags are displayed.
 					}
-				if(tagsDisplayed >= maxTagsShown)	{break;} //exit early once enough tags are displayed.
-				}
-			$tag.append(spans);
-			}, //tags
+				$tag.append(spans);
+				}, //tags
 
 //if first char is a !, hide that char, then render as text. used in breadcrumb
 //likely to be used in prodcats if/when it's built.s
@@ -600,6 +599,7 @@ need to be customized on a per-ria basis.
 					}
 				_app.renderFormats.text($tag,data);
 				},
+
 
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
 			searchlink : function($tag,data){
@@ -840,10 +840,7 @@ fallback is to just output the value.
 							})
 						}
 					else	{
-						$tag.on('click.detailsOrAdd',function(event){
-							event.preventDefault();
-							showContent('product',{'pid':pid}); 
-							})
+						$tag.attr({'data-hash':'#!product/'+pid,'data-app-click':'quickstart|showContent'});
 						}
 					}
 //				dump(" -> ID at end: "+$tag.attr('id'));
@@ -2963,6 +2960,17 @@ else	{
 			inlineProductPreviewShow : function($ele,p)	{
 				p.preventDefault();
 				_app.ext.quickstart.a.handleProdPreview($ele.closest("[data-pid]").data('pid'));
+				return false;
+				},
+
+			showContent : function($ele,p)	{
+				p.preventDefault();p
+				if($ele.data('hash'))	{
+					document.location.hash = $ele.data('hash');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In quickstart.e.showContent, no data-hash set on trigger element.","gMessage":true});
+					}
 				return false;
 				},
 

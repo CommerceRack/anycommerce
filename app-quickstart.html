@@ -321,7 +321,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
 		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{quickstart#srcset views='h=200&w=200&dpi=2x&vp=640'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 		</div>
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
@@ -735,7 +735,9 @@ if you change these, you should move them above this comment so that when you (o
 <!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
 		<div id="aboutArticle" class="textContentArea article">
 			<h1>About Us</h1>
-			<div data-tlc="bind $var '.zoovy:about'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="aboutUsContent"></div>
+			<div>
+			<!-- ::: add your about us information here -->
+			</div>
 		</div>
 
 
@@ -757,11 +759,10 @@ if you change these, you should move them above this comment so that when you (o
 				<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
 			</fieldset>
 			</form>
-			<div data-tlc="bind $var '.zoovy:contact'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="contactContent"></div>
 		</div>
 
 
-
+		<!-- faq are generated through the faq manager in the admin UI. do not add content in the faqContent area -->
 		<div id="faqArticle" class="displayNone textContentArea">
 			<h1>Frequently Asked Questions</h1>
 			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
@@ -771,7 +772,9 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="paymentArticle">
 			<h1>Payment Policy</h1>
-			<div data-tlc="bind $var '.zoovy:payment_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="paymentContent"></div>
+			<div>
+			<!-- ::: add your payment policy here ::: -->
+			</div>
 		</div>
 
 
@@ -821,14 +824,18 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="returnArticle">
 			<h1>Return Policy</h1>
-			<div data-tlc="bind $var '.zoovy:return_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="returnContent"></div>
+			<div>
+			<!-- ::: add your return policy here ::: -->
+			</div>
 		</div>
 
 
 
 		<div class="displayNone textContentArea" id="shippingArticle">
 			<h1>Shipping Information</h1>
-			<div data-tlc="bind $var '.zoovy:shipping_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="shippingContent"></div>
+			<div>
+			<!-- ::: add your shipping information here ::: -->
+			</div>
 		</div>
 
 	</div>
