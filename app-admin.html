@@ -68,14 +68,15 @@ $(document).ready(function(){
 		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 		"baseURL" : baseURL,
 		"addjQueryPointer" : true,
-		"initComplete" : function(t){
-			t.u.loadScript('app-admin-init.js',function(){
-				var progress = t.u.loadResources();
+		"initComplete" : function(){
+			adminApp.u.loadScript('app-admin-init.js',function(){
+				var progress = adminApp.u.loadResources();
 				adminApp.u.showProgress(progress);
 				});
-			$('#appversion').text(t.vars.release);
+			$('#appversion').text(adminApp.vars.release);
 			}
 		});
+	adminApp.vars.initComplete();
 	});
 </script>
 
