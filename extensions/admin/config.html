@@ -3230,13 +3230,13 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		Enable ShipWorks
 	</label>
 	<p>ShipWorks will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class="label"><span>Username: </span>shipworks</div>
+	<div class="label"><span>Username </span>shipworks</div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
@@ -3249,14 +3249,14 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	</label>
 
 	<p>ShipStation will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class="label"><span>Username: </span>shipstation</div>
+	<div class="label"><span>Username </span>shipstation</div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
-		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID"data-input-name="~password">Generate Password</button>
 	</div>
 	
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
 
 </fieldset>
 
@@ -3272,17 +3272,15 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	<p>Zoovy Desktop will request a username and password so it can access your store.
 	Use the username and password below: 
 	</p>
-	<div class="label"><span>Username: </span>username</div>
+	<div class="label"><span>Username </span> <span data-tlc="bind $var '.userid'; apply --append;"></span></div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	
-	<div data-tlc="bind $var '.domain';"></div>
+	<p>Zoovy Integrated Desktop automatically downloads users from Setup > User Manager. Users can login with their username + PIN (personal identification number). If no PIN has been set then the user will not be able to login to software</p>
 
 </fieldset>
-
 
 
 <fieldset id="pluginTemplate_auth_google">

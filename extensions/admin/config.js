@@ -174,7 +174,7 @@ var admin_config = function(_app) {
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
 				if($target instanceof jQuery && vars.plugin)	{
-					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({'domain':_app.vars.domain},_app.ext.admin_config.u.getPluginData(vars.plugin))});
+					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({},_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin))});
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 					$target.parent().find('.buttonset').show();
