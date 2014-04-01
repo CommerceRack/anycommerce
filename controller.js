@@ -124,9 +124,10 @@ _app.templates holds a copy of each of the templates declared in an extension bu
 			_app.handleAdminVars(); //needs to be late because it'll use some vars set above.
 			}
 		_app.model.addExtensions(_app.vars.extensions);
-		if(typeof _app.vars.initComplete == 'function')	{
-			_app.vars.initComplete(_app);
-			}
+// *** 201402 -> this is executed after the app is instantiated.
+//		if(typeof _app.vars.initComplete == 'function')	{
+//			_app.vars.initComplete(_app);
+//			}
 		}, //initialize
 
 //will load _session from localStorage or create a new one.
