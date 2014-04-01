@@ -225,6 +225,28 @@ var admin_blast = function(_app) {
 				_app.u.addEventDelegation($target);
 				},
 
+			blastSystemMacroList : function($target,params)	{
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroList","custom":0,"_tag":{
+					"datapointer":"adminBlastMacroList","callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							var macros = _app.data[rd.datapointer]['@MACROS'], L = macros.length, $content = $("<div \/>");
+							for(var i = 0; i < L; i += 1)	{
+								$content.append("<h3>"+macros[i].MACROID +( macros[i].TITLE ? " : "+ macros[i].TITLE : "" )+"<\/h3>");
+								$content.append(new tlc().runTLC({'templateid':'blastSystemMacroItemTemplate','dataset':macros[i]}).data(macros[i])); //
+								}
+							$target.append($content);
+							$content.accordion({heightStyle: "content"});
+							_app.u.handleButtons($target);
+							_app.u.handleCommonPlugins($target);
+							_app.u.addEventDelegation($target);
+							}
+						}}},"mutable");
+				_app.model.dispatchThis('mutable');
+				},
+
 			blastMacroEditor : function($target,params)	{
 				var $table = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Blast Macro Editor',
@@ -235,6 +257,7 @@ var admin_blast = function(_app) {
 					'cmdVars' : {
 						'_cmd' : 'adminBlastMacroList', //this is partition specific. if we start storing this locally, add prt to datapointer.
 						'system' : 0, //exclude system messages.
+						'custom' : 1,
 						'_tag' : {
 							'datapointer' : 'adminBlastMacroList'},
 							}
@@ -332,6 +355,9 @@ var admin_blast = function(_app) {
 						$('form',$target).anyform({trackEdits:true});
 						_app.u.handleButtons($target);
 						_app.ext.admin_blast.a.blastMacroProperyEditor($("[data-app-role='propertiesContainer']",$target));
+						}
+					else if($ele.data('setting') == 'systemmacros')	{
+						_app.ext.admin_blast.a.blastSystemMacroList($target);
 						}
 					else if($ele.data('setting') == 'macros')		{
 						_app.ext.admin_blast.a.blastMacroEditor($target);
@@ -502,6 +528,7 @@ var admin_blast = function(_app) {
 				},
 
 			blastMacroAddShow : function($ele,P)	{
+				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
 					title : "Add Macro",
 					'templateID' : 'adminBlastMacroCreateUpdateTemplate',
@@ -510,7 +537,12 @@ var admin_blast = function(_app) {
 					handleAppEvents : false //defaults to true
 					});
 				$('form',$D).append("<input type='hidden' name='_cmd' value='adminBlastMacroCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The macro has been created' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/persistent' value='true' />");
+				var $dataSrc = $ele.closest("[data-app-role='macroDataContainer']"); //used in the system macro list.
+				if($dataSrc.length)	{
+					$D.tlc({'verb':'translate','dataset':$dataSrc.data()});
+					}
 				$D.dialog('open');
+				return false;
 				}
 
 

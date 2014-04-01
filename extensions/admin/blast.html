@@ -7,7 +7,8 @@
 				<ul class='noPadOrMargin listStyleNone'>
 					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
 					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
-					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Macros</li>
+					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
+					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
 				</ul>
 			</div>
 		
@@ -389,6 +390,14 @@
 </table>
 
 
+<div id='blastSystemMacroItemTemplate' data-app-role='macroDataContainer'>
+	<pre class='prettyPre' data-tlc="bind $var '.BODY'; render --text; apply --append;"></pre>
+	<div class='buttonset alignRight'>
+		<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click="admin_blast|blastMacroAddShow">Clone to Custom</button>
+	</div>
+</div>
+
+
 
 <div id='blastMacroProperyEditorTemplate'>
 <form data-app-submit="admin|submitForm" class='labelsAsBreaks' action='#'>
@@ -397,7 +406,7 @@
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Your changes have been saved.' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-<p class='hint clearfix marginBottom'>The following fields are all optional, but highly recommended. These settings are partition specific.</p>
+
 <fieldset class='floatRight width50'>
 	<legend>Properties</legend>
 	<label>
@@ -410,26 +419,30 @@
 		<span class='toolTip' title="If all the hosts on this partition are apps, set this to app. If any are v-store, set this to vstore and be sure your app-based hosts are set to vstore/app.">?</span>
 </fieldset>
 
-<fieldset>
-	<legend>Contact</legend>
+<fieldset class='alignedLabels'>
+	<legend>Partition Macros</legend>
 	
 	<label>
-		<span>Domain</span>
+		<span>%DOMAIN%</span>
 		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
 		<span class='toolTip' title="You should start this with www.  You do NOT need to add the http:// or https://">?</span>
 	</label>
 	<label>
-		<span>Phone</span>
+		<span>%PHONE%</span>
 		<input type='tel' name='PRT.PHONE' value='' data-tlc="bind $var '.%PRT.PHONE'; apply --select=$var;" />
 		<span class='toolTip' title="This should include the area code, if applicable.">?</span>
 	</label>
 	<label>
-		<span>Email</span>
-		<input type='email' name='PRT.EMAIL' value='' data-tlc="bind $var '.%PRT.EMAIL'; apply --select=$var;" />
+		<span>%HELP_EMAIL%</span>
+		<input type='email' name='PRT.HELPEMAIL' value='' data-tlc="bind $var '.%PRT.HELPEMAIL'; apply --select=$var;" />
 	</label>
 	<label>
-		<span>Mailing Address</span>
-		<textarea name='PRT.MAILADDR' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" />
+		<span>%COMPANY%</span>
+		<input type='text' name='PRT.COMPANY' value='' data-tlc="bind $var '.%PRT.COMPANY'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>%MAILADDR%</span>
+		<textarea name='PRT.MAILADDR' rows='5' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" class='fullwidth' />
 	</label>
 </fieldset>
 
