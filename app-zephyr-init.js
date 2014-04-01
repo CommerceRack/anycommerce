@@ -19,15 +19,16 @@ myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
+myApp.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 
 //custom extensions
 myApp.rq.push(['extension',0,'tools_zoom','extensions/tools_zoom/tools_zoom.js']);
 myApp.rq.push(['extension',0,'tools_magnificpopup','extensions/tools_magnificpopup/extension.js']);
-
+myApp.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js']);
 
 //extensions w/ callbacks.
 myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram']);
-myApp.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js','startMyProgram']);
+
 
 
 //standard scripts
@@ -45,13 +46,13 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 //custom scripts
 myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
 myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //used pretty early in process..
 
 
 
 
 
 // ARE THESE USED?
-//app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 //app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
 
 
@@ -66,6 +67,14 @@ $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
 			});
 		}
 	});
+
+
+$("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
+	handleSrcSetUpdate($ele);
+	});
+
+
+
 
 
 

@@ -34,7 +34,36 @@ var store_zephyrapp = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				
+
+
+//bind a click action for the dropdown on the shop link.
+				$('#shopNowLink').on('click',function(){
+					$('#tier1categories').slideDown();
+					$( document ).one( "click", function() {
+						$('#tier1categories').slideUp();
+						});
+					return false;
+					});
+
+
+//resize is executed continuously and the browser dimensions change. This function allows the code to be executed once, on finish (or pause)
+	$(window).resize(function() {
+		if(this.resizeTO) {clearTimeout(this.resizeTO);}
+		this.resizeTO = setTimeout(function() {
+			$(this).trigger('resizeEnd');
+			}, 500);
+		});
+//when window is resized, generate a new logo. The code is triggered right after being bound to generate the correct size logo to start.
+	$(window).bind('resizeEnd', function(P) {
+		//resize the logo to maximum available space.
+		if(typeof handleSrcSetUpdate == 'function')	{
+			handleSrcSetUpdate($("#mainContentArea :visible:first"))
+			}
+		}).trigger('resizeEnd');
+
+
+
+							
 			
 				_app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
 					var $container = $('#recentlyViewedItemsContainer');
@@ -289,7 +318,38 @@ var store_zephyrapp = function(_app) {
 			
 			}, //Actions
 
+////////////////////////////////////   TLCFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+		tlcFormats : {
+			//this tlcformat gets run AFTER the image has been appended/replaced. It needs the data-attributes set.
+			srcset : function(data,thisTLC)	{
+				if(data.value)	{
+//					dump(" -> data: "); dump(data);
+					var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
+					var srcset = new Array();
+					if(argObj.views)	{
+						var $tag = $(data.globals.tags[data.globals.focusTag]), viewArr = argObj.views.split(','), L = viewArr.length;
+						for(var i = 0; i < L; i += 1)	{
+							var obj = _app.u.kvp2Array(viewArr[i]), string = '';
+							string = thisTLC.makeImageURL({'width':obj.w,'height':obj.h,'data-media':$tag.data('media'),'data-bgcolor':$tag.data('bgcolor')});
+							if(obj.vp)	{string += " "+obj.vp;}
+							if(obj.dpi)	{string += " "+obj.dpi;}
+							srcset.push(string);
+							}
+						$tag.removeAttr('width'); $tag.removeAttr('height'); //polyfill requires no height/width tag be specified.
+						dump({'srcset' : srcset});
+						$tag.attr("srcset",srcset.join(','));
+						}
+					}
+
+				return true; //continue processing tlc
+				}			
+			
+			},
+
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
 
 //renderFormats are what is used to actually output data.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.

@@ -840,10 +840,7 @@ fallback is to just output the value.
 							})
 						}
 					else	{
-						$tag.on('click.detailsOrAdd',function(event){
-							event.preventDefault();
-							showContent('product',{'pid':pid}); 
-							})
+						$tag.attr({'data-hash':'#!product/'+pid,'data-app-click':'quickstart|showContent'});
 						}
 					}
 //				dump(" -> ID at end: "+$tag.attr('id'));
@@ -1492,6 +1489,7 @@ $target.tlc({
 				if(_app.data['cartDetail|'+cartID] && _app.data['cartDetail|'+cartID].customer && _app.u.isSet(_app.data['cartDetail|'+cartID].customer.login))	{
 					r = _app.data['cartDetail|'+cartID].customer.login;
 	//				dump(' -> login was set. email = '+r);
+
 					}
 				else if(_app.data['cartDetail|'+cartID] && _app.data['cartDetail|'+cartID].bill && _app.u.isSet(_app.data['cartDetail|'+cartID].bill.email)){
 					r = _app.data['cartDetail|'+cartID].bill.email;
@@ -2963,6 +2961,17 @@ else	{
 			inlineProductPreviewShow : function($ele,p)	{
 				p.preventDefault();
 				_app.ext.quickstart.a.handleProdPreview($ele.closest("[data-pid]").data('pid'));
+				return false;
+				},
+
+			showContent : function($ele,p)	{
+				p.preventDefault();p
+				if($ele.data('hash'))	{
+					document.location.hash = $ele.data('hash');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In quickstart.e.showContent, no data-hash set on trigger element.","gMessage":true});
+					}
 				return false;
 				},
 

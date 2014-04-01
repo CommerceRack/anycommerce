@@ -8,9 +8,14 @@ a:hover	{color:#000;}
 menu, section, header, footer	{display:block; margin:0; padding:0;}
 
 
+.lineThrough	{text-decoration:line-through;}
+
+
+
 .sprite	{background:url(images/sprites.png);}
+.shipsFree	{background-position:0 -105px; width:90px; height:15px}
 
-
+/* header */
 
 #mastHead	{position:relative;}
 #mastHead .topbg	{background: #707070; height:12px;}
@@ -26,7 +31,7 @@ menu, section, header, footer	{display:block; margin:0; padding:0;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c84ec', endColorstr='#104a7b',GradientType=0 ); /* IE6-9 */
 	}
 #mastHead .bottombg, footer .footHead	{
-	height:26px;
+	height:28px;
 	background: #707070; /* Old browsers */
 	background: -moz-linear-gradient(top, #707070 0%, #282828 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#707070), color-stop(100%,#282828)); /* Chrome,Safari4+ */
@@ -47,44 +52,59 @@ menu, section, header, footer	{display:block; margin:0; padding:0;}
 
 
 #shopNowLink	{
-	position:absolute; bottom:0; left:0; height:26px; line-height:26px; text-align:center; padding:0 1.3em 0 .5em;
+	position:absolute; bottom:0; left:0; height:32px; line-height:26px; cursor:pointer; text-align:center; padding:0 1.3em 0 .5em;
+	color:#fff;
 	-webkit-border-radius: 0 .6em .6em 0;
 	border-radius: 0 .6em .6em 0;
-	background: #fcf5b5; /* Old browsers */
-	background: -moz-linear-gradient(top, #fcf5b5 0%, #f1da36 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#fcf5b5), color-stop(100%,#f1da36)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #fcf5b5 0%,#f1da36 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #fcf5b5 0%,#f1da36 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #fcf5b5 0%,#f1da36 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #fcf5b5 0%,#f1da36 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcf5b5', endColorstr='#f1da36',GradientType=0 ); /* IE6-9 */	
+	background: #ff9c00; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff9c00 0%, #ff4000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff9c00), color-stop(100%,#ff4000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ff9c00 0%,#ff4000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9c00', endColorstr='#ff4000',GradientType=0 ); /* IE6-9 */	
 	}
 
 #shopNowLink .arrow-down {
 	width: 0; 
 	height: 0;
 	display:block;
-	position:absolute; right:.3em; bottom:.5em;
+	position:absolute; right:.3em; bottom:.8em;
 	border-left: .35em solid transparent;
 	border-right: .35em solid transparent;
-	border-top: .35em solid #666;
+	border-top: .35em solid #fff;
 	}
 
 
 
 
-#mastHeadSearchFrm	{position:absolute; bottom:3px; right:.5em; left:100px;}
+#mastHeadSearchFrm	{position:absolute; bottom:5px; right:.5em; left:100px;}
 .productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:.9em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.1em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;}
 
-#tier1categories	{display:none;} /* these are revealed onclick */
+#tier1categories	{display:none; list-style:none; margin:0; padding:0; position:absolute; left:20px; top:75px; background:#fcf5b5; z-index:1000; width:90%;} /* these are revealed onclick */
+#tier1categories li	{
+	width:50%; display:block; float:left;
+	padding:.3em; margin:0;
+	font-size:.9em; line-height:.8em;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	}
+#tier1categories img	{float:left; margin-right:.5em;}
+#tier1categories li a	{text-decoration:none;}
+
+/* footer */
 
 
 footer .footHead	{line-height:26px; font-size:.9em; font-weight:bold; color:#fff; padding:.2em .5em;}
-footer p.linkGroup	{width:45%; font-size:.8em; line-height:1.1em; margin:0 .5em; padding:.5em 0;}
-footer p.linkGroup a	{text-decoration:none;}
+footer p.linkGroup	{width:45%; font-size:.8em;  margin:0 .5em; padding:.5em 0;}
+footer p.linkGroup a	{text-decoration:none; padding:.3em 0}
 footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; padding:.5em; color:#fff;}
 
+
+/* content area */
 #contentContainer	{padding:.3em;}
 
 .reversedHeader	{
@@ -205,3 +225,39 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 .blockLink	{text-decoration:none;}
 .zProductList .prodPrice	{color:#333;}
 .prodListArrow {position:absolute; right: 5px; top:40px;}
+.reviewPLAdjust	{margin:0em 0 -.5em 1em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
+
+
+/***** Review Section CSS Start *****/
+.reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px;}
+.review_1 	{background-position: 0px 0px;}
+.review_2	{background-position: 0px 0px;}
+.review_3	{background-position: 0px -28px;}
+.review_4	{background-position: 0px -28px;}
+.review_5	{background-position: 0px -56px;}
+.review_6	{background-position: 0px -56px;}
+.review_7	{background-position: 0px -84px;}
+.review_8	{background-position: 0px -84px;}
+.review_9	{background-position: 0px -112px;}
+.review_10	{background-position: 0px -112px;}
+/***** Review Section CSS End *****/
+
+
+/* product template */
+
+/* responsive video/youtube -> found here: http://avexdesigns.com/responsive-youtube-embed/ */
+.videoContainer {
+    position: relative;
+    padding-bottom: 56.25%;
+    padding-top: 30px; height: 0; overflow: hidden;
+	}
+ 
+.videoContainer iframe,
+.videoContainer object,
+.videoContainer embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+	}
