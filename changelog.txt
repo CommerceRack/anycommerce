@@ -42,6 +42,7 @@ QUICKSTART
 	cart template now has a 'refresh' button.
 	Integrated new router. big changes on how to link to pages (no more showContent).
 	enhancements to cart messaging (more buyer events get logged).
+	searchlink render format in quickstart removed. see mfg in producttemplate for working example of tlc.
 
 
 201401
