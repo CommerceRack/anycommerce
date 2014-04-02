@@ -79,7 +79,7 @@ var admin_support = function(_app) {
 			
 			showTicketManager : function($target,P)	{
 //				_app.u.dump("BEGIN admin_support.a.showTicketManager");
-				
+				$target.intervaledEmpty();
 				_app.ext.admin_support.a.showHelpInterface($target,P);
 				
 				$target.append("<div class='clearfix'></div>");
