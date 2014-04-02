@@ -674,7 +674,9 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 						});
 					}
-
+				if(!$.support['localStorage'])	{
+					$("#globalMessaging").anymessage({"message":"It appears you have localStorage disabled or are using a browser that does not support the feature. Please enable the feature or upgrade your browser","errtype":"youerr","persistent":true});
+					}
 				}
 			}, //initExtension
 
