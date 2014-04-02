@@ -404,7 +404,8 @@ pass in an event name and a function and it will be added as an eventAction.
 			errtype : null,
 			showCloseButton : true,
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
-			persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
+			persistent : false, //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
+			timeout : 10000
 			},
 
 		_init : function(){
@@ -434,7 +435,7 @@ pass in an event name and a function and it will be added as an eventAction.
 // ** ++ auto close bugfix.  The appropriate message is passed to the close function so that when the timeout executes it does not close all the messages in the container
 			else	{this.ts = setTimeout(function(){
 				if($('#'+o.messageElementID).length)	{$t.anymessage('close',$('#'+o.messageElementID));} 
-				},10000);} //auto close message after a short duration.
+				},o.timeout);} //auto close message after a short duration.
 // ** 201318 side effects bug- reset options after displaying the message to provide defaults for the next message --mc
 //EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistent true, message 2 does not set persistent.  
 //Message 2 is set to persistent because the defaults have been overwritten on the container
@@ -445,7 +446,8 @@ pass in an event name and a function and it will be added as an eventAction.
 				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 				showCloseButton : true,
 				errtype : null,
-				persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
+				persistent : false, //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
+				timeout : 10000
 				}
 			}, //_init
 

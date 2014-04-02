@@ -77,3 +77,8 @@ a.redText{color:#7e0000}
 .basePrice {color:#e24b2c; font-size: 1.5em;}
 
 .productPage .addtocartbutton{border:none;}
+
+.filteredSearchPage form {color:white;}
+.filterList { width: 16%; padding: 15px 2%;}
+.filterResultsContainer {float:right; width: 80%;}
+.filterGroup {margin-bottom: 10px;}

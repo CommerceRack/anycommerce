@@ -15,7 +15,7 @@ myApp.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
 //myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js']);
 
-myApp.rq.push(['extension',0,'store_swc','extensions/_store_swc.js']);
+myApp.rq.push(['extension',0,'store_swc','extensions/_store_swc.js', 'attachHandlers']);
 //myApp.rq.push(['css',0,'lightbox/css/lightbox.css', 'lightboxCSS']); 
 myApp.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']); 
 

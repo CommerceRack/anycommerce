@@ -28,3 +28,6 @@
 .categoryTemplate .catName {padding: .5em 0em;}
 
 .productPage .addtocartbutton{width:99px; height:31px; background:url(images/prodpages/add_to_cart_button_99x31.png) no-repeat;}
+
+.filterList { width: 26%; padding: 15px 2%;}
+.filterResultsContainer {float:right; width: 70%;}

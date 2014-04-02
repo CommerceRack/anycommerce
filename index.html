@@ -371,8 +371,50 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<object width="650" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="650" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>
 </div>
 
-
-
+<div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage">
+	
+	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
+		<div class="filterGroup">
+			<legend>My Teams:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Brand:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_brands'; store_swc#filtercheckboxlist --index='app_brands';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Demographic:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_prod_demographic'; store_swc#filtercheckboxlist --index='app_prod_demographic';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Department:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_department'; store_swc#filtercheckboxlist --index='app_department';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_sub_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Sub-Department:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_sub_department'; store_swc#filtercheckboxlist --index='app_sub_department';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_tshirts'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Tee Shirt Type:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_tshirts'; store_swc#filtercheckboxlist --index='app_tshirts';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_jerseys'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Jersey Type:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_jerseys'; store_swc#filtercheckboxlist --index='app_jerseys';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_souvenirs'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Souvenir Type:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_souvenirs'; store_swc#filtercheckboxlist --index='app_souvenirs';"></div>
+		</div>
+		<input type="submit" value="Search!"></input>
+	</form>
+	<div class="filterResultsContainer">
+		<ul class="filterResults listStyleNone fluidList noPadOrMargin productList"></ul>
+	</div>
+</div>
 
 
 <!--
@@ -1008,6 +1050,10 @@ if you change these, you should move them above this comment so that when you (o
 newsletterArticle is used for buyers who are not logged in or do not have an account.
 subscribeListsArticle is used for authenticated buyers
 -->
+		<div id="myteamsArticle" class="displayNone textContentArea">
+			<div data-tlc="bind $teams '.app_mlb.0.v'; apply --append;"></div>
+		</div>
+		
 		<div id="newsletterArticle" class="displayNone textContentArea">
 			<h1>Subscribe to our Newsletter and Save!</h1>
 			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
