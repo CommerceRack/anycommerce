@@ -87,7 +87,7 @@ var store_swc = function(_app) {
 			onSuccess : function(){
 				_app.templates.customerTemplate.on('complete.swc', function(event, $context, infoObj){
 				if(infoObj.show == "myteams"){
-					$('#myteamsArticle', $context).tlc({dataset:_app.ext.store_swc.validTeams, verb:"translate"});
+					_app.ext.store_swc.u.renderMyTeams($context);
 					}
 				});
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
@@ -142,6 +142,7 @@ var store_swc = function(_app) {
 				},
 			dump : function(data,thisTLC){
 				dump(data);
+				return true;
 				}
 			},
 		renderFormats : {
@@ -158,29 +159,36 @@ var store_swc = function(_app) {
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
+					this.renderMyTeams();
 					}
 				},
-				/*
-			addUserTeam : function(sport, team){
-				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
-					_app.ext.store_swc.vars.userTeams[sport].push(team);
-					this.saveUserTeams();
-					}
-				},
-			removeUserTeam : function(sport, team){
-				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined" ){
-					$.grep(_app.ext.store_swc.vars.userTeams[sport], function(e, i){
-						return e.v != team && e.p != team;
-						});
-					this.saveUserTeams();
-					}
-				},
-				*/
 			saveUserTeams : function(){
 				$('#appView .filteredSearchPage').each(function(){
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
+				},
+			renderMyTeams : function($context){
+				$context = $context || $('#appView');
+				var $teams = $('#myteamsArticle', $context);
+				if($teams.length){
+					var data = {
+						userTeams : _app.ext.store_swc.vars.userTeams,
+						validTeams : {}
+						};
+					for(var i in data.userTeams){
+						data.validTeams[i] = $.grep(_app.ext.store_swc.validTeams[i], function(ve,vi){
+							if(ve.v){
+								var collisions = $.grep(data.userTeams[i], function(me,mi){
+									return me.v === ve.v;
+									});
+								return !collisions.length;
+								}
+							return false;
+							});
+						}
+					$teams.empty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
+				}
 				}
 			}, //u [utilities]
 
@@ -220,7 +228,17 @@ var store_swc = function(_app) {
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleElasticResults', 'datapointer':'appFilteredSearch','extension':'store_search','templateID':'productListTemplateResults','list':$resultsContainer});
 				_app.model.dispatchThis();
 				
-				}
+				},
+			addteam : function($btn, p){
+				p.preventDefault();
+				var team = JSON.parse($btn.attr('data-swc-team'));
+				team.checked = "checked";
+				var sport = $btn.attr('data-swc-sport');
+				var teams = _app.ext.store_swc.vars.userTeams[sport];
+				teams.push(team);
+				_app.ext.store_swc.u.setUserTeams(sport, teams);
+				},
+			moveteam : function($btn, p){}
 			}, //e [app Events]
 		filterData : {
 			'jerseys' : {

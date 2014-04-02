@@ -1025,7 +1025,23 @@ if you change these, you should move them above this comment so that when you (o
 
 </div><!-- /companyTemplate -->
 
+<div id="myteamsArticleTemplate">
+	<div class="sportWidget" data-swc-sport="app_mlb">
+		<h4>My MLB Teams</h4>
+		<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+		<h4>Add More:</h4>
+		<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+	</div>
+</div>
 
+<ul>
+	<li id="myteamTemplate">
+		<span data-tlc="bind $name '.p'; apply --append;"></span> 
+	</li>
+	<li id="validteamTemplate">
+		<span data-tlc="bind $name '.p'; apply --append;"></span><button data-tlc="bind $var '.'; stringify; store_swc#dump; apply --attrib='data-swc-team';" data-swc-sport="app_mlb" data-app-click="store_swc|addteam">+</button>
+	</li>
+</ul>
 
 <div id="customerTemplate" class="clearfix">
 
@@ -1050,8 +1066,8 @@ if you change these, you should move them above this comment so that when you (o
 newsletterArticle is used for buyers who are not logged in or do not have an account.
 subscribeListsArticle is used for authenticated buyers
 -->
-		<div id="myteamsArticle" class="displayNone textContentArea">
-			<div data-tlc="bind $teams '.app_mlb.0.v'; apply --append;"></div>
+		<div id="myteamsArticle" class="displayNone textContentArea" data-templateid="myteamsArticleTemplate">
+			
 		</div>
 		
 		<div id="newsletterArticle" class="displayNone textContentArea">
