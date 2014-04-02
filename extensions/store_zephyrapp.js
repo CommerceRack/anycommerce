@@ -337,7 +337,6 @@ var store_zephyrapp = function(_app) {
 							srcset.push(string);
 							}
 						$tag.removeAttr('width'); $tag.removeAttr('height'); //polyfill requires no height/width tag be specified.
-						dump({'srcset' : srcset});
 						$tag.attr("srcset",srcset.join(','));
 						}
 					}
@@ -405,6 +404,75 @@ var store_zephyrapp = function(_app) {
 			randomizeList : function($list){
 				$list.children().shuffle();
 				},
+			
+			getDeliveryDateTable : function()	{
+				
+				
+
+var 
+	$table = $("<table \/>"),
+	montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),
+	shipMethods = new Array(
+		{"method":"Free/Standard Shipping","shiptime":"1-8 Business Days*","ddoi":8}, //ddoi is deliveryDateObjectIndex
+		{"method":"Fedex Home Delivery","shiptime":"1-5 Business Days*","ddoi":5},
+		{"method":"Fedex Express Saver","shiptime":"1-3 Business Days*","ddoi":3},
+		{"method":"Fedex 2-Day","shiptime":"1-2 Business Days*","ddoi":2},
+		{"method":"Fedex Overnight ","shiptime":"1 Business Day*","verbage":"Next Day"},
+		{"method":"USPS Priority**","shiptime":"1-4 Business Day*","ddoi":7}
+		);
+$table.append("<thead><tr><th>Shipping Method<\/th><th>Approximate Shipping Time<\/th><th>Est. Delivery Date<\/th><\/tr><\/thead>");
+$table.append("<tfoot><tr><td colspan='3' class='hint'>*Estimates do not take into account national holidays and other days which Fedex or USPS may not be working or may have restricted delivery services.<br>**USPS Delivery Service is based on the timescale of the Postal Service. Estimated Delivery Dates may change without notice depending on the US Postal Service.<\/td><\/tr><\/tfoot>");
+
+// This script came over from his existing website. The eval was commented out by JT.
+//	var num = 1;
+//	var temparray = document.location.href.split("?");
+//	eval(temparray[1]);
+	
+	function getDeliveryDateObj(businessDaysLeftForDelivery) {
+		var now = new Date();
+		var dayOfTheWeek = now.getDay();
+		var calendarDays = businessDaysLeftForDelivery;
+		var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
+		if (deliveryDay >= 6) {
+			//deduct this-week days
+			businessDaysLeftForDelivery -= 6 - dayOfTheWeek;
+			//count this coming weekend
+			calendarDays += 2;
+			//how many whole weeks?
+			deliveryWeeks = Math.floor(businessDaysLeftForDelivery / 5);
+			//two days per weekend per week
+			calendarDays += deliveryWeeks * 2;
+		}
+		now.setTime(now.getTime() + calendarDays * 24 * 60 * 60 * 1000);
+		return now;
+	}
+	
+	function showDate(num) {
+		var d=getDeliveryDateObj(num);
+		document.write( montharray[d.getMonth()] + " " + d.getDate() );
+	};
+	var ddoArray = getDeliveryDateObj();
+	
+	for(var i = 0; i < shipMethods.length; i += 1)	{
+//		$table.append("<tr><td>"+shipMethods[i].method+"<\/td><td>"+shipMethods[i].shiptime+"<\/td><td>"+(shipMethods[i].verbage ? shipMethods[i].verbage : showDate(shipMethods[i].ddoi)+"<\/td><\/tr>");
+		}
+	
+// ### TODO -> loop through the ship methods.  for each, add a row to $table.
+/*
+  <tr>
+    <td>
+    Fedex Express Saver
+    </td>
+    <td>
+    1-3 Business Days*
+    </td>
+    <td>
+    <b><script> showDate(1); </script> - <script> showDate(3); </script></b>
+    </td>
+  </tr>
+  */
+				},
+			
 			cacheRecentlyViewedItems: function ($container){
 				_app.u.dump ('Caching product to recently viewed');
 				var d = new Date().getTime();
@@ -482,8 +550,22 @@ var store_zephyrapp = function(_app) {
 					$('#globalMessaging').anymessage({"message":"For zephyr.e.revealation, no data-revealation-role='container' found as parent of trigger element.","gMessage":true});
 					}
 				return false;
-				}
+				},
 			
+			youtubeSwapExec : function($ele,p)	{
+				p.preventDefault();
+				if($ele.data('videoid'))	{
+					var $target = $ele.closest("[data-app-role='videoTabContent']").find("[data-app-role='videoContainer']");
+					$target.empty();
+					_app.renderFormats.youtubevideo($target,{'value':$ele.data('videoid'),'bindData':{}});
+					$ele.closest("[data-app-role='videoTabContent']").find('.ui-button').button('enable');
+					$ele.button('disable');
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In store_zephyrapp.e.youtubeSwapExec, no videoid set on trigger element.","gMessage":true});
+					}
+				return false;
+				}
 			
 			} //e [app Events]
 		} //r object.

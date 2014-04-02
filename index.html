@@ -541,7 +541,16 @@ this will likely become more flexible in the future. ###
 		<li><a href="#videos">Videos</a></li>
 		<li><a href="#images">Images</a></li>
 	</ul>
-	<div data-anytab-content="videos" data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}}"  class="displayNone marginBottom videoContainer"></div>
+	<div data-anytab-content='videos' class='prodVideoTab' data-app-role='videoTabContent'>
+		<div class="videoContainer" data-app-role='videoContainer' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}};"></div>
+		<div data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show;}};" class='buttonset smallButton  marginTop displayNone'>
+			<!-- button() adds a inline-block style to the button, which overrides displayNone. so the applyButton class is only added if the field is populated -->
+			<button class='applyButton' data-app-click='store_zephyrapp|youtubeSwapExec' disabled data-tlc="bind $var '.%attribs.youtube:videoid'; apply --attrib='data-videoid';">Video 1</button>
+			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 2</button>
+			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid3'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 3</button>
+			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid4'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton'; apply --attrib='data-videoid';}};">Video 4</button>
+		</div>
+	</div>
 	<div data-anytab-content="images">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=120&w=120&dpi=1x&vp=640w,h=250&w=250&dpi=1x&vp=800w,h=400&w=400&dpi=2x&vp=1024w';}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 	</div>

@@ -396,6 +396,9 @@ document.write = function(v){
 
 				tagObj.state = 'complete'; //needed for handleTemplateEvents.
 
+				_app.u.handleButtons(tagObj.jqObj);
+				_app.u.handleCommonPlugins(tagObj.jqObj);
+
 				_app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID))),tagObj);
 				},
 			onError : function(responseData,uuid)	{
@@ -1059,7 +1062,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 
-				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : 0},1000)} //new page content loading. scroll to top.				
+								
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					_app.ext.quickstart.pageTransition($('#appPreView'),$('#appView'));
@@ -1090,6 +1093,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
 
+				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},1000)} //new page content loading. scroll to top.
 //NOT POSTING THIS MESSAGE AS ASYNC BEHAVIOR IS NOT CURRENTLY QUANTIFIABLE					
 				//Used by the SEO generation utility to signal that a page has finished loading. 
 				//parent.postMessage("renderFinished","*");
@@ -2045,7 +2049,6 @@ effects the display of the nav buttons only. should be run just after the handle
 						$product = $tmp.children();
 						$product.attr('id',infoObj.parentID);
 						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
-						_app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
 
 //need to obtain the breadcrumb info pretty early in the process as well.

@@ -245,7 +245,11 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 /* product template */
 
-/* responsive video/youtube -> found here: http://avexdesigns.com/responsive-youtube-embed/ */
+/* responsive video/youtube -> found here: http://avexdesigns.com/responsive-youtube-embed/ 
+doesn't respond quite as well once in a tab. will need media queries to adjust the height. ####TODO
+*/
+.prodVideoTab	{min-height:200px;}
+
 .videoContainer {
     position: relative;
     padding-bottom: 56.25%;
