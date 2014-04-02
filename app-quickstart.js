@@ -351,7 +351,7 @@ document.write = function(v){
 //					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
 					tagObj.dataset = {};
 					//if no %page vars were requested, this datapointer won't be set and this would error.
-					if(_app.u.thisNestedExists("data.appPageGet|"+tagObj.navcat+".%page",_app))	{
+					if(_app.data["appPageGet|"+tagObj.navcat] && _app.data["appPageGet|"+tagObj.navcat]['%page'])	{
 						tagObj.dataset = {'%page' : _app.data['appPageGet|'+tagObj.navcat]['%page']};
 						}
 					//deep extend so any non-duplicates in %page are preserved.
@@ -600,20 +600,6 @@ need to be customized on a per-ria basis.
 				_app.renderFormats.text($tag,data);
 				},
 
-
-//### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
-			searchlink : function($tag,data){
-				if(data.value)	{
-					var keywords = data.value.replace(/ /g,"+"),
-					infoObj = {'KEYWORDS':keywords}
-					if(data.bindData.elasticAttr){
-						infoObj.ATTRIBUTES = data.bindData.elasticAttr.split(" ");
-						}
-					$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
-						showContent('search',infoObj)
-						});
-					}
-				}, //searchLink
 
 			cpsiawarning : function($tag,data)	{
 				if(data.value)	{

@@ -465,7 +465,7 @@ this will likely become more flexible in the future. ###
 
 
 <div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
-	<div data-tlc="set $bob '1234';"></div>
+
 	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
 	
 	<table class="prodViewerContainer">
@@ -496,7 +496,7 @@ this will likely become more flexible in the future. ###
 
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; quickstart#searchlink  --legacy;"></h5>
+			<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></h5>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
 		</div>
 	
