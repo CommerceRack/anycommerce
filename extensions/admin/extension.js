@@ -1094,33 +1094,62 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					})
 				}
 			}, //filterFinderSearchResults
+/*
 
+When a 'remove' is executed, a new message is created. This allows ALL users to have their list updated when a remove occurs.
+These new messages are returned with a verb='remove' on them. So these messages must be removed from the local copy.
+*/
 		handleMessaging : {
 			onSuccess : function(_rtag)	{
+				//message count is updated whether new messages exist or not, or it won't work at init.
+				var DPSMessages = _app.model.dpsGet('admin','messages') || [];
 				
-//				_app.u.dump("BEGIN admin.callbacks.handleMessaging");
-//				_app.u.dump(" ->last Message (start): "+_app.ext.admin.u.getLastMessageID());
 				if(_app.data[_rtag.datapointer] && _app.data[_rtag.datapointer]['@MSGS'] && _app.data[_rtag.datapointer]['@MSGS'].length)	{
-
 					var
 						L = _app.data[_rtag.datapointer]['@MSGS'].length,
-						DPSMessages = _app.model.dpsGet('admin','messages') || [],
 						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
 						lastMessageID;
 
-//update the localstorage object w/ the new messages.
+function getIndexByObjValue(arr,key,value)	{
+	var theIndex = false;
+	$.grep(arr, function(e,i){if(e[key] == value){theIndex = i; return;}});
+	return theIndex;
+	}
+
+//update the localstorage object w/ the new messages, except the removes.
 					for(var i = 0; i < L; i += 1)	{
-						DPSMessages.push(_app.data[_rtag.datapointer]['@MSGS'][i])
+						if(_app.data[_rtag.datapointer]['@MSGS'][i].verb == 'remove')	{
+							var index = getIndexByObjValue(DPSMessages,'origin',_app.data[_rtag.datapointer]['@MSGS'][i].origin);
+							if(index !== false && index >= 0)	{
+								DPSMessages.splice(index,1);
+								}
+							else	{} //getIndex returned something unexpected.
+							}
+						else if(_app.data[_rtag.datapointer]['@MSGS'][i].verb == 'update')	{
+							var index = getIndexByObjValue(DPSMessages,'origin',_app.data[_rtag.datapointer]['@MSGS'][i].origin);
+							//it's possible to have an 'update' w/ no existing reference in dpsMessages.
+							if(index !== false && index >= 0)	{
+								$.extend(DPSMessages[index],_app.data[_rtag.datapointer]['@MSGS'][i]);
+								}
+							else	{
+								DPSMessages.push(_app.data[_rtag.datapointer]['@MSGS'][i]);
+								}
+							}
+						else	{
+							DPSMessages.push(_app.data[_rtag.datapointer]['@MSGS'][i]);
+							}
+						lastMessageID = _app.data[_rtag.datapointer]['@MSGS'][i].id
 						}
 					_app.model.dpsSet('admin','messages',DPSMessages);
-					_app.model.dpsSet('admin','lastMessage',_app.data[_rtag.datapointer]['@MSGS'][L-1].id);
-					_app.ext.admin.u.displayMessages(_app.data[_rtag.datapointer]['@MSGS']);
-//					_app.u.dump(" ->last Message (end): "+_app.ext.admin.u.getLastMessageID());
+					if(lastMessageID)	{
+						_app.model.dpsSet('admin','lastMessage',lastMessageID);
+						}
 					}
 				else	{} //no new messages.
 				
-//add another request. this means with each immutable dispatch, messages get updated.
-_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"mutable");
+				_app.ext.admin.u.displayMessages(DPSMessages);				
+//add another request. this means with each mutable dispatch, messages get updated.
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"mutable");
 				},
 			onError : function()	{
 				//no error display.
@@ -2165,7 +2194,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 //			_app.u.dump(" -> messages:");  _app.u.dump(messages);
 				if(messages)	{
 					var
-						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent'),
+						$tbody = $("[data-app-role='messagesContainer']",'#messagesContent').empty(), //the messages are all regenerated each time. need to for 'removes' and 'updates'.
 						L = messages.length,
 						$tmp = $("<table><tbody><\/tbody><\/table>"); //used to store the rows so DOM is only updated once.
 	
@@ -2317,34 +2346,30 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 
 			loadNativeApp : function(path,opts,$target){
-//				_app.u.dump("BEGIN loadNativeApp");
 				_app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 				_app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 
 				if(!$target)	{_app.u.dump("TARGET NOT SPECIFIED")}
-
 //handle the default tabs specified as #! instead of #:
 				else if(_app.ext.admin.u.showTabLandingPage(path,$(_app.u.jqSelector('#',path.substring(2)+'Content')),opts))	{
 					//the showTabLandingPage will handle the display. It returns t/f
-
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.u.loadNativeApp, unrecognized path/app ["+path+"] passed.","gMessage":true});
 					_app.u.throwGMessage("WARNING! ");
 					}
-//				_app.u.dump("END loadNativeApp");
 				},
 
 //used for bringing one of the top tabs into focus. does NOT impact content area.
 			bringTabIntoFocus : function(tab){
 				$('.mhTabsContainer ul','#mastHead').children().removeClass('active'); //strip active class from all other tabs.
-				$('.'+tab+'Tab','#mastHead').addClass('active'); ///!!! need to put this into a jqSelector function !!!
+				// * 201402 -> added jqSelector around tab var
+				$(_app.u.jqSelector('.',tab+'Tab'),'#mastHead').addClass('active');
 				return false;
 				},
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
 			bringTabContentIntoFocus : function($target){
-				
 				if($target instanceof jQuery)	{
 					if($target.is('visible'))	{
 						//target is already visible. do nothing.
@@ -2358,19 +2383,17 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 						$target.show();
 						}
 					}
-
 				},
-
 
 			clearAllMessages : function(){
 				$("[data-app-role='messagesContainer']",'#messagesContent').intervaledEmpty();
-
-				_app.model.dpsSet('admin','messages',[]);
+				_app.model.addDispatchToQ({"_cmd":"adminMessagesEmpty"},"mutable"); //use mutable q to trigger another messages list call.
+				_app.model.dispatchThis("mutable");
+				_app.model.dpsSet('admin','messages',new Array());
 				_app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
-				// NOTE ### -> when this is updated to trigger a clear on the server, add a confirm prompt.
 				},
-			toggleMessagePane : function(state){
 
+			toggleMessagePane : function(state){
 				var $target = $('#messagesContent');
 				$target.css({top : $target.parent().height()})
 				if(state == 'hide' && $target.css('display') == 'none')	{} //pane is already hidden. do nothing.
@@ -2382,7 +2405,6 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					$target.slideUp();
 					$('.messagesTab').removeClass('messagesTabActive');
 					}
-
 				}, //toggleMessagePane
 
 //will create the dialog if it doesn't already exist.
@@ -2405,6 +2427,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 					}
 				return $target;
 				},
+
 //path should be passed in as  #!orders
 			showTabLandingPage : function(tab,$target,opts)	{
 				var r = true;
@@ -3856,6 +3879,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 
 			messageClearExec : function($ele,P)	{
+				P.preventDefault();
 				var msgid = $ele.closest('tr').data('messageid');
 //				_app.u.dump(" -> remove message: "+msgid);
 				$ele.closest('tr').empty().remove();
@@ -3865,16 +3889,19 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 				$.grep(DPSMessages, function(e,i){if(e.id == msgid){index = i; return;}});
 				
-//				_app.u.dump(" -> index: "); _app.u.dump(index);
-				if(index)	{
+				_app.u.dump(" -> messageClearExec index: "); _app.u.dump(index);
+				if(index >= 0)	{
 					DPSMessages.splice(index,1);
-					_app.u.dump(DPSMessages);
+					_app.u.dump({'dpsMessages' : DPSMessages});
 					_app.model.dpsSet('admin','messages',DPSMessages);
 					_app.ext.admin.u.updateMessageCount();
+					_app.model.addDispatchToQ({"_cmd":"adminMessageRemove","msgid":msgid},"mutable"); //use mutable Q to trigger another messagesList call.
+					_app.model.dispatchThis("mutable");
 					}
 				else	{
 					//could not find a matching message in DPS.
 					}
+				return false;
 				},
 
 			messageDetailShow : function($ele,P)	{

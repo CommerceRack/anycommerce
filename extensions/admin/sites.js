@@ -595,13 +595,9 @@ used, but not pre-loaded.
 					if($ele.data('mode') == 'update')	{
 // ### FUTURE -> this is gonna get more love soon.  When it does, for adding a template to a host, would be nice to remember which template was selected.
 						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
-						
 						title += ': '+(data.HOSTNAME.toString().toLowerCase())
 						}
-					
 					title += ' for '+domain
-					
-					_app.u.dump(" -> data: ");_app.u.dump(data);
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title': title,
 						'data' : data, //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
