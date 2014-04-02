@@ -471,7 +471,15 @@ This one block should get called for both img and imageurl but obviously, imageu
 			
 			case 'prepend': $tag.prepend(data); break;
 			case 'append': $tag.append(data); break;
-			case 'replace': globals.tags[globals.focusTag] = $(data); $tag.replaceWith(globals.tags[globals.focusTag]);  break; //the object in memory must also be updated so that the rest of the tlc statement can modify it.
+			case 'replace': 
+				var $n = $(data); //the contents of what will replace tag may or may not be a tag.
+				if($n.length)	{
+					globals.tags[globals.focusTag] = $n; $tag.replaceWith(globals.tags[globals.focusTag]);
+					}
+				else	{
+					$tag.replaceWith(data);
+					}
+				break; //the object in memory must also be updated so that the rest of the tlc statement can modify it.
 			case 'inputvalue':
 				$tag.val(data);
 				break;
@@ -595,6 +603,12 @@ This one block should get called for both img and imageurl but obviously, imageu
 		return r;
 		} //append
 
+	this.format_default = function(argObj,globals,arg)	{
+		var r = (arg.type == 'longopt' ? arg.value.value : arg.value);
+		globals.binds[argObj.bind] = r;
+		return r;
+		} //append
+
 	this.format_length = function(argObj,globals)	{
 		var r;
 		if(globals.binds[argObj.bind])	{r = globals.binds[argObj.bind].length;}
@@ -607,7 +621,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = globals.binds[argObj.bind];
 		if(globals.binds[argObj.bind] && Number(argObj.chop) && globals.binds[argObj.bind].length > argObj.chop)	{
 			r = globals.binds[argObj.bind].toString();
-			r = r.substr(0,Number(argObj.chop));
+			r = r.substr(Number(argObj.chop),r.length);
 			}
 		return r;
 		}//chop

@@ -42,6 +42,7 @@ function runTests()	{
 		'epochts' : 1395787429,
 		'number' : 10,
 		'html' : "<h1>This is some html</h1><p>Isn't it wonderful</p>",
+		'tag' : "<div>testing</div>",
 		'wiki' : "= This is a wiki h1 =",
 		'wiki2' : "=This is a wiki h1=",
 //		'undefined' : undefined,  do NOT comment this out.  It's here to serve as a reminder that this is called but should NOT be defined. allows for testing on an undefined value.
@@ -110,6 +111,7 @@ function runTests()	{
 			}); //loop
 		//now run the 'unique' tests.
 		ok($('#child-gets-replaced').html() == 'bob', "replace" );
+		ok($('#child-gets-replaced2').text() == 'testing', "replace" );
 		});
 	test( "TLC Formats", function() {
 		$("[data-testtype]",'#format-tests').each(function(index){
