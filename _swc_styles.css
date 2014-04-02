@@ -78,6 +78,8 @@ a.redText{color:#7e0000}
 
 .productPage .addtocartbutton{border:none;}
 
+.productPage .tabContent{overflow-y: auto; height:400px;}
+
 .filteredSearchPage form {color:white;}
 .filterList { width: 16%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 80%;}
