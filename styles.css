@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-body,html	{margin:0; padding:0; font-size:100%; font-family: 'Oswald', Arial,Helvetica,sans-serif; font-weight:300;}
+body,html	{margin:0; padding:0; font-size:100%; font-family: 'Oswald', Arial,Helvetica,sans-serif; font-weight:300; color:#000;}
 
 a	{color:#0f4d82;}
 a:hover	{color:#000;}
@@ -8,7 +8,13 @@ a:hover	{color:#000;}
 menu, section, header, footer	{display:block; margin:0; padding:0;}
 
 
-.lineThrough	{text-decoration:line-through;}
+
+h1	{font-size:1.3em; color:#333; margin:.3em 0;}
+h2	{font-size:1.2em; color:#666; margin:.2em 0;}
+h3	{font-size:1.1em; color:#ccc; margin:.1em 0;}
+h4	{font-size:1.05em; color:#666; margin:0;}
+h5	{font-size:1.03em; color:#666; margin:0;}
+
 
 
 
@@ -122,6 +128,23 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 
 
+.wikiContainer	{font-weight:300; font-size:1em;}
+.wikiContainer h1	{font-size:1em; color:#ff9c00;}
+.wikiContainer h2	{font-size:.95em; color:#333;}
+.wikiContainer h3	{font-size:.9em; color:#666;}
+.wikiContainer p	{margin:0 0 .3em 0; font-size:.9;}
+
+.basePrice	{color:#ff9c00;}
+.lineThrough	{text-decoration:line-through;}
+
+hr.subtle	{margin:.1em 0;
+	border: 0; height: 1px;
+	background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
+	background-image: -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
+	background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
+	background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
+}
+
 /***** Homepage CSS Start *****/
 #slideshowContainer {
 	margin-bottom: 5px;
@@ -217,6 +240,11 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 
 
+/* category page styles */
+
+.zCatList li.catListItem	{float:left; margin:.2em; width:93px; height:93px; overflow:hidden;}
+.zCatList li.catListItem a	{text-decoration:none;}
+.categoryListPretty	{background:#000000; color:#ffffff; padding:.2em; text-align:center;}
 
 /* product list styles */
 .zProductList	{list-style:none; margin:0; padding:0;}
@@ -265,3 +293,30 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
     width: 100%;
     height: 100%;
 	}
+
+.reviewSummary .reviewSprite	{margin-top:.3em;}
+
+.prodPageQtyInputFieldset	{display:none;} /* qty input on mobile not desired. will display w/ media queries later */
+.prodPageAdd2CartButton	{
+	width:50%; margin:0 auto; border:0;
+	padding:.5em 0; cursor:pointer; text-align:center;
+	font-weight:800;
+	color:#fff;
+	-webkit-border-radius: .6em;
+	border-radius: .6em;
+	background: #ff9c00; /* Old browsers */
+	background: -moz-linear-gradient(top, #ff9c00 0%, #ff4000 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff9c00), color-stop(100%,#ff4000)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ff9c00 0%,#ff4000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9c00', endColorstr='#ff4000',GradientType=0 ); /* IE6-9 */
+	}
+
+
+/* styles for the cart */
+.shippingEstimates th	{font-size:.9em; text-align:left;}
+.shippingEstimates td	{font-size:.8em; text-align:left; font-weight:300;}
+.shippingEstimates tr:nth-child(odd)	{background:#fff;}
+.shippingEstimates tr:nth-child(even)	{background:#efefef;}

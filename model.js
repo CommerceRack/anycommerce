@@ -1782,7 +1782,6 @@ A note about cookies:
 						DPS[ext][ns] = varObj;
 						}
 					else	{
-						dump(" -> dps[ext] was not set");
 						DPS[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
 						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.

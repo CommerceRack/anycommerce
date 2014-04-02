@@ -63,7 +63,7 @@ var store_zephyrapp = function(_app) {
 
 
 
-							
+							/*
 			
 				_app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
 					var $container = $('#recentlyViewedItemsContainer');
@@ -220,6 +220,7 @@ var store_zephyrapp = function(_app) {
 				_app.rq.push(['templateFunction','customerTemplate','onDeparts',function(infoObj){
 					$('#loginArticle form.loginForm').removeData('callback', infoObj.callback);
 					}]);
+					*/
 				r = true;
 				
 				return r;
@@ -342,7 +343,60 @@ var store_zephyrapp = function(_app) {
 					}
 
 				return true; //continue processing tlc
-				}			
+				},
+			
+			
+			shiptimestable : function(data,thisTLC)	{
+
+				var 
+					$table = $("<table \/>").addClass('shippingEstimates'),
+					montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),
+					shipMethods = new Array(
+						{"method":"Free/Standard Shipping","shiptime":"1-8 Business Days*","ddoi":8}, //ddoi is deliveryDateObjectIndex
+						{"method":"Fedex Home Delivery","shiptime":"1-5 Business Days*","ddoi":5},
+						{"method":"Fedex Express Saver","shiptime":"1-3 Business Days*","ddoi":3},
+						{"method":"Fedex 2-Day","shiptime":"1-2 Business Days*","ddoi":2},
+						{"method":"Fedex Overnight ","shiptime":"1 Business Day*","verbage":"Next Day"},
+						{"method":"USPS Priority**","shiptime":"1-4 Business Day*","ddoi":7}
+						);
+				$table.append("<thead><tr><th>Shipping Method<\/th><th>Approximate Shipping Time<\/th><th>Est. Delivery Date<\/th><\/tr><\/thead>");
+				$table.append("<tfoot><tr><td colspan='3' class='hint'>*Estimates do not take into account national holidays and other days which Fedex or USPS may not be working or may have restricted delivery services.<br>**USPS Delivery Service is based on the timescale of the Postal Service. Estimated Delivery Dates may change without notice depending on the US Postal Service.<\/td><\/tr><\/tfoot>");
+				
+				// This script came over from his existing website. The eval was commented out by JT.
+				//	var num = 1;
+				//	var temparray = document.location.href.split("?");
+				//	eval(temparray[1]);
+					
+					function getDeliveryDateObj(businessDaysLeftForDelivery) {
+						var now = new Date();
+						var dayOfTheWeek = now.getDay();
+						var calendarDays = businessDaysLeftForDelivery;
+						var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
+						if (deliveryDay >= 6) {
+							//deduct this-week days
+							businessDaysLeftForDelivery -= 6 - dayOfTheWeek;
+							//count this coming weekend
+							calendarDays += 2;
+							//how many whole weeks?
+							deliveryWeeks = Math.floor(businessDaysLeftForDelivery / 5);
+							//two days per weekend per week
+							calendarDays += deliveryWeeks * 2;
+						}
+						now.setTime(now.getTime() + calendarDays * 24 * 60 * 60 * 1000);
+						return now;
+					}
+					
+					function showDate(num) {
+						var d=getDeliveryDateObj(num);
+						return (montharray[d.getMonth()] + " " + d.getDate());
+						};
+					var today = showDate(1);
+					for(var i = 0; i < shipMethods.length; i += 1)	{
+						$table.append("<tr><td>"+shipMethods[i].method+"<\/td><td>"+shipMethods[i].shiptime+"<\/td><td>"+today+" - "+(shipMethods[i].verbage ? shipMethods[i].verbage : showDate(shipMethods[i].ddoi))+"<\/td><\/tr>");
+						}
+					data.globals.tags[data.globals.focusTag].append($table);
+				return false;  //this is a pretty specific format. kill any further processing.
+				}
 			
 			},
 
@@ -404,75 +458,6 @@ var store_zephyrapp = function(_app) {
 			randomizeList : function($list){
 				$list.children().shuffle();
 				},
-			
-			getDeliveryDateTable : function()	{
-				
-				
-
-var 
-	$table = $("<table \/>"),
-	montharray=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"),
-	shipMethods = new Array(
-		{"method":"Free/Standard Shipping","shiptime":"1-8 Business Days*","ddoi":8}, //ddoi is deliveryDateObjectIndex
-		{"method":"Fedex Home Delivery","shiptime":"1-5 Business Days*","ddoi":5},
-		{"method":"Fedex Express Saver","shiptime":"1-3 Business Days*","ddoi":3},
-		{"method":"Fedex 2-Day","shiptime":"1-2 Business Days*","ddoi":2},
-		{"method":"Fedex Overnight ","shiptime":"1 Business Day*","verbage":"Next Day"},
-		{"method":"USPS Priority**","shiptime":"1-4 Business Day*","ddoi":7}
-		);
-$table.append("<thead><tr><th>Shipping Method<\/th><th>Approximate Shipping Time<\/th><th>Est. Delivery Date<\/th><\/tr><\/thead>");
-$table.append("<tfoot><tr><td colspan='3' class='hint'>*Estimates do not take into account national holidays and other days which Fedex or USPS may not be working or may have restricted delivery services.<br>**USPS Delivery Service is based on the timescale of the Postal Service. Estimated Delivery Dates may change without notice depending on the US Postal Service.<\/td><\/tr><\/tfoot>");
-
-// This script came over from his existing website. The eval was commented out by JT.
-//	var num = 1;
-//	var temparray = document.location.href.split("?");
-//	eval(temparray[1]);
-	
-	function getDeliveryDateObj(businessDaysLeftForDelivery) {
-		var now = new Date();
-		var dayOfTheWeek = now.getDay();
-		var calendarDays = businessDaysLeftForDelivery;
-		var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
-		if (deliveryDay >= 6) {
-			//deduct this-week days
-			businessDaysLeftForDelivery -= 6 - dayOfTheWeek;
-			//count this coming weekend
-			calendarDays += 2;
-			//how many whole weeks?
-			deliveryWeeks = Math.floor(businessDaysLeftForDelivery / 5);
-			//two days per weekend per week
-			calendarDays += deliveryWeeks * 2;
-		}
-		now.setTime(now.getTime() + calendarDays * 24 * 60 * 60 * 1000);
-		return now;
-	}
-	
-	function showDate(num) {
-		var d=getDeliveryDateObj(num);
-		document.write( montharray[d.getMonth()] + " " + d.getDate() );
-	};
-	var ddoArray = getDeliveryDateObj();
-	
-	for(var i = 0; i < shipMethods.length; i += 1)	{
-//		$table.append("<tr><td>"+shipMethods[i].method+"<\/td><td>"+shipMethods[i].shiptime+"<\/td><td>"+(shipMethods[i].verbage ? shipMethods[i].verbage : showDate(shipMethods[i].ddoi)+"<\/td><\/tr>");
-		}
-	
-// ### TODO -> loop through the ship methods.  for each, add a row to $table.
-/*
-  <tr>
-    <td>
-    Fedex Express Saver
-    </td>
-    <td>
-    1-3 Business Days*
-    </td>
-    <td>
-    <b><script> showDate(1); </script> - <script> showDate(3); </script></b>
-    </td>
-  </tr>
-  */
-				},
-			
 			cacheRecentlyViewedItems: function ($container){
 				_app.u.dump ('Caching product to recently viewed');
 				var d = new Date().getTime();
@@ -541,9 +526,11 @@ $table.append("<tfoot><tr><td colspan='3' class='hint'>*Estimates do not take in
 				p.preventDefault();
 				var $container = $ele.closest("[data-revealation-role='container']");
 				if($container.length)	{
-					var $content = $("[data-revealation-role='content']");
-					if($content.is(":visible"))	{$content.slideUp();}
-					else	{$content.slideDown();}
+					var $content = $("[data-revealation-role='content']").each(function(){
+						var $t = $(this);
+						if($t.is(":visible"))	{$t.slideUp();}
+						else	{$t.slideDown();}
+						});
 					$("[data-app-click='store_zephyrapp|revealation']",$container).toggle();
 					}
 				else	{

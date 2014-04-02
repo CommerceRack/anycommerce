@@ -108,7 +108,7 @@ $(document).ready(function(){
 		
 		<div id='shopNowLink'>Shop <span class='arrow-down'></span></div><!-- hidden by default. on click, shows tier 1 categories -->		
 		<ul id='tier1categories' class='mastHeadMenu'></ul>		
-		<form name='headerSearchFrm' id='mastHeadSearchFrm' action='#' class='productSearchForm' method="get">
+		<form name='headerSearchFrm' id='mastHeadSearchFrm' action='#' class='productSearchForm' method="get"  data-app-submit='quickstart|searchFormSubmit'>
 			<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" x-webkit-speech="x-webkit-speech" id='mastHeadKeywordsInput' />
 			<button id='mastHeadSearchButton' class='sprite' title='Product Search'></button>
 		</form>
@@ -260,7 +260,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<p>	ZephyrPaintball.com is your one stop paintball store for Cheap Paintball Gear and Airsoft Gear at affordable prices. In a hurry to get your Paintball Gear? We have you covered! All orders placed by 2pm Pacific ship the same day and most orders arrive within 1-4 business days. We have great sale prices and a helpful customer service staff. We are proud to be your one stop Paintball shop for your Paintball Gear and Airsoft needs with a wide variety of product just a click away. Whether you're looking for a Paintball Guns, Paintball Masks, Paintball Gun Upgrades, Paintball Air Tanks, Paintball Supplies, Airsoft Guns and gear, It's in stock and ready to ship.  Just check the live inventory to see if what you want is in stock.</p>
 		<p>	Zephyr Sports was founded in 2004 as a Paintball Shop to serve you the avid Paintball and Airsoft player. Zephyr carries a huge selection of Paintball Gear Bags, Paintball Harnesses, Paintball Guns and Paintball Hoppers. We carry a complete line of paintball equipment with only the finest products made from top quality manufacturers. Some of these brands include: Dye Paintball, JT Sports, kingman Spyder, Tippmann, Pure Energy, Empire Paintball] BT Paintball, TechT, Alien, Proto Paintball Guns, Dangerous Power, Azodin and Planet Eclipse.  In 2005 we expanded to carry Airsoft. We currently carry a full line of Airsoft Guns including Airsoft Rifles, Airsoft Pistols, BBs, pistol holsters, Protective Gear and many other products to meet your airsoft needs.</p>
 	
-		<!-- anything in there will be hidden by default, then shown when 'show more' is clicked -->
+		<!-- anything in here will be hidden by default, then shown when 'show more' is clicked -->
 		<div data-revealation-role='content' class='displayNone'><p>	ZephyrPaintball.com Store Offers Free Shipping over $100 on Paintball Guns and Paintball Packages and  supplies at the lowest prices on the web. New to Paintball? We offer the most complete line of Paintball Packages for the beginner or tournament player to get you on the field . Not sure what you need? Be sure to check out our Paintball Gear Buyers Guide as well as our live chat for a quick answer from an experienced Paintball or Airsoft player. If you're a hardcore Paintball tournament or scenario player we carry all the gear you could ever want.</p>
 <h2>Paintball Games</h2>
 <p>	There are various different games that can be played to keep you paintball games entertaining. Capture the flag, elimination, hold the fort are popular at our local fields. Capture the flag - In the game, paintball players are separated in two teams, a flag can either be put in the middle of the field, or a flag can be put at the home base of each team. The idea is to capture the flag without getting shot and return it to your home base. This game is always a challenge since as soon as you grab the flag, you are now the target of every remaining player on the opposing team.</p> 
@@ -326,7 +326,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</section>
 
 	<section data-tlc="bind $var '.@subcategoryDetail'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
-		<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
+		<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone zCatList clearfix noPadOrMargin"></ul>
 	</section>
 
 	<section  data-tlc="bind $var '.@products'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
@@ -335,7 +335,15 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</section>	
 	
 	
-	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append; apply --show;}};" ></section>
+	<section data-revealation-role='container' class='displayNone marginBottom' data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{apply --show;}};" >
+		<div data-revealation-role='content' data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ format --truncate='350'; render --wiki='quickstart'; apply --append;}};"></div>
+		<div data-revealation-role='content' class='displayNone' data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
+		<!-- these buttons will only show up if the initial text is longer than 350 chars -->
+		<div class='displayNone' data-tlc="bind $var '.%page.description'; format --chop='350'; format --length; if (is $var --gt='0';) {{ apply --show;}};">
+			<a href="#" data-app-click="store_zephyrapp|revealation">Show More</a>
+			<a href="#" data-app-click="store_zephyrapp|revealation" class='displayNone'>Show Less</a>
+		</div>
+	</section>
 	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append; apply --show;}};" ></section>
 
 </div>
@@ -345,19 +353,17 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
-<li id="categoryListTemplate">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
-	<div class="pointer">
-		<div class="thumbContainer floatLeft marginRight"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="35" width="35"></div>
-		<div class="catName"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
-	</div>
+<li id="categoryListTemplate" class='catListItem'>
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href'; bind $name '.pretty'; apply --attrib='title';">
+	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=93 --height=93 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="">
+	<div class='categoryListPretty' data-tlc="bind $var '.pretty'; apply --append;"></div>
 	</a>
 </li>
 
 
 <li id="categoryListTemplateRootCats">
 	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
-	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="35" width="35">
+	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="">
 	<span data-tlc="bind $var '.pretty'; apply --append;"></span>
 	</a>
 </li>
@@ -535,13 +541,16 @@ this will likely become more flexible in the future. ###
 <div id="productTemplate" class="productPage">
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
-
+	
+	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+	
 	<section data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --add --class='applyAnytabs';}};">
 	<ul data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};" class='displayNone'>
 		<li><a href="#videos">Videos</a></li>
 		<li><a href="#images">Images</a></li>
 	</ul>
-	<div data-anytab-content='videos' class='prodVideoTab' data-app-role='videoTabContent'>
+	<!-- video tab will be shown automagically if video1 is populated (anytab triggers the show) -->
+	<div data-anytab-content='videos' class='prodVideoTab displayNone' data-app-role='videoTabContent'>
 		<div class="videoContainer" data-app-role='videoContainer' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}};"></div>
 		<div data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show;}};" class='buttonset smallButton  marginTop displayNone'>
 			<!-- button() adds a inline-block style to the button, which overrides displayNone. so the applyButton class is only added if the field is populated -->
@@ -556,12 +565,50 @@ this will likely become more flexible in the future. ###
 	</div>
 	</section>
 
+	<section class='marginBottom'>
+		<h4 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="lineThrough floatLeft marginRight"></h4>
+		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
+	</section>
 	
+	<section class='marginBottom addToCartContainer'>
+		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix marginBottom" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
+	
+			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
+			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone prodPageQtyInputFieldset"></fieldset>
+	
+			<div class='marginBottom'><input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="prodPageAdd2CartButton displayNone" type="submit"></div>
+		</form>
+	</section>
 
+	<section class='marginBottom'>
+		<h4>Description</h4>
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='marginBottom wikiContainer'></div>
+	</section>
 
+	<section class='marginBottom'>
+		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></div>
+		<div class='displayNone' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{apply --show;}};">Mfg: <a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></div>
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></div>
+	</section>
 
-
-
+	<section class='marginBottom' data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};">
+		<h4>Related Product</h4>
+		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="zProductList clearfix isRelatedItemsList"></ul><!-- isRelatedItemsList is used in an onComplete -->
+	</section>
+	
+	<section class='marginBottom displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}};" >
+		<h4>Customer Reviews</h4>
+		<div class='clearfix reviewSummary'>
+			<div data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' reviews'; apply --append;}};"></div>
+			<div>
+				<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite marginRight"></span>
+				<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{math --div='2'; format --append=' out of 5'; apply --append; }};"></span>
+			</div>
+			<hr class='subtle'>
+		</div>
+		<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone noPadOrMargin clearfix productReviewsList"></ul>
+	</section>
+	
 </div><!-- productTemplate -->
 
 
@@ -1046,11 +1093,11 @@ Cart template
 	<div class="ui-widget ui-corner-all">
 		<div class='ui-widget-header ui-corner-top ui-header smallPadding smallButton'>
 			<button class='applyButton cartRefreshButton' data-text='false' data-icon-primary='ui-icon-refresh' data-app-click="cco|cartFetchExec">Refresh Cart</button>
-			<h2>Cart Totals</h2>
+			Cart Totals
 		</div>
 		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
 
-<section class="cartSummary marginBottom">
+<section class="cartSummary marginBottom clearfix">
 
 	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
 
@@ -1079,24 +1126,23 @@ Cart template
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
 </section>
 
-<section class="marginBottom">
+<section class="marginBottom clearfix">
 
-	
+	<!-- spans are set around the buttons so each element has one consitent tag type around it -->
+	<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogClose">Continue Shopping</button></span>
 
+	<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
+		<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
+	</span>
+
+	<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
 </section>
+<!-- this will output a table with some shipping estimates -->
+<section data-tlc="store_zephyrapp#shiptimestable;"></section>
+
 
 		</div>
-		<div class="ui-state-default cartButtons stdPadding clearfix">
-			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogClose">Continue Shopping</button></span>
-	
-			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
-				<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
-			</span>
-	
-			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
-	
-		</div>
+
 
 	</div>
 </div>
@@ -1171,17 +1217,11 @@ used on a product layout. Some product have 'children' which may represent the s
 <!-- individual review template -->
 <ul>
 	<li id="productReviewsTemplateDetail" class="reviewLineItem clearfix">
-	<ul class="prodReviewInfo">
-		<li data-tlc="bind $var '.RATING'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></li>
-		<li data-tlc="bind $var '.CUSTOMER_NAME'; if (is $var --notblank;) {{apply --append;}};"></li>
-		<li data-tlc="bind $var '.LOCATION'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></li>
-		<li data-tlc="bind $var '.CREATED_GMT'; if (is $var --notblank;) {{datetime --out='mdy'; format --prepend='on '; apply --append;}};"></li>
-
-	</ul>
-	<blockquote>
-		<h2 data-tlc="bind $var '.SUBJECT'; if (is $var --notblank;) {{apply --append;}};"></h2>
-		<p data-tlc="bind $var '.MESSAGE'; if (is $var --notblank;) {{apply --append;}};"></p>
-	</blockquote>
+	
+	<span data-tlc="bind $var '.RATING'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatLeft marginRight"></span>
+	<p data-tlc="bind $var '.MESSAGE'; if (is $var --notblank;) {{apply --append;}};"></p>
+	<div data-tlc="bind $var '.CUSTOMER_NAME'; if (is $var --notblank;) {{apply --append;}};"></div>
+	<div data-tlc="bind $var '.CREATED_GMT'; if (is $var --notblank;) {{datetime --out='mdy'; format --prepend='on '; apply --append;}};"></div>
 	</li>
 </ul>
 

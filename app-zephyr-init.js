@@ -73,6 +73,24 @@ $("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
 	handleSrcSetUpdate($ele);
 	});
 
+$("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
+	if($('.isRelatedItemsList',$ele).children().length)	{
+		//this product has related items.
+		}
+	else	{
+		if(myApp.ext.quickstart.vars.hotw[1] && myApp.ext.quickstart.vars.hotw[1].navcat)	{
+			//the last viewed page was a category. show some items from it.
+			}
+		else if(myApp.ext.quickstart.vars.hotw[1] && myApp.ext.quickstart.vars.hotw[1].keywords)	{
+			//last page was a search, show some of those items.
+			}
+		else	{
+			//nothing usable in recent history. key off of the product attributes
+			var prod = myApp.data['appProductGet|'+infoObj.pid]['%attribs'];
+
+			}
+		}
+	});
 
 
 

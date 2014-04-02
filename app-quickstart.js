@@ -348,10 +348,10 @@ document.write = function(v){
 
 //cat page handling.
 				if(tagObj.navcat)	{
-//					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
+					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
 					tagObj.dataset = {};
 					//if no %page vars were requested, this datapointer won't be set and this would error.
-					if(_app.u.thisNestedExists("data.appPageGet|"+tagObj.navcat+".%page",_app))	{
+					if(_app.data["appPageGet|"+tagObj.navcat] && _app.data["appPageGet|"+tagObj.navcat]['%page'])	{
 						tagObj.dataset = {'%page' : _app.data['appPageGet|'+tagObj.navcat]['%page']};
 						}
 					//deep extend so any non-duplicates in %page are preserved.
@@ -3004,8 +3004,12 @@ else	{
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
-							_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
-							dump(" ->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+							if($ele.data('show') == 'inline')	{
+								document.location.hash = '#!cart';
+								}
+							else	{
+								_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+								}
 							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
 							}
 						}},'immutable');
@@ -3042,7 +3046,10 @@ else	{
 //add to form element. input name='KEYWORDS' is required for this simple search.
 			searchFormSubmit : function($ele,p)	{
 				p.preventDefault();
-				showContent('search',$ele.serializeJSON($ele));
+				var sfo = $ele.serializeJSON($ele);
+				if(sfo.KEYWORDS)	{
+					document.location.hash = '#!search/keywords/'+sfo.KEYWORDS;
+					}
 				return false;
 				},
 
