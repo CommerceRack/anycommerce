@@ -119,13 +119,35 @@ var store_swc = function(_app) {
 				data.globals.binds[data.globals.focusBind] = _app.u.makeImage(args);
 				return true;
 				},
+			extend : function(data,thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(args.by){
+					data.globals.binds[data.globals.focusBind] = $.extend(true, {}, data.globals.binds[data.globals.focusBind], args.by);
+					}
+				else {
+					return false;
+					}
+				},
+			merge : function(data,thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(args.by){
+					data.globals.binds[data.globals.focusBind] = $.merge(data.globals.binds[data.globals.focusBind], args.by);
+					}
+				else {
+					return false;
+					}
+				},
 			filtercheckboxlist : function(data, thisTLC){
 				var args = thisTLC.args2obj(data.command.args, data.globals);
-				dump(args);
+				if(typeof args.filterType === "undefined"){
+					args.filterType = 'checkboxList';
+					}
 				if(args.index){
 					var list = data.globals.binds[data.globals.focusBind];
 					var $tag = data.globals.tags[data.globals.focusTag];
-					$tag.attr('data-filter-type','checkboxList');
+					if(args.filterType){
+						$tag.attr('data-filter-type',args.filterType);
+						}
 					$tag.attr('data-filter-index',args.index);
 					for(var i in list){
 						var o = list[i];
@@ -208,12 +230,11 @@ var store_swc = function(_app) {
 						}
 					}
 				$('[data-filter-type=checkboxList]', $form).each(function(){
-					var index = $(this).attr('data-filter-index');
 					var filter = {"or" : []};
 					$('input', $(this)).each(function(){
 						if($(this).is(":checked")){
 							var f = {"term" : {}};
-							f.term[index] = $(this).attr('name');
+							f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
 							filter.or.push(f);
 							}
 						});
@@ -231,14 +252,46 @@ var store_swc = function(_app) {
 				},
 			addteam : function($btn, p){
 				p.preventDefault();
-				var team = JSON.parse($btn.attr('data-swc-team'));
+				var team = JSON.parse($btn.closest('[data-swc-team]').attr('data-swc-team'));
 				team.checked = "checked";
-				var sport = $btn.attr('data-swc-sport');
+				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
 				var teams = _app.ext.store_swc.vars.userTeams[sport];
 				teams.push(team);
 				_app.ext.store_swc.u.setUserTeams(sport, teams);
 				},
-			moveteam : function($btn, p){}
+			removeteam : function($btn, p){
+				p.preventDefault();
+				var team = JSON.parse($btn.closest('[data-swc-team]').attr('data-swc-team'));
+				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
+				var teams = $.grep(_app.ext.store_swc.vars.userTeams[sport], function(e,i){
+					return !(e.v === team.v);
+					});
+				_app.ext.store_swc.u.setUserTeams(sport, teams);
+				},
+			bumpTeamUp : function($btn, p){
+				p.preventDefault();
+				var team = JSON.parse($btn.closest('[data-swc-team]').attr('data-swc-team'));
+				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
+				var teams = _app.ext.store_swc.vars.userTeams[sport];
+				for(var i in teams){
+					if(i>0 && teams[i].v === team.v){
+						teams.splice(i-1, 0, teams.splice(i, 1)[0]);
+						}
+					}
+				_app.ext.store_swc.u.setUserTeams(sport, teams);
+				},
+			bumpTeamDown : function($btn, p){
+				p.preventDefault();
+				var team = JSON.parse($btn.closest('[data-swc-team]').attr('data-swc-team'));
+				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
+				var teams = _app.ext.store_swc.vars.userTeams[sport];
+				for(var i in teams){
+					if(i<teams.length && teams[i].v === team.v){
+						teams.splice(i+1, 0, teams.splice(i, 1)[0]);
+						}
+					}
+				_app.ext.store_swc.u.setUserTeams(sport, teams);
+				}
 			}, //e [app Events]
 		filterData : {
 			'jerseys' : {

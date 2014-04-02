@@ -161,7 +161,7 @@ $(document).ready(function(){
 			<a href="#!category/." class="navLink displayTableCell alignCenter">CHICAGO TEAMS</a>
 			<a href="#!category/.new-arrivals/" class="navLink displayTableCell alignCenter">NEW ARRIVALS</a>
 			<a href="#!category/.chicago-cubs-shirts/" class="navLink displayTableCell alignCenter">SHIRTS</a>
-			<a href="#!category/.chicago-cubs-jerseys/" class="navLink displayTableCell alignCenter">JERSEYS</a>
+			<a href="#!filter/jerseys" class="navLink displayTableCell alignCenter">JERSEYS</a>
 			<a href="#!category/.chicago-cubs-sweatshirts" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
 			<a href="#!category/.chicago-cubs-hats" class="navLink displayTableCell alignCenter">HATS</a>
 			<a href="#!category/.chicago-cubs-accessories" class="navLink displayTableCell alignCenter">ACCESSORIES</a>
@@ -374,12 +374,12 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage">
 	
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
-		<div class="filterGroup">
-			<legend>My Teams:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl';"></div>
+		<div class="filterGroup" data-filter-type="checkboxList">
+			<legend>My Teams <a href="#!customer/myteams/">[edit]</a>:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl' --filterType='';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='';"></div>
 		</div>
 		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Brand:</legend>
@@ -1027,19 +1027,57 @@ if you change these, you should move them above this comment so that when you (o
 
 <div id="myteamsArticleTemplate">
 	<div class="sportWidget" data-swc-sport="app_mlb">
-		<h4>My MLB Teams</h4>
-		<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
-		<h4>Add More:</h4>
-		<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+		<div class="myteams">
+			<h4>My MLB Teams</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+		</div>
+		<div class="moreteams">
+			<h4>Add More:</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+		</div>
+	</div>
+	<div class="sportWidget" data-swc-sport="app_nfl">
+		<div class="myteams">
+			<h4>My NFL Teams</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+		</div>
+		<div class="moreteams">
+			<h4>Add More:</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+		</div>
+	</div>
+	<div class="sportWidget" data-swc-sport="app_nba">
+		<div class="myteams">
+			<h4>My NBA Teams</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+		</div>
+		<div class="moreteams">
+			<h4>Add More:</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+		</div>
+	</div>
+	<div class="sportWidget" data-swc-sport="app_nhl">
+		<div class="myteams">
+			<h4>My NHL Teams</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+		</div>
+		<div class="moreteams">
+			<h4>Add More:</h4>
+			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+		</div>
 	</div>
 </div>
 
 <ul>
-	<li id="myteamTemplate">
-		<span data-tlc="bind $name '.p'; apply --append;"></span> 
+	<li id="myteamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|removeteam">-</button>
+		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
-	<li id="validteamTemplate">
-		<span data-tlc="bind $name '.p'; apply --append;"></span><button data-tlc="bind $var '.'; stringify; store_swc#dump; apply --attrib='data-swc-team';" data-swc-sport="app_mlb" data-app-click="store_swc|addteam">+</button>
+	<li id="validteamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|addteam">+</button>
+		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 </ul>
 

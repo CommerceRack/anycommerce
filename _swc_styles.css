@@ -82,3 +82,8 @@ a.redText{color:#7e0000}
 .filterList { width: 16%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 80%;}
 .filterGroup {margin-bottom: 10px;}
+
+.sportWidget button {width: 20px; font-weight:bold;}
+.sportWidget {width: 25%; float: left;}
+.sportWidget .myteams ul { height: 200px; overflow-y:scroll;}
+.sportWidget .moreteams ul { height: 300px; overflow-y:scroll;}
