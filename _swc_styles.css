@@ -87,5 +87,5 @@ a.redText{color:#7e0000}
 
 .sportWidget button {width: 20px; font-weight:bold;}
 .sportWidget {width: 25%; float: left;}
-.sportWidget .myteams ul { height: 200px; overflow-y:scroll;}
-.sportWidget .moreteams ul { height: 300px; overflow-y:scroll;}
+.sportWidget .myteams ul { height: 200px; overflow-y:auto;}
+.sportWidget .moreteams ul { height: 300px; overflow-y:auto;}
