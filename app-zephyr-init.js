@@ -73,6 +73,10 @@ $("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
 	handleSrcSetUpdate($ele);
 	});
 
+$("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
+	myApp.ext.store_zephyrapp.u.revealation($ele);
+	});
+
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	if($('.isRelatedItemsList',$ele).children().length)	{
 		//this product has related items.

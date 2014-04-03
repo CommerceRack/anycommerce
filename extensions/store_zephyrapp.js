@@ -455,6 +455,15 @@ var store_zephyrapp = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			//ele will likely be an entire template object. This will add the show/hide button for revealing more content IF the child element (actual text container) has a height greater than $ele.
+			revealation : function($ele)	{
+				$('.textBlockMaxHeight',$ele).each(function(index){
+					var $container = $(this), $text = $("[data-textblock-role='content']",$container);
+					if($text.height() > $container.height())	{
+						$("<p>").addClass('textFadeOut').append($("<button \/>").addClass('smallButton').text('Show More').attr('data-app-click','store_zephyrapp|revealation').button()).appendTo($container);
+						}
+					});
+				},
 			randomizeList : function($list){
 				$list.children().shuffle();
 				},
@@ -524,17 +533,26 @@ var store_zephyrapp = function(_app) {
 			
 			revealation : function($ele,p)	{
 				p.preventDefault();
-				var $container = $ele.closest("[data-revealation-role='container']");
+				var $container = $ele.closest(".textBlockMaxHeight");
 				if($container.length)	{
-					var $content = $("[data-revealation-role='content']").each(function(){
-						var $t = $(this);
-						if($t.is(":visible"))	{$t.slideUp();}
-						else	{$t.slideDown();}
-						});
-					$("[data-app-click='store_zephyrapp|revealation']",$container).toggle();
+					
+					if($container.attr('data-maxheight'))	{} //only set this once.
+					else	{$container.attr('data-maxheight',$container.css('max-height'));} //used to restore
+					
+					//text block is already 'open'. so close it.
+					if($ele.data('state') == 'open')	{
+						$container.attr('style',''); //restore to default state.
+						$ele.text('Show More').data('state','closed');
+						}
+					else	{
+						var height = $("[data-textblock-role='content']").outerHeight(true) + 60; // both height and max-height need to be set to get the button below the text.
+						$container.css({'max-height':height,'height':height,'overflow':'visible'});
+						$ele.text('Show Less').data('state','open');
+						
+						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"For zephyr.e.revealation, no data-revealation-role='container' found as parent of trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"For zephyr.e.revealation, no .textBlockMaxHeight found as parent of trigger element.","gMessage":true});
 					}
 				return false;
 				},
