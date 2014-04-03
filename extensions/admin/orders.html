@@ -557,6 +557,7 @@ The following templates are used in the 'order detail' modal/view.
 	<div data-bind='format:paystatusDetailed; extension:admin_orders; useParentData:true;'></div>
 	<div data-bind='var: payment(note); format:text; pretext:note: ;'></div>
 	<div data-bind='var: payment(luser); format:text; pretext:user: ;'></div>
+	<div data-bind="var: payment(acct); format:transactionAcctInfo; extension:admin_orders;"></div>
 	</td>
 </tr>
 </table>
