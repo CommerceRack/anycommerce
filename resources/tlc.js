@@ -531,8 +531,12 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(p1 != p2){ r = true;} break;
 			case "gt":
 				if(Number(p1) > Number(p2)){r = true;} break;
+			case "gte":
+				if(Number(p1) >= Number(p2)){r = true;} break;
 			case "lt":
 				if(Number(p1) < Number(p2)){r = true;} break;
+			case "lte":
+				if(Number(p1) <= Number(p2)){r = true;} break;
 			case "true":
 				if(p1){r = true}; break;
 			case "false":
