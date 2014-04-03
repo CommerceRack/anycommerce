@@ -1960,13 +1960,13 @@ VALIDATION
 						}
 //only validate the field if it's populated. if it's required and empty, it'll get caught by the required check later.
 					else if($input.attr('type') == 'url' && $input.val())	{
-						var urlregex = new RegExp("^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
+						var urlregex = new RegExp("^(http:\/\/|ssh:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)");
 						if (urlregex.test($input.val())) {}
 						else	{
 							r = false;
 							$input.addClass('ui-state-error');
 							$input.after($span.text('not a valid url. '));
-							$("<span class='toolTip' title='A url must be formatted as http, https, or ftp ://www.something.com/net/org/etc'>?<\/span>").tooltip().appendTo($span);
+							$("<span class='toolTip' title='A url must be formatted as http, https, ssh or ftp ://www.something.com/net/org/etc'>?<\/span>").tooltip().appendTo($span);
 							}
 						}
 
