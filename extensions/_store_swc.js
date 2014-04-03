@@ -210,7 +210,7 @@ var store_swc = function(_app) {
 							});
 						}
 					$teams.empty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
-				}
+					}
 				}
 			}, //u [utilities]
 
@@ -295,11 +295,21 @@ var store_swc = function(_app) {
 			}, //e [app Events]
 		filterData : {
 			'jerseys' : {
+				title : "Jerseys",
 				baseFilter : {
 					"term":{"app_department":"jersey"}
 					},
 				options : {
-					"app_jerseys":[{"p":"Alternate","v":"alternate","checked":"checked"},{"p":"Authentic","v":"authentic","checked":"checked"}]
+					"app_jerseys":[
+						{"p":"Alternate","v":"alternate","checked":"checked"},
+						{"p":"Authentic","v":"authentic","checked":"checked"}
+						],
+					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
+					}
+				},
+			'hats' : {
+				baseFilter : {
+					"term" : {"app_department":"hat"}
 					}
 				}
 			},
