@@ -64,6 +64,37 @@ var prodlist_infinite = function(_app) {
 			onError : function()	{
 				_app.u.dump('BEGIN _app.ext.store_prodlist.callbacks.init.onError');
 				}
+			},
+		handleInfiniteElasticResults : {
+			onSuccess : function(_rtag){
+				dump(" >>>> BEGIN handleInfiniteElasticResults <<<<<<<<<<<<<");
+				var L = _app.data[_rtag.datapointer]['_count'];
+				var $list = _rtag.list;
+				var EQ = $list.data('elastic-query');
+				if($list && $list.length)	{
+					$list.data('total-page-count', Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
+					
+					$list.removeClass('loadingBG');
+					if(L == 0)	{
+						$list.append("Your query returned zero results.");
+						}
+					else	{
+						$list.append(_app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
+						_app.ext.prodlist_infinite.u.handleElasticScroll(_rtag, $list);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In prodlist_infinite.callbacks.handleInfiniteElasticResults, $list ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
+					_app.u.dump("handleInfiniteElasticResults _rtag.list: "); _app.u.dump(_rtag.list);
+					}
+
+//this gets run whether there are results or not. It is the events responsibility to make sure results were returned. 
+// That way, it can handle a no-results action.
+				$list.trigger('listcomplete');
+				},
+			onError : function(){
+				
+				}
 			}
 
 		}, //callbacks
@@ -233,6 +264,30 @@ else	{
 		});
 	}
 
+				},
+			handleElasticScroll : function(_rtag, $tag){
+				var EQ = $tag.data('elastic-query');
+				var currPage = $tag.data('page-in-focus');
+				var totalPages = $tag.data('total-page-count');
+				if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();} //do nothing. fewer than 1 page worth of items.
+				else if(currPage >= totalPages)	{
+				//reached the last 'page'. disable infinitescroll.
+					$(window).off('scroll.infiniteScroll');
+					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					}
+				else	{
+					$(window).on('scroll.infiniteScroll',function(){
+						//will load data when two rows from bottom.
+						if( $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
+							$(window).off('scroll.infiniteScroll');
+							if($tag.data('isDispatching') == true)	{}
+							else	{
+								var _tag = _app.u.getWhitelistedObject(_rtag, ['datapointer','callback','extension','list','templateID']);
+								_app.ext.store_search.u.changePage($tag, currPage+1, _tag);
+								}
+							}
+						});
+					}
 				}
 
 			} //util

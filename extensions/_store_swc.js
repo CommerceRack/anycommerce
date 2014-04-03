@@ -244,9 +244,10 @@ var store_swc = function(_app) {
 					});
 					
 				var es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
-				es.size = 60;
+				es.size = 30;
+				$resultsContainer.empty();
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,es,1);
-				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleElasticResults', 'datapointer':'appFilteredSearch','extension':'store_search','templateID':'productListTemplateResults','list':$resultsContainer});
+				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleInfiniteElasticResults', 'datapointer':'appFilteredSearch','extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$resultsContainer});
 				_app.model.dispatchThis();
 				
 				},
