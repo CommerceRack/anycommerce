@@ -699,7 +699,26 @@ this will likely become more flexible in the future. ###
 	
 		<div class="productInfoSection priceContainer marginBottom">
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='<span>Our Price: </span>'; apply --append;}};" class="basePrice"></h4>
-			<h4 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='<span>MSRP: </span>';  apply --append;}};" class="prodMSRP"></h4>
+			<h4 class="prodMSRP">
+				<span class="prefix">MSRP: </span>
+				<span data-tlc="
+					bind $var '.%attribs.zoovy:prod_msrp';
+					if (is $var --notblank;) {{
+						format --currency='USD'; 
+						apply --append;
+					}};">
+				</span>
+				<span class="savings" data-tlc="
+					bind $price '.%attribs.zoovy:base_price'; 
+					bind $msrp '.%attribs.zoovy:prod_msrp';
+					bind $savings '.%attribs.zoovy:prod_msrp';
+					math --sub=$price --div=$msrp --mult='100' --precision='0';
+					if (is $savings --gte='5'){{
+						format --prepend='(';
+						format --append='% savings)';
+						apply --append;
+					}};"></span>
+			</h4>
 		</div>
 		
 		
