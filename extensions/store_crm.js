@@ -103,19 +103,19 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				}
 			}, //buyerOrderGet
 
-		setNewsletters : {
+		buyerNewsletters : {
 			init : function(obj,tagObj)	{
-				_app.u.dump("BEGIN store_crm.calls.setNewsletters.init");
+				_app.u.dump("BEGIN store_crm.calls.buyerNewsletters.init");
 				var r = 1;
 				this.dispatch(obj,tagObj);
 				return r;
 				},
 			dispatch : function(obj,tagObj)	{
 				obj['_tag'] = tagObj;
-				obj['_cmd'] = "setNewsletters";
+				obj['_cmd'] = "buyerNewsletters";
 				_app.model.addDispatchToQ(obj);	
 				}
-			}, //setNewsletters
+			}, //buyerNewsletters
 
 		buyerAddressList : {
 			init : function(tagObj,Q)	{
@@ -688,6 +688,25 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					$('#globalMessaging').anymessage({'message':'In store_crm.e.productReviewShow, unable to determine pid/stid','gMessage':true});
 					}
+				},
+			handleSubscribe : function($form, p)	{
+//				_app.u.dump("BEGIN store_crm.e.handleSubscribe");
+				p.preventDefault();
+				frmObj = $form.serializeJSON();
+				if(_app.u.validateForm($form))	{
+//						_app.u.dump(" -> $form validated.");
+					_app.ext.store_crm.calls.buyerNewsletters.init(frmObj,{'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$form.anymessage({'message':rd});
+							}
+						else	{
+							$form.anymessage(_app.u.successMsgObject("Thank you, you are now subscribed."));
+							}
+						}});
+					_app.model.dispatchThis();
+					}
+				else	{}
+					
 				}
 
 			} //e/events
