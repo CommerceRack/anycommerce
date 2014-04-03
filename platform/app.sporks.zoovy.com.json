@@ -5,15 +5,15 @@
 "js#compress" : 1,
 "css#compress" : 1,
 "html#compress" : 1,
-"html.fonts.embed" : 1;
-"html.css.embed" : 1;
-"html.image.embed" : 1;
-"file#robots" : "/robots.txt";
-"file#rewrites" : "/rewrites.json";
-"redirect#https" : 0;
-"redirect#root" : "/index.html";
-"redirect#missing" : "/index.html#!missing";
-"sitemap#syntax" : "201402";
-"seo#fragments" : 1;
-"seo#index" : "seo.html";
+"html.fonts.embed" : 1,
+"html.css.embed" : 1,
+"html.image.embed" : 1,
+"file#robots" : "/robots.txt",
+"file#rewrites" : "/rewrites.json",
+"redirect#https" : 0,
+"redirect#root" : "/index.html",
+"redirect#missing" : "/index.html#!missing",
+"sitemap#syntax" : "201402",
+"seo#fragments" : 1,
+"seo#index" : "seo.html"
 }
