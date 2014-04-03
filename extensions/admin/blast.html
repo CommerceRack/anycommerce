@@ -286,6 +286,7 @@
 	<input type='hidden' name='_tag/persistent' value='true' /><!-- leaves success present. important cuz form is NOT cleared so user can easily send another message -->
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
+	<input type='hidden' name='ORDERID' data-tlc="bind $var '.ORDERID'; apply --select=$var;" /><!-- if coming from an order, this will get populated -->
 
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>

@@ -999,7 +999,7 @@ if giftcard is on there, no paypal will appear.
 						break;
 					
 					case 'customer_blast':
-						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':$row.data('prt'),'RECEIVER':'CUSTOMER','CID':$row.data('cid')});
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':$row.data('prt'),'RECEIVER':'CUSTOMER','CID':$row.data('cid'),'ORDERID':$row.data('orderid')});
 						break;
 					
 					case 'order_flagaspaid':
@@ -2150,7 +2150,7 @@ handleOrder(orders[i]);
 						//is after the domain lookup because it could return false or undef.
 						partition = partition || _app.vars.partition;
 						_app.u.dump(" -> partition: "+partition);
-						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':partition,'EMAIL':email,'RECEIVER':'EMAIL','CID':CID});
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':partition,'EMAIL':email,'RECEIVER':'EMAIL','CID':CID,'ORDERID':orderID});
 						}
 					else	{
 						_app.u.dump(" -> could not ascertain orderid for order or the order is not in memory.",'error');
