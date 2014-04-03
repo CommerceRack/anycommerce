@@ -13,7 +13,7 @@
 
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px; max-width: 100%;}
-.blockLink, li.blockLink {width: 32%; margin: .6%;}
+.blockLink, li.blockLink {width: 32%; margin: .4%;}
 
 .productListItem .prodInfo {height: 40px; padding: .2em 0em; font-size: .9em;}
 .productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}

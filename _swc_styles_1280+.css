@@ -23,7 +23,7 @@
 
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px;}
-.blockLink, li.blockLink {width: 24%; margin: .5%;}
+.blockLink, li.blockLink {width: 24%; margin: .3%;}
 
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
 

@@ -47,10 +47,7 @@ a.redText{color:#7e0000}
 .homepageBanner{display: block; text-decoration: none; border:none; width: 100%; background:url(images/homepage/banner_bg_1280x320.jpg) no-repeat center center; position:relative;}
 .homepageBanner .bannerImg{display:inline-block; vertical-align:middle; max-width: 60%; height:100%;}
 .homepageBanner img{vertical-align:middle; max-width: 100%;}
-.blockLink {
-	display: block;
-	float: left;
-}
+a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
 .categoryListItem .catName, .productListItem .prodInfo {position:absolute; bottom:0px; right:0px; left:0px; color: white; padding: .8em 0em; font-weight:bold;}
 .productListItem .prodInfo {height: 12%;}

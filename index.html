@@ -314,7 +314,7 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
-<div id="homepageTemplate" class="homeTemplate">
+<div id="homepageTemplate" class="homeTemplate alignCenter">
 	<a href="#!category/.new-arrivals.100_years_of_wrigley_field/" class="homepageBanner alignCenter highlightBG_1">
 		<span class="bannerImg">
 			<img src="images/homepage/wrigley_centennial_banner.png">
@@ -351,6 +351,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<a class="blockLink" href="#!category/.chicago-cubs-jerseys/">
 		<img src="images/homepage/follow_us.jpg"/>
+	</a>
+	
+	<a class="blockLink" href="#!filter/hats/">
+		<img src="images/homepage/hats.jpg"/>
 	</a>
 	
 	<!--
@@ -436,12 +440,11 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 
-	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
+	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
 
-	<ul data-tlc="bind $var '.@products'; prodlist_infinite#infiniteproductlist  --withReviews='1' --withInventory='1' --withVariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin"></ul><!-- outputs the product list -->
+	<ul data-tlc="bind $var '.@products'; prodlist_infinite#infiniteproductlist  --withReviews='1' --withInventory='1' --withVariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs the product list -->
 
 	<p data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-
 
 </div>
 
