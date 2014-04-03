@@ -751,7 +751,7 @@ this will likely become more flexible in the future. ###
 				<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
 				<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
 			</ul>
-			<div class="tabContent" data-anytab-content="prodDesc">
+			<div class="tabContent alignJustify" data-anytab-content="prodDesc">
 				<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 			</div>
 			
@@ -789,10 +789,11 @@ this will likely become more flexible in the future. ###
 	
 	</div>
 	
+	<!--
 	<div class="prodlistRelatedContainer">
 		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --before='<h2>Similar Items</h2>' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 	</div>
-
+	-->
 
 </div><!-- productTemplate -->
 

@@ -9,6 +9,7 @@ a.redText{color:#7e0000}
 
 .textDecNone{text-decoration:none;}
 .alignBottom {vertical-align:bottom;}
+.alignJustify {text-align:justify;}
 .displayTable {display: table;}
 .displayTableRow {display: table-row;}
 .displayTableCell {display: table-cell;}
