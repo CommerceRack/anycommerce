@@ -999,7 +999,17 @@ returning a 'false' here will exit the statement loop.
 		var bind = Number(globals.binds[globals.focusBind]);
 		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-				var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
+				//var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
+				var value = cmd.args[i].value;
+				if(cmd.args[i].type == 'longopt'){
+					if(value.type == 'variable'){
+						value = globals.binds[value.value];
+						}
+					else {
+						value = value.value
+						}
+					}
+				value = Number(value);
 				if(!isNaN(value))	{
 					switch(cmd.args[i].key)	{
 						case "add":
