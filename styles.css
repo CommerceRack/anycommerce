@@ -277,7 +277,7 @@ hr.subtle	{margin:.1em 0;
 doesn't respond quite as well once in a tab. will need media queries to adjust the height. ####TODO
 */
 .prodVideoTab	{min-height:200px;}
-
+.vidsAndPics	{max-width:600px;}
 .videoContainer {
     position: relative;
     padding-bottom: 56.25%;

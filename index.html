@@ -544,11 +544,17 @@ this will likely become more flexible in the future. ###
 	
 	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 	
-	<section data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --add --class='applyAnytabs';}};">
-	<ul data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};" class='displayNone'>
-		<li><a href="#videos">Videos</a></li>
+	<section class='vidsAndPics' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --add --class='applyAnytabs';}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --add --class='applyAnytabs';}};">
+	<ul data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --show;}};" class='displayNone'>
+		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}};"><a href="#viewer360">360 Viewer</a></li>
+		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};"><a href="#videos">Videos</a></li>
 		<li><a href="#images">Images</a></li>
 	</ul>
+
+	<div data-anytab-content='viewer360' class='prodVideoTab displayNone' data-app-role='viewer360TabContent'>
+		<div class='videoContainer' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank;){{controller#youtubevideo --legacy;}};"></div>
+	</div>
+
 	<!-- video tab will be shown automagically if video1 is populated (anytab triggers the show) -->
 	<div data-anytab-content='videos' class='prodVideoTab displayNone' data-app-role='videoTabContent'>
 		<div class="videoContainer" data-app-role='videoContainer' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}};"></div>
@@ -560,9 +566,11 @@ this will likely become more flexible in the future. ###
 			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid4'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton'; apply --attrib='data-videoid';}};">Video 4</button>
 		</div>
 	</div>
+
 	<div data-anytab-content="images">
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=120&w=120&dpi=1x&vp=640w,h=250&w=250&dpi=1x&vp=800w,h=400&w=400&dpi=2x&vp=1024w';}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
 	</div>
+
 	</section>
 
 	<section class='marginBottom'>

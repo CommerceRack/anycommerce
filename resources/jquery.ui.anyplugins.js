@@ -706,11 +706,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					this.reveal($("li[data-anytabs-tab='"+theAnchor+"']",this.element));
 					}
 				else	{
-					this.reveal($("li:first",this.element));
+					this.reveal($("li:visible:first",this.element));
 					}
 				}
 			else	{
-				this.reveal($("li:first",this.element));
+				this.reveal($("li:visible:first",this.element));
 				}
 			},
 
