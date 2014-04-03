@@ -89,14 +89,27 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 .productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:.9em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.1em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;}
 
-#tier1categories	{
-	display:none; list-style:none; margin:0; padding:0em; 
+#tier1catContainer	{
+	display:none; 
 	position:absolute; left:1em; top:77px; width:90%;
 	border:2px solid #ff4000; background:#fcf5b5; 
 	z-index:1000;
 	-webkit-border-radius: 0 .6em .6em .6em;
 	border-radius: 0 .6em .6em .6em;
 	} /* these are revealed onclick */
+
+#tier1catContainer button	{
+	position:absolute; top:0; right:0;
+	-webkit-border-radius: 0 .6em .6em .6em;
+	border-radius: 0 .6em .6em .6em;
+	border:0; background:#ff4000;
+	color:#ffffff;
+	}
+
+#tier1categories	{
+	list-style:none; margin:0; padding:0em; 
+	}
+
 #tier1categories li	{
 	width:50%; display:block; float:left;
 	padding:.3em; margin:0;
@@ -169,98 +182,20 @@ hr.subtle	{margin:.1em 0;
 }
 
 /***** Homepage CSS Start *****/
-#slideshowContainer {
-	margin-bottom: 5px;
-    height: 265px;
-    overflow: hidden;
-    position: relative;
-    width: 600px;
-    z-index: 10;
-}
-#slideshow {
-	width: 600px;	
-	height: 284px;
-	position:absolute; 
-	left:0; 
-	top:0;
-	overflow:hidden;
-}
-#slideshowNav {
-    bottom: 5px;
-    right: 10px;
-    position: absolute;
-    text-align: left;
-    z-index: 50;
-}
-#slideshowNav a {
-    background: none repeat scroll 0 0 #333333;
-    border: 2px solid #FE8B21;
-    border-radius: 3px;
-    color: #FFFFFF;
-    display: inline-block;
-    font-size: 13px;
-    font-weight: bold;
-    height: 16px;
-    margin: 0 5px;
-    padding: 5px;
-    text-align: center;
-    text-decoration: none;
-    width: 15px;
-}
-#slideshowNav a:hover, #nav a.activeSlide {
-    color: #FE8B21;
-}
-#slideshowNav a:focus {
-    outline: medium none;
-}
-#slideshowContainer {
-    margin-bottom: 5px;
-    max-height: 265px;
-    overflow: hidden;
-    position: relative;
-    width: 600px;
-    z-index: 10;
-}
-#slideshowContainer #slideshow {
-    margin: 0;
-    padding: 0;
-}
-#slideshowContainer #slideshow li {
-    float: left;
-    list-style: none outside none;
-    margin: 0;
-    padding: 0;
-}
-#slideshowNav {
-    bottom: 15px;
-    left: 10px;
-    position: absolute;
-    text-align: left;
-    width: 100%;
-    z-index: 50;
-}
-#slideshowNav a {
-    background: none repeat scroll 0 0 #333333;
-    border: 2px solid #FE8B21;
-    border-radius: 3px;
-    color: #FFFFFF;
-    display: inline-block;
-    font-size: 13px;
-    font-weight: bold;
-    height: 16px;
-    margin: 0 5px;
-    padding: 5px;
-    text-align: center;
-    text-decoration: none;
-    width: 15px;
-}
-#slideshowNav a:hover, #slideshowNav a.activeSlide {
-    color: #FE8B21;
-}
-#slideshowNav a:focus {
-    outline: medium none;
-}
-
+/* pager */
+#slideshowContainer	{width:100%; overflow:hidden; height:265px; position:relative; max-width:605px;}
+.cycle-pager { 
+    z-index: 110; position: absolute; bottom: .2em; left:.2em; overflow: hidden;
+	margin:0; padding:0;
+	}
+.cycle-pager span {
+	-webkit-border-radius: 4px;
+	border-radius: 4px; 
+	padding:0 .5em;
+    font-size: 1em; background:#ffffff; margin-right:6px; border:1px solid #ff4000;
+    color: #ff4000; cursor: pointer; display:inline-block;
+	}
+.cycle-pager span.cycle-pager-active {background:#ff4000; color: #fff;}
 
 
 /* category page styles */

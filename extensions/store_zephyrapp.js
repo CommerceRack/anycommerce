@@ -38,9 +38,9 @@ var store_zephyrapp = function(_app) {
 
 //bind a click action for the dropdown on the shop link.
 				$('#shopNowLink').on('click',function(){
-					$('#tier1categories').slideDown();
+					$('#tier1catContainer').slideDown();
 					$( document ).one( "click", function() {
-						$('#tier1categories').slideUp();
+						$('#tier1catContainer').slideUp();
 						});
 					return false;
 					});

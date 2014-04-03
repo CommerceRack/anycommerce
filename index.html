@@ -58,7 +58,6 @@ document.getElementsByTagName('base')[0].href = baseURL;
 <script src="controller.js"></script>
 <script src="model.js"></script>
 
-<script src="srcset-polyfill-1.1.1-jt.js"></script>
 <script type="text/javascript" src="includes.js"></script>
 
 
@@ -107,7 +106,13 @@ $(document).ready(function(){
 		</menu>
 		
 		<div id='shopNowLink'>Shop <span class='arrow-down'></span></div><!-- hidden by default. on click, shows tier 1 categories -->		
-		<ul id='tier1categories' class='mastHeadMenu'></ul>		
+		<div id='tier1catContainer'>
+			<button title='close'>X</button>
+			<nav id='tier1categories' class='mastHeadMenu'></nav>
+			<div>
+			<a href='#!category/.shop_by_brand'>Shop By Brand</a>
+			</div>
+		</div>
 		<form name='headerSearchFrm' id='mastHeadSearchFrm' action='#' class='productSearchForm' method="get"  data-app-submit='quickstart|searchFormSubmit'>
 			<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" x-webkit-speech="x-webkit-speech" id='mastHeadKeywordsInput' />
 			<button id='mastHeadSearchButton' class='sprite' title='Product Search'></button>
@@ -236,13 +241,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="homepageTemplate" class="homeTemplate">
 
 	<section class='marginBottom'>
-		<div id="slideshowContainer" class="clearfix marginBottom" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="5000" data-cycle-slides="div.slide" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true">
-			<nav id="slideshowNav"></nav>
-			<div class='slide'><a href="#!category/.3packagespecials.proto_paintball_gun_packages"><img src="images/holiday_proto_packages_slideshow.jpg"></a></div>
-			<div class='slide'><a href="#!category/.2clearance"><img src="images/early_black_friday_sale_slideshow.jpg"></a></div>
-			<div class='slide'><a href="#!search/keywords/spire+260"><img src="images/spire260_zephyr.jpg"></a></div>
-			<div class='slide'><a href="#!category/.markers.azodin"><img src="images/holiday_azodin_packages_slideshow.jpg"></a></div>
-			<div class='slide'><a href="#!category/.3packagespecials"><img src="images/package_deals_slideshow_template.jpg"></a></div>
+		<div id="slideshowContainer" class="clearfix marginBottom" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.slide" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>">
+			<nav class="cycle-pager"></nav>
+			<div class='slide'><a href="#!category/.3packagespecials.proto_paintball_gun_packages"><img src="images/holiday_proto_packages_slideshow.jpg" width='605' height='265' alt='' /></a></div>
+			<div class='slide'><a href="#!category/.2clearance"><img src="images/early_black_friday_sale_slideshow.jpg" width='605' height='265' alt='' /></a></div>
+			<div class='slide'><a href="#!search/keywords/spire+260"><img src="images/spire260_zephyr.jpg" width='605' height='265' alt='' /></a></div>
+			<div class='slide'><a href="#!category/.markers.azodin"><img src="images/holiday_azodin_packages_slideshow.jpg" width='605' height='265' alt='' /></a></div>
+			<div class='slide'><a href="#!category/.3packagespecials"><img src="images/package_deals_slideshow_template.jpg" width='605' height='265' alt='' /></a></div>
 		</div>
 	</section>
 
@@ -480,32 +485,27 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults" class="searchResultsProduct ">
-	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
+<li id="productListTemplateResults"  class="loadingBG clearfix plLineItem">
+
+	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; ">
+		<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
+		<div class='displayNone sprite shipsFree' data-tlc="bind $var '.prod_tags.shipfree'; if(is $var --eq='1'){{apply --remove --class='displayNone';}};"></div>
 		</div>
 
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
+		<div class='prodName marginBottom' data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></div>
+		<div class=' marginBottom'>
+			<span class='lineThrough' data-tlc="bind $var '.prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --add --class='marginRight' apply --append;}};"></span>
+			<b class='basePrice' data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
+		</div>
+		</a>
 
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-		
+		<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';"><img src="images/prodlist_arrow.png" class="prodListArrow"></a>
 	</div>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
+
 </li>
 
-<li id="productListTemplateResultsNoPreview" class="searchResultsProduct ">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer">
-		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
-
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-	</a>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
-</li>
 </ul>
 
 
@@ -1019,12 +1019,9 @@ subscribeListsArticle is used for authenticated buyers
 
 <div id="searchTemplate" class="searchResultsPage clearfix">
 
-	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
-	<div class="previewProductDetail displayNone"></div>
-
 	<div class="previewListContainer">
 		<!-- productListTemplateResults gets loaded into here -->
-		<ul id="resultsProductListContainer" class="listStyleNone fluidList noPadOrMargin productList"></ul>
+		<ul id="resultsProductListContainer" class="zProductList clearfix"></ul>
 	</div>
 
 </div>
