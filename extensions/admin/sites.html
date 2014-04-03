@@ -587,6 +587,7 @@ That's also why the template does not contain a form
 	<td colspan="3">
 	<div class="marginLeft">
 		<div data-tlc="bind $var '.ID'; format --prepend='ID: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UUID'; format --prepend='Project ID: '; apply --append;"></div>
 		<div data-tlc="bind $var '.TYPE'; format --prepend='Type: '; apply --append;"></div>
 		<div data-tlc="bind $var '.CREATED_TS'; format --prepend='Created: '; apply --append;"></div>
 		<div data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
@@ -608,7 +609,7 @@ That's also why the template does not contain a form
 
 <div id="projectCreateTemplate">
 
-<form onsubmit="return false">
+<form onsubmit="return false" novalidate>
 <fieldset class="labelsAsBreaks alignedLabels alignedInputs">
 	<label>
 	<span>Project title</span>
@@ -628,14 +629,20 @@ That's also why the template does not contain a form
 	</select>
 	</label>
 
+	<label>
+	<span>Project ID</span>
+	<input name="UUID" maxlength="40" data-minlength='10' type="text" required='required' data-input-keyup="format" data-input-format='pid, uppercase'>
+	<span class='toolTip' title="An alpha-numeric (plus dashes and underscores) project id with a minimum of ten characters. Should be informative as this is used for troubleshooting (maybe the domain and/or name of the git repo). The id should be unique.">?</span>
+	</label>
 
 	<label>
 	<span>GitHub repo</span>
 	<input name="repo" maxlength="128" required type="url">
 	</label>
-	<p class="hint">ex: http://github.com/yourname/project.git<br>
-	At this time only GITHUB hosted projects with public http urls are supported.
-	</p>
+	<p class="hint">ex: https://github.com/yourname/project.git OR ssh://github.com/yourname/project.git<br>
+	You can find this link on the right side of the repo in a box that says 'https clone url'.</p>
+
+
 
 	<label>
 	<span>GitHub branch</span>

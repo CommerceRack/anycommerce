@@ -712,7 +712,8 @@ used, but not pre-loaded.
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
 					_app.model.destroy('adminProjectList');
-					sfo.UUID = _app.u.guidGenerator();
+//UUID is now set by merchant.
+//					sfo.UUID = _app.u.guidGenerator();
 					sfo._cmd = 'adminProjectCreate';
 					sfo._tag = {"callback":function(rd){
 						$form.hideLoading();
