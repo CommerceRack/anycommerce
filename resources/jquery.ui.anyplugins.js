@@ -696,7 +696,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
-
+// ** 201402 -> updated the default to show the first VISIBLE tab, not the first tab.  allows for tabs to be conditionally shown more easily.
 		_handleDefaultTab : function()	{
 			var o = this.options;
 //if no anchor is set, activate the default.
@@ -706,11 +706,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					this.reveal($("li[data-anytabs-tab='"+theAnchor+"']",this.element));
 					}
 				else	{
-					this.reveal($("li:first",this.element));
+					this.reveal($("li:visible:first",this.element));
 					}
 				}
 			else	{
-				this.reveal($("li:first",this.element));
+				this.reveal($("li:visible:first",this.element));
 				}
 			},
 
