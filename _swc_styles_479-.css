@@ -4,6 +4,7 @@
 	max-width:320px;
 	margin: auto;
 }
+#appView {padding-top: 30px;}
 
 #logo img {
 	height: 30px;

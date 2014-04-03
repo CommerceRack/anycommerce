@@ -4,6 +4,7 @@
 	max-width:480px;
 	margin: auto;
 }
+#appView {padding-top: 70px;}
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}

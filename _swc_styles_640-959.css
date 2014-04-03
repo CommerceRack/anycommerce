@@ -4,6 +4,7 @@
 	max-width:640px;
 	margin: auto;
 }
+#appView {padding-top: 74px;}
 
 #livechat {margin-left: 42px;}
 #livechat img {width:115px; height:42px;}

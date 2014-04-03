@@ -22,6 +22,15 @@ a.redText{color:#7e0000}
 
 .dosis {font-family:'Dosis', sans-serif;}
 
+#header {
+	position:fixed;
+	background:white;
+	left:0px;
+	right:0px;
+	top:0px;
+	z-index: 100;
+}
+
 #nav {padding:3px 0px;}
 #nav a {
 	text-decoration:none;
