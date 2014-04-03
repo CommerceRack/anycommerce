@@ -55,7 +55,7 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'customer','callback':'company'});
 				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
 				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
-				_app.router.appendHash({'type':'match','route':'search/{{KEYWORDS}}*','callback':'search'});
+				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 
 
 /*
