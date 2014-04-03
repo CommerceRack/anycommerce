@@ -542,12 +542,12 @@ var store_zephyrapp = function(_app) {
 					//text block is already 'open'. so close it.
 					if($ele.data('state') == 'open')	{
 						$container.attr('style',''); //restore to default state.
-						$ele.text('Show More').data('state','closed');
+						$ele.data('state','closed').find('.ui-button-text').text('Show More');
 						}
 					else	{
 						var height = $("[data-textblock-role='content']").outerHeight(true) + 60; // both height and max-height need to be set to get the button below the text.
 						$container.css({'max-height':height,'height':height,'overflow':'visible'});
-						$ele.text('Show Less').data('state','open');
+						$ele.data('state','open').find('.ui-button-text').text('Show Less');
 						
 						}
 					}

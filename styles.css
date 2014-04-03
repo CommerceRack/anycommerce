@@ -89,7 +89,14 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 .productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:.9em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.1em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;}
 
-#tier1categories	{display:none; list-style:none; margin:0; padding:0; position:absolute; left:20px; top:75px; background:#fcf5b5; z-index:1000; width:90%;} /* these are revealed onclick */
+#tier1categories	{
+	display:none; list-style:none; margin:0; padding:0em; 
+	position:absolute; left:1em; top:77px; width:90%;
+	border:2px solid #ff4000; background:#fcf5b5; 
+	z-index:1000;
+	-webkit-border-radius: 0 .6em .6em .6em;
+	border-radius: 0 .6em .6em .6em;
+	} /* these are revealed onclick */
 #tier1categories li	{
 	width:50%; display:block; float:left;
 	padding:.3em; margin:0;
@@ -134,7 +141,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 .wikiContainer h3	{font-size:.9em; color:#666;}
 .wikiContainer p	{margin:0 0 .3em 0; font-size:.9;}
 
-.basePrice	{color:#ff9c00;}
+.basePrice	{color:#ff4000;}
 .lineThrough	{text-decoration:line-through;}
 .textBlockMaxHeight	{max-height:300px; overflow:hidden; position:relative;} /* applied to a container around the text. text must have data-textblock-role='content' on it */
 /* added to a p which is appended to textBlockMaxHeight and will have the read more/less button in it */
@@ -267,10 +274,10 @@ hr.subtle	{margin:.1em 0;
 .zProductList li.plLineItem	{display:block; margin:0 0 .5em 0; font-weight:300; padding:0; font-size:.9em; position:relative;}
 .prodThumbContainer	{float:left; margin-right:.5em;}
 .blockLink	{text-decoration:none;}
-.zProductList .prodPrice	{color:#333;}
+.zProductList a 	{color:#333;}
 .prodListArrow {position:absolute; right: 5px; top:40px;}
 .reviewPLAdjust	{margin:0em 0 -.5em 1em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
-
+.plLineItem .marginBottom	{margin-bottom:.3em;}
 
 /***** Review Section CSS Start *****/
 .reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px;}

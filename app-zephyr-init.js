@@ -45,7 +45,10 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 
 //custom scripts
 myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
-myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
+//myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.min.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.swipe.min.js']);
+
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //used pretty early in process..
 
 
@@ -60,12 +63,7 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt
 
 //  now add some template functions.
 $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
-	if (!$('#slideshow', $ele).hasClass('slideshowSet')){
-		$('#slideshow', $ele).addClass('slideshowSet').cycle({
-			pause:  1,
-			pager:  '#slideshowNav'
-			});
-		}
+	$('#slideshowContainer',$ele).cycle();
 	});
 
 
