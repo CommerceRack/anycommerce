@@ -953,17 +953,22 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.render_wiki = function(bind,argObj)	{
-		var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
-		myCreole['parse']($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
-		//r = wikify($tmp.text()); //###TODO -> 
-		var r = $tmp.html();
-		$tmp.empty(); delete $tmp;
+		var r = bind;
+		//skip if bind has no value.
+		if(bind)	{
+			var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
+			myCreole['parse']($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+			//r = wikify($tmp.text()); //###TODO -> 
+			r = $tmp.html();
+			$tmp.empty(); delete $tmp;
+			}
 		return r;
 		}
 
+
 	
 	this.handleCommand_render = function(cmd,globals){
-		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
+//		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
 		for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 			var argObj = this.handleArg(cmd.args[i],globals);
 			var key = cmd.args[i].key;
