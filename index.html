@@ -693,6 +693,9 @@ this will likely become more flexible in the future. ###
 	</div>
 	<div class="productInfo clearRight marginBottom no_underline">
 		<div class="productInfoSection marginBottom">
+			<div class="floatRight mfgLogoContainer">
+				<img data-tlc="bind $var '.%attribs.zoovy:prod_image99'; if (is $var --notblank){{store_swc#imageurl --name=$var --b='ffffff'; apply --attrib='src';}};"/>
+			</div>
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{format --prepend='More Products By: '; quickstart#searchlink  --legacy;}};"></h5>
 		</div>

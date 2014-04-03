@@ -23,3 +23,8 @@
 .productTitle, .productInfo, .productTabs,.productImages {float: none; width:100%;}
 
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
+.productPage .mfgLogoContainer img {
+	max-width: 100px;
+	max-height: 46px;
+	padding-right: 20px;
+}

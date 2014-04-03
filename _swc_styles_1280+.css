@@ -26,4 +26,8 @@
 .blockLink, li.blockLink {width: 24%; margin: .3%;}
 
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
-
+.productPage .mfgLogoContainer img {
+	max-width: 100px;
+	max-height: 46px;
+	padding-right: 20px;
+}
