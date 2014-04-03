@@ -29,6 +29,7 @@ var store_swc = function(_app) {
 			"filteredSearchTemplate",
 			"fieldcamTemplate"
 			],
+		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
 		userTeams : {
 			app_nba : [],
 			app_mlb : [],
@@ -292,6 +293,25 @@ var store_swc = function(_app) {
 						}
 					}
 				_app.ext.store_swc.u.setUserTeams(sport, teams);
+				},
+			productAdd2Cart : function($form, p){
+				p.preventDefault();
+				if($form.attr('data-swc-custom-notice')){
+					var $notice = $('<div><div>'+_app.ext.store_swc.vars.customPrompt+'</div></div>');
+						
+					var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
+					$button.bind('click',function(){
+						$notice.dialog('close');
+						_app.ext.quickstart.e.productAdd2Cart($form,p);
+						});
+						
+					$notice.append($button);
+					
+					$notice.dialog({'modal':'true','title':'Custom Product Agreement', 'width':400});
+					}
+				else {
+					_app.ext.quickstart.e.productAdd2Cart($form,p);
+					}
 				}
 			}, //e [app Events]
 		filterData : {
