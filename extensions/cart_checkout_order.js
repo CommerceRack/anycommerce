@@ -1195,10 +1195,11 @@ in a reorder, that data needs to be converted to the variations format required 
 			paypalecbutton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-					var payObj = _app.ext.cco.u.which3PCAreAvailable();
+					var payObj = _app.ext.cco.u.which3PCAreAvailable(data.value);
 					if(payObj.paypalec)	{
 						$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
-							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
+//***201402 Must pass cartid parameter on the call itself -mc
+							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1, '_cartid':data.value},{'callback':function(rd){
 								$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
 								if(_app.model.responseHasErrors(rd)){
 									$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');

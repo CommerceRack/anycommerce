@@ -1574,7 +1574,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
 				if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !_app.ext.cco.u.thisSessionIsPayPal())	{
 					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
-					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
+//***201402 Must pass cartid parameter on the call itself -mc
+					var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
+					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('body').hideLoading();
 							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
