@@ -395,7 +395,8 @@ document.write = function(v){
 					}
 
 				tagObj.state = 'complete'; //needed for handleTemplateEvents.
-
+				_app.u.handleButtons(tagObj.jqObj);
+				_app.u.handleCommonPlugins(tagObj.jqObj);
 				_app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID))),tagObj);
 				},
 			onError : function(responseData,uuid)	{
