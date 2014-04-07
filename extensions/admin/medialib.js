@@ -585,7 +585,8 @@ setTimeout(function(){
 //						dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						dump(" -> selector.length: "+$(_app.u.jqSelector('#',mediaData.eleSelector)).length);
 // * 201332 -> added 'edited' class on save. used in a lot of UI to count the number of updated elements and, in several cases, unlocks the save button.
-						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform');
+						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform')
+						$(correctedSelector).triggerHandler('change');
 // * 201336
 //						if($(correctedSelector).closest('form').length)	{
 //							_app.ext.admin.u.handleSaveButtonByEditedClass($(correctedSelector).closest('form'));
