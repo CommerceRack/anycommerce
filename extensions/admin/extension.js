@@ -2006,6 +2006,9 @@ vars.findertype is required. acceptable values are:
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
 //				_app.u.dump("BEGIN admin.u.showHeader");
+				
+				adminApp.router.init();
+
 //hide all preView and login data.
 				$('#appLogin').hide(); 
 				$('#appPreView').hide();
