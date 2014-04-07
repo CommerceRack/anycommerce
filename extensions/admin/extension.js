@@ -847,6 +847,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 
 		showHeader : {
 			onSuccess : function(_rtag){
+				$('body').hideLoading();
 //				_app.u.dump("BEGIN admin.callbacks.showHeader");
 //				_app.u.dump(" -> _app.data["+_rtag.datapointer+"]:");	_app.u.dump(_app.data[_rtag.datapointer]);
 //account was just created, skip domain chooser.

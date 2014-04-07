@@ -270,7 +270,9 @@ var admin_blast = function(_app) {
 					"encode" : "base64",
 					"maxSelectableFiles" : 1,
 					"filesChange" : function(e,f,c)	{
-
+						c.container.showLoading({'message':'Generating instance of image with the correct dimensions...'});
+						var $button = c.container.closest('form').find("button[data-app-role='saveButton']");
+						$button.button('disable');
 						$('.fileUpload_default:not(:last)',c.container).remove(); //anyupload only enforces selecting one file at a time so here we manually remove any images previously selected.
 						var base64 = $('.fileUpload_default',c.container).attr('src');
 //						dump(" -> base64: "); dump(base64);
@@ -278,17 +280,18 @@ var admin_blast = function(_app) {
 							base64 = base64.substring(base64.indexOf(',')+1); //strip off the data:... base64, from beginning of string
 							//pixel of 1 is for better image quality on graphics
 							var filename = "logo_"+_app.u.guidGenerator();
-							//image reference is stores with height/width as params. do not change them in the adminImageMagick cmd without updating the PRT.LOGOIMG.val() as well.
+							//image reference is stores with height/width as params. do not change them in the adminImageMagick cmd without updating the PRT.LOGOIMAGE.val() as well.
 							_app.model.addDispatchToQ({"_cmd":"adminImageMagick","folder":"logos","filename":filename,"base64":base64,"@updates":["MinimalResize?width=200&height=200&pixel=1"],"_tag":{"datapointer":"adminImageMagick","callback":function(rd){
+								c.container.hideLoading();
 								if(_app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									//sample action. success would go here.
-									$("[name='companyLogo']",$target).addClass('edited').attr('src','data:'+_app.data[rd.datapointer]['%properties'].mime+';base64,'+_app.data[rd.datapointer].base64);
-									$("[name='PRT.LOGOIMG']",$target).val(filename+"?width=200&height=200&pixel=1")
+									$("[data-app-role='companyLogoImgContainer'] img:first",$target).addClass('edited').attr('src','data:'+_app.data[rd.datapointer]['%properties'].mime+';base64,'+_app.data[rd.datapointer].base64);
+									$("[name='PRT.LOGOIMAGE']",$target).val("logos/"+filename+"?width=200&height=200&pixel=1").closest('.anyformEnabled').anyform('updateChangeCounts');
 									$('.fileUpload_default',c.container).remove();
-									
+									$button.button('enable');
 									}
 								}}},"mutable");
 							_app.model.dispatchThis("mutable");
