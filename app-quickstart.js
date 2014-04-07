@@ -2879,7 +2879,7 @@ else	{
 				},
 	
 			cartShipMethodSelect : function($ele,P)	{
-				p.preventDefault();
+				P.preventDefault();
 				var $cart = $ele.closest("[data-template-role='cart']");
 				_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
 				$cart.trigger('fetch',{'Q':'immutable'});
