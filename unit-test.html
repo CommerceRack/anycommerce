@@ -110,6 +110,7 @@
 		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; format --prepend='my name is '; apply --append;" data-testname="prepend" ></div>
 		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; format --append=' is my name'; apply --append;" data-testname="append" ></div>
 		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency" ></div>	
+		<div data-testtype='output-compare' data-output='some<br>data' data-tlc="bind $var '.price'; render --crbr; apply --append;" data-testname="currency" ></div>	
 	</section>
 	-->
 	<section id='math-tests'>
