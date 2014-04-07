@@ -262,7 +262,46 @@ var admin_blast = function(_app) {
 
 			blastMacroProperyEditor : function($target,params)	{
 				$target.showLoading({"message":"Fetching macro properties"});
-				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","templateid":"blastMacroProperyEditorTemplate","jqObj":$target,"trackEdits":true}},"mutable");
+				$target.tlc({'verb':'template','templateid':'blastMacroProperyEditorTemplate'});
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","verb":"translate","jqObj":$target,"trackEdits":true}},"mutable");
+				
+				$("[data-app-role='companyLogoContainer']",$target).anyupload({
+					fileclass : "image",
+					"encode" : "base64",
+					"maxSelectableFiles" : 1,
+					"filesChange" : function(e,f,c)	{
+
+						$('.fileUpload_default:not(:last)',c.container).remove(); //anyupload only enforces selecting one file at a time so here we manually remove any images previously selected.
+						var base64 = $('.fileUpload_default',c.container).attr('src');
+//						dump(" -> base64: "); dump(base64);
+						if(base64)	{
+							base64 = base64.substring(base64.indexOf(',')+1); //strip off the data:... base64, from beginning of string
+							//pixel of 1 is for better image quality on graphics
+							var filename = "logo_"+_app.u.guidGenerator();
+							//image reference is stores with height/width as params. do not change them in the adminImageMagick cmd without updating the PRT.LOGOIMG.val() as well.
+							_app.model.addDispatchToQ({"_cmd":"adminImageMagick","folder":"logos","filename":filename,"base64":base64,"@updates":["MinimalResize?width=200&height=200&pixel=1"],"_tag":{"datapointer":"adminImageMagick","callback":function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//sample action. success would go here.
+									$("[name='companyLogo']",$target).addClass('edited').attr('src','data:'+_app.data[rd.datapointer]['%properties'].mime+';base64,'+_app.data[rd.datapointer].base64);
+									$("[name='PRT.LOGOIMG']",$target).val(filename+"?width=200&height=200&pixel=1")
+									$('.fileUpload_default',c.container).remove();
+									
+									}
+								}}},"mutable");
+							_app.model.dispatchThis("mutable");
+							}
+						else	{
+							$("#globalMessaging").anymessage({"message":"In admin_blast.e.blastMacroPropertyEditor, unable to ascertain base64 on company logo.","gMessage":true});
+							}
+
+						},
+					"ajaxRequest" : function(file,$ele){
+						dump(" -> file: "); dump(file);
+						}
+					});
 				_app.model.dispatchThis("mutable");
 				_app.u.addEventDelegation($target);
 				},
@@ -590,6 +629,24 @@ var admin_blast = function(_app) {
 				return false;
 				},
 			
+			blastGlobalSettingLogoSelectChange : function($ele,P)	{
+				//?alt=xyz&height=100&width=100&base64=
+				var $saveButton = $ele.closest('form').find("[data-app-role='saveButton']");
+				$saveButton.button('disable'); //disable button while dimensions are being computed.
+				_app.model.addDispatchToQ({"_cmd":"adminImageMagick","@updates":["Resize?width=200&height=65"],"_tag":{"datapointer":"adminImageMagick","callback":function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						//sample action. success would go here.
+						
+						}
+					}}},"mutable");
+				_app.model.dispatchThis("mutable");
+				}
+			
+			 /* ,
+			
 			textarea2editor : function($ele,P)	{
 				P.preventDefault();
 				$ele.closest("[data-editor-role='container']").find('textarea').each(function(){
@@ -609,7 +666,7 @@ var admin_blast = function(_app) {
 					});
 				return false;
 				}
-
+*/
 
 			} //e [app Events]
 		} //r object.

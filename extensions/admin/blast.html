@@ -374,7 +374,7 @@
 	</label>
 	<div class='buttonset clearfix'>
 		<!-- the following two buttons are conditionally revealed, like in the header/footer editor -->
-		<button class='applyButton displayNone showForHeaderFooterEditor' data-app-click="admin_blast|textarea2editor" disabled>HTML Editor</button>
+<!--		<button class='applyButton displayNone showForHeaderFooterEditor' data-app-click="admin_blast|textarea2editor" disabled>HTML Editor</button> -->
 		<button type="reset" value="Reset" class='applyButton displayNone showForHeaderFooterEditor' disabled>Cancel Changes</button>
 		<button class='applyButton floatRight'>Save</button>
 	</div>
@@ -452,6 +452,19 @@
 		<span>%MAILADDR%</span>
 		<textarea name='PRT.MAILADDR' rows='5' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" class='fullwidth' />
 	</label>
+
+
+	<div class="label" data-app-role='companyLogoContainer'>
+		<span class='prompt floatLeft'>Logo</span>
+		<span data-app-role='companyLogoImgContainer'>
+		<img width="50" height="50" border="0" name='companyLogo' src="blank.gif" data-tlc="bind $var '.%PRT.LOGO'; if(is $var --notblank;){{apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;}};">
+		</span>
+	<input type='hidden' name='PRT.LOGOIMG' data-tlc="bind $var '.%PRT.LOGO'; apply --select=$var;" />
+	</div>
+
+
+
+
 </fieldset>
 
 	<div class='buttonset'>
