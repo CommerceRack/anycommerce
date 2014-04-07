@@ -156,9 +156,11 @@ additionally, will apply some conditional form logic.
 				else if($CT.data('input-format').indexOf('decimal') > -1)	{
 					$CT.val($CT.val().replace(/[^0-9\.]+/g, ''));
 					}							
-				
-				if($CT.data('input-format').indexOf('pid') > -1)	{
+				else if($CT.data('input-format').indexOf('pid') > -1)	{
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
+					}
+				else if($CT.data('input-format').indexOf('blastid') > -1)	{
+					$CT.val($CT.val().replace(/[^\w\.]+/, '','g'));
 					}
 				},
 //allows an input to specify a button to get triggered if 'enter' is pushed while the input is in focus.

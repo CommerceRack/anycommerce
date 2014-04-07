@@ -393,7 +393,7 @@ var admin_blast = function(_app) {
 				var $form = $ele.closest('form');
 				if(_app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
-					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+".CUSTOM."+sfo.msgid, "_tag":{"callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+"."+sfo.msgid, "_tag":{"callback":function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
