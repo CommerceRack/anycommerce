@@ -121,6 +121,15 @@ var admin_blast = function(_app) {
 				_app.model.dispatchThis("mutable");
 				}, //blastMessagesList
 
+			
+			headerFooterEditor : function($target,params){
+				if($target.data('isTLC'))	{
+					$target.tlc('destroy');
+					}				
+				$target.tlc({'verb':'template','templateid':'headerFooterTemplate'});
+				},
+
+
 			//used in the blast message list tool for editing a specific message.			
 			//can be used outside that interface by calling directly.
 			blastMessagesDetail : function($target,params)	{
@@ -358,6 +367,9 @@ var admin_blast = function(_app) {
 						}
 					else if($ele.data('setting') == 'systemmacros')	{
 						_app.ext.admin_blast.a.blastSystemMacroList($target);
+						}
+					else if($ele.data('setting') == 'headerfooter')	{
+						_app.ext.admin_blast.a.headerFooterEditor($target);
 						}
 					else if($ele.data('setting') == 'macros')		{
 						_app.ext.admin_blast.a.blastMacroEditor($target);

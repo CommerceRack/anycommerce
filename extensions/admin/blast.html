@@ -9,6 +9,7 @@
 					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
 					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
 					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
+					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
 				</ul>
 			</div>
 		
@@ -234,7 +235,14 @@
 
 			<div class='marginTop'>
 				<h3>Macros</h3>
-				<table class='gridTable fullWidth'>
+				<table class='gridTable fullWidth applyAnytable'>
+				<thead>
+				<tr>
+					<th>Macro ID</th>
+					<th>Macro</th>
+					<th>Created By</th>
+				</tr>
+				</thead>
 				<tbody data-tlc="bind $var '.@MACROS'; controller#loop --templateid='blastMessageMacroRowTemplate'; apply --append;"></tbody>
 				</table>
 			</div>
@@ -452,4 +460,35 @@
 	<div class='buttonset'><button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button></div>
 
 </form>
+</div>
+
+
+
+
+
+
+<div id='headerFooterTemplate'>
+
+	<section data-app-role='headerEditor'>
+		<h3>Header</h3>
+		<textarea name='HEADER' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" class='fullWidth' rows='10'>
+<table>
+<tr>
+	<td>logo</td>
+	<td>Home | About | Contact</td>
+</tr>
+</table>
+		</textarea>
+	</section>
+	
+	<section data-app-role='footerEditor'>
+		<h3>Footer</h3>
+		<textarea name='HEADER' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" class='fullWidth' rows='10'>
+<br />
+<div>
+Home | About | Contact | My Account
+</div>
+		</textarea>
+	</section>
+
 </div>
