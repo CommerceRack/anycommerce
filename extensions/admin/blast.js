@@ -97,8 +97,18 @@ var admin_blast = function(_app) {
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
 //									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
-									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+"><b>"+(msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"</b> : "+msgs[i].SUBJECT+"<\/li>");
+function buildLink(section)	{
+	$("[data-app-role='blastmessages_"+section+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+"><b>"+(msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"</b> : "+msgs[i].SUBJECT+"<\/li>");
+	}
+
+									if(msgs[i].MSGID.indexOf('PRINTABLE') == 0)	{
+										buildLink('PRINTABLE')
+										}
+									else if(msgs[i].OBJECT)	{
+										buildLink(msgs[i].OBJECT)
+										}
+									else	{
+										//unclassified.
 										}
 									}
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.

@@ -958,10 +958,13 @@ see shipping panel in product editor for example
 */
 
 .labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
-.labelsAsBreaks div.label label	{ margin-right:12px;}
+.labelsAsBreaks div.label label, .labelsAsBreaks .prompt	{ margin-right:12px;}
+
+
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-.alignedLabels label span:first-of-type	{width:30%;}
+/* first of type was a HORRIBLE idea. started adding 'prompt' so that the first-of-type can be ditched */
+.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],

@@ -32,6 +32,11 @@
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
+	
+			<h2>Printables</h2>
+			<div>
+				<ul data-app-role="blastmessages_PRINTABLE" class='noPadOrMargin listStyleNone'></ul>
+			</div>
 <!--	
 			<h2>Supply Chain</h2>
 			<div>
@@ -457,7 +462,7 @@
 	<div class="label" data-app-role='companyLogoContainer'>
 		<span class='prompt floatLeft'>%LOGOIMAGE%</span>
 		<span data-app-role='companyLogoImgContainer'>
-		<img width="50" height="50" border="0" name='companyLogo' src="blank.gif" data-tlc="bind $var '.%PRT.LOGOIMAGE'; if(is $var --notblank;){{apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;}};">
+		<img width="50" height="50" border="0" name='companyLogo' src="blank.gif" data-tlc="bind $var '.%PRT.LOGOIMAGE'; if(is $var --notblank;){{apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};">
 		</span>
 	<input type='hidden' name='PRT.LOGOIMAGE' data-tlc="bind $var '.%PRT.LOGOIMAGE'; apply --select=$var;" />
 	</div>
