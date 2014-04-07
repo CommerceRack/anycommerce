@@ -2190,30 +2190,31 @@ handleOrder(orders[i]);
 					query;
 				
 				if(frmObj.keyword)	{
+					var keyword = $.trim(frmObj.keyword);
 					$('#orderListTableBody').empty();
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					$mainCol.showLoading({'message':'Searching orders...'});
 					if(frmObj.isDetailedSearch == 'on')	{
 						query = {'size':Number(frmObj.size) || 30,'filter' : {
 						'or' : [
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/address']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/item']}},
-						{'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}}}
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/address']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/item']}},
+						{'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}}}
 						]},'type' : ['order'],'explain' : 1}
 						}
 					else	{
 						query = { 'filter' : {
 						  'or' : [
-							 { 'term': { 'references': frmObj.keyword  } },
-							 { 'term' : { 'email': frmObj.keyword } },
-							 { 'term' : { 'orderid': frmObj.keyword } }
+							 { 'term': { 'references': keyword  } },
+							 { 'term' : { 'email': keyword } },
+							 { 'term' : { 'orderid': keyword } }
 							 ]
 						  }}
 						}
 					
-					_app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':frmObj.keyword},'immutable');
+					_app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':keyword},'immutable');
 
 					_app.model.dispatchThis('immutable');
 					}
