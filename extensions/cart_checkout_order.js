@@ -1195,10 +1195,11 @@ in a reorder, that data needs to be converted to the variations format required 
 			paypalecbutton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-					var payObj = _app.ext.cco.u.which3PCAreAvailable();
+					var payObj = _app.ext.cco.u.which3PCAreAvailable(data.value);
 					if(payObj.paypalec)	{
 						$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
-							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
+//***201402 Must pass cartid parameter on the call itself -mc
+							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1, '_cartid':data.value},{'callback':function(rd){
 								$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
 								if(_app.model.responseHasErrors(rd)){
 									$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');
@@ -1256,25 +1257,20 @@ in a reorder, that data needs to be converted to the variations format required 
 //for displaying order balance in checkout order totals.
 //changes value to 0 for negative amounts. Yes, this can happen.			
 			orderbalance : function($tag,data)	{
-				var o = '';
-				var amount = data.value;
-//				_app.u.dump('BEGIN _app.renderFunctions.format.orderBalance()');
-//				_app.u.dump('amount * 1 ='+amount * 1 );
+				if(data.value)	{
+					var o = '';
+					var amount = data.value;
 //if the total is less than 0, just show 0 instead of a negative amount. zero is handled here too, just to avoid a formatMoney call.
 //if the first character is a dash, it's a negative amount.  JS didn't like amount *1 (returned NAN)
-				
-				if(amount * 1 <= 0){
-//					_app.u.dump(' -> '+amount+' <= zero ');
-					o += data.bindData.currencySign ? data.bindData.currencySign : '$';
-					o += '0.00';
+					if(amount * 1 <= 0){
+						o += data.bindData.currencySign ? data.bindData.currencySign : '$';
+						o += '0.00';
+						}
+					else	{
+						o += _app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
+						}
+					$tag.text("Balance due: "+o);  //update DOM.
 					}
-				else	{
-//					_app.u.dump(' -> '+amount+' > zero ');
-					o += _app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
-					}
-				
-				$tag.text("Balance due: "+o);  //update DOM.
-//				_app.u.dump('END _app.renderFunctions.format.orderBalance()');
 				}, //orderBalance
 
 //displays the shipping method followed by the cost.

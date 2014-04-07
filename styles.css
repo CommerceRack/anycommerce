@@ -272,6 +272,8 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9c00', endColorstr='#ff4000',GradientType=0 ); /* IE6-9 */
 	}
 
+#slideshowContainer	{width:100%; overflow:hidden; height:265px; position:relative; max-width:605px;}
+
 
 /* styles for the cart */
 .shippingEstimates th	{font-size:.9em; text-align:left;}

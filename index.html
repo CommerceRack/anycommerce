@@ -374,6 +374,35 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 
+
+
+
+
+
+<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; "  id="productListCycleTemplate" class='productListCycleSlide'>
+	
+	<div class="prodThumbContainer">
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90"></a>
+	<div class='displayNone sprite shipsFree' data-tlc="bind $var '.%attribs.is:shipfree'; if(is $var --eq='1'){{apply --remove --class='displayNone';}};"></div>
+	</div>
+
+	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"><div class='prodName marginBottom' data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></div></a>
+	<div class=' marginBottom'>
+		<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --add --class='marginRight' apply --append;}};"></span>
+		<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
+	</div>
+
+	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm smallButton" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
+		<input name="qty" value="1" type="hidden">
+		<button data-tlc="bind $var '.'; quickstart#addtocartbutton  --legacy; apply --append;" class='applyButton'>more details</button>
+		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite reviewPLAdjust"></span>
+	</form>
+
+</div>
+
+
+
+
 <ul>
 
 
@@ -598,7 +627,10 @@ this will likely become more flexible in the future. ###
 
 	<section class='marginBottom' data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};">
 		<h4>Related Product</h4>
-		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="zProductList clearfix isRelatedItemsList"></ul><!-- isRelatedItemsList is used in an onComplete -->
+		<div data-app-role='relatedItemsContainer' data-cycle-fx='carousel' data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.productListCycleSlide" data-cycle-swipe="true" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>" data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListCycleTemplate'  --legacy; apply --append;" class="isRelatedItemsList">
+			<div class="cycle-prev"></div>
+			<div class="cycle-next"></div>
+		</div>
 	</section>
 	
 	<section class='marginBottom displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}};" >

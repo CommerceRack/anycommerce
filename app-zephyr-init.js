@@ -48,7 +48,7 @@ myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
 myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(){
 	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.swipe.min.js']);
-	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.carousel.js']); //need to make sure this loads after cycle2 or it barfs.
+	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.carousel.min.js']); //need to make sure this loads after cycle2 or it barfs.
 	});
 
 
@@ -79,11 +79,15 @@ $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblo
 	});
 
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
-	if($('.isRelatedItemsList',$ele).children().length)	{
+	var $prodlist = $('.isRelatedItemsList',$ele);
+	dump(" -> in onComplete for related items: "+$prodlist.children().length);
+	if($prodlist.children().length)	{
 		//this product has related items.
+		$prodlist.cycle();
 		}
 	else	{
-		if(myApp.ext.quickstart.vars.hotw[1] && myApp.ext.quickstart.vars.hotw[1].navcat)	{
+		$prodlist.closest('section').hide(); //hide the section (so header doesn't show up) if no product are present.
+/*		if(myApp.ext.quickstart.vars.hotw[1] && myApp.ext.quickstart.vars.hotw[1].navcat)	{
 			//the last viewed page was a category. show some items from it.
 			}
 		else if(myApp.ext.quickstart.vars.hotw[1] && myApp.ext.quickstart.vars.hotw[1].keywords)	{
@@ -94,7 +98,7 @@ $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 			var prod = myApp.data['appProductGet|'+infoObj.pid]['%attribs'];
 
 			}
-		}
+*/		}
 	});
 
 
@@ -132,6 +136,8 @@ myApp.u.showProgress = function(progress)	{
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
+			myApp.router.init();//instantiates the router.
+			myApp.u.appInitComplete();
 			}
 		else if(attempt > 150)	{
 			//hhhhmmm.... something must have gone wrong.
