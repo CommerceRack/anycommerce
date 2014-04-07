@@ -6,10 +6,10 @@
 			<div>
 				<ul class='noPadOrMargin listStyleNone'>
 					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
+					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
 					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
 					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
 					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
-					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
 				</ul>
 			</div>
 		
@@ -358,10 +358,7 @@
 
 <div id='adminBlastMacroCreateUpdateTemplate'>
 
-<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm'>
-
-
-
+<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm' novalidate>
 	<label>
 		<span>Title</span>
 		<input type='text' name='TITLE' required='required' value='' data-tlc="bind $var '.TITLE'; apply --select=$var;" />
@@ -373,10 +370,13 @@
 	</label>
 	<label>
 		<span>Body</span>
-		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;"></textarea>
+		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" rows='8' class='fullWidth'></textarea>
 	</label>
-	<div class='buttonset'>
-		<button class='applyButton'>Save</button>
+	<div class='buttonset clearfix'>
+		<!-- the following two buttons are conditionally revealed, like in the header/footer editor -->
+		<button class='applyButton displayNone showForHeaderFooterEditor' data-app-click="admin_blast|textarea2editor" disabled>HTML Editor</button>
+		<button type="reset" value="Reset" class='applyButton displayNone showForHeaderFooterEditor' disabled>Cancel Changes</button>
+		<button class='applyButton floatRight'>Save</button>
 	</div>
 </form>
 
@@ -454,10 +454,9 @@
 	</label>
 </fieldset>
 
-
-
-
-	<div class='buttonset'><button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button></div>
+	<div class='buttonset'>
+	<button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+	</div>
 
 </form>
 </div>
@@ -467,28 +466,18 @@
 
 
 
-<div id='headerFooterTemplate'>
+<div id='headerFooterTemplate' data-app-role='headerFooterEditorContainer'>
+	<p>The header and footer blocks are macros. That means they can not contain macros because they don't get interpreted. You can use TLC to load variables, if desired. <b>Please make a local copy/backup prior to making changes</b> so that you can easily restore at a later time.</p>
 
-	<section data-app-role='headerEditor'>
+
+	<section data-app-role='headerEditor' data-editor-role='container'>
 		<h3>Header</h3>
-		<textarea name='HEADER' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" class='fullWidth' rows='10'>
-<table>
-<tr>
-	<td>logo</td>
-	<td>Home | About | Contact</td>
-</tr>
-</table>
-		</textarea>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
 	</section>
-	
-	<section data-app-role='footerEditor'>
+	<br />
+	<section data-app-role='footerEditor' data-editor-role='container'>
 		<h3>Footer</h3>
-		<textarea name='HEADER' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" class='fullWidth' rows='10'>
-<br />
-<div>
-Home | About | Contact | My Account
-</div>
-		</textarea>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
 	</section>
-
+</form>
 </div>

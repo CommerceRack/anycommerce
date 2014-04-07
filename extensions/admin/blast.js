@@ -125,8 +125,41 @@ var admin_blast = function(_app) {
 			headerFooterEditor : function($target,params){
 				if($target.data('isTLC'))	{
 					$target.tlc('destroy');
-					}				
+					}
+				$("[data-editor-role='container']",$target).showLoading();
+				// the header and footer have the same tlc bind value, so the template is added but two of the children actually get translated.
 				$target.tlc({'verb':'template','templateid':'headerFooterTemplate'});
+				
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroList","_tag":{"datapointer":"adminBlastMacroList","callback":function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+
+						function populateTextarea(type)	{
+							var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@MACROS'],'MACROID','%'+type.toUpperCase()+'%');
+							if(dataset)	{
+								dataset.TITLE = dataset.TITLE || type; //set a default title if none set.
+								var $editor = $("[data-app-role='"+type+"Editor']",$target);
+								$editor.tlc({'verb':'translate','dataset':dataset});
+								$("[name='MACROID']",$editor).prop('disabled','disabled');
+								$('.showForHeaderFooterEditor',$editor).show();
+								$editor.hideLoading();
+								_app.u.handleButtons($editor);
+								$('button',$editor).button('enable'); //buttons are disabled by default, so that they aren't clicked prior to content loading.
+								}
+							else	{
+								$target.anymessage({'message':'Unable to gather dataset for '+type+' in editor','gMessage':true});
+								}
+							}
+
+						populateTextarea('header');
+						populateTextarea('footer');
+						
+						}
+					}}},"mutable");
+				_app.model.dispatchThis("mutable");
+				
 				},
 
 
@@ -554,6 +587,26 @@ var admin_blast = function(_app) {
 					$D.tlc({'verb':'translate','dataset':$dataSrc.data()});
 					}
 				$D.dialog('open');
+				return false;
+				},
+			
+			textarea2editor : function($ele,P)	{
+				P.preventDefault();
+				$ele.closest("[data-editor-role='container']").find('textarea').each(function(){
+					$(this).tinymce({
+						menubar : 'edit insert view format table tools',
+						height : 300,
+						visual: false, //turn off visual aids by default. menu choice will still show up.
+						keep_styles : true,
+						image_list: [],
+						plugins: [
+							"_image advlist autolink lists link charmap print preview anchor",
+							"searchreplace visualblocks code fullscreen", //fullpage is what allows for the doctype, head, body tags, etc.
+							"media table contextmenu paste"
+							],
+						toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+						});
+					});
 				return false;
 				}
 
