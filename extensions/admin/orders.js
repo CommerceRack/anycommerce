@@ -2365,22 +2365,22 @@ handleOrder(orders[i]);
 						errors = (typeof _app.ext.cco.validate[formJSON.tender] === 'function') ? _app.ext.cco.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
 						_app.u.dump('errors'); _app.u.dump(errors);
-						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
+						$paymentContainer.find('.ui-state-error').removeClass('ui-state-error'); //remove css from previously failed inputs to avoid confusion.
 						
 
-//the mandatory class gets added to the parent of the input, so that the input, label and more get styled.
+//the ui-state-error class gets added to the parent of the input, so that the input, label and more get styled.
 						if(!formJSON.amt)	{
 							var msgObj = _app.u.errMsgObject("Please set an amount");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							_app.u.throwMessage(msgObj);
-							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
+							$("[name='amt']",$paymentContainer).addClass('ui-state-error');
 							}
 						else if(errors)	{
 							var msgObj = _app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							_app.u.throwMessage(msgObj);
 							for(var index in errors)	{
-								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
+								$("[name='"+errors[index]+"']",$paymentContainer).addClass('ui-state-error');
 								}
 							}
 						else	{
