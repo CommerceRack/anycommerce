@@ -903,39 +903,45 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return uriParams;
 			},
-
 		init : function()	{
-			//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
-			$.extend(_app.router.initObj,{
-				hash : location.hash,
-				uriParams : _app.router.getURIParams(),
-				hashParams : (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(decodeURIComponent(location.hash.split("?")[1])) : {})
-				});
-			var routeObj = _app.router._getRouteObj(document.location.href,'init'); //strips out the #! and trailing slash, if present.
-			if(routeObj)	{
-				_app.router._executeCallback(routeObj);
-				}
+			if($(document.body).data('isRouted'))	{} //only allow the router to get initiated once.
 			else	{
-				_app.u.dump(" -> Uh Oh! no valid route found for "+location.hash);
-				//what to do here?
-				}
-	//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
-			if (window.addEventListener) {
-				console.log(" -> addEventListener is supported and added for hash change.");
-				window.addEventListener("hashchange", _app.router.handleHashChange, false);
-				}
-			//IE 8
-			else if(window.attachEvent)	{
-				//A little black magic here for IE8 due to a hash related bug in the browser.
-				//make sure a hash is set.  Then set the hash to itself (yes, i know, but that part is key). Then wait a short period and add the hashChange event.
-				window.location.hash = window.location.hash || '#!home'; //solve an issue w/ the hash change reloading the page.
-				window.location.hash = window.location.hash;
-				setTimeout(function(){
-					window.attachEvent("onhashchange", _app.router.handleHashChange);
-					},1000);
-				}
-			else	{
-				$("#globalMessaging").anymessage({"message":"Browser doesn't support addEventListener OR attachEvent.","gMessage":true});
+				
+				//initObj is a blank object by default, but may be updated outside this process. so instead of setting it to an object, it's extended to merge the two.
+				$.extend(_app.router.initObj,{
+					hash : location.hash,
+					uriParams : _app.router.getURIParams(),
+					hashParams : (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(decodeURIComponent(location.hash.split("?")[1])) : {})
+					});
+				var routeObj = _app.router._getRouteObj(document.location.href,'init'); //strips out the #! and trailing slash, if present.
+				if(routeObj)	{
+					_app.router._executeCallback(routeObj);
+					}
+				else	{
+					_app.u.dump(" -> Uh Oh! no valid route found for "+location.hash);
+					//what to do here?
+					}
+		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
+				if (window.addEventListener) {
+					console.log(" -> addEventListener is supported and added for hash change.");
+					window.addEventListener("hashchange", _app.router.handleHashChange, false);
+					$(document.body).data('isRouted',true);
+					}
+				//IE 8
+				else if(window.attachEvent)	{
+					//A little black magic here for IE8 due to a hash related bug in the browser.
+					//make sure a hash is set.  Then set the hash to itself (yes, i know, but that part is key). Then wait a short period and add the hashChange event.
+					window.location.hash = window.location.hash || '#!home'; //solve an issue w/ the hash change reloading the page.
+					window.location.hash = window.location.hash;
+					setTimeout(function(){
+						window.attachEvent("onhashchange", _app.router.handleHashChange);
+						},1000);
+					$(document.body).data('isRouted',true);
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"Browser doesn't support addEventListener OR attachEvent.","gMessage":true});
+					}
+				
 				}
 			},
 	
@@ -1178,7 +1184,6 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 				if(_app.u.numberOfLoadedResourcesFromPass(0) == _app.vars.rq.length)	{
 					_app.vars.rq = null; //this is the tmp array used by handleRQ and numberOfResourcesFromPass. Should be cleared for next pass.
 					_app.model.addExtensions(_app.vars.extensions);
-					_app.router.init(); ///### FUTURE -> this should be in the app / app init, not here.
 					_app.u.handleRQ(1); //this will empty the RQ.
 					_app.rq.push = _app.u.loadResourceFile; //reassign push function to auto-add the resource.
 					}
