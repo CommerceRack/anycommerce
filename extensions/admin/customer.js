@@ -521,10 +521,33 @@ $D is returned.
 									callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
 									}
 								else	{
-									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr[data-prt='"+_app.vars.partition+"']").addClass('lookLikeLink pointer').end().on('click',"tbody tr[data-prt='"+_app.vars.partition+"']",function(){
+									
+// ** 201402 -> a new method, using delegated events, for displaying/handling clicks. Needed to improve experience for results with mixed partitions.
+/*									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr[data-prt='"+_app.vars.partition+"']").addClass('lookLikeLink pointer').end().on('click',"tbody tr[data-prt='"+_app.vars.partition+"']",function(){
 										callback($(this).data());
 										$D.dialog('close').empty().remove();
 										}).parent().css({'max-height':200,'overflow':'auto',});
+*/
+									var partitionMismatch = false;
+									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr").each(function(){
+										var $tr  = $(this);
+										if($tr.data('prt') == _app.vars.partition)	{
+											$tr.addClass('lookLikeLink pointer');
+											}
+										else	{
+											partitionMismatch = true;
+											}
+										})
+									.end()
+									.on('click',"tr.lookLikeLink",function(){
+										callback($(this).data());
+										$D.dialog('close').empty().remove();
+										})
+									.parent().css({'max-height':200,'overflow':'auto',});
+									
+									if(partitionMismatch)	{
+										$("[data-app-role='customerSearchResultsContainer']",$D).anymessage({"message":"Some (or all) the customers listed below are from another partition. You can only select customers from the partition you are currently logged in to (partition "+_app.vars.partition+");","persistent":true,"errtype":"hint"});
+										}
 									}
 								}
 

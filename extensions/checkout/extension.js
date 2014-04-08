@@ -494,8 +494,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				}, //chkoutPayOptionsFieldset
 				
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0;
-				var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -556,11 +555,12 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				}, //chkoutBillAddressFieldset
 				
 			chkoutAddressShip: function($fieldset,formObj)	{
-				var valid = 0;
+				dump("BEGIN ship address validation");
+				var valid = 0, cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 
 				if($fieldset && formObj)	{
 					
-					if(formObj['want/bill_to_ship'])	{valid = 1}
+					if(formObj['want/bill_to_ship'])	{dump(" -> Bill to ship is enabled."); valid = 1;}
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as they need/want. trust what we already have (which may not be enough for OUR validation)
 					else if(_app.ext.cco.u.thisSessionIsPayPal())	{
@@ -568,6 +568,14 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
 					else if(_app.u.buyerIsAuthenticated() && _app.data.buyerAddressList && _app.data.buyerAddressList['@ship'] && _app.data.buyerAddressList['@ship'].length)	{
+						dump(" -> user is authenticated and has ship address(es) defined");
+						if(formObj['ship/shortcut'])	{valid = 1}
+						else	{
+							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
+							}
+						}
+//in an admin session w/ an existing user, make sure the address has been selected.
+					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
 						if(formObj['ship/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
