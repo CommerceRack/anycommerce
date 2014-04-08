@@ -557,7 +557,6 @@ do NOT change the input name or id or checkout will likely break.
 	
 		</td>
 		<td class="orderContentsProdlistContainer">
-		<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks --legacy;" class="displayNone noListStyle marginBottom"></ul>
 		<table class="listStyleNone lineItemProdlist">
 		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
 		</table>

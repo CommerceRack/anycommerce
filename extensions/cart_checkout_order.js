@@ -867,8 +867,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
 						populateAddressFromShortcut('bill','ship');	
 						}
-//bill to ship, but no short cut (not logged in)
-					else if(formObj['want/bill_to_ship'])	{
+//bill to ship, but no short cut (not logged in).
+// ** 201402 -> was hitting on else if((formObj['want/bill_to_ship']) so > 0 added.
+					else if(formObj['want/bill_to_ship'] > 0)	{
+						dump(" -> want/bill_to_ship = "+formObj['want/bill_to_ship']);
 						for(var index in formObj)	{
 //copy billing fields into shipping. not email tho.
 							if(index.indexOf('bill/') == 0 && index != 'bill/email')	{ 
