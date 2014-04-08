@@ -46,6 +46,8 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 //custom scripts
 myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
+
+//used for the slideshow on the homepage and product page. $.cycle();
 myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(){
 	//if these files are not done loading, cycle won't work quite right. so a check is done before executing a slideshow to make sure (with a settimeout to re-execute check).
 	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.swipe.min.js',function(){
@@ -56,7 +58,8 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 		}]); //need to make sure this loads after cycle2 or it barfs.
 	});
 
-
+//a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
+//there's an 'activator' for this in the 'complete' for product, home and category pages.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //used pretty early in process..
 
 

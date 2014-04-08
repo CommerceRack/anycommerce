@@ -57,7 +57,11 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 #mastHead menu .account	{background-position:-26px -70px;}
 #mastHead menu .cart	{background-position:-55px -70px;}
 
-#specialsNav, #mastHead .socialIcons, #mastHead .minicart, #menuNav	{display:none;}
+#specialsNav, 
+#mastHead .socialIcons, 
+#mastHead .minicart, 
+#headerDecal1,
+#menuNav	{display:none;}
 
 
 #shopNowLink	{
@@ -352,8 +356,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 
 
 
-
-
-
+@media only screen and (min-width: 800px) {
+	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
+	#menuNav	{right:110px;}
+	}
 
 
