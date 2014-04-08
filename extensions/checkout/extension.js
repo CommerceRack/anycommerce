@@ -1996,7 +1996,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				var payerid = _app.u.getParameterByName('PayerID');
 //				_app.u.dump(" -> aValidPaypalTenderIsPresent(): "+_app.ext.cco.u.aValidPaypalTenderIsPresent());
 				if(token && payerid)	{
-//					_app.u.dump(" -> both token and payerid are set.");
+					_app.u.dump(" -> both token and payerid are set.");
 					if(_app.ext.cco.u.aValidPaypalTenderIsPresent())	{
 						_app.u.dump(" -> token and payid are set but a valid paypal tender is already present.");
 						} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.

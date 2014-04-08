@@ -1218,7 +1218,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						$('tr',$dataTableTbody).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 							else	{
-								dump(" -> tr.data():"); dump($(this).data());
+//								dump(" -> tr.data():"); dump($(this).data());
 								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$._app.u.hash2kvp(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid','subtotal','fee','weight','zip1','zip2','postal','text'])));
 								}
 							});
