@@ -1083,6 +1083,7 @@ var admin_wholesale = function(_app) {
 							})
 						})
 
+					_app.u.addEventDelegation($table);
 
 					var $editorContainer = $(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content'))
 					$editorContainer.empty();
