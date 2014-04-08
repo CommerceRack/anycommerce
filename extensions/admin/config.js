@@ -1212,12 +1212,14 @@ when an event type is changed, all the event types are dropped, then re-added.
 							});
 						}
 				//currently, only insurance and handling have more than one data table. If that changes, the code below will need updating.
+				//this is used for ALL ship methods tho, so the whitelist must include all the input names for all the ship method data tables.
 					else if($dataTableTbody.length && sfo.provider)	{
 						macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider);
 						$('tr',$dataTableTbody).each(function(){
 							if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 							else	{
-								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid'])));
+								dump(" -> tr.data():"); dump($(this).data());
+								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$._app.u.hash2kvp(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid','subtotal','fee','weight','zip1','zip2','postal','text'])));
 								}
 							});
 						}
