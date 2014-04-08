@@ -1176,7 +1176,8 @@ var admin_wholesale = function(_app) {
 						var $D = _app.ext.admin.i.dialogCreate({
 							'templateID': ($ele.data('mode') == 'order') ? 'supplierOrderListTemplate' : 'supplierItemListTemplate',
 							'title': $ele.data('mode')+" list for vendor "+VENDORID,
-							'showLoading' : false
+							'showLoading' : false,
+							'skipDelegation' : true //the dialog is being appended to a parent element which already has delegation on it.
 							});
 						$D.data('vendorid',VENDORID);
 						$D.dialog('option','modal',false);
@@ -1190,7 +1191,8 @@ var admin_wholesale = function(_app) {
 							'VENDORID':VENDORID,
 							'_tag':	{
 								'callback': 'anycontent',
-								'addEventDelegation' : true,
+								'skipAppEvents' : true,
+								'addEventDelegation' : false, //the dialog is being appended to a parent element which already has delegation on it.
 								'jqObj' : $('form',$D)
 								}
 							}
