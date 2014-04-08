@@ -47,8 +47,13 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
 myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(){
-	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.swipe.min.js']);
-	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.carousel.min.js']); //need to make sure this loads after cycle2 or it barfs.
+	//if these files are not done loading, cycle won't work quite right. so a check is done before executing a slideshow to make sure (with a settimeout to re-execute check).
+	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.swipe.min.js',function(){
+		$(document.body).data('swipeLoaded',true); //can't execute a cycle carousel till this is loaded.
+		}]);
+	myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.cycle2.carousel.min.js',function(){
+		$(document.body).data('carouselLoaded',true); //can't execute a cycle carousel till this is loaded.
+		}]); //need to make sure this loads after cycle2 or it barfs.
 	});
 
 
@@ -66,7 +71,11 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt
 
 //  now add some template functions.
 $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
-	$('#slideshowContainer',$ele).cycle();
+	function execCycle()	{
+		if(myApp.u.carouselIsReady())	{$('#slideshowContainer',$ele).cycle();}
+		else {setTimeout(execCycle,500);}
+		}
+	execCycle();
 	});
 
 
@@ -81,9 +90,15 @@ $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblo
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
 	dump(" -> in onComplete for related items: "+$prodlist.children().length);
+	
+	function execCycle()	{
+		if(myApp.u.carouselIsReady())	{$prodlist.cycle();}
+		else {setTimeout(execCycle,500); dump(" -> cycle not ready yet");}
+		}
+	
 	if($prodlist.children().length)	{
 		//this product has related items.
-		$prodlist.cycle();
+		execCycle();
 		}
 	else	{
 		$prodlist.closest('section').hide(); //hide the section (so header doesn't show up) if no product are present.
@@ -156,6 +171,12 @@ myApp.u.showProgress = function(progress)	{
 	showProgress(0)
 	}
 
+//function to ascertain if the secondary files associated w/ cycle are done loading.
+myApp.u.carouselIsReady = function()	{
+	var r = false;
+	if($(document.body).data('swipeLoaded') && $(document.body).data('carouselLoaded'))	{r = true;}
+	return r;
+	}
 
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)

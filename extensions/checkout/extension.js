@@ -494,8 +494,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				}, //chkoutPayOptionsFieldset
 				
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0;
-				var cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -556,11 +555,12 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				}, //chkoutBillAddressFieldset
 				
 			chkoutAddressShip: function($fieldset,formObj)	{
-				var valid = 0;
+				dump("BEGIN ship address validation");
+				var valid = 0, cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 
 				if($fieldset && formObj)	{
 					
-					if(formObj['want/bill_to_ship'])	{valid = 1}
+					if(formObj['want/bill_to_ship'])	{dump(" -> Bill to ship is enabled."); valid = 1;}
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as they need/want. trust what we already have (which may not be enough for OUR validation)
 					else if(_app.ext.cco.u.thisSessionIsPayPal())	{
@@ -568,6 +568,14 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 						}
 //if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
 					else if(_app.u.buyerIsAuthenticated() && _app.data.buyerAddressList && _app.data.buyerAddressList['@ship'] && _app.data.buyerAddressList['@ship'].length)	{
+						dump(" -> user is authenticated and has ship address(es) defined");
+						if(formObj['ship/shortcut'])	{valid = 1}
+						else	{
+							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
+							}
+						}
+//in an admin session w/ an existing user, make sure the address has been selected.
+					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
 						if(formObj['ship/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -1574,7 +1582,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
 				if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !_app.ext.cco.u.thisSessionIsPayPal())	{
 					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
-					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
+//***201402 Must pass cartid parameter on the call itself -mc
+					var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
+					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('body').hideLoading();
 							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
@@ -1977,7 +1987,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 
 
 			handlePaypalInit : function($context)	{
-//				_app.u.dump("BEGIN order_create.u.handlePaypalInit");
+				_app.u.dump("BEGIN order_create.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1986,7 +1996,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				var payerid = _app.u.getParameterByName('PayerID');
 //				_app.u.dump(" -> aValidPaypalTenderIsPresent(): "+_app.ext.cco.u.aValidPaypalTenderIsPresent());
 				if(token && payerid)	{
-//					_app.u.dump(" -> both token and payerid are set.");
+					_app.u.dump(" -> both token and payerid are set.");
 					if(_app.ext.cco.u.aValidPaypalTenderIsPresent())	{
 						_app.u.dump(" -> token and payid are set but a valid paypal tender is already present.");
 						} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.

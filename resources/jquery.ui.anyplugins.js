@@ -156,9 +156,11 @@ additionally, will apply some conditional form logic.
 				else if($CT.data('input-format').indexOf('decimal') > -1)	{
 					$CT.val($CT.val().replace(/[^0-9\.]+/g, ''));
 					}							
-				
-				if($CT.data('input-format').indexOf('pid') > -1)	{
+				else if($CT.data('input-format').indexOf('pid') > -1)	{
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
+					}
+				else if($CT.data('input-format').indexOf('blastid') > -1)	{
+					$CT.val($CT.val().replace(/[^\w\.]+/, '','g'));
 					}
 				},
 //allows an input to specify a button to get triggered if 'enter' is pushed while the input is in focus.
@@ -696,22 +698,27 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
-
+// ** 201402 -> updated the default to show the first VISIBLE tab, not the first tab.  allows for tabs to be conditionally shown more easily.
 		_handleDefaultTab : function()	{
-			var o = this.options;
+			var o = this.options, $tab;
 //if no anchor is set, activate the default.
 			if(o.persist && o.extension && $._app)	{
 				var theAnchor = $._app.model.dpsGet(o.extension,'anytabs') || {};
 				if(theAnchor.recentTab && $("li[data-anytabs-tab='"+theAnchor+"']",this.element).length)	{
-					this.reveal($("li[data-anytabs-tab='"+theAnchor+"']",this.element));
+					$tab = $("li[data-anytabs-tab='"+theAnchor+"']",this.element)
 					}
 				else	{
-					this.reveal($("li:visible:first",this.element));
+					$tab = $("li:visible:first",this.element);
 					}
 				}
 			else	{
-				this.reveal($("li:visible:first",this.element));
+				$tab = $("li:visible:first",this.element);
 				}
+			//in case no tab has been found, default to the first. this 'could' happen if applied to an object in memory.
+			if(!$tab.length)	{
+				$tab = $("li:first",this.element);
+				}
+			this.reveal($tab);
 			},
 
 		_addEvent2Tabs : function()	{
@@ -771,6 +778,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			},
 
 		reveal : function($tab)	{
+			dump(" ----> $tab.length: "+$tab.length);
 			var $tab2show = false;
 			//method accepts string or jquery object as the trigger.
 			if(typeof $tab == 'string')	{
@@ -870,7 +878,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 				$buttonSet = $("<div \/>").addClass('ui-widget-anyupload-buttonset');
 
 			$buttonSet.append('<input type="file" class="ui-widget-anyfile-fileinput" '+(self['options'].maxSelectableFiles === 1 ? '' : 'multiple' )+' name="files[]" style="display:none;" />');
-			$("<button \/>").text('Select Files').button({icons: {primary: "ui-icon-document"},text: true}).on('click',function(event){
+			$("<button \/>").text('Select '+(self['options'].maxSelectableFiles === 1 ? 'File' : 'Files')).button({icons: {primary: "ui-icon-document"},text: true}).on('click',function(event){
 				event.preventDefault();
 				$(this).parent().find(".ui-widget-anyfile-fileinput").trigger('click');
 				}).appendTo($buttonSet);
@@ -932,7 +940,7 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 			if(self['options'].autoUpload === false && filteredFiles.length)	{
 				$('.ui-widget-anyfile-uploadbutton',self.element).button('enable');
 				}
-
+//Do NOT make changes to the preview area if maxSelectedFiles is set to 1. Let the instance do it. That way file select can be set to one, but multiple files could still be supported.
 			for (var i = 0; i < filteredFiles.length; i++) {
 				var file = filteredFiles[i];
 				var fileType = file.type.match('image.*') ? 'image' : 'file';
@@ -965,12 +973,24 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 					var $img = $ele.is('img') ? $ele : $('img',$ele);
 					if($img.length)	{
 						var reader = new FileReader();
-						reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result; }; })($img[0]);
+						//the onload here is an async event and the 'filesChange' should not get executed till after the src is set.
+						reader.onload = (function(aImg) { return function(e) {
+							aImg.src = e.target.result;
+						if(typeof self['options'].filesChange == 'function')	{
+							self['options'].filesChange(event,files,{'container':self.element});
+							}
+							}; })($img[0]);
 						reader.readAsDataURL(file);
 						}
 					else	{
 						//filetype is image, but no image was found within the preview (could be an image was selected for a file based upload and no filter was enabled
 						}
+					}
+				else	{
+					if(typeof self['options'].filesChange == 'function')	{
+						self['options'].filesChange(event,files,{'container':self.element});
+						}
+
 					}
 				if(self.element.closest('.anyformEnabled').length)	{
 					self.element.closest('.anyformEnabled').anyform('updateChangeCounts'); // updates the save button change count.
@@ -982,9 +1002,6 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //			console.log(" --------> fileChangeEvent triggered");
 			var files = event.target.files; // FileList object
 			self._buildPreviews(files,event);
-			if(typeof self['options'].filesChange == 'function')	{
-				self['options'].filesChange(event,files,{'container':self.element});
-				}
 			if(self['options'].instantUpload)	{
 				self._sendFiles();
 				}
@@ -997,9 +1014,9 @@ https://developer.mozilla.org/en-US/docs/Using_files_from_web_applications
 //start the upload process. Uses the previews that are added to the DOM. Keep all filtering of filetypes code in the preview builder.
 		_sendFiles : function()	{
 			var self = this;
-			dump("BEGIN anyfileupload._sendFiles.");
+//			dump("BEGIN anyfileupload._sendFiles.");
 			if(typeof self['options'].ajaxRequest == 'function')	{
-				dump(" -> ajaxRequest is defined as a function");
+//				dump(" -> ajaxRequest is defined as a function");
 				$(".newMediaFile",self.element).each(function(){
 					self._fileUpload($(this), $(this).data('file'));
 					});

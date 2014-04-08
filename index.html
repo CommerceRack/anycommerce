@@ -238,7 +238,7 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
-<div id="homepageTemplate" class="homeTemplate">
+<div id="homepageTemplate" class="homeTemplate isPageTemplate">
 
 	<section class='marginBottom'>
 		<div id="slideshowContainer" class="clearfix marginBottom" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.slide" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>">
@@ -320,7 +320,7 @@ used to organize content when a category is clicked.
 each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
-<div id="categoryTemplate" class=" categoryTemplate">
+<div id="categoryTemplate" class=" categoryTemplate isPageTemplate">
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
@@ -563,7 +563,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div id="productTemplate" class="productPage">
+<div id="productTemplate" class="productPage isPageTemplate">
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	
@@ -625,11 +625,16 @@ this will likely become more flexible in the future. ###
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></div>
 	</section>
 
-	<section class='marginBottom' data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};">
+	<section class='marginBottom relatedItemsContainer' data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};">
 		<h4>Related Product</h4>
-		<div data-app-role='relatedItemsContainer' data-cycle-fx='carousel' data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.productListCycleSlide" data-cycle-swipe="true" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>" data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListCycleTemplate'  --legacy; apply --append;" class="isRelatedItemsList">
-			<div class="cycle-prev"></div>
-			<div class="cycle-next"></div>
+
+<div class='carouselNav'>
+    <a href='#' class='prev'>&#171; Prev </a>
+    <a href='#' class='next'> Next &#187; </a>
+</div>
+
+		<div data-app-role='relatedItemsContainer' data-cycle-fx='carousel' data-cycle-next=".next" data-cycle-prev=".prev" data-cycle-timeout=0 data-cycle-speed="1000" data-cycle-slides="div.productListCycleSlide" data-cycle-swipe="true" data-cycle-pause-on-hover="true"  data-allow-wrap='false' data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListCycleTemplate'  --legacy; apply --append;" class="isRelatedItemsList">
+
 		</div>
 	</section>
 	

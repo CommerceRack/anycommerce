@@ -457,11 +457,26 @@ var store_zephyrapp = function(_app) {
 		u : {
 			//ele will likely be an entire template object. This will add the show/hide button for revealing more content IF the child element (actual text container) has a height greater than $ele.
 			revealation : function($ele)	{
+				dump("BEGIN revealation");
 				$('.textBlockMaxHeight',$ele).each(function(index){
 					var $container = $(this), $text = $("[data-textblock-role='content']",$container);
-					if($text.height() > $container.height())	{
-						$("<p>").addClass('textFadeOut').append($("<button \/>").addClass('smallButton').text('Show More').attr('data-app-click','store_zephyrapp|revealation').button()).appendTo($container);
+					
+					function handleHeight(i)	{
+						i++;
+						if($text.outerHeight() > $container.height())	{
+							$("<p>").addClass('textFadeOut').append($("<button \/>").addClass('smallButton').text('Show More').attr('data-app-click','store_zephyrapp|revealation').button()).appendTo($container);
+							}
+						else if($text.outerHeight() == 0 && $container.height() == 0)	{ //because of how the animation is handled, height may not be able to be computed right away.
+							if(1 < 10)	{
+								setTimeout(function(){handleHeight(i);},250);
+								}
+							else	{} //ok, tried enough times. maybe these are just empty.
+							}
+						else	{} //text block is shorter than container. that's okay too.
 						}
+					
+					handleHeight(0);
+					
 					});
 				},
 			randomizeList : function($list){
