@@ -1,6 +1,6 @@
 @charset "utf-8";
 
-body,html	{margin:0; padding:0; font-size:100%; font-family: 'Oswald', Arial,Helvetica,sans-serif; font-weight:300; color:#000;}
+body,html	{margin:0; padding:0; font-size:100%; font-family: 'Oswald', Arial,Helvetica,sans-serif; font-weight:300; color:#000; background-color: #707070;}
 
 a	{color:#0f4d82;}
 a:hover	{color:#000;}
@@ -24,7 +24,8 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 /* header */
 
 #mastHead	{position:relative;}
-#mastHead .topbg	{background: #707070; height:12px;}
+#mastHead .topbg	{height:12px;} /* primarily a spacer */
+#mastHead .middle2bg	{display:none;}
 #mastHead .middlebg	{
 	height:38px;
 	background: #0c84ec; /* Old browsers */
@@ -55,6 +56,8 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 #mastHead menu .contact	{background-position:0 -70px;}
 #mastHead menu .account	{background-position:-26px -70px;}
 #mastHead menu .cart	{background-position:-55px -70px;}
+
+#specialsNav, #mastHead .socialIcons, #mastHead .minicart, #menuNav	{display:none;}
 
 
 #shopNowLink	{
@@ -131,7 +134,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 
 /* content area */
-#contentContainer	{padding:.3em;}
+#contentContainer	{padding:.3em; background:#fff;}
 
 .reversedHeader	{
 	display:block; padding:.3em .5em; margin:0 0 .5em 0; line-height:26px; 
@@ -283,3 +286,74 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 .shippingEstimates td	{font-size:.8em; text-align:left; font-weight:300;}
 .shippingEstimates tr:nth-child(odd)	{background:#fff;}
 .shippingEstimates tr:nth-child(even)	{background:#efefef;}
+
+
+
+
+
+
+
+
+@media only screen and (min-width: 640px) {
+	body	{background:url(images/zs10_body_bg-2000x16.gif) repeat-y; margin:0em; padding:.7em; font-weight:100;}
+	
+	#mastHead	{height:137px;}
+	.mobileNav	{display:none;}
+	#mastHead .logo	{position:absolute; top:3px; left:.5em; width:270px; height:75px; display:block; background-position: -222px -4px;}
+	#shopNowLink	{display:none;}
+	#mastHead .middlebg	{
+		height:65px;
+		-webkit-border-top-left-radius: 5px;
+		-webkit-border-top-right-radius: 5px;
+		-moz-border-radius-topleft: 5px;
+		-moz-border-radius-topright: 5px;
+		border-top-left-radius: 5px;
+		border-top-right-radius: 5px;
+		border-bottom:1px solid #00203e;
+		}
+
+	#mastHead .middle2bg	{
+		display:block;
+		height:28px;
+		border-top:1px solid #7f919f;
+		border-bottom:2px solid #080c0f;
+		background: rgb(114,110,107); /* Old browsers */
+		background: -moz-linear-gradient(top, rgba(114,110,107,1) 0%, rgba(68,72,75,1) 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(114,110,107,1)), color-stop(100%,rgba(68,72,75,1))); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* IE10+ */
+		background: linear-gradient(to bottom, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#726e6b', endColorstr='#44484b',GradientType=0 ); /* IE6-9 */
+
+		}
+
+	#menuNav	{position:absolute; top:14px; right:.5em; display:block; color:#27a8e0;}
+	.menuLink	{color:#fff; font-size:.7em; font-weight:100; margin:0 .2em; text-decoration:none;}
+	#specialsNav	{position:absolute; top:77px; left:0; display:block;}
+	.specialsLink	{color:#ccc; font-size:.7em; font-weight:700; margin:0; padding:0 .5em; border-right:1px solid #333; text-decoration:none;}
+	.specialsLink:hover	{color:#fff;}
+	
+	#mastHeadSearchFrm	{left:.5em; width:50%;}
+	.productSearchKeyword	{width:100%;}
+	
+	#mastHead .socialIcons	{display:block; position:absolute; right:.5em; bottom:5px; font-size:.5em; line-height:.3em;}
+	#mastHead .minicart	{bottom:33px; font-size:.8em; display:block; right:.5em; position:absolute;}
+
+	.socialSprite	{background:url(images/social_sprite.png) no-repeat; width:20px; height:20px; display:inline-block; margin-right:.2em; overflow:hidden; text-indent:-3000px;}
+	.facebook	{background-position:0 -100px;}
+	.twitter	{background-position:0 -440px;}
+	.gplus		{background-position: 0 -180px;}
+	.myspace	{background-position:0 -220px;}
+	.youtube	{background-position:0 -160px;}
+	.wordpress	{background-position:0 -160px;}
+	}
+
+
+
+
+
+
+
+
+
