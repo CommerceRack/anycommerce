@@ -473,7 +473,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
-<li id="categoryListTemplate" class="categoryListItem blockLink">
+<li id="categoryListTemplate" class="categoryListItem blockLink alignLeft">
 	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';" >
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
 		<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
@@ -498,7 +498,7 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id="productListTemplate" class="loadingBG productListItem blockLink" onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
+<li id="productListTemplate" class="alignLeft loadingBG productListItem blockLink" onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
 	<!--
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 	-->
