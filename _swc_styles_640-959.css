@@ -27,8 +27,9 @@
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px;}
 .blockLink, li.blockLink {width: 24%; margin: .3%;}
+.productListItem.blockLink { padding-bottom: 40px;}
 
-.productListItem .prodInfo {height: 40px; padding: .2em 0em; font-size: .9em;}
+.productListItem .prodInfo {height: 64px; padding: .2em 0em;}
 .productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
 
 .productPage .addtocartbutton{width:99px; height:31px; background:url(images/prodpages/add_to_cart_button_99x31.png) no-repeat;}

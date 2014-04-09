@@ -433,7 +433,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</form>
 	<div class="filterResultsContainer">
 		<h2 data-tlc="bind $var '.title'; apply --append;"></h2>
-		<ul class="filterResults listStyleNone fluidList noPadOrMargin productList"></ul>
+		<ul class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
 	</div>
 </div>
 
@@ -591,7 +591,17 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults" class="loadingBG searchResultsProduct ">
+<li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink">
+	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
+		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
+		
+		<div class="prodInfo highlightBG_1_alpha">
+			<h6 class="prodName" data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='60'; apply --append;}};"></h6>
+
+			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD';  format --prepend='<span>Our Price: </span>'; apply --append;}};"></h5>
+		</div>
+	</a>
+	<!--
 	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
 		<div class="prodThumbContainer">
 		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
@@ -603,6 +613,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		
 	</div>
 	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
+	-->
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
