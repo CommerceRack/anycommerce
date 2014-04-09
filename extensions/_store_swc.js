@@ -195,6 +195,21 @@ var store_swc = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			fetchTemplateForPage : function(navcat){
+				var r = false;
+				dump('HERE');
+				dump(navcat);
+				dump('HERE');
+				dump(navcat.indexOf('.aa.'));
+				if(_app.ext.store_swc.pages[navcat]){
+					r = _app.ext.store_swc.pages[navcat];
+					}
+				else if(navcat.indexOf('.aa.')==0){
+					r = 'categoryTemplateHTML';
+					}
+				
+				return r;
+				},
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
 				},
