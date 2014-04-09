@@ -88,6 +88,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 .productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.33em;}
 .productListItem .price > span {color:white; font-size.75em;}
 
+.productListItem.blockLink { padding-bottom: 66px;}
+.productListItem .prodInfo {height: 60px; padding: 3px 0px;}
+
 .blockLink img {width:100%;}
 
 .fieldCamPage iframe,

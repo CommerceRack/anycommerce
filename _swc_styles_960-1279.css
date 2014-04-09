@@ -26,8 +26,6 @@
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px;}
 .blockLink, li.blockLink {width: 19%; margin: .3%;}
-.productListItem.blockLink { padding-bottom: 40px;}
-.productListItem .prodInfo {height: 60px; padding: .2em 0em;}
 
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
 .productPage .mfgLogoContainer img {

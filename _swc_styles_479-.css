@@ -17,9 +17,7 @@
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px; max-width: 100%;}
 .blockLink, li.blockLink {width: 32%; margin: .4%;}
-.productListItem.blockLink { padding-bottom: 40px;}
-
-.productListItem .prodInfo {height: 60px; padding: .2em 0em; font-size: .9em;}
+.productListItem .prodInfo {font-size: .9em;}
 .productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
 
 .categoryTemplate .catName {padding: .5em 0em;}
