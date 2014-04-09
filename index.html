@@ -480,8 +480,62 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 </div>
 
-<div id="affiliatesTemplate"></div>
-<div id="inquiryTemplate"></div>
+<div id="affiliatesTemplate">
+	<div class="affiliate_category">
+		<div class="affliate_banner">
+			<img width="760" height="100" border="0" alt="CubWorld.com Affiliate Program" src="img/categoryPages/affiliates/affiliate_banner.jpg" id="TOP_SIDE1_img">
+		</div>
+		<div class="text_desc">
+			<h2>Why Affiliate with SportsWorldChicago.com?</h2>
+			SportsWorld has the latest and greatest Chicago Cubs, Wrigley Field and Chicago Bears merchandise and apparel. With one of the largest selections in Wrigleyville, we are located at the corner of Clark and Addison Streets, across from the front gate at Wrigley Field. Our brick and mortar store is known as Sports World.
+			<div class="signup alignCenter">
+				<a href="http://www.pepperjamnetwork.com/affiliate/registration.php?refid=109945" title="CubWorld SignUp" target="_blank">
+					<img width="180" height="57" border="0" alt="CubWorld SignUp" src="img/categoryPages/affiliates/cw_btn_signmeup_180x57.jpg" >
+				</a>
+			</div>
+		</div>
+		<div class="text_desc">
+			<h2>Applying is simple!</h2>
+			1. Read the Affiliate Agreement     2. Fill out the easy Online Application      3. Get Approved     4. Get Links and Start Earning Today!
+			<br>
+			For questions or feedback e-mail us at 
+			<a href="mailto:CustomerService@SportsWorldChicago.com" title="CustomerService@SportsWorldChicago.com" class="wikilink wikilink_url">CustomerService@SportsWorldChicago.com</a>.
+			We can also be easily contacted at 888-4-SportsWorld.
+		</div>
+		<div class="box_desc">
+			<h2>Earn 10% Commissions</h2>
+			As an affiliate of SportsWorld, you can earn 10% commission on sales generated from your site. Let us do all the work - ordering products, fulfilling orders and handling customer inquiries. You just concentrate on growing your Web site and earning commissions!
+		</div>
+		<div class="box_desc">
+			<h2>Track &amp; Report your Sports World Commissions</h2>
+			SportsWorld has joined forces with Pepperjam Affiliate Program to provide you with dependable third party tracking, customized reporting and monthly commission checks. SportsWorld offers search capabilities, outstanding customer service and more.
+		</div>
+		<div class="box_desc">
+			<h2>Get Paid Quickly</h2>
+			With SportsWorld's affiliate network you will be paid on a monthly basis provided that the total commission due to you at the end of each calendar month is equal to or greater than $20. Commissions less than $20 will be carried into the next month until you reach $20.
+		</div>
+			
+	</div>
+</div>
+<div id="inquiryTemplate">
+	<form class="floatRight" action="#" onSubmit="return false;">
+		<fieldset class="marginTop">
+			<legend>Contact Us for a Player Specific Product</legend>
+			<div class="appMessaging"></div>
+			<div><label for='contactFormSubject'>Player Name: </label><input type='text' name='playername' /></div>
+			<div><label for='contactFormSubject'>Team: </label><input type='text' name='team' /></div>
+			<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' /></div>
+			<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required'></textarea></div>
+			
+			
+			<div class='alignRight'>
+				<button onClick="app.ext.cubworld.a.sendInquiry($(this).closest('form'));" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
+					<span class="ui-button-text">Send Message</span>
+				</button>
+			</div>
+		</fieldset>
+	</form>
+</div>
 <div id="rewardsTemplate"></div>
 <div id="contestTemplate"></div>
 

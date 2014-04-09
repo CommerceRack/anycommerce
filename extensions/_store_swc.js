@@ -63,6 +63,18 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
 					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
 					}});
+				_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
+					showContent('static',{'templateID':'affiliatesTemplate'})
+					}});
+				_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
+					showContent('static',{'templateID':'inquiryTemplate'})
+					}});
+				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
+					showContent('static',{'templateID':'rewardsTemplate'})
+					}});
+				_app.router.appendHash({'type':'exact','route':'contest/','callback':function(routeObj){
+					showContent('static',{'templateID':'contestTemplate'})
+					}});
 				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 					if(_app.ext.store_swc.filterData[routeObj.params.id]){
 						routeObj.params.templateID = "filteredSearchTemplate";
