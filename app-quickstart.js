@@ -340,10 +340,10 @@ document.write = function(v){
 
 //cat page handling.
 				if(tagObj.navcat)	{
-//					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
+					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
 					tagObj.dataset = {};
 					//if no %page vars were requested, this datapointer won't be set and this would error.
-					if(_app.u.thisNestedExists("data.appPageGet|"+tagObj.navcat+".%page",_app))	{
+					if(_app.data["appPageGet|"+tagObj.navcat]['%page'])	{
 						tagObj.dataset = {'%page' : _app.data['appPageGet|'+tagObj.navcat]['%page']};
 						}
 					//deep extend so any non-duplicates in %page are preserved.
@@ -2708,6 +2708,7 @@ else if(tagObj.navcat)	{
 	var pageAttributes = new Array(), pageObj = (_app.u.thisNestedExists("data.appPageGet|"+tagObj.navcat+".%page",_app)) ? _app.data['appPageGet|'+tagObj.navcat]['%page'] : {}; 
 	
 	for(var i = 0, L = bindArr.length; i < L; i += 1)	{
+		dump(bindArr[i]);
 		if(bindArr[i].indexOf('%page') == 0 && (!pageObj[bindArr[i]] || !pageObj[bindArr[i]] === null))	{ //a null value would mean the data was requested already but isn't set.
 			pageAttributes.push(bindArr[i].substring(6)); //api is sent an array w/out %page. (ex: %page.description is set as description)
 			}
