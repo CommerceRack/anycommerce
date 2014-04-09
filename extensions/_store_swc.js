@@ -197,10 +197,6 @@ var store_swc = function(_app) {
 		u : {
 			fetchTemplateForPage : function(navcat){
 				var r = false;
-				dump('HERE');
-				dump(navcat);
-				dump('HERE');
-				dump(navcat.indexOf('.aa.'));
 				if(_app.ext.store_swc.pages[navcat]){
 					r = _app.ext.store_swc.pages[navcat];
 					}
