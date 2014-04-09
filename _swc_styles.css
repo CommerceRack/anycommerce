@@ -48,6 +48,7 @@ a.redText{color:#7e0000}
 #footerMiddle .displayTableCell, #footerLeft .displayTableCell {padding: 4px 0px; font-size:.9em;}
 
 #footerRight .displayTableCell {width: 16.66%}
+#footerRight .socialIcons img{width: 100%; max-width:33px;}
 #footerRight form {padding: 20px 0px;}
 
 .footerColumn h3 { letter-spacing:6px; font-size: .8em; padding: 4px 0px;}

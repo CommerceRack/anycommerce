@@ -4,20 +4,24 @@
 	max-width:480px;
 	margin: auto;
 }
-#appView {padding-top: 70px;}
+#appView {
+	padding-top: 70px;
+	padding-bottom: 176px;
+}
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}
 #nav {font-size: .6em; padding: 5px 0px;}
+#footer{font-size:.8em}
 #footer > div{position:relative; height:136px;}
 .footerColumn {
 	position:absolute;
-	width:128px;
+	width:150px;
 }
 
 #footerLeft{left:0px;}
 #footerRight{right:0px;}
-#footerMiddle{left: 50%; margin-left:-64px;}
+#footerMiddle{left: 50%; margin-left:-75px;}
 
 .homepageBanner {height:322px;}
 .homepageBanner .bannerImg{line-height:322px; max-width: 100%;}
