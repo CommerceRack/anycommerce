@@ -42,7 +42,27 @@ a.redText{color:#7e0000}
 #mininav a{color:black;}
 #search input{ border-radius:3px; border: 1px solid #b3b3b3;}
 
-#footer {color:white; padding: 20px 0px;}
+#footer {
+	color:white; 
+	padding: 20px 0px;
+	position:fixed;
+	left:0px;
+	right:0px;
+	z-index:100;
+}
+#toggleFooterBtn{
+	height: 40px;
+	width: 40px;
+	position:absolute;
+	right:0px;
+	top:-40px;
+	border-left: 1px solid white;
+	border-top: 1px solid white;
+	box-shadow: -2px -2px 6px rgba(64,64,64,.5);
+}
+#footer{transition: bottom 1s;}
+#appView.showFooter #footer {bottom:0px;}
+
 #footer a {color:white; text-decoration: none;}
 
 #footerMiddle .displayTableCell, #footerLeft .displayTableCell {padding: 4px 0px; font-size:.9em;}

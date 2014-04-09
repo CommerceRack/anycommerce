@@ -4,7 +4,9 @@
 	max-width:320px;
 	margin: auto;
 }
-#appView {padding-top: 30px;}
+#appView {padding-top: 30px;padding-bottom:40px;}
+#appView.showFooter {padding-bottom: 402px;}
+#appView #footer {bottom:-362px; font-size:16px;}
 
 #logo img {
 	height: 30px;

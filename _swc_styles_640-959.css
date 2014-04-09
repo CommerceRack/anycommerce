@@ -6,8 +6,9 @@
 }
 #appView {
 	padding-top: 74px;
-	padding-bottom: 176px;
-}
+	padding-bottom:40px;}
+#appView.showFooter {padding-bottom: 216px;}
+#appView #footer {bottom:-176px;}
 
 #livechat {margin-left: 42px;}
 #livechat img {width:115px; height:42px;}
