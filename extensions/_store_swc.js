@@ -152,9 +152,10 @@ var store_swc = function(_app) {
 					$tag.attr('data-filter-index',args.index);
 					for(var i in list){
 						var o = list[i];
-						var $t = $('<div></div>');
+						var $t = $('<div data-filter="inputContainer"></div>');
 						$t.append('<input type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />');
 						$t.append('<label>'+o.p+'</label>');
+						$t.append(' <span data-filter="count"></span>');
 						if(o.hidden){$t.addClass('displayNone');}
 						$tag.append($t);
 						}
@@ -230,23 +231,52 @@ var store_swc = function(_app) {
 						"and" : [filterBase]
 						}
 					}
+				var countFilters = [];
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
+					var cf = [];
+					$('[data-filter=count]', $(this)).empty();
 					$('input', $(this)).each(function(){
+						var f = {"term" : {}};
+						f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
 						if($(this).is(":checked")){
-							var f = {"term" : {}};
-							f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
+							countFilters.push({"query":f, "$input":$(this)});
 							filter.or.push(f);
 							}
+						cf.push({"query":f, "$input":$(this)});
 						});
 					if(filter.or.length > 0){
 						elasticsearch.filter.and.push(filter);
 						}
+					else {
+						countFilters = countFilters.concat(cf);
+						}
 					});
-					
+				dump(countFilters);
 				var es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
 				es.size = 30;
 				$resultsContainer.empty();
+				for(var i in countFilters){
+					var q = {
+						"query":{
+							"filtered":{
+								"query":countFilters[i].query,
+								"filter":elasticsearch.filter
+								}
+							}
+						}
+					var $input = countFilters[i].$input;
+					
+					var countES = _app.ext.store_search.u.buildElasticRaw(q);
+					countES.mode = 'elastic-count';
+					delete countES.size;
+					_app.ext.store_search.calls.appPublicSearch.init(countES, {'callback':function(rd){
+						dump(rd);
+						$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
+						_app.model.destroy(rd.datapointer);
+						}, 'datapointer':'appFilteredCount|'+i, "$input":$input});
+				
+					}
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,es,1);
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleInfiniteElasticResults', 'datapointer':'appFilteredSearch','extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$resultsContainer});
 				_app.model.dispatchThis();
