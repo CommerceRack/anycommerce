@@ -2631,6 +2631,9 @@ buyer to 'take with them' as they move between  pages.
 					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
 						infoObj.templateID = 'homepageTemplate'
 						}
+					else if(_app.ext.store_swc.pages[catSafeID]){
+						infoObj.templateID = _app.ext.store_swc.pages[catSafeID]
+						}
 					else	{
 						infoObj.templateID = 'categoryTemplate'
 						}

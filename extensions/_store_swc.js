@@ -23,7 +23,9 @@
 var store_swc = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
-
+	pages : {
+		".aa" : "ticketsTemplate"
+		},
 	vars : {
 		templates : [
 			"filteredSearchTemplate",
