@@ -77,7 +77,7 @@ a.redText{color:#7e0000}
 #footerLeft .displayTableCell {width:50%;}
 #footerMiddle .displayTableCell {width:33.33%;}
 
-.homepageBanner{display: block; text-decoration: none; border:none; width: 100%; background:url(images/homepage/banner_bg_1280x320.jpg) no-repeat center center; position:relative;}
+.homepageBanner{display: block; text-decoration: none; border:none; width: 100%; background:url(images/homepage/banner_bg_1280x322.jpg) no-repeat center center; position:relative;}
 .homepageBanner .bannerImg{display:inline-block; vertical-align:middle; max-width: 60%; height:100%;}
 .homepageBanner img{vertical-align:middle; max-width: 100%;}
 a.blockLink, li.blockLink {display: inline-block;}
