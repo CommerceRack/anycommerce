@@ -45,7 +45,10 @@ a.redText{color:#7e0000}
 #footer {color:white; padding: 20px 0px;}
 #footer a {color:white; text-decoration: none;}
 
-#footer .displayTableCell {padding: 4px 0px; font-size:.9em;}
+#footerMiddle .displayTableCell, #footerLeft .displayTableCell {padding: 4px 0px; font-size:.9em;}
+
+#footerRight .displayTableCell {width: 16.66%}
+#footerRight form {padding: 20px 0px;}
 
 .footerColumn h3 { letter-spacing:6px; font-size: .8em; padding: 4px 0px;}
 .footerBottomBorder .displayTableCell{border-bottom:1px solid #2f483d;}
