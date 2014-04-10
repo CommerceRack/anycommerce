@@ -1644,12 +1644,13 @@ URI PARAM
 	
 //turn a set of key value pairs (a=b&c=d) into an object. pass location.search.substring(1); for URI params or location.hash.substring(1) for hash based params
 			kvp2Array : function(s)	{
-				if(s.charAt(0) == '&')	{s = s.substring(1);} //regex below doesn't like the first char being an &.
-				var r = false;
-				if(s && s.indexOf('=') > -1)	{
-					r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
+				if(s)	{
+					if(s.charAt(0) == '&')	{s = s.substring(1);} //regex below doesn't like the first char being an &.
+					var r = false;
+					if(s.indexOf('=') > -1)	{
+						r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
+						}
 					}
-				else	{}
 				return r;
 				}, //kvp2Array
 		
