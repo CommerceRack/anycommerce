@@ -59,7 +59,7 @@ var admin_marketplace = function(_app) {
 		handleMacroUpdate : {
 			onSuccess : function(_rtag,macroResponses)	{
 				_app.u.dump("BEGIN admin_marketplace.callbacks.handleMacroUpdate.onSuccess");
-				_app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
+//				_app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
 				var $target;
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj === 'object')	{
 					$target = _rtag.jqObj

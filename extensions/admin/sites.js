@@ -390,7 +390,7 @@ used, but not pre-loaded.
 					_app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 //This will update the hosts tbody.
 					if($domainEditor instanceof jQuery)	{
-						$domainEditor.empty().showLoading({'message':'Updating host and refreshing content...'});
+						$domainEditor.empty().showLoading({'message':'Updating '+sfo.HOSTNAME+'.'+sfo.DOMAINNAME+' and refreshing content...'});
 						if($domainEditor.data('isTLC'))	{
 							$domainEditor.tlc('destroy'); //ensures fresh data is used.
 							}
