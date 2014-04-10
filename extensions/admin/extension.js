@@ -3670,7 +3670,12 @@ dataAttribs -> an object that will be set as data- on the panel.
 // ** 201402 -> the menu, when opening a dialog, was not closing
 				$menu.on('click','a, button',function(){$menu.hide();});
 				$( document ).one( "click", function() {$menu.hide();});
-				$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200,'top':25,'right':0}).show();
+				$menu.css({'position':'absolute','width':($menu.data('width') || 200),'z-index':200}).show();
+				$menu.position({
+					my: "left top",
+					at: "left bottom",
+					of: $ele
+					});
 				return false;
 				},
 			

@@ -462,7 +462,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case 'remove':
 				if(argObj['class'])	{$tag.removeClass(argObj['class'])}
 				else if(argObj.tag)	{
-					globals.tags[argObj.tag].remove();
+					$tag.remove();
+//					globals.tags[argObj.tag].remove();
 					}
 				else	{
 					dump("For apply, the verb was set to remove, but neither a tag or class were defined. argObj follows:",'warn'); dump(argObj);
@@ -673,7 +674,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		}
 
 	this.set_path = function(argObj,globals,dataset)	{
-		dataset[argObj.path] = globals.binds[argObj.bind];
+		globals.binds[argObj.bind] = dataset[argObj.path];
 		return globals.binds[argObj.bind]; //no manipulation of the data occured so return unmolested var. 
 		}
 
@@ -759,6 +760,7 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
+//		dump(" -> cmd: "); dump(cmd,'dir'); dump(dataset,'dir');
 		var argObj = this.args2obj(cmd.args,globals);
 //SANITY -> dataset is the name of the param passed in.
 		dataset[cmd.Set.value] = argObj.dataset;
@@ -795,19 +797,20 @@ returning a 'false' here will exit the statement loop.
 	this.handleType_FOREACH = function(cmd,globals,dataset)	{
 		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
 //		dump(" -> into FOREACH"); dump(cmd.Members,'debug');
+		var newGlobal;
 		for(var index in globals.binds[cmd.Members.value])	{
-			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
-			newGlobals.binds = {};
-			newGlobals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
-			newGlobals.focusBind = cmd.Set.value;
+//			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
+			globals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
+			globals.focusBind = cmd.Set.value;
 //			dump(" -> index: "+index); dump(newGlobals);
-			this.executeCommands(cmd.Loop.statements,newGlobals,globals.binds[cmd.Members.value][index]);
+			$.extend(globals,this.executeCommands(cmd.Loop.statements,globals,globals.binds[cmd.Members.value][index]));
 			}
 		return cmd.Set.value;
 		}
 
 	this.handleType_SET = function(cmd,globals,dataset)	{
-		globals.binds[cmd.Set.value] = cmd.Src.value; //have to set this here so that the set_ functions have something to reference.
+		// a set is essentially a copy.  so we set the new bind to the value.  Then, the args are processed which may impact the final value. 
+		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? cmd.Src.value : globals.binds[cmd.Src.value]; //have to set this here so that the set_ functions have something to reference.
 		globals.focusBind = cmd.Set.value;
 		if(cmd.args)	{
 			var argObj = this.args2obj(cmd.args,globals);
@@ -1126,6 +1129,7 @@ returning a 'false' here will exit the statement loop.
 				dump(commands);
 				}
 			}
+		return theseGlobals;
 		}
 	
 //This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.
