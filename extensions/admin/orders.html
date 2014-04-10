@@ -328,10 +328,17 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 </div>
 
 
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton positionRelative"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
 <!--	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='TEST'>TEST</button> -->
 	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='INVOICE'>Print Invoice</button>
 	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='PACKSLIP'>Packing Slip</button>
+
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin|showMenu">Print Preview</button>
+	<menu class='displayNone'>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Invoice</a></li>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Packing Slip</a></li>
+	</menu>
+	
 
 	<!-- the appearance of the following customer buttons will be shown/hidden based on whether or not a valid customer record is already assigned to the order -->
 	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerEdit' data-app-role='orderEditorCustomerEditButton'>Edit Customer</button>

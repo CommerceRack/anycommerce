@@ -260,7 +260,20 @@ else	{
 						}
 					
 					if(printables)	{
-						_app.u.printByjqObj($printme); //commented out for testin.
+						if(_rtag.mode == 'preview')	{
+							var $D = _app.ext.admin.i.dialogCreate({
+								title : "Print Preview",
+								'width' : '90%',
+								'height' : $(document.body).outerHeight() - 100,
+								anycontent : false, //the dialogCreate params are passed into anycontent
+								handleAppEvents : false //defaults to true
+								});
+							$printme.appendTo($D);
+							$D.dialog('open');
+							}
+						else	{
+							_app.u.printByjqObj($printme); //commented out for testin.
+							}
 //						$(document.body).append($printme);
 						}
 					}
@@ -1612,7 +1625,7 @@ handleOrder(orders[i]);
 										"datapointer":"adminBlastMsgDetail|"+prts[i]+"|PRINTABLE."+vars.printable
 										}},"mutable");
 									}
-								_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":"printOrders","extension":"admin_orders","orders":okOrders,"printable":vars.printable,"jqObj":$dialog}},"mutable");
+								_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":"printOrders","extension":"admin_orders","orders":okOrders,"printable":vars.printable,"mode" : (vars.mode ? vars.mode : 'print'),"jqObj":$dialog}},"mutable");
 								_app.model.dispatchThis("mutable");
 								}
 							else	{
@@ -1918,14 +1931,15 @@ handleOrder(orders[i]);
 
 
 			orderPrint : function($ele,p)	{
-
+				p.preventDefault();
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID && $ele.data('printable'))	{
-					_app.ext.admin_orders.u.printOrders([orderID],{'printable':$ele.data('printable')});
+					_app.ext.admin_orders.u.printOrders([orderID],{'printable':$ele.data('printable'),'mode':$ele.data('mode')});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-printable ["+$ele.data('printable')+"] not set on trigger element.","gMessage":true});
 					}
+				return false;
 				},
 /*
 //////////////////   END delegated events \\\\\\\\\\\\\\\\\\
