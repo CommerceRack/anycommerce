@@ -810,7 +810,7 @@ returning a 'false' here will exit the statement loop.
 			globals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
 			globals.focusBind = cmd.Set.value;
 //			dump(" -> index: "+index); dump(newGlobals);
-			$.extend(globals,this.executeCommands(cmd.Loop.statements,globals,globals.binds[cmd.Members.value][index]));
+			this.executeCommands(cmd.Loop.statements,globals,globals.binds[cmd.Members.value][index]);
 			}
 		return cmd.Set.value;
 		}
@@ -1106,7 +1106,7 @@ returning a 'false' here will exit the statement loop.
 //		dump(" -> running tlcInstance.executeCommands"); //dump(commands);
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
-		var theseGlobals = $.extend({
+		var globals = $.extend({
 			binds : {}, //an object of all the binds set in args.
 			tags : {
 				'$tag' : ''
@@ -1118,7 +1118,7 @@ returning a 'false' here will exit the statement loop.
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 //			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
-				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
+				if(this.handleType_command(commands[i],globals,dataset))	{} //continue
 				else	{
 					if($._app.vars.debug == 'tlc')	{
 						dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
@@ -1128,7 +1128,7 @@ returning a 'false' here will exit the statement loop.
 					}
 				}
 			else if(typeof this['handleType_'+commands[i].type] === 'function')	{
-				this['handleType_'+commands[i].type](commands[i],theseGlobals,dataset);
+				this['handleType_'+commands[i].type](commands[i],globals,dataset);
 				}
 			else	{
 				//unrecognized type.
@@ -1136,7 +1136,7 @@ returning a 'false' here will exit the statement loop.
 				dump(commands);
 				}
 			}
-		return theseGlobals;
+		return globals;
 		}
 	
 //This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.
