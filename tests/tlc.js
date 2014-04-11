@@ -1,7 +1,6 @@
 function loadGrammar()	{
 	console.log("Attempt to fetch the grammar file");
-
-	$.ajax({
+	return $.ajax({
 		'url' : 'resources/pegjs-grammar-20140203.pegjs', //append release to eliminate caching on new releases.
 		'dataType' : 'html',
 		'error' : function()	{
@@ -27,6 +26,9 @@ function loadGrammar()	{
 			}
 		});
 	}
+
+
+
 //dump is used in tlc 
 function dump(v)	{
 	if(typeof console != 'undefined')	{console.log(v)}

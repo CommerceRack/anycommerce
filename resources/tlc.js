@@ -187,12 +187,17 @@ var tlc = function()	{
 					}
 	
 				if(commands && !$.isEmptyObject(commands))	{
-					_self.executeCommands(commands,{
+					var dataAfterTranslation = _self.executeCommands(commands,{
 						tags : {
 							'$tag' : $tag
 							}, //an object of tags.
 						focusTag : '$tag' //the pointer to the tag that is currently in focus.
 						},dataset);
+					if($._app.vars.debug == 'tlc')	{
+						dump(" ------> this is what the dataset looks like at the very end <------ ");
+						console.dir(dataAfterTranslation);
+						}
+					
 					}
 				else	{
 					dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
@@ -581,10 +586,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "or":
 				if(p1 != null){r = true;}; break; // ### FUTURE -> not done.
 */			}
-		if($._app.vars.debug == 'tlc')	{
+/*		if($._app.vars.debug == 'tlc')	{
 			dump(" -> op: "+op+" and p1 = "+p1+" and p2 = "+p2+" and r = "+r);
 			}
-		return r;
+*/		return r;
 		}
 
 
@@ -796,7 +801,9 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_FOREACH = function(cmd,globals,dataset)	{
 		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
-//		dump(" -> into FOREACH"); dump(cmd.Members,'debug');
+		if($._app.vars.debug == 'tlc')	{
+			dump(" -> into FOREACH. members: "); dump(cmd.Members,'debug');
+			}
 		var newGlobal;
 		for(var index in globals.binds[cmd.Members.value])	{
 //			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
