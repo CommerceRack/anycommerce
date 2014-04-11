@@ -1230,9 +1230,13 @@ when an event type is changed, all the event types are dropped, then re-added.
 				
 					_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
 //nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
-// ** 201401 -> the new callback for navigateTo on the configMacro call will destroy/re-obtain the shipmethods.
-//					_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
-//					_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
+//the new callback for navigateTo on the configMacro call will destroy/re-obtain the shipmethods for handling and insurance.
+					if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{}
+					else	{
+						_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+						_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
+						
+						}
 				
 				//	_app.u.dump(" -> macros"); _app.u.dump(macros);
 					_app.model.dispatchThis('immutable');
