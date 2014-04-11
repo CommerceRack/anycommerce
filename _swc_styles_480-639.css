@@ -42,3 +42,30 @@
 
 .filterList { width: 26%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 70%;}
+
+.productListItem .prodListTagsContainer {
+	height: 16px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 99;
+}
+.productListItem .prodListTagsContainer {
+	bottom: 66px;
+}
+.productListItem .prodListTagsContainer span{
+	display: inline-block;
+	height: 16px;
+	background: url(images/cubworld_smalltags.png) no-repeat;
+}
+.productListItem .prodListTagsContainer .is_fresh{background-position:0px 0px; width:51px;}
+.productListItem .prodListTagsContainer .is_bestseller{background-position:0px -16px; width:49px;}
+.productListItem .prodListTagsContainer .is_user1{background-position:0px -32px; width:61px;}
+.productListItem .prodListTagsContainer .is_sale{background-position:0px -48px; width:61px;}
+.productListItem .prodListTagsContainer .is_user3,
+.productListItem .prodListTagsContainer .is_specialorder{background-position:0px -64px; width:71px;}
+.productListItem .prodListTagsContainer .is_preorder{background-position:0px -80px; width:83px;}
+.productListItem .prodListTagsContainer .is_discontinued,
+.productListItem .prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
+.productListItem .prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}

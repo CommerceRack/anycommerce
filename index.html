@@ -658,6 +658,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 	-->
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='60';apply --append;}};"></h6>
@@ -816,13 +817,10 @@ this will likely become more flexible in the future. ###
 <div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
 	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
 	
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; store_swc#addtagspans;"></div>
-		
 	<h1 class="dosis productTitle marginBottom" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 	
 	<div class="productImages">
 		<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
-			<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer"></div>
 			<!-- 
 			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
 			-->
@@ -835,7 +833,10 @@ this will likely become more flexible in the future. ###
 					format --prepend='prodPage_';
 					apply --attrib='data-lightbox';
 				}};" class="prodThumb" href="#">
-				<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=768 --h=768 --b='ffffff'; apply --attrib='src'}};" src="blank.gif" class="prodBigImage" alt="">
+				<div class="positionRelative">
+					<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
+					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=768 --h=768 --b='ffffff'; apply --attrib='src'}};" src="blank.gif" class="prodBigImage" alt="">
+				</div>
 			</a>
 		</div>
 

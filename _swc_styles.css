@@ -14,6 +14,8 @@ a.redText{color:#7e0000}
 .displayTableRow {display: table-row;}
 .displayTableCell {display: table-cell;}
 
+.positionRelative{position:relative}
+
 .fillWidth {width:100%;}
 
 .clear{clear:both;}
@@ -128,24 +130,28 @@ a.blockLink, li.blockLink {display: inline-block;}
 .sportWidget .moreteams ul { height: 300px; overflow-y:auto;}
 
 .prodListTagsContainer {
-	height: 16px;
+	height: 26px;
 	overflow: hidden;
 	position: absolute;
 	bottom: 0px;
 	left: 0px;
 	z-index: 99;
 }
+.productListItem .prodListTagsContainer {
+	bottom: 66px;
+}
 .prodListTagsContainer span{
 	display: inline-block;
-	height: 16px;
-	background: url(images/cubworld_smalltags.png) no-repeat;
+	height: 26px;
+	background: url(images/cubworld_bigtags.png) no-repeat;
 }
-.prodListTagsContainer .is_fresh{background-position:0px 0px; width:51px;}
-.prodListTagsContainer .is_bestseller{background-position:0px -16px; width:49px;}
-.prodListTagsContainer .is_user1{background-position:0px -32px; width:61px;}
-.prodListTagsContainer .is_sale{background-position:0px -48px; width:61px;}
-.prodListTagsContainer .is_specialorder{background-position:0px -64px; width:71px;}
-.prodListTagsContainer .is_preorder{background-position:0px -80px; width:83px;}
-.prodListTagsContainer .is_discontinued{background-position:0px -96px; width: 78px;}
-.prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
-.prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
+.prodListTagsContainer .is_fresh{background-position:0px 0px; width:83px;}
+.prodListTagsContainer .is_bestseller{background-position:0px -26px; width:80px;}
+.prodListTagsContainer .is_user1{background-position:0px -52px; width:99px;}
+.prodListTagsContainer .is_sale{background-position:0px -78px; width:99px;}
+.prodListTagsContainer .is_specialorder,
+.prodListTagsContainer .is_user3{background-position:0px -104px; width:116px;}
+.prodListTagsContainer .is_preorder{background-position:0px -130px; width:135px;}
+.prodListTagsContainer .is_discontinued,
+.prodListTagsContainer .is_outofstock{background-position:0px -156px; width: 128px;}
+.prodListTagsContainer .is_shipfree{background-position:0px -182px; width: 176px;}
