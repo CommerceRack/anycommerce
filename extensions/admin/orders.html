@@ -142,11 +142,6 @@
 						</ul>
 						</li>
 
-						<li><a href='#'>Send email</a>
-						<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;" data-app-role='bulkEmailMessagesList'>
-						</ul>
-						</li>
-	
 						<li><a href='#PMNT|FLAGASPAID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Flag as paid</a></li>
 	
 					</ul>
@@ -313,7 +308,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div data-bind="var:order(cart/ip_address);format:text; pretext: IP Address: ;"></div>
 		<div data-bind="var:order(our/order_ts); format:epoch2mdy; showtime:1;"></div>
 		<div data-bind='var: order(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
-		<div><b data-bind='var: order(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+		<div><b data-bind='var: order(sum/balance_due_total); format:orderbalance; hideZero:false; currencySign: $; extension:cco;'></b></div>
 		<h6 data-bind='var: order(want/po_number); format:text; pretext:PO #: ;'></h6>
 	</hgroup>
 
@@ -333,9 +328,17 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 </div>
 
 
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice" data-loadstemplate='invoiceTemplate'>Print Invoice</button>
-	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip" data-loadstemplate='packslipTemplate'>Packing Slip</button>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton positionRelative"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+<!--	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='TEST'>TEST</button> -->
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='INVOICE'>Print Invoice</button>
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='PACKSLIP'>Packing Slip</button>
+
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin|showMenu">Print Preview</button>
+	<menu class='displayNone'>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Invoice</a></li>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Packing Slip</a></li>
+	</menu>
+	
 
 	<!-- the appearance of the following customer buttons will be shown/hidden based on whether or not a valid customer record is already assigned to the order -->
 	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerEdit' data-app-role='orderEditorCustomerEditButton'>Edit Customer</button>
@@ -343,11 +346,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 	<button class='floatLeft hide4Native' data-app-event="admin_customer|appAdminTicketCreateShow" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Create CRM Ticket</button>
 	<div class='floatLeft hide4Native'>
-	<button data-app-event="admin_orders|orderEmailSend">Send Email</button>
-	<button data-app-event="admin_orders|orderEmailShowMessageList">Message List</button>
+	<button data-app-event="admin_orders|orderBlastSend">Send Email</button>
 	</div>
-	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;" class='orderMailMenuList'>
-	</ul>
 	<button class='floatRight' data-app-event="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 	<button class='floatRight' data-app-event="admin_orders|orderUpdateCancel">Back to Order List</button>
 </div>
@@ -397,7 +397,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 					<span data-bind='var: cart(sum/bnd_total); format:money; hideZero:true; currencySign: $;'></span>
 				</div>
 				
-				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+				<div><b data-bind='var: cart(sum/balance_due_total); format:orderbalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
 			</fieldset>
 			<div data-bind='var:order(our/orderid); format:assignAttribute; attribute:data-orderid;'>
 			<table class='orderContentsTable' data-app-role='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
@@ -416,7 +416,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 
-	<div data-app-role='orderNotes'>
+	<div data-app-role='orderNotes'  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
 	<h2>Notes</h2>
 	<section class='notes' data-app-role='orderUpdateNotesContainer'>
 	
@@ -456,7 +456,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <form>
 	<fieldset>
 		<legend>Add Payment</legend>
-		<div class='labelsAsBreaks' data-bind='useParentData:true; format:fetchAndDisplayPayMethods; extension: admin_orders;'></div>
+		<div data-bind='useParentData:true; format:fetchAndDisplayPayMethods; extension: admin_orders;'></div>
 		<div><label>Amount: <input type='number' class='smallInput' size='7' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
 		<div><label>Note: <input type='text' name='note' /></label></div>
 		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
@@ -494,8 +494,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<h3>Add New Package</h3>
 
 		<form>
-		<fieldset>
-			<label><span>Carrier: </span> <select  name="carrier">
+		<fieldset class='labelsAsBreaks alignedLabels'>
+			<label><span>Carrier </span> <select  name="carrier">
 				<option value="UPS">UPS</option>
 				<option value="USPS">USPS</option>
 				<option value="FEDX">FEDEX</option>
@@ -504,11 +504,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 			</select>
 			</label>
 			
-			<label><span>Tracking #: </span><input name="value" type="text" size='15' /></label>
+			<label><span>Tracking # </span> <input name="value" type="text" size='15' /></label>
 			
-			<label><span>Cost: </span> <input size="5" name="cost" type='number'  class='smallInput' step='0.01' min='0' /></label>
-			<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" class='smallInput' /></label>
-			<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
+			<label><span>Cost </span> <input size="5" name="cost" type='number'  class='smallInput' step='0.01' min='0' /></label>
+			<label><span>Actual Weight </span> <input  size="5" name="actualwt" type="text" class='smallInput' /></label>
+			<label><span>Notes </span> <textarea  class='fullWidth' rows="3" name="notes"></textarea></label>
 		
 			<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
 		
@@ -564,6 +564,7 @@ The following templates are used in the 'order detail' modal/view.
 	<div data-bind='format:paystatusDetailed; extension:admin_orders; useParentData:true;'></div>
 	<div data-bind='var: payment(note); format:text; pretext:note: ;'></div>
 	<div data-bind='var: payment(luser); format:text; pretext:user: ;'></div>
+	<div data-bind="var: payment(acct); format:transactionAcctInfo; extension:admin_orders;"></div>
 	</td>
 </tr>
 </table>
@@ -599,7 +600,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span data-bind='var: order(sku); format:text; className: stid;'></span></td><!-- stid has mkt data on it. use sku -->
 	<td>
 		<div data-bind='var: order(prod_name); format:text; '></div>
-		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
 	</td>	
 
 	<td data-bind="format:orderEditQtyInput; extension:admin_orders; useParentData:true;"></td>
@@ -638,7 +639,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5></td>
 	<td>
 		<div data-bind='var: order(prod_name); format:text; '></div>
-		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
 	</td>
 	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
 	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
@@ -750,43 +751,6 @@ used in legacy compat mode (and probably full app mode as well)
 </address>
 
 
-<div id='orderEmailCustomMessageTemplate' class='orderEmailCustomMessage '>
-<form action='#'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
-<label>
-	<span>Message source:</span>
-	<select name='MSGID' data-bind="var: admin_orders(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
-		<option value='BLANK'>blank</option>
-	</select>
-</label>
-
-<label>
-	<span>Subject:</span>
-	<input type='text' name='SUBJECT' required='required' maxlength="40" />
-</label>
-
-<label>
-	<span>Message:</span>
-	<textarea name='BODY' rows='10' required='required'></textarea>
-</label>
-</fieldset>
-
-
-<fieldset class='updateSystemMessageContainer marginBottom'>
-<label><input type='checkbox' name='updateSystemMessage' disabled='disabled' />Save these changes to the message <span class='msgType'></span> for all future emails</label><!-- the .msgType is used to populate the message ID in focus. -->
-</fieldset>
-
-<button data-app-event="admin_orders|orderEmailCustomSend">send email</button>
-
-</form>
-</div>
-
-
-
-
-
-
-
 
 
 
@@ -808,10 +772,10 @@ used in legacy compat mode (and probably full app mode as well)
 	<td valign='top' width='50%' style='text-align:right'>
 <h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
 <h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
-<h4 data-bind='var:order(flow/payment_status); format:paymentStatus; extension:cco;'></h4>
+<h4 data-bind='var:order(flow/payment_status); format:paymentstatus; extension:cco;'></h4>
 <h4>
 	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
-	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:cco;"></span>
+	<span data-bind="var:order(our/orderid); format:marketplaceorderid; extension:cco;"></span>
 </h4>
 <div data-bind='var: order(our/order_ts); format:epoch2mdy; pretext:Created on: ;'></div>
 <div data-bind='var: order(flow/paid_ts); format:epoch2mdy; pretext:Paid on: ; hideZero:true;'></div>
@@ -904,7 +868,7 @@ used in legacy compat mode (and probably full app mode as well)
 	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
 	
-	<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+	<div><b data-bind='var: cart(sum/balance_due_total); format:orderbalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
 <br />
 	</td>
 </tr>
@@ -943,7 +907,7 @@ some legacy html tags to make this print friendly.
 <table>
 	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
 		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
-		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
 </td>
 		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
 		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
@@ -1033,7 +997,7 @@ This should get moved to orders when order is taken over
 	
 	<td valign='top'>
 	<div data-bind='var: product(prod_name); format:text; '></div>
-	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
 	</td>
 
 	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>

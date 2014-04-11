@@ -84,7 +84,7 @@ var magicToolBox_mzp = function(_app) {
 		renderFormats : {
 
 			magicZoomPlus : function($tag,data)	{
-				_app.u.dump('BEGIN myRIA.renderFormats.magicZoomPlus');
+				_app.u.dump('BEGIN quickstart.renderFormats.magicZoomPlus');
 				var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 				if(data.value)	{
 					var imgSrc = _app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
@@ -98,7 +98,7 @@ var magicToolBox_mzp = function(_app) {
 				},
 
 			magicThumb : function($tag,data)	{
-				_app.u.dump('BEGIN myRIA.renderFormats.magicThumb');
+				_app.u.dump('BEGIN quickstart.renderFormats.magicThumb');
 				var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 				if(data.value)	{
 					var imgSrc = _app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
@@ -116,7 +116,7 @@ var magicToolBox_mzp = function(_app) {
 // used to display product image 1 thru X where X is the last image. checks spot 1 - 50
 // product id should be used as var
 			productImages : function($tag,data)	{
-//				_app.u.dump("BEGIN myRIA.renderFormats.productImages ["+data.value+"]");
+//				_app.u.dump("BEGIN quickstart.renderFormats.productImages ["+data.value+"]");
 				var pdata = _app.data['appProductGet|'+data.value]['%attribs']; //short cut to product object in memory.
 				var imgs = ''; //all the html for all the images. appended to $tag after loop.
 				var imgName; //recycled in loop.

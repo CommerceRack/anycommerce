@@ -516,8 +516,15 @@ setTimeout(function(){
 							P.eleSelector = 'input_'+_app.u.guidGenerator();
 							strOrObj.attr('id',P.eleSelector);
 							}
+						if($image.data('media'))	{
+							//this is not the way to get the 'currently selected' to work.  P.src goes into legacy UI mode, which isn't the desired behavior.
+							//## TODO -> media is set on the image. Need to load the currently selected image into the media library header.
+//							P.src = $image.data('media');
+							}
 						}
 					else if(typeof strOrObj == 'string')	{P.src = strOrObj;}
+					else	{} //strOrObj is blank or an invalid format.
+					
 					_app.ext.admin_medialib.a.showMediaLib(P);
 					}
 				else	{
@@ -578,7 +585,8 @@ setTimeout(function(){
 //						dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						dump(" -> selector.length: "+$(_app.u.jqSelector('#',mediaData.eleSelector)).length);
 // * 201332 -> added 'edited' class on save. used in a lot of UI to count the number of updated elements and, in several cases, unlocks the save button.
-						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform');
+						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform')
+						$(correctedSelector).triggerHandler('change');
 // * 201336
 //						if($(correctedSelector).closest('form').length)	{
 //							_app.ext.admin.u.handleSaveButtonByEditedClass($(correctedSelector).closest('form'));

@@ -131,12 +131,12 @@ var partner_addthis = function(_app) {
 			// http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-sharing
 			// By default only url, title, and description are supported.
 			sharingObj = {
-				url : (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url)+ _app.ext.myRIA.u.buildRelativePath(infoObj),
+				url : (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url)+ _app.ext.quickstart.u.buildRelativePath(infoObj),
 				title : _app.ext.partner_addthis.vars.titlePrefix || "",
 				description : _app.ext.partner_addthis.vars.defaultDesc || ""
 				};
 				
-			var data = _app.ext.myRIA.u.getDataFromInfoObj(infoObj);
+			var data = _app.ext.quickstart.u.getDataFromInfoObj(infoObj);
 			switch(infoObj.pageType){
 				case "product" :
 					if(_app.ext.partner_addthis.vars.setTitle){

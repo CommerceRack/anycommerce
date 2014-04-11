@@ -269,14 +269,15 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				},
 
 			
-			orderTrackingLinks : function($tag,data)	{
-				_app.u.dump("BEGIN myRIA.renderFormats.orderTrackingLinks");
+			ordertrackinglinks : function($tag,data)	{
+//				_app.u.dump("BEGIN quickstart.renderFormats.ordertrackinglinks");
 				_app.u.dump(data.value);
 				
 				var L = data.value.length;
 				var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
 				for(var i = 0; i < L; i += 1)	{
-					o += "<li><a href='"+_app.ext.myRIA.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
+					// ### TODO -> need to get the link to quickstart out of here.
+					o += "<li><a href='"+_app.ext.quickstart.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
 					if(_app.u.isSet(data.value[i].cost))
 						o += " ("+_app.u.formatMoney(data.value[i].cost,'$',2,true)+")";
 					o += "<\/li>";
@@ -371,18 +372,7 @@ will output a newsletter form into 'parentid' using 'templateid'.
 				return numRequests;
 				},
 
-			getBuyerListsAsUL : function(datapointer)	{
 
-				var data = _app.data[datapointer]['@lists']; //shortcut
-				var L = data.length;
-				var $r = $("<ul>");
-				var $li; //recycled
-				for(var i = 0; i < L; i += 1)	{
-					$li = $("<li\/>").data("buyerlistid",data[i].id).text(data[i].id+" ("+data[i].items+" items)");
-					$li.appendTo($r);
-					}
-				return $r;
-				},
 
 /*
 The list object returned on a buyerProductListDetail is not a csv or even a string of skus, it's an array of objects, each object containing information
@@ -531,7 +521,8 @@ This is used to get add an array of skus, most likely for a product list.
 					var $editor = $("<div \/>");
 					
 					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
-					$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':{},'showLoading':false});
+//					$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':{},'showLoading':false});
+					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','verb':'template'});
 //* 201338 -> the address id should be at the bottom of the form, not the top. isn't that important or required.
 					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.

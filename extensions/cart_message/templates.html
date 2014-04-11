@@ -27,6 +27,7 @@
 </div>
 
 
+
 <table>
 <tr id='adminCartManagementRowTemplate'>
 	<td><span class='wait'></span></td>
@@ -39,7 +40,7 @@
 	<td data-bind='var:cart(value);format:assignAttribute; attribute:data-cartid;' class='alignRight'>
 	
 		<button data-text='false' data-icon-primary='ui-icon-close' class='applyButton' data-app-click='cart_message|adminCartRemoveFromSession'>Remove from Session</button>
-		<button data-text='false' data-icon-primary='ui-icon-cart' disabled='disabled' class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button>
+		<button data-text='false' data-icon-primary='ui-icon-cart' disabled='disabled' class='applyButton' data-app-click='cart_message|cartEditExec' data-app-role='cartEditButton'>Edit Cart</button>
 		<button data-text='false' data-icon-primary='ui-icon-comment' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartInteract'>Interact</button>
 	</td>
 </tr>
@@ -55,7 +56,7 @@
 		</div>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer'>
 			<textarea name='message' required='required' placeholder='send a message'></textarea>
-			<button class='applyButton' data-app-click='cart_message|chatPostExec'>Send</button>
+			<button class='applyButton' data-app-click='cart_message|chatPostExec' data-app-role='messageSubmitButton'>Send</button>
 		</fieldset>
 		<section data-app-role='messageCommands' class='messageCommandsContainer'>
 <!-- 		<button class='applyButton' data-app-click="cart_message|chatInitExec" title="">Initiate Chat</button>opens a chat dialog if an buyer is on an app 201401+ -->

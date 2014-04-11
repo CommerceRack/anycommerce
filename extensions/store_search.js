@@ -113,7 +113,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // parentID, templateID (template used on each item in the results) and datapointer.
 		handleElasticResults : {
 			onSuccess : function(_rtag)	{
-//				_app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
+				dump(" >>>> BEGIN handleElasticResults <<<<<<<<<<<<<");
 				var L = _app.data[_rtag.datapointer]['_count'];
 				
 				var $list = _rtag.list;
@@ -133,6 +133,9 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 //put items into list (most likely a ul or tbody
 						$list.append(_app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
+						if(_rtag.title)	{
+							$list.before("<h2 class='searchHeader'>"+_rtag.title+"</h2>");
+							}
 						if(_app.ext.admin)	{
 							$list.hideLoading();
 							_app.u.handleAppEvents($parent);
@@ -167,9 +170,6 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 								$pageMenu.menu();
 //								$sortMenu.menu();
 								}
-	
-							
-							
 							}
 						else	{
 							//no error gets thrown here. it is an acceptable use case to display search results w/ no multipage functionality.
@@ -180,6 +180,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handleElasticResults, $list ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
 					_app.u.dump("handleElasticResults _rtag.list: "); _app.u.dump(_rtag.list);
 					}
+
+//this gets run whether there are results or not. It is the events responsibility to make sure results were returned. 
+// That way, it can handle a no-results action.
+				$list.trigger('listcomplete');
 				}
 			}
 		}, //callbacks
@@ -195,9 +199,9 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 
 //list is the UL or whatever element type contains the list of product.
-			buildResultsHeader : function($list,datapointer)	{
+			buildResultsHeader : function($list,datapointer,vars)	{
 //				_app.u.dump("BEGIN store_search.u.buildMultipageHeader");
-				
+				vars = vars || {};
 				var $header = false, //will be a jquery object IF the necesarry data is present.
 				EQ = $list.data('elastic-query'); //Elastic Query
 				
@@ -219,7 +223,6 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				else	{
 					$list.parent.anymessage({'message':'In store_search.u.buildResultsHeader, no datapointer specified','gMessage':true});
 					}
-
 				return $header;
 				},
 			
@@ -456,7 +459,8 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				for(var i = 0; i < L; i += 1)	{
 					pid = _app.data[P.datapointer].hits.hits[i]['_id'];
 //					_app.u.dump(" -> "+i+" pid: "+pid);
-					$r.append(_app.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,_app.data[P.datapointer].hits.hits[i]['_source']));
+					$r.append(new tlc().runTLC({'templateid':P.templateID,'dataset':_app.data[P.datapointer].hits.hits[i]['_source']}).attr('data-pid',pid).removeClass('loadingBG'));
+//					$r.append(_app.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,_app.data[P.datapointer].hits.hits[i]['_source']));
 					}
 				return $r.children();
 				},

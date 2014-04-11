@@ -6,13 +6,41 @@
 
 <link rel="stylesheet" type="text/css" href="extensions/admin/styles.css">
 <link rel="stylesheet" type="text/css" href="extensions/admin/jquery-ui-1.9.2.custom.min.css">
+
+
+
+<script>
+
+function getQueryParams(qs) {
+	qs = qs.split("+").join(" ");
+	var params = {}, tokens,
+	re = /[?&]?([^=]+)=([^&]*)/g;
+	while (tokens = re.exec(qs)) {
+		params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+		}
+	return params;
+	}
+
+function showMessage()	{
+	var QP = getQueryParams(document.location.search);
+	if(QP.msg)	{
+		document.getElementById('logoutMessage').innerHTML = QP.msg;
+		}
+	}
+
+</script>
+
+
 </head>
 
-<body>
+<body onLoad="showMessage();">
 
 <div id='appLogin' class='ui-widget ui-widget-content stdPadding alignCenter marginTop ui-corner-all'>
-<h1 class='marginBottom'>Thank you!</h1><br />
-<h2 class='marginBottom'>You are now logged out</h2><br />
+<h1 class='marginBottom'>Thank you!</h1>
+<h2 class='marginBottom'>You are now logged out</h2>
+
+<p id='logoutMessage'></p>
+
 <h3 class='marginBottom'><a href="app-admin.html">click here to log in</a></h3>
 </div>
 </body>

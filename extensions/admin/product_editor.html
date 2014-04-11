@@ -986,12 +986,12 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 				<div class='floatLeft marginRight labelsAsBreaks' data-app-role='ebayStoreCategoryContainer'>
 					<label>
 						<span>eBay store category</span>
-						<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
+						<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsfromlist; text:catPath; value:catID;'></select>
 					</label>
 					
 					<label>
 						<span>eBay store category 2</span>
-						<select name='ebay:storecat2' data-bind='var: (@STORECATS);format:optionsFromList; text:catPath; value:catID;'></select>
+						<select name='ebay:storecat2' data-bind='var: (@STORECATS);format:optionsfromlist; text:catPath; value:catID;'></select>
 					</label>
 				</div>
 				
@@ -2551,6 +2551,9 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
 	</label>
 	-->
+	<p class='invOnly hint'>
+	For inventory-able variations, price is set per product.
+	</p>
 	<label class='displayNone nonInvOnly showForZoovyOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />

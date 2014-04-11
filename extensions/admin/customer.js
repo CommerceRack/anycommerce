@@ -100,7 +100,6 @@ var admin_customer = function(_app) {
 					$("[name='searchfor']",$target).val(vars.searchfor);
 					$("button[data-app-role='customerSearchButton']:first",$target).trigger('click');
 					}
-				
 				}, //showCustomerManager
 
 //in obj, currently only CID and partition are required.
@@ -112,7 +111,6 @@ var admin_customer = function(_app) {
 					if(Number(obj.CID) > 0)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 //partition allows for editor to be linked from orders, where order/customer in focus may be on a different partition.
-						_app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':obj.partition || _app.vars.partition},{},'mutable');
 						_app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 // always obtain a new copy of the customer record. May have been updated by another process.
 						_app.model.destroy("adminCustomerDetail|"+obj.CID);
@@ -319,6 +317,29 @@ var admin_customer = function(_app) {
 				}, //showReviewsManager
 
 
+			faqManager : function($target,params)	{
+				$target.empty();
+				_app.ext.admin.i.DMICreate($target,{
+					'header' : 'FAQ Manager',
+					'handleAppEvents' : false,
+					'className' : 'faqManager',
+					'controls' : "",
+					'buttons' : [
+						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click='admin_customer|faqTopicAddNewShow'>New Topic<\/button>"],
+					'thead' : ['Topic','Question','Priority',''],
+					'tbodyDatabind' : "var: users(@FAQS); format:processList; loadsTemplate:faqResultsRowTemplate;",
+					'cmdVars' : {
+						'_cmd' : 'adminFAQList',
+						'_tag' : {
+							'datapointer' : 'adminFAQList'  //NOTE -> renderFormats.faqTopic uses this datapointer.
+							}
+						}
+					});
+				_app.u.handleButtons($target);
+				_app.model.dispatchThis('mutable');
+				}, //showReviewsManager
+
 //obj should contain CID. likely will include partition soon too.
 // ### FUTURE -> this works, but should probably be updated to use submitForm and refreshCustomerPanel as submit/click events.
 			showAddWalletModal : function(obj,$walletPanel)	{
@@ -500,10 +521,33 @@ $D is returned.
 									callback(_app.data[rd.datapointer]['@CUSTOMERS'][0]);
 									}
 								else	{
-									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr[data-prt='"+_app.vars.partition+"']").addClass('lookLikeLink pointer').end().on('click',"tbody tr[data-prt='"+_app.vars.partition+"']",function(){
+									
+// ** 201402 -> a new method, using delegated events, for displaying/handling clicks. Needed to improve experience for results with mixed partitions.
+/*									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr[data-prt='"+_app.vars.partition+"']").addClass('lookLikeLink pointer').end().on('click',"tbody tr[data-prt='"+_app.vars.partition+"']",function(){
 										callback($(this).data());
 										$D.dialog('close').empty().remove();
 										}).parent().css({'max-height':200,'overflow':'auto',});
+*/
+									var partitionMismatch = false;
+									$("[data-app-role='customerSearchResultsTable']",$D).show().anycontent(rd).find("tbody tr").each(function(){
+										var $tr  = $(this);
+										if($tr.data('prt') == _app.vars.partition)	{
+											$tr.addClass('lookLikeLink pointer');
+											}
+										else	{
+											partitionMismatch = true;
+											}
+										})
+									.end()
+									.on('click',"tr.lookLikeLink",function(){
+										callback($(this).data());
+										$D.dialog('close').empty().remove();
+										})
+									.parent().css({'max-height':200,'overflow':'auto',});
+									
+									if(partitionMismatch)	{
+										$("[data-app-role='customerSearchResultsContainer']",$D).anymessage({"message":"Some (or all) the customers listed below are from another partition. You can only select customers from the partition you are currently logged in to (partition "+_app.vars.partition+");","persistent":true,"errtype":"hint"});
+										}
 									}
 								}
 
@@ -520,9 +564,35 @@ $D is returned.
 			
 			}, //Actions
 
+////////////////////////////////////   TLCFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		tlcFormats : {
+			
+			topicloop : function(data,thisTLC)	{
+//				dump(" -> data.globals: "); dump(data.globals);
+				var T = data.globals.binds[data.globals.focusBind], L = T.length, $tmp = $("<select \/>");
+				for(var i = 0; i < L; i += 1)	{
+					$("<option>"+T[i].TITLE+"</option>").val(T[i].TOPIC_ID).appendTo($tmp);
+					}
+				data.globals.binds[data.globals.focusBind] = $tmp.children();
+				return true;
+				}
+			
+			},
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			//passed the topic id, which is used to look up the topic_title
+			faqTopic : function($tag,data)	{
+				var topicID = data.value; //shortcut.
+				var topic = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminFAQList['@TOPICS'],'TOPIC_ID',topicID);
+				if(topic && topic.TITLE)	{
+					$tag.append(topic.TITLE);
+					}
+				else	{
+					$tag.append(topicID);
+					}
+				},
 
 			orderHistoryTotal : function($tag,data)	{
 				_app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
@@ -589,8 +659,30 @@ $D is returned.
 					newSfo['@updates'].push("SET/EXPIRES?expires="+sfo.expires+"&note="+sfo.expires_note);
 					}
 				return newSfo;
-				} //adminGiftcardMacro
-			
+				}, //adminGiftcardMacro
+			'adminCustomerUpdatePassword' : function(sfo,$form)	{
+				sfo['@updates'] = new Array();
+				sfo._cmd = 'adminCustomerUpdate';
+				sfo['@updates'].push("PASSWORD-SET?password="+encodeURIComponent(sfo.password)); //password needs to be encoded (required for & and + to be acceptable password characters)
+				if(sfo.sendblast)	{
+					sfo['@updates'].push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
+					}
+				//these are no longer necessary.
+				delete sfo.sendblast;
+				delete sfo.password;
+				return sfo;
+				},
+			'adminFAQMacro' : function(sfo,$form)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminFAQMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					};
+				newSfo['@updates'].push("FAQ-UPDATE?"+_app.u.hash2kvp(_app.u.getWhitelistedObject(sfo,['FAQ_ID','QUESTION','ANSWER','TOPIC_ID','PRIORITY','KEYWORDS'])));
+				return newSfo;
+				} //adminGiftcardMacro		
 			},
 			
 			
@@ -1356,7 +1448,11 @@ _app.model.dispatchThis('immutable');
 						updates.push("CREATE?email="+formObj.email); //setting email @ create is required.
 						if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
 						if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
-						if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+						// *** 201402 -> macro ID for passwordreset changed to PASSWORD-SET
+						if(formObj.generatepassword)	{
+							updates.push("PASSWORD-SET?password=");
+							updates.push("BLAST-SEND?MSGID=CUSTOMER.PASSWORD.RECOVER");
+							} //generate a random password
 						
 						// $('body').showLoading("Creating customer record for "+formObj.email);
 						_app.model.addDispatchToQ({
@@ -1459,19 +1555,17 @@ _app.model.dispatchThis('immutable');
 								}
 							}
 						else if($tag.is('input') || $tag.is('select'))	{
-							if($tag.attr('name') == 'password')	{
-								macros.push("PASSWORDRESET?password="+encodeURIComponent($tag.val())); //password needs to be encoded (required for & and + to be acceptable password characters)
-								}
-							else if(pr == 'general')	{
+							
+							if(pr == 'general')	{
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
 								}
 							else if(pr == 'newsletter')	{
 								general += $tag.attr('name')+"="+handleCheckbox($tag)+"&";
 								}
-						else if(pr == 'organization')	{
-//								_app.u.dump(" -> orgid being set to: "+$tag.val());
-								macros.push("LINKORG?orgid="+$tag.val());
-								}
+							else if(pr == 'organization')	{
+	//								_app.u.dump(" -> orgid being set to: "+$tag.val());
+									macros.push("LINKORG?orgid="+$tag.val());
+									}
 							else	{
 								$panel.anymessage({'message':'In admin_customer.e.adminEditorSave, panel role ['+pr+'] not an expected type'});
 								}
@@ -1516,7 +1610,7 @@ _app.model.dispatchThis('immutable');
 					$ele.closest('form').anymessage({'message':'In admin_customer.e.execCustomerEditorSave, unable to ascertain CID.','gMessage':true});
 					}
 				}, //customerEditorSave
-				
+
 			refreshCustomerPanel : function($ele,p){
 				var panel = $ele.data('panel');
 				if(panel)	{
@@ -1554,7 +1648,7 @@ _app.model.dispatchThis('immutable');
 							_app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
 							_app.model.addDispatchToQ({
 								'_cmd':'adminCustomerRemove',
-								'cid' : CID,
+								'CID' : CID,
 								'_tag':	{
 									'datapointer' : 'adminCustomerRemove',
 									'callback':function(rd){
@@ -1668,6 +1762,51 @@ _app.model.dispatchThis('immutable');
 					}).appendTo($modal);
 		
 				}, //execHintReset
+				
+			passwordChangeShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Change Password",
+					templateID : 'customerPasswordChangeTemplate',
+					showLoading : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$D.tlc({'verb':'translate','dataset':{'CID':$ele.closest("[data-cid]").data('cid')}});
+				$D.dialog('open');
+				},
+				//used in the customer editor to allow merchants to generate a temporary password. This would allow the merchant to log in AS the customer without changing their password.
+			passwordCreateTemporaryExec : function($ele,P)	{
+				P.preventDefault();
+				if($ele.hasClass('ui-button'))	{$ele.button('disable')} //prevent double-click.
+			
+				_app.model.addDispatchToQ({"_cmd":"adminCustomerUpdate","CID":$ele.closest("[data-cid]").data('cid'),"@updates":["PASSWORD-RECOVER"],"_tag":{
+					"datapointer":"adminCustomerUpdate",
+					"callback":function(rd){
+						if($ele.hasClass('ui-button'))	{$ele.button('enable')} //prevent double-click.
+						if(_app.model.responseHasErrors(rd)){
+							$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							if(_app.u.thisNestedExists("data."+rd.datapointer+".PASSWORD-RECOVER.password",_app))	{
+								$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({
+									'errtype':'success','iconClass':'app-icon-success',
+									'message' : 'Temporary password generated: '+_app.data[rd.datapointer]['PASSWORD-RECOVER'].password,
+									'persistant' : true,
+									'msgType' : 'success'
+									});
+								delete _app.data[rd.datapointer]; //no sense keeping this around.
+								}
+							else	{
+								$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({'message':'The call succeeded as expected, but the response format did not contain the temporary password as expected.','gMessage':true});
+								}
+							}
+						}
+					}},"mutable");
+				_app.model.dispatchThis("mutable");
+				//for success messaging: 
+				},
 
 			execNoteCreate : function($ele,P)	{
 				P.preventDefault();
@@ -1762,10 +1901,18 @@ _app.model.dispatchThis('immutable');
 					})
 				
 				}, //saveOrgToField
-			
-			showMailTool : function($ele,P)	{
+
+			showBlastTool : function($ele,P)	{
 				P.preventDefault();
-				_app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':_app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
+				var CID = $ele.closest("[data-cid]").data('cid');
+				if(CID && _app.data['adminCustomerDetail|'+CID])	{
+					_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'CUSTOMER','PRT':_app.data['adminCustomerDetail|'+CID]._PRT,'EMAIL':_app.data['adminCustomerDetail|'+CID]._EMAIL,'RECEIVER':'CUSTOMER','CID':CID});
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_customer.e.showBlastTool, unable to ascertain CID ["+CID+"] or customer record not in memory.","gMessage":true});
+					}
+				
+//				_app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':_app.vars.partition,'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //showMailTool
 
 			showOrgChooser : function($ele,P)	{
@@ -1845,9 +1992,76 @@ _app.model.dispatchThis('immutable');
 				else	{
 					$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 					}
-				} //orderCustomerEdit
+				}, //orderCustomerEdit
+			
+			faqTopicAddNewShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Create a new FAQ Topic",
+					showLoading : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				
+				$D.append("<form><input type='text' data-input-keyup='format' data-input-format='alphanumeric,uppercase' name='TITLE' \/><br \/><\/form>");
+				$D.anyform();
+				$("<button \/>").text('save').button().on('click',function(event){
+					event.preventDefault();
+					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE"+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							//sample action. success would go here.
+							$('#globalMessaging').anymessage(_app.u.successMsgObject('Topic has been created.'));
+							$D.dialog('close');
+							}
+						}}},"mutable");
+					_app.model.dispatchThis("mutable");
+					}).appendTo($('form',$D));
+				$D.dialog('option','width',250);
+				$D.dialog('open');
+				},
+			
+			faqQuestionDeleteConfirm : function($ele,P)	{
+				var faqid = $ele.closest('tr').data('id');
+				var $D = _app.ext.admin.i.dialogConfirmRemove({
+					"message" : "Are you sure you want to delete faq "+faqid+"? There is no undo for this action.",
+					"removeButtonText" : "Remove", //will default if blank
+					"title" : "Remove faq "+faqid, //will default if blank
+					removeFunction : function()	{
+						_app.model.addDispatchToQ({"_cmd":"adminFAQRemove","ID":faqid,"_tag":{"callback":function(rd){
+							//if the macro has a panel open, close it.
+							var $panel = $(_app.u.jqSelector('#','faq_'+faqid));
+							if($panel.length)	{
+								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
+								}
+							$D.dialog('close'); 
+							$("#globalMessaging").anymessage({"message":"The faq has been deleted.","errtype":"success"});
+							//hide the row. no need to refresh the whole list.
+							$ele.closest('tr').slideUp();
+							}}},"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					});
+				},
 
 
+			faqQuestionUpdateShow : function($ele,P)	{
+				var faqid = $ele.closest('tr').data('faq_id');
+				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
+					'templateID' : 'faqAddUpdateTemplate',
+					'panelID' : 'faq_'+faqid,
+					'header' : 'Edit faq: '+faqid,
+					'handleAppEvents' : false,
+					'data' : {}
+					});
+				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminFAQList']['@FAQS'],'FAQ_ID',faqid),{'@TOPICS':_app.data['adminFAQList']['@TOPICS']})});
+				$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				_app.u.handleCommonPlugins($panel);
+				_app.u.handleButtons($panel);
+				$panel.anyform({'trackEdits':true});
+				}
 
 
 			} //e [app Events]

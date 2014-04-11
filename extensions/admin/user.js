@@ -121,7 +121,6 @@ var admin_user = function(_app) {
 				$(":checkbox",$form).each(function(){
 					delete sfo[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
 					});
-				_app.u.dump(" -> sfo: "); _app.u.dump(sfo);
 				return sfo;
 				} //adminGiftcardMacro			
 			

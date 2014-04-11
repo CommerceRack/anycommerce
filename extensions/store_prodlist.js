@@ -183,7 +183,7 @@ A special translate template for product so that reviews can be merged into the 
 */
 		translateTemplate : {
 			onSuccess : function(tagObj)	{
-//				_app.u.dump("BEGIN _app.ext.store_prodlist.callbacks.translateTemplate.onSuccess");
+//				_app.u.dump("BEGIN _app.ext.store_prodlist.callbacks.translateTemplate.onSuccess ");
 //				_app.u.dump(tagObj);
 //				_app.u.dump(" -> tagObj.datapointer = "+tagObj.datapointer);
 //				_app.u.dump(" -> tagObj.parentID = "+tagObj.parentID+" and $(#"+tagObj.parentID+").length: "+$('#'+tagObj.parentID).length);
@@ -196,16 +196,18 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
 
-				var $product =(tagObj.jqObj instanceof jQuery) ? tagObj.jqObj :  $(_app.u.jqSelector('#',tagObj.parentID));
+				var $product = tagObj.jqObj.removeClass('loadingBG').attr('data-pid',pid);
 				var $prodlist = $product.parent();
+
+				$product.tlc({'dataset':tmp,'verb':'translate'}).attr('data-template-role','listitem');
+				_app.u.handleButtons($product);
 				
-				$product.anycontent({'datapointer':tagObj.datapointer}).attr('data-template-role','listitem');
-				
+
 				$prodlist.data('pageProductLoaded',($prodlist.data('pageProductLoaded') + 1)); //tracks if page is done.
 				$prodlist.data('totalProductLoaded',($prodlist.data('totalProductLoaded') + 1)); //tracks if entire list is done. handy for last page which may have fewer than an entire pages worth of data.
 				if(($prodlist instanceof jQuery && $prodlist.data('pageProductLoaded')) && (($prodlist.data('pageProductLoaded') == $prodlist.data('prodlist').items_per_page) || ($prodlist.data('totalProductLoaded') == $prodlist.data('prodlist').total_product_count)))	{
 //					_app.u.dump($._data($prodlist[0],'events')); //how to see what events are tied to an element. not a supported method.
-					$prodlist.trigger('complete');
+					$prodlist.trigger('listcomplete');
 					}
 
 
@@ -263,7 +265,13 @@ A special translate template for product so that reviews can be merged into the 
 //a product list needs an ID for multipage to work right. will assign a random one if none is set.
 //that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
-
+			productlist : function($tag,data)	{
+				//need to keep admin and quickstart both running.
+//				dump(" data.value: "); dump(data.value);
+				data.bindData.loadsTemplate = data.bindData.templateid; // ### TODO -> once the prodlist code is updated, this can be ditched.
+				data.value = data.value;
+				this.productList($tag,data);
+				},
 			productList : function($tag,data)	{
 //				_app.u.dump("BEGIN store_prodlist.renderFormats.productList");
 //				_app.u.dump(" -> data.bindData: "); _app.u.dump(data.bindData);
@@ -291,8 +299,8 @@ will remove the add to cart button if the item is not purchaseable.
 
 */
 
-			addToCartButton : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+			addtocartbutton : function($tag,data)	{
+//				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton");
 //				_app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
 				var showATC = true;
@@ -325,9 +333,9 @@ so the atc events are unbinded, then binded.
 //						_app.u.dump(" -> is choose options.");
 						$tag.addClass('chooseOptionsButton').unbind('.myATCEvent').bind('click.myATCEvent',function(event){
 event.preventDefault();
-// !!! TEMPORARY!!! this needs to be handled better. a function needs to be passed in or something.
+// ### TODO -> this needs to be handled better. a function needs to be passed in or something.
 //move into the custom _app. 
-_app.ext.myRIA.u.handlePageContent('product',pid)
+_app.ext.quickstart.u.handlePageContent('product',pid)
 					}).text('Choose Options')}
 					
 					}
@@ -335,7 +343,7 @@ _app.ext.myRIA.u.handlePageContent('product',pid)
 					$tag.replaceWith("<span class='notAvailable'>not available</span>");
 					}
 //				_app.u.dump(" -> ID at end: "+$tag.attr('id'));
-				} //addToCartButton
+				} //addtocartbutton
 			},
 
 
@@ -439,6 +447,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 					}
 //				_app.u.dump(" -> typeof csv: "+typeof csv);
 				csv = $.grep(csv,function(n){return(n);}); //remove blanks. commonly occurs in product attributes cuz of extra comma
+				csv = $.map(csv,function(n){return(n.trim());}); //remove blanks. commonly occurs in product attributes cuz of extra comma
 				return csv;
 				},
 
@@ -475,12 +484,11 @@ if no parentID is set, then this function gets the data into memory for later us
 */
 			getProductDataForList : function(plObj,$tag,Q)	{
 //				_app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]"); _app.u.dump(plObj);
-
 				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
 				if(plObj && plObj.csv)	{
-//					_app.u.dump(" -> csv defined. length: "+plObj.csv.length);
-					var pageCSV = this.getSkusForThisPage(plObj);
+//					_app.u.dump(" -> csv defined. length: "+plObj.csv.length); _app.u.dump(plObj.csv);
+					var pageCSV = this.getSkusForThisPage(plObj); 
 					var L = pageCSV.length;
 					var call = 'appProductGet';  //this call is used unless variations or inventory are needed. this call is 'light' and just gets basic info.
 					if(Number(plObj.withVariations) + Number(plObj.withInventory) + Number(plObj.withReviews) > 0)	{
@@ -494,17 +502,21 @@ if no parentID is set, then this function gets the data into memory for later us
 							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':magic.inspect('#'+this.getSkuSafeIdForList(plObj.parentID,pageCSV[i]))}
 							}
 						else if(plObj.parentID)	{
-							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':$(plObj.placeholders[i]),'parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])}
+//							_app.u.dump(" -> parentID is set.");
+							_tag = {'callback':'translateTemplate','extension':'store_prodlist','jqObj':$(plObj.placeholders[i])}
 							}
-						else	{}
+						else	{
+							_app.u.dump(" -> no parentID set. item not queued.");
+							}
 						numRequests += _app.ext.store_prodlist.calls[call].init({
 							"pid":pageCSV[i],
+							"withReviews":plObj.withReviews, 
 							"withVariations":plObj.withVariations,
-							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
 							},_tag, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
+				
 				if(numRequests > 0)	{_app.model.dispatchThis(Q)}
 				return numRequests;
 				}, //getProductDataForList
@@ -597,13 +609,8 @@ params that are missing will be auto-generated.
 							$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
 							}
 						}
-//The timeout was here because of an issue where the placeholders were getting nuked. That issue was caused by translateTemplate doing a replace.
-//that code was changed in 201239 (as was this function) so the timeout was commented out. This comment is here in case the change to translateFunction is changed back.
-//					setTimeout(function(){
-						_app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
-//						},1000);
 					 //will render individual product, if data already present or fetch data and render as part of response.
-
+					_app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
 					}
 				else	{
 					_app.u.throwGMessage("WARNING: store_prodlist.u.buildProductList is missing some required fields. Obj follows: ");
@@ -612,37 +619,7 @@ params that are missing will be auto-generated.
 //				_app.u.dump(" -> r = "+r);
 				}, //buildProductList
 
-/*
-This is executed when the page is changed in a prodlist.
-initially, this was how product lists were handled, the the productList renderFormat was introduced.
-need to remove duplicate code from this and the renderFormat. ###
-*/
-/*
-			handleProductList : function(parentID)	{
-				var r = 0; //returns the number of requests.
-//				_app.u.dump("BEGIN _app.ext.store_prodlist.u.handleProductList");
-//				_app.u.dump(" -> parent = "+parentID);
-				var $parent = $('#'+parentID).empty(); 
-				var csvArray = new Array();
-				if(_app.ext.store_prodlist.vars[parentID].items_per_page >= _app.ext.store_prodlist.vars[parentID].csv.length)	{
-//					_app.u.dump(' -> single page product list');
-					csvArray = _app.ext.store_prodlist.vars[parentID].csv
-					}
-				else	{
-//in a multipage format, just request the pids of the page in focus.
-//					_app.u.dump(' -> multi page product list.');
-					csvArray = _app.ext.store_prodlist.vars[parentID].csv.slice(_app.ext.store_prodlist.vars[parentID].page_start_point - 1,_app.ext.store_prodlist.vars[parentID].page_end_point);
-					if(!_app.ext.store_prodlist.vars[parentID].hide_summary)	{
-						$('.mpControlContainer').empty().remove();
-						$parent.before(_app.ext.store_prodlist.u.showMPControls(parentID,'header'));
-						$parent.after(_app.ext.store_prodlist.u.showMPControls(parentID,'footer'));
-						}
-					}
-//now that we have our prodlist, get the product data and add it to the DOM.
-				r = _app.ext.store_prodlist.u.getProductDataForList(csvArray,parentID);
-				return r;
-				},
-*/
+
 
 /*
 function is executed both from the next/previous buttons and list of page links.
@@ -676,7 +653,13 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 				if(plObj.hide_pagination === true)	{
 					}
 				else	{
-					$output = _app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+//					$output = _app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+					$output = $("<div \/>");
+					$output.tlc({
+						'templateid' : 'mpControlSpec',
+						'dataset' : plObj,
+						'dataAttribs' : {'id':'mpControl_'+plObj.parentID+'_'+location}
+						})
 					$output.find('.mpControlJumpToPage, .paging').click(function(){
 						_app.ext.store_prodlist.u.mpJumpToPage($(this))
 						_app.u.jumpToAnchor('mpControl_'+plObj.parentID+'_header');

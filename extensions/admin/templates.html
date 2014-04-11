@@ -4,6 +4,7 @@
 	<td class='valignTop'>
 	<h5 data-bind="var:message(origin); format:text;"></h5>
 	<h6 data-bind="var:message(msg); format:text;"></h6>
+	<h6 data-bind="var:message(verb); format:text;"></h6>
 	<p data-bind="var:message(note); format:truncText; numCharacters: 75;"></p>
 	<button data-app-click='admin|messageDetailShow' data-icon-primary="ui-icon-arrowthick-1-e" data-text='true' class='applyButton'>Details</button>
 	</td>
@@ -33,18 +34,18 @@ PRODUCT FINDER/CHOOSER
 
 <ul>
 	<li class='clearfix loadingBG stdListItem' id='adminProdStdForList'>
-	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
-	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
-	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
-	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
-	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+		<div class="removeProd" onclick="adminApp.ext.admin.u.removePidFromFinder($(this).closest(&quot;[data-pid]&quot;));"><span class="ui-icon ui-icon-closethick"></span></div>
+		<div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};" class="prodThumb" height="50" width="50">
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{apply --append;}};" class="pid"></div>
 	</li>
 
 	<li class='clearfix loadingBG simpleListItem' id='adminProdSimpleForList'>
-	<div class='removeProd' onClick='adminApp.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
-	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
-	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
-	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+		<div class="removeProd" onclick="adminApp.ext.admin.u.removePidFromFinder($(this).closest(&quot;[data-pid]&quot;));"><span class="ui-icon ui-icon-closethick"></span></div>
+		<div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
+		<div data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};" class="prodName"></div>
+		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{apply --append;}};" class="pid"></div>
 	</li>
 
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
@@ -143,29 +144,29 @@ PRODUCT FINDER/CHOOSER
 
 
 <div id='productTemplateChooser'>
-<table>
-<tr>
-	<td>
-<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
-	</td>
-	<td>
-	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	
-	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfg); format:text; pretext: Mfg: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
-	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
-	
-	
-	
-	</td>
-</tr>
-</table>
-<div data-bind='useParentData:true; format:detailedInvDisplay; extension:store_product;' class='inventory'></div>
-	<form action='#' onSubmit="return false;" class='chooserAddToCartForm'>
+	<table>
+	<tr>
+		<td>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		</td>
+		<td>
+		<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+		
+		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfg); format:text; pretext: Mfg: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		
+		
+		
+		</td>
+	</tr>
+	</table>
+	<div data-bind='useParentData:true; format:detailedinvdisplay; extension:store_product;' class='inventory stdPadding'></div>
+	<form action='#' onSubmit="return false;" class='chooserAddToCartForm stdPadding'>
 	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='sku' />
-		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='var: product(pid); format:atcvariations; extension:store_product;' class='borderNone'></fieldset>
 		
 		<fieldset class='labelsAsBreaks'>
 			<label>Quantity: <input type='number' class='smallInput' value='1' name='qty' /></label>
@@ -268,8 +269,9 @@ SETUP PAGE TEMPLATE
 
 <div id='pageSetupTemplate' class='page pageSetup'>
 
+<div class='floatPanel'>
 
-	<div id="manage" class='ui-widget floatPanel'>
+	<div id="manage" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
@@ -286,7 +288,6 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('#!ext/admin_sites/showDomainConfig'); return false;">Domain and App Config</a>
 			<div class="helper marginBottom">Add, update or remove domains, hosts and app projects.</div>
 			
-			
 			<a href="#" onClick="navigateTo('#!ext/admin/showRSS'); return false;">RSS Feeds</a>
 			<div class="helper marginBottom">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
 			
@@ -295,8 +296,28 @@ SETUP PAGE TEMPLATE
 		</div>
 	</div><!-- /manage -->
 
+	
+	<div id="developer" class='ui-widget'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Developer Tools</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!ext/admin_tools/showPrivateFiles'); return false;">Private Files <!-- (beta) --></a>
+			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a>
+			<div class="helper marginBottom">Use this to easily custom integrations or apps.</div>
+			
+			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a>
+			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
+		</div>
+	</div><!-- /developer -->
 
-	<div id="properties" class='ui-widget floatPanel'>
+</div>
+<div class='floatPanel'>
+
+	<div id="properties" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Store Properties</h3>
 		</div>
@@ -312,67 +333,20 @@ SETUP PAGE TEMPLATE
 			<div class="helper marginBottom">Configure state and local tax collection amounts.</div>
 			
 			<a href="#" onClick="navigateTo('#!ext/admin_config/showCouponManager'); return false;">Coupons</a>
-			<div class="helper marginBottom">Create discounts for special purchases</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showPluginManager'); return false;">Plugins</a>
+			<div class="helper marginBottom">Create discounts for special purchases.</div>
+
+			<a href="#" onClick="navigateTo('#!ext/admin_blast/blastMessagesList'); return false;">Email Config and Messages</a>
+			<div class="helper marginBottom">Update messaging used in automated outbound emails (order create, password recover, etc) and/or configure some message based settings.</div>
+
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showPluginManager'); return false;">Integrations</a>
 			<div class="helper marginBottom">Provide third party username/passwords for app mashups.</div>
 			
 			<a href="#" onClick="navigateTo('#!ext/admin_prodedit/showStoreVariationsManager'); return false;">Global Variations</a>
-			<div class="helper marginBottom">Manage your global product variations</div>
+			<div class="helper marginBottom">Manage your global product variations.</div>
 		</div>
 	</div><!-- /properties -->
-	
 
-	<div id="account" class='ui-widget floatPanel'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Account Settings</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showContactInformation'); return false;">Contact Information</a>
-			<div class="helper marginBottom">Change Administrative/Billing Information</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showBillingHistory'); return false;">Billing History</a>
-			<div class="helper marginBottom">View your billing history, update payment information.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showGlobalSettings'); return false;">Global Settings</a>
-			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showNotifications'); return false;">Notifications</a>
-			<div class="helper marginBottom">Configure notifications based on system events.</div>
-			
-			<a href="#" onClick="navigateTo('#!ext/admin_config/showPartitionManager'); return false;">Partitions</a>
-			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
-
-			<a href="#" onClick="navigateTo('#!ext/admin_user/showUserManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a>
-			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
-			
-			<a href="#" onClick="navigateTo('#!/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a>
-			<div class="helper marginBottom">You should change your password every 60 days.</div>
-
-		</div>
-	</div><!-- /account -->
-
-
-	<div id="developer" class='ui-widget floatPanel'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Developer Tools</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!ext/admin_tools/showPrivateFiles'); return false;">Private Files <!-- (beta) --></a>
-			<div class="helper marginBottom">Private files include diagnostic logs, reports, and ticket attachments.</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a>
-			<div class="helper marginBottom">Use this to easily custom integrations or apps</div>
-			
-			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a>
-			<div class="helper marginBottom">Learn more about what is possible, and what is included in the SDK.</div>
-		</div>
-	</div><!-- /developer -->
-
-
-	<div id="vstore" class='ui-widget floatPanel showForZoovyOnly'>
+	<div id="vstore" class='ui-widget showForZoovyOnly'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>vStore</h3>
 		</div>
@@ -395,12 +369,6 @@ SETUP PAGE TEMPLATE
 				<a href="#" onClick="navigateTo('#!/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT"> &#187; Customize Site Decals</a>
 				<div class="helper">Enhance your site with 3rd party logos.</div>
 				
-				<a href="#" onClick="navigateTo('#!/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E'); return false;" title="/biz/vstore/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E"> &#187; Select Email Theme</a>
-				<div class="helper">Pick a style for a header and footer for an email.</div>
-				
-				<a href="#" onClick="navigateTo('#!/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT'); return false;" title="/biz/vstore/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT"> &#187; Edit Email Messages</a>
-				<div class="helper">Customize the emails that are sent to customers.</div>
-
 						
 			<a href="#" onClick="navigateTo('#!/biz/vstore/analytics/index.cgi'); return false;" title="/biz/vstore/analytics/index.cgi">Analytics &amp; Plugins</a>
 			<div class="helper marginBottom">Integrate approved 3rd party applications with your site.</div>
@@ -413,7 +381,7 @@ SETUP PAGE TEMPLATE
 			<div class="helper marginBottom">Configure what options customers have when they login to their accounts on your store.</div>
 			
 			<a href="#" onClick="navigateTo('#!/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a>
-			<div class="helper marginBottom">Customize System Messages used throughout the site</div>
+			<div class="helper marginBottom">Customize System Messages used throughout the site.</div>
 			
 			<a href="#" onClick="navigateTo('#!/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a>
 			<div class="helper marginBottom">Customize Checkout Messaging used during checkout.</div>
@@ -426,8 +394,54 @@ SETUP PAGE TEMPLATE
 
 			<a href="#" onClick="navigateTo('#!/biz/vstore/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/vstore/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a>
 			<div class="helper marginBottom">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
+			
+			<a href='#!downloads'>Downloads</a>
+			<div class="helper marginBottom">Use our windows clients for managing orders and product</div>
+			
+			
 		</div>
 	</div><!-- /vstore -->
+
+
+</div>
+<div class='floatPanel'>
+
+	<div id="account" class='ui-widget'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3 class='smallPadding'>Account Settings</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showContactInformation'); return false;">Contact Information</a>
+			<div class="helper marginBottom">Change Administrative/Billing Information.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showBillingHistory'); return false;">Billing History</a>
+			<div class="helper marginBottom">View your billing history, update payment information.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showGlobalSettings'); return false;">Global Settings</a>
+			<div class="helper marginBottom">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showNotifications'); return false;">Notifications</a>
+			<div class="helper marginBottom">Configure notifications based on system events.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/showPartitionManager'); return false;">Partitions</a>
+			<div class="helper marginBottom">The ability to segment your settings, and databases for each site associated with this account.</div>
+
+			<a href="#" onClick="navigateTo('#!ext/admin_user/showUserManager'); return false;" title="add, remove and edit users, permissions and devices">Manage Users/Devices</a>
+			<div class="helper marginBottom">Manage which users and devices can access your account.</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_config/passwordUpdate'); return false;">Change Password</a>
+			<div class="helper marginBottom">Change the password for the user you are logged in as. You should change your password every 60 days.</div>
+
+		</div>
+	</div><!-- /account -->
+
+
+</div>
+
+
+
+
 
 </div>
 
@@ -452,32 +466,53 @@ UTILITIES PAGE TEMPLATE
 
 <div id='pageUtilitiesTemplate' class='page pageUtilities'>
 
+	<div class='floatPanel'>
+		<div class='ui-widget marginBottom'>
+			<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+			<h3 class='smallPadding'>Customers</h3>
+			</div>
+			
+			<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_customer/showCustomerManager'); return false;">Customer Manager</a>
+			<div class="helper marginBottom">Find or create a customer record for your website</div>
 	
-	<div class='ui-widget floatPanel'>
+			<a href="#" onClick="navigateTo('#!ext/cart_message/showCartManager'); return false;">Cart Manager</a>
+			<div class="helper marginBottom">Modify carts and communicate directly with buyers.</div>
+	
+			<a href="#" onClick="navigateTo('#!ext/admin_wholesale/showPriceSchedules'); return false;">Wholesale Pricing Schedules <!-- (beta) --></a>
+			<div class="helper marginBottom">Create separate price lists for your wholesale customers</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_wholesale/showOrganizationManager'); return false;">Organization Manager</a>
+			<div class="helper marginBottom">Create / Manage Organizations for wholesale/b2b/resale</div>
+			
+			<a href="#" onClick="navigateTo('#!ext/admin_customer/showGiftcardManager'); return false;">GiftCard Manager</a>
+			<div class="helper marginBottom">Create / Manage GiftCards</div>
+			
+			</div>
+		</div>
+
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Customers</h3>
+		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		
-		<a href="#" onClick="navigateTo('#!ext/admin_customer/showCustomerManager'); return false;">Customer Manager</a>
-		<div class="helper marginBottom">Find or create a customer record for your website</div>
+		<a href="#" onClick="navigateTo('#!ext/admin_tools/showProductExport'); return false;">Product Export</a>
+		<div class="helper marginBottom">Exports products into a CSV file</div>
+	
+		<a href="#" onClick="navigateTo('#!ext/admin_tools/showPPT'); return false;">Product Power Tool</a>
+		<div class="helper marginBottom">Modify multiple product attributes in mass</div>
+	
+		<a href="#" onClick="navigateTo('#!ext/admin_tools/showManageFlexedit'); return false;">Manage Flexedit Fields</a>
+		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor</div>
+	
+		<a href="#" onClick="navigateTo('#!ext/admin_tools/showAccountUtilities'); return false;">Tech Support Utils</a>
+		<div class="helper marginBottom">The jundland wastes are not to be traveled lightly.</div>
 
-		<a href="#" onClick="navigateTo('#!ext/cart_message/showCartManager'); return false;">Cart Manager</a>
-		<div class="helper marginBottom">Modify carts and communicate directly with buyers.</div>
-
-		<a href="#" onClick="navigateTo('#!ext/admin_wholesale/showPriceSchedules'); return false;">Wholesale Pricing Schedules <!-- (beta) --></a>
-		<div class="helper marginBottom">Create separate price lists for your wholesale customers</div>
-		
-		<a href="#" onClick="navigateTo('#!ext/admin_wholesale/showOrganizationManager'); return false;">Organization Manager</a>
-		<div class="helper marginBottom">Create / Manage Organizations for wholesale/b2b/resale</div>
-		
-		<a href="#" onClick="navigateTo('#!ext/admin_customer/showGiftcardManager'); return false;">GiftCard Manager</a>
-		<div class="helper marginBottom">Create / Manage GiftCards</div>
-		
 		</div>
-	</div>
 
+	</div>
+	
 	<div class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Social &amp; Communications</h3>
@@ -533,30 +568,6 @@ UTILITIES PAGE TEMPLATE
 			<div class="helper marginBottom">Manage repricing agents.</div>
 -->		</div>
 	</div>	
-
-	<div class='ui-widget floatPanel'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3 class='smallPadding'>Manage Apps/Website</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<a href="#" onClick="navigateTo('#!ext/admin_tools/showProductExport'); return false;">Product Export</a>
-		<div class="helper marginBottom">Exports products into a CSV file</div>
-	
-		<a href="#" onClick="navigateTo('#!ext/admin_tools/showPPT'); return false;">Product Power Tool</a>
-		<div class="helper marginBottom">Modify multiple product attributes in mass</div>
-	
-		<a href="#" onClick="navigateTo('#!ext/admin_tools/showManageFlexedit'); return false;">Manage Flexedit Fields (beta)</a>
-		<div class="helper marginBottom">Set what fields show in the flexedit panel of the product editor</div>
-	
-		<a href="#" onClick="navigateTo('#!ext/admin_tools/showAccountUtilities'); return false;">Tech Support Utils</a>
-		<div class="helper marginBottom">The jundland wastes are not to be traveled lightly.</div>
-
-		</div>
-	</div>
-
-
-	
 
 	
 </div>
@@ -812,47 +823,6 @@ ACHIEVEMENTS
 
 
 
-<!--
-//////////////////////////  EMAIL TOOL \\\\\\\\\\\\\\\\\\\\\\\\\
--->
-
-
-
-
-<div id='mailToolTemplate'>
-<form action='#'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
-<label>
-	<span>Message source:</span>
-	<select name='MSGID' data-bind="var: emailList(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
-		<option value='BLANK'>blank</option>
-	</select>
-</label>
-
-<label>
-	<span>Subject:</span>
-	<input type='text' name='SUBJECT' required='required' maxlength="100" />
-</label>
-
-<label>
-	<span>Message:</span>
-	<textarea name='BODY' rows='10' required='required'></textarea>
-</label>
-</fieldset>
-
-
-<fieldset class='updateSystemMessageContainer marginBottom'>
-<label>
-	<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
-	Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
-</label>
-</fieldset>
-
-<button data-app-event="admin|execMailToolSend">send email</button>
-
-</form>
-</div>
-
 
 
 
@@ -889,7 +859,7 @@ ACHIEVEMENTS
 	<legend>General Properties</legend>
 	<label>
 		<span>Domain/Profile:</span>
-		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsFromList; text:DOMAINNAME; value:DOMAINNAME;" />
+		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsfromlist; text:DOMAINNAME; value:DOMAINNAME;" />
 			<option></option>
 		</select>
 	</label>
@@ -914,7 +884,7 @@ ACHIEVEMENTS
 	
 	<label>
 		<span>Feed Link</span>
-			<input type="text" name="LINK" value="" data-bind="var: rss(LINK); format: popVal;" readonly="readonly" />
+			<input type="text" name="LINK" value="" data-bind="var: rss(LINK); format: popVal;" readonly />
 			<span class="toolTip" title="The URL to your store, or for this promotion.">?</span>
 	</label>
 	<label>
@@ -942,7 +912,7 @@ ACHIEVEMENTS
 
 	<label>
 		<span>Source List:</span>
-		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsFromList;">
+		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsfromlist;">
 			<option></option>
 		</select>
 		<span class="toolTip" title="The list from which this RSS feed is built (where the product come from).">?</span>
@@ -955,7 +925,7 @@ ACHIEVEMENTS
 	
 	<label>
 		<span>Pricing Schedule:</span>
-		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option>none</option>
 		</select>
 	</label>
@@ -1026,7 +996,7 @@ search tags: DMI
 
 
 
-<div id='dualModeTemplate' class='dualModeContainer' data-app-role='dualModeContainer' data-app-mode='list'>
+<div id='dualModeTemplate' class='dualModeContainer marginBottom' data-app-role='dualModeContainer' data-app-mode='list'>
 
 	<section class='dualModeDetail' data-app-role='dualModeDetail'></section>
 
@@ -1139,3 +1109,36 @@ data-contentloaded is used to determine if dynamic content has already been load
 <label id='pickerLaunchProfileRowTemplate'>
 	<input type='checkbox' name='' data-bind="var:list(PROFILE); format:assignAttribute; attribute:name; valuePretext:PROFILE+;" /><span data-bind="var: list(PROFILE); format:text;"></span>
 </label>
+
+
+
+
+
+
+
+
+<div id='tlctest'>
+<h1>Some TLC for testing. execute this with #!/ext/admin/tlcTest</h1>
+<h2>Data src is adminDomainList. pretty much can guarantee it's in memory.</h2>
+<br><br>
+<!--
+templateidexist -> part of an IS.
+-->
+<h3 data-tlc="bind $var '.media-host'; if(is $tlclisttest --templateidexists;){{ apply --append;}};">media host: </h3>
+<table>
+<tbody data-tlc="bind $items '.@DOMAINS'; foreach $item in $items {{ transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};"></tbody>
+</table>
+</div>
+
+<table>
+	<tr id='tlclisttest'>
+		<td>
+		<img data-tlc="bind $var '.LOGO'; if(is $var --notblank;){{apply --img --bob='was here' --media=$var --width=25 --height=25 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="">
+		</td>
+		<td>
+		<img data-tlc="bind $var '.LOGO'; if(is $var --notblank;){{apply --img --bob='was here' --media=$var --imgdefault --replace;}};" width='50' height='50' data-bgcolor='#fffff' src="blank.gif" class="prodThumb" alt="">
+		</td>
+		<td data-tlc="bind $var '.DOMAINNAME'; format --truncate='20' apply --append;"></td>
+		<td data-tlc="bind $var '.LOGO'; if(is $var --notblank;){{apply --imageurl --media=$var --width=25 --height=25 --bgcolor='#ffffff' --append;}};"></td>
+	</tr>
+</table>

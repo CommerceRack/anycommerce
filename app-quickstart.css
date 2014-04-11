@@ -50,6 +50,19 @@ td.valignMiddle	{vertical-align: middle;}
 /* feel free to delete these or override in your own .css file */
 h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
 
+/* some optional form styling
+<label><span class='prompt'>prompt</span><input class='alignInput'></label> w/ alignedForm class around it on form, fieldset, whatever 
+ */
+.alignedForm label	{display:block; clear:both; margin-bottom:.2em; vertical-align:top;}
+.alignedForm label:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+.alignedForm .prompt	{text-align:right; float:left; width:35%; display:block; margin-right:2%;}
+.alignedForm .alignInput	{width:60%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
@@ -133,7 +146,7 @@ and offMenu is toggle off, hiding the change button.
 .stdMargin	{margin:1em;}
 .headerPadding	{padding: .2em .4em;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
 .stdPadding	{padding:1em;}
-
+.smallPadding	{padding:.5em;}
 .fullWidth	{width:100%;}
 
 
@@ -177,6 +190,7 @@ these get used just about everywhere. leave these fairly generic
 and override using classes or id's as needed.
 
 */
+a.blockLink {border:none; display:block;}
 
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
@@ -289,11 +303,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .reviewLineItem blockquote	{margin:0 0 0 185px; padding:0;}
 
 
-/* WRITE REVIEW MODAL */
-#reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
-#reviewsMessage		{width:250px; height:250px;}
-#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:.5em;}
-#reviewFrm .ui-button	{float:right;}
+
 
 /*
 
@@ -320,9 +330,9 @@ cartTemplate
 
 
 .cartContainer	{width:100%;}
-
 #mainContentArea_cart .continueShoppingButton	{display:none;} /* used in modal cart only */
 
+.cartSummaryTotalsContainer .ui-widget .cartRefreshButton	{margin: -4px 0 0 0; float:right;}
 /*
 
 CUSTOMER PAGES
@@ -355,6 +365,12 @@ CUSTOMER PAGES
 #buyerAddresses h2	{margin:1em 0; clear:both;}
 #buyerAddresses address	{margin:0 0px 1em 0; float:left; width:90%; display:block; padding:1em;}
 
+
+/* buyer lists */
+.smallButtonList .ui-button-icon-only {width:1.4em}
+.smallButtonList .ui-button-icon-only .ui-button-text	{height:1.4em; padding:0;}
+
+.buyerList .prodThumbContainer	{position:relative;}
 
 
 /*

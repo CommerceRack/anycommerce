@@ -28,40 +28,13 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function(_app) {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrdersOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	vars : {
 		"pools" : ['RECENT','PENDING','PREORDER','BACKORDER','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
-		"emailMessages" : {
-			'ORDER.CONFIRM':'Order created',
-			'ORDER.CUSTOM_MESSAGE1' : 'Order custom 1',
-			'ORDER.CONFIRM_DENIED' : 'Order confirmation w/payment denied',
-			'ORDER.ARRIVED.AMZ' : 'Order arrived: Amazon follow up',
-			'ORDER.ARRIVED.BUY' : 'Order arrived: Buy.com follow up',
-			'ORDER.ARRIVED.EBF' : 'Order arrived: eBay follow up',
-			'ORDER.ARRIVED.WEB' : 'Order arrived: website follow up',
-			'ORDER.FEEDBACK.AMZ' : 'Amazon Feedback request',
-			'ORDER.FEEDBACK.EBAY' : 'eBay Feedback request',
-			'ORDER.NOTE' : 'Order %ORDERID%',
-			'ORDER.SHIPPED' : 'Order %ORDERID% shipped',
-			'ORDER.SHIPPED.EBAY' : 'Your eBay order has been shipped.',
-			'ORDER.SHIPPED.AMZ' : 'Your Amazon order has been shipped.',
-			'ORDER.MERGED' : 'Your order has been merged',
-			'ORDER.SPLIT' : 'Changes to your order',
-			'ORDER.PAYMENT_REMINDER' : 'Payment reminder',
-			'ORDER.MOVE.APPROVED' : 'Order %ORDERID% approved',
-			'ORDER.MOVE.RECENT' : 'Order %ORDERID% backordered',
-			'ORDER.MOVE.COMPELTED' : 'Order %ORDERID% completed',
-			'ORDER.MOVE.CANCEL' : 'Order %ORDERID% cancelled',
-			'ORDER.MOVE.PENDING' : 'Order %ORDERID% pending',
-			'ORDER.MOVE.PREORDER' : 'Order %ORDERID% preordered',
-			'ORDER.MOVE.PROCESSING' : 'Order %ORDERID% processing',
-			'ORDER.MOVE.RECENT' : 'Order %ORDERID% moved to recent',
-			'CUSTOMMESSAGE' : 'Custom/Edit message' //if this changes, change class here in orders css: .orderManagerTable .bulkEditMenu .emailmsg_custommessage
-			},
 		"markets" : {
 			'ebay' : 'eBay',
 			'amazon' : 'Amazon'
@@ -91,24 +64,6 @@ var admin_orders = function(_app) {
 			}, //init
 
 
-		mergeDataForBulkPrint : {
-			
-			onSuccess : function(tagObj){
-				var tmpData = {};
-				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
-				//this is because a template only wants to be parsed once.
-				if(tagObj.merge)	{
-					tmpData = $.extend(_app.data[tagObj.datapointer],_app.data[tagObj.merge]);
-					}
-				else	{
-					tmpData =_app.data[tagObj.datapointer];
-					}
-				var $print = _app.renderFunctions.transmogrify({},tagObj.templateID,tmpData);
-				$print.addClass('pageBreak'); //ensures template is on it's own page.
-				$('#printContainer').append($print);
-				}
-			},
-
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
@@ -125,36 +80,6 @@ var admin_orders = function(_app) {
 				}		
 			}, //orderPoolChanged
 
-//executed per order lineitem on a sendmail macro for order update.
-// on success, if the row is still selected, change the icon from loading back to selected. if not selected, drop icon
-//on error, show an error icon in the first column, but suppress the error message from being loaded in THAT column, which is a small spot to put a message.
-		handleSendEmail : {
-			onSuccess : function(tagObj)	{
-//				_app.u.dump("BEGIN admin_orders.callsbacks.handleSendEmail.onSuccess"); _app.u.dump(tagObj);
-				var $td = $(_app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)');
-//restore selected icon IF row is still selected.
-				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
-				else	{$td.html("")}
-				$td.parent().attr('data-status',''); //reset status.
-				},
-			onError : function(responseData)	{
-//				_app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); _app.u.dump(responseData);
-//change the status icon to notify user something went wrong on this update.
-//also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
-				var $row = $(_app.u.jqSelector('#',responseData._rtag.targetID));
-				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
-				_app.ext.admin_orders.u.unSelectRow($row);
-				delete responseData._rtag.targetID; //don't want the message here.
-				_app.u.throwMessage(responseData);
-				}		
-			}, //handleSendEmail
-
-		handleSendEmailFromEdit : {
-			onSuccess : function(tagObj)	{
-				$('body').hideLoading();
-				_app.u.throwMessage(_app.u.successMsgObject("Your email has been sent."));
-				}
-			}, //handleSendEmail
 
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
@@ -248,15 +173,6 @@ function pools2Object()	{
 	return r;
 	}
 
-function messages2Object()	{
-	var r = {};
-	for(var key in _app.ext.admin_orders.vars.emailMessages)	{
-		r["customer_email|"+key] = {'name' : _app.ext.admin_orders.vars.emailMessages[key]}
-		}
-	return r;
-	}
-
-// * 201338 -> updated contextual menu library and the code here. MUCH more efficient method. page loaded faster after this enhancement.
 $.contextMenu({
 	'selector' : '.adminOrderLineItem',
 	'callback' : function(key,options)	{
@@ -274,15 +190,19 @@ $.contextMenu({
 			}
 		},
 	'items' : {
-		"customer_edit": {name: "Edit Customer"},
-		"ticket_create": {name: "Create CRM Ticket"},
-		"customer_email": {
-			"name": "Email Customer", 
-			"items": messages2Object()
-            },
+		"customer_edit": {name: "Edit customer"},
+		"ticket_create": {name: "Create CRM ticket"},
+		"customer_blast": {name: "Email customer"},
 		"sep1": "---------",
-		"order_flagaspaid": {name: "Flag as Paid"},
-		"order_pool_change": {name: "Change Pool",
+		"print" : {
+			"name":"Print",
+			"items" : {
+				"print_invoice" : {"name" : "Invoice"},
+				"print_packslip" : {"name" : "Packing slip"}
+				}
+			},
+		"order_flagaspaid": {name: "Flag as paid"},
+		"order_pool_change": {name: "Change pool",
 			"items": pools2Object()
 			}
 		}
@@ -308,7 +228,58 @@ else	{
 
 
 				}
-			} //listOrders
+			}, //listOrders
+
+//By the time this callback is executed, both the order AND the printable message should be in memory.
+//this is called within the printOrders utility.
+		printOrders : {
+			onSuccess : function(_rtag){
+
+				function getObj(html,dataset)	{
+					//each order is put within a container the pageBreak class so that each printed item is on it's own page.
+					var $tmp = $("<div \/>").addClass('pageBreak').html(html).tlc({'verb':'translate','dataset':dataset});
+					return $tmp;
+					}
+
+				if(_rtag.orders && _rtag.orders.length && _rtag.printable){
+					var L = _rtag.orders.length, $printme = $("<div \/>");
+					var printables = 0; //incremented w/ each order successfully added to the printme element.
+					for(var i = 0; i < L; i += 1)	{
+						var PRT = _app.data['adminOrderDetail|'+_rtag.orders[i]]._PRT || 0;
+						$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Rendering '+_rtag.printable.toLowerCase());
+						try	{
+							// in an email, order tlc binds are prefixed with %ORDER, so the order object is passed in under %ORDER
+							$printme.append(getObj(_app.data['adminBlastMsgDetail|'+PRT+'|PRINTABLE.'+_rtag.printable]['%MSG'].BODY,{'%ORDER':_app.data['adminOrderDetail|'+_rtag.orders[i]]}));
+							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Sent to print.');
+							printables++;
+							}
+						catch(e)	{
+							$("li[data-orderid='"+_rtag.orders[i]+"']",_rtag.jqObj).find('.status').text('Error! '+e);
+							dump(" -> Error thrown by print: "); dump(e);
+							}
+						}
+					
+					if(printables)	{
+						if(_rtag.mode == 'preview')	{
+							var $D = _app.ext.admin.i.dialogCreate({
+								title : "Print Preview",
+								'width' : '90%',
+								'height' : $(document.body).outerHeight() - 100,
+								anycontent : false, //the dialogCreate params are passed into anycontent
+								handleAppEvents : false //defaults to true
+								});
+							$printme.appendTo($D);
+							$D.dialog('open');
+							}
+						else	{
+							_app.u.printByjqObj($printme); //commented out for testin.
+							}
+//						$(document.body).append($printme);
+						}
+					}
+				}
+			}	//printOrders
+		
 		}, //callbacks
 
 
@@ -350,12 +321,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 				$("[data-app-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
 				$("[data-app-role='admin_orders|itemUpdateBulkEditMenu']",$target).menu().hide();
-
-				//Adds the click events to the order bulk update dropdown menu. The render format that generates the list is shared, so the events are added separately.
-				$("[data-app-role='bulkEmailMessagesList']",$target).find('a').each(function(){
-					$(this).attr('data-app-click','admin_orders|bulkImpactOrderItemListExec');
-					})
-
 
 //note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
 //because it requires a slight drag before the 'select' is triggered.
@@ -438,6 +403,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 					
 //go get the list of orders and any other necessary data
 				_app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); //get this for orders.
+				
 				_app.ext.admin_orders.a.showOrderList(P.filters);
 				_app.u.addEventDelegation($target);
 				$target.anyform();
@@ -448,42 +414,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 				}
 //			_app.u.dump("END initOrderManager");
 			}, //initOrderManager
-
-//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
-//though not a modal, only one can be open at a time.
-		showCustomMailEditor : function(orderID, prt)	{
-			if(orderID && Number(prt) >= 0)	{
-				var $target = $('#orderEmailCustomMessage');
-				if($target.length)	{$target.empty();}
-				else	{
-					$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
-					$target.dialog({'width':500,'height':500,'autoOpen':false});
-					}
-	
-				$target.dialog('open');
-				$target.showLoading({'message':'Fetching list of email messages/content'});
-	
-				_app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-					$target.hideLoading();
-					if(_app.model.responseHasErrors(rd)){
-						if(rd._rtag && rd._rtag.selector)	{
-							$(_app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
-							}
-						_app.u.throwMessage(rd);
-						}
-					else	{
-						$target.append(_app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',_app.data[rd.datapointer]));
-						_app.u.handleAppEvents($target);
-						}
-		
-					}},'mutable');
-				_app.model.dispatchThis('mutable');
-				}
-			else	{
-				_app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
-				}
-			},
-
 
 
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
@@ -525,7 +455,6 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 						var
 							orderData = _app.data[rd.datapointer];
-							orderData.emailMessages = _app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 
 //trigger the editable regions
 						_app.ext.admin_orders.u.makeEditable($("[data-app-role='orderUpdateNotesContainer']",$order),{'inputType':'textarea'});
@@ -546,6 +475,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 
 						_app.u.handleCommonPlugins($order);
 						_app.u.handleAppEvents($order);
+						_app.u.handleButtons($order);
 
 //now is the time on sprockets when we enhance.
 
@@ -574,7 +504,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 									//done means done. no adjusting price or quantity at this point.
 									if(invDetail.BASETYPE == "DONE")	{
 //										$tr.attr('title','This item is DONE. It is no longer editable');
-										$tr.attr('title','This item is DONE. Be very cautions about editing it.');
+										$tr.attr('title','This item is DONE. Be very cautious about editing it.');
 //										$('button',$tr).button('disable'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 //										$(':input',$tr).prop('disabled','disabled'); //** 201346 -> commented out for holidays (till we have a permanent solution.
 										}
@@ -742,7 +672,28 @@ else	{
 			else if(data.value == 2 || _app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
 			else	{} //do nothing.
 			},
-		
+		transactionAcctInfo : function($tag,data)	{
+			if(data.value)	{
+				var acctArr = data.value.split('|');
+				var cc,mm='',yy='';
+				for(var i = 0; i < acctArr.length; i += 1)	{
+					var itemArr = acctArr[i].split(':');
+					if(itemArr[0] == 'CM')	{
+						cc = itemArr[1];
+						}
+					else if(itemArr[0] == 'YY')	{
+						yy = itemArr[1];
+						}
+					else if(itemArr[0] == 'MM')	{
+						mm = itemArr[1];
+						}
+					else	{}
+					}
+				if(cc)	{
+					$tag.append("CC: "+cc+"<br>CC Exp: "+mm+"/"+yy);
+					}
+				}
+			},
 		orderFlagsAsSpans : function($tag,data)	{
 			var flags = _app.ext.admin_orders.u.getOrderFlagsAsArray(data.value),
 			L = flags.length;
@@ -804,15 +755,6 @@ else	{
 				}
 			},
 
-//used for adding email message types to the actions dropdown.
-//recycled in list mode and edit mode. #MAIL| is important in list mode and stripped in edit mode during click event.
-//designed for use with the vars object in this extension, not the newer adminEmailList _cmd
-//this is shared, so do NOT add an app-click to the li here, do it with JS. -> used by bulk edit AND in order edit.
-		emailMessagesListItems : function($tag,data)	{
-			for(var key in data.value)	{
-				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"' >"+data.value[key]+" ("+key+")</a></li>");
-				}
-			},
 
 		fetchAndDisplayPayMethods : function($tag,data)	{
 			$tag.showLoading({'message':'Fetching payment methods for order'});
@@ -1082,16 +1024,16 @@ if giftcard is on there, no paypal will appear.
 							'orderid':$row.data('orderid')
 							});
 						break;
+					case 'print_invoice':
+						_app.ext.admin_orders.u.printOrders([$row.data('orderid')],{printable:"INVOICE"});
+						break;
 					
-					case 'customer_email':
-						var MSG = action.split('|')[1];
-						if(MSG == 'CUSTOMMESSAGE')	{
-							_app.ext.admin_orders.a.showCustomMailEditor($row.data('orderid'),$row.data('prt'));
-							}
-						else	{
-							_app.ext.admin_orders.u.sendOrderMail($row.data('orderid'),MSG,$row);
-							_app.model.dispatchThis('immutable');
-							}
+					case 'print_packslip':
+						_app.ext.admin_orders.u.printOrders([$row.data('orderid')],{printable:"PACKSLIP"});
+						break;
+					
+					case 'customer_blast':
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':$row.data('prt'),'RECEIVER':'CUSTOMER','CID':$row.data('cid'),'ORDERID':$row.data('orderid')});
 						break;
 					
 					case 'order_flagaspaid':
@@ -1439,94 +1381,6 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
 				},
 
-			
-			
-//orderid and msgID are required.
-			sendOrderMail : function(orderID,msgID,$row)	{
-				if(msgID && orderID && $row.length){
-					if($row)	{$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>")}
-					else	{}// see how this is used outside the list. may want to use this to trigger a showLoading.
-					_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
-					}
-				else	{
-					_app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
-					}
-				},
-
-			bulkSendOrderMail : function(CMD)	{
-				var $orders = $('.ui-selected','#orderListTableBody');
-				var msgID = CMD.substring(5);
-				if(!$orders.length)	{
-					_app.u.throwMessage("Please select at least 1 order");
-					}
-//msgID is set and exists.
-				else if(msgID && _app.ext.admin_orders.vars.emailMessages[msgID])	{
-					$orders.each(function(){
-						_app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID,$(this));
-						});
-					_app.model.dispatchThis('immutable');
-					}
-				else	{
-					_app.u.throwGMessage("In admin_orders.u.bulkSendOrderMail, unable to ascertain msg type. command = "+command+" and msgID = "+msgID);
-					}
-				},
-
-//currently, this requires that the order_create extension has been added.
-//This groups all the invoices into 1 div and adds pagebreaks via css.
-//for this reason, the individual print functions for invoice/packslip are not recycled
-			bulkOrdersPrint : function(CMD)	{
-				var $orders = $('.ui-selected','#orderListTableBody'),
-				templateID = undefined, //what template will be used.
-				sDomains = {}; //a list of the sdomains. each domain added once. done to optimize dispatches so each sdoamin/profile data only requested once.
-				
-				if($orders.length)	{
-					if(CMD == 'PRNT|INVOICE')	{
-						templateID = "invoiceTemplate";
-						}
-					else if(CMD == 'PRNT|PACKSLIP')	{
-						templateID = "packslipTemplate"
-						}
-					else	{_app.u.throwGMessage("In admin_orders.u.bulkOrdersPrint, CMD value is unsupported.")} //unsupported CMD.
-					
-					if(templateID)	{
-						$('#printContainer').empty(); //clean out any previously printed content.
-						$('body').showLoading({'message':'Generating file for print'});
-						
-						_app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
-						
-						$orders.each(function(){
-							var $order = $(this);
-							var sdomain = $order.data('sdomain');
-							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
-							else if(sdomain)	{
-								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								_app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
-								}
-							else	{
-								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
-								}
-							_app.model.destroy('adminOrderDetail|'+$order.data('orderid')); //get a clean copy of the order.
-							_app.ext.admin.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
-							})
-						_app.calls.ping.init({'callback':function(responseData){
-							$('body').hideLoading();
-							if(_app.model.responseHasErrors(responseData)){
-								_app.u.throwMessage(responseData);
-								}
-							else	{
-//							$('#printContainer').show(); //here for troubleshooting.
-								_app.u.printByElementID('printContainer');
-								}
-							}},'immutable');
-						_app.model.dispatchThis('immutable');
-						}
-					else	{} //error occured. no templateID defined. error message already displayed.
-					}
-				else	{
-					_app.u.throwMessage('Please select at least one row.');
-					}
-				}, //bulkOrdersPrint
-
 
 //run this to change the pool for a specific order.
 //this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
@@ -1595,20 +1449,26 @@ else	{
 
 //used in the order editor. executed whenever a change is made to update the number of changes in the 'save' button.
 			updateOrderChangeCount : function($t)	{
-				_app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
-				var $dialog = $t.closest("[data-orderid]"); //container dialog.
-				if($dialog.length)	{
-					_app.u.dump(" -> FOUND PARENT!");
-					var numEdits = $('.edited',$dialog).length;
-					_app.u.dump(" -> numEdits: "+numEdits);
-					var $count = $('.changeCount',$dialog);
-					$count.text(numEdits);
-					//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
-					if(numEdits > 0)	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
-					else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+				var numEdits = '';
+				if($t instanceof jQuery)	{
+					_app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
+					var $dialog = $t.closest("[data-orderid]"); //container dialog.
+					if($dialog.length)	{
+						_app.u.dump(" -> FOUND PARENT!");
+						numEdits = $('.edited',$dialog).length;
+						_app.u.dump(" -> numEdits: "+numEdits);
+						var $count = $('.changeCount',$dialog);
+						$count.text(numEdits);
+						//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
+						if(numEdits > 0)	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
+						else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.","gMessage":true});
+						}
 					}
 				else	{
-					_app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
+					$("#globalMessaging").anymessage({"message":"In admin_orders.u.updateOrderChangeCount, $t is not an instance of jQuery.","gMessage":true});
 					}
 				
 				return numEdits;
@@ -1708,9 +1568,81 @@ $('.editable',$container).each(function(){
 				else	{
 					$mainCol.anymessage({'message':'In admin_orders.u.changeOMMode, invalid mode ['+mode+'] set. must be order or item.','gMessage':true});
 					}
-				}
+				},
 			
+//orders should be an array of order id's.
+// vars.printable should be set to what printable message format is to be used. ex: PACKSLIP
+//will go fetch all the orders. Will use the orders to determine which partition messaging needs to be retrieved.
+//will then execute the printOrders callback, which will add all the invoices to the print div and print.
+			printOrders : function(orders,vars)	{
+				vars = vars || {};
+				if(orders && orders.length)	{
+					if(vars.printable)	{
+						var $dialog = $("<div \/>",{'title':'Print Status'}).dialog({
+							autoOpen: true,
+							width: 250
+							});
+						var $ul = $("<ul \/>").appendTo($dialog);
+						//The first thing that needs to be done is to get all the order details. Then we can use these to see how many partitions worth of msg.printable we need to gather.
+						var
+							L = orders.length,
+							okOrders = new Array(), //list of orders that were retrieved w/out error.
+							prts = new Array(); //list of partitions that the orders belong to. necessary for fetching appopriate blast message.
+						prts.push(0); //the zero partition is used when no partition can be ascertained. Added to array to ensure the default printable message is retrieved.
+						for(var i = 0; i < L; i += 1)	{
 
+function handleOrder(orderid){
+	$ul.append("<li data-orderid='"+orderid+"'>"+orderid+" - <span class='status'>Fetching<\/span><\s/li>");
+	_app.ext.admin.calls.adminOrderDetail.init(orderid,{callback : function(rd){
+		if(_app.model.responseHasErrors(rd)){
+			$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('error!').end().anymessage(rd);
+			}
+		else	{
+			dump(" -> order fetch callback. orderid: "+orderid);
+			okOrders.push(orderid);
+			if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderid+".our.domain",_app))	{
+				$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('processing...');
+				var dObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',_app.data['adminOrderDetail|'+orderid].our.domain);
+	//										dump(dObj);
+				if(dObj && dObj.PRT >= 0)	{
+					_app.data['adminOrderDetail|'+orderid]._PRT = dObj.PRT; //add this to order in memory for quick lookup in printOrders callback.
+					if($.inArray(dObj.PRT,prts) < 0)	{prts.push(dObj.PRT);}
+					}
+				}
+			}		
+		}},'mutable');
+	}
+handleOrder(orders[i]);
+
+							}
+//now fetch the printable message for each partition being used.
+						_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":function(rd){
+//							dump(" -> Got to ping callback");
+							if(okOrders.length)	{
+								//no orders came back without errors.
+								for(var i = 0; i < prts.length; i += 1)	{
+									_app.model.addDispatchToQ({"_cmd":"adminBlastMsgDetail","PRT":prts[i],"TLC":true,"MSGID":"PRINTABLE."+vars.printable,"_tag":{
+										"datapointer":"adminBlastMsgDetail|"+prts[i]+"|PRINTABLE."+vars.printable
+										}},"mutable");
+									}
+								_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":"printOrders","extension":"admin_orders","orders":okOrders,"printable":vars.printable,"mode" : (vars.mode ? vars.mode : 'print'),"jqObj":$dialog}},"mutable");
+								_app.model.dispatchThis("mutable");
+								}
+							else	{
+								//no orders were retrieved. errors are already displayed.
+								}
+							}}},"mutable");
+						_app.model.dispatchThis('mutable');
+	
+						}
+					else	{
+						$("#globalMessaging").anymessage({"message":"In admin_orders.u.printOrders, vars.printable was blank.","gMessage":true});
+						}
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_orders.u.printOrders, no orders were passed.","gMessage":true});
+					}
+				}
 
 
 			}, //u
@@ -1820,16 +1752,13 @@ $('.editable',$container).each(function(){
 								_app.model.dispatchThis('immutable');
 								break;
 							
-							case 'MAIL':
-								_app.ext.admin_orders.u.bulkSendOrderMail(command);
-								break;
-
 							case 'PRNT':
-								_app.ext.admin_orders.u.bulkOrdersPrint(command);
-								break;
-				
-							case 'BTCH':
-								alert('woot!');
+//								_app.ext.admin_orders.u.bulkOrdersPrint(command);
+								var orders = new Array();
+								$('.ui-selected','#orderListTableBody').each(function(){
+									orders.push($(this).data('orderid'));
+									});
+								_app.ext.admin_orders.u.printOrders(orders,{printable:command.split('|')[1]});
 								break;
 				
 							default:
@@ -2002,60 +1931,15 @@ $('.editable',$container).each(function(){
 
 
 			orderPrint : function($ele,p)	{
-				dump(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+				p.preventDefault();
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
-				if(orderID && $ele.data('loadstemplate'))	{
-// SANITY -> browsers didn't like it when the popup was triggered after an ajax request. so instead, we open the popup right away, then populate the content later, followed by the print cmd.
-
-// ### FUTURE -> the iframe code below is a new approach to printing.  needs testing. -> worked on PC chrome and firefox. Worked on iphone safari. did NOT work on android chrome for ericH. that needs more testing.
-//var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($("#printContainer").empty()); //the print container.  emptied to make sure anything leftover from last print is gone.
-//$iframe.contents().find('body').append('<h1>JT WAS HERE!</h1>')
-//$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
-//window.frames["printContainerIframe"].focus(); window.frames["printContainerIframe"].print();
-
-					var popup = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
-					if(popup)	{
-						popup.document.write("<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>Loading order content...</body></html>");
-						var domain, $pop = $(popup.document);
-						if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderID+".our.domain",_app))	{
-							domain = _app.data['adminOrderDetail|'+orderID].our.domain;
-							}
-						else if(domain = $ele.closest("[data-domain]").data('domain'))	{}
-						else	{} //hhhmm.. no domain available. that means no branding.
-						
-						if(domain)	{
-							_app.calls.appProfileInfo.init({'domain':domain},{},'mutable'); //have this handy for any orders with no domain.
-							}
-						_app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
-						_app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(rd){
-							if(_app.model.responseHasErrors(rd)){
-								$('body',$pop).html("").anymessage({'message':rd});
-								}
-							else	{
-								var tmpData = {};
-								if(domain)        {
-									tmpData = $.extend(true,{},_app.data[rd.datapointer],_app.data['appProfileInfo|'+domain]);
-									}
-								else        {
-									tmpData = _app.data[rd.datapointer];
-									}
-								$('body',$pop).html(_app.renderFunctions.transmogrify({},$ele.data('loadstemplate'),tmpData));
-								popup.focus();
-								popup.print();
-								popup.close();
-								}
-							}},'mutable');
-						_app.model.dispatchThis('mutable');
-						
-						}
-					else	{
-						//unable to open a popup.
-						}
-
+				if(orderID && $ele.data('printable'))	{
+					_app.ext.admin_orders.u.printOrders([orderID],{'printable':$ele.data('printable'),'mode':$ele.data('mode')});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-loadstemplate ["+$ele.data('loadstemplate')+"] not set on trigger element.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_orders.e.orderPrint, either orderid ["+orderID+"] was unable to be ascertained or data-printable ["+$ele.data('printable')+"] not set on trigger element.","gMessage":true});
 					}
+				return false;
 				},
 /*
 //////////////////   END delegated events \\\\\\\\\\\\\\\\\\
@@ -2278,140 +2162,36 @@ $('.editable',$container).each(function(){
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
 
-			"orderPrintInvoice" : function($btn){
-				$btn.button();
-				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
-					event.preventDefault();
-					_app.ext.admin_orders.e.orderPrint($btn,event);
-					});
-				}, //orderPrintInvoice
-
-			"orderPrintPackSlip" : function($btn){
-				$btn.button();
-				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
-					event.preventDefault();
-//					_app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
-					_app.ext.admin_orders.e.orderPrint($btn,event);
-					});
-				}, //orderPrintPackSlip
-
-			"orderEmailSend" : function($btn){
+			"orderBlastSend" : function($btn){
 				$btn.button();
 //simply trigger the dropdown on the next button in the set.
-				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
-					_app.u.dump(" -> orderEmailSend clicked.");
+				$btn.off('click.orderBlastSend').on('click.orderBlastSend',function(event){
 					event.preventDefault();
-					$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").trigger('click');
-					_app.u.dump(" -> $btn.parent().find('[data-app-event='orderEmailShowMessageList']').length: "+$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").length);
-					});
 
+					var orderID = $btn.closest("[data-orderid]").data('orderid');
 
-				}, //orderEmailSend
-
-			"orderEmailCustomSend" : function($btn)	{
-				$btn.button();
-				$btn.off('click.orderEmailCustomSend').on('click.orderEmailCustomSend',function(event){
-					event.preventDefault();
-					var $form = $btn.parents('form'),
-					frmObj = $form.serializeJSON(),
-					orderID = $btn.closest("[data-orderid]").data('orderid');
-					partition = $btn.closest("[data-prt]").data('prt');
-					
-					$('body').showLoading({'message':'Sending custom message for order '+orderID});
-					
-					if(!$.isEmptyObject(frmObj) && orderID && frmObj.SUBJECT && frmObj.BODY && frmObj.BODY.length > 1)	{
-						_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?body="+encodeURIComponent(frmObj.BODY)+"&subject="+encodeURIComponent(frmObj.SUBJECT)],{'callback':function(rd){
-$('body').hideLoading();
-if(_app.model.responseHasErrors(rd)){
-	rd.parentID = 'orderEmailCustomMessage';
-	_app.u.throwMessage(rd);
-	}
-else	{
-	var msgObj = _app.u.successMsgObject("Thank you, your message has been sent.");
-	$('#orderEmailCustomMessage').empty();
-	msgObj.parentID = 'orderEmailCustomMessage';
-	_app.u.throwMessage(msgObj);
-	}
-							}});
-//						_app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
-						if(frmObj.updateSystemMessage && frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
-//							_app.u.dump(" -> updating default system messaging");
-							frmObj.PRT = partition;
-							frmObj.TYPE = 'ORDER'; //Don't pass a blank FORMAT, must be set to correct type.
-							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-//							_app.u.dump(" -> frmObj: "); _app.u.dump(frmObj);
-							_app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
-								if(_app.model.responseHasErrors(rd)){
-									rd.parentID = 'orderEmailCustomMessage';
-									_app.u.throwMessage(rd);
-									}
-								else	{
-									var msgObj = _app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
-									msgObj.parentID = 'orderEmailCustomMessage';
-									
-									_app.u.throwMessage(msgObj);
-									}
-								}},'immutable');
-							}
-						
-						_app.model.dispatchThis('immutable')
-						}
-					else	{
-						_app.u.throwGMessage("In admin_orders.e.orderEmailCustomSend, both subject ["+frmObj.subject+"] and body are required and one was empty OR app was unable to ascertain the order id ["+orderID+"]");
-						_app.u.dump("In the following object, body param MUST be present and have a length > 1"); _app.u.dump(frmObj);
-						}
-					
-					})
-				}, //orderEmailCustomSend
-
-//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
-			"orderEmailCustomChangeSource" : function($select)	{
-				_app.ext.admin.e.toggleEmailInputValuesBySource($select);
-				}, //orderEmailCustomChangeSource
-
-//
-			"orderEmailShowMessageList" : function($btn){
-				
-				$btn.button({text: false,icons: {primary: "ui-icon-triangle-1-s"}})
-
-				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-				var menu = $btn.parent().next('ul').menu().hide();
-				menu.css({'position':'absolute','width':'300px','z-index':'10000'}).parent().css('position','relative');
-				
-				menu.find('li a').each(function(){
-					$(this).off('click.sendmail').on('click.sendmail',function(event){
-						event.preventDefault();
-						if($(this).attr('href') == '#MAIL|CUSTOMMESSAGE')	{
-							_app.ext.admin_orders.a.showCustomMailEditor(orderID,_app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
+					if(orderID && _app.data['adminOrderDetail|'+orderID])	{
+						var partition;
+						var email = _app.data['adminOrderDetail|'+orderID].bill.email || _app.data['adminOrderDetail|'+orderID].customer.login || "";
+						var CID = _app.data['adminOrderDetail|'+orderID].customer.cid;
+						var domain = _app.data['adminOrderDetail|'+orderID].our.domain; //used to fetch the partition.
+						if(domain)	{
+							partition = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',domain).PRT;
 							}
 						else	{
-							$('body').showLoading({'message':'Emailing customer [message: '+$(this).attr('href').substring(6)+']'});
-//substring(6) on the link below strips #MAIL| from the url
-							_app.ext.admin.calls.adminOrderMacro.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
-							_app.model.dispatchThis('immutable');
+							_app.u.dump(" -> could not ascertain domain for order. using partition in focus.");
 							}
-						});
+						//if no partition could be found from the domain, use the partition in focus.
+						//is after the domain lookup because it could return false or undef.
+						partition = partition || _app.vars.partition;
+						_app.u.dump(" -> partition: "+partition);
+						_app.ext.admin_blast.u.showBlastToolInDialog({'OBJECT':'ORDER','PRT':partition,'EMAIL':email,'RECEIVER':'EMAIL','CID':CID,'ORDERID':orderID});
+						}
+					else	{
+						_app.u.dump(" -> could not ascertain orderid for order or the order is not in memory.",'error');
+						}
 					});
-
-
-//simply trigger the dropdown on the next button in the set.
-				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){
-					_app.u.dump(" -> orderEmailShowMessageList clicked.");
-					$btn.button();
-					event.preventDefault();
-                    menu.show().position({
-                        my: "right top",
-                        at: "right bottom",
-                        of: this
-	                    });
-//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
-					setTimeout(function(){$(document).one( "click", function() {menu.hide();});},1000);
-					});
-
-				$btn.parent().buttonset();
-
-				}, //orderEmailShowMessageList
-
+				}, //orderBlastSend
 
 
 			orderSearch : function($ele,P)	{
@@ -2424,30 +2204,31 @@ else	{
 					query;
 				
 				if(frmObj.keyword)	{
+					var keyword = $.trim(frmObj.keyword);
 					$('#orderListTableBody').empty();
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					$mainCol.showLoading({'message':'Searching orders...'});
 					if(frmObj.isDetailedSearch == 'on')	{
 						query = {'size':Number(frmObj.size) || 30,'filter' : {
 						'or' : [
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/address']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/item']}},
-						{'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}}}
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/address']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
+						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/item']}},
+						{'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}}}
 						]},'type' : ['order'],'explain' : 1}
 						}
 					else	{
 						query = { 'filter' : {
 						  'or' : [
-							 { 'term': { 'references': frmObj.keyword  } },
-							 { 'term' : { 'email': frmObj.keyword } },
-							 { 'term' : { 'orderid': frmObj.keyword } }
+							 { 'term': { 'references': keyword  } },
+							 { 'term' : { 'email': keyword } },
+							 { 'term' : { 'orderid': keyword } }
 							 ]
 						  }}
 						}
 					
-					_app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':frmObj.keyword},'immutable');
+					_app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrdersOrderLineItem','keyword':keyword},'immutable');
 
 					_app.model.dispatchThis('immutable');
 					}
@@ -2478,7 +2259,7 @@ else	{
 						}
 //build shipping macro/call, if necessary. Only add if inputs have changed.
 					if($("[name='sum/shp_carrier']",$parent).hasClass('edited') || $("[name='sum/shp_method']",$parent).hasClass('edited') || $("[name='sum/shp_total']",$parent).hasClass('edited'))	{
-						macros.push("SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier=SLOW&sum/shp_method="+frmObj['sum/shp_method']);
+						macros.push("SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier="+frmObj['sum/shp_carrier']+"&sum/shp_method="+frmObj['sum/shp_method']);
 						}
 
 					if(macros.length)	{
@@ -2598,22 +2379,22 @@ else	{
 						errors = (typeof _app.ext.cco.validate[formJSON.tender] === 'function') ? _app.ext.cco.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
 						_app.u.dump('errors'); _app.u.dump(errors);
-						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
+						$paymentContainer.find('.ui-state-error').removeClass('ui-state-error'); //remove css from previously failed inputs to avoid confusion.
 						
 
-//the mandatory class gets added to the parent of the input, so that the input, label and more get styled.
+//the ui-state-error class gets added to the parent of the input, so that the input, label and more get styled.
 						if(!formJSON.amt)	{
 							var msgObj = _app.u.errMsgObject("Please set an amount");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							_app.u.throwMessage(msgObj);
-							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
+							$("[name='amt']",$paymentContainer).addClass('ui-state-error');
 							}
 						else if(errors)	{
 							var msgObj = _app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							_app.u.throwMessage(msgObj);
 							for(var index in errors)	{
-								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
+								$("[name='"+errors[index]+"']",$paymentContainer).addClass('ui-state-error');
 								}
 							}
 						else	{

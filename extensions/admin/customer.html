@@ -25,7 +25,7 @@
 			<option value='ACCOUNT_MANAGER'>account manager (org)</option>
 			<option value='ACCOUNT_TYPE'>account type (org)</option>
 		</select>
-		<input type='search' name='searchfor' placeholder='keyword' size='30' required="required" />
+		<input type='search' name='searchfor' placeholder='keyword' size='30' required />
 		<button class='applyButton' data-app-role='customerSearchButton' data-app-click='admin_customer|execCustomerSearch' data-text='true' data-icon-primary='ui-icon-search'>Search</button>
 		</form>		
 		</div>
@@ -84,9 +84,8 @@ if the data attrib is changed or any changes are made to the values (especially 
 	<div class='buttonBar clearfix marginBottom'>
 		<div class='floatRight smallButtons'>
 			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerEditorSave' disabled='disabled' data-app-role='saveButton' data-text='true'>Save <span class='numChanges'></span> Changes</button>
-			<button class='floatRight applyButton' data-app-click='admin_customer|execHintReset' data-text='true' data-icon-primary='ui-icon-close'>Remove Password Hint</button>
 			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerRemove' data-text='true' data-icon-primary='ui-icon-trash'>Delete</button>
-			<button class='floatRight applyButton' data-app-click='admin_customer|showMailTool' data-text='true' data-icon-primary='ui-icon-mail-closed'>Email</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|showBlastTool' data-text='true' data-icon-primary='ui-icon-mail-closed'>Email</button>
 		</div>
 
 		<h2>
@@ -107,8 +106,15 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 		<label><span>Email:</span><input size='20' type="email" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
 		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
 		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
-		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /></label>
+<!--		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /> <span class='toolTip' title="Leave this field blank to leave the customer password 'as is'.  If you set a password here, the existing password will be removed in favor of what you entered. This field will always appear blank.">?</span></label> -->
 		<label data-bind="var:customer(INFO.IS_LOCKED); format:addClass;className:ui-state-error;"><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popVal;"> Lock customer account</label>
+	</fieldset>
+	<hr>
+	<h5>Password Utilities</h5>
+	<fieldset data-bind='var:customer(_CID); format:assignAttribute; attribute:data-cid;' class='buttonset' data-app-role='passwordButtonContainer'>
+		<button title="Change the password and, optionally, send the user a message notifying them." class='applyButton' data-app-click='admin_customer|passwordChangeShow' data-text='true' data-icon-primary='ui-icon-pencil'>Change</button>
+		<button title="Generate a temporate password that will last for 3 hours. Handy if you need to log in as the user and do not want to change their password." class='applyButton' data-app-click='admin_customer|passwordCreateTemporaryExec' data-text='true' data-icon-primary='ui-icon-clock'>Get Temporary</button>
+		<button class='applyButton' data-app-click='admin_customer|execHintReset' data-text='true' data-icon-primary='ui-icon-close'>Remove Hint</button>
 	</fieldset>
 	</div>
 </div>
@@ -226,20 +232,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 	</div>
 </div>
 
-<!--
-<div class='labelsAsBreaks alignedLabels panel' data-app-role="wholesale">
-	<h2>Wholesale</h2>
-	<div>
-	<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_customer;">Schedule: </label>
-	<label class='clearfix'><input type="checkbox" name="ALLOW_PO" data-bind="var:customer(WS.ALLOW_PO); format:popVal;"> Enable/Accept Purchase Orders</label>
-	<label class='clearfix'><input type="checkbox" name="RESALE" data-bind="var:customer(WS.RESALE); format:popVal;"> Do not charge sales tax</label>
-	<label><span>Credit Limit: $</span><input type='number' class='smallInput' step='0.01' min='0' name="CREDIT_LIMIT"  size="10" data-bind="var:customer(WS.CREDIT_LIMIT); hideZero:false; format:popVal;" /></label>
-	<label><span>Credit Balance: $</span><input type='number' class='smallInput' step='0.01' min='0' name="CREDIT_BALANCE"  size="10" data-bind="var:customer(WS.CREDIT_BALANCE); hideZero:false; format:popVal;" /></label>
-	<label><span>Resale #: </span><input type='number' class='smallInput' name="RESALE_PERMIT"  size="15" data-bind="var:customer(WS.RESALE_PERMIT); format:popVal;" /></label>
-	<label><span>Account Manager: </span><input type="text" name="ACCOUNT_MANAGER"  size="10" data-bind="var:customer(WS.ACCOUNT_MANAGER); format:popVal;" /></label>
-	</div>
-</div>
--->
+
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="wallets">
 	<h2>Wallets</h2>
@@ -287,7 +280,28 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 
 
 
+<div id='customerPasswordChangeTemplate'>
 
+<form data-app-submit="admin|submitForm">
+<!-- OR use a macro cmd, usually not both -->
+<input type='hidden' name='_macrobuilder' value='admin_customer|adminCustomerUpdatePassword' />
+<!-- define a callback as so and pass params via _tag/ -->
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='The password has been changed.' />
+<input type='hidden' name='CID' data-tlc="bind $cid '.CID'; apply --select=$cid; " />
+	<fieldset class='labelsAsBreaks'>
+		<label>
+			<span class='prompt'>New password</span>
+			<input type='text' name='password' value='' />
+		</label>
+		<label>
+			<input type='checkbox' name='sendblast' checked />Send message to customer with new password
+		</label>
+	</fieldset>
+	<button class='applyButton'>Save</button>
+</form>
+
+</div>
 
 
 
@@ -1107,7 +1121,7 @@ The checkbox below does not work.
 
 <label>
 	<span>Template</span>
-	<select data-bind="var: mkt(@TEMPLATES);format:optionsFromList; text:SUBDIR; value:SUBDIR;" name='template_origin'></select>
+	<select data-bind="var: mkt(@TEMPLATES);format:optionsfromlist; text:SUBDIR; value:SUBDIR;" name='template_origin'></select>
 </label>
 
 
@@ -1315,3 +1329,45 @@ Coming Soon
 	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
 </tr>
 </table>
+
+
+
+
+<!-- FAQ manager -->
+
+<table>
+<tr id='faqResultsRowTemplate'>
+	<td data-bind='var: faq(TOPIC_ID); format:faqTopic; extension:admin_customer;'></td>
+	<td data-bind='var: faq(QUESTION); format:text;'></td>
+	<td data-bind='var: faq(PRIORITY); format:text;'></td>
+	<td class='alignRight'>
+		<button data-app-click="admin_customer|faqQuestionDeleteConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete FAQ</button>
+		<button data-app-click="admin_customer|faqQuestionUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit FAQ</button>
+	</td>
+</tr>
+</table>
+
+<div id='faqAddUpdateTemplate'>
+	<form class='labelsAsBreaks alignedLabels' data-app-submit="admin|submitForm">
+	<input type='hidden' name='FAQ_ID' value='' data-tlc="bind $val '.FAQ_ID'; apply --select=$val;" />
+	
+	<label>
+		<select name='TOPIC_ID' data-tlc="bind $val '.TOPIC_ID'; bind $topics '.@TOPICS'; admin_customer#topicloop; apply --append; apply --select=$val;">
+			
+		</select>
+	</label>
+	<label>
+		<textarea placeholder='question' name='QUESTION' class='fullWidth' data-tlc="bind $val '.QUESTION'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<textarea placeholder='answer' name='ANSWER'  class='fullWidth' data-tlc="bind $val '.ANSWER'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<textarea placeholder='keywords' name='KEYWORDS'  class='fullWidth' data-tlc="bind $val '.KEYWORDS'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<input type='number' min='0' step='1' placeholder='priority' name='PRIORITY' data-tlc="bind $val '.PRIORITY'; apply --select=$val;" value='0' />
+	</label>
+	<button class='applyButton' data-app-role='saveButton'>Save</button>
+	</form>
+</div>

@@ -83,7 +83,7 @@ function model(_app) {
 	var r = {
 	
 		
-		version : "201401",
+		version : "201402",
 		
 		
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
@@ -210,7 +210,7 @@ function model(_app) {
 				
 //				_app.u.dump(index+"). "+_app.q[QID][index]._cmd+" status: "+_app.q[QID][index]._tag.status);
 				
-				if(_app.q[QID][index]._tag.status == 'queued')	{
+				if(_app.q[QID][index]._tag && _app.q[QID][index]._tag.status == 'queued')	{
 					_app.q[QID][index]._tag.status = "requesting";
 //					_app.u.dump(" -> new status: "+_app.q[QID][index]._tag.status);
 					if(puuid){_app.q[QID][index]._tag.pipeUUID = puuid}
@@ -483,6 +483,12 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
 				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
 					_app.u.dump(' -> API Response for '+QID+' Q contained an error at the top level (on the pipe)','warn');
+					$('.ui-showloading').hideLoading(); //make sure all the showLoadings go away.
+					//brian says that an error 10 will always ONLY be for admin. 2014-03-20
+					if(responseData.errid == 10)	{
+						_app.u.dump(" -> errid of 10 corresponds to an expired token. ");
+						_app.ext.admin.callbacks.handleLogout.onSuccess({"msg":"You were logged out because the token you were using has expired. Please log in to continue."});
+						}
 					if(Q && Q.length)	{
 //						_app.u.dump(" -> Q.length: "+Q.length); _app.u.dump(Q);
 						for(var i = 0, L = Q.length; i < L; i += 1)	{
@@ -629,9 +635,10 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 		thisGetsSaved2Memory : function(cmd)	{
 			var r = true;
 			if(cmd == 'adminNavcatMacro')	{}
-			else if(this.cmdIsAnAdminUpdate(cmd))	{
-				r = false;
-				}
+// ** 201402 -> if they don't need to be saved to memory, don't put a datapointer on them. But allow them to be added if necessary.
+//			else if(this.cmdIsAnAdminUpdate(cmd))	{
+//				r = false;
+//				}
 			else	{
 				switch(cmd)	{
 					case 'appPageGet': //saved into category object earlier in process. redundant here.
@@ -1081,6 +1088,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 // check to see if the cartID is already in carts. if so, remove old and add new id to top.
 // do we want a 'bringCartIntoFocus', which would move a cart id to the top? wait and see if it's necessary.
 		addCart2Session : function(cartID)	{
+//			_app.u.dump(">>>>>>>> BEGIN addCart2Session: "+cartID);
 			var carts = _app.vars.carts || this.dpsGet('app','carts') || [];
 //each cart id should only be in carts once. if the cart id is already present, remove it.
 			var index = $.inArray(cartID,carts);
@@ -1099,6 +1107,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				carts.splice( $.inArray(cartID, carts), 1 );
 				_app.model.destroy('cartDetail|'+cartID);
 				this.dpsSet('app','carts',carts); //update localStorage.
+				//support for browsers w/ localStorage disabled.
+				if(!$.support.localStorage)	{
+					_app.model.deleteCookie('cartid');
+					}
+
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':'In model.removeCartFromSession, no cartid passed','gMessage':true});
@@ -1227,7 +1240,11 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 //templateID is how the template will be referenced in _app.templates.
 		makeTemplate : function($templateSpec,templateID)	{
 			var r = true; //what is returned. if a template is created, true is returned.
-			if(templateID && typeof $templateSpec == 'object')	{
+			if(templateID && $templateSpec)	{
+				if($templateSpec instanceof jQuery)	{}
+				else{
+					$templateSpec = $($templateSpec);
+					}
 				_app.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone(true); //events needs to be copied from original
 				_app.templates[templateID].removeAttr('id'); //get rid of the ID to reduce likelyhood of duplicate ID's on the DOM.
 				$('#'+templateID).empty().remove(); //here for templates created from existing DOM elements. They're removed to ensure no duplicate ID's exist.
@@ -1629,28 +1646,21 @@ methods of getting data from non-server side sources, such as cookies, local or 
 */
 
 //location should be set to 'session' or 'local'.
+// WARNING! -> any changes to writeLocal should be tested in IE8 right away.
 		writeLocal : function (key,value,location)	{
 			location = location || 'local';
 			var r = false;
-
 			if($.support[location+'Storage'])	{
-				if(typeof window[location+'Storage'].setItem == 'function' )	{
-					r = true;
-					if (typeof value == "object") {value = JSON.stringify(value);}
-
+				r = true;
+				if (typeof value == "object") {value = JSON.stringify(value);}
 //a try is used here so that if storage is full, the error is handled gracefully.
-					try	{
-						window[location+'Storage'].setItem(key, value);
-						}
-					catch(e)	{
-						r = false;
-						_app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
-						_app.u.dump(e.message);
-						}
-					
+				try	{
+					window[location+'Storage'].setItem(key, value);
 					}
-				else	{
-					_app.u.dump(" -> window."+location+"Storage.setItem is not a function.");
+				catch(e)	{
+					r = false;
+					_app.u.dump(' -> '+location+'Storage [key: '+key+'] defined but not available.');
+					_app.u.dump(e.message);
 					}
 				}
 			else	{
@@ -1676,6 +1686,7 @@ methods of getting data from non-server side sources, such as cookies, local or 
 				}
 			},
 
+// WARNING! -> any changes to readLocal should be tested in IE8 right away.
 		readLocal : function(key,location)	{
 			location = location || 'local';
 			if(!$.support[location+'Storage'])	{
@@ -1702,8 +1713,10 @@ methods of getting data from non-server side sources, such as cookies, local or 
 			}, //readLocal
 /*
 A note about cookies:
-	They're not particularly mobile friendly. All modern browsers support localStorage, even ie7, supports local/session storage, which is the main mechanism used by the model for persistent data storage.
+	They're not particularly mobile friendly. All modern browsers support localStorage, even ie7 supports local/session storage, which is the main mechanism used by the model for persistent data storage.
 	So the cookie functions are here (for now), but should probably be avoided.
+	They are used to store the session ID if localStorage is disabled.
+	Quickstart uses them to store the cartid.
 */
 		readCookie : function(c_name){
 			var i,x,y,ARRcookies=document.cookie.split(";");
@@ -1712,6 +1725,7 @@ A note about cookies:
 				y=ARRcookies[i].substr(ARRcookies[i].indexOf("=")+1);
 				x=x.replace(/^\s+|\s+$/g,"");
 				if (x==c_name)	{
+					dump(" -> "+c_name +" cookie value: "+y);
 					return unescape(y);
 					}
 				}
@@ -1719,16 +1733,15 @@ A note about cookies:
 			},
 
 		writeCookie : function(c_name,value)	{
-var myDate = new Date();
-myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
-document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
+			var myDate = new Date();
+			myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
+			document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain="+document.domain+";path=/";
 			},
 //deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
 //test before earlier.
 		deleteCookie : function(c_name)	{
-document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
-_app.u.dump(" -> DELETED cookie "+c_name);
+			document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
+			_app.u.dump(" -> DELETED cookie "+c_name);
 			},
 
 
@@ -1743,7 +1756,7 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 				var r = false, DPS = this.readLocal('dps','local') || {};
 //				_app.u.dump("DPS from local: "); _app.u.dump(DPS);
 				if($.isEmptyObject(DPS))	{
-//					_app.u.dump(" ^^ Entire 'DPS' object is empty.");
+					_app.u.dump(" ^^ Entire 'DPS' object is empty.");
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
 				else	{
@@ -1773,14 +1786,41 @@ _app.u.dump(" -> DELETED cookie "+c_name);
 						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-					this.writeLocal('dps',DPS,'local'); //update the localStorage session var.
+					this.writeLocal('dps',DPS,'local');
 					}
 				else	{
 					_app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
+				},
+
+			getGrammar : function(url)	{
+				$.ajax({
+					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
+					'dataType' : 'html',
+					'error' : function()	{
+						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
+						},
+					'success' : function(file){
+						var success;
+						try{
+							var pegParserSource = PEG.buildParser(file);
+							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+							success = true;
+							}
+						catch(e)	{
+							_app.u.dump("Could not build pegParser.","warn");
+//							_app.u.dump(buildErrorMessage(e),"error");
+							}
+						if(success)	{
+							_app.u.dump(" -> successfully built pegParser");
+							}
+						else	{
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+							}
+						}
+					})
+
 				}
-
-
 
 
 

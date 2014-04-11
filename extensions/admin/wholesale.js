@@ -342,11 +342,12 @@ var admin_wholesale = function(_app) {
 
 		renderFormats : {
 			wholesaleScheduleSelect : function($tag,data)	{
-				if(!_app.data.adminPriceScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
+				if(!_app.data.adminPriceScheduleList)	{$tag.closest('label').anymessage({'message':'Unable to fetch wholesale list'})}
 				else if(!_app.data.adminPriceScheduleList['@SCHEDULES'])	{
-					$tag.anymessage({'message':'You have not created any schedules yet.'})
+					$tag.closest('label').anymessage({'message':'You have not created any schedules yet.'})
 					}
-				else if(!data.value)	{$tag.anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
+//* 201402 -> if data.value isn't set (ex: a merchant hasn't selected one for the marketplace) then the list wouldn't generate.
+//				else if(!data.value)	{$tag.closest('label').anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
 				else	{
 					var $select = $("<select \/>",{'name':'SCHEDULE'}),
 					schedules =_app.data.adminPriceScheduleList['@SCHEDULES'], //shortcut
@@ -358,7 +359,8 @@ var admin_wholesale = function(_app) {
 						}
 					
 					$select.appendTo($tag);
-					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
+					if(data.value)	{$select.val(data.value)}
+//					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
 
 					}
 				}, //wholesaleScheduleSelect
@@ -1081,6 +1083,7 @@ var admin_wholesale = function(_app) {
 							})
 						})
 
+					_app.u.addEventDelegation($table);
 
 					var $editorContainer = $(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content'))
 					$editorContainer.empty();
@@ -1174,7 +1177,8 @@ var admin_wholesale = function(_app) {
 						var $D = _app.ext.admin.i.dialogCreate({
 							'templateID': ($ele.data('mode') == 'order') ? 'supplierOrderListTemplate' : 'supplierItemListTemplate',
 							'title': $ele.data('mode')+" list for vendor "+VENDORID,
-							'showLoading' : false
+							'showLoading' : false,
+							'skipDelegation' : true //the dialog is being appended to a parent element which already has delegation on it.
 							});
 						$D.data('vendorid',VENDORID);
 						$D.dialog('option','modal',false);
@@ -1188,7 +1192,8 @@ var admin_wholesale = function(_app) {
 							'VENDORID':VENDORID,
 							'_tag':	{
 								'callback': 'anycontent',
-								'addEventDelegation' : true,
+								'skipAppEvents' : true,
+								'addEventDelegation' : false, //the dialog is being appended to a parent element which already has delegation on it.
 								'jqObj' : $('form',$D)
 								}
 							}

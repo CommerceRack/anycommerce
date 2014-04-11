@@ -271,11 +271,11 @@ addToCart : function (pid,$form){
 //creates some required form inputs.
 //the ID on the product_id input should NOT be changed without updating the addToCart call (which uses this id to obtain the pid).
 
-			atcForm : function($tag,data)	{
+			atcform : function($tag,data)	{
 				$tag.append("<input type='hidden' name='sku' value='"+data.value+"' />");
 				},
 			
-			reviewList : function($tag,data)	{
+			reviewlist : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFormats.reviewList");
 				var templateID = data.bindData.loadsTemplate;
 //				_app.u.dump(data.value)
@@ -286,43 +286,45 @@ addToCart : function (pid,$form){
 				return L;
 				},
 
-			quantityDiscounts : function($tag,data)	{
+			quantitydiscounts : function($tag,data)	{
 //				_app.u.dump("BEGIN store_product.renderFormats.quantityDiscounts");
 //				_app.u.dump("value: "+data.value);
 				var o = ''; //what is output;
-				
-				var dArr = data.value.split(',');
-				var tmp,num;
-				var L = dArr.length;
-//## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
-				for(var i = 0; i < L; i += 1)	{
-					if(dArr[i].indexOf('=') > -1)	{
-//						_app.u.dump(' -> treat as =');
-						tmp = dArr[i].split('=');
-						if(tmp[1].indexOf('$') >= 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
-//						_app.u.dump(" -> tmp[1] = "+tmp[1]);
-						o += "<div>buy "+tmp[0]+"+ for "+_app.u.formatMoney(Number(tmp[1]),'$','')+" each<\/div>";  //test gss COR6872
+				if(data.value)	{
+					var dArr = data.value.split(',');
+					var tmp,num;
+					var L = dArr.length;
+	//## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
+	// sample data: 2/$30,4/$20,10=$3.50
+					for(var i = 0; i < L; i += 1)	{
+						if(dArr[i].indexOf('=') > -1)	{
+	//						_app.u.dump(' -> treat as =');
+							tmp = dArr[i].split('=');
+							if(tmp[1].indexOf('$') >= 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
+	//						_app.u.dump(" -> tmp[1] = "+tmp[1]);
+							o += "<div>buy "+tmp[0]+"+ for "+_app.u.formatMoney(Number(tmp[1]),'$','')+" each<\/div>";  //test gss COR6872
+							}
+						else if(dArr[i].indexOf('/') > -1)	{
+	//						_app.u.dump(' -> treat as /');
+							tmp = dArr[i].split('/');
+							o += "<div>buy "+tmp[0]+"+ for ";
+							if(tmp[1].indexOf('$') == 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
+//							_app.u.dump(" -> tmp[1] = "+tmp[1]);
+							num = Number(tmp[1]) / Number(tmp[0])
+	//						_app.u.dump(" -> number = "+num);
+							o += _app.u.formatMoney(num,'$','') //test spork 1000
+							o += " each<\/div>";
+							}
+						else	{
+							_app.u.dump("WARNING! invalid value for qty discount. Contained neither a '/' or an '='.");
+							}
+						tmp = ''; //reset after each loop.
 						}
-					else if(dArr[i].indexOf('/') > -1)	{
-//						_app.u.dump(' -> treat as /');
-						tmp = dArr[i].split('/');
-						o += "<div>buy "+tmp[0]+"+ for ";
-						if(tmp[1].indexOf('$') >= 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
-//						_app.u.dump(" -> tmp[1] = "+tmp[1]);
-						num = Number(tmp[1]) / Number(tmp[0])
-//						_app.u.dump(" -> number = "+num);
-						o += _app.u.formatMoney(num,'$','') //test spork 1000
-						o += " each<\/div>";
-						}
-					else	{
-						_app.u.dump("WARNING! invalid value for qty discount. Contained neither a '/' or an '='.");
-						}
-					tmp = ''; //reset after each loop.
+					$tag.append("<div class='marginBottom'>"+o+"<\/div>").prepend("<h3>Quantity Discounts: <\/h3>");
 					}
-				$tag.append(o);
 				},
 
-			simpleInvDisplay : function($tag,data)	{
+			simpleinvdisplay : function($tag,data)	{
 //data.value = available inventory
 //				_app.u.dump("BEGIN store_product.renderFunctions.invAvail.");
 				if(data.value > 0)
@@ -332,7 +334,7 @@ addToCart : function (pid,$form){
 				},
 
 //data.value should be entire product object.
-			detailedInvDisplay : function($tag,data)	{
+			detailedinvdisplay : function($tag,data)	{
 				var pid = data.value.pid;
 				if(pid && data.value['@inventory'] && data.value['@inventory'][pid])	{
 					$tag.append("<div>Available Inventory: "+data.value['@inventory'][pid].inv+"<\/div>");
@@ -353,13 +355,13 @@ addToCart : function (pid,$form){
 				else	{
 					$tag.append("Unable to determine inventory count");
 					}
-				}, //detailedInvDisplay
+				}, //detailedinvdisplay
 
 //add all the necessary fields for quantity inputs.
-			atcQuantityInput : function($tag,data)	{
+			atcquantityinput : function($tag,data)	{
 				var $input = $("<input \/>",{'name':'qty'});
 				if(_app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
-					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
+					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).addClass('numberInput').appendTo($tag);
 					$input.on('keyup.classChange',function(){
 						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
 						});
@@ -369,7 +371,7 @@ addToCart : function (pid,$form){
 					$input.attr({'type':'hidden'}).appendTo($tag); //add so that handleaddtocart doesn't throw error that no qty input is present
 					}
 //set this. because the name is shared by (potentially) a lot of inputs, the browser 'may' use the previously set value (like if you add 1 then go to another page, all the inputs will be set to 1. bad in a prodlist format)
-				$input.val(data.bindData.defaultValue || 0); 
+				$input.val(data.bindData.defaultvalue || 0); 
 				},
 
 
@@ -377,8 +379,8 @@ addToCart : function (pid,$form){
 // in this case, we aren't modifying an attribute of $tag, we're appending to it. a lot.
 //this code requires the includes.js file.
 //it loops through the products options and adds them to the fieldset (or whatever $tag is, but a fieldset is a good idea).
-			atcVariations : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFormats.atcVariations");
+			atcvariations : function($tag,data)	{
+//				_app.u.dump("BEGIN store_product.renderFormats.atcvariations");
 				var pid = data.value; 
 				var formID = $tag.closest('form').attr('id'); //move up the dom tree till the parent form is found
 				$tag.empty(); /* prodlist fix */
@@ -412,9 +414,8 @@ $display.appendTo($tag);
 
 
 //will remove the add to cart button if the item is not purchaseable.
-			addToCartButton : function($tag,data)	{
-//				_app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
-//				_app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
+			addtocartbutton : function($tag,data)	{
+//				_app.u.dump("BEGIN store_product.renderFunctions.addtocartbutton"); dump(data.value);
 				var pid = data.value;
 				var pData = _app.data['appProductGet|'+pid];
 				if(_app.ext.store_product.u.productIsPurchaseable(pid))	{
@@ -431,7 +432,7 @@ $display.appendTo($tag);
 					}
 
 //				_app.u.dump(" -> ID at end: "+$tag.attr('id'));
-				} //addToCartButton
+				} //addtocartbutton
 
 			},
 
@@ -454,11 +455,11 @@ it has no inventory AND inventory matters to merchant
 					r = false;
 					}
 				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:base_price'] == '')	{
-					_app.u.dump(" -> base price not set: "+pid);
+					_app.u.dump(" -> not purchaseable because base price not set: "+pid);
 					r = false;
 					}
 				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
-					_app.u.dump(" -> product is a parent: "+pid);
+					_app.u.dump(" -> not purchaseable because product is a parent: "+pid);
 					r = false;
 					}
 //inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
@@ -468,12 +469,12 @@ it has no inventory AND inventory matters to merchant
 // ex: _app.data["appProductGet|"+PID]["@inventory"][PID].inv
 // also avail is ...[PID].res (reserved)
 					if(typeof _app.data['appProductGet|'+pid]['@inventory'] === 'undefined' || typeof _app.data['appProductGet|'+pid]['@variations'] === 'undefined')	{
-						_app.u.dump(" -> inventory ("+typeof _app.data['appProductGet|'+pid]['@inventory']+") and/or variations ("+typeof _app.data['appProductGet|'+pid]['@variations']+") object(s) not defined.");
+						_app.u.dump(" -> not purchaseable because inventory ("+typeof _app.data['appProductGet|'+pid]['@inventory']+") and/or variations ("+typeof _app.data['appProductGet|'+pid]['@variations']+") object(s) not defined.");
 						r = false;
 						}
 					else	{
 						if(_app.ext.store_product.u.getProductInventory(pid) <= 0)	{
-							_app.u.dump(" -> inventory not available: "+pid);
+							_app.u.dump(" -> not purchaseable because inventory not available: "+pid);
 							r = false
 							}
 						}
@@ -633,7 +634,9 @@ NOTES
 						_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 						});
 					
-					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
+//					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
+					$parent.dialog('open').append(new tlc().getTemplateInstance(P.templateID).attr('data-pid',P.pid));
+					_app.u.handleCommonPlugins($parent);
 					P.state = 'init';
 					_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 					_app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
@@ -642,7 +645,7 @@ NOTES
 							}
 						else	{
 							$parent.dialog( "option", "title", _app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
-							$parent.anycontent({'templateID':P.templateID,'translateOnly':true,'datapointer':"appProductGet|"+P.pid});
+							$parent.tlc({'templateid':P.templateID,'verb':'translate','datapointer':"appProductGet|"+P.pid});
 							P.state = 'complete';
 							_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 							}
@@ -656,7 +659,6 @@ NOTES
 					}
 				return P;
 				}, //prodDataInModal
-
 
 			showProductDataIn : function(targetID,P)	{
 				if(targetID && P && P.pid && P.templateID)	{
@@ -685,64 +687,57 @@ NOTES
 
 //SANITY -> if multiple carts are in use, make sure that _cartid is part of $form as a hidden input.
 			buildCartItemAppendObj : function($form)	{
-				var obj = false; //what is returned. either the obj or false.
-				if($form instanceof jQuery)	{
+				var obj = false; //what is returned. either the obj or false. returning false will prevent the addItemToCart from dispatching calls
+				if($form instanceof jQuery && $form.length)	{
 					var $qtyInput = $("input[name='qty']",$form),
 					sku = $("input[name='sku']",$form).val();
 
-					if(sku && $qtyInput.val() >= 1)	{
-						obj = $form.serializeJSON();
-
-						_app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
-//here for the admin side of things. Will have no impact on retail as price can't be set.
-//should always occur, validating or not.
-						if(obj.price == "")	{delete obj.price; _app.u.dump("Deleting price");}
-						else{}
-
-//The sku could be a fully qualified sku (ex: PRODUCTID:AOOO:A112:ABThis is the value).
-//just add these to the obj and the loop a little further down will format them properly into the %variations object.
-						if(sku.indexOf(':') >= -1)	{
-							var skuArr = sku.split(':');
-							obj.sku = skuArr[0];
-							for(var i = 1; i < skuArr.length; i += 1)	{
-								obj[skuArr[i].substring(0,2)] = skuArr[i].substr(2);
-								}
-							}
-
-//There are use cases for skipping validation, such as admin, quick order, etc.
-						if($form.data('skipvalidation') || _app.ext.store_product.validate.addToCart(sku,$form))	{
-							
-							obj['%variations'] = {};
-							
-	
-							for(var index in obj)	{
-	//							_app.u.dump(" -> index: "+index);
-	//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
-	//pids must be longer and qty (the other supported input) won't conflict.
-								if(index.length == 2 && index.toUpperCase() == index)	{
-									obj['%variations'][index] = obj[index];
-									delete obj[index];
+					if(sku && $qtyInput.length)	{
+						if($qtyInput.val() >= 1)	{
+							obj = $form.serializeJSON();
+							_app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
+	//here for the admin side of things. Will have no impact on retail as price can't be set.
+	//should always occur, validating or not.
+							if(obj.price == "")	{delete obj.price; _app.u.dump("Deleting price");}
+							else{}
+	//The sku could be a fully qualified sku (ex: PRODUCTID:AOOO:A112:ABThis is the value).
+	//just add these to the obj and the loop a little further down will format them properly into the %variations object.
+							if(sku.indexOf(':') >= -1)	{
+								var skuArr = sku.split(':');
+								obj.sku = skuArr[0];
+								for(var i = 1; i < skuArr.length; i += 1)	{
+									obj[skuArr[i].substring(0,2)] = skuArr[i].substr(2);
 									}
 								}
-
+	//There are use cases for skipping validation, such as admin, quick order, etc.
+							if($form.data('skipvalidation') || _app.ext.store_product.validate.addToCart(sku,$form))	{
+								obj['%variations'] = {};
+								for(var index in obj)	{
+//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
+//pids must be longer and qty (the other supported input) won't conflict.
+									if(index.length == 2 && index.toUpperCase() == index)	{
+										obj['%variations'][index] = obj[index];
+										delete obj[index];
+										}
+									}
+								}
+							else	{
+								obj = false;
+								//the validation itself will display the errors.
+								}
 							}
 						else	{
-// ** 201318 returning false will prevent the addItemToCart from dispatching calls
-							obj = false;
-							//the validation itself will display the errors.
+							$form.anymessage({'message':'Please select a quantity of at least 1'})
 							}
 						}
 					else	{
-// ** 201318 returning false will prevent the addItemToCart from dispatching calls
 						obj = false;
 						$form.anymessage({'message':'The form for store_product.u.handleAddToCart was either missing a sku ['+sku+'] or qty input ['+$qtyInput.length+'].','gMessage':true});
 						}
-		
 					}
 				else	{
-// ** 201318 returning false will prevent the addItemToCart from dispatching calls
 					obj = false;
-					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form was not a valid jquery instance.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form was not a valid jquery instance ['+($form instanceof jQuery)+'] or had no length ['+$form.length+'].','gMessage':true});
 					}
 				return obj;
 				}, //buildCartItemAppendObj
@@ -760,6 +755,7 @@ NOTES
 							r = true;
 							_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
 							_app.model.dispatchThis('immutable');
+							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
 							}
 						}
 					else	{

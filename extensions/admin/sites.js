@@ -94,7 +94,7 @@ used, but not pre-loaded.
 										_app.data[rd.datapointer]['*favorites'].push(domains[i]);
 										}
 									}
-								$target.anycontent({'templateID':'pageTemplateSites','datapointer':rd.datapointer});
+								$target.tlc({'templateid':'pageTemplateSites','datapointer':rd.datapointer});
 								_app.u.handleButtons($target);
 								}
 							}
@@ -105,16 +105,36 @@ used, but not pre-loaded.
 
 				},
 			
-			
+/*			
 			showDomainConfig : function($target)	{
 				$target.anycontent({'templateID':'domainAndAppConfigTemplate','showLoading':false}).anyform();
 				_app.u.addEventDelegation($target);
 				_app.ext.admin_sites.u.fetchSiteTabData($target,'mutable');
 				_app.u.handleButtons($target);
 				_app.model.dispatchThis('mutable');
+				},
+*/			
+			showDomainConfig : function($target)	{
+				$target.showLoading();
+				_app.u.addEventDelegation($target);
+				
+				_app.model.addDispatchToQ({'_cmd':'adminDomainList','hosts' : true,'_tag':	{'datapointer' : 'adminDomainList'}},'mutable');
+				_app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag':	{'datapointer' : 'adminProjectList','callback':function(){
+					$target.hideLoading().tlc({
+						'templateid' : 'domainAndAppConfigTemplate',
+						dataset : $.extend({},_app.data.adminDomainList,_app.data.adminProjectList)
+						});
+					_app.u.handleButtons($target);
+					if(_app.vars.domain)	{
+						$("[data-app-role='domainListNonFavorites']",$target).find("tbody[data-domainname='"+_app.vars.domain+"']").find("button[data-app-click='admin_sites|domainPutInFocus']").addClass('ui-state-focus');
+						}
+					}}},'mutable');
+				_app.model.dispatchThis('mutable');
 				}
 			
 			}, //Actions
+
+
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -122,10 +142,14 @@ used, but not pre-loaded.
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
-				projectID2Pretty : function($tag,data)	{
-					var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
+			projectidpretty : function($tag,data)	{
+//				dump(" BEGIN projectidpretty");
+				var o = data.value; //what will be Output into $tag. Defaults to project id (which is what should be in data.value
+				if(o)	{
 					if(_app.data.adminProjectList && _app.data.adminProjectList['@PROJECTS'])	{
+						dump(" projects ARE in memory");
 						var index = _app.ext.admin.u.getIndexInArrayByObjValue(_app.data.adminProjectList['@PROJECTS'],'UUID',data.value);
+	//					dump(" -> index: "+index);
 						if(index === 0 || index >= 1)	{
 							if(_app.data.adminProjectList['@PROJECTS'][index].TITLE)	{
 								o = _app.data.adminProjectList['@PROJECTS'][index].TITLE;
@@ -133,25 +157,63 @@ used, but not pre-loaded.
 							}
 						}
 					$tag.text(o);
-					},
+					}
+				},
+			projectbuttons : function($tag,data)	{
+				var $menu = $("<menu \/>").addClass('projectMenu').hide();
+				$tag.css('position','relative');  //so menu appears where it should.
+				if(data.value.GITHUB_REPO)	{
+					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='project' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+					}
+				if(data.value.LINK)	{
+					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
+// -> Can't do a pull here  because the 'pull' goes to a dir that is host/domain specific. it isn't 'stored' till it's tied to a host/domain. A pull is specific to that host/domain.
+					}
+				$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
 
-				projectButtons : function($tag,data)	{
-					var $menu = $("<menu \/>").addClass('projectMenu').hide();
-					$tag.css('position','relative');  //so menu appears where it should.
-					if(data.value.GITHUB_REPO)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
-						}
-					if(data.value.LINK)	{
-						$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
-						}
-					$menu.append("<li><a href='#' data-app-click='admin_sites|projectRemove'>Remove this Project<\/a><\/li>");
+				$menu.menu();
+				$tag.append($menu);
+				$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
+				var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
+				$button.on('click',function(){
+					$menu.closest('table').find('menu.projectMenu').hide(); //close any open menus.
+					$menu.show();
+					$( document ).one( "click", function() {
+						$menu.hide();
+						});
+					return false;
+					})
+				$tag.append($button);
+				},
 
+			//pass in HOSTTYPE as data.
+			apphostbuttons : function($tag,data)	{
+				var $menu = $("<menu \/>").addClass('appHostMenu').hide();
+				$tag.css('position','relative');  //so menu appears where it should.
+
+				if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
+					$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+
+					if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
+// * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
+//							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
+						$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
+						}
+					else	{
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
+						$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
+						}
+					}
+				if($menu.children().length)	{
 					$menu.menu();
-					$tag.append($menu);
+					$tag.append($menu); //so menu appears where it should.
 					$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
 					var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
 					$button.on('click',function(){
-						$menu.closest('table').find('menu.projectMenu').hide(); //close any open menus.
+						$menu.closest('table').find('menu.appHostMenu').hide(); //close any open menus.
 						$menu.show();
 						$( document ).one( "click", function() {
 							$menu.hide();
@@ -159,47 +221,11 @@ used, but not pre-loaded.
 						return false;
 						})
 					$tag.append($button);
-					},
-
-				//pass in HOSTTYPE as data.
-				appHostButtons : function($tag,data)	{
-					var $menu = $("<menu \/>").addClass('appHostMenu').hide();
-					$tag.css('position','relative');  //so menu appears where it should.
-
-					if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
-						$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
-
-						if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
-// * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
-//							$menu.append("<li><a href='#' data-app-click='admin_template|templateChooserShow' data-mode='Site'>Choose a Template</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_template|templateEditorShow' data-mode='Site'>Edit Project</a></li>");
-							$menu.append("<li data-app-click='admin_template|containerFileUploadShow' data-mode='Site'><a href='#'>Upload Template Files</a></li>");
-							}
-						else	{
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/PAGES' >Export Pages.json</a></li>");
-							$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/APPRESOURCE' >Export App Resource Zip</a></li>");
-							}
-						}
-					if($menu.children().length)	{
-						$menu.menu();
-						$tag.append($menu); //so menu appears where it should.
-						$menu.css({'position':'absolute','width':200,'z-index':200,'top':25,'right':0});
-						var $button = $("<button>").text("App Related Utilities").button({icons: {primary: "ui-icon-wrench",secondary: "ui-icon-triangle-1-s"},text: false});
-						$button.on('click',function(){
-							$menu.closest('table').find('menu.appHostMenu').hide(); //close any open menus.
-							$menu.show();
-							$( document ).one( "click", function() {
-								$menu.hide();
-								});
-							return false;
-							})
-						$tag.append($button);
-						}
-					else	{
-						//host/domain isn't app based.
-						}
 					}
+				else	{
+					//host/domain isn't app based.
+					}
+				}
 
 			}, //renderFormats
 
@@ -364,24 +390,20 @@ used, but not pre-loaded.
 					_app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 //This will update the hosts tbody.
 					if($domainEditor instanceof jQuery)	{
-						var $tbody = $("tbody[data-app-role='domainsHostsTbody']",$domainEditor);
-						if($tbody.length)	{
-							$tbody.empty();
-							_app.model.addDispatchToQ({
-								'_cmd':'adminDomainDetail',
-								'DOMAINNAME':sfo.DOMAINNAME,
-								'_tag':	{
-									'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
-									'skipAppEvents' : true,
-									'translateOnly' : true,
-									'jqObj' : $tbody,
-									'callback' : 'anycontent'
-									}
-								},'immutable');
+						$domainEditor.empty().showLoading({'message':'Updating '+sfo.HOSTNAME+'.'+sfo.DOMAINNAME+' and refreshing content...'});
+						if($domainEditor.data('isTLC'))	{
+							$domainEditor.tlc('destroy'); //ensures fresh data is used.
 							}
-						else	{
-							_app.u.dump("In admin_sites.u.domainAddUpdateHost, $domainEditor was specified [length: "+$domainEditor.length+"], but tbody[data-app-role='domainsHostsTbody'] has no length, so the view will not be updated.","warn");
-							}
+						_app.model.addDispatchToQ({
+							'_cmd':'adminDomainDetail',
+							'DOMAINNAME':sfo.DOMAINNAME,
+							'_tag':	{
+								'datapointer' : 'adminDomainDetail|'+sfo.DOMAINNAME,
+								'templateid' : 'domainUpdateTemplate',
+								'jqObj' : $domainEditor,
+								'callback' : 'tlc'
+								}
+							},'immutable');
 						}
 					
 					_app.model.dispatchThis('immutable');
@@ -401,8 +423,7 @@ used, but not pre-loaded.
 					'hosts' : true,
 					'_tag':	{
 						'datapointer' : 'adminDomainList',
-						'callback':'anycontent',
-						'translateOnly' : true,
+						'callback':'tlc',
 						'jqObj' : $("[data-app-role='domainsAndHostsContainer']:first",$target)
 						}
 					},Q);
@@ -410,8 +431,7 @@ used, but not pre-loaded.
 					'_cmd':'adminProjectList',
 					'_tag':	{
 						'datapointer' : 'adminProjectList',
-						'callback':'anycontent',
-						'translateOnly' : true,
+						'callback':'tlc',
 						'jqObj' : $("[data-app-role='projectsContainer']:first",$target)
 						}
 					},Q);
@@ -496,7 +516,7 @@ used, but not pre-loaded.
 						'DOMAINNAME':$ele.data('domainname'),
 						'_tag':{
 							'datapointer':'adminDomainDiagnostics|'+$ele.data('domainname'),
-							'callback':'anycontent',
+							'callback':'tlc',
 							'jqObj':$ele.closest("[data-app-role='tabContainer']").find("[data-anytab-content='domainDiagnostics']:first").showLoading({'message':'Fetching domain diagnostics'})
 							}
 						},'mutable');
@@ -512,15 +532,15 @@ used, but not pre-loaded.
 				var $detail = $ele.closest('tr').next('tr').find("[data-app-role='domainDetailContainer']:first");
 				var wasVisible = $detail.is(':visible'); //used to track state prior to all detail panels being closed.
 				$("[data-app-role='domainDetailContainer']:visible",$ele.closest('table')).each(function(){$(this).slideUp('slow','',function(){
-					$(this).intervaledEmpty().anycontent('destroy');
+					$(this).intervaledEmpty().tlc('destroy');
 					});}); //close any open rows. interface gets VERY crowded if more than one editor is open.
-				_app.u.dump(" -> wasVisible: "+wasVisible);
+
 				if(wasVisible)	{}//was open and has already been closed
 				else	{
 					$detail.show();
 					var domainname = $ele.closest("[data-domainname]").data('domainname');
 					if(domainname)	{
-						$detail.anycontent({'templateID':'domainUpdateTemplate','showLoadingMessage':'Fetching domain details'});
+						$detail.showLoading({'message':'Fetching domain detail'});
 						$detail.attr({'data-domainname':domainname,'data-domain':domainname});
 						$("[data-app-role='domainsHostsTbody']",$detail).attr({'data-domainname':domainname,'data-domain':domainname}).addClass('buttonset'); //here for templateEditor.
 						_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','prts':1,'_tag':{'datapointer':'adminConfigDetail|prts'}},'mutable');
@@ -529,11 +549,10 @@ used, but not pre-loaded.
 							'DOMAINNAME':domainname,
 							'_tag':	{
 								'datapointer' : 'adminDomainDetail|'+domainname,
-								'skipAppEvents' : true,
+								'templateID':'domainUpdateTemplate',
 								'extendByDatapointers' : ['adminConfigDetail|prts'],
-								'translateOnly' : true,
 								'jqObj' : $detail,
-								'callback' : 'anycontent',
+								'callback' : 'tlc',
 								onComplete : function(rd)	{
 									$('form',$detail).anyform({'trackEdits':true}); //enable form 'tracking' so save button counts number of changes
 									$("select[name='PRT']",$detail).val(_app.data[rd.datapointer].PRT); //select the partition
@@ -544,7 +563,7 @@ used, but not pre-loaded.
 						}
 					else	{}
 					}
-				}, //adminDomainDetailShow
+	 			}, //adminDomainDetailShow
 
 			domainView : function($ele,p)	{
 				var domainname = $ele.closest("[data-domainname]").data('domainname');
@@ -578,9 +597,7 @@ used, but not pre-loaded.
 						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
 						title += ': '+(data.HOSTNAME.toString().toLowerCase())
 						}
-					
 					title += ' for '+domain
-					
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title': title,
 						'data' : data, //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
@@ -588,7 +605,7 @@ used, but not pre-loaded.
 						'appendTo' : $ele.closest("[data-app-role='domainDetailContainer']"),
 						'showLoading':false //will get passed into anycontent and disable showLoading.
 						});
-
+					
 //get the list of projects and populate the select list.  If the host has a project set, select it in the list.
 					var _tag = {'datapointer' : 'adminProjectList','callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
@@ -660,8 +677,7 @@ used, but not pre-loaded.
 							"_cmd":"adminProjectDetail",
 							"UUID":projectUUID,
 							"_tag": {
-								'callback':'anycontent',
-								'translateOnly' : true,
+								'callback':'tlc',
 								jqObj:$detailRow,
 								'datapointer' : 'adminProjectDetail|'+projectUUID
 								}
@@ -696,7 +712,8 @@ used, but not pre-loaded.
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
 					_app.model.destroy('adminProjectList');
-					sfo.UUID = _app.u.guidGenerator();
+//UUID is now set by merchant.
+//					sfo.UUID = _app.u.guidGenerator();
 					sfo._cmd = 'adminProjectCreate';
 					sfo._tag = {"callback":function(rd){
 						$form.hideLoading();

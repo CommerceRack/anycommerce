@@ -20,6 +20,7 @@ adminApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extensio
 adminApp.rq.push(['extension',0,'admin_support','extensions/admin/support.js']); 
 adminApp.rq.push(['extension',0,'admin_tools','extensions/admin/tools.js']); 
 adminApp.rq.push(['extension',0,'admin_navcats','extensions/admin/navcats.js']); 
+adminApp.rq.push(['extension',0,'admin_blast','extensions/admin/blast.js']); 
 adminApp.rq.push(['extension',0,'admin_task','extensions/admin/task.js']);
 adminApp.rq.push(['extension',0,'admin_template','extensions/admin/template_editor.js']); 
 adminApp.rq.push(['extension',0,'admin_marketplace','extensions/admin/marketplace.js']); //needs to be in pass 0 for linkFrom (links from marketplaces)
@@ -43,7 +44,17 @@ adminApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js
 	}]);
 
 //required for init. don't change from 0.
-adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js',function(){window.myCreole = new Parse.Simple.Creole();}]); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/jsonpath.0.8.0.js']); //used pretty early in process..
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/tlc.js']); //used pretty early in process..
+adminApp.rq.push(['script',0,adminApp.vars.baseURL+'resources/anycontent.js']);
+
+//once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
+adminApp.u.loadScript(adminApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
+	adminApp.model.getGrammar(adminApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
+
+
 
 adminApp.rq.push(['script',1,adminApp.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
 adminApp.rq.push(['script',0,adminApp.vars.baseURL+'app-admin/resources/highcharts-3.0.1/highcharts.js']); //used for KPI
@@ -99,6 +110,7 @@ adminApp.u.showProgress = function(progress)	{
 	function showProgress(attempt)	{
 //		dump(" -> passZeroResourcesLength: "+progress.passZeroResourcesLength+" and progress.passZeroResourcesLoaded: "+progress.passZeroResourcesLoaded);
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
+			
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
 			}
@@ -120,6 +132,16 @@ adminApp.u.showProgress = function(progress)	{
 	}
 
 //don't execute script till both jquery AND the dom are ready.
+
+adminApp.cmr.push(['cart.orderCreate',function(message,$context){
+	if(message.who != 'ADMIN')	{
+		//cart was checked out by someone else.
+		//leave the dialog open so communication can continue, but pull the cart from the session. and 'lock' the edit cart button.
+		$("button[data-app-role='cartEditButton']").button('disable');
+		adminApp.model.removeCartFromSession($context.data('cartid'));
+		dump(" -------> cart.orderCreate cartMessage received. Cart dropped: "+$context.data('cartid'));
+		}
+	}]);
 
 adminApp.cmr.push(["view",function(message,$context){
 	var $history = $("[data-app-role='messageHistory']",$context);
@@ -184,7 +206,7 @@ adminApp.router.addAlias('404',function(v)	{
 
 
 adminApp.router.appendHash({'type':'match','route':'/biz/vstore*','callback':function(v){
-//	console.log(" -> Welcome to legacy compat mode.");
+//	_app.u.dump(" -> Welcome to legacy compat mode.");
 //	console.dir(v);
 	adminApp.model.fetchAdminResource(v.hash.substr(2),{'tab':adminApp.ext.admin.vars.tab,'targetID':adminApp.ext.admin.vars.tab+'Content'});
 	}});

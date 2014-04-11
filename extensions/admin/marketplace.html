@@ -466,7 +466,7 @@
 	
    <tr>
       <td valign="top">Pricing Schedule:</td>
-      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select> </td>
    </tr>
@@ -590,7 +590,7 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
 </tr>
 <tr>
   <td>Pricing Schedule:</td>
-  <td><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+  <td><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select> </td>
 </tr>
@@ -639,7 +639,7 @@ CommissionJunction.</p>
 	
    <tr>
       <td valign="top">Pricing Schedule:</td>
-      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select> </td>
    </tr>
@@ -687,7 +687,7 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
 	
    <tr>
       <td valign="top">Pricing Schedule:</td>
-      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select> <br></td>
    </tr>
@@ -736,7 +736,7 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
 	
    <tr>
       <td valign="top">Pricing Schedule:</td>
-      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+      <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select> <br></td>
    </tr>
@@ -1221,7 +1221,7 @@ These settings *MUST* match the settings in your bing.com account.
 	</tr>
 <tr>
   <td valign="top">Pricing Schedule:</td>
-  <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+  <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 	<option value=''>none</option>
 </select> <br></td>
 </tr>
@@ -1512,7 +1512,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 
 <tr>
   <td valign="top">Pricing Schedule:</td>
-  <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+  <td valign="top"><select name='SCHEDULE' data-bind="var: mkt(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 	<option value=''>none</option>
 </select> </td>
 </tr>
@@ -1584,7 +1584,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<td class='small valignTop leftCol'>
 	<div class='ebayCatChooserLeftColContainer'>
 	
-	<select class='marginBottom' data-bind="var: mkt(@USER_RECENT);format:optionsFromList; text:name; value:categoryid;" data-app-event='admin_marketplace|ebayShowTreeByChild'>
+	<select class='marginBottom' data-bind="var: mkt(@USER_RECENT);format:optionsfromlist; text:name; value:categoryid;" data-app-event='admin_marketplace|ebayShowTreeByChild'>
 		<option>Recently Viewed</option>
 		
 	</select>
@@ -1674,7 +1674,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 			
 			<label>
 				<span>Token</span>
-				<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsFromList; text:EBAY_USERNAME; value:EBAY_EIAS;">
+				<select name='EIAS' data-bind="var: profile(@ACCOUNTS);format:optionsfromlist; text:EBAY_USERNAME; value:EBAY_EIAS;">
 				</select>
 			</label>
 
@@ -2045,7 +2045,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 				<div class='buttonset alignRight'><button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply Service</button></div><!-- needs to be within same fieldset as dataTable -->
 			</div>
 
-			<div class='buttonset alignRight'><button data-app-event="admin_marketplace|ebayServiceAddShow">Add Service</button></div>
+			<div class='buttonset alignRight'><button data-app-click="admin_marketplace|ebayServiceAddShow" class='applyButton'>Add Service</button></div>
 			</fieldset>
 
 			<br />
@@ -2681,7 +2681,7 @@ add an input here (checkbox) for 'let ebay compute the costs'
 
 
 <div id='syndication_register_ebf'>
-	<h1>Generate eBayAutorization Token</h1>
+	<h1>Generate eBayAuthorization Token</h1>
 	
 	<h2>What is this?</h2>
 	<p>You have been brought to this page in order generate a new eBay Authorization Token. eBay Authorization Tokens permit us to communicate with your eBay account. eBay Authorization Tokens increase security on your eBay account because no storage of your password is required.</p>
@@ -2832,7 +2832,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 	<span data-bind="var: ebay(addcost); format:text; pretext: addl: ;"></span>
 	<span data-bind="var: ebay(farcost); format:text; pretext: AK+HI: ;"></span>
 	</td>
-	<td><button data-app-event="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
+	<td><button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button></td>
 </tr>
 
 </table>

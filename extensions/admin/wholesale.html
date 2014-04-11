@@ -76,7 +76,7 @@
 			<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
 			<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return adminApp.u.numbersOnly(event);' /></div>
 			<div class='label'>
-				<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+				<label data-bind="var: org(ORG.SCHEDULE); forceRender:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
 			</div>
 			<label><input class='applyAnycb' type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popVal;' />Allow Purchase Orders</label>
 			<label><input class='applyAnycb' type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popVal;' />Allow Resale/Tax Exempt</label>
@@ -654,6 +654,7 @@
 			<label>
 				<span>Preference</span>
 				<input type='number' class='smallInput' name='PREFERENCE' value='' data-bind="var:vendor(PREFERENCE); format:popVal;" max='100' step='1' min='1' size='3' />
+				<span class='toolTip' title="A numerical value between 1 and 99 to indicate what 'preference' this source should be given for a sku if multiple sources are available. The higher the number, the more likely it is to be auto-assigned as the source.">?</span>
 			</label>
 			
 			</fieldset>

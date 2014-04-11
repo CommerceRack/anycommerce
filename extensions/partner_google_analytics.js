@@ -61,23 +61,23 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 				onSuccess : function(){
 //					_app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
-//make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
+//make sure that not only has quickstart been loaded, but that the createTemplateFunctions has executed
 					if(_app.templates && _app.templates.productTemplate && typeof _gaq == 'object')	{
 
 //_app.u.dump(" -> adding triggers");
-_app.templates.homepageTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/index.html']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-_app.templates.categoryTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-_app.templates.productTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-_app.templates.companyTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/company/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
-_app.templates.customerTemplate.on('complete.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
-_app.templates.checkoutTemplate.on('init.googleanalytics',function($ele,P) {_gaq.push(['_trackPageview', '/checkout']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
+_app.templates.homepageTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/index.html']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.categoryTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.productTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.companyTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/company/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+_app.templates.customerTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
+_app.templates.checkoutTemplate.on('init.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/checkout']); _app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
 
-_app.templates.searchTemplate.on('init.googleanalytics',function($ele,P) {
+_app.templates.searchTemplate.on('init.googleanalytics',function(event,$ele,P) {
 	_gaq.push('_trackPageview','/search?KEYWORDS='+P.KEYWORDS);
 	_app.ext.google_analytics.u.handleAntiBounceEvent(P);
 	}) 
 //404's don't execute the anti-bounce event because if you go homepage then 404 and leave, it should register as a bounce.
-_app.templates.pageNotFoundTemplate.on('complete.googleanalytics',function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
+_app.templates.pageNotFoundTemplate.on('complete.googleanalytics',function(event,$ele,P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
 
 
 //for GoogleTrustedStores.

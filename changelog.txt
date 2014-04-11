@@ -5,6 +5,46 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+
+201402
+
+GLOBAL
+	introduction of a new templating language, data-tlc. Data-bind will be supported for another few versions.
+	introduction of unit-test for TLC (still in development).
+
+ADMIN
+	plugins section in setup renamed 'integrations'.
+	new integration for shipping: ShipWorks and ShipStation (in integrations).
+	new email manager interface in setup (store properties panel). Lots of new features here.
+	new email send interface (linked from orders and customer editor).
+	enhancements to cart messaging (more admin events get logged).
+	A plethora of bug fixes.
+	Login page 'recover password' is restored and working.
+	Change password on setup page now works.
+	orders - custom invoice and packslip now supported for web printing!
+		- customize your invoice and packing slip through utilities -> email messaging (in order menu)
+		- new popup-less print method (we tested FF, Chrome and IE, plus iOS7. still printing issues in droid/chrome)
+		- print option added as contextual menu in order list
+	new button in the coupon and shipping interface for downloading the rules (creates a batch process).
+	downloads link moved to the vstore section of setup.
+	help docs added to support page and removed from header.
+	COD and CHKOD handling charge removed from UI (wasn't a supported feature).
+	changes to passwords for customers
+		- customer passwords are now more secure, they do NOT show up in the admin interface.
+		- temporary passwords can be created so admins can log in as customers.
+		- some changes to the customer editor to accomodate these password-related updates.
+
+QUICKSTART
+	update to the new TLC template language.
+	search ul's no longer require an ID.
+	prodsearch render format now supports listcomplete, run after the list is done (whether it has product or not).
+	prodlist render format 'complete' event changed to 'listcomplete'.
+	cart template now has a 'refresh' button.
+	Integrated new router. big changes on how to link to pages (no more showContent).
+	enhancements to cart messaging (more buyer events get logged).
+	searchlink render format in quickstart removed. see mfg in producttemplate for working example of tlc.
+
+
 201401
 
 GLOBAL

@@ -100,7 +100,7 @@ order detail
 
 .orderDetails .rightCol	textarea	{width:95%; height:80px;}
 
-.orderDetails .rightCol label span	{width:100px;}
+
 
 
 .orderDetailHeader	{padding-bottom:12px; border-bottom:1px solid #efefef;}
@@ -122,8 +122,8 @@ order detail
 
 /* compensate for some default styling to make supplemental contain wrap up right against the corresponding payment type */
 #adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
-ul.paybySupplemental	{margin-top:0;}
-
+.paybySupplemental	{margin-top:0; padding:.6em}
+.paybySupplemental div	{margin-bottom:.3em}
 /* payment panel */
 
 .actionInputs label, .actionInputs div, .actionInputs button	{display:inline-block; margin-left:12px;}

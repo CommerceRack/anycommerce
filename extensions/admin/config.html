@@ -260,11 +260,13 @@
 <div id='couponAddUpdateContentTemplate'>
 
 <form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels' data-app-submit="admin|submitForm">
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<!-- some additional inputs are added here based on whether verb is create or update -->
 <fieldset>
 
 <label>
 	<span>Discount Code</span>
-	<input type="text" name='coupon' value="" size="8" maxlength="8" data-bind='var:coupon(coupon); format:popVal;' required='required' data-app-event='admin|alphaNumeric' />
+	<input type="text" name='coupon' value="" size="8" maxlength="8" data-bind='var:coupon(coupon); format:popVal;' required='required' data-input-keyup="format" data-input-format='alphanumeric, uppercase' />
 	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.
 	If you have a longer than 8 character code you can supply that and only the first 8 characters will be used in a coupon box. For shared coupon/giftcards coupons must be only 8 characters.">?</span>
 </label>
@@ -596,7 +598,7 @@ keep all inputs within one fieldset for the save function.
 
 	<label data-app-role='pricingScheduleContainer'>
 		<span>Pricing Schedule:</span>
-		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:SID; value:SID;">
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsfromlist; text:SID; value:SID;">
 			<option value=''>none</option>
 		</select>
 	</label>
@@ -659,6 +661,7 @@ keep all inputs within one fieldset for the save function.
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
 			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
+				<button data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/RULES' data-element data-export='shipping' data-whitelist='export' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download Rules</button>
 				<button data-app-click="admin_support|showHelpDocInDialog" class='applyButton' data-title='ship intro' data-icon-primary='ui-icon-lightbulb'>Help</button>
 				<button data-app-click="admin_config|shipMethodRemoveConfirm" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash'>Delete Method</button>
 				<button data-app-click="admin_config|shipmethodAddUpdateExec" class='applyButton' data-text='true' disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
@@ -738,7 +741,7 @@ keep all inputs within one fieldset for the save function.
 	<div class='marginBottom' data-table-role='inputs'>
 		<label>
 			<span>Country</span>
-			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
+			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsfromlist; text:Z; value:ISOX;">
 				<option value=''>none</option>
 			</select>
 		</label>
@@ -2318,7 +2321,7 @@ Paypal offers two different methods of authentication for api requests.<br />
 3rd party: where you give paypal_api1.zoovy.com access to your account (recommended, easier)
 </p>
 <p class='warn'>
-If you have already granted API access to paypal_api1.zoovy.com on PayPal.com, then leave all the fields below empty of the configuration will NOT work.
+If you have already granted API access to paypal_api1.zoovy.com on PayPal.com, then leave all the fields below empty or the configuration will NOT work.
 </p>
 
 <label><span>Paypal API Username</span><input type="text" data-bind='var: payment(paypal_api_user); format:popVal;'  name="paypal_api_user"></label>
@@ -2611,8 +2614,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<span>Capture Funds:</span>
 		<select name="cc_instant_capture" required='required' data-bind='var: payment(cc_instant_capture); format:popVal;'>
 			<option value="" disabled='disabled'>Please Choose</option>
-			<option value="ALWAYS">Instant Capture (authorization and transfer of funds occurs at time of checkout)</option>
-			<option value="NEVER">Delayed Capture (only authorization occurs at checkout, funds transferred later by merchant)</option>
+			<option value="ALWAYS">Instant Capture (authorization and funds transfer at checkout)</option>
+			<option value="NEVER">Delayed Capture (authorization at checkout, funds transferred by merchant)</option>
 			<option value="NOAUTH_DELAY">No Authorization (store in wallet then process later)</option>
 		</select>
 		
@@ -2681,7 +2684,7 @@ SANITY -> these inputs are whitelisted in admin_config|taxTableUpdateExec
 <section class='ui-widget twoColumn labelsAsBreaks alignedLabels' >
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate="novalidate">
+	<form onsubmit="return false" data-app-role='taxTableInputForm'  data-table-role='inputs' action="#" novalidate>
 
 	<input type='hidden' name='enable' value='1' />
 	<fieldset>
@@ -2998,7 +3001,6 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<b>Enquiries</b><br>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY">Enquiry <span class='toolTip' title="Triggered by enquiry based events.">?</span></label>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY.ORDER">Order Enquiry <span class='toolTip' title="Triggered through website 'contact us' with a confirmed order id.">?</span></label>
-			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Customer Order Cancel <span class='toolTip' title="Triggered when a customer cancels an order.">?</span></label>
 
 			<b>Errors and Alerts</b><br>
 			<label><input type='radio' name='event' required='required' value="ERROR.SYNDICATION">Syndication Failure</label>
@@ -3010,6 +3012,22 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.HIDE">Hide from Website</label>
 			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.FAIL">Website Change Failure</label>
 
+			<b>Customer</b><br>
+			<label><input type='radio' name='event' required='required' value="CUSTOMER.NEW">Customer Created <span class='toolTip' title="Customer Account initialized">?</span></label>
+			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Customer Order Cancel <span class='toolTip' title="Triggered when a customer cancels an order.">?</span></label>
+			
+			<b>Order</b><br>
+			<label><input type='radio' name='event' required='required' value="ORDER.CREATE">Order Created <span class='toolTip' title="A new order is placed.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.SHIP">Order Shipped <span class='toolTip' title="A new order flagged as shipped.">?</span></label>
+			<!--
+			<label><input type='radio' name='event' required='required' value="ORDER.ITEM.CANCEL">Order Item Cancelled <span class='toolTip' title="Triggered when an item in the order is cancelled.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.ITEM.BACKORDER">Order Item Backorder <span class='toolTip' title="The order is cancelled.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.RECENT">Order Status: Recent <span class='toolTip' title="The order status is changed/set to RECENT.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.APPROVED">Order Status: Approved <span class='toolTip' title="The order status is changed/set to APPROVED.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.PENDING">Order Status: Pending <span class='toolTip' title="The order status is changed/set to PENDING.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.BACKORDER">Order Status: Backorder <span class='toolTip' title="The order status is changed/set to BACKORDER.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.CANCEL">Order Status: Cancel <span class='toolTip' title="The order status is changed/set to BACKORDER.">?</span></label>
+			-->
 
 			<label>
 				<span>Method</span>
@@ -3078,18 +3096,25 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 
+<!--
 
 
+IMPORTANT!!!!
+when adding a new plugin, make sure any private fields are saved with a ~ in front of them.  See facebook or amazon for examples
 
-<div id='pluginManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+
+-->
+
+
+<div id="pluginManagerPageTemplate" class="page pageUser slimLeftContainer" data-app-role="slimLeftContainer">
 	
 
-	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+	<section class="slimLeftNav" data-app-role="slimLeftNav">
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin='auth_facebook' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Facebook</li>
-			<li data-plugin='auth_google' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Google</li>
+			<li data-plugin="auth_facebook" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
+			<li data-plugin="auth_google" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3098,10 +3123,19 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin='esp_awsses' data-app-click="admin_config|pluginUpdateShow" title='Amazon Simple Email Services' class='lookLikeLink'>Amazon SES</li>
-			<li data-plugin='platform_android' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Android</li>
-			<li data-plugin='platform_appleios' data-app-click="admin_config|pluginUpdateShow" class='lookLikeLink'>Apple/iOS</li>
+			<li data-plugin="esp_awsses" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
+			<li data-plugin="platform_android" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
+			<li data-plugin="platform_appleios" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
 		</ul>
+
+
+		<h4>Shipping</h4>
+		<ul>
+			<li data-plugin="shipstation.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
+			<li data-plugin="shipworks.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
+			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
+		</ul>
+
 <!--
 		<h4>Infrastructure</h4>
 		<ul>
@@ -3120,72 +3154,65 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 -->
 	</section>
 
-	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
+	<section class="slimLeftContentSection ui-widget" data-app-role="slimLeftContentSection">
 		<form onsubmit="return false">
-		<div class='ui-widget-header ui-corner-top'>
-			<h3 class='heading'>Edit:</h3>
+		<div class="ui-widget-header ui-corner-top">
+			<h3 class="heading">Edit:</h3>
 		</div>
-		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
-			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
-				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role='saveButton' class='applyButton'>Save <span class='numChanges'></span> Changes</button>
+		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
+			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
+				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
-			<div data-app-role='slimLeftContent'>
-			
-			
-			
+			<div data-app-role="slimLeftContent">
 			</div>
-		
 		</div>
-
-
 		</form>
 	</section>
-
 
 </div>
 
 
-
-<fieldset id='pluginTemplate_esp_awsses'>
-	<input type='hidden' name='plugin' value='esp_awsses' />
+<fieldset id="pluginTemplate_esp_awsses">
+	<input name="plugin" value="esp_awsses" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
+	<button data-app-click='admin_support|showHelpDocInDialog' data-title='Amazon_SES' class='applyButton floatRight' data-text='true' data-icon-primary='ui-icon-key'>Help</button>
 	<h3>Amazon Account Information</h3>
-	
-	<p class='hint'>Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effective bulk and transactional email sending service for businesses and developers.<br />
-	<a href='#' onClick="linkOffSite('http://aws.amazon.com/ses/','',true); return false;">Click here for signup / more details</a></p>
+	<p class="hint">Amazon Simple Email Service (Amazon SES) is a highly scalable and cost-effective bulk and transactional email sending service for businesses and developers.<br>
+	<a href="#" onclick="linkOffSite('http://aws.amazon.com/ses/','',true); return false;">Click here for signup / more details</a></p>
 	
 	<label>
 		<span>IAM username</span>
-		<input type='text' name='iam-username' value='' data-bind="var: plugin(iam-username); format:popVal;" />
+		<input length="25" data-tlc="bind $var '.iam-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="iam-username" value="" type="text">
 	</label>	
 	<label>
 		<span>SMTP username</span>
-		<input type='text' name='smtp-username' value='' data-bind="var: plugin(smtp-username); format:popVal;" />
+		<input data-tlc="bind $var '.smtp-username'; if(is $var --notblank;) {{apply --select=$var;}}; " name="smtp-username" value=""
+		length="25" type="text">
 	</label>	
 	<label>
 		<span>SMTP password</span>
-		<input type='text' name='~smtp-password' value='' data-bind="var: plugin(~smtp-password); format:popVal;" />
+		<input length="50" data-tlc="bind $var '.~smtp-password'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~smtp-password" value="" type="text">
 	</label>
 
 
-	<h3 class='marginTop marginBottom'>Email Addresses</h3>
+	<h3 class="marginTop marginBottom">Email Addresses</h3>
 	<label>
 		<span>From email address (automated/orders)</span>
-		<input type='text' name='from_email_auto' value='' data-bind="var: plugin(from_email_auto); format:popVal;" /><span class='toolTip' title='Used by all automated mailings, such as order confirmations, password recovery, etc'>?</span>
+		<input length="30" data-tlc="bind $var '.from_email_auto'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_auto" value="" type="text"><span class="toolTip" title="Used by all automated mailings, such as order confirmations, password recovery, etc">?</span>
 	</label>
 
 	<label>
 		<span>From email address (campaigns)</span>
-		<input type='text' name='from_email_campaign' value='' data-bind="var: plugin(from_email_campaign); format:popVal;" /><span class='toolTip' title='used in conjunction with the outbound campaign mail system'>?</span>
+		<input length="30" data-tlc="bind $var '.from_email_campaign'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_campaign" value="" type="text"><span class="toolTip" title="used in conjunction with the outbound campaign mail system">?</span>
 	</label>
 	
 	<label>
 		<span>From email address (staff/support)</span>
-		<input type='text' name='from_email_support' value='' data-bind="var: plugin(from_email_support); format:popVal;" /><span class='toolTip' title='used in conjunction with the CRM system'>?</span>
+		<input length="30" data-tlc="bind $var '.from_email_support'; if(is $var --notblank;) {{apply --select=$var;}}; " name="from_email_support" value="" type="text"><span class="toolTip" title="used in conjunction with the CRM system">?</span>
 	</label>
 
 	
@@ -3193,40 +3220,103 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 
-<fieldset id='pluginTemplate_auth_google'>
-	<input type='hidden' name='plugin' value='auth_google' />
+<fieldset id="pluginTemplate_shipworks.com">
+	<input name="plugin" value="shipworks.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<input name="username" value="shipworks" type="hidden">
+	<p class="hint">ShipWorks is a global setting, it is not partition specific</p>
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable ShipWorks
+	</label>
+	<p>ShipWorks will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
+	<div class="label"><span>Username </span>shipworks</div>
+	<div class="label smallButton">
+		<span>Password</span>
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
+	</div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
+</fieldset>
+
+<fieldset id="pluginTemplate_shipstation.com">
+	<input name="plugin" value="shipstation.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<p class="hint">ShipStation is a global setting, it is not partition specific</p>
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable ShipStation
+	</label>
+
+	<p>ShipStation will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
+	<div class="label"><span>Username </span>shipstation</div>
+	<div class="label smallButton">
+		<span>Password</span>
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID"data-input-name="~password">Generate Password</button>
+	</div>
+	
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
+
+</fieldset>
+
+<fieldset id="pluginTemplate_desktop.zoovy.com">
+	<input name="plugin" value="desktop.zoovy.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<p class="hint">Zoovy Integrate Desktop is a global setting, it is not partition specific</p>
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable Admin Sync
+	</label>
+
+	<p>Zoovy Desktop will request a username and password so it can access your store.
+	Use the username and password below: 
+	</p>
+	<div class="label"><span>Username </span> <span data-tlc="bind $var '.userid'; apply --append;"></span></div>
+	<div class="label smallButton">
+		<span>Password</span>
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
+	</div>
+	<p>Zoovy Integrated Desktop automatically downloads users from Setup > User Manager. Users can login with their username + PIN (personal identification number). If no PIN has been set then the user will not be able to login to software</p>
+
+</fieldset>
+
+
+<fieldset id="pluginTemplate_auth_google">
+	<input name="plugin" value="auth_google" type="hidden">
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Client ID</span>
-		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+		<input data-tlc="bind $var '.clientid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="clientid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Client secret</span>
-		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~clientsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~clientsecret" value="" type="text">
 	</label>
 	
 </fieldset>
 
-<fieldset id='pluginTemplate_auth_facebook'>
-	<input type='hidden' name='plugin' value='auth_facebook' />
+<fieldset id="pluginTemplate_auth_facebook">
+	<input name="plugin" value="auth_facebook" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb'  data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>App ID</span>
-		<input type='text' name='appid' value='' data-bind="var: plugin(appid); format:popVal;" />
+		<input data-tlc="bind $var '.appid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="appid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>App secret</span>
-		<input type='text' name='~appsecret' value='' data-bind="var: plugin(~appsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~appsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~appsecret" value="" type="text">
 	</label>
 	
 </fieldset>
@@ -3234,49 +3324,48 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 
-<fieldset id='pluginTemplate_platform_android'>
-	<input type='hidden' name='plugin' value='platform_android' />
+<fieldset id="pluginTemplate_platform_android">
+	<input name="plugin" value="platform_android" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Client ID</span>
-		<input type='text' name='clientid' value='' data-bind="var: plugin(clientid); format:popVal;" />
+		<input data-tlc="bind $var '.clientid'; if(is $var --notblank;) {{apply --select=$var;}}; " name="clientid" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Client secret</span>
-		<input type='text' name='~clientsecret' value='' data-bind="var: plugin(~clientsecret); format:popVal;" />
+		<input data-tlc="bind $var '.~clientsecret'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~clientsecret" value="" type="text">
 	</label>
 	
 </fieldset>
 
 
-<fieldset id='pluginTemplate_platform_appleios' class='alignedInputs alignedLabels'>
-	<input type='hidden' name='plugin' value='platform_appleios' />
+<fieldset id="pluginTemplate_platform_appleios" class="alignedInputs alignedLabels">
+	<input name="plugin" value="platform_appleios" type="hidden">
 	<label>
-		<input name='enable' type='checkbox' class='applyAnycb' data-bind="var: plugin(enable); format:popVal;" />
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 
 	<label>
 		<span>Password</span>
-		<input type='text' name='~passwd' value='' data-bind="var: plugin(~passwd); format:popVal;" />
+		<input data-tlc="bind $var '.~passwd'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~passwd" value="" type="text">
 	</label>
 	
 	<label>
 		<span>Certificate</span>
-		<textarea name='~cert' data-bind="var: plugin(~cert); format:popVal;" rows='10'></textarea>
+		<textarea data-tlc="bind $var '.~cert'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~cert" rows="10"></textarea>
 	</label>
 	
 	<label>
 		<span>Key</span>
-		<textarea name='~key' data-bind="var: plugin(~key); format:popVal;" rows='10'></textarea>
+		<textarea data-tlc="bind $var '.~key'; if(is $var --notblank;) {{apply --select=$var;}}; " name="~key" rows="10"></textarea>
 	</label>
 </fieldset>
-
 
 
 
@@ -3547,3 +3636,30 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 </div>
 
 
+
+<div id='passwordUpdateTemplate' class='ui-widget'>
+
+<form data-app-submit='admin_config|adminPasswordUpdateExec' class='ui-widget-content stdPadding'>
+<fieldset class='labelsAsBreaks alignedLabels'>
+	<legend>Update Password</legend>
+	<p>New passwords must be a minimum of eight characters.  It is recommended that you use mixed case, one number and one special character in your password. This will make it more secure.</p>
+	<label>
+		<span class='prompt'>Old password</span>
+		<input type='password' name='oldpassword' required='required' value='' />
+		<span class='hint'>if you are using a temporary password issued as part of a recovery, it will work</span>
+	</label>
+
+	<label>
+		<span class='prompt'>New password</span>
+		<input type='password' name='newpassword1' value='' required='required' data-minlength='8' />
+	</label>
+	<label>
+		<span class='prompt'>New password again</span>
+		<input type='password' name='newpassword2' value='' required='required' data-minlength='8' />
+	</label>
+
+	<input type='submit' value='Change Password' class='applyButton' />
+</fieldset>
+</form>
+
+</div>
