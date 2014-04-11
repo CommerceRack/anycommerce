@@ -3096,7 +3096,7 @@ later, it will handle other third party plugins as well.
 		init : function()	{
 			dump("BEGIN quickstart.handleThirdParty.Init");
 
-			var uriParams = _app.u.kvp2Array(location.hash.substring(1));
+			var uriParams = _app.u.kvp2Array(location.hash.substring(1)) || {};
 			//landing on the admin app, having been redirected after logging in to google.
 			if(uriParams.trigger == 'googleAuth')	{
 				_app.calls.authAdminLogin.init({
