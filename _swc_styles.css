@@ -59,6 +59,9 @@ a.redText{color:#7e0000}
 	border-left: 1px solid white;
 	border-top: 1px solid white;
 	box-shadow: -2px -2px 6px rgba(64,64,64,.5);
+	background-image:url(images/wrapper/menu_icon.png);
+	background-position:center center;
+	background-repeat:no-repeat;
 }
 #footer{transition: bottom 1s;}
 #appView.showFooter #footer {bottom:0px;}
@@ -123,3 +126,26 @@ a.blockLink, li.blockLink {display: inline-block;}
 .sportWidget {width: 25%; float: left;}
 .sportWidget .myteams ul { height: 200px; overflow-y:auto;}
 .sportWidget .moreteams ul { height: 300px; overflow-y:auto;}
+
+.prodListTagsContainer {
+	height: 16px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 99;
+}
+.prodListTagsContainer span{
+	display: inline-block;
+	height: 16px;
+	background: url(images/cubworld_smalltags.png) no-repeat;
+}
+.prodListTagsContainer .is_fresh{background-position:0px 0px; width:51px;}
+.prodListTagsContainer .is_bestseller{background-position:0px -16px; width:49px;}
+.prodListTagsContainer .is_user1{background-position:0px -32px; width:61px;}
+.prodListTagsContainer .is_sale{background-position:0px -48px; width:61px;}
+.prodListTagsContainer .is_specialorder{background-position:0px -64px; width:71px;}
+.prodListTagsContainer .is_preorder{background-position:0px -80px; width:83px;}
+.prodListTagsContainer .is_discontinued{background-position:0px -96px; width: 78px;}
+.prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
+.prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
