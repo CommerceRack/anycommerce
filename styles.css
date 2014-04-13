@@ -51,16 +51,17 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 #mastHead .logo	{position:absolute; top:3px; left:.5em; width:165px; height:51px; display:block;}
 
-#mastHead menu	{position:absolute; top:21px; right:.5em;}
-#mastHead menu a	{float:left; margin-left:1em; display:block; width:26px; height:21px;}
-#mastHead menu .contact	{background-position:0 -70px;}
-#mastHead menu .account	{background-position:-26px -70px;}
-#mastHead menu .cart	{background-position:-55px -70px;}
+#mastHead .mobileNav	{position:absolute; top:21px; right:.5em;}
+#mastHead .mobileNav a	{float:left; margin-left:1em; display:block; width:26px; height:21px;}
+#mastHead .mobileNav .contact	{background-position:0 -70px;}
+#mastHead .mobileNav .account	{background-position:-26px -70px;}
+#mastHead .mobileNav .cart	{background-position:-55px -70px;}
 
-#specialsNav, 
+#specialsNav,
+#headerPhoneNumber,
 #mastHead .socialIcons, 
-#mastHead .minicart, 
-#headerDecal1,
+#mastHead .minicart, .checkoutText,
+#headerDecal1, #headerDecal2,
 #menuNav	{display:none;}
 
 
@@ -99,6 +100,7 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 #tier1catContainer	{
 	display:none; 
 	position:absolute; left:1em; top:77px; width:90%;
+	padding:.3em;
 	border:2px solid #ff4000; background:#fcf5b5; 
 	z-index:1000;
 	-webkit-border-radius: 0 .6em .6em .6em;
@@ -107,9 +109,10 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 #tier1catContainer button	{
 	position:absolute; top:0; right:0;
-	-webkit-border-radius: 0 .6em .6em .6em;
-	border-radius: 0 .6em .6em .6em;
+	-webkit-border-radius: 0 .6em .0em .6em;
+	border-radius: 0 .6em .0em .6em;
 	border:0; background:#ff4000;
+	padding:.1em .5em;
 	color:#ffffff;
 	}
 
@@ -128,20 +131,46 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 #tier1categories img	{float:left; margin-right:.5em;}
 #tier1categories li a	{text-decoration:none;}
 
+
+.checkoutButton	{
+	font-weight:400; font-size:.9em; color:#fff;
+	padding:.1em .3em;
+	display:block;
+	-webkit-border-radius: .4em;
+	border-radius: .4em;
+	background: rgb(78,169,18); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(78,169,18,1) 0%, rgba(50,126,0,1) 50%, rgba(78,169,18,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(78,169,18,1)), color-stop(50%,rgba(50,126,0,1)), color-stop(100%,rgba(78,169,18,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(78,169,18,1) 0%,rgba(50,126,0,1) 50%,rgba(78,169,18,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(78,169,18,1) 0%,rgba(50,126,0,1) 50%,rgba(78,169,18,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(78,169,18,1) 0%,rgba(50,126,0,1) 50%,rgba(78,169,18,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(78,169,18,1) 0%,rgba(50,126,0,1) 50%,rgba(78,169,18,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4ea912', endColorstr='#4ea912',GradientType=0 ); /* IE6-9 */	
+	}
+
+
 /* footer */
 
-
+#mastFoot	{background:#fff;}
 footer .footHead	{line-height:26px; font-size:.9em; font-weight:bold; color:#fff; padding:.2em .5em;}
 footer p.linkGroup	{width:45%; font-size:.8em;  margin:0 .5em; padding:.5em 0;}
 footer p.linkGroup a	{text-decoration:none; padding:.3em 0}
 footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; padding:.5em; color:#fff;}
 
 
+
+/* app nav overrides */
+
+#appNav .prodDetailPrevItemButton	{position:absolute; top:2px; left:2px;}
+#appNav .prodDetailNextItemButton	{position:absolute; top:2px; right:2px;}
+
+
+
 /* content area */
 #contentContainer	{padding:.3em; background:#fff;}
 
-.reversedHeader	{
-	display:block; padding:.3em .5em; margin:0 0 .5em 0; line-height:26px; 
+.reversedHeader	{display:block; padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}
+.reversedHeader, .plAdd2Cart	{
 	color:#fff; font-weight:700; font-size:1em;
 	background: #7d7e7d; /* Old browsers */
 	background: -moz-linear-gradient(top, #7d7e7d 0%, #0e0e0e 100%); /* FF3.6+ */
@@ -221,6 +250,9 @@ hr.subtle	{margin:.1em 0;
 .reviewPLAdjust	{margin:0em 0 -.5em 1em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
 .plLineItem .marginBottom	{margin-bottom:.3em;}
 
+.plAdd2Cart	{letter-spacing: .08em;}
+
+
 /***** Review Section CSS Start *****/
 .reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px;}
 .review_1 	{background-position: 0px 0px;}
@@ -258,6 +290,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
     width: 100%;
     height: 100%;
 	}
+
+.productPrimaryImage	{margin-bottom:.3em; margin:0 auto;}
+.productDetailThumbnails .productThumb	{float:left; margin: 0 .3em .3em 0;}
 
 .reviewSummary .reviewSprite	{margin-top:.3em;}
 
@@ -329,10 +364,30 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		background: -ms-linear-gradient(top, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* IE10+ */
 		background: linear-gradient(to bottom, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* W3C */
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#726e6b', endColorstr='#44484b',GradientType=0 ); /* IE6-9 */
-
 		}
 
-	#menuNav	{position:absolute; top:14px; right:.5em; display:block; color:#27a8e0;}
+	#headerDecal2	{
+		display:block;
+		color:#fff;
+		position:absolute; top: 43px; right:.5em;
+		-webkit-border-radius: .4em;
+		border-radius: .4em;
+		padding:.1em .6em; 
+		background: rgb(230,116,29); /* Old browsers */
+		background: -moz-linear-gradient(top, rgba(230,116,29,1) 0%, rgba(242,60,31,1) 100%); /* FF3.6+ */
+		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,116,29,1)), color-stop(100%,rgba(242,60,31,1))); /* Chrome,Safari4+ */
+		background: -webkit-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Chrome10+,Safari5.1+ */
+		background: -o-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Opera 11.10+ */
+		background: -ms-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* IE10+ */
+		background: linear-gradient(to bottom, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* W3C */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6741d', endColorstr='#f23c1f',GradientType=0 ); /* IE6-9 */
+		}
+	#headerDecal2 .primaryText	{font-weight:900; font-size:1em; margin-right:.4em; padding-right:.4em; border-right:1px solid #faba8e; text-shadow: 1px 1px 1px #000;}
+	#headerDecal2 .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
+
+
+
+	#menuNav	{position:absolute; top:14px; right:.3em; display:block; color:#27a8e0;} /* .3 instead of .5 is to compensate for the link margin */
 	.menuLink	{color:#fff; font-size:.7em; font-weight:100; margin:0 .2em; text-decoration:none;}
 	#specialsNav	{position:absolute; top:77px; left:0; display:block;}
 	.specialsLink	{color:#ccc; font-size:.7em; font-weight:700; margin:0; padding:0 .5em; border-right:1px solid #333; text-decoration:none;}
@@ -341,16 +396,20 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#mastHeadSearchFrm	{left:.5em; width:50%;}
 	.productSearchKeyword	{width:100%;}
 	
+	#headerPhoneNumber	{display:block; position:absolute; top:0px; margin-top:-10px; right:.5em; font-size:.8em; color:#fff;}
+	
 	#mastHead .socialIcons	{display:block; position:absolute; right:.5em; bottom:5px; font-size:.5em; line-height:.3em;}
-	#mastHead .minicart	{bottom:33px; font-size:.8em; display:block; right:.5em; position:absolute;}
+	#mastHead .minicart	{bottom:33px; font-size:.8em; display:block; right:.5em; position:absolute; color:#fff; padding-left:32px;}
+	#mastHead .minicart .cart	{background-position:-125px -67px; display:block; width:26px; height:25px; float:left; margin-right:.2em; position:absolute; left:0; top:-2px;}
+	.minicart a	{color:#fff; text-decoration:none;}
 
-	.socialSprite	{background:url(images/social_sprite.png) no-repeat; width:20px; height:20px; display:inline-block; margin-right:.2em; overflow:hidden; text-indent:-3000px;}
-	.facebook	{background-position:0 -100px;}
-	.twitter	{background-position:0 -440px;}
-	.gplus		{background-position: 0 -180px;}
-	.myspace	{background-position:0 -220px;}
-	.youtube	{background-position:0 -160px;}
-	.wordpress	{background-position:0 -160px;}
+	.socialSprite	{background:url(images/social_sprite.png) no-repeat; width:22px; height:21px; display:inline-block; margin-right:.3em; overflow:hidden; text-indent:-3000px;}
+	.facebook	{background-position:-344px -137px;}
+	.twitter	{background-position:-344px -15px;}
+	.gplus		{background-position: -140px -137px;}
+	.myspace	{background-position:-276px -76px;}
+	.youtube	{background-position:-5px -15px;}
+	.wordpress	{background-position:-174px -15px;}
 	}
 
 
@@ -358,7 +417,8 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 
 @media only screen and (min-width: 800px) {
 	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
-	#menuNav	{right:110px;}
+	#menuNav, #headerDecal2	{right:110px;}
+	.checkoutText	{display:inline;}
 	}
 
 

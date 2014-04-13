@@ -344,7 +344,24 @@ var store_zephyrapp = function(_app) {
 
 				return true; //continue processing tlc
 				},
-			
+//Generate a list of thumbnails, adding srcset along the way.			
+			proddetailthumbs : function(data,thisTLC)	{
+				if(data.value && data.value['zoovy:prod_image2'])	{
+					var $div = $("<div \/>");
+					for(var i = 1; i <= 20; i += 1)	{
+						if(data.value['zoovy:prod_image'+i])	{
+							$("<img \/>",{
+								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
+								//the first srcset value should match the default height and width, then grow from there.
+								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 1x, "+thisTLC.makeImageURL({'width':200,'height':200,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 2x"
+								}).addClass('productThumb').appendTo($div);
+							}
+						else	{break;} //exit early once a 'blank' is found in the img list.
+						}
+					data.globals.binds[data.globals.focusBind] = $div.children();
+					}
+				return true;
+				},
 			
 			shiptimestable : function(data,thisTLC)	{
 

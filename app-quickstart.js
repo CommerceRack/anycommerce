@@ -216,7 +216,7 @@ document.write = function(v){
 						
 						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
 	
-						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete()}; //gets run after app has been init
+//						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete()}; //gets run after app has been init
 						_app.ext.quickstart.thirdParty.init();
 						
 						}}},"mutable"); //used to determine if user is logged in or not.
@@ -624,7 +624,7 @@ need to be customized on a per-ria basis.
 
 			addpicslider : function($tag,data)	{
 //				dump("BEGIN quickstart.renderFormats.addPicSlider: "+data.value);
-				if(typeof _app.data['appProductGet|'+data.value] == 'object')	{
+				if(data.value && typeof _app.data['appProductGet|'+data.value] == 'object')	{
 					var pdata = _app.data['appProductGet|'+data.value]['%attribs'];
 //if image 1 or 2 isn't set, likely there are no secondary images. stop.
 					if(_app.u.isSet(pdata['zoovy:prod_image1']) && _app.u.isSet(pdata['zoovy:prod_image2']))	{
@@ -640,7 +640,9 @@ need to be customized on a per-ria basis.
 
 //no click event is added to this. do that on a parent element so that this can be recycled.
 			youtubethumbnail : function($tag,data)	{
-				$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
+				if(data.value)	{
+					$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
+					}
 				return true;
 				}, //youtubeThumbnail
 
@@ -685,63 +687,68 @@ fallback is to just output the value.
 */
 
 			banner : function($tag, data)	{
+				if(data.value)	{
 //				dump("begin quickstart.renderFormats.banner");
-				var obj = _app.u.kvp2Array(data.value), //returns an object LINK, ALT and IMG
-				hash, //used to store the href value in hash syntax. ex: #company?show=return
-				pageInfo = {};
-				
-//if value starts with a #, then most likely the hash syntax is being used.
-				if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
-					hash = obj.LINK;
-					pageInfo = _app.ext.quickstart.u.getPageInfoFromHash(hash);
-					}
-// Initially attempted to do some sort of validating to see if this was likely to be a intra-store link.
-//  && data.value.indexOf('/') == -1 || data.value.indexOf('http') == -1 || data.value.indexOf('www') > -1
-				else if(obj.LINK)	{
-					pageInfo = _app.ext.quickstart.u.detectRelevantInfoToPage(obj.LINK);
-					if(pageInfo.pageType)	{
-						hash = _app.ext.quickstart.u.getHashFromPageInfo(pageInfo);
+					var obj = _app.u.kvp2Array(data.value), //returns an object LINK, ALT and IMG
+					hash, //used to store the href value in hash syntax. ex: #company?show=return
+					pageInfo = {};
+					
+	//if value starts with a #, then most likely the hash syntax is being used.
+					if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
+						hash = obj.LINK;
+						pageInfo = _app.ext.quickstart.u.getPageInfoFromHash(hash);
+						}
+	// Initially attempted to do some sort of validating to see if this was likely to be a intra-store link.
+	//  && data.value.indexOf('/') == -1 || data.value.indexOf('http') == -1 || data.value.indexOf('www') > -1
+					else if(obj.LINK)	{
+						pageInfo = _app.ext.quickstart.u.detectRelevantInfoToPage(obj.LINK);
+						if(pageInfo.pageType)	{
+							hash = _app.ext.quickstart.u.getHashFromPageInfo(pageInfo);
+							}
+						else	{
+							hash = obj.LINK
+							}
 						}
 					else	{
-						hash = obj.LINK
+						//obj.link is not set
 						}
-					}
-				else	{
-					//obj.link is not set
-					}
-				if(!_app.u.isSet(obj.IMG))	{$tag.remove()} //if the image isn't set, don't show the banner. if a banner is set, then unset, val may = ALT=&IMG=&LINK=
- 				else	{
-//if we don't have a valid pageInfo object AND a valid hash, then we'll default to what's in the obj.LINK value.
-					$tag.attr('alt',obj.ALT);
-//if the link isn't set, no href is added. This is better because no 'pointer' is then on the image which isn't linked.
-					if(obj.LINK)	{
-//						dump(" -> obj.LINK is set: "+obj.LINK);
-						var $a = $("<a />").addClass('bannerBind').attr({'href':hash,'title':obj.ALT});
-						if(pageInfo && pageInfo.pageType)	{
-							$a.click(function(){
-								return showContent('',pageInfo)
-								})
+					if(!_app.u.isSet(obj.IMG))	{$tag.remove()} //if the image isn't set, don't show the banner. if a banner is set, then unset, val may = ALT=&IMG=&LINK=
+					else	{
+	//if we don't have a valid pageInfo object AND a valid hash, then we'll default to what's in the obj.LINK value.
+						$tag.attr('alt',obj.ALT);
+	//if the link isn't set, no href is added. This is better because no 'pointer' is then on the image which isn't linked.
+						if(obj.LINK)	{
+	//						dump(" -> obj.LINK is set: "+obj.LINK);
+							var $a = $("<a />").addClass('bannerBind').attr({'href':hash,'title':obj.ALT});
+							if(pageInfo && pageInfo.pageType)	{
+								$a.click(function(){
+									return showContent('',pageInfo)
+									})
+								}
+							$tag.wrap($a);
 							}
-						$tag.wrap($a);
+						data.value = obj.IMG; //this will enable the image itself to be rendered by the default image handler. recycling is good.
+						_app.renderFormats.imageURL($tag,data);
 						}
-					data.value = obj.IMG; //this will enable the image itself to be rendered by the default image handler. recycling is good.
-					_app.renderFormats.imageURL($tag,data);
 					}
 				}, //banner
-				
+
 //could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
 			legacyurltoria : function($tag,data)	{
 				if(data.value == '#')	{
 					$tag.removeClass('pointer');
 					}
+				else if(data.value && data.value.indexOf('#!') == 0)	{
+					//link is formatted correctly. do nothing.
+					}
+				else if(data.value)	{
+					$tag.attrib('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
+					}
 				else	{
-					var pageInfo = _app.ext.quickstart.u.detectRelevantInfoToPage(data.value);
-					pageInfo.back = 0;
-					$tag.addClass('pointer').click(function(){
-						return _app.ext.quickstart.a.showContent('',pageInfo);
-						});
+					//data.value is not set. do nothing.
 					}
 				}, //legacyURLToRIA
+
 
 //use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
 // render format will also hide the button if the user is not logged in.
@@ -1732,20 +1739,20 @@ $target.tlc({
 //				dump("BEGIN quickstart.u.getHashFromPageInfo");
 				var r = false; //what is returned. either false if no match or hash (#company?show=contact)
 				if(this.thisPageInfoIsValid(infoObj))	{
-					if(infoObj.pageType == 'product' && infoObj.pid)	{r = '#product?pid='+infoObj.pid}
-					else if(infoObj.pageType == 'category' && infoObj.navcat)	{r = '#category?navcat='+infoObj.navcat}
-					else if(infoObj.pageType == 'homepage')	{r = ''}
-					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
-					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
+					if(infoObj.pageType == 'product' && infoObj.pid)	{r = '#!product/'+infoObj.pid}
+					else if(infoObj.pageType == 'category' && infoObj.navcat)	{r = '#!category/'+infoObj.navcat}
+					else if(infoObj.pageType == 'homepage')	{r = '#!home'}
+					else if(infoObj.pageType == 'cart')	{r = '#!cart'}
+					else if(infoObj.pageType == 'checkout')	{r = '#!checkout'}
 					else if(infoObj.pageType == 'search' && (infoObj.TAG || infoObj.KEYWORDS))	{
-						r = '#search?';
-						r += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
+						r = '#!search/';
+						r += (infoObj.KEYWORDS) ? 'keywords/'+infoObj.KEYWORDS : 'tag/'+infoObj.TAG;
 						}
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
-						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
+						r = '#!search/elasticsearch/'+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
 						}
-					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
+					else if(infoObj.pageType && infoObj.show)	{r = '#!'+infoObj.pageType+'/'+infoObj.show}
 					else	{
 						//shouldn't get here because pageInfo was already validated. but just in case...
 						dump("WARNING! invalid pageInfo object passed into getHashFromPageInfo. infoObj: ");

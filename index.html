@@ -107,7 +107,15 @@ $(document).ready(function(){
 			<a href='#!category/.3packagespecials' class='specialsLink'>Package Specials</a>
 		</nav>
 		
-		<div id='headerDecal1'></div>
+		<div id='headerDecal1'></div><!-- ssl cert -->
+
+		<div id='headerDecal2'>
+			<span class='primaryText'>FREE SHIPPING</span>
+			<div class='secondaryText'>
+				<div>on orders</div><div>over $100</div>
+			</div>
+		</div>
+
 		<nav id='menuNav'>
 			<a href='#!company/about' class='menuLink'>About Us</a> | 
 			<a href='#!company/retail' class='menuLink'>Retail Store</a> | 
@@ -116,7 +124,21 @@ $(document).ready(function(){
 			<a href='#!customer' class='menuLink'>My Account</a>
 		</nav>
 		
-		<div class='minicart'>Minicart</div>
+		<div class='minicart'>
+			<a href='#!cart' class='sprite cart'></a>
+			<a href='#!cart'>My Cart</a>
+			<span class='countContainer marginRight'>( <span class='itemCount'>0</span> items)</span>
+			<a class='checkoutButton floatRight ui-widget-header'><!-- ui-widget-header is for white icons -->
+				<span class='ui-icon ui-icon-check floatLeft'></span>
+				<span class='checkoutText'>Proceed to Secure</span> Checkout
+				<span class='ui-icon ui-icon-triangle-1-e floatRight'></span>
+			</a>
+		</div>
+		
+		<div id='headerPhoneNumber'>
+			<span class='phoneText'>Questions? Call Us</span>
+			<span class='phoneNumber'>1.877.814.4297</span>
+		</div>
 		
 		<nav class='mobileNav'>
 		<a href='#!company/contact' class='sprite contact'></a>
@@ -148,7 +170,7 @@ $(document).ready(function(){
 
 	<div id='contentContainer' class='clearfix'>
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
-		<div id='appNav'>
+		<div id='appNav' class='smallButton'>
 			<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
 			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 		</div>
@@ -156,7 +178,7 @@ $(document).ready(function(){
 		<div id='mainContentArea'></div>
 	</div>
 
-	<footer>
+	<footer id='mastFoot' class='clearfix'>
 		<div class='footHead'>Zephyr Help Desk</div>
 		<div  class='clearfix'>
 			<p class='floatLeft linkGroup'>
@@ -170,7 +192,7 @@ $(document).ready(function(){
 				<a href='#!company/return'>Policies</a>	
 			</p>
 		</div>
-		
+
 		<p class='footText'>
 		Copyright &copy; All Rights Reserved.<br>
 		eCommerce by <a href='http://www.anycommerce.com' target='_blank'>anyCommerce</a>
@@ -350,10 +372,44 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
-	<section class='marginBottom'>
-		<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="">
-		<h2 data-tlc="bind $var '.%page.header'; if (is $var --notblank;) {{apply --append;}};"></h2>
-		<div data-tlc="bind $var '.%page.top_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
+
+
+	<section data-app-role="catBigSlideshowContainer" class="clearfix marginBottom  displayNone" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.slide" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>" data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; if(is $var --notnull;) {{ apply --show; }}; ">
+		<nav class="cycle-pager"></nav>
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide2'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide3'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide4'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide5'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+	</section>
+
+
+
+	<a href="#" class='displayNone' data-tlc="bind $var '.%page.banner01_link'; bind $img '.%page.zoovy:banner01'; if (is $img --notnull;) {{apply --show;}}; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner01'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
+
+	<a href="#" class='displayNone' data-tlc="bind $var '.%page.banner02_link'; bind $img '.%page.zoovy:banner02'; if (is $img --notnull;) {{apply --show;}}; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner02'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
+
+<!--
+The images get .slide only if populated. the category complete event counts the instances of slide within the app-role and if > 2, will generate a slideshow.
+
+ -->
+	<section data-app-role="catTrioSlideshowContainer" class="clearfix marginBottom  displayNone" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="div.slide" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>">
+		<h3 class='reversedHeader displayNone' data-tlc="bind $var '.%page.3widead_title'; if (is $var --notblank;) {{apply --append; apply --show;}};"></h3>
+		<nav class="cycle-pager"></nav>
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide2'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide3'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" />
+	</section>
+
+
+
+
+	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description'; if(is $var --notnull;) {{ apply --show; }}; ">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+	</section>
+
+	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description2'; if(is $var --notnull;) {{ apply --show; }}; ">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description2'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
 	</section>
 
 	<section data-tlc="bind $var '.@subcategoryDetail'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
@@ -367,11 +423,12 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
 
 	<section class='marginBottom textBlockMaxHeight'>
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.description'; if (is $var --notnull;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
 	</section>
 
 
-	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append; apply --show;}};" ></section>
+	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; if (is $var --notnull;) {{render --wiki='quickstart'; apply --append; apply --show;}};" ></section>
+	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.htmllinks'; if (is $var --notnull;) {{render --wiki='quickstart'; apply --append; apply --show;}};" ></section>
 
 </div>
 
@@ -404,7 +461,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 
-
+<!-- used in related items and anywhere else the product list is in a carousel -->
 <div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; "  id="productListCycleTemplate" class='productListCycleSlide'>
 	
 	<div class="prodThumbContainer">
@@ -455,7 +512,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm smallButton" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 			<input name="qty" value="1" type="hidden">
-			<button data-tlc="bind $var '.'; quickstart#addtocartbutton  --legacy; apply --append;" class='applyButton'>more details</button>
+			<button data-tlc="bind $var '.'; quickstart#addtocartbutton  --legacy; apply --append;" class='plAdd2Cart'>more details</button>
 			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite reviewPLAdjust"></span>
 		</form>
 
@@ -618,8 +675,15 @@ this will likely become more flexible in the future. ###
 		</div>
 	</div>
 
-	<div data-anytab-content="images">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=120&w=120&dpi=1x&vp=640w,h=250&w=250&dpi=1x&vp=800w,h=400&w=400&dpi=2x&vp=1024w';}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
+	<div data-anytab-content="images" class='clearfix'>
+		<div class='productPrimaryImage'>
+			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=760w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w';}};" src="blank.gif" alt="" height="250" width="250">
+		</div>
+		
+		<div class='productDetailThumbnails' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;">
+		
+		</div>
+		
 	</div>
 
 	</section>
