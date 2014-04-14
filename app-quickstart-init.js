@@ -83,7 +83,6 @@ myApp.u.showProgress = function(progress)	{
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
-			myApp.router.init();//instantiates the router.
 			myApp.u.appInitComplete();
 			}
 		else if(attempt > 150)	{
