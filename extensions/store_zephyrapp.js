@@ -493,7 +493,7 @@ var store_zephyrapp = function(_app) {
 				dump("BEGIN revealation");
 				$('.textBlockMaxHeight',$ele).each(function(index){
 					var $container = $(this), $text = $("[data-textblock-role='content']",$container);
-					
+					$container.attr("data-textblock-role",'container').css('position','relative');  //when the class is toggled off, position will be too. but relative positioning necessary for the button to be visible.
 					function handleHeight(i)	{
 						i++;
 						if($text.outerHeight() > $container.height())	{
@@ -581,7 +581,7 @@ var store_zephyrapp = function(_app) {
 			
 			revealation : function($ele,p)	{
 				p.preventDefault();
-				var $container = $ele.closest(".textBlockMaxHeight");
+				var $container = $ele.closest("[data-textblock-role='container']");
 				if($container.length)	{
 					
 					if($container.attr('data-maxheight'))	{} //only set this once.
@@ -589,14 +589,12 @@ var store_zephyrapp = function(_app) {
 					
 					//text block is already 'open'. so close it.
 					if($ele.data('state') == 'open')	{
-						$container.attr('style',''); //restore to default state.
+						$container.addClass('textBlockMaxHeight').css('padding-bottom','0');; //restore to default state.
 						$ele.data('state','closed').find('.ui-button-text').text('Show More');
 						}
 					else	{
-						var height = $("[data-textblock-role='content']").outerHeight(true) + 60; // both height and max-height need to be set to get the button below the text.
-						$container.css({'max-height':height,'height':height,'overflow':'visible'});
+						$container.removeClass('textBlockMaxHeight').css('padding-bottom','2em'); //padding is to compensate for fadeout/button.
 						$ele.data('state','open').find('.ui-button-text').text('Show Less');
-						
 						}
 					}
 				else	{
