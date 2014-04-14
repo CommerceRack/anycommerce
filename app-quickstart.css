@@ -170,7 +170,7 @@ and offMenu is toggle off, hiding the change button.
 
 .mainColumn	{width:75%;}
 .sideline	{float:right; width:20%; margin:0 0 2em 0;}
-.sideline a	{padding:1em 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+.sideline a	{padding:.3em 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 

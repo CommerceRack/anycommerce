@@ -13,6 +13,9 @@ ADMIN
 	Product editor debug now includes 'inventory transactions'.
 
 
+QUICKSTART
+	previously, the appNav div was always visible and the buttons were hidden/shown.  Now the container is hidden/visible as well to allow for css adjustments.
+
 
 201402
 
