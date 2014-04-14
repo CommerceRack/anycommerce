@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.d",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201402.e",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -476,7 +476,7 @@ The images get .slide only if populated. the category complete event counts the 
 
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"><div class='prodName marginBottom' data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></div></a>
 	<div class=' marginBottom'>
-		<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --add --class='marginRight' apply --append;}};"></span>
+		<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
 		<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
 	</div>
 
@@ -510,7 +510,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		<div class='prodName marginBottom' data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div class=' marginBottom'>
-			<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --add --class='marginRight' apply --append;}};"></span>
+			<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
 			<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
 		</div>
 		</a>
@@ -613,7 +613,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 		<div class='prodName marginBottom' data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div class=' marginBottom'>
-			<span class='lineThrough' data-tlc="bind $var '.prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --add --class='marginRight' apply --append;}};"></span>
+			<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.base_price'; bind $msrp '.prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
 			<b class='basePrice' data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
 		</div>
 		</a>
@@ -682,7 +682,9 @@ this will likely become more flexible in the future. ###
 
 	<div data-anytab-content="images" class='clearfix'>
 		<div class='productPrimaryImage'>
-			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=760w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w';}};" src="blank.gif" alt="" height="250" width="250">
+			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};">
+			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w';}};" src="blank.gif" alt="" height="250" width="250" />
+			</a>
 		</div>
 		
 		<div class='productDetailThumbnails' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;">
@@ -694,7 +696,10 @@ this will likely become more flexible in the future. ###
 	</section>
 
 	<section class='marginBottom'>
-		<h4 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="lineThrough floatLeft marginRight"></h4>
+		<h4 data-tlc=" bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show;}};" class="floatLeft marginRight displayNone">
+			<span >MSRP: </span>
+			<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></span>
+		</h4>
 		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
 	</section>
 	

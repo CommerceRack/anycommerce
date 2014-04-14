@@ -365,6 +365,7 @@ var store_zephyrapp = function(_app) {
 					var $div = $("<div \/>");
 					for(var i = 1; i <= 20; i += 1)	{
 						if(data.value['zoovy:prod_image'+i])	{
+							$("<a \/>",{'href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),'rev':'','rel':''});
 							$("<img \/>",{
 								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
 								//the first srcset value should match the default height and width, then grow from there.

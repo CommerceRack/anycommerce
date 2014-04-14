@@ -61,6 +61,9 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 //a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
 //there's an 'activator' for this in the 'complete' for product, home and category pages.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //used pretty early in process..
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //used pretty early in process..
+myApp.rq.push(['css',1,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.css']);
+
 
 
 
@@ -121,6 +124,10 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 $("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
 	handleSrcSetUpdate($ele);
+	});
+
+$("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
+	MagicZoomPlus.refresh();
 	});
 
 $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
