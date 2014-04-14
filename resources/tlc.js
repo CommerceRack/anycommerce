@@ -203,7 +203,6 @@ var tlc = function()	{
 					dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 					//could not parse tlc. error already reported.
 					}
-	//			dump("----------------> end $tag <-----------------");
 				});
 			}
 		else	{
@@ -853,7 +852,6 @@ returning a 'false' here will exit the statement loop.
 //			dump(" -> p1: "+p1);
 			for(var i = 1, L = 2; i < L; i += 1)	{
 				var p2;
-				dump(" -------------> args: ");	dump(args); //p2 = 
 				if(args[i])	{
 					if(args[i].type == 'longopt')	{
 						p2 = this.handleArg(args[i],globals)[args[i].key];
@@ -1035,16 +1033,7 @@ returning a 'false' here will exit the statement loop.
 		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				//var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
-				var value = cmd.args[i].value;
-				if(cmd.args[i].type == 'longopt'){
-					if(value.type == 'variable'){
-						value = globals.binds[value.value];
-						}
-					else {
-						value = value.value
-						}
-					}
-				value = Number(value);
+				var value = Number(this.handleArg(cmd.args[i],globals)[cmd.args[i].key]);
 				if(!isNaN(value))	{
 					switch(cmd.args[i].key)	{
 						case "add":
