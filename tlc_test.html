@@ -39,8 +39,12 @@ function tlcTestInit()	{
 		if($select.val() == 'textarea')	{$('#json').val("")} //clear any existing json from the textarea.
 		else if($select.val() == 'ORDER' || $select.val() == '%ORDER')	{
 			$.getJSON("examples/sample-data/order.json").success(function(d){
-				console.log(" -> SUCCESS");
 				$('#json').val(($select.val() == '%ORDER' ? '{"%ORDER": '+JSON.stringify(d)+' }' : JSON.stringify(d)));
+				});
+			}
+		else if($select.val() == 'product')	{
+			$.getJSON("examples/sample-data/product.json").success(function(d){
+				$('#json').val(JSON.stringify(d));
 				});
 			}
 		});
@@ -95,6 +99,7 @@ function tlcTestInit()	{
 		<option value='textarea'>textarea</option>
 		<option value='%ORDER'>%order</option>
 		<option value='ORDER'>order</option>
+		<option value='product'>product</option>
 	</select>
 	</div>
 
