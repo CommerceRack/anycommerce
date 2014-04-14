@@ -344,6 +344,21 @@ var store_zephyrapp = function(_app) {
 
 				return true; //continue processing tlc
 				},
+			//if the value is blank, null, empty, undefined , return false (stops tlc processing on this statement)
+			dwiwempty : function(data,thisTLC)	{
+				dump(" --------------------------------> GOT HERE."); dump(data);
+				var r = true;
+				//needs to be first or the blanket data.value will b hit and return true.
+				if(data.value == 'ALT=&IMG=&LINK=')	{r = false;} //this is what a blank banner attribute will be set to
+				else if(data.value === 0)	{}
+				else if(data.value)	{}
+				else	{
+					r = false;
+					}
+				dump(" -> r: "+r);
+				return r;
+				},
+			
 //Generate a list of thumbnails, adding srcset along the way.			
 			proddetailthumbs : function(data,thisTLC)	{
 				if(data.value && data.value['zoovy:prod_image2'])	{
