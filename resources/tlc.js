@@ -841,7 +841,7 @@ returning a 'false' here will exit the statement loop.
 		//NOTE -> change '2' to args.length to support multiple args. ex: if (is $var --lt='100' --gt='5') {{ apply --append; }};
 
 //SANITY -> in args, args[0] is the variable declaration (type/value).  args[1]+ is the comparison (key, type, value where key = comparison operand).
-		
+
 		if(args.length)	{
 			if(args[0].type == 'variable')	{
 //				dump(" -> args[0].value: "+args[0].value);
@@ -853,9 +853,10 @@ returning a 'false' here will exit the statement loop.
 //			dump(" -> p1: "+p1);
 			for(var i = 1, L = 2; i < L; i += 1)	{
 				var p2;
+				dump(" -------------> args: ");	dump(args); //p2 = 
 				if(args[i])	{
 					if(args[i].type == 'longopt')	{
-						p2 = (args[i].value == null) ? args[i].value : args[i].value.value;
+						p2 = this.handleArg(args[i],globals)[args[i].key];
 						}
 					else {p2 = args[i].value || null}
 					if(this.comparison(args[i].key,p1,p2))	{}
