@@ -395,6 +395,7 @@ left them be to provide guidance later.
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
+						dump(" -----------------------------> GOT TO HERE!!!");
 						var $c = $(this);
 						$c.empty().showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
@@ -1331,13 +1332,16 @@ in a reorder, that data needs to be converted to the variations format required 
 			cartItemRemove	: function($ele,p)	{
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
+					
+					// these needs to be before the empty below OR the button can't look up the foodchain for the cart container.
+					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+
 					_app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':0,'_cartid':cartid},{
 						'callback' : 'showMessaging',
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
 					$ele.closest('[data-stid]').intervaledEmpty();
-					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 					_app.model.dispatchThis('immutable');
 					}
 				else	{
