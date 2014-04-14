@@ -1,0 +1,1058 @@
+<TEMPLATE ID="~zephyrsports_p_tabs_20121221" FORMAT="LAYOUT">
+
+
+<!-- ******* -->
+<ELEMENT ID="DAQIFLU" AUTHOR="jerryc" PROJECT="1318013" TYPE="CONFIG" EXPORT="1" CREATED="20121031160236" TITLE="Product: rollover images, tabs and product lists" FOLDER="_ticket_1318013" OVERLOAD="dev.no_continue=1"></ELEMENT>
+<ELEMENT ID="VAR_USERNAME" SUB="USERNAME" TYPE="READONLY" DATA="FLOW::USERNAME"></ELEMENT>
+<ELEMENT ID="VAR_POPUPTHEME" SUB="POPUP_THEME" TYPE="READONLY" LOAD="profile:zoovy:popup_wrapper" RAW="1"></ELEMENT>
+<ELEMENT ID="VAR_SKU" SUB="SKU" TYPE="READONLY" LOAD="FLOW::PROD" RAW="1"></ELEMENT>
+<ELEMENT ID="DAQIFLW" SUB="PROD_NAME" TYPE="READONLY" LOAD="product:zoovy:prod_name" RAW="1"></ELEMENT>
+<ELEMENT ID="VAR_LAYOUT_URL" SUB="LAYOUT_URL" TYPE="READONLY" LOAD="URL::LAYOUT_URL" RAW="1"></ELEMENT>
+<ELEMENT ID="VAR_FILES_URL" SUB="FILES_URL" TYPE="READONLY" LOAD="URL::FILES_URL" RAW="1"></ELEMENT>
+<ELEMENT ID="VAR_NONSECURE_URL" SUB="NONSECURE_URL" TYPE="READONLY" LOAD="URL::NONSECURE_URL" RAW="1"></ELEMENT>
+<ELEMENT HEIGHT="75" ID="PRODUCT_SEAL_BANNER" SUB="PROD_SEAL_GFX" WIDTH="75" PROMPT="product page seal (profile specific)" TYPE="BANNER" BGCOLOR="TTTTTT" EDITOR="INLINE" DATA="wrapper:zs11_banner_product_seal" OUTPUTSKIP="512"><HTML><![CDATA[
+<!-- BANNER: <% print($ID); %> --><div id='productSeal'><% load($PRETEXT); default(""); print(); %><a onClick="openWindow('<%
+load($LINKURL); default("#"); format(rewrite); print();
+%>?wrapper=%POPUP_THEME%',700,600); if(typeof PleaseTrackClick == 'function') { PleaseTrackClick('banner-<% print($ID); %>','<% print($IMG); %>|<% print($LINK); %>'); }" id="<% print($ID); %>_href" title="<% 
+load($ALT); default(""); format(encode=>"entity"); print(); 
+%>" href="#">
+<img border="0" height="<% print($HEIGHT); %>" width="<% print($WIDTH); %>" id="<% print($ID); %>_img" src="<%
+print($IMGURL);
+%>" alt="<% load($ALT); default(""); format(encode=>"entity"); print(); %>" />
+</a><% load($POSTTEXT); default(""); print(); %></div><!-- /BANNER: <% print($ID); %> -->
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PROD_WAREHOUSE_LOCATION" SUB="PROD_WAREHOUSE_LOC" TYPE="SPECL"><HTML><![CDATA[
+<%
+/* EMPL is the schedule that employee logins are on. This allows us to display some extra stuff */
+loadurp("CART::schedule"); default("");
+goto(label=>"END",ne=>"EMPL");
+	loadurp("product:user:prod_store_warehouse_loc"); default("");
+	format(pretext=>"<div style='margin-top:10px; font-weight:bold;'>Warehouse location: ",posttext=>"</div>"); 
+	print();
+	stop();
+:END();
+print("<!-- not on a schedule -->");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PROD_SHIP_TAG" SUB="PROD_SHIPTAG" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+/* product must be tagged AND the profile image must be set */
+loadurp("product:is:shipfree"); default("");
+stop(unless=>$_);
+
+loadurp("wrapper:zs11_image_freeship"); default("");
+stop(unless=>$_);
+	set($STICKER=>$_);
+
+loadurp("wrapper:wrap_ship_promo"); default("");
+stop(unless=>$_);
+	set($SHIPPROMOPRICE=>$_);
+
+loadurp("product:zoovy:base_price"); default("");
+stop(unless=>$_);
+
+goto(label=>"END",lt=>$SHIPPROMOPRICE);
+
+	load($STICKER);
+	image(src=>$_,h=>"75",w=>"75",bg=>"TTTTTT",tag=>"1",alt=>"Ships Free!");
+	format(pretext=>"<div class='shipsFreeTag'>",posttext=>"</div>");
+	print();
+	
+:END();
+print("<!-- meets most qualifications for free shipping except price minimum -->");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DHFKAAE" SUB="PROD_TAGS" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("<!-- tags, if item is tagged -->");
+
+/* load each tag and see if it is set.  If so, display a sticker.  If not, skip to the next tag. */
+
+loadurp("product:is:specialorder"); default("");
+goto(label=>"SKIP_SPECIALORDER",ne=>"1");
+	image(src=>"/tags/small/specialorder",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Special Order");
+	print();
+	stop();
+:SKIP_SPECIALORDER();
+
+
+loadurp("product:is:preorder"); default("");
+goto(label=>"SKIP_PREORDER",ne=>"1");
+	image(src=>"/tags/small/preorder",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Preorder");
+	print();
+	stop();
+:SKIP_PREORDER();
+
+
+/* user2 = packagedeal */
+loadurp("product:is:user2"); default("");
+goto(label=>"SKIP_USER2",ne=>"1");
+	image(src=>"/tags/small/packagedeal",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Package Deal");
+	print();
+	stop();
+:SKIP_USER2();
+
+
+/* user1 = clearance */
+loadurp("product:is:user1"); default("");
+goto(label=>"SKIP_USER1",ne=>"1");
+	image(src=>"/tags/small/clearance",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Clearance");
+	print();
+	stop();
+:SKIP_USER1();
+
+
+loadurp("product:is:newarrival"); default("");
+goto(label=>"SKIP_NEWARRIVAL",ne=>"1");
+	image(src=>"/tags/small/newarrival",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"New Arrival");
+	print();
+	stop();
+:SKIP_NEWARRIVAL();
+
+
+loadurp("product:is:sale"); default("");
+goto(label=>"SKIP_SALE",ne=>"1");
+	image(src=>"/tags/small/sale",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Sale");
+	print();
+	stop();
+:SKIP_SALE();
+
+
+loadurp("product:is:bestseller"); default("");
+goto(label=>"SKIP_BESTSELLER",ne=>"1");
+	image(src=>"/tags/small/bestseller",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Best Seller");
+	print();
+	stop();
+:SKIP_BESTSELLER();
+
+
+print("<!-- product is not tagged -->");
+%>
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PROD_WARNING" WIKI="3" PROMPT="Product Warning" SUB="PROD_WARNING" TYPE="TEXT" FONT="0" EDITOR="INLINE" DATA="product:zoovy:prod_warning"><POSTTEXT><![CDATA[
+	</div>
+</div>
+]]></POSTTEXT>
+<PRETEXT><![CDATA[
+<div id="prodWarningElement" class='ztxt' style='margin-top:10px;'>
+	<div class='zwarn'>Warning!</div>
+	<div>
+	]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DCJGLFQ" SUB="PROD_WISHPOT_BUTTON" TYPE="SPECL"><HTML><![CDATA[<%
+
+print("<!-- Wishpot button, if enabled -->");
+
+loadurp("profile:wishpot:merchantid"); default("");
+stop(unless=>$_);
+	set($WISHPOT_MID=>$_);
+print("
+
+<div class='wishpot_form' style='margin-top:5px;'>
+
+<noscript>Visit <a href='http://www.wishpot.com/' title='Wish list, wedding registry, baby registry' target='_blank'>Wishpot add this item to your <b>wish list</b></a>.</noscript>
+
+<!--the partner key-->
+<input name='pkey' value='zoovy' type='hidden'>
+<!--optionally specify a channel for reporting purposes. 32 character limit -->
+<input name='pchannel' value='"); print($WISHPOT_MID); print("' type='hidden'>
+<input name='WishUrl' value='%PRODUCT_URL%/%SKU%' type='hidden'>
+<input name='WishTitle' value=&quot;");
+
+loadurp("product:zoovy:prod_name"); default(""); format(encode=>"entity"); print();
+
+print("&quot; type='hidden'>
+<input name='Price' value='");
+
+loadurp("product:zoovy:base_price"); default(""); format(money); print();
+
+print("' type='hidden'>
+
+<input name='Notes' value='' type='hidden'>
+
+<!-- Display the image source and size for the product (size required) -->
+
+<input name='ImgSrc' value='");
+
+loadurp("product:zoovy:prod_image1"); default("");
+image(h=>"200",w=>"200",bg=>"ffffff",tag=>"0"); print();
+
+print("' type='hidden'>
+<input name='ImgWidth' value='200' type='hidden'>
+<input name='ImgHeight' value='200' type='hidden'>
+
+<!--Specific to certain items -->
+<input name='Isbn' value='");
+
+loadurp("product:zoovy:prod_isbn"); default(""); print();
+
+print("' type='hidden'>
+<input name='Upc' value='");
+
+loadurp("product:zoovy:prod_upc"); default(""); print();
+print("' type='hidden'>
+
+<a href='http://www.wishpot.com/' onClick=&quot;if(document.getElementById){window.WISHPOT_FORM=this.parentNode;var x=document.getElementsByTagName('head').item(0);var o=document.createElement('script');if(typeof(o)!='object')o=document.standardCreateElement('script');o.setAttribute('src','http://www.wishpot.com/scripts/bm.js?v=100');o.setAttribute('type','text/javascript');x.appendChild(o);} return false;&quot; title='Add to your universal wish list or wedding registry' target='_blank'><img src='%LAYOUT_URL%/zs09_p_btn_wishpot-63x21.gif' width='63' height='21' alt='add to wishpot' border='0'></a>
+
+<!-- /wishpot code -->
+</div>
+
+");
+%>]]></HTML>
+</ELEMENT>
+<ELEMENT ID="IMAGES" SUB="PROD_IMAGES" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+
+/* display image1 big.  Check to see if image 2 is set.  if so, start looping through product images till a image field is hit and empty. */
+
+/* the height and width of the big image.  It is a variable because it is output several times and this makes it easier to change. */
+set($imagewidth=>"413");
+set($imageheight=>"262");
+loadurp("product:zoovy:prod_name"); format(encode=>"entity");
+set($PROD_NAME=>$_);
+
+
+/* IE and FireFox cant seem to decide whether a border is within the width or outside.  This compensates for that by creating a div around the image with a fixed width and putting the bordered div inside that. */
+
+
+loadurp("product:zoovy:prod_image1");
+set($IMAGE1=>$_);
+stop(unless=>$_);
+	print("<div style='margin-bottom:3px; margin-right:7px; float:left;'>");
+	print("<a href='");
+	load($IMAGE1); image(h=>"",w=>"",bg=>"ffffff",tag=>"0"); print();
+	print("' class='MagicZoom MagicThumb' rel='thumb-change: mouseover' id='zoom1'><img src='");
+	load($IMAGE1);
+	image(h=>$imageheight,w=>$imagewidth,bg=>"ffffff",tag=>"0",m=>"0"); print();
+	print("' height='");
+	print($imageheight);
+	print("' width='");
+	print($imagewidth);
+	print("' alt='");
+	print($PROD_NAME);
+	print("' border='0'></a>");
+	
+	print("</div>");
+
+
+/* if image2 is not set, we do not show any thumbnails */
+loadurp("product:zoovy:prod_image2");
+stop(unless=>$_);
+
+set($i=>"1");
+
+/* this is the product field that we append $i to for generating the image key. */
+set($image_key=>"product:zoovy:prod_image"); 
+
+
+:LOOP();
+
+load($image_key); format(posttext=>$i);
+loadurp($_);
+/* we use the filename in multiple places, so I set the var instead of loadurp'ing it several times. */
+set($image=>$_);
+
+/* if the current load has no value, then there are no more images to process.  Stop. Otherwise, print a thumbnail with JS to change big image and open original onclick */
+stop(unless=>$_);
+
+	print("
+
+	<div style='float:left; margin-bottom:3px; margin-right:3px; ' class='zborder'><a href='");
+	load($image);
+	image(h=>"",w=>"",bg=>"ffffff",tag=>"0",m=>"0"); print();
+	print("' rel='zoom1' class='MagicThumb' rev='");
+	load($image);
+	image(h=>$imageheight,w=>$imagewidth,bg=>"ffffff",tag=>"0"); print(); 
+	print("'>");
+	load($image);
+	image(src=>$image,w=>"82",h=>"54",bg=>"ffffff",m=>"0",tag=>"1",alt=>$PROD_NAME);
+	print();
+	print("</a></div>
+");
+
+	load($i);
+	math(op=>"add",var=>"1");
+	set($i=>$_);
+/* Go to loop and do it all again. */
+	goto(label=>"LOOP",ne=>"");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="INVSTATUS" SUB="PROD_INV_STATUS" TYPE="SCRIPT"><HTML><![CDATA[
+var invQuantity = loadURP('INVENTORY::AVAILABLE');
+if(invQuantity == 0)
+	write("Sold Out!");
+else if(invQuantity < 10)
+	write("Limited Availability (Qty = "+invQuantity+")");
+else if(invQuantity < 50)
+	write("In stock (Qty = "+invQuantity+")");
+else
+	write("In stock (Qty = 25+) <!-- ("+invQuantity+") -->");
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DHFKAAF" SUB="PROD_VIDEO" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+loadurp("product:youtube:360"); default("");
+stop(unless=>$_);
+	set($VIDEOID=>$_);
+	print("<div style='margin:10px;' align='center'><iframe id='youtubeVideoIframe' width='325' height='263' src='//www.youtube.com/embed/");
+	print($VIDEOID);
+	print("?rel=0' frameborder='0' allowfullscreen></iframe></div>");
+
+%>
+<%
+print("");
+loadurp("product:youtube:videoid"); default("");
+stop(unless=>$_);
+	set($VIDEOID=>$_);
+	print("<div style='margin:10px;' align='center'><iframe id='youtubeVideoIframe' width='325' height='263' src='//www.youtube.com/embed/");
+	print($VIDEOID);
+	print("?rel=0' frameborder='0' allowfullscreen></iframe></div>");
+
+%>
+<%
+print("");
+loadurp("product:youtube:videoid1"); default("");
+stop(unless=>$_);
+	set($VIDEOID=>$_);
+	print("<div style='margin:10px;' align='center'><iframe id='youtubeVideoIframe' width='325' height='263' src='//www.youtube.com/embed/");
+	print($VIDEOID);
+	print("?rel=0' frameborder='0' allowfullscreen></iframe></div>");
+
+%>
+<%
+print("");
+loadurp("product:youtube:videoid2"); default("");
+stop(unless=>$_);
+	set($VIDEOID=>$_);
+	print("<div style='margin:10px;' align='center'><iframe id='youtubeVideoIframe' width='325' height='263' src='//www.youtube.com/embed/");
+	print($VIDEOID);
+	print("?rel=0' frameborder='0' allowfullscreen></iframe></div>");
+
+%>
+<%
+print("");
+loadurp("product:youtube:videoid3"); default("");
+stop(unless=>$_);
+	set($VIDEOID=>$_);
+	print("<div style='margin:10px;' align='center'><iframe id='youtubeVideoIframe' width='325' height='263' src='//www.youtube.com/embed/");
+	print($VIDEOID);
+	print("?rel=0' frameborder='0' allowfullscreen></iframe></div>");
+
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT SIZE="50" ID="PRODLIST_ACCESSORIES" MAX="20" ALTERNATE="1" SHOWDEFAULT="0" MULTIPAGE="0" DATA="product:zoovy:prod_prodlist_style2" INVENTORY="1" COLS="2" FORMAT="CUSTOM" PROMPT="Accessories" SUB="PROD_PRODLIST_ACCESSORIES" TYPE="PRODLIST" DISABLEPRODUCTS="1" SRC="PRODUCT:zoovy:accessory_products"><HTML><![CDATA[
+
+<table border="0" cellpadding="3" cellspacing="0" width="100%">
+<!-- ROW -->
+<tr>
+<!-- PRODUCT -->
+
+	<td valign='top' width='1%' class='ztable_row<% print($row.alt); %>' align='center'><a href="javascript:openWindow('<% print($PROD_URL); %>?wrapper=<% loadurp("profile:zoovy:popup_wrapper"); default("plain"); print(); %>&fl=prod_info',600,400);" ><% load($zoovy:prod_thumb);  default("");  default($zoovy:prod_image1); image(w=>"50",h=>"50",tag=>"1",alt=>$zoovy:prod_name);  print(); %></a></td>
+	
+	<td width="49%" class="ztable_row<% print($row.alt); %> ztable_row" valign='top' style='padding-bottom:5px;'>
+	
+<div  class='no_underline'><a href="javascript:openWindow('<% print($PROD_URL); %>?wrapper=<% loadurp("profile:zoovy:popup_wrapper"); default("plain"); print(); %>&fl=prod_info',600,400);"><% load($zoovy:prod_name);  default(""); strip(length=>"60",breaks=>"1",html=>"1");  print(); %></a></div>
+
+<%
+load($zoovy:base_price); format(hidezero); format(money); format(pretext=>"<div class='ztable_row_title' style='margin:3px 0;'>",posttext=>"</div>"); print();
+%>
+<div><% load($POGS); default(""); print(); %></div>
+<input type='hidden' name='product_id:<% print($PRODUCT_ID); %>' value='1'>
+<input type='text' name='quantity:<% print($PRODUCT_ID); %>' size='2' maxlength='3' value='0' class='zform_textbox'>
+
+
+	</td>
+<!-- /PRODUCT -->
+</tr>
+<!-- /ROW -->
+<tr>
+	<td colspan='5' class='ztable_head'><input type='submit' class='zform_button' value='add selected items to cart'></td>
+</tr>
+</table>
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="SPECL_PROD_PRICING" SUB="PROD_PRICING" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+
+/* the div around the price is closed at the start of the MSRP div OR at the very end. */
+loadurp("product:zoovy:prod_show_no_price"); default("");
+goto(label=>"DISABLEDPRICE",ne=>"");
+
+	set($PRICETEXT=>"Zephyr Low Price:");
+	loadurp("product:is:sale"); default("");
+	goto(label=>"SHOWPRICE",ne=>"1");
+		set($PRICETEXT=>"Zephyr Sale Price:");
+		
+:SHOWPRICE();
+	loadurp("product:zoovy:base_price");
+	set($price=>$_);
+	format(hidezero); format(money); 
+	format(pretext=>$PRICETEXT);
+	format(pretext=>"<div class='ztxt' style='color:#FF7F00; font-size:13pt; font-weight:bold;'>");
+	print();
+	
+	/* if the msrp is blank or the  - price is less than 0, do not display savings */
+	loadurp("product:zoovy:prod_msrp");
+	stop(unless=>$_);
+	goto(label=>"END",lt=>$price);
+	goto(label=>"END",eq=>$price);
+		set($MSRP=>$_);
+		print("</div><div class='ztxt' style='font-size:8pt;'>");
+		load($MSRP);
+		format(hidezero); format(money);
+		format(pretext=>"Compare to: <span style='text-decoration:line-through;'>",posttext=>"</span>");
+		print();
+	
+	load($MSRP);
+	math(op=>"subtract",var=>$price);
+	goto(label=>"END",lt=>"2");
+		format(hidezero); format(money);
+		format(pretext=>"<span  style='color:#00A74D; padding-left:20px;' class='ztxt'>Save  ",posttext=>"</span>"); 
+		print();
+		print(" (");
+		load($price);
+		math(op=>"divide",var=>$MSRP); 
+		math(op=>"subtract",var=>"1");
+		math(op=>"multiply",var=>"-100"); format(hidezero); format(convert=>"number",precision=>"0"); 
+		print();
+		print("%) ");
+	:END();
+	print("</div>");
+	stop();
+
+:DISABLEDPRICE();
+	print();
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="MFG" SUB="PROD_MFG" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+loadurp("product:zoovy:prod_mfg"); default("");
+set($mfg=>$_);
+/* if mfg is not set, we dont print it, so we skip down to blank.  If it does have a value, it is printed and linked to search results. */
+
+goto(label=>"BLANK",eq=>"");
+	print("");
+	print("<div id='prodMfg'>Manufacturer: <a href='");
+	print("%SEARCH_URL%/");
+	print($mfg);
+	print("/'>");
+	print($mfg);
+	print("</a></div>");
+
+:BLANK();
+	print("<!-- No Manf. Specified -->");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFLX" SUB="PROD_MFGID" TYPE="READONLY" LOAD="product:zoovy:prod_mfgid"><PRETEXT><![CDATA[<div id="prodMfgidElement" class="ztxt">Mfg. ID: ]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="DAQIFLY" SUB="PROD_ADDTOCART" TYPE="ADDTOCART"></ELEMENT>
+<ELEMENT ID="REVIEWSUMMARY" DATA="product:zoovy:prod_reviews" SUB="PROD_REVIEW_SUMMARY" TYPE="REVIEWS"><HTML><![CDATA[ <!-- Product review summary -->
+<!-- SUMMARY -->
+<!-- rating -->
+<table cellspacing="0" cellpadding="0" style="margin-top:5px;">
+<tr>
+	<td class="ztxt" NOWRAP>
+<%
+load($TOTAL_REVIEWS); default("");
+goto(ne=>"0",label=>"MULTIPLE");	
+	print("<span class="zsmall"><a href='javascript:openWindow(&quot;");
+	loadurp("URL::HOME_URL"); print();
+	print("popup.pl?verb=INIT_REVIEWS&pg=*taf&fl=pop_reviews_ajax&product=");
+	loadurp("FLOW::PROD"); print();
+	print("&quot;,400,400);' class='zlink'>Be the first person to review this product</a></span>");
+	stop();
+:MULTIPLE();
+	print("<a href='javascript:prodTabs.expandit(&quot;prodReviewsTab&quot;)' class='zlink'>Reviewed ");
+	print($TOTAL_REVIEWS);
+	print(" times</a></td>
+	<td align='left' width='1%' style='padding-left:5px;'>");
+/* load the profile review icon that is selected.  If not set, use default instead. */
+loadurp("CSS::zcolor.bgcolor");
+set($bgcolor=>$_);
+loadurp("profile:zoovy:prod_reviews_icon"); default("colored_stars"); format(pretext=>"stock/reviews/",posttext=>"/");
+set($image_loc=>$_);
+load($AVG_RATING); format(pretext=>$image_loc);
+image(src=>$_,h=>"25",w=>"110",bg=>$bgcolor,tag=>"1");
+print();	
+
+	%>	
+	
+	</td>
+</tr>
+</table>
+<!-- /rating -->	
+<!-- /SUMMARY -->
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="REVIEWDETAILS" DATA="product:zoovy:prod_reviews" SUB="PROD_REVIEWS" TYPE="REVIEWS"><HTML><![CDATA[<!-- product reviews -->
+
+<!-- DETAIL -->
+<div style='margin-bottom:6px;' id='reviews'>
+<table cellspacing="0" cellpadding="2">
+<tr>
+	<td colspan='2' align='right'><span class='zsmall'><a href="#reviews" onclick="openWindow('%HOME_URL%popup.pl?verb=INIT_REVIEWS&pg=*taf&fl=pop_reviews_ajax&product=%SKU%');" >write a review</a></span></td>
+</tr>
+<!-- ROW -->
+<!-- REVIEW -->
+<tr>
+	<td class="ztable_row"><strong><% print($CUSTOMER_NAME); %></strong> of <% load($LOCATION);  default("");  print(); %><br>
+	<% load($SUBJECT);  default("");  print(); %></td>
+	<td valign="top" align="right" class="ztable_row">
+<%
+/* load the profile review icon that is selected.  If not set, use default instead. */
+loadurp("CSS::zcolor.bgcolor");
+set($bgcolor=>$_);
+loadurp("profile:zoovy:prod_reviews_icon"); default("colored_stars"); format(pretext=>"stock/reviews/",posttext=>"/");
+set($image_loc=>$_);
+load($RATING); format(pretext=>$image_loc);
+image(src=>$_,h=>"25",w=>"110",bg=>$bgcolor,tag=>"1");
+print();	
+%>	
+	
+	</td>
+</tr>
+<tr>
+	<td colspan="2" style="border-bottom:1px dotted <% loadurp("CSS::zcolor_light.bgcolor"); print(); %>;" class="ztable_row"><% load($MESSAGE);  default(""); strip(html=>"1"); print(); %></td>
+</tr>
+<!-- /REVIEW -->
+<!-- /ROW -->
+</table>
+</div>
+<!-- /DETAIL -->
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PROD_DESC" EDITOR="INLINE" DATA="product:zoovy:prod_desc" PROMPT="Product Description" SUB="PROD_DESC" TYPE="TEXT" FONT="0"></ELEMENT>
+<ELEMENT ID="PROD_SIZEINFO" EDITOR="INLINE" DATA="product:user:prod_size_notes" PROMPT="Product Size Chart/info" SUB="PROD_SIZEINFO" TYPE="TEXT" FONT="0"></ELEMENT>
+<ELEMENT ID="PROD_DETAIL" EDITOR="INLINE" DATA="product:zoovy:prod_detail" PROMPT="Product Details/Specifications" SUB="PROD_DETAIL" TYPE="TEXT" FONT="0"></ELEMENT>
+<ELEMENT ID="PROD_FEATURES" EDITOR="INLINE" DATA="product:zoovy:prod_features" PROMPT="Product Features" SUB="PROD_FEATURES" TYPE="TEXT" FONT="0"></ELEMENT>
+<ELEMENT ID="DAQIFLZ" SUB="PROD_MANUAL" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+loadurp("product:zoovy:prod_link1"); default("");
+stop(unless=>$_);
+	format(pretext=>"<a href='",posttext=>"' target='_manual'><img src='%LAYOUT_URL%/zs09_p_manual-137x27.jpg' width='137' height='27' alt='product manual' border='0'></a>");
+	print();
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMA" SUB="PROD_INSTALL_ICON" TYPE="SPECL"><HTML><![CDATA[
+<%
+print("");
+loadurp("product:zoovy:prod_int1"); default("");
+	stop(unless=>$_);
+	print("<table cellspacing='0' cellpadding='0'><tr><td class='ztxt'>Install Difficulty: </td><td>");
+	loadurp("product:zoovy:prod_int1"); format(pretext=>"stock/reviews/colored_stars/");
+	image(src=>$_,h=>"25",w=>"110",bg=>"#666666",tag=>"1");
+	print();
+	print("</td></tr></table>");
+	
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMB" SUB="PRODUCT_TABSNCONTENT" TYPE="SPECL"><HTML><![CDATA[
+
+<!-- product tabs.  description and reviews tabs always show up. The rest are conditional based on the presence of content -->
+
+<ul id='producttabs' class='shadetabs'>
+	<li><a href='#' rel='prodDescTabContent' id='prodDescTab' class='selected'>Description</a></li>
+	
+	<%
+print("");
+loadurp("product:zoovy:prod_detail"); default(""); stop(unless=>$_);
+	print("	<li><a href='#' rel='prodDetailTabContent' id='prodDetailTab'>Specs</a></li>");
+	%>
+<%
+print("");
+loadurp("product:zoovy:prod_features"); default(""); stop(unless=>$_);
+	print("	<li><a href='#' rel='prodFeaturesTabContent' id='prodFeaturesTab'>Features</a></li>");
+	%>	
+	<%
+print("");
+loadurp("product:zoovy:accessory_products"); default(""); stop(unless=>$_);
+	print("	<li><a href='#' rel='prodAccessoriesTabContent' id='prodAccessoriesTab'>Accessories</a></li>");
+	%>
+	<%
+print("");
+loadurp("product:user:prod_size_notes"); default(""); stop(unless=>$_);
+	print("	<li><a href='#' rel='prodSizeInfoTabContent' id='prodSizeInfoTab'>Size Info</a></li>");
+	%>
+
+
+
+	<li><a href='#' rel='prodReviewsTabContent' id='prodReviewsTab'>Reviews</a></li>
+<%
+print("");
+loadurp("product:zoovy:prod_enable_feature1"); default("");
+stop(unless=>$_);
+	print("	<li><a href='#' rel='prodTechcenterTabContent' id='prodTechcenterTab'>Tech Center</a></li>");
+%>
+	<li style='clear:both; height:0px; font-size:0px; line-height:0px;'></li>
+</ul>
+<div class='tabcontentstyle'>
+	<div id='prodDescTabContent' class='tabcontent'>%PROD_DESC%</div>
+	<div id='prodDetailTabContent' class='tabcontent'>%PROD_DETAIL%</div>
+	<div id='prodFeaturesTabContent' class='tabcontent'>%PROD_FEATURES%</div>
+	<div id='prodSizeInfoTabContent' class='tabcontent'>%PROD_SIZEINFO%</div>
+	<div id='prodAccessoriesTabContent' class='tabcontent'>%PROD_PRODLIST_ACCESSORIES%</div>
+	<div id='prodReviewsTabContent' class='tabcontent'>%PROD_REVIEWS%</div>
+	
+	<div id='prodTechcenterTabContent' class='tabcontent'>
+
+<div style='float:left;'>%PROD_INSTALL_ICON%</div>
+<div style='float:right;'>%PROD_MANUAL%</div>
+<div style='clear:both; padding-top:15px;'>%PROD_HTML%</div>
+
+
+	</div>
+	
+</div>
+
+
+<script type="text/javascript">
+
+var prodTabs=new ddtabcontent("producttabs")
+prodTabs.setpersist(false)  // set to false to NOT remember what tab was last selected onload.
+prodTabs.setselectedClassTarget("link") //"link" or "linkparent"
+prodTabs.init()  // set an integer in .init [ex init(3000) ] to enable slideshow. integer = duration in miliseconds.
+
+</script>
+
+
+<!--
+sample of what a link would look like to open a specific tab.
+<a href="javascript:prodTabs.expandit('prodReviewsTab')">Read Reviews</a>
+-->
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PROD_MYHTML" EDITOR="INLINE" DATA="product:my:prod_html1" PROMPT="Product HTML for tech center tab" SUB="PROD_HTML" TYPE="TEXT" FONT="0"></ELEMENT>
+<ELEMENT ID="CVPBTZM" SUB="PROD_PRODLISTS" TYPE="SPECL"><HTML><![CDATA[<%
+print("");
+/* extra product lists 1 - 5 are all formatted the same.  The header, if set, appears as a link which reveals a div when clicked.  This script loops through and creates the 5 lists rather than having five elements that are identical.  If the header is not set, nothing appears. */
+
+set($i=>"1");
+
+:LOOP();
+
+load($i); format(pretext=>"product:zoovy:prod_list",posttext=>"_title");
+loadurp($_);
+stop(unless=>$_);
+	set($heading=>$_);
+	print("<div style='margin-top:4px;'>
+	<div style='background:url(%LAYOUT_URL%/zs09_p_prodlisthead_bg-1x27.jpg) repeat-x; height:27px;'>
+		<div style='float:right;'><img src='%LAYOUT_URL%/zs09_p_tabcorner-11x10.png' width='11' height='10' alt=''></div>
+		<a href='javascript:changeDisplay(&quot;upgrades_prodlist"); print($i); print("&quot;);' style='display:block; padding:5px; color:#666666; text-decoration:none;'> &#187; "); print($heading); print("</a></div>
+</div>");
+	print("<div id='upgrades_prodlist"); print($i); print("' style='display:none;  margin-bottom:5px;'>");
+	load($i); format(pretext=>"PRODUCT:zoovy:prod_list"); set($this_src=>$_);
+	load($i); format(pretext=>"product:zoovy:prod_prodlist".posttext=>"_style"); set($this_data=>$_);
+	
+	element(TYPE=>"PRODLIST",DATA=>$this_data,ID=>$i,SRC=>$this_src,PROMPT=>"upgrades 1",MAX=>"20",SIZE=>"20",FORMAT=>"CUSTOM",ALTERNATE=>"1",HTML=>$PRODLIST_SPEC,SHOWDEFAULT=>"0",MULTIPAGE=>"0",INVENTORY=>"1"); print();
+	print("</div>");
+	
+	load($i); math(op=>"add",var=>"1"); set($i=>$_); 
+	goto(label=>"LOOP",lt=>"5");
+%>]]></HTML>
+<PRODLIST_SPEC><![CDATA[
+<div class='zborder' style=' padding:1px; border-top-width:0px;'>
+<table cellspacing='0' cellpadding='3'>
+<!-- PRODUCT -->
+
+<tr>
+	<td width='1%' class='ztable_row<% print($row.alt); %>'><% load($zoovy:prod_thumb);  default("");  default($zoovy:prod_image1); image(w=>"50",h=>"50",m=>"1",bg=>"ffffff",tag=>"1");  print(); %></td>
+	
+	<td class='ztable_row<% print($row.alt); %>' width='99%'>
+<div style='font-weight:bold;'><% load($zoovy:prod_name); default(""); strip(breaks=>"1",html=>"1");  print(); %></div>
+<div><% load($POGS); default(""); print(); %></div>
+<div style='float:right;'>
+<input type='hidden' name='product_id:<% print($PRODUCT_ID); %>' value='1'>
+<input type='text' name='quantity:<% print($PRODUCT_ID); %>' size='2' maxlength='3' value='0' class='zform_textbox'></div>
+
+<div><% load($zoovy:base_price);  default("");  format(money); format(pretext=>"only: "); print(); %></div>
+<div class='zhint no_underline' style='margin-top:2px;'><a href="javascript:openWindow('<% loadurp("URL::PRODUCT_URL"); print(); %>/<% print($PRODUCT_ID); %>?wrapper=<% loadurp("profile:zoovy:popup_wrapper"); default("plain"); print(); %>&fl=prod_info');" class='zlink'>details</a></div>
+
+	</td>
+</tr>
+
+<!-- /PRODUCT -->
+<tr>
+	<td colspan='2' class='ztable_head' align='right'><input type='submit' class='zform_button' value='add selected items to cart'></td>
+</tr>
+</table>
+</div>
+
+
+]]></PRODLIST_SPEC>
+</ELEMENT>
+<ELEMENT SIZE="5000" ID="PRODLIST_RELATED" MAX="8" ALTERNATE="0" INVENTORY="1" DATA="product:zoovy:prod_prodlist_style" COLS="1" FORMAT="CUSTOM" SUB="PROD_PRODLIST_RELATED" PROMPT="Product List: related items" TYPE="PRODLIST" DISABLEPRODUCTS="1" SORTBY="RANDOM"><HTML><![CDATA[
+<div><img src="%LAYOUT_URL%/zs_tit_youmaylike-194x26.gif" width="194" height="26" alt=""></div>
+<div style="border:1px solid #D7D7D7;">
+<div style=" padding:2px;">
+<table border="0" cellpadding="0" cellspacing="2">
+<!-- ROW -->
+<tr>
+<!-- PRODUCT -->
+
+	<td valign="top" width="1%"><a href="<% load($PROD_URL);  default("");  print(); %>"><% load($zoovy:prod_thumb);  default("");  default($zoovy:prod_image1); image(w=>"68",h=>"68",bg=>"ffffff",tag=>"1");  print(); %></a></td>
+
+	<td width="99%" class='ztable_row'>
+
+<div class='ztable_row_small'><a href="<% load($PROD_URL);  default("");  print(); %>" style="color:#010101; text-decoration:none;"><% load($zoovy:prod_name);  default(""); strip(length=>"55",breaks=>"1",html=>"1");  format(after=>"break",skipblank=>"1");  print(); %></a></div>
+
+<div style="padding-top:5px;" class='no_underline'><span class='ztable_row_title'><% load($zoovy:base_price); format(money); print(); %></span> | <a href="<% print($PROD_URL); %>">details</a></div>
+
+		</td>
+<!-- /PRODUCT -->
+</tr>
+<tr>
+	<td colspan='2'><div  style='border-bottom:1px dashed #D7D7D7;'></div></td>
+</tr>
+<!-- /ROW -->
+</table>
+</div>
+</div>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMF" SUB="PROD_ADDTOCART_BUTTON" TYPE="SPECL"><HTML><![CDATA[
+<%
+loadurp("product:zoovy:grp_type"); default("");
+goto(label=>"SHOWADD",ne=>"PARENT");
+	print("<!-- no inventory message or add to cart button for parents gets displayed -->");
+	stop();
+:SHOWADD();
+	print("%PROD_ADDTOCART%");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMC" SUB="PROD_GRP_SELECT_DEFAULT" TYPE="SPECL"><HTML><![CDATA[<%
+/* if the parent sku IS set, then we're on a 'child' page and the select list needs to be preselected to the focus sku */
+print("");
+loadurp("product:zoovy:grp_parent");
+stop(unless=>$_);
+	print("
+<script type='text/javascript'>
+PreselectMyItem('%SKU%','prod_children');
+</script>
+");
+
+%>]]></HTML>
+</ELEMENT>
+<ELEMENT ID="CVMKWTI" TYPE="SPECL"><HTML><![CDATA[<%
+print("");
+/* if the parent sku is set, change the pages focus sku to the parent.  */
+/* This is done so that 'siblings' can be loaded in the select list PRODLIST */
+/* element which follows this specl element.  that element must ALWAYS come after this one.  */
+/* NO OTHER ELEMENT SHOULD BE AFTER THAT PRODLIST!!!!!!! the wrong product will be in focus */
+
+loadurp("product:zoovy:grp_parent");
+	stop(unless=>$_);
+	set($FOCUSSKU=>$_);
+	element(TYPE=>"SET",SRC=>"SREF::PID",DATA=>$FOCUSSKU,FIX=>"1");
+	element(TYPE=>"SET",SRC=>"SREF::SKU",DATA=>$FOCUSSKU,FIX=>"1");
+	print("
+	<!-- focus sku changed to: ");
+	print($FOCUSSKU);
+	print(" -->
+	
+	");
+%>]]></HTML>
+<MYDATA><![CDATA[<!-- PRODUCT --><%
+load($PRODUCT_ID); print();
+%><!-- /PRODUCT -->]]></MYDATA>
+</ELEMENT>
+<ELEMENT SIZE="5000" ID="PRODLIST_PRODLIST3" MULTIPAGE="0" SHOWDEFAULT="0" ALTERNATE="0" DATA="product:zoovy:prod_prodlist1_style" INVENTORY="2" COLS="1" FORMAT="CUSTOM" SUB="PROD_PRODLIST_CHILDREN" PROMPT="Product List: children/siblings" TYPE="PRODLIST" SRC="PRODUCT:zoovy:grp_children" DISABLEPRODUCTS="1"><HTML><![CDATA[
+<div style='margin-top:5px;'>
+
+<label for='prod_children' style='font-weight:bold;'>
+<% loadurp("product:zephyrsports:prod_children_title"); default("Please choose"); format(posttext=>": "); print(); %>
+</label>
+
+<select name='prod_children' id='prod_children' onchange="window.open(this.options[this.selectedIndex].value,'_top')" style='margin-bottom:3px;' class='zform_select'>
+
+	<option value='' selected disabled>please choose</option>
+<!-- PRODUCT -->
+	<option value='<% load($PROD_URL);  default("");  print(); %>' id='<% load($PRODUCT_ID); print(); %>' <%
+print("");
+/* if inventory is not available, disable the selection. */
+/* default inv to 1 so that purchasing is possible and inventory can get handled in the cart if something has gone wrong */
+load($zoovy:inv_qty_available); default("1");	
+goto(label=>"UNAVAILABLE",lt=>"1");
+	stop();
+:UNAVAILABLE();
+	print(" disabled='disabled' ");
+%>>
+	<% load($zoovy:prod_size); default($zoovy:prod_name); strip(length=>"30"); default(""); print(); %>
+	<%
+print("");
+load($zoovy:base_price); default(""); 
+format(hidezero,skipblank=>"1"); 
+format(money,skipblank=>"1");
+print();
+%>
+<%
+print("");
+load($zoovy:inv_qty_available); default("1");	
+goto(label=>"UNAVAILABLE",lt=>"1");
+	stop();
+:UNAVAILABLE();
+	print(" (sold out) ");
+%>
+	</option>
+<!-- /PRODUCT -->
+</select>
+</div>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMD" TYPE="HIDDEN" OUTPUTSKIP="32768"><DEFAULT><![CDATA[
+
+<link rel="stylesheet" type="text/css" href="%GRAPHICS_URL%/jslib/magiczoomplus-1.5/magiczoomplus.css">
+<script typ='text/javascript' src='%GRAPHICS_URL%/jslib/magiczoomplus-1.5/mzp-packed.js'></script>
+
+<script type="text/javascript">
+MagicThumb.options = {
+//	backgroundFadingColor: '#cccccc', 
+//	backgroundFadingDuration: 0.4, 
+	backgroundFadingOpacity : 0.5,
+	keepThumbnail: true}
+</script>
+
+
+
+<script type="text/javascript" language="javascript">
+<!--
+function openWindow(url,w,h) {
+	adviceWin = window.open(url,'advice','status=no,width='+w+',height='+h+',menubar=no,scrollbars=yes');
+	adviceWin.focus(true);
+	}
+
+function zoom (url) {
+	z = window.open('','zoom_popUp','status=0,directories=0,toolbar=0,menubar=0,resizable=1,scrollbars=1,location=0');
+	z.document.write('<html>\n<head>\n<title>Picture Zoom</title>\n</head>\n<body>\n<div align="center">\n<img src="' + url + '"><br>\n<form><input type="button" value="Close Window" onClick="self.close(true)"></form>\n</div>\n</body>\n</html>\n');
+	z.document.close();
+	z.focus(true);
+	}
+
+
+function changeDisplay(ID)	{
+//	alert(document.getElementById(ID).style.display);
+	if(document.getElementById(ID).style.display == 'block')
+		document.getElementById(ID).style.display='none';
+	else
+		document.getElementById(ID).style.display = 'block';
+	
+	}
+
+//-->
+</script>
+
+<script type="text/javascript">
+
+<!--
+
+//used to select and option in a select list.
+function PreselectMyItem(itemToSelect,formField)	{
+	itemToSelect = itemToSelect.replace('%3A',':')
+// Get a reference to the drop-down
+	var myDropdownList = document.addToCartFrm[formField];
+
+// Loop through all the items
+	for (iLoop = 0; iLoop< myDropdownList.options.length; iLoop++)	{    
+		if (myDropdownList.options[iLoop].id == itemToSelect)	{
+// Item is found. Set its selected property, and exit the loop
+			myDropdownList.options[iLoop].selected = true;
+			break;
+			}
+		}
+	}
+
+//-->
+</script>
+
+<script type="text/javascript" src="%GRAPHICS_URL%/jslib/tabcontent-2.2/tabcontent.js">
+/***********************************************
+* Tab Content script v2.2-  Dynamic Drive DHTML code library (www.dynamicdrive.com)
+* This notice MUST stay intact for legal use
+* Visit Dynamic Drive at http://www.dynamicdrive.com/ for full source code
+***********************************************/
+
+//help can be found here http://www.dynamicdrive.com/dynamicindex17/tabcontent.htm
+</script>
+
+
+<form action='%CART_URL%' method='post' id='addToCartFrm' name='addToCartFrm'>
+
+
+
+]]></DEFAULT>
+</ELEMENT>
+<ELEMENT ID="DAQIFME" TYPE="OUTPUT"><HTML><![CDATA[
+
+
+<div style="background:#FFFFFF url(%LAYOUT_URL%/zs_prd_tit_mid-1x59.gif) repeat-x top; border-left:1px solid #EEEEEE; padding-left:10px;">
+	<div style="background:url(%LAYOUT_URL%/zs_prd_tit_right-17x59.gif) no-repeat right top; padding:10px 10px 18px 0px; font-size:16pt; color:#FFFFFF;">
+	<div style='float:right;'>%PROD_TAGS%</div>
+	%PROD_NAME%
+	
+	</div>
+</div>
+<table width="100%" cellspacing="0" cellpadding="0" border="0" style='margin-bottom:10px;'>
+<tr>
+	<td align="left" valign="top">
+	<div style="width:545px; margin-bottom:10px;">
+	%PROD_IMAGES%
+	</div>
+	
+	
+	<div class='clearAll'></div>
+	
+	<div id='socialToolBar'>
+	]]></HTML>
+</ELEMENT>
+<ELEMENT ID="FACEBOOK_SEND_FBML" DECALID="facebook_send_fbml" TYPE="DECAL"><PRETEXT><![CDATA[<div class='socialTool'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="FACEBOOK_LIKE_BUTTONDETAIL" DECALID="facebook_like_vertical_fbml" TYPE="DECAL"><PRETEXT><![CDATA[<div class='socialTool facebookLikeButtonVert'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="GOOGLEPLUSONE_MED_WITH_COUNT" DECALID="googleplusone_tall" TYPE="DECAL"><PRETEXT><![CDATA[<div class='socialTool'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="LINKEDIN_SHARE_VERTICAL" DECALID="linkedin_share_vertical" TYPE="DECAL"><PRETEXT><![CDATA[<div class='socialTool'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="TWITTER_TWEETBTN_VERTICAL" DECALID="twitter_tweetbtn_vertical" TYPE="DECAL"><PRETEXT><![CDATA[<div class='socialTool'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="DAQIFME22" TYPE="OUTPUT"><HTML><![CDATA[
+	</div>
+	</td>
+	<td valign="top" align="right" style="padding-right:20px;" class='ztxt'>
+	<div style='position:relative; width:226px;'>
+
+%PROD_SEAL_GFX%
+%PROD_SHIPTAG%
+<div>%PROD_PRICING%</div>
+%PROD_WAREHOUSE_LOC%
+
+<div id='inventoryDisplay' class='ztxt' style='margin-top:10px;'><!-- % PROD_INV_STATUS % --></div>
+
+
+%PROD_PRODLIST_CHILDREN%
+<div style="padding-top:3px;" id='addToCartButtonContainer'>
+
+
+
+%PROD_ADDTOCART_BUTTON%
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMG" TYPE="OUTPUT"><HTML><![CDATA[
+
+
+
+</div>
+
+<div style="padding-top:5px;"><a href="javascript:openWindow('%FILES_URL%/shipping_times_003.html','700','600')"><img src="%LAYOUT_URL%/zs09_p_btn_arrdate-156x31.jpg" width="156" height="31" alt="" border="0"></a></div>
+
+<!-- BEGIN LivePerson Button Code -->
+<div style="padding-top:5px;">
+<a id="_lpChatBtn" href='https://server.iad.liveperson.net/hc/73183980/?cmd=file&file=visitorWantsToChat&site=73183980&byhref=1&VISITORVAR!Source=PRODUCT&imageUrl=https://static.zoovy.com/img/zephyrsports/-/live_chat/product_page/' target='chat73183980'  onClick="lpButtonCTTUrl = 'https://server.iad.liveperson.net/hc/73183980/?cmd=file&file=visitorWantsToChat&site=73183980&VISITORVAR!Source=PRODUCT&imageUrl=https://static.zoovy.com/img/zephyrsports/-/live_chat/product_page/&referrer='+escape(document.location); lpButtonCTTUrl = (typeof(lpAppendVisitorCookies) != 'undefined' ? lpAppendVisitorCookies(lpButtonCTTUrl) : lpButtonCTTUrl); lpButtonCTTUrl = ((typeof(lpMTag)!='undefined' && typeof(lpMTag.addFirstPartyCookies)!='undefined')?lpMTag.addFirstPartyCookies(lpButtonCTTUrl):lpButtonCTTUrl);window.open(lpButtonCTTUrl,'chat73183980','width=475,height=475,resizable=yes');return false;" ><img src='https://server.iad.liveperson.net/hc/73183980/?cmd=repstate&site=73183980&channel=web&&ver=1&imageUrl=https://static.zoovy.com/img/zephyrsports/-/live_chat/product_page/' name='hcIcon' border=0></a>
+</div><!-- END LivePerson Button code -->
+
+
+
+<div style="margin-top:5px;">%PROD_REVIEW_SUMMARY%</div>
+
+<div style="font-size:9pt; margin-top:5px; color:#3187D0;"><a href="javascript:openWindow('%CATEGORY_URL%/price_matching?wrapper=%POPUP_THEME%','600','600')" style="color:#3187D0; text-decoration:none;">price matching</a> | <a href='javascript:openWindow("%HOME_URL%popup.pl?verb=INIT_REVIEWS&pg=*taf&fl=pop_reviews_ajax&product=%SKU%&wrapper=%POPUP_THEME%",400,400);' style="color:#3187D0; text-decoration:none;">review this product</a></div>
+
+<div style='margin-top:5px;'>
+%PROD_INSTALL_ICON%
+</div>
+
+
+
+
+
+<div style='margin-top:5px;'>
+
+
+
+	<div style='float:right; padding-top:7px;'>
+<script type="text/javascript">
+var addthis_pub="zephyrsports";
+var addthis_brand = "Zephyr Sports";
+</script>
+	</div>
+
+	<div style='clear:both;'></div>
+
+</div>
+
+<div style="padding-top:10px;" class="ztxt">%PROD_MFG%</div>
+
+<div>%PROD_MFGID%</div>
+
+<div>Sku: %SKU%</div>
+
+	</div>
+	</td>
+</tr>
+</table>
+
+<div style="float:left; width:580px;">
+	<div>%PRODUCT_TABSNCONTENT%</div>
+	
+	
+	
+	
+	<div id='extra_prodlists'>%PROD_PRODLISTS%</div>
+	
+	
+	%PROD_VIDEO%
+
+
+
+
+%PROD_WARNING%
+	
+</div>
+<div style="float:right; padding-left:10px;">
+	<div style="width:194px;">%PROD_PRODLIST_RELATED%</div>
+</div>
+
+<div style="clear:both; height:0px; line-height:0px; font-size:0px;"></div>
+
+
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="DAQIFMH" TYPE="HIDDEN" OUTPUTSKIP="32768"><DEFAULT><![CDATA[
+
+
+
+</form>
+
+
+%PROD_GRP_SELECT_DEFAULT%
+
+
+
+]]></DEFAULT>
+</ELEMENT>
+
+</TEMPLATE>

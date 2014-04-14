@@ -160,7 +160,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 
 /* app nav overrides */
-
+#appNav	{height:20px;}
 #appNav .prodDetailPrevItemButton	{position:absolute; top:2px; left:2px;}
 #appNav .prodDetailNextItemButton	{position:absolute; top:2px; right:2px;}
 
@@ -239,6 +239,11 @@ hr.subtle	{margin:.1em 0;
 .zCatList li.catListItem	{float:left; margin:.2em; width:93px; height:93px; overflow:hidden;}
 .zCatList li.catListItem a	{text-decoration:none;}
 .categoryListPretty	{background:#000000; color:#ffffff; padding:.2em; text-align:center;}
+
+.catBigSlideshowContainer	{height:265px; overflow:hidden;}
+.catTrioSlideshowContainer	{height:120px; overflow:hidden;} 
+
+
 
 /* product list styles */
 .zProductList	{list-style:none; margin:0; padding:0;}

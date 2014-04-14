@@ -82,16 +82,19 @@ $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
 	});
 
 
-
+//don't need to check if cycle is already running because it's turned off in a 'depart'.
 $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
+	dump(" -> executing categoryComplete for slideshows");
 	function execCycle()	{
 		if(myApp.u.carouselIsReady())	{
-			var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele)
-			if($('.slides',$trio).length)	{
-				$trio.cycle();
+			var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele);
+			//the 'trio' uses the old legacy banner format (2 elements, one for href and one for img) so .slide is added to the image, if it is set instead of using a, which is always present.
+			if($('.slide',$trio).length > 1 && $(document.body).width() < 760)	{
+				$trio.data('isCycle',true).cycle(); //isCycle is what the depart event uses to determine if a destroy should be run.
 				}
 			var $big = $("[data-app-role='catBigSlideshowContainer']",$ele);
-			if($('.slides',$big).length)	{
+			//the big banners use the newer legacy banner syntax (1 banner element) so the 'a' will only be present if the banner is populated.
+			if($('a',$big).length > 1)	{
 				$big.cycle();
 				}
 
@@ -99,6 +102,19 @@ $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
 		else {setTimeout(execCycle,500);}
 		}
 	execCycle();
+	});
+
+//Don't keep the slideshows continually running when the page is no longer visible. destroy will return them to their original state and the 'complete' action will trigger them on again if necessary.
+// this should be more memory friendly.
+$("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
+	var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele)
+	if($trio.data('isCycle') == true)	{
+		$trio.cycle('destroy');
+		}
+	var $big = $("[data-app-role='catBigSlideshowContainer']",$ele);
+	if($('a',$big).length > 1)	{
+		$big.cycle('destroy');
+		}
 	});
 
 
