@@ -169,7 +169,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 /* content area */
 #contentContainer	{padding:.3em; background:#fff;}
 
-.reversedHeader	{display:block; padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}
+.reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;} /* display block on this element will cause conflicts w/ displayNone. test if changed */
 .reversedHeader, .plAdd2Cart	{
 	color:#fff; font-weight:700; font-size:1em;
 	background: #7d7e7d; /* Old browsers */
