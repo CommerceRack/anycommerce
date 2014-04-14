@@ -488,6 +488,19 @@ setTimeout(function(){
 				$target.dialog('open');
 				}, //showMediaLib
 
+
+
+
+
+			publicFiles : function($target,p){
+				$target.anycontent({'templateID':'page-setup-publicfiles','data':{}});
+				_app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
+				_app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
+				_app.model.dispatchThis();
+				},
+
+
+
 //first param is thumbnail object on page.
 //second param is string (src in api call) or object (ref to text input, hidden, something). must determine
 //third param is The title.
@@ -1411,14 +1424,6 @@ $('#mediaLibActionsBar span',$target).buttonset();
 $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				}, //handleMediaLibButtons
 
-
-			showPublicFiles : function(path,P){
-				var $target = $('#setupContent');
-				$target.empty().append(_app.renderFunctions.transmogrify({},'page-setup-publicfiles',{})); //load the page template.
-				_app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
-				_app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
-				_app.model.dispatchThis();
-				}
 
 			}, //u
 
