@@ -180,7 +180,7 @@ optional params:
 						r = true;
 						var seoname = '';
 						if(args.seo)	{
-							seoname = data.value['zoovy:prod_seo_title'] || data.value['zoovy:prod_name'];
+							seoname = data.value['%attribs']['zoovy:prod_seo_title'] || data.value['%attribs']['zoovy:prod_name'];
 							}
 						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.productAnchor(data.value.pid, seoname);
 						break;
