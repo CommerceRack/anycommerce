@@ -92,7 +92,12 @@
 		<h6>Used for format tests</h6>
 		<div data-testtype='output-compare' data-output='my name is bob' data-tlc="bind $var '.name'; format --prepend='my name is '; apply --append;" data-testname="prepend" ></div>
 		<div data-testtype='output-compare' data-output='bob is my name' data-tlc="bind $var '.name'; format --append=' is my name'; apply --append;" data-testname="append" ></div>
-		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency" ></div>
+		
+		<div data-testtype='output-compare' data-output='$24.95' data-tlc="bind $var '.price'; format --currency='USD'; apply --append;" data-testname="currency (original # has decimal)" ></div>
+		<div data-testtype='output-compare' data-output='$10.00' data-tlc="bind $var '.number'; format --currency='USD'; apply --append;" data-testname="currency (no decimal in original #)" ></div>
+		<div data-testtype='output-compare' data-output='$.00' data-tlc="bind $var '.cents'; format --currency='USD'; apply --append;" data-testname="currency (cents)" ></div>
+		<div data-testtype='output-compare' data-output='$18.90' data-tlc="bind $var '.decimal'; format --currency='USD'; apply --append;" data-testname="currency (one # after the decimal)" ></div>
+		
 		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.small-array'; format --length; apply --append;" data-testname="length (array)" ></div>
 		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length (string)" ></div>
 		<div data-testtype='output-compare' data-output='long string to use for testing.' data-tlc="bind $var '.long-string'; format --chop='10'; apply --append;" data-testname="chop at 11" ></div>

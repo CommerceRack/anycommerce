@@ -53,6 +53,8 @@ function runTests()	{
 		'small-array' : ["frank","albert","tom","harry"],
 		'small-hash' : {'name':'ron','nickname' : 'tater salad'},
 		'price' : 24.95,
+		'decimal' : 18.9,
+		'cents' : .71,
 		'boolean-true' : true,
 		'boolean-false' : false,
 		'string-false' : 'false'
