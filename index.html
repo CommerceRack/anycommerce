@@ -482,9 +482,10 @@ The images get .slide only if populated. the category complete event counts the 
 
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm smallButton" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 		<input name="qty" value="1" type="hidden">
-		<button data-tlc="bind $var '.'; quickstart#addtocartbutton  --legacy; apply --append;" class='applyButton'>more details</button>
+		<button data-tlc="bind $var '.'; quickstart#addtocartbutton  --legacy; apply --append;" class='plAdd2Cart'>more details</button>
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite reviewPLAdjust"></span>
 	</form>
+
 
 </div>
 
@@ -614,7 +615,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		<div class='prodName marginBottom' data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div class=' marginBottom'>
 			<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.base_price'; bind $msrp '.prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
-			<b class='basePrice' data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
+			<b class='basePrice' data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{math --div='100'; format --currency='USD'; apply --append;}};"></b>
 		</div>
 		</a>
 
@@ -682,9 +683,9 @@ this will likely become more flexible in the future. ###
 
 	<div data-anytab-content="images" class='clearfix'>
 		<div class='productPrimaryImage'>
-			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};">
-			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }};" src="blank.gif" alt="" height="250" width="250" />
-			<!-- goes in tlc above, right after 'replace':  store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w'; -->
+			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" rel="zoom-position: bottom">
+			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }}; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w';" src="blank.gif" alt="" height="250" width="250" />
+			<!-- goes in tlc above, right after 'replace':   -->
 			</a>
 		</div>
 		
@@ -703,13 +704,17 @@ this will likely become more flexible in the future. ###
 		</h4>
 		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
 	</section>
-	
-	<section class='marginBottom addToCartContainer'>
+
+
+	<table class="marginBottom fullWidth gridTable" data-app-role="childrenSiblingsContainer">
+		<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
+	</table>
+
+	<!-- if this is a parent, the 'children' list will detail what's available and each will have an add to cart button. -->
+	<section class='marginBottom addToCartContainer' data-tlc="bind $children '.%attribs.zoovy:grp_children'; if (is $children --notblank;) {{apply --hide;}}; ">
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix marginBottom" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
-	
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone prodPageQtyInputFieldset"></fieldset>
-	
 			<div class='marginBottom'><input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="prodPageAdd2CartButton displayNone" type="submit"></div>
 		</form>
 	</section>
@@ -1362,20 +1367,22 @@ used on a product layout. Some product have 'children' which may represent the s
 -->
 
 <table>
-<tbody><tr id="productListTemplateChildren">
-	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=45 --height=45 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="45" width="45"></td>
-	<td data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></td>
-	<td>
+<tbody>
+<tr id="productListTemplateChildren">
+	<td class='smallButton'>
 	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 
-		<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-		<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
-
-		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
-	</form>
-	</td>
+	<div class='clearfix'>
+		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone floatRight marginLeft" type="submit">
+		<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone floatRight"></fieldset>
+		<div  data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></div>
+	</div>
+	<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
+	</form></td>
 </tr>
-</tbody></table>
+
+</tbody>
+</table>
 
 
 

@@ -127,7 +127,8 @@ $("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
 	});
 
 $("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
-	MagicZoomPlus.refresh();
+	// disabled for an iOS test.
+//	MagicZoomPlus.refresh();
 	});
 
 $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){

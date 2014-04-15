@@ -223,7 +223,8 @@ hr.subtle	{margin:.1em 0;
 /* pager */
 #slideshowContainer	{width:100%; overflow:hidden; height:265px; position:relative; max-width:605px;}
 .cycle-pager { 
-    z-index: 110; position: absolute; bottom: .2em; left:.2em; overflow: hidden;
+	/* the dialog z-index is 100, so everything else should be lower */
+    z-index: 99; position: absolute; bottom: .2em; left:.2em; overflow: hidden;
 	margin:0; padding:0;
 	}
 .cycle-pager span {
