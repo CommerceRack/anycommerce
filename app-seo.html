@@ -234,7 +234,7 @@
 			
 			var doc = $('#appContainer').get(0).contentWindow.document
 			$(doc.getElementsByTagName('script')).each(function(){$(this).remove()});
-			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'#!'+iframeHash+'" />');
+			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'/#!'+iframeHash+'" />');
 			console.log(doc.getElementsByTagName('script'));
 			console.log(doc.getElementsByTagName('script').length);
 			
