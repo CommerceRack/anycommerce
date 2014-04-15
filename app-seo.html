@@ -227,9 +227,14 @@
 			
 			var iframe = $('#appContainer').get(0);
 			
+			var iframeHash = iframe.contentWindow.location.hash;
+			if(iframeHash.indexOf('#!') == 0){
+				iframeHash = iframeHash.substr(2);
+				}
+			
 			var doc = $('#appContainer').get(0).contentWindow.document
 			$(doc.getElementsByTagName('script')).each(function(){$(this).remove()});
-			
+			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'#!'+iframeHash+'" />');
 			console.log(doc.getElementsByTagName('script'));
 			console.log(doc.getElementsByTagName('script').length);
 			
@@ -247,10 +252,6 @@
 			
 			var html = doctype + dochtml;
 			
-			var iframeHash = iframe.contentWindow.location.hash;
-			if(iframeHash.indexOf('#!') == 0){
-				iframeHash = iframeHash.substr(2);
-				}
 			var obj = {
 				"_cmd" : "appSEOStore",
 				"#!" : iframeHash,
