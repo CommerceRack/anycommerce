@@ -3063,7 +3063,7 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				var qObj = {}; //query object
 				var columnValue = $('#finderSearchQuery').val();
 				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
+				qObj.mode = 'elastic-search';
 				qObj.size = 400;
 				qObj.query =  {"query_string" : {"query" : columnValue}};
 			

@@ -41,7 +41,7 @@ var store_search = function(_app) {
 /*
 P is the params object. something like: 
 var P = {}
-P.mode = 'elastic-native';
+P.mode = 'elastic-search';
 P.size = 250;
 P.filter =  { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } }
 or instead of P.filter, you may have
