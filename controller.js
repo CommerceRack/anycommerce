@@ -574,7 +574,7 @@ _app.u.throwMessage(responseData); is the default error handler.
 				rd._rtag.jqObj.anymessage(rd);
 				},
 			onSuccess : function(_rtag)	{
-//				_app.u.dump("BEGIN callbacks.anycontent"); _app.u.dump(_rtag);
+				_app.u.dump("BEGIN callbacks.anycontent"); // _app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
 					var $target = _rtag.jqObj; //shortcut
@@ -588,9 +588,9 @@ _app.u.throwMessage(responseData); is the default error handler.
 					
 					
 // use either delegated events OR app events, not both.
-//avoid using this. ### FUTURE -> get rid of these. the delegation should occur before here.
+//avoid using this. ### FUTURE -> get rid of these. the delegation should occur in the function that calls this. more control that way and things like dialogs being appendedTo a parent can be handled more easily.
 					if(_rtag.addEventDelegation)	{
-//						_app.u.dump(" ------> using delegated events in anycontent, not app events ");
+						_app.u.dump(" ------> using delegated events in anycontent, not app events ");
 						_app.u.addEventDelegation($target);
 						}
 					else if(_rtag.skipAppEvents)	{}
@@ -1644,12 +1644,13 @@ URI PARAM
 	
 //turn a set of key value pairs (a=b&c=d) into an object. pass location.search.substring(1); for URI params or location.hash.substring(1) for hash based params
 			kvp2Array : function(s)	{
-				if(s.charAt(0) == '&')	{s = s.substring(1);} //regex below doesn't like the first char being an &.
 				var r = false;
-				if(s && s.indexOf('=') > -1)	{
-					r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
+				if(s)	{
+					if(s.charAt(0) == '&')	{s = s.substring(1);} //regex below doesn't like the first char being an &.
+					if(s.indexOf('=') > -1)	{
+						r = s ? JSON['parse']('{"' + s.replace(/&/g, '","').replace(/=/g,'":"') + '"}',function(key, value) { return key===""?value:decodeURIComponent(value) }) : {};
+						}
 					}
-				else	{}
 				return r;
 				}, //kvp2Array
 		

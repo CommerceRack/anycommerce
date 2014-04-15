@@ -472,7 +472,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				var es = $.extend(true, {}, elasticsearch);
 				
 				es.type = 'product';
-				es.mode = 'elastic-native';
+				es.mode = 'elastic-search';
 				es.size = 250;
 				
 				return es;
@@ -483,7 +483,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				var query = {}; //what is returned. false if error occurs.
 				if(obj && obj.query)	{
 					query.type = 'product';
-					query.mode = 'elastic-native';
+					query.mode = 'elastic-search';
 					query.size = 250;
 					query.query =  {"query_string" : obj};
 					}

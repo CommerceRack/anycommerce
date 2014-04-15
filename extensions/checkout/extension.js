@@ -1987,7 +1987,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 
 
 			handlePaypalInit : function($context)	{
-				_app.u.dump("BEGIN order_create.u.handlePaypalInit");
+//				_app.u.dump("BEGIN order_create.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.

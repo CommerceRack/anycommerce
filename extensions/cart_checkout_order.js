@@ -219,7 +219,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 				obj.returnURL =  (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#!checkout?"; //? at end because paypal is going to add key value pairs to this url.
 				
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
-				dump(" -> cartPaypalSetExpressCheckout obj: "); dump(obj);
+//				dump(" -> cartPaypalSetExpressCheckout obj: "); dump(obj);
 				_app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
@@ -1218,7 +1218,6 @@ in a reorder, that data needs to be converted to the variations format required 
 									}
 								}});
 							$(this).addClass('disabled').attr('disabled','disabled');
-
 							_app.model.dispatchThis('immutable');
 							});
 						}
@@ -1332,13 +1331,18 @@ in a reorder, that data needs to be converted to the variations format required 
 			cartItemRemove	: function($ele,p)	{
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
+					
+
 					_app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':0,'_cartid':cartid},{
 						'callback' : 'showMessaging',
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
-					$ele.closest('[data-stid]').intervaledEmpty();
+
+					// these needs to be before the empty below OR the button can't look up the foodchain for the cart container.
 					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+						
+					$ele.closest('[data-stid]').intervaledEmpty();
 					_app.model.dispatchThis('immutable');
 					}
 				else	{
