@@ -1151,8 +1151,8 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<div>
 		qty: <input data-tlc="cco#cartitemqty  --legacy;" class="qtyInput numberInput" data-app-change="cco|cartItemUpdateExec" data-bind="format:cartItemQty;extension:cco;useParentData:true;" name="quantity" type="number">
 		<button class="displayNone">update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-tlc="bind $var '.price'; format --prepend='x '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
-		<span data-tlc="bind $var '.extended'; format --prepend='= '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
+		<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{ format --currency='USD'; format --prepend=' x '; apply --append;}};"></span>
+		<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD';  format --prepend='= '; apply --append;}};"></span>
 
 		</div>
 
