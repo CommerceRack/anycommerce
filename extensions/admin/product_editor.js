@@ -3589,7 +3589,7 @@ function type2class(type)	{
 					}
 				else if($ele.data('variationmode') == 'product')	{
 					var data, variationID = $ele.closest('tr').data('id'), pid = $ele.closest("[data-pid]").data('pid');
-					
+					dump(" -> pid: "+pid);
 					if(pid)	{
 
 
