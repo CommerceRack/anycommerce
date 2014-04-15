@@ -1364,7 +1364,8 @@ setTimeout(function(){
 				if($ele.length == 0)	{
 					$ele = $("<div />").attr('id','youtubeVideoModal').appendTo('body');
 					}
-				$ele.empty().append("<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+videoid+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
+// * 201403 -> adding the ?rel=0 to the end of the URL will disable the suggested videos feature
+				$ele.empty().append("<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+videoid+"?rel=0' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
 				$ele.dialog({
 					modal:true,
 					width:600,
@@ -1949,10 +1950,13 @@ effects the display of the nav buttons only. should be run just after the handle
 				
 //The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
 				if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{
-					$nav.removeClass('displayNone');
-					$nextBtn.show();
-					$prevBtn.show();
-					r = true;
+// * 201403 -> only show the buttons if more than 1 product is in the list.
+					if(_app.u.thisNestedExists("data."+$prevBtn.data('datapointer')+".@products",_app) && _app.data[$prevBtn.data('datapointer')]['@products'].length > 1)	{
+						$nav.removeClass('displayNone');
+						$nextBtn.show();
+						$prevBtn.show();
+						r = true;
+						}
 					}
 				else	{
 					$nav.addClass('displayNone');
