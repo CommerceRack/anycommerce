@@ -1053,6 +1053,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
+
+// * 201403 -> the slideUp is not run on the initial load (when preView is still visible) or it'll be jumpy. Also, duration shortened.
+				if(infoObj.performJumpToTop && !$('#appPreView').is(':visible'))	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500)} //new page content loading. scroll to top.
 		
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
@@ -1083,8 +1086,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				else	{
 					dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
-				//if a header is defined in the appview, the height of that header will be the jumpto point, which effectively 'chops' off the header w/ each page load.
-				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},1000)} //new page content loading. scroll to top.
+
 //NOT POSTING THIS MESSAGE AS ASYNC BEHAVIOR IS NOT CURRENTLY QUANTIFIABLE					
 				//Used by the SEO generation utility to signal that a page has finished loading. 
 				//parent.postMessage("renderFinished","*");
