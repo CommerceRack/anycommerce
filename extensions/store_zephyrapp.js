@@ -369,8 +369,10 @@ var store_zephyrapp = function(_app) {
 							$("<img \/>",{
 								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
 								//the first srcset value should match the default height and width, then grow from there.
-								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 1x, "+thisTLC.makeImageURL({'width':200,'height':200,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 2x"
+								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 1x"
 								}).addClass('productThumb').appendTo($div);
+// NOTE -> iphone wasn't reacting well to the 2x.
+// , "+thisTLC.makeImageURL({'width':200,'height':200,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 2x
 							}
 						else	{break;} //exit early once a 'blank' is found in the img list.
 						}
