@@ -3592,7 +3592,6 @@ function type2class(type)	{
 					dump(" -> pid: "+pid);
 					if(pid)	{
 
-
 						var L = _app.data['adminProductDetail|'+pid]['@variations'].length;
 // if isnew is true, that means this is a sog or pog that was just added to the product.
 // pogs do not have an ID immediately after they're added, so the guid is used to get the data from the product object in memory.

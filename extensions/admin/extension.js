@@ -3247,6 +3247,7 @@ else	{
 //domain and partition are persitent between sessions. bad for support so clear them.
 //for multi-account users, the domainInit code checks to make sure the selected domain is valid.
 				if(_app.vars.trigger == 'support')	{
+					dps.admin = dps.admin || {};
 					dps.admin.domain = '';
 					dps.admin.partition = '';
 					}
