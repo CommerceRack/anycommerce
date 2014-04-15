@@ -322,6 +322,7 @@ var store_zephyrapp = function(_app) {
 ////////////////////////////////////   TLCFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		tlcFormats : {
+
 			//this tlcformat gets run AFTER the image has been appended/replaced. It needs the data-attributes set.
 			srcset : function(data,thisTLC)	{
 				if(data.value)	{
@@ -341,12 +342,11 @@ var store_zephyrapp = function(_app) {
 						$tag.attr("srcset",srcset.join(','));
 						}
 					}
-
 				return true; //continue processing tlc
 				},
+
 			//if the value is blank, null, empty, undefined , return false (stops tlc processing on this statement)
 			dwiwempty : function(data,thisTLC)	{
-				dump(" --------------------------------> GOT HERE."); dump(data);
 				var r = true;
 				//needs to be first or the blanket data.value will b hit and return true.
 				if(data.value == 'ALT=&IMG=&LINK=')	{r = false;} //this is what a blank banner attribute will be set to

@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.f",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201402.15a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -660,8 +660,8 @@ this will likely become more flexible in the future. ###
 	<section class='vidsAndPics' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --add --class='applyAnytabs';}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --add --class='applyAnytabs';}};">
 	<ul data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --show;}};" class='displayNone'>
 		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}};"><a href="#viewer360">360 Viewer</a></li>
-		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};"><a href="#videos">Videos</a></li>
 		<li><a href="#images">Images</a></li>
+		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};"><a href="#videos">Videos</a></li>
 	</ul>
 
 	<div data-anytab-content='viewer360' class='prodVideoTab displayNone' data-app-role='viewer360TabContent'>
@@ -683,7 +683,8 @@ this will likely become more flexible in the future. ###
 	<div data-anytab-content="images" class='clearfix'>
 		<div class='productPrimaryImage'>
 			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};">
-			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w';}};" src="blank.gif" alt="" height="250" width="250" />
+			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }};" src="blank.gif" alt="" height="250" width="250" />
+			<!-- goes in tlc above, right after 'replace':  store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w,h=1000&w=1000&dpi=2x&vp=1024w'; -->
 			</a>
 		</div>
 		

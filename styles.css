@@ -151,7 +151,7 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 /* footer */
 
-#mastFoot	{background:#fff;}
+#mastFoot	{background:#fff; padding:0 .5em;}
 footer .footHead	{line-height:26px; font-size:.9em; font-weight:bold; color:#fff; padding:.2em .5em;}
 footer p.linkGroup	{width:45%; font-size:.8em;  margin:0 .5em; padding:.5em 0;}
 footer p.linkGroup a	{text-decoration:none; padding:.3em 0}
@@ -169,8 +169,10 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 /* content area */
 #contentContainer	{padding:.3em; background:#fff;}
 
-.reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;} /* display block on this element will cause conflicts w/ displayNone. test if changed */
-.reversedHeader, .plAdd2Cart	{
+/* .reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}  display block on this element will cause conflicts w/ displayNone. test if changed */
+.reversedHeader	{margin:0 0 .4em 0; border-bottom:1px solid #efefef; color:#666666; font-size:1em; font-weight:900;}
+
+.plAdd2Cart	{
 	color:#fff; font-weight:700; font-size:1em;
 	background: #7d7e7d; /* Old browsers */
 	background: -moz-linear-gradient(top, #7d7e7d 0%, #0e0e0e 100%); /* FF3.6+ */
@@ -192,7 +194,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 .basePrice	{color:#ff4000;}
 .lineThrough	{text-decoration:line-through;}
-.textBlockMaxHeight	{max-height:300px; overflow:hidden; position:relative;} /* applied to a container around the text. text must have data-textblock-role='content' on it */
+.textBlockMaxHeight	{max-height:180px; overflow:hidden; position:relative;} /* applied to a container around the text. text must have data-textblock-role='content' on it */
 /* added to a p which is appended to textBlockMaxHeight and will have the read more/less button in it */
 .textFadeOut	{
 	position: absolute; 

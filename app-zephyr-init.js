@@ -136,14 +136,12 @@ $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblo
 
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
-	dump(" -> in onComplete for related items: "+$prodlist.children().length);
-	
 	function execCycle()	{
 		if(myApp.u.carouselIsReady())	{$prodlist.cycle();}
 		else {setTimeout(execCycle,500); dump(" -> cycle not ready yet");}
 		}
 	
-	if($prodlist.children().length)	{
+	if($prodlist.children().length > 1)	{
 		//this product has related items.
 		execCycle();
 		}
