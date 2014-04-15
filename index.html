@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.15a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201402.15b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -110,10 +110,10 @@ $(document).ready(function(){
 		<div id='headerDecal1'></div><!-- ssl cert -->
 
 		<div id='headerDecal2'>
-			<span class='primaryText'>FREE SHIPPING</span>
 			<div class='secondaryText'>
 				<div>on orders</div><div>over $100</div>
 			</div>
+			<span class='primaryText'>FREE SHIPPING</span>
 		</div>
 
 		<nav id='menuNav'>
@@ -125,14 +125,14 @@ $(document).ready(function(){
 		</nav>
 		
 		<div class='minicart'>
+			<a class='checkoutButton floatRight ui-widget-header'><!-- ui-widget-header is for white icons -->
+				<span class='ui-icon ui-icon-check floatLeft'></span>
+				<span class='ui-icon ui-icon-triangle-1-e floatRight'></span>
+				<span class='checkoutText'>Proceed to Secure</span> Checkout
+			</a>
 			<a href='#!cart' class='sprite cart'></a>
 			<a href='#!cart'>My Cart</a>
 			<span class='countContainer marginRight'>( <span class='itemCount'>0</span> items)</span>
-			<a class='checkoutButton floatRight ui-widget-header'><!-- ui-widget-header is for white icons -->
-				<span class='ui-icon ui-icon-check floatLeft'></span>
-				<span class='checkoutText'>Proceed to Secure</span> Checkout
-				<span class='ui-icon ui-icon-triangle-1-e floatRight'></span>
-			</a>
 		</div>
 		
 		<div id='headerPhoneNumber'>
