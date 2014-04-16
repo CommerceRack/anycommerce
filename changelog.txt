@@ -9,12 +9,17 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201403
 
+GLOBAL
+	'elastic-native' changed to 'elastic-search' for appPublicSearch
+
 ADMIN
 	Product editor debug now includes 'inventory transactions'.
 
 
 QUICKSTART
-	previously, the appNav div was always visible and the buttons were hidden/shown.  Now the container is hidden/visible as well to allow for css adjustments.
+	Enhancements to appNav
+	-> The container is hidden/visible as well as the buttons to allow for css adjustments.
+	-> if referring page only had 1 product, appnav will remain hidden.
 
 
 201402

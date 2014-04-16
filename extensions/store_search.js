@@ -494,7 +494,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				return query;
 				},
 
-//not used by quickstart anymore. Still in use by analyzer and admin product editor.
+//This is used by quickstart for simple tag and keyword searches as well as by analyzer and admin interface (product editor and probably finder).
 			handleElasticSimpleQuery : function(keywords,_tag)	{
 				var qObj = this.buildElasticSimpleQuery({'query':keywords});
 				_tag = _tag || {};

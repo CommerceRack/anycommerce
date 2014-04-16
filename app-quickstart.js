@@ -2129,8 +2129,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				
 				
 			showSearch : function(infoObj)	{
-//				dump("BEGIN quickstart.u.showSearch. infoObj follows: ");
-//				dump(infoObj);
+				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
 				infoObj.templateID = 'searchTemplate';
 				infoObj.parentID = 'mainContentArea_search';
 				infoObj.state = 'init';
@@ -2153,23 +2152,31 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 					
 //If raw elastic has been provided, use that.  Otherwise build a query.
-				var elasticsearch;
 				if(infoObj.elasticsearch){
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 					}
-				else if(infoObj.TAG)	{
-					elasticsearch = {"filter":{"term":{"tags":infoObj.TAG}}}
-					elasticsearch = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
+				else if(infoObj.tag)	{
+					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
+					   "filter":{
+						  "and" : [
+							 {"term":{"tags":infoObj.tag}},
+							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":100}}}}} //only return item w/ inventory
+							 ]
+						  }});
 					}
 				else if (infoObj.KEYWORDS) {
-					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
-					if(infoObj.fields)	{qObj.fields = infoObj.fields}
-					elasticsearch = _app.ext.store_search.u.buildElasticSimpleQuery(qObj);
+					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
+					   "filter":{
+						  "and" : [
+							 {"query":{"query_string":{"query":infoObj.KEYWORDS}}},
+							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":100}}}}} //only return item w/ inventory
+							 ]
+						  }});
 					}
 				else	{
 					
 					}
-				//dump(elasticsearch);
+				dump(elasticsearch);
 /*
 #####
 if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
