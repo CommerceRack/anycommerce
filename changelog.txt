@@ -11,6 +11,7 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 GLOBAL
 	'elastic-native' changed to 'elastic-search' for appPublicSearch
+	Elastic is now inventory aware.
 
 ADMIN
 	Product editor debug now includes 'inventory transactions'.
@@ -20,7 +21,7 @@ QUICKSTART
 	Enhancements to appNav
 	-> The container is hidden/visible as well as the buttons to allow for css adjustments.
 	-> if referring page only had 1 product, appnav will remain hidden.
-
+	Enhancement - keyword and tag search will now only return results w/ positive inventory.
 
 201402
 
