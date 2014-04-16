@@ -70,6 +70,12 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomp
 //app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
 
 
+//triggers the resize of the images for srcset and also revealation. Both of these could have big impacts on the pages attributes (height/width) so it happens early.
+$("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
+	$(window).trigger('resizeEnd'); //this triggers the srcset code.  It isn't strictly required, but I found the polyfill works better when this is manually executed.
+	myApp.ext.store_zephyrapp.u.revealation($ele);
+	});
+
 
 
 //  now add some template functions.
@@ -121,16 +127,10 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
 	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
-		handleSrcSetUpdate($ele);
+		dump(" -> onComplete for pid: "+infoObj.pid);
 		myApp.ext.store_zephyrapp.u.handleMZP($ele);
 		});
 	});
-
-$("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
-	$(window).trigger('resizeEnd'); //this triggers the srcset code.  It isn't strictly required, but I found the polyfill works better when this is manually executed.
-	myApp.ext.store_zephyrapp.u.revealation($ele);
-	});
-
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
 	function execCycle()	{

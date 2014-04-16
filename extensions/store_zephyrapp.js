@@ -509,7 +509,9 @@ var store_zephyrapp = function(_app) {
 						dump("Unable to find the href for the primary image within the product layout. MagicZoomPlus will not work properly.","warn")
 						}
 					}
-				else	{}
+				else	{
+					dump("$product not a valid jquery instance for handleMZP. MZP will likely not work quite right.",'warn');
+					}
 				},
 			
 			randomizeList : function($list){
