@@ -503,7 +503,15 @@ need to be customized on a per-ria basis.
 			}, //wiki
 
 
-		pageTransition : function($o,$n)	{
+		pageTransition : function($o,$n,infoObj)	{
+			
+
+			if(infoObj.performJumpToTop)	{
+				$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500,function(){
+					dump(" ----> THE SCROLL ANIME IS DONE <-----");
+					});
+				} //new page content loading. scroll to top.			
+			
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 //$o MAY be a jquery instance but have no length, so check both.
 			if($o instanceof jQuery && $o.length)	{
@@ -1054,7 +1062,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 //the slideUp is not run on the initial load (when preView is still visible) or it'll be jumpy.
-				if(infoObj.performJumpToTop && !$('#appPreView').is(':visible'))	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500)} //new page content loading. scroll to top.
+				
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					_app.ext.quickstart.pageTransition($('#appPreView'),$('#appView'));
@@ -1069,12 +1077,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						$('#appView').slideDown(3000);
 						});
 					}
-				else if(infoObj.performTransition == false)	{
-					}
-				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
-
+				else if(infoObj.performTransition && typeof _app.ext.quickstart.pageTransition == 'function')	{
 //					dump(" -> parentID.length: "+$(_app.u.jqSelector('#',infoObj.parentID)).length);
-					_app.ext.quickstart.pageTransition($old,$new);
+					_app.ext.quickstart.pageTransition($old,$new,infoObj);
 					}
 				else if($new instanceof jQuery)	{
 //no page transition specified. hide old content, show new. fancy schmancy.

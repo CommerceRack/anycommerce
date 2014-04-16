@@ -225,7 +225,34 @@ myApp.u.carouselIsReady = function()	{
 myApp.u.appInitComplete = function()	{
 	myApp.u.dump("Executing myAppIsLoaded code...");
 	
+	myApp.ext.quickstart.pageTransition = function($o,$n,infoObj){
 
+//		if(infoObj.performJumpToTop)	{
+//			$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500,function(){
+//				dump(" ----> THE SCROLL ANIME IS DONE <-----");
+//				});
+//			} //new page content loading. scroll to top.			
+		$o.css({'position':'relative','z-index':'10'});
+//$n isn't populated yet, most likely. So instead of animating it, just show it. Then animate the old layer above it.
+		if($n instanceof jQuery)	{
+			$n.css({position:'absolute','z-index':9,'left':0,'top':0,'right':0}).show();
+			}
+//if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
+//$o MAY be a jquery instance but have no length, so check both.
+		if($o instanceof jQuery && $o.length)	{
+			$('#mainContentArea').height($o.outerHeight()); //add a fixed height temporarily.
+			$o.animate({left:$(window).width(),top:$(window).height()},function(){
+				$('#mainContentArea').height('');
+				$o.hide();
+				$n.css({'position':'relative','z-index':10}); //
+				});
+			}
+		else	{
+			//if o isn't set, n needs to be reset to relative positioning or the display will be wonky.
+			$n.css({'position':'relative','z-index':10}); //
+			}
+		}
+	
 	
 	myApp.ext.order_create.checkoutCompletes.push(function(vars,$checkout){
 //append this to 
