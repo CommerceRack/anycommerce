@@ -18,6 +18,21 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 
 
+#appPreView	{
+	position:absolute; top:10%; z-index:1000;  left:15%;
+	width:70%;
+	background:#fff; border:2px solid #000; padding:2em 0;
+	-webkit-border-radius: .6em;
+	border-radius:.6em;
+	text-align:center;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	}
+#appPreView .logo	{margin:1em auto;}
+#appPreViewBG	{z-index:999; position:absolute; top:0; left:0; bottom:0; right:0;}
+
+
 .sprite	{background:url(images/sprites.png);}
 .shipsFree	{background-position:0 -105px; width:90px; height:15px}
 
@@ -49,13 +64,20 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#707070', endColorstr='#282828',GradientType=0 ); /* IE6-9 */	
 	}
 
-#mastHead .logo	{position:absolute; top:3px; left:.5em; width:165px; height:51px; display:block;}
+#mastHead .logo, #appPreView .logo	{ width:165px; height:51px; display:block;}
+#mastHead .logo	{position:absolute; top:3px; left:.5em;}
 
 #mastHead .mobileNav	{position:absolute; top:21px; right:.5em;}
-#mastHead .mobileNav a	{float:left; margin-left:1em; display:block; width:26px; height:21px;}
+#mastHead .mobileNav a	{float:left; margin-left:1em; display:block; width:26px; height:21px; position:relative;}
 #mastHead .mobileNav .contact	{background-position:0 -70px;}
 #mastHead .mobileNav .account	{background-position:-26px -70px;}
 #mastHead .mobileNav .cart	{background-position:-55px -70px;}
+#mastHead .mobileNav .cartItemCount	{
+	font-size:.6em; color:#104a7b; 
+	display:block;
+	width:20px; text-align:center;
+	position:absolute; bottom:5px; left:4px;
+	}
 
 #specialsNav,
 #headerPhoneNumber,
@@ -168,6 +190,8 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 /* content area */
 #contentContainer	{padding:.3em; background:#fff;}
+.pageContentSidebar	{display:none;}
+#mainContentArea	{position:relative;}
 
 /* .reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}  display block on this element will cause conflicts w/ displayNone. test if changed */
 .reversedHeader	{margin:0 0 .4em 0; border-bottom:1px solid #efefef; color:#666666; font-size:1em; font-weight:900;}
@@ -334,20 +358,19 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 .shippingEstimates tr:nth-child(odd)	{background:#fff;}
 .shippingEstimates tr:nth-child(even)	{background:#efefef;}
 
+.cartItemProdlist	{margin:0; padding:0; list-style:none; font-size:.9em;}
+.cartLineItem	{margin:0 0 .3em 0; padding: 0 0 .3em 0; border-bottom:1px solid #efefef;}
+.removeButton	{margin:0;}
 
 
 
-
-
-
-
-@media only screen and (min-width: 640px) {
+@media only screen and (min-width: 768px) {
 	body	{background:url(images/zs10_body_bg-2000x16.gif) repeat-y; margin:0em; padding:.7em; font-weight:100;}
 	
 	#mastHead	{height:137px;}
 	.mobileNav	{display:none;}
 	#mastHead .logo	{position:absolute; top:3px; left:.5em; width:270px; height:75px; display:block; background-position: -222px -4px;}
-	#shopNowLink	{display:none;}
+	
 	#mastHead .middlebg	{
 		height:65px;
 		-webkit-border-top-left-radius: 5px;
@@ -393,7 +416,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#headerDecal2 .primaryText	{font-weight:900; font-size:1em; margin-right:.4em; padding-right:.4em; border-right:1px solid #faba8e; text-shadow: 1px 1px 1px #000;}
 	#headerDecal2 .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
 
-
+	#tier1catContainer	{
+		top:137px; width:60%;
+		} /* these are revealed onclick */
 
 	#menuNav	{position:absolute; top:14px; right:.3em; display:block; color:#27a8e0;} /* .3 instead of .5 is to compensate for the link margin */
 	.menuLink	{color:#fff; font-size:.7em; font-weight:100; margin:0 .2em; text-decoration:none;}
@@ -401,7 +426,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.specialsLink	{color:#ccc; font-size:.7em; font-weight:700; margin:0; padding:0 .5em; border-right:1px solid #333; text-decoration:none;}
 	.specialsLink:hover	{color:#fff;}
 	
-	#mastHeadSearchFrm	{left:.5em; width:50%;}
+	#mastHeadSearchFrm	{left:90px; width:50%;}
 	.productSearchKeyword	{width:100%;}
 	
 	#headerPhoneNumber	{display:block; position:absolute; top:0px; margin-top:-10px; right:.5em; font-size:.8em; color:#fff;}
@@ -411,6 +436,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#mastHead .minicart .cart	{background-position:-125px -67px; display:block; width:26px; height:25px; float:left; margin-right:.2em; position:absolute; left:0; top:-2px;}
 	.minicart a	{color:#fff; text-decoration:none;}
 
+
 	.socialSprite	{background:url(images/social_sprite.png) no-repeat; width:22px; height:21px; display:inline-block; margin-right:.3em; overflow:hidden; text-indent:-3000px;}
 	.facebook	{background-position:-344px -137px;}
 	.twitter	{background-position:-344px -15px;}
@@ -418,16 +444,45 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.myspace	{background-position:-276px -76px;}
 	.youtube	{background-position:-5px -15px;}
 	.wordpress	{background-position:-174px -15px;}
+
+	.pageContentMainColumn	{
+		margin-right:195px; overflow:hidden;
+		}
+
+	.pageContentSidebar	{display:block; position:absolute; top:0; right:0; width:183px;}
+	.sbbSprite	{width:183px; height:120px; display:block; margin-bottom:.5em; background:url(images/sidebar_banners.jpg) no-repeat;}
+	.sbb1	{background-position:0 0;}
+	.sbb2	{background-position:0 -120px;}
+	.sbb3	{background-position:0 -240px;}
+	.sbb4	{background-position:0 -360px;}
+	.sbb5	{background-position:0 -480px;}
+	.sbb6	{background-position:0 -500px;}
+	.sbb7	{background-position:0 -620px;}
+
+
 	}
 
 
 
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 1024px) {
 	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
+
+	.pageContentMainColumn	{
+		margin-left:195px;
+		}
+
+	#tier1catContainer	{display:block; width:120px; left:.5em; border:0; background:#fff;}
+	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
+	#tier1categories li	{width:100%;}
 	}
+
+
+
+
+
 
 
 /* overrides */

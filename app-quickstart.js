@@ -1053,7 +1053,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
-		
+//the slideUp is not run on the initial load (when preView is still visible) or it'll be jumpy.
+				if(infoObj.performJumpToTop && !$('#appPreView').is(':visible'))	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500)} //new page content loading. scroll to top.
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					_app.ext.quickstart.pageTransition($('#appPreView'),$('#appView'));
@@ -1084,7 +1085,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
 				//if a header is defined in the appview, the height of that header will be the jumpto point, which effectively 'chops' off the header w/ each page load.
-				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},1000)} //new page content loading. scroll to top.
+				
 //NOT POSTING THIS MESSAGE AS ASYNC BEHAVIOR IS NOT CURRENTLY QUANTIFIABLE					
 				//Used by the SEO generation utility to signal that a page has finished loading. 
 				//parent.postMessage("renderFinished","*");
@@ -2151,14 +2152,14 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 					
 //If raw elastic has been provided, use that.  Otherwise build a query.
-				var elasticsearch;
+
 				if(infoObj.elasticsearch){
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 					}
 				else if(infoObj.TAG)	{
 					elasticsearch = {"filter":{"term":{"tags":infoObj.TAG}}}
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
-					}
+						}
 				else if (infoObj.KEYWORDS) {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
