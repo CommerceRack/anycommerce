@@ -1,6 +1,17 @@
 
 
 
+Revealation
+In places this is used, only the first few lines of a textblock are revealed, followed by a 'show more' button. When clicked, show more reveals the rest of the text and the button changes to 'show less', which will once again hide the extra text.
+On a mobile device, the text block is capped at 120px (about 5 lines). On a pad or bigger, a larger text block is shown before the text is cropped and the button appears.
+
+
+srcset
+Many images, especially in the product layout, use an emerging standard for responsive imagery known as srcset. This allows you to set multiple sources on a given image tag (based on browser dimensions and pixel density) and the browser will show the correct one. This allows for an entirely different size image to be used for mobile than for larger screens.
+A javascript 'polyfill' is used for backwards compatibility.
+
+
+
 Homepage
 
 The banners are hard coded in index.html (search for homepageSlideshowContainer). The slideshow will support more than five simply by adding more linked images. ex:
@@ -8,7 +19,7 @@ The banners are hard coded in index.html (search for homepageSlideshowContainer)
 
 The featured items load dynamically based on the contents of a list named  "homepage_products".
 
-The text is also hard coded. There is a display format set up to only show the first 200 pixels of content, followed by a 'show more' link.
+The text is also hard coded in the homepage.  This block uses revealation.
 
 
 
@@ -46,7 +57,7 @@ Sections:
 	1 text block -> will be formatted as wiki. Is it's own key.	(.%page.bot_description)
 	1 html block -> will be formatted as html. Is it's own key.	(.%page.htmllinks)**
 	
-* This text block will only display the first 200 pixels, then a 'show more' button will show up. Is smart enough to 'know' whether or not to show the button.
+* This text block uses revealation.
 ** Be sure to validate your html, one mismatched tag could have disasterous results.
 
 
@@ -61,9 +72,9 @@ Images and Videos:
 	Images, 360 viewer and video are displayed within tabs.  
 	360 viewer (youtube:360) will only show up if populated.
 	The video tab will only show up if the youtube:videoid attribute is populated. More videos ARE supported, but won't show if the default video field is not populated.
-	If the key fields for video and 360 are empty, the images will NOT show up in a tab (would be silly for just one tab to show up).
+	If the key fields for video and 360 are empty, the tab functionality will be disabled and the images will show.
 	The app will display an unlimited number of product images as long as there are no breaks in the sequence (if images 1-3 and 5-9 are populated, only 1-3 will show because 4 is blank).
 
-
+The product description uses revealation.
 
 	
