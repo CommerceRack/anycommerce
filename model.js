@@ -685,7 +685,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					break;
 					}
 				}
-			return r;
+			return false;
 			},
 
 	//gets called for each response in a pipelined request (or for the solo response in a non-pipelined request) in most cases. request-specific responses may opt to not run this, but most do.
