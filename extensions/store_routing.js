@@ -112,9 +112,6 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 					});
 					
 				_app.templates.productTemplate.on('complete.routing', function(event, $context, infoObj){
-					dump('here');
-					dump('here');
-					dump('here');
 					var hash = "";
 					var $routeEle = $('[data-routing-hash]',$context)
 					if($routeEle.length){
@@ -129,7 +126,7 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 				
 				_app.templates.companyTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/company/"+infoObj.show+"/");});
 				_app.templates.customerTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/customer/"+infoObj.show+"/");});
-				_app.templates.searchTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/search/"+encodeURI(infoObj.KEYWORDS)+"/");});
+				_app.templates.searchTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/");});
 				_app.templates.cartTemplate.on('complete.routing', function(event, $context, infoObj){if(infoObj.show == "inline"){_app.ext.store_routing.u.setHash("#!/cart/");}});
 				//_app.templates.checkoutTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/checkout/");});
 				},
@@ -224,10 +221,10 @@ optional params:
 					}
 				},
 			productAnchor : function(pid, seo){
-				return "#!product/"+pid+"/"+(seo ? encodeURI(seo) : '');
+				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
@@ -244,7 +241,7 @@ optional params:
 				else	{
 					//unrecognized type
 					}
-				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				}
 			}, //u [utilities]
 
