@@ -43,7 +43,7 @@ document.getElementsByTagName('base')[0].href = baseURL;
 <![endif]-->
 
 
-
+<link rel="stylesheet" type="text/css" href="resources/magiczoomplus/magiczoomplus.css">
 <link href='https://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="jquery-ui-1.10.4.custom.css" /><!-- quickstart.css is merged into this file along w/ the jquery ui theme -->
@@ -511,7 +511,7 @@ The images get .slide only if populated. the category complete event counts the 
 
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink"><div class='prodName marginBottom' data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></div></a>
 	<div class=' marginBottom'>
-		<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
+		<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{format --currency='USD'; apply --show; apply --append}};"></span>
 		<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
 	</div>
 
@@ -538,16 +538,19 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id="productListTemplate" class="loadingBG clearfix plLineItem">
 	
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; ">
-		<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
+		<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href'; " class="blockLink">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=90&w=90&dpi=1x&vp=400w,h=150&w=150&dpi=1x&vp=768w,h=150&w=150&dpi=1x&vp=1800w';}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
 		<div class='displayNone sprite shipsFree' data-tlc="bind $var '.%attribs.is:shipfree'; if(is $var --eq='1'){{apply --remove --class='displayNone';}};"></div>
 		</div>
 
 		<div class='prodName marginBottom' data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></div>
 		<div class=' marginBottom'>
-			<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show; apply --append}};"></span>
-			<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
+			<span class='lineThrough marginRight displayNone' data-tlc="bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{format --currency='USD'; apply --show; apply --append}};"></span>
+			<span>
+				<span data-tlc="bind $var '.%attribs.is:sale'; if(is $var --eq='1';){{apply --append='Sale Price ';}} else {{apply --append='Price '}};" class='pricePrompt'></span>
+				<b class='basePrice' data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></b>
+			</span>
 		</div>
 		</a>
 
@@ -559,7 +562,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		
 
-		<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';"><img src="images/prodlist_arrow.png" class="prodListArrow"></a>
+		<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class='prodListArrow'><img src="images/prodlist_arrow.png" class="prodListArrow"></a>
 	</div>
 
 </li>
@@ -716,15 +719,17 @@ this will likely become more flexible in the future. ###
 		</div>
 	</div>
 
-	<div data-anytab-content="images" class='clearfix'>
+	<div data-anytab-content='images' class='clearfix'>
 		<div class='productPrimaryImage'>
-			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" rel="zoom-position: bottom">
-			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }}; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=320w,h=350&w=350&dpi=1x&vp=760w,h=500&w=500&dpi=1x&vp=1024w';" src="blank.gif" alt="" height="250" width="250" />
+			<!-- rel is overwritten in handleMZP for browsers > 768 -->
+			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" rel="zoom-position: bottom" data-app-role='primaryImageHref'>
+			<!-- the proddetailthumbs tlc format has some dimensions for MZP that correspond to the srcset's used below. if you change these, change them as well -->
+			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }}; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=400w,h=350&w=350&dpi=1x&vp=1100w,h=500&w=500&dpi=1x&vp=1800w';" src="blank.gif" alt="" height="250" width="250" />
 			<!-- goes in tlc srcset views ,h=1000&w=1000&dpi=2x&vp=1024w  -->
 			</a>
 		</div>
 		
-		<div class='productDetailThumbnails' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;">
+		<div class='productDetailThumbnails' data-app-role='productThumbnailsContainer' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;">
 		
 		</div>
 		

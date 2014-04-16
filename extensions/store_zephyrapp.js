@@ -46,17 +46,18 @@ var store_zephyrapp = function(_app) {
 					});
 
 
-//resize is executed continuously and the browser dimensions change. This function allows the code to be executed once, on finish (or pause)
+//resize is executed continuously as the browser dimensions change. This function allows the code to be executed once, on finish (or pause)
 	$(window).resize(function() {
 		if(this.resizeTO) {clearTimeout(this.resizeTO);}
 		this.resizeTO = setTimeout(function() {
 			$(this).trigger('resizeEnd');
 			}, 500);
 		});
-//when window is resized, generate a new logo. The code is triggered right after being bound to generate the correct size logo to start.
+
 	$(window).bind('resizeEnd', function(P) {
 		//resize the logo to maximum available space.
 		if(typeof handleSrcSetUpdate == 'function')	{
+//			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length);
 			handleSrcSetUpdate($("#mainContentArea :visible:first"))
 			}
 		}).trigger('resizeEnd');
@@ -265,57 +266,6 @@ var store_zephyrapp = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-			showDropDown : function ($container) {
-				//_app.u.dump('showing');
-				//console.log($container.data('timeoutNoShow'));
-				if(!$container.data('timeoutNoShow') || $container.data('timeoutNoShow')=== "false") {
-					var $dropdown = $(".dropdown", $container);
-					var height = 0;
-					$dropdown.show();
-					if($dropdown.data('width')){
-						$dropdown.css("width",$dropdown.data('width'));
-					}
-					
-					if($dropdown.data('height')){
-						height = $dropdown.data('height');
-					} else{
-						$dropdown.children().each(function(){
-							height += $(this).outerHeight();
-						});
-					}
-					if($container.data('timeout') && $container.data('timeout')!== "false"){
-						clearTimeout($container.data('timeout'));
-						$container.data('timeout','false');
-					}
-					$dropdown.stop().animate({"height":height+"px"}, 500);
-					$(".ddMenuBtn",$container).animate({"height":"44px"}, 100);
-					
-					$('html, .ddMenuBtn').on('click.dropdown',function(){
-						//hide the dropdown
-						_app.u.dump('hiding');
-						$(".dropdown", $container).stop().animate({"height":"0px"}, 500);
-						$(".ddMenuBtn",$container).animate({"height":"36px"}, 500);
-						if($container.data('timeout') && $container.data('timeout')!== "false"){
-							$container.data('timeout')
-							$container.data('timeout','false');
-						}
-						$container.data('timeout',setTimeout(function(){$(".dropdown", $container).hide();},500));
-						
-						//clean up after ourselves
-						$('html, .ddMenuBtn').off('click.dropdown')
-					});
-					return true;
-					}
-				return false;
-				},
-			showSearchBar: function ($container){
-				if (!$('.searchSection').hasClass('searchShow')){
-					$('.searchSection').addClass('searchShow').show();
-					}
-				else{
-					$('.searchSection').removeClass('searchShow').hide();
-					}
-				}
 			
 			}, //Actions
 
@@ -359,18 +309,29 @@ var store_zephyrapp = function(_app) {
 				return r;
 				},
 			
-//Generate a list of thumbnails, adding srcset along the way.			
+//Generate a list of thumbnails, adding srcset along the way.
+//the image size for 768 and 1024 should be the same, specifically for magic zoom. That way the click to put an alternate image into the primary spot uses a consistent size.
 			proddetailthumbs : function(data,thisTLC)	{
 				if(data.value && data.value['zoovy:prod_image2'])	{
-					var $div = $("<div \/>");
+					var
+						$div = $("<div \/>"),
+						dim = 250,
+						bodyWidth = $(document.body).width(); //dimensions of the primary product image. Used to generate the 'rev' for MZP.
+					
+					if(bodyWidth >= 640)	{dim = 350}
+					else if(bodyWidth >= 1100)	{dim = 500}
+					else	{} //use default.
+					dump(" ---------------------->>>>>>>>> "+bodyWidth);
 					for(var i = 1; i <= 20; i += 1)	{
 						if(data.value['zoovy:prod_image'+i])	{
-							$("<a \/>",{'href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),'rev':'','rel':''});
-							$("<img \/>",{
+							$("<a \/>",{'href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),'rev':thisTLC.makeImageURL({'width':dim,'height':dim,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).append($("<img \/>",{
 								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
+								'data-media' : data.value['zoovy:prod_image'+i],
 								//the first srcset value should match the default height and width, then grow from there.
-								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 1x"
-								}).addClass('productThumb').appendTo($div);
+								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1100w 1x"
+								}).addClass('productThumb')).appendTo($div);
+
+
 // NOTE -> iphone wasn't reacting well to the 2x.
 // , "+thisTLC.makeImageURL({'width':200,'height':200,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 2x
 							}
@@ -514,6 +475,43 @@ var store_zephyrapp = function(_app) {
 					
 					});
 				},
+			
+			//MZP is, unfortunately, very ID centric. This function is executed in a product template oncomplete.
+			//it will add an id to the primary image, which is used for the mzp.start() and the 'rel' on the thumbnails.
+			//the rel will be generated for the thumbnails as well, so that the correct is used.
+			//for this reason, the 768 and 1024 image sizes should be the same for the primary product pic (so switching from portrait to landscape works ok)
+			handleMZP : function($product)	{
+				dump("BEGIN handleMZP");
+				if($product instanceof jQuery)	{
+					var $href = $("[data-app-role='primaryImageHref']:first",$product), ID;
+					if($href.length)	{
+						//mzp gives the href an id. Can't rely on that tho, so just in case, we generate and append our own.
+						if($href.attr('id'))	{
+							ID = $href.attr('id');
+							}
+						else	{
+							ID = 'mzpzoom_'+_app.u.guidGenerator();
+							$href.attr('id',ID);
+							}
+						//the rel gets set there because we have the ID.  the rev is generated at the thumbs tlcFormat so that resolution specific sizing is all in the same place.
+						$("[data-app-role='productThumbnailsContainer']:first",$product).find('a').each(function(){
+							$(this).attr({'rel':'zoom-id:'+ID});
+							});
+
+						if($(document.body).outerWidth() > 760)	{
+							$href.attr('rel','zoom-position: right');
+							}
+
+						MagicZoomPlus.refresh(ID);
+						// rel="zoom-id: zoom;" rev="images/small.jpg"
+						}
+					else	{
+						dump("Unable to find the href for the primary image within the product layout. MagicZoomPlus will not work properly.","warn")
+						}
+					}
+				else	{}
+				},
+			
 			randomizeList : function($list){
 				$list.children().shuffle();
 				},

@@ -43,10 +43,6 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 	});
 
 
-//custom scripts
-myApp.rq.push(['script',0,'extensions/tools_zoom/zoom/js/jquery.zoom.min.js']);
-//myApp.rq.push(['script',0,myApp.vars.baseURL+'extensions/jquery-cycle.js']);
-
 //used for the slideshow on the homepage and product page. $.cycle();
 myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(){
 	//if these files are not done loading, cycle won't work quite right. so a check is done before executing a slideshow to make sure (with a settimeout to re-execute check).
@@ -60,9 +56,10 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 
 //a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
 //there's an 'activator' for this in the 'complete' for product, home and category pages.
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //used pretty early in process..
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //used pretty early in process..
-myApp.rq.push(['css',1,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.css']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //a srcset polyfill. used for a lot of imagery.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
+
 
 
 
@@ -122,16 +119,15 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 
 
-$("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
-	handleSrcSetUpdate($ele);
-	});
-
-$("#productTemplate").on('complete.srcset',function(state,$ele,infoObj){
-	// disabled for an iOS test.
-//	MagicZoomPlus.refresh();
+$("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
+	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
+		handleSrcSetUpdate($ele);
+		myApp.ext.store_zephyrapp.u.handleMZP($ele);
+		});
 	});
 
 $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
+	$(window).trigger('resizeEnd'); //this triggers the srcset code.  It isn't strictly required, but I found the polyfill works better when this is manually executed.
 	myApp.ext.store_zephyrapp.u.revealation($ele);
 	});
 
@@ -228,6 +224,8 @@ myApp.u.carouselIsReady = function()	{
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 myApp.u.appInitComplete = function()	{
 	myApp.u.dump("Executing myAppIsLoaded code...");
+	
+
 	
 	myApp.ext.order_create.checkoutCompletes.push(function(vars,$checkout){
 //append this to 

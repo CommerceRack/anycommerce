@@ -191,7 +191,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 /* content area */
 #contentContainer	{padding:.3em; background:#fff;}
 .pageContentSidebar	{display:none;}
-#mainContentArea	{position:relative;}
+#mainContentArea	{position:relative;} /* important for some of the page transition effects */
 
 /* .reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}  display block on this element will cause conflicts w/ displayNone. test if changed */
 .reversedHeader	{margin:0 0 .4em 0; border-bottom:1px solid #efefef; color:#666666; font-size:1em; font-weight:900;}
@@ -323,7 +323,6 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
     height: 100%;
 	}
 
-.productPrimaryImage	{margin-bottom:.3em; margin:0 auto;}
 .productDetailThumbnails .productThumb	{float:left; margin: 0 .3em .3em 0;}
 
 .reviewSummary .reviewSprite	{margin-top:.3em;}
@@ -459,6 +458,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.sbb6	{background-position:0 -500px;}
 	.sbb7	{background-position:0 -620px;}
 
+	.textBlockMaxHeight	{max-height:400px;}
 
 	}
 
@@ -469,14 +469,19 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
-
-	.pageContentMainColumn	{
-		margin-left:195px;
+	#mastHeadSearchFrm	{left:.5em; width:50%;}
+	#mainContentArea	{
+		margin-left:195px; min-height:500px;
 		}
-
-	#tier1catContainer	{display:block; width:120px; left:.5em; border:0; background:#fff;}
+	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50;}
 	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
-	#tier1categories li	{width:100%;}
+	#tier1categories li	{width:100%; margin:.1em 0;}
+	#shopNowLink	{display:none;}
+	
+	
+	.zProductList li.plLineItem	{display:block; margin:0 1% .5em 0; width:32%; float:left;}
+	.prodListArrow	{display:none;}
+	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
 	}
 
 
