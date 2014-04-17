@@ -366,7 +366,10 @@ var store_zephyrapp = function(_app) {
 					function getDeliveryDateObj(businessDaysLeftForDelivery) {
 						var now = new Date();
 						var dayOfTheWeek = now.getDay();
-						var calendarDays = businessDaysLeftForDelivery;
+						var hour = now.getHours();
+						//after 12, add 1 business day.
+						var calendarDays = (hour < 13) ? businessDaysLeftForDelivery : businessDaysLeftForDelivery+1;
+						
 						var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
 						if (deliveryDay >= 6) {
 							//deduct this-week days
