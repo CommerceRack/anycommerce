@@ -368,7 +368,7 @@ var store_zephyrapp = function(_app) {
 						var dayOfTheWeek = now.getDay();
 						var hour = now.getHours();
 						//after 12, add 1 business day.
-						var calendarDays = (hour < 13) ? businessDaysLeftForDelivery : businessDaysLeftForDelivery+1;
+						var calendarDays = (hour < 13) ? businessDaysLeftForDelivery : businessDaysLeftForDelivery+1; // * 201403 -> added a +1 day for after 12:00
 						
 						var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
 						if (deliveryDay >= 6) {
@@ -488,7 +488,7 @@ var store_zephyrapp = function(_app) {
 				if($product instanceof jQuery)	{
 					var $href = $("[data-app-role='primaryImageHref']:first",$product), ID;
 					if($href.length)	{
-						//mzp gives the href an id. Can't rely on that tho, so just in case, we generate and append our own.
+						//mzp gives the href an id. Can't rely on that tho, so just in case, if none is set we generate and append our own.
 						if($href.attr('id'))	{
 							ID = $href.attr('id');
 							}
@@ -504,9 +504,9 @@ var store_zephyrapp = function(_app) {
 						if($(document.body).outerWidth() > 760)	{
 							$href.attr('rel','zoom-position: right');
 							}
-
-						MagicZoomPlus.refresh(ID);
-						// rel="zoom-id: zoom;" rev="images/small.jpg"
+// SANITY -> tried to specify a specific ID for the refresh and it did not work to well in FF.
+//it would, more often than not, fail to init which resulted in an image click opening the image in the window/tab in focus.
+						MagicZoomPlus.refresh();
 						}
 					else	{
 						dump("Unable to find the href for the primary image within the product layout. MagicZoomPlus will not work properly.","warn")

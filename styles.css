@@ -190,6 +190,9 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 
 /* content area */
+
+#mainContentArea	{overflow:hidden;} /* here so animations that 'leave' the element don't cause undesired stretching */
+
 #contentContainer	{padding:.3em; background:#fff;}
 .pageContentSidebar	{display:none;}
 #mainContentArea	{position:relative;} /* important for some of the page transition effects */
@@ -290,7 +293,7 @@ hr.subtle	{margin:.1em 0;
 .prodThumbContainer	{float:left; margin-right:.5em;}
 .blockLink	{text-decoration:none;}
 .zProductList a 	{color:#333;}
-.prodListArrow {position:absolute; right: 5px; top:40px;}
+.prodListArrow {position:absolute; right: 5px; top:20px;}
 .reviewPLAdjust	{margin:0em 0 -.5em 1em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
 .plLineItem .marginBottom	{margin-bottom:.3em;}
 
