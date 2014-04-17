@@ -1,7 +1,5 @@
 
 
-
-
 <!--
 //////////////////// EBAY LISTINGS \\\\\\\\\\\\\\\\\\\\
 -->
@@ -112,30 +110,33 @@
 
 <div class='label'>
 <select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required' data-bind="var: chart(graph); format:popVal;">
-	<option value='' selected='selected' disabled='disabled'>graph type</option>
-	<option value='area'>Area</option>
-	<option value='area.stacked'>Area - Stacked</option>
-	<option value='area.percent'>Area - Stacked Percentage</option>
-	<option value='bar'>Horizontal Bar Graph</option>
-	<option value='bar.stacked'>Horizontal Bar Graph - Stacked</option>
-	<option value='bar.percent'>Horizontal Bar Graph - Stacked Percentage</option>
-	<option value='column'>Vertical Column Graph</option>
-	<option value='column.stacked'>Vertical Column Graph - Stacked</option>
-	<option value='column.percent'>Vertical Column Graph - Stacked Percentage</option>
-	<option value='areaspline'>Area Spline</option>
-	<option value='line'>Line Graph</option>
-	<option value='pie'>Pie Chart</option>
-	<option value='text'>Quickstats (text)</option>
+	<option value='' selected='selected' disabled='disabled'>visualization</option>
+	<option data-image="extensions/admin/images/sample-chart-dashboard.jpg" value='text'>KPI Dashboard (text - no graph)</option>
+	<option data-image="extensions/admin/images/sample-chart-area.jpg" value='area'>Area</option>
+	<option data-image="extensions/admin/images/sample-chart-areastacked.jpg" value='area.stacked'>Area - Stacked</option>
+	<option data-image="extensions/admin/images/sample-chart-areapercent.jpg" value='area.percent'>Area - Stacked Percentage</option>
+	<option data-image="extensions/admin/images/sample-chart-horizontalbar.jpg" value='bar'>Horizontal Bar Graph</option>
+	<option data-image="extensions/admin/images/sample-chart-horizontalbarstacked.jpg" value='bar.stacked'>Horizontal Bar Graph - Stacked</option>
+	<option data-image="extensions/admin/images/sample-chart-horizontalbarpercent.jpg" value='bar.percent'>Horizontal Bar Graph - Stacked Percentage</option>
+	<option data-image="extensions/admin/images/sample-chart-verticalcolumn.jpg" value='column'>Vertical Column Graph</option>
+	<option data-image="extensions/admin/images/sample-chart-verticalcolumnstacked.jpg" value='column.stacked'>Vertical Column Graph - Stacked</option>
+	<option data-image="extensions/admin/images/sample-chart-verticalcolumnpercent.jpg" value='column.percent'>Vertical Column Graph - Stacked Percentage</option>
+	<option data-image="extensions/admin/images/sample-chart-areaspline.jpg" value='areaspline'>Area Spline</option>
+	<option data-image="extensions/admin/images/sample-chart-line.jpg" value='line'>Line Graph</option>
+	<option data-image="extensions/admin/images/sample-chart-pie.jpg" value='pie'>Pie Chart</option>
 </select>
+<span class='toolTip' title="
+visualizations can be text dashboards which display important numbers, or different types of graphs.
+">?</span>
 </div>
 
 <div class='marginBottom clearfix'>
 
 
-	<div class='floatLeft marginRight'>
+	<div class='floatLeft'>
 	
 		<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal;">
-			<option selected='selected' disabled='disabled'>period</option>
+			<option selected='selected' disabled='disabled'>timeframe (period)</option>
 			<optgroup label='daily' >
 				<option value='day.today'>Today</option>
 				<option value='day.yesterday'>Yesterday</option>
@@ -185,33 +186,42 @@
 		<span class='toolTip' title="How long of a time period the graph should encompass. This selection determines which grouping is available.">?</span>
 
 	</div>
-
-	<div class='floatLeft'>
-		<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
-			<option selected='selected' disabled='disabled' value=''>grouping</option>
-			<option value='none'>None (Merge Datasets)</option>
-			<option value='day'>Date: Day (Full Detail)</option>
-			<option value='week'>Date: Week</option>
-			<option value='month'>Date: Month</option>
-			<option value='quarter'>Date: Quarter</option>
-			<option value='dow'>Date: Day of Week</option>
-		</select>
-		<span class='toolTip' title="Dependant on the 'period' being selected. Determines how the data is grouped.">?</span>
-	</div>
-
 </div>
 
+<div class='marginBottom clearfix'>
+	<div class='floatLeft'>
+		<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
+			<option selected='selected' disabled='disabled' value=''>units of time</option>
+			<option value='none'>None (Merge Datasets into a single value)</option>
+			<option value='day'>Date: Day (maximum detail level)</option>
+			<option value='week'>Date: Week (1-52 values per year)</option>
+			<option value='month'>Date: Month (1-12 values per year)</option>
+			<option value='quarter'>Date: Quarter (1-4 values per year)</option>
+			<option value='dow'>Day of Week (Mon - Sun possible values)</option>
+		</select>
+		<span class='toolTip' title="
+		Dependant on the 'period' being selected. 
+		Data points will be collated by the time unit selected. 
+		The minimum level of granularity is 1 day (since KPI does not record time of events, only days).
+		When using Day of Week be sure to select an appropriate time period (weeks, or anything divisible by 7).
+		">?</span>
+	</div>
+</div>
 
 
 <div class='marginBottom clearfix'>
 
 	<div class='floatLeft marginRight'>
-		<div class='label'>Data Columns:</div>
-	
-		<label><input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> Dynamic <span class='toolTip' title="Will provide a fixed set of data choices displayed with a predetermined number of columns.">?</span></label>
-		
-		<label><input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> Fixed <span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
+		<div class='label'>Columns:</div>
 
+		<label><input type='radio' name='dataColumns' value='fixed' 
+		data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> User Specified : choose one or more columns individually.
+		 	<span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
+	
+		<label><input type='radio' name='dataColumns' value='dynamic' 
+		data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> Dynamic List : automatically use all possible columns from preset lists.
+			<span class='toolTip' title="Will automatically update with all possible columns which have data during the time period.">?</span></label>
+		
 	</div>
 	
 	
@@ -219,8 +229,10 @@
 	
 
 	<div class='floatLeft displayNone' data-app-role='datasetTypeContainer'>
-		<div class='label'>Data:</div>
-	
+		<div class='label'>
+			Data Point: 
+			<span class='toolTip' title="KPI stores three possible data points: Gross Sales, # of Orders, # Units are recorded for each column.">?</span></label>
+		</div>
 		<label><input type='radio' name='column' value='gms' data-bind="var:chart(column); format:popVal;" /> Gross Sales</label>
 		<label><input type='radio' name='column' value='distinct' data-bind="var:chart(column); format:popVal;" /> # Orders</label>
 		<label><input type='radio' name='column' value='total' data-bind="var:chart(column); format:popVal;" /> # Units Sold</label>
@@ -236,22 +248,24 @@
 
 <!-- if datacolumns is set to dynamic, show this: -->
 <div class='label displayNone' data-app-role='dDatasetContainer'>
+<b>Dynamic Lists</b>
 <select name='ddataset' data-bind="var:chart(ddataset); format:popVal;">
-	<option selected='selected' disabled="disabled" value=''>Data Source</option>
-	<option value='PRTS'>By Partitions</option>
-	<option value='SCHEDULES'>By Schedules</option>
+	<option selected='selected' disabled="disabled" value=''>Dynamic List</option>
+	<option value='PRTS'>Sales By Partition</option>
+	<option value='SCHEDULES'>Sales By Pricing Schedules</option>
 	<option value='OGMS' >Overall Gross Merchandise Sales</option>
 	<option value='DOMAINS' >By Domains</option>
 	<option value='TAGS'>By Tags</option>
-	<option value='MARKETS'>By Integrations</option>
+	<option value='MARKETS'>By Marketplace/Integrations</option>
 </select>
 </div>
 
 
 
 <div data-app-role='fDatasetContainer' class='label displayNone'>
+<b>User Specified Columns</b>
 <select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange"  data-bind="var:chart(datasetGrp); format:popVal;">
-	<option value='' disabled='disabled' selected='selected'>Dataset By</option>
+	<option value='' disabled='disabled' selected='selected'>choose data column</option>
 	<option value='OVERALL'>All Domains/Partitions</option>
 	<option value='COUPON'>Coupon</option>
 	<option value='DOMAIN'>Domain</option>
