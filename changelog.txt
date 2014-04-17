@@ -22,6 +22,9 @@ QUICKSTART
 	-> The container is hidden/visible as well as the buttons to allow for css adjustments.
 	-> if referring page only had 1 product, appnav will remain hidden.
 	Enhancement - keyword and tag search will now only return results w/ positive inventory.
+	Enhancement - infoObj now passed into pageTransition. Allows more customization and control.
+	Bug fix - edit address in checkout was broken (as of 201402)
+	Enhancement - some better responsiveness for checkout on small screens.
 
 201402
 
