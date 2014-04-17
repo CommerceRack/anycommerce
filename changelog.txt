@@ -11,7 +11,8 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 GLOBAL
 	'elastic-native' changed to 'elastic-search' for appPublicSearch
-	Elastic is now inventory aware.
+	Elastic is now inventory aware (optionally).
+	Elastic can now search by category.
 
 ADMIN
 	Product editor debug now includes 'inventory transactions'.
@@ -25,6 +26,8 @@ QUICKSTART
 	Enhancement - infoObj now passed into pageTransition. Allows more customization and control.
 	Bug fix - edit address in checkout was broken (as of 201402)
 	Enhancement - some better responsiveness for checkout on small screens.
+
+
 
 201402
 
