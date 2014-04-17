@@ -732,12 +732,14 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<\/select>";
 							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
-							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
+							tmp += "<div><label for='payment/CV'>CVV/CID <input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
+							tmp += "' ";
 							if(!_app.u.thisIsAnAdminSession())	{
 								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
 								}
-							tmp += "'  /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+
+							tmp += " /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
@@ -1152,9 +1154,15 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
-				var r = '';
+				var r = '', cart;
+				
 				if(data.value.cart && data.value.cart.cartid){
-					var cartid = data.value.cart.cartid;
+					cartid = data.value.cart.cartid;
+					}
+				else	{
+					cartid = _app.model.fetchCartID(); //in some cases, such as an address editor, the cartid may not be in the data.
+					}
+				if(cartid)	{
 					if(_app.data['appCheckoutDestinations|'+cartid] && _app.data['cartDetail|'+cartid] && data.bindData.shiptype)	{
 						var destinations = _app.data['appCheckoutDestinations|'+cartid]['@destinations'], L = destinations.length, cartData = _app.data['cartDetail|'+cartid];
 						for(var i = 0; i < L; i += 1)	{
@@ -1170,6 +1178,9 @@ in a reorder, that data needs to be converted to the variations format required 
 						$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesasoptions, _app.data[appCheckoutDestinations|'+cartid+'] or _app.data.cartDetail|'+cartid+' and both are required. is not available in memory.','gMessage':true}));
 						}
 
+					}
+				else	{
+					dump("For countriesasoptions renderFormat in CCO, cartID could not be obtained.",'warn');
 					}
 				},
 

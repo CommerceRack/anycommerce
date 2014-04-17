@@ -106,18 +106,19 @@ item list and summary are separate just to give more control over location.
 
 <section id="chkoutPreflightTemplate">
 
-<h4 data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if (is $var --notblank;) {{apply --append;}};" class="displayNone" data-app-role="username"></h4>
-
-<div data-app-role="login">
-
-	<div data-app-role="loginPasswordContainer" class="displayNone floatRight passwordContainer">
-		<div>If you have an account with us, please enter your password below to login</div>
-		<input placeholder="password" size="30" name="password" type="password"><button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
+	<h4 data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if (is $var --notblank;) {{apply --append;}};" class="displayNone" data-app-role="username"></h4>
+	
+	<div data-app-role="login">
+		<div class='floatLeft marginBottom'>
+			<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
+			<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
+		</div>
+	
+		<div data-app-role="loginPasswordContainer" class="displayNone floatRight passwordContainer">
+			<div>If you have an account with us, please enter your password below to login</div>
+			<input placeholder="password" size="30" name="password" type="password"><button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
+		</div>
 	</div>
-
-	<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
-	<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
-</div>
 
 </section>
 
@@ -132,29 +133,30 @@ item list and summary are separate just to give more control over location.
 <!--
 billing address panel spec
 This template is also used in the myAccount page, which is why a default using _ is present.
+This template is used both in the billing address panel AND in the address editor (if logged in). in the address editor, the data is formatted as bill/address1
 -->
 
 <section id="chkoutAddressBillTemplate">
 
-	<div><input data-tlc="bind $var '.bill.firstname'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="bill/firstname" required value="" type="text"></div>
-	<div><input data-tlc="bind $var '.bill.lastname'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="bill/lastname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.firstname'; if(is $var --blank;){{bind $var '.bill/firstname';}}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="bill/firstname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.lastname'; if(is $var --blank;){{bind $var '.bill/lastname';}}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="bill/lastname" required value="" type="text"></div>
 
-	<div class="bill_company"><input data-tlc="bind $var '.bill.company'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
+	<div class="bill_company"><input data-tlc="bind $var '.bill.company';  if(is $var --blank;){{bind $var '.bill/company';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<div><input data-tlc="bind $var '.bill.address1'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.address1';  if(is $var --blank;){{bind $var '.bill/address1';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
-	<div><input data-tlc="bind $var '.bill.address2'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address2" placeholder="address 2" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.address2'; if(is $var --blank;){{bind $var '.bill/address2';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/address2" placeholder="address 2" value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
-	<div><input data-tlc="bind $var '.bill.city'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.city'; if(is $var --blank;){{bind $var '.bill/city';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
-	<div><input data-tlc="bind $var '.bill.region'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.region'; if(is $var --blank;){{bind $var '.bill/region';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
 	<!-- postal not required for international. don't add it. -->
-	<div><input data-tlc="bind $var '.bill.postal'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.bill.postal'; if(is $var --blank;){{bind $var '.bill/postal';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div class="billCountry" data-app-role="billCountry"><select data-tlc="bind $var '.'; cco#countriesasoptions  --shiptype='bill' --legacy;" data-legacy-useparentdata="true" name="bill/countrycode" placeholder="country" required="required" data-app-change="order_create|execCountryUpdate"></select></div>
 
-	<div><input data-tlc="bind $var '.bill.phone'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/phone" placeholder="phone number" required value="" type="tel"> <span class="hint zhint">in case of billing/delivery problems</span></div>
+	<div><input data-tlc="bind $var '.bill.phone';  if(is $var --blank;){{bind $var '.bill/phone';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/phone" placeholder="phone number" required value="" type="tel"> <span class="hint zhint">in case of billing/delivery problems</span></div>
 
 </section>
 
@@ -165,25 +167,26 @@ This template is also used in the myAccount page, which is why a default using _
 <!--
 shipping address panel.
 don't add required to any inputs because if bill to ship is checked, NONE of these fields are required/populated.
+This template is used both in the shipping panel AND in the address editor (if logged in). in the address editor, the data is formatted as ship/address1
 -->
 
 <section id="chkoutAddressShipTemplate">
 
-	<div><input data-tlc="bind $var '.ship.firstname'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="ship/firstname" required value="" type="text"></div>
-	<div><input data-tlc="bind $var '.ship.lastname'; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="ship/lastname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.firstname';  if(is $var --blank;){{bind $var '.ship/firstname';}}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="first name" name="ship/firstname" required value="" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.lastname'; if(is $var --blank;){{bind $var '.ship/lastname';}}; if(is $var --notblank;) {{apply --select=$var;}}; " placeholder="last name" name="ship/lastname" required value="" type="text"></div>
 
-	<div class="bill_company"><input data-tlc="bind $var '.ship.company'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
+	<div class="bill_company"><input data-tlc="bind $var '.ship.company';  if(is $var --blank;){{bind $var '.ship/company';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/company" placeholder="company" value="" type="text"></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<div><input data-tlc="bind $var '.ship.address1'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.address1'; if(is $var --blank;){{bind $var '.ship/address1';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address1" placeholder="address" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
-	<div><input data-tlc="bind $var '.ship.address2'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address2" placeholder="address 2" value="" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.address2'; if(is $var --blank;){{bind $var '.ship/address2';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/address2" placeholder="address 2" value="" type="text"></div>
 
-	<div><input data-tlc="bind $var '.ship.city'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.city'; if(is $var --blank;){{bind $var '.ship/city';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/city" placeholder="city" required value="" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 	
-	<div><input data-tlc="bind $var '.ship.region'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.region'; if(is $var --blank;){{bind $var '.ship/region';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/region" placeholder="state/region" required size="5" value="" maxlength="20" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	
-	<div><input data-tlc="bind $var '.ship.postal'; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
+	<div><input data-tlc="bind $var '.ship.postal';  if(is $var --blank;){{bind $var '.ship/postal';}}; if(is $var --notblank;) {{apply --select=$var;}}; " name="ship/postal" placeholder="zip/postal code" required size="14" value="" maxlength="10" data-app-blur="order_create|execAddressUpdate" type="text"></div>
 
 	<div class="shipCountry" data-app-role="shipCountry"><select data-tlc="bind $var '.'; cco#countriesasoptions  --shiptype='ship' --legacy;" data-legacy-useparentdata="true" name="ship/countrycode" placeholder="country" data-app-change="order_create|execCountryUpdate"></select></div>
 
@@ -360,7 +363,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-tlc="bind $var '.bill/postal'; if(is $var --blank;) {{bind $var '.ship/postal'; }}; if (is $var --notblank;) {{apply --append;}};"></div>
 	<div class="clearfix">
 		<button class="floatRight applyButton" data-app-click="order_create|execBuyerAddressSelect" data-icon="false" data-icon-primary="ui-icon-check">Use This Address</button>
-		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|showBuyerAddressUpdate" data-icon="false" data-icon-primary="ui-icon-pencil">Edit This Address</button>
+		<button class="floatRight marginRight applyButton" data-app-role="addressEditButton" data-app-click="order_create|showBuyerAddressUpdate" data-icon="false" data-icon-primary="ui-icon-pencil">Edit</button>
 	</div>
 </address>
 
