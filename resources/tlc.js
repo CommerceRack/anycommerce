@@ -543,6 +543,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(p1 == p2){ r = true;} break;
 			case "ne":
 				if(p1 != p2){ r = true;} break;
+			case "inteq":
+				if(Number(p1) === Number(p2)){ r = true;} break;
+			case "intne":
+				if(Number(p1) != Number(p2)){ r = true;} break;
 			case "gt":
 				if(Number(p1) > Number(p2)){r = true;} break;
 			case "gte":
@@ -598,29 +602,37 @@ This one block should get called for both img and imageurl but obviously, imageu
 //passing the command into this will verify that the format exists (whether it be core or not)
 
 	this.format_currency = function(argObj,globals)	{
+		dump(" BEGIN format_currency");
 		var
 			decimalPlace = 2,
-			a = globals.binds[argObj.bind], 
-			b = a.toFixed(globals.binds[argObj.bind]),  //get 12345678.90
-			r;
-//			_app.u.dump(" -> b = "+b);
-		a = parseInt(a); // get 12345678
-		b = (b-a).toPrecision(decimalPlace); //get 0.90
-		b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
-		a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
-//			_app.u.dump(" -> a = "+a);
-		//if IE (our number ends in .00)
-		if(a.indexOf('.00') > 0)	{
-			a=a.substr(0, a.length-3); //delete the .00
-//				_app.u.dump(" -> trimmed. a. a now = "+a);
-			}
-		r = a+b.substr(1);//remove the 0 from b, then return a + b = 12,345,678.90
+			a = argObj.bind ? globals.binds[argObj.bind] : globals.binds[globals.focusBind];
 
-//if the character before the decimal is just a zero, remove it.
-		if(r.split('.')[0] == 0){
-			r = '.'+r.split('.')[1]
+		if(!isNaN(a))	{
+			a = Number(a);
+			var 
+				b = a.toFixed(decimalPlace),  //get 12345678.90
+				r;
+			a = parseInt(a); // get 12345678
+			b = (b-a).toPrecision(decimalPlace); //get 0.90
+			b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
+			a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
+			//if IE (our number ends in .00)
+			if(a.indexOf('.00') > 0)	{
+				a=a.substr(0, a.length-3); //delete the .00
+	//				_app.u.dump(" -> trimmed. a. a now = "+a);
+				}
+			r = a+b.substr(1);//remove the 0 from b, then return a + b = 12,345,678.90
+	
+	//if the character before the decimal is just a zero, remove it.
+			if(r.split('.')[0] == 0){
+				r = '.'+r.split('.')[1]
+				}
+			r = '$'+r;
 			}
-		return "$"+r;
+		else	{
+			r = a;
+			}
+		return r;
 		} //currency
 
 	this.format_prepend = function(argObj,globals,arg)	{
@@ -910,7 +922,9 @@ returning a 'false' here will exit the statement loop.
 //						dump(" -> cmd.args[i].key: "+cmd.args[i].key); dump(cmd.args[i]);
 						globals.binds[argObj.bind] = this['format_'+cmd.args[i].key](argObj,globals,cmd.args[i]);
 						}
-					catch(e)	{}
+					catch(e)	{
+						dump(e);
+						}
 					}
 				}
 			}
