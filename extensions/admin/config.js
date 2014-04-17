@@ -111,26 +111,55 @@ var admin_config = function(_app) {
 				_app.u.addEventDelegation($target);
 				},
 
-			showNotifications : function($target)	{
-				$target.intervaledEmpty();
-				_app.u.addEventDelegation($target);
-				$target.anycontent({
-					'templateID' : 'notificationPageTemplate'
-					}).anyform({'trackEdits':true});
-				_app.u.handleButtons($target);
-				_app.model.addDispatchToQ({
-					'_cmd':'adminConfigDetail',
-					'notifications' : true,
-					'_tag':	{
-						'datapointer' : 'adminConfigDetail|notifications',
-						'callback':'anycontent',
-						'translateOnly' : true,
-						'jqObj' : $target
-						}
-					},'mutable');
-				_app.model.dispatchThis('mutable');
 
-				},
+			//shows the lists of all blast messages and the means to edit each one individually.
+			showNotifications : function($target,params)	{
+				$target.showLoading({"message":"Fetching notifications"});
+				$target.tlc({'templateid':'notificationPageTemplate','verb':'template'});
+				_app.u.addEventDelegation($target);
+				_app.u.handleButtons($target);
+				$(".slimLeftNav .accordion",$target).accordion({
+					heightStyle: "content"
+					});
+
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','notifications':1,'_tag':{'datapointer':'adminConfigDetail|'+_app.vars.partition+'|notifications',callback : function(rd){
+
+					$target.hideLoading();
+					if(_app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd});
+						}
+					else	{
+
+						var notes = _app.data[rd.datapointer]['@NOTIFICATIONS'];
+						
+						for(var i = 0, L = notes.length; i < L; i += 1)	{
+							var e = (notes[i].event ? notes[i].event.split('.')[0] : '');
+							if(e && notes[i])	{
+								$("[data-app-role='notifications_"+e+"']",$target).append("<li data-app-click='admin_config|notificationUpdateShow' class='lookLikeLink' data-event="+notes[i]['event']+"><b>"+notes[i]['event'] +" <\/li>");
+								}
+							else	{
+								//either no verb set or @VERBS was empty.
+								}
+							}
+						//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
+						// the accordion does get initiated here because the left column looked out of place for too long.
+						$(".slimLeftNav .accordion",$target).accordion('refresh');
+						//handle loading the content. 
+						if(params.msgid)	{
+							$("[data-msgid='"+_app.u.jqSelector('',params.msgid)+"']",$target).trigger('click').closest('.ui-accordion-content').prev('.ui-accordion-header').trigger('click');
+							}
+						else if(params.setting)	{
+							$("[data-setting='"+_app.u.jqSelector('',params.setting)+"']",$target).trigger('click');
+							}
+						else	{
+							$("[data-setting='general']",$target).trigger('click');
+							}
+						}
+
+					}}},'mutable');
+
+				_app.model.dispatchThis("mutable");
+				}, //blastMessagesList
 
 			showBillingHistory : function($target)	{
 				$target.empty();
@@ -1708,6 +1737,26 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					}
 				else	{} //validate handles error display.
+				return false;
+				},
+			
+			notificationUpdateShow : function($ele,p)	{
+				p.preventDefault();
+				var $target = $ele.closest("[data-app-role='notificationsContainer']").find("[data-app-role='slimLeftContentContainer']");
+				
+				if($ele.data('event') && _app.u.thisNestedExists("data.adminConfigDetail|"+_app.vars.partition+"|notifications.@NOTIFICATIONS",_app))	{
+					var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|'+_app.vars.partition+'|notifications']['@NOTIFICATIONS'],'event',$ele.data('event'));
+					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
+					_app.u.handleButtons($target);
+					$('form',$target).anyform();
+					}
+				else if(!$ele.data('event'))	{
+					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, data-event not set on trigger element.","gMessage":true});
+					}
+				else	{
+					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, adminConfigDetail|"+_app.vars.partition+"|notifications is not in memory.","gMessage":true});
+					}
+				
 				return false;
 				}
 

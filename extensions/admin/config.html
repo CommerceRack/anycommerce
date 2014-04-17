@@ -2961,54 +2961,65 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 /////////////////////////   setup > notifications
 
 
-New notifications interface:
 
-Accordion on left of 'groups' that are currently on the right.
-
-Each notification needs to be able to map to a blast.
 
 
 -->
 
 
-<div id='notificationPageTemplate'>
-<!--
+<div id='notificationPageTemplate' data-app-role='notificationsContainer'>
+
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 		<div class='accordion marginBottom'>
-			<h2>Settings</h2>
+
+			<h2>App</h2>
 			<div>
-				<ul class='noPadOrMargin listStyleNone'>
-					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
-					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
-					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
-					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
-					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
-				</ul>
-			</div>
-		
-			<h2>Order</h2>
-			<div>
-				<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_APP" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 	
-			<h2>Customer</h2>
+			<h2>Market</h2>
 			<div>
-				<ul data-app-role="blastmessages_ACCOUNT" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_MARKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 	
 			<h2>Product</h2>
 			<div>
-				<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 	
-			<h2>Ticket</h2>
+			<h2>Order</h2>
 			<div>
-				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_ORDER" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 	
-			<h2>Printables</h2>
+			<h2>Customer</h2>
 			<div>
-				<ul data-app-role="blastmessages_PRINTABLE" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_CUSTOMER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Supplier</h2>
+			<div>
+				<ul data-app-role="notifications_SUPPLIER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Inventory</h2>
+			<div>
+				<ul data-app-role="notifications_INVENTORY" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>API</h2>
+			<div>
+				<ul data-app-role="notifications_API" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Error</h2>
+			<div>
+				<ul data-app-role="notifications_ERROR" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Alert</h2>
+			<div>
+				<ul data-app-role="notifications_ALERT" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 
 		</div>
@@ -3021,9 +3032,12 @@ Each notification needs to be able to map to a blast.
 		
 		</div>
 	</section>
--->
+
+</div>
 
 
+
+<div id='notificationUpdateTemplate'>
 
 <form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
 	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
@@ -3049,7 +3063,7 @@ Each notification needs to be able to map to a blast.
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var:notifications(@NOTIFICATIONS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
+		<tbody data-bind="var:notifications(@VERBS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
 		
 		</tbody>
 		</table>
@@ -3058,7 +3072,14 @@ Each notification needs to be able to map to a blast.
 		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
 
 <!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
-	
+
+
+<!--
+Put these into fieldsets, all hidden.
+Show only the fieldset that matches the high level event type (customer, product,etc).
+-->
+
+
 			<b>Enquiries</b><br>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY">Enquiry <span class='toolTip' title="Triggered by enquiry based events.">?</span></label>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY.ORDER">Order Enquiry <span class='toolTip' title="Triggered through website 'contact us' with a confirmed order id.">?</span></label>
@@ -3133,6 +3154,10 @@ Each notification needs to be able to map to a blast.
 
 
 </div>
+
+
+
+
 
 
 <table>

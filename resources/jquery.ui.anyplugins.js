@@ -576,9 +576,7 @@ pass in an event name and a function and it will be added as an eventAction.
 				else	{
 //					$r = $("<p \/>").addClass('anyMessage').text('An unknown error has occured');
 					} //unknown data format
-				
-				dump(" ------------> GOT HERE");
-				
+		
 //A message could contain a _msg for success AND @MSGS. always display what is in @MSGS.
 				if(!$.isEmptyObject(msg['@MSGS']))	{
 					var L = msg['@MSGS'].length;

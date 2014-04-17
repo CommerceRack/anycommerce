@@ -590,7 +590,6 @@ _app.u.throwMessage(responseData); is the default error handler.
 // use either delegated events OR app events, not both.
 //avoid using this. ### FUTURE -> get rid of these. the delegation should occur in the function that calls this. more control that way and things like dialogs being appendedTo a parent can be handled more easily.
 					if(_rtag.addEventDelegation)	{
-						_app.u.dump(" ------> using delegated events in anycontent, not app events ");
 						_app.u.addEventDelegation($target);
 						}
 					else if(_rtag.skipAppEvents)	{}
