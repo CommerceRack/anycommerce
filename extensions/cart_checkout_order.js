@@ -727,10 +727,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
-							tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
+							tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option value=''>month<\/option>";
 							tmp += _app.u.getCCExpMonths(data['payment/MM']);
 							tmp += "<\/select>";
-							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
+							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''>year<\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
 							tmp += "<div><label for='payment/CV'>CVV/CID <input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
@@ -739,7 +739,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
 								}
 
-							tmp += " /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+							tmp += " /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,width:"+($(window).width < 400 ? '90%' : 400)+"});\"></span><\/div>";
 							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
@@ -1137,6 +1137,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					} //which3PCAreAvailable
 	
 			}, //util
+
 
 
 
