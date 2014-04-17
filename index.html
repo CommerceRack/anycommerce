@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.15c",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201402.17a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -144,7 +144,7 @@ $(document).ready(function(){
 		</nav>
 		
 		<div class='minicart'>
-			<a class='checkoutButton floatRight ui-widget-header'><!-- ui-widget-header is for white icons -->
+			<a class='checkoutButton floatRight ui-widget-header' href="#!checkout"><!-- ui-widget-header is for white icons -->
 				<span class='ui-icon ui-icon-check floatLeft'></span>
 				<span class='ui-icon ui-icon-triangle-1-e floatRight'></span>
 				<span class='checkoutText'>Proceed to Secure</span> Checkout
@@ -1341,13 +1341,18 @@ Cart template
 <section class="marginBottom clearfix">
 
 	<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-	<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogClose">Continue Shopping</button></span>
+	<span class="continueShoppingSpan cartButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogClose">Continue Shopping</button></span>
 
-	<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
-		<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
+	<span id="inStoreCheckoutButton" class='cartButton' title="proceed to secure checkout">
+		<a class='checkoutButton ui-widget-header cartCheckoutButton' href="#!checkout"><!-- ui-widget-header is for white icons -->
+			<span class='ui-icon ui-icon-locked floatLeft cartIconTuning'></span>
+			<span class='ui-icon ui-icon-triangle-1-e floatRight cartIconTuning'></span>
+			Secure Checkout
+		</a>
+		<a href="#!checkout" class='checkoutButtonText'>Fast and Safe In-Store Checkout</a>
 	</span>
 
-	<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
+	<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="cartButton"></span>
 </section>
 <!-- this will output a table with some shipping estimates -->
 <section data-tlc="store_zephyrapp#shiptimestable;"></section>
