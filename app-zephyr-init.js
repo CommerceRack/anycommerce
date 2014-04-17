@@ -228,30 +228,40 @@ myApp.u.appInitComplete = function()	{
 	dump(" -> HEY! just a head's up, the default pageTransition was just overwritten from app-zephyr-init.js");
 	myApp.ext.quickstart.pageTransition = function($o,$n,infoObj){
 
-//		if(infoObj.performJumpToTop)	{
-//			$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500,function(){
-//				dump(" ----> THE SCROLL ANIME IS DONE <-----");
-//				});
-//			} //new page content loading. scroll to top.			
-		$o.css({'position':'relative','z-index':'10'});
-//$n isn't populated yet, most likely. So instead of animating it, just show it. Then animate the old layer above it.
-		if($n instanceof jQuery)	{
-			$n.css({position:'absolute','z-index':9,'left':0,'top':0,'right':0}).show();
-			}
+
+		function transitionThePage()	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 //$o MAY be a jquery instance but have no length, so check both.
-		if($o instanceof jQuery && $o.length)	{
-			$('#mainContentArea').height($o.outerHeight()); //add a fixed height temporarily.
-			$o.animate({left:$(window).width(),top:$(window).height()},function(){
-				$('#mainContentArea').height('');
-				$o.hide();
+			if($o instanceof jQuery && $o.length)	{
+				$('#mainContentArea').height($o.outerHeight()); //add a fixed height temporarily so that page doesn't 'collapse'
+				$o.animate({left:$(window).width(),top:$(window).height()},function(){
+					$('#mainContentArea').height('');
+					$o.hide();
+					$n.css({'position':'relative','z-index':10}); //
+					});
+				}
+			else	{
+				//if o isn't set, n needs to be reset to relative positioning or the display will be wonky.
 				$n.css({'position':'relative','z-index':10}); //
+				}
+			
+			}
+
+		$o.css({'position':'relative','z-index':'10'}); //make sure the old page is 'above' the new.
+//$n isn't populated yet, most likely. So instead of animating it, just show it. Then animate the old layer above it.
+		if($n instanceof jQuery)	{
+			$n.addClass('pageTemplateBG').css({position:'absolute','z-index':9,'left':0,'top':0,'right':0}).show();
+			}
+//only 'jump to top' if we are partially down the page.  Using the header height as > means if a link in the header is clicked, we don't jump down to the content area. feels natural that way.
+		if(infoObj.performJumpToTop && $(window).scrollTop() > $('header','#appView').height())	{
+			$('html, body').animate({scrollTop : ($('header','#appView').length ? $('header','#appView').first().height() : 0)},500,function(){
+				transitionThePage();
 				});
-			}
+			} //new page content loading. scroll to top.			
 		else	{
-			//if o isn't set, n needs to be reset to relative positioning or the display will be wonky.
-			$n.css({'position':'relative','z-index':10}); //
+			transitionThePage();
 			}
+
 		}
 	
 	
