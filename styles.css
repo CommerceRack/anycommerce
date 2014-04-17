@@ -154,8 +154,9 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 #tier1categories li a	{text-decoration:none;}
 
 
-.checkoutButton	{
+.checkoutButton, .ui-widget-content .checkoutButton	{
 	font-weight:400; font-size:.9em; color:#fff;
+	text-decoration:none;
 	padding:.1em .3em;
 	display:block;
 	-webkit-border-radius: .4em;
@@ -192,6 +193,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 #contentContainer	{padding:.3em; background:#fff;}
 .pageContentSidebar	{display:none;}
 #mainContentArea	{position:relative;} /* important for some of the page transition effects */
+.pageTemplateBG		{background:#fff;} /* added by page transition. puts a solid color behind the content to help aesthetic of animation (page won't be see-thru) */
 
 /* .reversedHeader	{padding:.3em .5em; margin:0 0 .5em 0; line-height:26px;}  display block on this element will cause conflicts w/ displayNone. test if changed */
 .reversedHeader	{margin:0 0 .4em 0; border-bottom:1px solid #efefef; color:#666666; font-size:1em; font-weight:900;}
@@ -242,6 +244,16 @@ hr.subtle	{margin:.1em 0;
 	background-image: -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
 	background-image: -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.5), rgba(0,0,0,0)); 
 }
+
+
+
+
+
+/* cart */
+.cartIconTuning	{margin:4px .1em 0 .1em;}
+.cartButton	{float:left; margin:0 1em 1em 0; display:block; float:left;}
+.checkoutButtonText	{display:block; padding-top:.1em; font-size:.7em; text-align:center; text-decoration:none; color:#666666;}
+#inStoreCheckoutButton	{width:145px;} /* width matches the paypal button */
 
 /***** Homepage CSS Start *****/
 /* pager */
