@@ -41,7 +41,7 @@ var store_search = function(_app) {
 /*
 P is the params object. something like: 
 var P = {}
-P.mode = 'elastic-native';
+P.mode = 'elastic-search';
 P.size = 250;
 P.filter =  { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } }
 or instead of P.filter, you may have
@@ -474,7 +474,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				es.type = 'product';
 				es.mode = 'elastic-search';
 				es.size = 250;
-				
+				es.sort = [{'prod_name.raw':'asc'}] //here for testing. prod_name is tokenized, so the .raw field must be used for sorting.
 				return es;
 			},
 			
@@ -494,7 +494,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				return query;
 				},
 
-//not used by quickstart anymore. Still in use by analyzer and admin product editor.
+//This is used by quickstart for simple tag and keyword searches as well as by analyzer and admin interface (product editor and probably finder).
 			handleElasticSimpleQuery : function(keywords,_tag)	{
 				var qObj = this.buildElasticSimpleQuery({'query':keywords});
 				_tag = _tag || {};

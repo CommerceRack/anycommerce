@@ -598,8 +598,29 @@ This one block should get called for both img and imageurl but obviously, imageu
 //passing the command into this will verify that the format exists (whether it be core or not)
 
 	this.format_currency = function(argObj,globals)	{
-		var r = "$"+globals.binds[argObj.bind]; //+" ("+arg.value.value+")";
-		return r;
+		var
+			decimalPlace = 2,
+			a = globals.binds[argObj.bind], 
+			b = a.toFixed(globals.binds[argObj.bind]),  //get 12345678.90
+			r;
+//			_app.u.dump(" -> b = "+b);
+		a = parseInt(a); // get 12345678
+		b = (b-a).toPrecision(decimalPlace); //get 0.90
+		b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
+		a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
+//			_app.u.dump(" -> a = "+a);
+		//if IE (our number ends in .00)
+		if(a.indexOf('.00') > 0)	{
+			a=a.substr(0, a.length-3); //delete the .00
+//				_app.u.dump(" -> trimmed. a. a now = "+a);
+			}
+		r = a+b.substr(1);//remove the 0 from b, then return a + b = 12,345,678.90
+
+//if the character before the decimal is just a zero, remove it.
+		if(r.split('.')[0] == 0){
+			r = '.'+r.split('.')[1]
+			}
+		return "$"+r;
 		} //currency
 
 	this.format_prepend = function(argObj,globals,arg)	{

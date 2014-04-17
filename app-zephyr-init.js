@@ -225,6 +225,7 @@ myApp.u.carouselIsReady = function()	{
 myApp.u.appInitComplete = function()	{
 	myApp.u.dump("Executing myAppIsLoaded code...");
 	
+	dump(" -> HEY! just a head's up, the default pageTransition was just overwritten from app-zephyr-init.js");
 	myApp.ext.quickstart.pageTransition = function($o,$n,infoObj){
 
 //		if(infoObj.performJumpToTop)	{

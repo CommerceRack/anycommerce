@@ -1046,7 +1046,7 @@ note - the order object is available at _app.data['order|'+P.orderID]
 
 					_app.ext.order_create.vars[cartID] = _app.ext.order_create.vars[cartID] || {'payment':{}};
 
-					_app.ext.order_create.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
+					_app.ext.order_create.u.handlePaypalInit($chkContainer, cartID); //handles paypal code, including paymentQ update. should be before any callbacks.
 					_app.ext.cco.calls.appPaymentMethods.init({_cartid:cartID},{},'immutable');
 					_app.ext.cco.calls.appCheckoutDestinations.init(cartID,{},'immutable');
 					
@@ -1986,7 +1986,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 
 
 
-			handlePaypalInit : function($context)	{
+			handlePaypalInit : function($context, cartID)	{
 //				_app.u.dump("BEGIN order_create.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
@@ -2006,7 +2006,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						_app.ext.order_create.vars['payment-pt'] = token;
 						_app.ext.order_create.vars['payment-pi'] = payerid;
 						
-						_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':$context.closest("[data-app-role='checkout']").data('cartid')},{"extension":"order_create","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
+						_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':cartID},{"extension":"order_create","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.

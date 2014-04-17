@@ -497,7 +497,7 @@ pass in an event name and a function and it will be added as an eventAction.
 			var o = this.options, //shortcut
 			msg = o.message || o, //shortcut to the message itself. if message blank, options are used, which may contain the response data errors (_msgs, err etc)
 			msgDetails = "", //used for iseerr (server side error) and ise/no response
-			$r = $(), //what is returned.
+			$r = $("<div \/>"), //what is returned. some sort of defualt container needs to be set. may be overwritten. necessary in cases where only @MSGS is defined.
 			amcss = {'margin':'0','paddingBottom':'5px'} //anyMessageCSS - what's applied to P (or each P in the case of _msgs)
 
 //			dump(' -> msg: '); dump(msg);
@@ -576,17 +576,17 @@ pass in an event name and a function and it will be added as an eventAction.
 				else	{
 //					$r = $("<p \/>").addClass('anyMessage').text('An unknown error has occured');
 					} //unknown data format
-				
-				
-				
+		
 //A message could contain a _msg for success AND @MSGS. always display what is in @MSGS.
-				if(msg['@MSGS'])	{
+				if(!$.isEmptyObject(msg['@MSGS']))	{
 					var L = msg['@MSGS'].length;
-//					dump("Got to @MSGS, length: "+L);
+					dump("Got to @MSGS, length: "+L);
 					$msgs = $("<ul \/>"); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
 						$msgs.append("<li>"+msg['@MSGS'][i]['_']+": "+msg['@MSGS'][i]['+']+"<\/li>");
 						}
+					dump(" -> $msgs.children().length: "+$msgs.children().length);
+					$r.append($msgs);
 					$msgs.appendTo($r);
 					}
 				
