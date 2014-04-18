@@ -213,9 +213,12 @@ var store_swc = function(_app) {
 					}
 				},
 			saveUserTeams : function(){
-				$('#appView .filteredSearchPage').each(function(){
-					$(this).intervaledEmpty().remove();
-					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
+				$('#appView .myTeamsFilter').each(function(){
+					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
+					});
+				//$('#appView .filteredSearchPage').each(function(){
+				//	$(this).intervaledEmpty().remove();
+				//	}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
 			renderMyTeams : function(){
@@ -388,10 +391,54 @@ var store_swc = function(_app) {
 				}
 			}, //e [app Events]
 		filterData : {
+			'100_years_of_wrigley_field' : {
+				title : "100 Years of Wrigley Field",
+				baseFilter : {
+					"term" : {"app_promo":"wrigley100"}
+					}
+				},
+			'new_arrivals' :{
+				title : "New Arrivals",
+				baseFilter  : {
+					"term" : {"tags":"IS_NEWARRIVAL"}
+					}
+				},
+			'shirts' : {
+				title : "Shirts",
+				baseFilter : {
+					"and" : [
+						{"term":{"app_department":"t_shirt"}}
+						]
+					},
+				options : {
+					"app_jerseys":[
+						{"p":"Alternate","v":"alternate","checked":"checked"},
+						{"p":"Authentic","v":"authentic","checked":"checked"}
+						],
+					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
+					}
+				},
 			'jerseys' : {
 				title : "Jerseys",
 				baseFilter : {
-					"term":{"app_department":"jersey"}
+					"and" : [
+						{"term":{"app_department":"jersey"}}
+						]
+					},
+				options : {
+					"app_jerseys":[
+						{"p":"Alternate","v":"alternate","checked":"checked"},
+						{"p":"Authentic","v":"authentic","checked":"checked"}
+						],
+					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
+					}
+				},
+			'sweatshirts' : {
+				title : "Sweatshirts and Jackets",
+				baseFilter : {
+					"and" : [
+						{"term":{"app_department":"sweatshirt_jacket"}}
+						]
 					},
 				options : {
 					"app_jerseys":[
@@ -402,8 +449,15 @@ var store_swc = function(_app) {
 					}
 				},
 			'hats' : {
+				title : "Hats",
 				baseFilter : {
 					"term" : {"app_department":"hat"}
+					}
+				},
+			'accessories' : {
+				title : "Accessories",
+				baseFilter : {
+					"term" : {"app_department":"accessories"}
 					}
 				}
 			},

@@ -150,13 +150,13 @@ $(document).ready(function(){
 	<div class="clear"></div>
 	<div id="nav" class="highlightBG_1 dosis displayNone_320">
 		<div class="fixedContainer displayTable fillWidth">
-			<a href="#!category/." class="navLink displayTableCell alignCenter">CHICAGO TEAMS</a>
-			<a href="#!category/.new-arrivals/" class="navLink displayTableCell alignCenter">NEW ARRIVALS</a>
-			<a href="#!category/.chicago-cubs-shirts/" class="navLink displayTableCell alignCenter">SHIRTS</a>
+			<a href="#!filter/100_years_of_wrigley_field/" class="navLink displayTableCell alignCenter">WRIGLEY 100 YEARS</a>
+			<a href="#!filter/new_arrivals/" class="navLink displayTableCell alignCenter">NEW ARRIVALS</a>
+			<a href="#!filter/shirts/" class="navLink displayTableCell alignCenter">SHIRTS</a>
 			<a href="#!filter/jerseys/" class="navLink displayTableCell alignCenter">JERSEYS</a>
-			<a href="#!category/.chicago-cubs-sweatshirts" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
+			<a href="#!filter/sweatshirts/" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
 			<a href="#!filter/hats/" class="navLink displayTableCell alignCenter">HATS</a>
-			<a href="#!category/.chicago-cubs-accessories" class="navLink displayTableCell alignCenter">ACCESSORIES</a>
+			<a href="#!filter/accessories/" class="navLink displayTableCell alignCenter">ACCESSORIES</a>
 		</div>
 	</div>
 </div>
@@ -381,8 +381,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<img src="images/homepage/wrigley_field.jpg"/>
 	</a>
 	
+	<!--
 	<a class="blockLink" href="#!category/.chicago-cubs-jerseys.custom/">
 		<img src="images/homepage/personalized.jpg"/>
+	</a>
+	-->
+	
+	<a class="blockLink" href="#!filter/hats/">
+		<img src="images/homepage/hats.jpg"/>
 	</a>
 	
 	<a class="blockLink" href="#!company/shipping/">
@@ -401,9 +407,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<img src="images/homepage/follow_us.jpg"/>
 	</a>
 	
-	<a class="blockLink" href="#!filter/hats/">
-		<img src="images/homepage/hats.jpg"/>
-	</a>
 	
 	<!--
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
@@ -586,11 +589,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
 		<div class="filterGroup" data-filter-type="checkboxList">
-			<legend>My Teams <a href="#!customer/myteams/">[edit]</a>:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl' --filterType='';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='';"></div>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='';"></div>
+			<legend>My Teams [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">edit</span>]:</legend>
+			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='';"></div>
+			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl' --filterType='';"></div>
+			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='';"></div>
+			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='';"></div>
 		</div>
 		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Brand:</legend>
