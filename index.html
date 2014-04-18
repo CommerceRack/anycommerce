@@ -595,10 +595,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='';"></div>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='';"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
-			<legend>Brand:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_brands'; store_swc#filtercheckboxlist --index='app_brands';"></div>
-		</div>
 		<div data-tlc="bind $var '.options.app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Demographic:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_prod_demographic'; store_swc#filtercheckboxlist --index='app_prod_demographic';"></div>
@@ -622,6 +618,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<div data-tlc="bind $var '.options.app_souvenirs'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Souvenir Type:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_souvenirs'; store_swc#filtercheckboxlist --index='app_souvenirs';"></div>
+		</div>
+		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Brand:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_brands'; store_swc#filtercheckboxlist --index='app_brands';"></div>
 		</div>
 		<input type="submit" value="Search!"></input>
 	</form>
