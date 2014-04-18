@@ -159,6 +159,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .filteredSearchPage form {color:white;}
 .filterList { width: 16%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 80%;}
+.filterCheckboxList {max-height: 120px; overflow:auto;}
 .filterGroup {margin-bottom: 10px;}
 
 .sportWidget button {width: 20px; font-weight:bold;}

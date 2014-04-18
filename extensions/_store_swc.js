@@ -80,6 +80,20 @@ var store_swc = function(_app) {
 						routeObj.params.templateID = "filteredSearchTemplate";
 						dump(routeObj);
 						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
+						if(routeObj.params.dataset.options.explicit){} //Options are passed with explicit values, leave them alone.
+						else {
+							var optStrs = routeObj.params.dataset.options;
+							routeObj.params.dataset.options = {};
+							for(var i in optStrs){
+								var o = optStrs[i];
+								if(_app.ext.store_swc.options[o]){
+									routeObj.params.dataset.options[o] = _app.ext.store_swc.options[o];
+									}
+								else {
+									dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
+									}
+								}
+							}
 						routeObj.params.dataset.userTeams = _app.ext.store_swc.vars.userTeams;
 						showContent('static',routeObj.params)
 						}
@@ -300,7 +314,14 @@ var store_swc = function(_app) {
 					countES.mode = 'elastic-count';
 					delete countES.size;
 					_app.ext.store_search.calls.appPublicSearch.init(countES, {'callback':function(rd){
-						dump(rd);
+						//dump(rd);
+					//	if(_app.data[rd.datapointer].count){
+					//		rd.$input.closest('[data-filter=inputContainer]').show();
+					//		}
+					//	else {
+					//		rd.$input.closest('[data-filter=inputContainer]').hide();
+					//		rd.$input.prop('checked',false);
+					//		}
 						$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
 						_app.model.destroy(rd.datapointer);
 						}, 'datapointer':'appFilteredCount|'+i, "$input":$input});
@@ -396,13 +417,31 @@ var store_swc = function(_app) {
 				title : "100 Years of Wrigley Field",
 				baseFilter : {
 					"term" : {"app_promo":"wrigley100"}
-					}
+					},
+				options : [
+					"app_department",
+					"app_sub_department",
+					"app_tshirts",
+					"app_souvenirs",
+					"app_jerseys",
+					"app_brands"
+					]
 				},
 			'new_arrivals' :{
 				title : "New Arrivals",
 				baseFilter  : {
 					"term" : {"tags":"IS_NEWARRIVAL"}
-					}
+					},
+				options : [
+					"app_promo",
+					"app_department",
+					"app_sub_department",
+					"app_prod_demographic",
+					"app_tshirts",
+					"app_souvenirs",
+					"app_jerseys",
+					"app_brands"
+					]
 				},
 			'shirts' : {
 				title : "Shirts",
@@ -411,13 +450,11 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"t_shirt"}}
 						]
 					},
-				options : {
-					"app_jerseys":[
-						{"p":"Alternate","v":"alternate","checked":"checked"},
-						{"p":"Authentic","v":"authentic","checked":"checked"}
-						],
-					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
-					}
+				options : [
+					"app_prod_demographic",
+					"app_tshirts",
+					"app_brands"
+					]
 				},
 			'jerseys' : {
 				title : "Jerseys",
@@ -426,13 +463,11 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"jersey"}}
 						]
 					},
-				options : {
-					"app_jerseys":[
-						{"p":"Alternate","v":"alternate","checked":"checked"},
-						{"p":"Authentic","v":"authentic","checked":"checked"}
-						],
-					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
-					}
+				options : [
+					"app_prod_demographic",
+					"app_jerseys",
+					"app_brands"
+					]
 				},
 			'sweatshirts' : {
 				title : "Sweatshirts and Jackets",
@@ -441,25 +476,31 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"sweatshirt_jacket"}}
 						]
 					},
-				options : {
-					"app_jerseys":[
-						{"p":"Alternate","v":"alternate","checked":"checked"},
-						{"p":"Authentic","v":"authentic","checked":"checked"}
-						],
-					"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}]
-					}
+				options : [
+					"app_prod_demographic",
+					"app_brands"
+					]
 				},
 			'hats' : {
 				title : "Hats",
 				baseFilter : {
 					"term" : {"app_department":"hat"}
-					}
+					},
+				options : [
+					"app_prod_demographic",
+					"app_sub_department",
+					"app_brands"
+					]
 				},
 			'accessories' : {
 				title : "Accessories",
 				baseFilter : {
 					"term" : {"app_department":"accessories"}
-					}
+					},
+				options : [
+					"app_souvenirs",
+					"app_brands"
+					]
 				}
 			},
 		validTeams : {
@@ -498,6 +539,19 @@ var store_swc = function(_app) {
 			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals"},{"p":"Atlanta Falcons","v":"atlanta_falcons"},{"p":"Baltimore Ravens","v":"baltimore_ravens"},{"p":"Buffalo Bills","v":"buffalo_bills"},{"p":"Carolina Panthers","v":"carolina_panthers"},{"p":"Chicago Bears","v":"chicago_bears"},{"p":"Cincinnati Bengals","v":"cincinnati_bengals"},{"p":"Cleveland Browns","v":"cleveland_browns"},{"p":"Dallas Cowboys","v":"dallas_cowboys"},{"p":"Denver Broncos","v":"denver_broncos"},{"p":"Detroit Lions","v":"detroit_lions"},{"p":"Green Bay Packers","v":"green_bay_packers"},{"p":"Houston Texans","v":"houston_texans"},{"p":"Indianapolis Colts","v":"indianapolis_colts"},{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars"},{"p":"Kansas City Chiefs","v":"kansas_city_chiefs"},{"p":"Miami Dolphins","v":"miami_dolphins"},{"p":"Minnesota Vikings","v":"minnesota_vikings"},{"p":"New England Patriots","v":"new_england_patriots"},{"p":"New York Giants","v":"new_york_giants"},{"p":"New Orleans Saints","v":"new_orleans_saints"},{"p":"New York Jets","v":"new_york_jets"},{"p":"Oakland Raiders","v":"oakland_raiders"},{"p":"Philadelphia Eagles","v":"philadelphia_eagles"},{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers"},{"p":"San Diego Chargers","v":"san_diego_chargers"},{"p":"San Francisco 49ers","v":"san_francisco_49ers"},{"p":"Seattle Seahawks","v":"seattle_seahawks"},{"p":"St. Louis Rams","v":"st_louis_rams"},{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers"},{"p":"Tennessee Titans","v":"tennessee_titans"},{"p":"Washington Redskins","v":"washington_redskins"}],
 			'app_nhl' : [{"p":"Chicago Blackhawks","v":"chicago_blackhawks"}],
 			},
+		
+		options : {
+			"app_promo" : [],
+			"app_brands" : [{"p":"47 Brand","v":"47_brand"},{"p":"5th & Ocean","v":"5th_ocean"},{"p":"Adidas","v":"adidas"},{"p":"American Needle","v":"american_needle"},{"p":"Aminco","v":"aminco"},{"p":"Antigua","v":"antigua"},{"p":"Baby Fanatic","v":"baby_fanatic"},{"p":"Bare Feet","v":"bare_feet"},{"p":"Belle View","v":"belle_view"},{"p":"Big League Promotions","v":"big_league_promotions"},{"p":"Concept One","v":"concept_one"},{"p":"Coopersburg Sports","v":"coopersburg_sports"},{"p":"Cooperstown Cookie","v":"cooperstown_cookie"},{"p":"Emblem Source","v":"emblem_source"},{"p":"Fan Mats","v":"fan_mats"},{"p":"Forever Collectibles","v":"forever_collectibles"},{"p":"Fremont Die","v":"fremont_die"},{"p":"G-III","v":"g_iii"},{"p":"Gold Sport Collectibles","v":"gold_sport_collectibles"},{"p":"Great American","v":"great_american"},{"p":"Holy Cow Canvas","v":"holy_cow_canvas"},{"p":"Hunter","v":"hunter"},{"p":"Imperial International","v":"imperial_international"},{"p":"Jarden","v":"jarden"},{"p":"Kolder","v":"kolder"},{"p":"Label Daddy","v":"label_daddy"},{"p":"Littlearth","v":"littlearth"},{"p":"LogoArt Watches","v":"logoart_watches"},{"p":"Majestic Athletic","v":"majestic_athletic"},{"p":"McArthur","v":"mcarthur"},{"p":"My Owners Box","v":"my_owners_box"},{"p":"New Era","v":"new_era"},{"p":"NFL Brand","v":"nfl_brand"},{"p":"Nike","v":"nike"},{"p":"Northwest","v":"northwest"},{"p":"Nostalgic Images","v":"nostalgic_images"},{"p":"Original Retro Brand","v":"original_retro_brand"},{"p":"Pangea Brands","v":"pangea_brands"},{"p":"Party Animal","v":"party_animal"},{"p":"Phiten","v":"phiten"},{"p":"Rawlings","v":"rawlings"},{"p":"Red Jacket","v":"red_jacket"},{"p":"Reebok","v":"reebok"},{"p":"Reyn Spooner","v":"reyn_spooner"},{"p":"Rico Tag","v":"rico_tag"},{"p":"S. Propaganda","v":"s_propaganda"},{"p":"Section 101","v":"section_101"},{"p":"Soft as a Grape","v":"soft_as_a_grape"},{"p":"Sports Coverage","v":"sports_coverage"},{"p":"Stitches","v":"stitches"},{"p":"Team Sports America","v":"team_sports_america"},{"p":"ThirtyFive55","v":"thirtyfive55"},{"p":"Touch by Alyssa Milano","v":"touch_by_alyssa_milano"},{"p":"True Fan","v":"true_fan"},{"p":"Wincraft","v":"wincraft"},{"p":"Winning Streak","v":"winning_streak"},{"p":"Wright & Ditson","v":"wright_ditson"}],
+			"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}],
+			"app_department" : [{"p":"Accessories","v":"accessories"},{"p":"Hat","v":"hat"},{"p":"Jersey","v":"jersey"},{"p":"Sale","v":"sale"},{"p":"Souvenir","v":"souvenir"},{"p":"Sweatshirt/Jacket","v":"sweatshirt_jacket"},{"p":"T-Shirt","v":"t_shirt"}],
+			//THIS IS CAP TYPE
+			"app_sub_department" : [{"p":"Adjustable","v":"adjustable"},{"p":"Fitted","v":"fitted"},{"p":"Flex Fit / Stretch","v":"flex_fit_stretch"},{"p":"Snapback","v":"snapback"},{"p":"Visors / Floppy","v":"visors_floppy"},{"p":"Winter","v":"winter"}], 
+			"app_tshirts" : [{"p":"Customized","v":"customized"},{"p":"Long Sleeve","v":"long_sleeve"},{"p":"Short Sleeve","v":"short_sleeve"}],
+			"app_jerseys" : [{"p":"Alternate","v":"alternate"},{"p":"Authentic","v":"authentic"},{"p":"Cooperstown","v":"cooperstown"},{"p":"Custom Personalized","v":"custom_personalized"},{"p":"Institutionalized","v":"institutionalized"},{"p":"Replica","v":"replica"}],
+			"app_souvenirs" : [{"p":"Auto","v":"auto"},{"p":"Books / Movies / Music","v":"books_movies_music"},{"p":"Die Hard Cub Fan","v":"die_hard_cub_fan"},{"p":"Display Cases","v":"display_cases"},{"p":"Games","v":"games"},{"p":"Holiday","v":"holiday"},{"p":"Home Decor","v":"home_decor"},{"p":"Lapel Pins","v":"lapel_pins"},{"p":"Pet Products","v":"pet_products"},{"p":"Pictures","v":"pictures"},{"p":"School / Office / Home","v":"school_office_home"},{"p":"Signs & Flags","v":"signs_flags"},{"p":"Under $20","v":"under_20"},{"p":"Watches, Jewelry & Keychains","v":"watches_jewelry_keychains"}],
+			},
+			
 		staticData : {
 			"fieldcam" : {
 				"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
