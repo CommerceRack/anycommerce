@@ -1161,7 +1161,7 @@ var admin_reports = function(_app) {
 				var $form = $select.closest('form');
 				$select.off('change.addTriggerKPIGraphTypeChange').on('change.addTriggerKPIGraphTypeChange',function()	{
 					$("[data-app-role='graphTypePreview']",$form).show();
-					$("[data-app-role='graphTypePreview'] img",$form).attr('src','images/kpi/'+$select.val()+'-300x104.png');
+					$("[data-app-role='graphTypePreview'] img",$form).attr('src',($('option:selected',$select).data('image')));
 					$("[data-app-role='graphTypePreview'] .graphType",$form).text($select.val().replace('.',' '));
 					
 /*
@@ -1273,7 +1273,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 						callback : function(rd)	{
 
 							_app.u.dump("BEGIN inline callback on adminKPIDBCollectionDetail _cmd for adding a new chart.");
-/*
+
 								if(_app.model.responseHasErrors(rd)){
 								$context.hideLoading();
 								$('.appMessaging').anymessage({'message':rd,'gMessage':true});
@@ -1310,14 +1310,15 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 										$('.appMessaging').anymessage({'message':rd,'gMessage':true});
 										}
 									else	{
-										$('.appMessaging').anymessage(_app.u.successMsgObject('Your chart has been added.'));
+										//added to section, not messaging, because the screen could be quite long and messaging could be out of view.
+										$btn.closest('section').anymessage(_app.u.successMsgObject('Your chart has been added.'));
 										}
 									}},'immutable');
 								_app.ext.admin_reports.calls.adminKPIDBCollectionDetail.init(collection,{},'immutable');//make sure collection is udpated in localstorage and memory
 								_app.model.dispatchThis('immutable');
 								
 								}
-						*/	}
+							}
 						},'immutable');
 					_app.model.dispatchThis('immutable');
 					}
