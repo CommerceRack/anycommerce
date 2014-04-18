@@ -51,26 +51,28 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 		appPublicProductSearch : {
 			init : function(P,tagObj,Q)	{
 //				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
-				if(P.filter){
-					var tmp = P.filter;
-					P.filter = {
-						"and" : _app.ext.store_search.vars.universalFilters
+				if(_app.ext.store_seach.vars.universalFilters.length){
+					if(obj.filter){
+						var tmp = obj.filter;
+						obj.filter = {
+							"and" : _app.ext.store_search.vars.universalFilters
+							}
+						obj.filter.and.push(tmp);
 						}
-					P.filter.and.push(tmp);
-					}
-				else if(P.query){
-					var tmp = P.query;
-					P.query = {
-						"filtered" : {
-							"query" : tmp,
-							"filter" : {
-								"and" : _app.ext.store_search.vars.universalFilters
+					else if(obj.query){
+						var tmp = obj.query;
+						obj.query = {
+							"filtered" : {
+								"query" : tmp,
+								"filter" : {
+									"and" : _app.ext.store_search.vars.universalFilters
+									}
 								}
 							}
 						}
-					}
-				else{
-					//This is not going to end well, but let's let Elastic tell you that.
+					else{
+						//This is not going to end well, but let's let Elastic tell you that.
+						}
 					}
 				this.dispatch(P,tagObj,Q)
 				return 1;
@@ -88,26 +90,28 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
-				if(obj.filter){
-					var tmp = obj.filter;
-					obj.filter = {
-						"and" : _app.ext.store_search.vars.universalFilters
+				if(_app.ext.store_seach.vars.universalFilters.length){
+					if(obj.filter){
+						var tmp = obj.filter;
+						obj.filter = {
+							"and" : _app.ext.store_search.vars.universalFilters
+							}
+						obj.filter.and.push(tmp);
 						}
-					obj.filter.and.push(tmp);
-					}
-				else if(obj.query){
-					var tmp = obj.query;
-					obj.query = {
-						"filtered" : {
-							"query" : tmp,
-							"filter" : {
-								"and" : _app.ext.store_search.vars.universalFilters
+					else if(obj.query){
+						var tmp = obj.query;
+						obj.query = {
+							"filtered" : {
+								"query" : tmp,
+								"filter" : {
+									"and" : _app.ext.store_search.vars.universalFilters
+									}
 								}
 							}
 						}
-					}
-				else{
-					//This is not going to end well, but let's let Elastic tell you that.
+					else{
+						//This is not going to end well, but let's let Elastic tell you that.
+						}
 					}
 				this.dispatch(obj,tagObj,Q)
 				return 1;
