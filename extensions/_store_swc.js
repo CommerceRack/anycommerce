@@ -109,6 +109,7 @@ var store_swc = function(_app) {
 				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
 					$context.empty().remove();
 					});
+				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
 				},
 			onError : function(){}
 			}
