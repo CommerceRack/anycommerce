@@ -499,7 +499,7 @@ need to be customized on a per-ria basis.
 			if($o.length)	{
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
-				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide();}, 400); //fade out old, fade in new.
+				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide();}, 600); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
