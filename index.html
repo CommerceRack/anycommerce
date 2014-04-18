@@ -46,8 +46,8 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="_swc_styles_640-959.css" media="(min-width:640px) and (max-width:959px)"/>
 <link rel="stylesheet" type="text/css" href="_swc_styles_480-639.css" media="(min-width:480px) and (max-width:639px)"/>
 <link rel="stylesheet" type="text/css" href="_swc_styles_479-.css" media="(max-width:479px)"/>
-<link rel="stylesheet" type="text/css" href="jqueryui-theme/jquery-ui-1.10.4.custom.min.css"/>
 <link rel="stylesheet" type="text/css" href="lightbox/css/lightbox.css"/>
+<link rel="stylesheet" type="text/css" href="jqueryui-theme/jquery-ui-1.10.4.custom.min.css"/>
 
 <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
 
@@ -96,12 +96,7 @@ $(document).ready(function(){
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-<table>
-<tr>
-	<td><!-- put logo here --></td>
-	<td>
-
-	<div id="loader">
+	<div>
 		<h3>One moment please.</h3>
 
 		<div class='alignCenter'>
@@ -109,18 +104,11 @@ $(document).ready(function(){
 		</div>
 		<div id='appPreViewProgressText'>0% Complete</div>
 	</div>
-	<div id="clickToLoad" class="displayNone pointer">
-		Click here to load your shopping experience!
-	</div>
-	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
 </div>
 
 
 
-<div id='appView' class='displayNone'>
+<div id='appView'>
 
 <div id="header">
 	<div id="headerContent" class="dosis">
@@ -139,7 +127,7 @@ $(document).ready(function(){
 			</div>
 			
 			<div id="mininav" class="floatRight redText displayNone_320">
-				<a href="#!customer/myteams/" class="textDecNone">My Teams</a> |
+				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone">My Teams</a> |
 				<a href="#!company/contact/" class="textDecNone">Contact</a> |
 				<a href="#!customer/myaccount/" class="textDecNone">My Account</a> |
 				<a href="#!company/contact/" class="textDecNone">Help</a> |
@@ -205,7 +193,7 @@ $(document).ready(function(){
 				</div>
 				<div class="displayTableRow">
 					<a href="#!company/privacy/"  class="displayTableCell alignCenter">Privacy</a>
-					<a href="#!customer/myaccount/"  class="displayTableCell alignCenter">Newsletter Signup</a>
+					<a href="#" data-app-click="store_swc|showMyTeamChooser" class="displayTableCell alignCenter">My Teams</a>
 				</div>
 			</div>
 		</div>
@@ -308,7 +296,50 @@ $(document).ready(function(){
 
 
 
-
+<div id="myTeamChooserTemplate" class="chooser">
+	<h2 class="highlightBG_1">My Team Chooser <span class="closeButton floatRight" data-app-click="store_swc|hideMyTeamChooser"></span></h2>
+	
+	<div class="contentContainer" class="positionRelative">
+		<div id="sportChooser" class="alignCenter">
+			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb" >MLB
+				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
+			</div>
+			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_nfl" >NFL
+				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
+			</div>
+			<div class="pointer">NBA
+				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
+			</div>
+			<div class="pointer">NHL
+				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
+			</div>
+		</div>
+		<div class="sportContainer" data-swc-sport="app_mlb">
+			<div>
+				<div class="backButton" data-app-click="store_swc|selectSport"></div>
+			</div>
+			<div class="myteams teamlist">
+				<h4>My MLB Teams</h4>
+				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+			</div>
+			<div class="moreteams teamlist">
+				<h4>Add More:</h4>
+				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+			</div>
+		</div>
+		<div class="sportContainer" data-swc-sport="app_nfl">
+			<div class="pointer" data-app-click="store_swc|selectSport">Back</div>
+			<div class="myteams">
+				<h4>My NFL Teams</h4>
+				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+			</div>
+			<div class="moreteams">
+				<h4>Add More:</h4>
+				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+			</div>
+		</div>
+	</div>
+</div>
 
 
 
@@ -1285,13 +1316,17 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <ul>
-	<li id="myteamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+	<li id="myteamTemplate" class="teamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+		<!--
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
+		-->
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var; apply --attrib='src';">
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|removeteam">-</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
-	<li id="validteamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+	<li id="validteamTemplate" class="teamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var; apply --attrib='src';">
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|addteam">+</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
@@ -2229,5 +2264,9 @@ The 'data-action' attribute is used to assign an onclick.
 <i>* These charts are for reference only. Fit may vary slightly.</i></font></center></div><p></p>
 
 </div>
+
+
+<div id="myTeamChooser" data-templateid="myTeamChooserTemplate" ></div>
+
 </body>
 </html>

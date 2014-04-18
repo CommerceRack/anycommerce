@@ -56,3 +56,5 @@
 .productListItem .prodListTagsContainer .is_discontinued,
 .productListItem .prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
 .productListItem .prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
+
+#myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:35px;}

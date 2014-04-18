@@ -343,7 +343,7 @@ document.write = function(v){
 					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");
 					tagObj.dataset = {};
 					//if no %page vars were requested, this datapointer won't be set and this would error.
-					if(_app.data["appPageGet|"+tagObj.navcat]['%page'])	{
+					if(_app.data["appPageGet|"+tagObj.navcat] && _app.data["appPageGet|"+tagObj.navcat]['%page'])	{
 						tagObj.dataset = {'%page' : _app.data['appPageGet|'+tagObj.navcat]['%page']};
 						}
 					//deep extend so any non-duplicates in %page are preserved.
@@ -494,13 +494,15 @@ need to be customized on a per-ria basis.
 
 
 		pageTransition : function($o,$n)	{
+			$n.removeClass('displayNone').show();
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 			if($o.length)	{
-				dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
-				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
+				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
+				$o.addClass('post'); 
+				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide();}, 400); //fade out old, fade in new.
 				}
 			else	{
-				$n.fadeIn(1000)
+				$n.addClass('active')
 				}
 			}, //pageTransition
 
@@ -1074,15 +1076,17 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				if($('#appPreView').is(':visible'))	{
 //					_app.ext.quickstart.pageTransition($('#appPreView'),$('#appView'));
 //appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
-					var $bg = $('#appPreViewBG');
-					if($bg.length)	{
-						$bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
-						}
+					// var $bg = $('#appPreViewBG');
+					// if($bg.length)	{
+						// $bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
+						// }
 
-					$('#appPreView').slideUp(1000,function(){
-						$new.show(); //have to show content area here because the slideDown will only make the parent visible
-						$('#appView').slideDown(3000);
-						});
+					// $('#appPreView').slideUp(1000,function(){
+						// $new.show(); //have to show content area here because the slideDown will only make the parent visible
+						// $('#appView').slideDown(3000);
+						// });
+					$('#appPreView').hide();
+					_app.ext.quickstart.pageTransition($old,$new);
 					}
 				else if(infoObj.performTransition == false)	{
 					

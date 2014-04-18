@@ -1,4 +1,7 @@
 html, body{padding:0px; margin: 0px;}
+/*
+body{background:url(images/white_brick_background.jpg) repeat center top;}
+*/
 .highlightBG_1 {background: #233628;}
 .highlightBG_1_alpha {background:rgba(35,54,40,.75);}
 .highlightBG_2 {background: #5c6a60;}
@@ -23,6 +26,40 @@ a.redText{color:#7e0000}
 .clearRight{clear:right;}
 
 .dosis {font-family:'Dosis', sans-serif;}
+
+#appPreView{
+	background: rgba(64,64,64,.5);
+	position:fixed;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	z-index:1000;
+	
+	width: 100%;
+	max-width:100%;
+}
+#appPreView > div {
+	background: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 100px;
+	width: 200px;
+	margin-left: -100px;
+	margin-top: -50px;
+	border: 5px solid #233628;
+	box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);
+}
+#mainContentArea {position:relative;}
+#mainContentArea > div {
+	position:absolute;
+	left: -150%;
+	transition: left .6s;
+	width: 100%;
+}
+#mainContentArea > div.active {left:0%;}
+#mainContentArea > div.active.post {left:150%;}
 
 #header {
 	position:fixed;
@@ -155,3 +192,40 @@ a.blockLink, li.blockLink {display: inline-block;}
 .prodListTagsContainer .is_discontinued,
 .prodListTagsContainer .is_outofstock{background-position:0px -156px; width: 128px;}
 .prodListTagsContainer .is_shipfree{background-position:0px -182px; width: 176px;}
+
+#myTeamChooser {position:fixed; left:0px; right:0px; bottom:0px; top:0px; z-index:1000; opacity:0; transition: all .4s; visibility:hidden; background: rgba(64,64,64,.5);}
+#myTeamChooser.active {opacity:1; visibility:visible;}
+/*
+#myTeamChooser.hidden {z-index:-1000;}
+*/
+#myTeamChooser .ui-button{width:1em;}
+#myTeamChooser .chooser {position:absolute; left:20px; right:20px; bottom:20px; top:20px; background: white; padding: 5px; box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);overflow:hidden;}
+#myTeamChooser .chooser h2{color:white; padding: 5px; height:30px;}
+#myTeamChooser .contentContainer{position:absolute; top:45px; bottom: 5px; left:5px; right:5px;}
+#myTeamChooser #sportChooser {height:100%;}
+#myTeamChooser #sportChooser > div {
+	width: 45%;
+	height: 40%;
+	padding: 2.4% 2.4%;
+	display:inline-block;
+}
+#myTeamChooser #sportChooser > div img{
+	max-width: 100%;
+	max-height: 100%;
+}
+#myTeamChooser .teamlist {width: 45%; display: inline-block; padding: 0px 2.4%; overflow: auto; height: 90%;}
+#myTeamChooser .teamlist .teamTemplate {height:30px;}
+#myTeamChooser .teamlist .teamTemplate button {height:25px; width: 25px; text-align:center;}
+#myTeamChooser .teamlist .teamTemplate img {height:100%;}
+#myTeamChooser .sportContainer{
+	position:absolute;
+	width: 100%;
+	background: white;
+	top:0px;
+	bottom:0px;
+	overflow:auto;
+	transition: left 1s;
+	left: 120%;
+}
+#myTeamChooser[data-swc-sport=app_mlb] .sportContainer[data-swc-sport=app_mlb]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nfl] .sportContainer[data-swc-sport=app_nfl]{left: 0px;}

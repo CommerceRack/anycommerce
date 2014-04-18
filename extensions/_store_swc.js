@@ -102,11 +102,7 @@ var store_swc = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				_app.templates.customerTemplate.on('complete.swc', function(event, $context, infoObj){
-				if(infoObj.show == "myteams"){
-					_app.ext.store_swc.u.renderMyTeams($context);
-					}
-				});
+				_app.ext.store_swc.u.renderMyTeams();
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
 					$('form.filterList', $context).trigger('submit');
 					});
@@ -222,27 +218,26 @@ var store_swc = function(_app) {
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
-			renderMyTeams : function($context){
-				$context = $context || $('#appView');
-				var $teams = $('#myteamsArticle', $context);
-				if($teams.length){
-					var data = {
-						userTeams : _app.ext.store_swc.vars.userTeams,
-						validTeams : {}
-						};
-					for(var i in data.userTeams){
-						data.validTeams[i] = $.grep(_app.ext.store_swc.validTeams[i], function(ve,vi){
-							if(ve.v){
-								var collisions = $.grep(data.userTeams[i], function(me,mi){
-									return me.v === ve.v;
-									});
-								return !collisions.length;
-								}
-							return false;
-							});
-						}
-					$teams.empty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
+			renderMyTeams : function(){
+				var $teams = $('#myTeamChooser');
+				var data = {
+					userTeams : _app.ext.store_swc.vars.userTeams,
+					validTeams : {}
+					};
+				for(var i in data.userTeams){
+					data.validTeams[i] = $.grep(_app.ext.store_swc.validTeams[i], function(ve,vi){
+						if(ve.v){
+							var collisions = $.grep(data.userTeams[i], function(me,mi){
+								return me.v === ve.v;
+								});
+							return !collisions.length;
+							}
+						return false;
+						});
 					}
+				$teams.empty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
+				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
 				}
 			}, //u [utilities]
 
@@ -372,6 +367,24 @@ var store_swc = function(_app) {
 				else {
 					_app.ext.quickstart.e.productAdd2Cart($form,p);
 					}
+				},
+			showMyTeamChooser : function($ele, p){
+				p.preventDefault();
+				this.selectSport($ele,p);
+				$('#myTeamChooser').addClass('active');
+				},
+			hideMyTeamChooser : function($ele,p){
+				p.preventDefault();
+				$('#myTeamChooser').removeClass('active');
+				},
+			selectSport : function($ele, p){
+				p.preventDefault();
+				if($ele.attr('data-swc-sport')){
+					$('#myTeamChooser').attr('data-swc-sport', $ele.attr('data-swc-sport'));
+					}
+				else {
+					$('#myTeamChooser').removeAttr('data-swc-sport');
+					}
 				}
 			}, //e [app Events]
 		filterData : {
@@ -396,10 +409,39 @@ var store_swc = function(_app) {
 			},
 		validTeams : {
 			//These values taken from flex field setup, and should be adjusted when / if these are expanded
-			'app_nba' : [{"p":"Chicago Bulls","v":"chicago_bulls"},{"p":"EMPTY","v":""}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks"},{"p":"Atlanta Braves","v":"atlanta_braves"},{"p":"Baltimore Orioles","v":"baltimore_orioles"},{"p":"Boston Red Sox","v":"boston_red_sox"},{"p":"Chicago Cubs","v":"chicago_cubs"},{"p":"Chicago White Sox","v":"chicago_white_sox"},{"p":"Cincinnati Reds","v":"cincinnati_reds"},{"p":"Cleveland Indians","v":"cleveland_indians"},{"p":"Colorado Rockies","v":"colorado_rockies"},{"p":"Detroit Tigers","v":"detroit_tigers"},{"p":"Houston Astros","v":"houston_astros"},{"p":"Kansas City Royals","v":"kansas_city_royals"},{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim"},{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers"},{"p":"Miami Marlins","v":"miami_marlins"},{"p":"Milwaukee Brewers","v":"milwaukee_brewers"},{"p":"Minnesota Twins","v":"minnesota_twins"},{"p":"New York Mets","v":"new_york_mets"},{"p":"New York Yankees","v":"new_york_yankees"},{"p":"Oakland Athletics","v":"oakland_athletics"},{"p":"Philadelphia Phillies","v":"philadelphia_phillies"},{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates"},{"p":"San Diego Padres","v":"san_diego_padres"},{"p":"San Francisco Giants","v":"san_francisco_giants"},{"p":"Seattle Mariners","v":"seattle_mariners"},{"p":"St. Louis Cardinals","v":"st_louis_cardinals"},{"p":"Tampa Bay Rays","v":"tampa_bay_Rays"},{"p":"Texas Rangers","v":"texas_rangers"},{"p":"Toronto Blue Jays","v":"toronto_blue_jays"},{"p":"Washington Nationals","v":"washington_nationals"},{"p":"EMPTY","v":""}],
-			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals"},{"p":"Atlanta Falcons","v":"atlanta_falcons"},{"p":"Baltimore Ravens","v":"baltimore_ravens"},{"p":"Buffalo Bills","v":"buffalo_bills"},{"p":"Carolina Panthers","v":"carolina_panthers"},{"p":"Chicago Bears","v":"chicago_bears"},{"p":"Cincinnati Bengals","v":"cincinnati_bengals"},{"p":"Cleveland Browns","v":"cleveland_browns"},{"p":"Dallas Cowboys","v":"dallas_cowboys"},{"p":"Denver Broncos","v":"denver_broncos"},{"p":"Detroit Lions","v":"detroit_lions"},{"p":"Green Bay Packers","v":"green_bay_packers"},{"p":"Houston Texans","v":"houston_texans"},{"p":"Indianapolis Colts","v":"indianapolis_colts"},{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars"},{"p":"Kansas City Chiefs","v":"kansas_city_chiefs"},{"p":"Miami Dolphins","v":"miami_dolphins"},{"p":"Minnesota Vikings","v":"minnesota_vikings"},{"p":"New England Patriots","v":"new_england_patriots"},{"p":"New York Giants","v":"new_york_giants"},{"p":"New Orleans Saints","v":"new_orleans_saints"},{"p":"New York Jets","v":"new_york_jets"},{"p":"Oakland Raiders","v":"oakland_raiders"},{"p":"Philadelphia Eagles","v":"philadelphia_eagles"},{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers"},{"p":"San Diego Chargers","v":"san_diego_chargers"},{"p":"San Francisco 49ers","v":"san_francisco_49ers"},{"p":"Seattle Seahawks","v":"seattle_seahawks"},{"p":"St. Louis Rams","v":"st_louis_rams"},{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers"},{"p":"Tennessee Titans","v":"tennessee_titans"},{"p":"Washington Redskins","v":"washington_redskins"},{"p":"EMPTY","v":""}],
-			'app_nhl' : [{"p":"Chicago Blackhawks","v":"chicago_blackhawks"},{"p":"EMPTY","v":""}],
+			'app_nba' : [{"p":"Chicago Bulls","v":"chicago_bulls"}],
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlb_team_jersey_pics/arizona_diamondbacks_authentic_personalized_alternate_cool_base_jersey_1"},
+						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlb_team_jersey_pics/atlanta_braves_authentic_personalized_or_mlb_player_home_cool_base_jersey"},
+						{"p":"Baltimore Orioles","v":"baltimore_orioles"},
+						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlb_team_jersey_pics/boston_red_sox_authentic_home_cool_base_jersey"},
+						{"p":"Chicago Cubs","v":"chicago_cubs"},
+						{"p":"Chicago White Sox","v":"chicago_white_sox"},
+						{"p":"Cincinnati Reds","v":"cincinnati_reds"},
+						{"p":"Cleveland Indians","v":"cleveland_indians"},
+						{"p":"Colorado Rockies","v":"colorado_rockies"},
+						{"p":"Detroit Tigers","v":"detroit_tigers"},
+						{"p":"Houston Astros","v":"houston_astros"},
+						{"p":"Kansas City Royals","v":"kansas_city_royals"},
+						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim"},
+						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers"},
+						{"p":"Miami Marlins","v":"miami_marlins"},
+						{"p":"Milwaukee Brewers","v":"milwaukee_brewers"},
+						{"p":"Minnesota Twins","v":"minnesota_twins"},
+						{"p":"New York Mets","v":"new_york_mets"},
+						{"p":"New York Yankees","v":"new_york_yankees"},
+						{"p":"Oakland Athletics","v":"oakland_athletics"},
+						{"p":"Philadelphia Phillies","v":"philadelphia_phillies"},
+						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates"},
+						{"p":"San Diego Padres","v":"san_diego_padres"},
+						{"p":"San Francisco Giants","v":"san_francisco_giants"},
+						{"p":"Seattle Mariners","v":"seattle_mariners"},
+						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlb_team_jersey_pics/cardinals_cool_base_ws_champions_jeresey_6"},
+						{"p":"Tampa Bay Rays","v":"tampa_bay_Rays"},
+						{"p":"Texas Rangers","v":"texas_rangers"},
+						{"p":"Toronto Blue Jays","v":"toronto_blue_jays"},
+						{"p":"Washington Nationals","v":"washington_nationals"}],
+			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals"},{"p":"Atlanta Falcons","v":"atlanta_falcons"},{"p":"Baltimore Ravens","v":"baltimore_ravens"},{"p":"Buffalo Bills","v":"buffalo_bills"},{"p":"Carolina Panthers","v":"carolina_panthers"},{"p":"Chicago Bears","v":"chicago_bears"},{"p":"Cincinnati Bengals","v":"cincinnati_bengals"},{"p":"Cleveland Browns","v":"cleveland_browns"},{"p":"Dallas Cowboys","v":"dallas_cowboys"},{"p":"Denver Broncos","v":"denver_broncos"},{"p":"Detroit Lions","v":"detroit_lions"},{"p":"Green Bay Packers","v":"green_bay_packers"},{"p":"Houston Texans","v":"houston_texans"},{"p":"Indianapolis Colts","v":"indianapolis_colts"},{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars"},{"p":"Kansas City Chiefs","v":"kansas_city_chiefs"},{"p":"Miami Dolphins","v":"miami_dolphins"},{"p":"Minnesota Vikings","v":"minnesota_vikings"},{"p":"New England Patriots","v":"new_england_patriots"},{"p":"New York Giants","v":"new_york_giants"},{"p":"New Orleans Saints","v":"new_orleans_saints"},{"p":"New York Jets","v":"new_york_jets"},{"p":"Oakland Raiders","v":"oakland_raiders"},{"p":"Philadelphia Eagles","v":"philadelphia_eagles"},{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers"},{"p":"San Diego Chargers","v":"san_diego_chargers"},{"p":"San Francisco 49ers","v":"san_francisco_49ers"},{"p":"Seattle Seahawks","v":"seattle_seahawks"},{"p":"St. Louis Rams","v":"st_louis_rams"},{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers"},{"p":"Tennessee Titans","v":"tennessee_titans"},{"p":"Washington Redskins","v":"washington_redskins"}],
+			'app_nhl' : [{"p":"Chicago Blackhawks","v":"chicago_blackhawks"}],
 			},
 		staticData : {
 			"fieldcam" : {
