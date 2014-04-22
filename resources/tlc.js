@@ -183,22 +183,26 @@ var tlc = function()	{
 					
 					}
 				catch(e)	{
-					dump(_self.buildErrorMessage(e)); dump(tlc);
+					dump("TLC error: "+_self.buildErrorMessage(e)+" for: "+tlc);
 					}
 	
 				if(commands && !$.isEmptyObject(commands))	{
-					_self.executeCommands(commands,{
+					var dataAfterTranslation = _self.executeCommands(commands,{
 						tags : {
 							'$tag' : $tag
 							}, //an object of tags.
 						focusTag : '$tag' //the pointer to the tag that is currently in focus.
 						},dataset);
+					if($._app.vars.debug == 'tlc')	{
+						dump(" ------> this is what the dataset looks like at the very end <------ ");
+						console.dir(dataAfterTranslation);
+						}
+					
 					}
 				else	{
 					dump("couldn't parse a tlc: "+$tag.data('tlc'),'warn');
 					//could not parse tlc. error already reported.
 					}
-	//			dump("----------------> end $tag <-----------------");
 				});
 			}
 		else	{
@@ -462,7 +466,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case 'remove':
 				if(argObj['class'])	{$tag.removeClass(argObj['class'])}
 				else if(argObj.tag)	{
-					globals.tags[argObj.tag].remove();
+					$tag.remove();
+//					globals.tags[argObj.tag].remove();
 					}
 				else	{
 					dump("For apply, the verb was set to remove, but neither a tag or class were defined. argObj follows:",'warn'); dump(argObj);
@@ -471,7 +476,15 @@ This one block should get called for both img and imageurl but obviously, imageu
 			
 			case 'prepend': $tag.prepend(data); break;
 			case 'append': $tag.append(data); break;
-			case 'replace': $tag.replaceWith(data); break;
+			case 'replace': 
+				var $n = $(data); //the contents of what will replace tag may or may not be a tag.
+				if($n.length)	{
+					globals.tags[globals.focusTag] = $n; $tag.replaceWith(globals.tags[globals.focusTag]);
+					}
+				else	{
+					$tag.replaceWith(data);
+					}
+				break; //the object in memory must also be updated so that the rest of the tlc statement can modify it.
 			case 'inputvalue':
 				$tag.val(data);
 				break;
@@ -518,8 +531,9 @@ This one block should get called for both img and imageurl but obviously, imageu
 		function isBlank(v)	{
 			var isBlank = false;
 			//not set and undefined are blank.  null or false is NOT blank.
-			if(v == '' || v == undefined)	{isBlank = true;}
+			if(typeof v == 'undefined')	{isBlank = true;}
 			else if(v == 'false' || v === false || v == null)	{isBlank = false}
+			else if(v == '')	{isBlank = true;}
 			else	{}
 			return  isBlank;
 			}
@@ -529,6 +543,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(p1 == p2){ r = true;} break;
 			case "ne":
 				if(p1 != p2){ r = true;} break;
+			case "inteq":
+				if(Number(p1) === Number(p2)){ r = true;} break;
+			case "intne":
+				if(Number(p1) != Number(p2)){ r = true;} break;
 			case "gt":
 				if(Number(p1) > Number(p2)){r = true;} break;
 			case "gte":
@@ -571,10 +589,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "or":
 				if(p1 != null){r = true;}; break; // ### FUTURE -> not done.
 */			}
-		if($._app.vars.debug == 'tlc')	{
+/*		if($._app.vars.debug == 'tlc')	{
 			dump(" -> op: "+op+" and p1 = "+p1+" and p2 = "+p2+" and r = "+r);
 			}
-		return r;
+*/		return r;
 		}
 
 
@@ -584,7 +602,36 @@ This one block should get called for both img and imageurl but obviously, imageu
 //passing the command into this will verify that the format exists (whether it be core or not)
 
 	this.format_currency = function(argObj,globals)	{
-		var r = "$"+globals.binds[argObj.bind]; //+" ("+arg.value.value+")";
+		dump(" BEGIN format_currency");
+		var
+			decimalPlace = 2,
+			a = argObj.bind ? globals.binds[argObj.bind] : globals.binds[globals.focusBind];
+
+		if(!isNaN(a))	{
+			a = Number(a);
+			var 
+				b = a.toFixed(decimalPlace),  //get 12345678.90
+				r;
+			a = parseInt(a); // get 12345678
+			b = (b-a).toPrecision(decimalPlace); //get 0.90
+			b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
+			a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
+			//if IE (our number ends in .00)
+			if(a.indexOf('.00') > 0)	{
+				a=a.substr(0, a.length-3); //delete the .00
+	//				_app.u.dump(" -> trimmed. a. a now = "+a);
+				}
+			r = a+b.substr(1);//remove the 0 from b, then return a + b = 12,345,678.90
+	
+	//if the character before the decimal is just a zero, remove it.
+			if(r.split('.')[0] == 0){
+				r = '.'+r.split('.')[1]
+				}
+			r = '$'+r;
+			}
+		else	{
+			r = a;
+			}
 		return r;
 		} //currency
 
@@ -595,6 +642,12 @@ This one block should get called for both img and imageurl but obviously, imageu
 
 	this.format_append = function(argObj,globals,arg)	{
 		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
+		return r;
+		} //append
+
+	this.format_default = function(argObj,globals,arg)	{
+		var r = (arg.type == 'longopt' ? arg.value.value : arg.value);
+		globals.binds[argObj.bind] = r;
 		return r;
 		} //append
 
@@ -610,7 +663,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = globals.binds[argObj.bind];
 		if(globals.binds[argObj.bind] && Number(argObj.chop) && globals.binds[argObj.bind].length > argObj.chop)	{
 			r = globals.binds[argObj.bind].toString();
-			r = r.substr(0,Number(argObj.chop));
+			r = r.substr(Number(argObj.chop),r.length);
 			}
 		return r;
 		}//chop
@@ -658,7 +711,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		}
 
 	this.set_path = function(argObj,globals,dataset)	{
-		dataset[argObj.path] = globals.binds[argObj.bind];
+		globals.binds[argObj.bind] = dataset[argObj.path];
 		return globals.binds[argObj.bind]; //no manipulation of the data occured so return unmolested var. 
 		}
 
@@ -744,6 +797,7 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.handleType_EXPORT = function(cmd,globals,dataset)	{
+//		dump(" -> cmd: "); dump(cmd,'dir'); dump(dataset,'dir');
 		var argObj = this.args2obj(cmd.args,globals);
 //SANITY -> dataset is the name of the param passed in.
 		dataset[cmd.Set.value] = argObj.dataset;
@@ -779,20 +833,23 @@ returning a 'false' here will exit the statement loop.
 
 	this.handleType_FOREACH = function(cmd,globals,dataset)	{
 		//tested on a tlc formatted as follows: bind $items '.@DOMAINS'; foreach $item in $items {{transmogrify --templateid='tlclisttest' --dataset=$item; apply --append;}};
-//		dump(" -> into FOREACH"); dump(cmd.Members,'debug');
+		if($._app.vars.debug == 'tlc')	{
+			dump(" -> into FOREACH. members: "); dump(cmd.Members,'debug');
+			}
+		var newGlobal;
 		for(var index in globals.binds[cmd.Members.value])	{
-			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
-			newGlobals.binds = {};
-			newGlobals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
-			newGlobals.focusBind = cmd.Set.value;
+//			var newGlobals = $.extend({},globals); //make a clean copy because focusBind here will probably be different than the rest of the tlc statement.
+			globals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
+			globals.focusBind = cmd.Set.value;
 //			dump(" -> index: "+index); dump(newGlobals);
-			this.executeCommands(cmd.Loop.statements,newGlobals,globals.binds[cmd.Members.value][index]);
+			this.executeCommands(cmd.Loop.statements,globals,globals.binds[cmd.Members.value][index]);
 			}
 		return cmd.Set.value;
 		}
 
 	this.handleType_SET = function(cmd,globals,dataset)	{
-		globals.binds[cmd.Set.value] = cmd.Src.value; //have to set this here so that the set_ functions have something to reference.
+		// a set is essentially a copy.  so we set the new bind to the value.  Then, the args are processed which may impact the final value. 
+		globals.binds[cmd.Set.value] = (cmd.Src.type == 'scalar') ? cmd.Src.value : globals.binds[cmd.Src.value]; //have to set this here so that the set_ functions have something to reference.
 		globals.focusBind = cmd.Set.value;
 		if(cmd.args)	{
 			var argObj = this.args2obj(cmd.args,globals);
@@ -816,7 +873,7 @@ returning a 'false' here will exit the statement loop.
 		//NOTE -> change '2' to args.length to support multiple args. ex: if (is $var --lt='100' --gt='5') {{ apply --append; }};
 
 //SANITY -> in args, args[0] is the variable declaration (type/value).  args[1]+ is the comparison (key, type, value where key = comparison operand).
-		
+
 		if(args.length)	{
 			if(args[0].type == 'variable')	{
 //				dump(" -> args[0].value: "+args[0].value);
@@ -830,7 +887,7 @@ returning a 'false' here will exit the statement loop.
 				var p2;
 				if(args[i])	{
 					if(args[i].type == 'longopt')	{
-						p2 = (args[i].value == null) ? args[i].value : args[i].value.value;
+						p2 = this.handleArg(args[i],globals)[args[i].key];
 						}
 					else {p2 = args[i].value || null}
 					if(this.comparison(args[i].key,p1,p2))	{}
@@ -865,7 +922,9 @@ returning a 'false' here will exit the statement loop.
 //						dump(" -> cmd.args[i].key: "+cmd.args[i].key); dump(cmd.args[i]);
 						globals.binds[argObj.bind] = this['format_'+cmd.args[i].key](argObj,globals,cmd.args[i]);
 						}
-					catch(e)	{}
+					catch(e)	{
+						dump(e);
+						}
 					}
 				}
 			}
@@ -942,19 +1001,24 @@ returning a 'false' here will exit the statement loop.
 		}
 
 	this.render_wiki = function(bind,argObj)	{
-		var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
-		myCreole['parse']($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
-		//r = wikify($tmp.text()); //###TODO -> 
-		var r = $tmp.html();
-		$tmp.empty(); delete $tmp;
+		var r = bind;
+		//skip if bind has no value.
+		if(bind)	{
+			var $tmp = $('<div \/>'); // #### TODO -> cross browser test this wiki solution. it's a little different than before.
+			myCreole['parse']($tmp[0], bind,{},argObj.wiki); //the creole parser doesn't like dealing w/ a jquery object.
+			//r = wikify($tmp.text()); //###TODO -> 
+			r = $tmp.html();
+			$tmp.empty(); delete $tmp;
+			}
 		return r;
 		}
 
+
 	
 	this.handleCommand_render = function(cmd,globals){
-		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
+//		dump(">>>>> BEGIN tlc.handleCommand_render. cmd: ");// dump(cmd);
 		for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
-			argObj = this.handleArg(cmd.args[i],globals);
+			var argObj = this.handleArg(cmd.args[i],globals);
 			var key = cmd.args[i].key;
 			//if key is dwiw, needs to be changed to either html or text so that it can be properly displayed. this is guesswork, but that comes along with dwiw.
 			if(key == 'dwiw' && globals.binds[globals.focusBind].indexOf('<') >= 0)	{
@@ -1004,16 +1068,7 @@ returning a 'false' here will exit the statement loop.
 		if(!isNaN(bind))	{
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				//var value = Number((cmd.args[i].type == 'longopt' && cmd.args[i].value) ? cmd.args[i].value.value : cmd.args[i].value);
-				var value = cmd.args[i].value;
-				if(cmd.args[i].type == 'longopt'){
-					if(value.type == 'variable'){
-						value = globals.binds[value.value];
-						}
-					else {
-						value = value.value
-						}
-					}
-				value = Number(value);
+				var value = Number(this.handleArg(cmd.args[i],globals)[cmd.args[i].key]);
 				if(!isNaN(value))	{
 					switch(cmd.args[i].key)	{
 						case "add":
@@ -1076,7 +1131,7 @@ returning a 'false' here will exit the statement loop.
 //		dump(" -> running tlcInstance.executeCommands"); //dump(commands);
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
-		var theseGlobals = $.extend({
+		var globals = $.extend({
 			binds : {}, //an object of all the binds set in args.
 			tags : {
 				'$tag' : ''
@@ -1088,7 +1143,7 @@ returning a 'false' here will exit the statement loop.
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 //			dump(i+") commands[i]: handleCommand_"+commands[i].type); //dump(commands[i]);
 			if(commands[i].type == 'command')	{
-				if(this.handleType_command(commands[i],theseGlobals,dataset))	{} //continue
+				if(this.handleType_command(commands[i],globals,dataset))	{} //continue
 				else	{
 					if($._app.vars.debug == 'tlc')	{
 						dump(" -> early exit of statement loop caused on cmd: "+commands[i].name+" (normal if this was legacy/renderFormat)");
@@ -1098,7 +1153,7 @@ returning a 'false' here will exit the statement loop.
 					}
 				}
 			else if(typeof this['handleType_'+commands[i].type] === 'function')	{
-				this['handleType_'+commands[i].type](commands[i],theseGlobals,dataset);
+				this['handleType_'+commands[i].type](commands[i],globals,dataset);
 				}
 			else	{
 				//unrecognized type.
@@ -1106,6 +1161,7 @@ returning a 'false' here will exit the statement loop.
 				dump(commands);
 				}
 			}
+		return globals;
 		}
 	
 //This is intendted to be run on a template BEFORE the data is in memory. Allows for gathering what data will be necessary.

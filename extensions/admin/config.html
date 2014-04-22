@@ -2959,10 +2959,85 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 <!--
 /////////////////////////   setup > notifications
+
+
+
+
+
 -->
 
 
-<div id='notificationPageTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+<div id='notificationPageTemplate' data-app-role='notificationsContainer'>
+
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+		<div class='accordion marginBottom'>
+
+			<h2>App</h2>
+			<div>
+				<ul data-app-role="notifications_APP" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Market</h2>
+			<div>
+				<ul data-app-role="notifications_MARKET" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Product</h2>
+			<div>
+				<ul data-app-role="notifications_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Order</h2>
+			<div>
+				<ul data-app-role="notifications_ORDER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Customer</h2>
+			<div>
+				<ul data-app-role="notifications_CUSTOMER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Supplier</h2>
+			<div>
+				<ul data-app-role="notifications_SUPPLIER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Inventory</h2>
+			<div>
+				<ul data-app-role="notifications_INVENTORY" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>API</h2>
+			<div>
+				<ul data-app-role="notifications_API" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Error</h2>
+			<div>
+				<ul data-app-role="notifications_ERROR" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Alert</h2>
+			<div>
+				<ul data-app-role="notifications_ALERT" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+
+		</div>
+
+	</section>
+	
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
+		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer clearfix' data-app-role='slimLeftContentContainer'>
+
+		
+		</div>
+	</section>
+
+</div>
+
+
+
+<div id='notificationUpdateTemplate'>
 
 <form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
 	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
@@ -2988,7 +3063,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var:notifications(@NOTIFICATIONS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
+		<tbody data-bind="var:notifications(@VERBS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
 		
 		</tbody>
 		</table>
@@ -2997,11 +3072,17 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
 
 <!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
-	
+
+
+<!--
+Put these into fieldsets, all hidden.
+Show only the fieldset that matches the high level event type (customer, product,etc).
+-->
+
+
 			<b>Enquiries</b><br>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY">Enquiry <span class='toolTip' title="Triggered by enquiry based events.">?</span></label>
 			<label><input type='radio' name='event' required='required' value="ENQUIRY.ORDER">Order Enquiry <span class='toolTip' title="Triggered through website 'contact us' with a confirmed order id.">?</span></label>
-			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Customer Order Cancel <span class='toolTip' title="Triggered when a customer cancels an order.">?</span></label>
 
 			<b>Errors and Alerts</b><br>
 			<label><input type='radio' name='event' required='required' value="ERROR.SYNDICATION">Syndication Failure</label>
@@ -3013,6 +3094,22 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.HIDE">Hide from Website</label>
 			<label><input type='radio' name='event' required='required' value="INV.NAVCAT.FAIL">Website Change Failure</label>
 
+			<b>Customer</b><br>
+			<label><input type='radio' name='event' required='required' value="CUSTOMER.NEW">Customer Created <span class='toolTip' title="Customer Account initialized">?</span></label>
+			<label><input type='radio' name='event' required='required' value="CUSTOMER.ORDER.CANCEL">Customer Order Cancel <span class='toolTip' title="Triggered when a customer cancels an order.">?</span></label>
+			
+			<b>Order</b><br>
+			<label><input type='radio' name='event' required='required' value="ORDER.CREATE">Order Created <span class='toolTip' title="A new order is placed.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.SHIP">Order Shipped <span class='toolTip' title="A new order flagged as shipped.">?</span></label>
+			<!--
+			<label><input type='radio' name='event' required='required' value="ORDER.ITEM.CANCEL">Order Item Cancelled <span class='toolTip' title="Triggered when an item in the order is cancelled.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.ITEM.BACKORDER">Order Item Backorder <span class='toolTip' title="The order is cancelled.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.RECENT">Order Status: Recent <span class='toolTip' title="The order status is changed/set to RECENT.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.APPROVED">Order Status: Approved <span class='toolTip' title="The order status is changed/set to APPROVED.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.PENDING">Order Status: Pending <span class='toolTip' title="The order status is changed/set to PENDING.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.BACKORDER">Order Status: Backorder <span class='toolTip' title="The order status is changed/set to BACKORDER.">?</span></label>
+			<label><input type='radio' name='event' required='required' value="ORDER.MOVE.CANCEL">Order Status: Cancel <span class='toolTip' title="The order status is changed/set to BACKORDER.">?</span></label>
+			-->
 
 			<label>
 				<span>Method</span>
@@ -3057,6 +3154,10 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 </div>
+
+
+
+
 
 
 <table>
@@ -3215,13 +3316,13 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		Enable ShipWorks
 	</label>
 	<p>ShipWorks will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class="label"><span>Username: </span>shipworks</div>
+	<div class="label"><span>Username </span>shipworks</div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
@@ -3234,14 +3335,14 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	</label>
 
 	<p>ShipStation will request a username and password so they can log into your store. Rather than provide them with your master password, use these:</p>
-	<div class="label"><span>Username: </span>shipstation</div>
+	<div class="label"><span>Username </span>shipstation</div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
-		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
+		<button class="applyButton" data-app-click="admin_config|buildGUID"data-input-name="~password">Generate Password</button>
 	</div>
 	
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}}"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
 
 </fieldset>
 
@@ -3257,17 +3358,15 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	<p>Zoovy Desktop will request a username and password so it can access your store.
 	Use the username and password below: 
 	</p>
-	<div class="label"><span>Username: </span>username</div>
+	<div class="label"><span>Username </span> <span data-tlc="bind $var '.userid'; apply --append;"></span></div>
 	<div class="label smallButton">
 		<span>Password</span>
-		<input data-tlc="bind $var '.password'; if(is $var --notblank;) {{apply --select=$var;}}; " data-minlength="20" name="~password" type="text">
+		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	
-	<div data-tlc="bind $var '.domain';"></div>
+	<p>Zoovy Integrated Desktop automatically downloads users from Setup > User Manager. Users can login with their username + PIN (personal identification number). If no PIN has been set then the user will not be able to login to software</p>
 
 </fieldset>
-
 
 
 <fieldset id="pluginTemplate_auth_google">

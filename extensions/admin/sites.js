@@ -390,7 +390,7 @@ used, but not pre-loaded.
 					_app.model.addDispatchToQ(cmdObj,'immutable'); //this handles the update cmd.
 //This will update the hosts tbody.
 					if($domainEditor instanceof jQuery)	{
-						$domainEditor.empty().showLoading({'message':'Updating host and refreshing content...'});
+						$domainEditor.empty().showLoading({'message':'Updating '+sfo.HOSTNAME+'.'+sfo.DOMAINNAME+' and refreshing content...'});
 						if($domainEditor.data('isTLC'))	{
 							$domainEditor.tlc('destroy'); //ensures fresh data is used.
 							}
@@ -595,13 +595,9 @@ used, but not pre-loaded.
 					if($ele.data('mode') == 'update')	{
 // ### FUTURE -> this is gonna get more love soon.  When it does, for adding a template to a host, would be nice to remember which template was selected.
 						$.extend(data,_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')]);
-						
 						title += ': '+(data.HOSTNAME.toString().toLowerCase())
 						}
-					
 					title += ' for '+domain
-					
-					_app.u.dump(" -> data: ");_app.u.dump(data);
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title': title,
 						'data' : data, //passes in DOMAINNAME and anything else that might be necessary for anycontent translation.
@@ -716,7 +712,8 @@ used, but not pre-loaded.
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
 					_app.model.destroy('adminProjectList');
-					sfo.UUID = _app.u.guidGenerator();
+//UUID is now set by merchant.
+//					sfo.UUID = _app.u.guidGenerator();
 					sfo._cmd = 'adminProjectCreate';
 					sfo._tag = {"callback":function(rd){
 						$form.hideLoading();

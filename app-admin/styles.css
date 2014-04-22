@@ -104,7 +104,13 @@ a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 .queryMatch	{background-color:#f0f4f5;}
 /* text styling */
 
-
+pre.prettyPre {
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
 
 .barcode	{font-family: barcode3of9 !important;}
 
@@ -952,16 +958,19 @@ see shipping panel in product editor for example
 */
 
 .labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
-.labelsAsBreaks div.label label	{ margin-right:12px;}
+.labelsAsBreaks div.label label, .labelsAsBreaks .prompt	{ margin-right:12px;}
+
+
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-.alignedLabels label span:first-of-type	{width:30%;}
+/* first of type was a HORRIBLE idea. started adding 'prompt' so that the first-of-type can be ditched */
+.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],
 .alignedInputs input[type=password],
 .alignedInputs input[type=url],
-.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+.alignedInputs input[type=text]:not([size])	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
 
 .alignedInputs input[type=number], 
 .alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */

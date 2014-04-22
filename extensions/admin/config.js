@@ -111,26 +111,55 @@ var admin_config = function(_app) {
 				_app.u.addEventDelegation($target);
 				},
 
-			showNotifications : function($target)	{
-				$target.intervaledEmpty();
-				_app.u.addEventDelegation($target);
-				$target.anycontent({
-					'templateID' : 'notificationPageTemplate'
-					}).anyform({'trackEdits':true});
-				_app.u.handleButtons($target);
-				_app.model.addDispatchToQ({
-					'_cmd':'adminConfigDetail',
-					'notifications' : true,
-					'_tag':	{
-						'datapointer' : 'adminConfigDetail|notifications',
-						'callback':'anycontent',
-						'translateOnly' : true,
-						'jqObj' : $target
-						}
-					},'mutable');
-				_app.model.dispatchThis('mutable');
 
-				},
+			//shows the lists of all blast messages and the means to edit each one individually.
+			showNotifications : function($target,params)	{
+				$target.showLoading({"message":"Fetching notifications"});
+				$target.tlc({'templateid':'notificationPageTemplate','verb':'template'});
+				_app.u.addEventDelegation($target);
+				_app.u.handleButtons($target);
+				$(".slimLeftNav .accordion",$target).accordion({
+					heightStyle: "content"
+					});
+
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','notifications':1,'_tag':{'datapointer':'adminConfigDetail|'+_app.vars.partition+'|notifications',callback : function(rd){
+
+					$target.hideLoading();
+					if(_app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd});
+						}
+					else	{
+
+						var notes = _app.data[rd.datapointer]['@NOTIFICATIONS'];
+						
+						for(var i = 0, L = notes.length; i < L; i += 1)	{
+							var e = (notes[i].event ? notes[i].event.split('.')[0] : '');
+							if(e && notes[i])	{
+								$("[data-app-role='notifications_"+e+"']",$target).append("<li data-app-click='admin_config|notificationUpdateShow' class='lookLikeLink' data-event="+notes[i]['event']+"><b>"+notes[i]['event'] +" <\/li>");
+								}
+							else	{
+								//either no verb set or @VERBS was empty.
+								}
+							}
+						//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
+						// the accordion does get initiated here because the left column looked out of place for too long.
+						$(".slimLeftNav .accordion",$target).accordion('refresh');
+						//handle loading the content. 
+						if(params.msgid)	{
+							$("[data-msgid='"+_app.u.jqSelector('',params.msgid)+"']",$target).trigger('click').closest('.ui-accordion-content').prev('.ui-accordion-header').trigger('click');
+							}
+						else if(params.setting)	{
+							$("[data-setting='"+_app.u.jqSelector('',params.setting)+"']",$target).trigger('click');
+							}
+						else	{
+							$("[data-setting='general']",$target).trigger('click');
+							}
+						}
+
+					}}},'mutable');
+
+				_app.model.dispatchThis("mutable");
+				}, //blastMessagesList
 
 			showBillingHistory : function($target)	{
 				$target.empty();
@@ -174,7 +203,7 @@ var admin_config = function(_app) {
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
 				if($target instanceof jQuery && vars.plugin)	{
-					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({'domain':_app.vars.domain},_app.ext.admin_config.u.getPluginData(vars.plugin))});
+					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({},_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin))});
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
 					$target.parent().find('.buttonset').show();
@@ -1181,7 +1210,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
 					$dataTableTbody = $("tbody[data-table-role='content']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
 					macros = new Array(),
-					callback = 'handleMacroUpdate'; //will be changed if in insert mode.
+					callback = 'handleMacroUpdate'; //will be changed if in insert mode. this is in the marketplace extension.
 					
 				if(_app.u.validateForm($form))	{
 					
@@ -1212,12 +1241,14 @@ when an event type is changed, all the event types are dropped, then re-added.
 							});
 						}
 				//currently, only insurance and handling have more than one data table. If that changes, the code below will need updating.
+				//this is used for ALL ship methods tho, so the whitelist must include all the input names for all the ship method data tables.
 					else if($dataTableTbody.length && sfo.provider)	{
 						macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider);
 						$('tr',$dataTableTbody).each(function(){
-							if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+							if($(this).hasClass('rowTaggedForRemove'))	{ $(this).intervaledEmpty()} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 							else	{
-								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid'])));
+//								dump(" -> tr.data():"); dump($(this).data());
+								macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+$._app.u.hash2kvp(_app.u.getWhitelistedObject($(this).data(),['country','type','match','guid','subtotal','fee','weight','zip1','zip2','postal','text'])));
 								}
 							});
 						}
@@ -1228,9 +1259,13 @@ when an event type is changed, all the event types are dropped, then re-added.
 				
 					_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_marketplace','jqObj':$form},'immutable');
 //nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
-// ** 201401 -> the new callback for navigateTo on the configMacro call will destroy/re-obtain the shipmethods.
-//					_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
-//					_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
+//the new callback for navigateTo on the configMacro call will destroy/re-obtain the shipmethods for handling and insurance.
+					if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{}
+					else	{
+						_app.model.destroy('adminConfigDetail|shipmethods|'+_app.vars.partition);
+						_app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+_app.vars.partition},'immutable');
+						
+						}
 				
 				//	_app.u.dump(" -> macros"); _app.u.dump(macros);
 					_app.model.dispatchThis('immutable');
@@ -1702,6 +1737,26 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					}
 				else	{} //validate handles error display.
+				return false;
+				},
+			
+			notificationUpdateShow : function($ele,p)	{
+				p.preventDefault();
+				var $target = $ele.closest("[data-app-role='notificationsContainer']").find("[data-app-role='slimLeftContentContainer']");
+				
+				if($ele.data('event') && _app.u.thisNestedExists("data.adminConfigDetail|"+_app.vars.partition+"|notifications.@NOTIFICATIONS",_app))	{
+					var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|'+_app.vars.partition+'|notifications']['@NOTIFICATIONS'],'event',$ele.data('event'));
+					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
+					_app.u.handleButtons($target);
+					$('form',$target).anyform();
+					}
+				else if(!$ele.data('event'))	{
+					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, data-event not set on trigger element.","gMessage":true});
+					}
+				else	{
+					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, adminConfigDetail|"+_app.vars.partition+"|notifications is not in memory.","gMessage":true});
+					}
+				
 				return false;
 				}
 

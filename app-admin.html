@@ -59,7 +59,7 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 $(document).ready(function(){
 	window.adminApp = new initApp({
 		/////////////////////////////////\
-		"release":"201402.j",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		"release":"201403.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -68,14 +68,15 @@ $(document).ready(function(){
 		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 		"baseURL" : baseURL,
 		"addjQueryPointer" : true,
-		"initComplete" : function(t){
-			t.u.loadScript('app-admin-init.js',function(){
-				var progress = t.u.loadResources();
+		"initComplete" : function(){
+			adminApp.u.loadScript('app-admin-init.js',function(){
+				var progress = adminApp.u.loadResources();
 				adminApp.u.showProgress(progress);
 				});
-			$('#appversion').text(t.vars.release);
+			$('#appversion').text(adminApp.vars.release);
 			}
 		});
+	adminApp.vars.initComplete();
 	});
 </script>
 
@@ -310,7 +311,6 @@ $(document).ready(function(){
 		<div id='homeContent' class='displayNone tabContent' data-section='home'></div><!-- home acts as a default as well -->
 		<div id='setupContent' class='displayNone tabContent' data-section='setup'></div>
 		<div id='sitesContent' class='displayNone tabContent' data-section='sites'></div>
-		<div id='productContent' class='displayNone tabContent' data-section='product'></div>
 		<div id='ordersContent' class='displayNone tabContent' data-section='orders'></div>
 		<div id='crmContent' class='displayNone tabContent' data-section='crm'></div>
 		<div id='syndicationContent' class='displayNone tabContent' data-section='syndication'></div>
@@ -320,6 +320,8 @@ $(document).ready(function(){
 		<div id='supportContent' class='displayNone tabContent' data-section='support'></div><!-- used for new support app -->
 		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'></div>
 		<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
+		
+		<div id='productContent' class='displayNone tabContent' data-section='product'></div>
 
 	</div>
 
@@ -437,7 +439,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Test</a>
 	<ul>
-		<li><a href='#' onClick='adminApp.model.addDispatchToQ({"mode":"elastic-native","size":250,"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":"AC"}}]},"_cmd":"appPublicSearch","type":"product"},"mutable"); adminApp.model.dispatchThis("mutable"); return false;'>elastic-native</a></li>	
+		<li><a href='#' onClick='adminApp.model.addDispatchToQ({"mode":"elastic-search","size":250,"filter":{"and":[{"range":{"base_price":{"from":0,"to":50000}}},{"term":{"pogs":"AC"}}]},"_cmd":"appPublicSearch","type":"product"},"mutable"); adminApp.model.dispatchThis("mutable"); return false;'>elastic-search</a></li>	
 		<li><a href='#' onClick="$('#globalMessaging').anymessage(adminApp.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
 		<li><a href='#' onClick="adminApp.model.destroy('adminSyndicationList'); adminApp.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); adminApp.model.dispatchThis('mutable');">adminSyndicationList</a></li>

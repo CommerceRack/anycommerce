@@ -215,11 +215,11 @@ calls should always return the number of dispatches needed. allows for cancellin
 				var extras = "";
 				if(window.debug1pc)	{extras = "&sender=jcheckout&fl=checkout-"+_app.model.version+debug1pc} //set debug1pc to a,p or r in console to force this versions 1pc layout on return from paypal
 				obj._cmd = "cartPaypalSetExpressCheckout";
-				obj.cancelURL = (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#cart?show=inline";
-				obj.returnURL =  (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#checkout?show=checkout";
+				obj.cancelURL = (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#!cart";
+				obj.returnURL =  (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#!checkout?"; //? at end because paypal is going to add key value pairs to this url.
 				
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
-				
+//				dump(" -> cartPaypalSetExpressCheckout obj: "); dump(obj);
 				_app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
@@ -727,17 +727,19 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							if(data['payment/CC']){tmp += data['payment/CC']}
 							tmp += "' required='required' /><\/label><\/div>";
 							
-							tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
+							tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option value=''>month<\/option>";
 							tmp += _app.u.getCCExpMonths(data['payment/MM']);
 							tmp += "<\/select>";
-							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
+							tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''>year<\/option>"+_app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 							
-							tmp += "<div><label for='payment/CV'>CVV/CID<input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
+							tmp += "<div><label for='payment/CV'>CVV/CID <input data-format-rules='CV' type='text' size='4' name='payment/CV' class=' creditCardCVV' data-input-format='numeric' data-input-keyup='input-format' value='";
 							if(data['payment/CV']){tmp += data['payment/CV']}
+							tmp += "' ";
 							if(!_app.u.thisIsAnAdminSession())	{
 								tmp += " required='required' " //merchant has option of acquiring cvv/cid.
 								}
-							tmp += "'  /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
+
+							tmp += " /><\/label> <span class='ui-icon ui-icon-help creditCardCVVIcon' onClick=\"$('#cvvcidHelp').dialog({'modal':true,width:"+($(window).width < 400 ? '90%' : 400)+"});\"></span><\/div>";
 							
 							if(isAdmin === true)	{
 								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
@@ -867,8 +869,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
 						populateAddressFromShortcut('bill','ship');	
 						}
-//bill to ship, but no short cut (not logged in)
-					else if(formObj['want/bill_to_ship'])	{
+//bill to ship, but no short cut (not logged in).
+// ** 201402 -> was hitting on else if((formObj['want/bill_to_ship']) so > 0 added.
+					else if(formObj['want/bill_to_ship'] > 0)	{
+						dump(" -> want/bill_to_ship = "+formObj['want/bill_to_ship']);
 						for(var index in formObj)	{
 //copy billing fields into shipping. not email tho.
 							if(index.indexOf('bill/') == 0 && index != 'bill/email')	{ 
@@ -1150,9 +1154,15 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
-				var r = '';
+				var r = '', cart;
+				
 				if(data.value.cart && data.value.cart.cartid){
-					var cartid = data.value.cart.cartid;
+					cartid = data.value.cart.cartid;
+					}
+				else	{
+					cartid = _app.model.fetchCartID(); //in some cases, such as an address editor, the cartid may not be in the data.
+					}
+				if(cartid)	{
 					if(_app.data['appCheckoutDestinations|'+cartid] && _app.data['cartDetail|'+cartid] && data.bindData.shiptype)	{
 						var destinations = _app.data['appCheckoutDestinations|'+cartid]['@destinations'], L = destinations.length, cartData = _app.data['cartDetail|'+cartid];
 						for(var i = 0; i < L; i += 1)	{
@@ -1168,6 +1178,9 @@ in a reorder, that data needs to be converted to the variations format required 
 						$tag.parent().append($("<div \/>").anymessage({'persistent':true,'message':'in cco.renderFormats.countriesasoptions, _app.data[appCheckoutDestinations|'+cartid+'] or _app.data.cartDetail|'+cartid+' and both are required. is not available in memory.','gMessage':true}));
 						}
 
+					}
+				else	{
+					dump("For countriesasoptions renderFormat in CCO, cartID could not be obtained.",'warn');
 					}
 				},
 
@@ -1195,10 +1208,11 @@ in a reorder, that data needs to be converted to the variations format required 
 			paypalecbutton : function($tag,data)	{
 	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-					var payObj = _app.ext.cco.u.which3PCAreAvailable();
+					var payObj = _app.ext.cco.u.which3PCAreAvailable(data.value);
 					if(payObj.paypalec)	{
 						$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
-							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
+//***201402 Must pass cartid parameter on the call itself -mc
+							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1, '_cartid':_app.model.fetchCartID()},{'callback':function(rd){
 								$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
 								if(_app.model.responseHasErrors(rd)){
 									$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');
@@ -1256,25 +1270,20 @@ in a reorder, that data needs to be converted to the variations format required 
 //for displaying order balance in checkout order totals.
 //changes value to 0 for negative amounts. Yes, this can happen.			
 			orderbalance : function($tag,data)	{
-				var o = '';
-				var amount = data.value;
-//				_app.u.dump('BEGIN _app.renderFunctions.format.orderBalance()');
-//				_app.u.dump('amount * 1 ='+amount * 1 );
+				if(data.value)	{
+					var o = '';
+					var amount = data.value;
 //if the total is less than 0, just show 0 instead of a negative amount. zero is handled here too, just to avoid a formatMoney call.
 //if the first character is a dash, it's a negative amount.  JS didn't like amount *1 (returned NAN)
-				
-				if(amount * 1 <= 0){
-//					_app.u.dump(' -> '+amount+' <= zero ');
-					o += data.bindData.currencySign ? data.bindData.currencySign : '$';
-					o += '0.00';
+					if(amount * 1 <= 0){
+						o += data.bindData.currencySign ? data.bindData.currencySign : '$';
+						o += '0.00';
+						}
+					else	{
+						o += _app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
+						}
+					$tag.text("Balance due: "+o);  //update DOM.
 					}
-				else	{
-//					_app.u.dump(' -> '+amount+' > zero ');
-					o += _app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
-					}
-				
-				$tag.text("Balance due: "+o);  //update DOM.
-//				_app.u.dump('END _app.renderFunctions.format.orderBalance()');
 				}, //orderBalance
 
 //displays the shipping method followed by the cost.
@@ -1326,11 +1335,14 @@ in a reorder, that data needs to be converted to the variations format required 
 		e : {
 			
 			cartFetchExec : function($ele,p)	{
+				p.preventDefault();
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 				_app.model.dispatchThis('immutable');
+				return false;
 				},
 			
 			cartItemRemove	: function($ele,p)	{
+				p.preventDefault();
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
 					_app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':0,'_cartid':cartid},{
@@ -1338,13 +1350,17 @@ in a reorder, that data needs to be converted to the variations format required 
 						'message' : 'Item '+stid+' removed from your cart',
 						'jqObj' : $ele.closest('form')
 						},'immutable');
-					$ele.closest('[data-stid]').intervaledEmpty();
+
+					// these needs to be before the empty below OR the button can't look up the foodchain for the cart container.
 					$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
+						
+					$ele.closest('[data-stid]').intervaledEmpty();
 					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					$ele.closest('form').anymessage({'message':'In cco.e.cartItemRemove, unable to ascertain item STID ['+stid+'] and/or the cart id ['+cartid+'].','gMessage':true})
 					}
+				return false;
 				}, //cartItemRemove
 			
 			cartShipmethodSelect : function($ele,p)	{
@@ -1357,6 +1373,7 @@ in a reorder, that data needs to be converted to the variations format required 
 			
 			//this can be used to update a store or admin session. the callback here is fixed and will update the cart IF the cart was generated using getCartAsJqObj
 			cartItemUpdateExec : function($ele,p){
+				p.preventDefault();
 				var
 					$container = $ele.closest('[data-stid]'),
 					$cart = $ele.closest("[data-template-role='cart']"),
@@ -1379,9 +1396,11 @@ in a reorder, that data needs to be converted to the variations format required 
 				else	{
 					//cartItemUpdate will handle error display.
 					}
+				return false;
 				}, //cartItemUpdateExec
 			//will post the input to the cart, passively.
 			cartSetAttrib : function($ele,p)	{
+				p.preventDefault();
 				var cartid = $ele.data('cartid') || $ele.closest("[data-cartid]").data('cartid');
 				if(cartid)	{
 					var cmdObj = {
@@ -1393,12 +1412,15 @@ in a reorder, that data needs to be converted to the variations format required 
 				else	{
 					$("#globalMessaging").anymessage({"message":"In cco.e.cartSetAttib, unable to ascertain cart id. Be sure data-cartid is set on/above trigger element.","gMessage":true});
 					}
+				return false;
 				},
 
 			cartZipUpdateExec : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				_app.model.dispatchThis('immutable');
+				return false;
 				} //cartZipUpdateExec
 
 			}

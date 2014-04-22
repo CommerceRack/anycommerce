@@ -110,6 +110,7 @@ adminApp.u.showProgress = function(progress)	{
 	function showProgress(attempt)	{
 //		dump(" -> passZeroResourcesLength: "+progress.passZeroResourcesLength+" and progress.passZeroResourcesLoaded: "+progress.passZeroResourcesLoaded);
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
+			
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
 			}

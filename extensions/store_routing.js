@@ -33,6 +33,12 @@ var store_routing = function(_app) {
 			onSuccess : function()	{
 				var r = false; 
 				
+				if(_app.u.getParameterByName('seoRequest')){
+					_app.vars.showContentHashChange = true;
+					_app.vars.ignoreHashChange = true;
+					}
+				
+				
 				_app.router.addAlias('homepage', 	function(routeObj){showContent('homepage',	routeObj.params);});
 				_app.router.addAlias('category', 	function(routeObj){showContent('category',	routeObj.params);});
 				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
@@ -58,7 +64,7 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'customer','callback':'company'});
 				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
 				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
-				_app.router.appendHash({'type':'match','route':'search/{{KEYWORDS}}*','callback':'search'});
+				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 
 
 /*
@@ -79,6 +85,55 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 			onError : function()	{
 				_app.u.dump('BEGIN store_routing.callbacks.init.onError');
 				}
+			},
+		attachEventHandlers : {
+			onSuccess : function(){
+				_app.templates.homepageTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/");});
+				
+				_app.templates.categoryTemplate.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
+						}
+					else {
+						hash = "#!/category/"+infoObj.navcat+"/";
+					}
+					_app.ext.store_routing.u.setHash(hash);
+					});
+					
+				_app.templates.categoryTemplateFilteredSearch.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
+						}
+					else {
+						hash = "#!/category/"+infoObj.navcat+"/";
+					}
+					_app.ext.store_routing.u.setHash(hash);
+					});
+					
+				_app.templates.productTemplate.on('complete.routing', function(event, $context, infoObj){
+					var hash = "";
+					var $routeEle = $('[data-routing-hash]',$context)
+					if($routeEle.length){
+						hash = $routeEle.attr('data-routing-hash');
+						}
+					else {
+						hash = "#!/product/"+infoObj.pid+"/";
+					}
+					dump(hash);
+					_app.ext.store_routing.u.setHash(hash);
+					});
+				
+				_app.templates.companyTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/company/"+infoObj.show+"/");});
+				_app.templates.customerTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/customer/"+infoObj.show+"/");});
+				_app.templates.searchTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/search/"+encodeURIComponent(infoObj.KEYWORDS)+"/");});
+				_app.templates.cartTemplate.on('complete.routing', function(event, $context, infoObj){if(infoObj.show == "inline"){_app.ext.store_routing.u.setHash("#!/cart/");}});
+				//_app.templates.checkoutTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/checkout/");});
+				},
+			onError : function(){}
 			}
 		}, //callbacks
 
@@ -124,9 +179,17 @@ optional params:
 					case 'product':
 						r = true;
 						var seoname = '';
-						if(args.seo)	{
-							seoname = data.value['zoovy:prod_seo_title'] || data.value['zoovy:prod_name'];
+						if(args.seoname)	{
+							seoname = args.seoname;
 							}
+						//seoname isn't clearly defined, so we go into some dwiw guesswork.
+						else if(args.seo && data.value['%attribs'])	{ 
+							seoname = data.value['%attribs']['zoovy:prod_seo_title'] || data.value['%attribs']['zoovy:prod_name'] || ''; //this would be a product list.
+							}
+						else if(args.seo && data.value.prod_name)	{
+							seoname = data.value.prod_name; //this would be an elastic search results.
+							}
+						else	{} //not defined. guesswork came back negative.
 						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.productAnchor(data.value.pid, seoname);
 						break;
 					
@@ -162,11 +225,17 @@ optional params:
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
+			setHash : function(hash){
+				if(_app.vars.showContentHashChange){
+					dump('forcing a hash change');
+					window.location.href = window.location.href.split("#")[0]+hash;
+					}
+				},
 			productAnchor : function(pid, seo){
-				return "#!product/"+pid+"/"+(seo ? encodeURI(seo) : '');
+				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
@@ -183,7 +252,7 @@ optional params:
 				else	{
 					//unrecognized type
 					}
-				return "#!category/"+path+((seo) ? "/"+encodeURI(seo) : '');
+				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				}
 			}, //u [utilities]
 

@@ -89,6 +89,7 @@ myApp.u.showProgress = function(progress)	{
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
+			myApp.u.appInitComplete();
 			}
 		else if(attempt > 150)	{
 			//hhhhmmm.... something must have gone wrong.
@@ -137,18 +138,26 @@ myApp.u.appInitComplete = function()	{
 
 //this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
 //it'll also handle the old 'meta' uri params.
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+//it'll also handle the old 'meta' uri params.
 myApp.router.appendInit({
 	'type':'function',
 	'route': function(v){
 		return {'init':true} //returning anything but false triggers a match.
 		},
 	'callback':function(f,g){
+		dump(" -> triggered callback for appendInit");
 		g = g || {};
-		if(document.location.hash)	{
+		if(g.uriParams.seoRequest){
+			showContent(g.uriParams.pageType, g.uriParams);
+			}
+		else if(document.location.hash)	{	
+			myApp.u.dump('triggering handleHash');
 			myApp.router.handleHashChange();
 			}
 		else	{
-			showContent('homepage');
+			//IE8 didn't like the shortcut to showContent here.
+			myApp.ext.quickstart.a.showContent('homepage');
 			}
 		if(g.uriParams && g.uriParams.meta)	{
 			myApp.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
@@ -158,6 +167,7 @@ myApp.router.appendInit({
 			}
 		}
 	});
+
 
 
 

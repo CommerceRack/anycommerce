@@ -6,8 +6,10 @@
 			<div>
 				<ul class='noPadOrMargin listStyleNone'>
 					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
+					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
 					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
-					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Macros</li>
+					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
+					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
 				</ul>
 			</div>
 		
@@ -29,6 +31,11 @@
 			<h2>Ticket</h2>
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Printables</h2>
+			<div>
+				<ul data-app-role="blastmessages_PRINTABLE" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 <!--	
 			<h2>Supply Chain</h2>
@@ -103,10 +110,9 @@
 			</select>
 		</label>
 
-
 		<label>
 			<span class='prompt'>Message id</span>
-			<input type='text' name='msgid' data-input-keyup="format" data-input-format='alphanumeric,uppercase' required='required' />
+			<input type='text' name='msgid' data-input-keyup="format" value="CUSTOM." data-input-format='blastid,uppercase' required='required' />
 			<span class='toolTip' title="A short, alphanumeric ID for the message. The message type (order, customer, etc) will be automatically be prepended. The message ID should be short but descriptive of what the message will be used for. ex: CANCELLED or CLOSED">?</span>
 		</label>
 		<button class='applyButton'>Create</button>
@@ -234,7 +240,14 @@
 
 			<div class='marginTop'>
 				<h3>Macros</h3>
-				<table class='gridTable fullWidth'>
+				<table class='gridTable fullWidth applyAnytable'>
+				<thead>
+				<tr>
+					<th>Macro ID</th>
+					<th>Macro</th>
+					<th>Created By</th>
+				</tr>
+				</thead>
 				<tbody data-tlc="bind $var '.@MACROS'; controller#loop --templateid='blastMessageMacroRowTemplate'; apply --append;"></tbody>
 				</table>
 			</div>
@@ -285,6 +298,7 @@
 	<input type='hidden' name='_tag/persistent' value='true' /><!-- leaves success present. important cuz form is NOT cleared so user can easily send another message -->
 	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
 
+	<input type='hidden' name='ORDERID' data-tlc="bind $var '.ORDERID'; apply --select=$var;" /><!-- if coming from an order, this will get populated -->
 
 	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 		<label>
@@ -349,10 +363,7 @@
 
 <div id='adminBlastMacroCreateUpdateTemplate'>
 
-<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm'>
-
-
-
+<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm' novalidate>
 	<label>
 		<span>Title</span>
 		<input type='text' name='TITLE' required='required' value='' data-tlc="bind $var '.TITLE'; apply --select=$var;" />
@@ -364,10 +375,13 @@
 	</label>
 	<label>
 		<span>Body</span>
-		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;"></textarea>
+		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" rows='8' class='fullWidth'></textarea>
 	</label>
-	<div class='buttonset'>
-		<button class='applyButton'>Save</button>
+	<div class='buttonset clearfix'>
+		<!-- the following two buttons are conditionally revealed, like in the header/footer editor -->
+<!--		<button class='applyButton displayNone showForHeaderFooterEditor' data-app-click="admin_blast|textarea2editor" disabled>HTML Editor</button> -->
+		<button type="reset" value="Reset" class='applyButton displayNone showForHeaderFooterEditor' disabled>Cancel Changes</button>
+		<button class='applyButton floatRight'>Save</button>
 	</div>
 </form>
 
@@ -389,6 +403,14 @@
 </table>
 
 
+<div id='blastSystemMacroItemTemplate' data-app-role='macroDataContainer'>
+	<pre class='prettyPre' data-tlc="bind $var '.BODY'; render --text; apply --append;"></pre>
+	<div class='buttonset alignRight'>
+		<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click="admin_blast|blastMacroAddShow">Clone to Custom</button>
+	</div>
+</div>
+
+
 
 <div id='blastMacroProperyEditorTemplate'>
 <form data-app-submit="admin|submitForm" class='labelsAsBreaks' action='#'>
@@ -397,7 +419,7 @@
 <input type='hidden' name='_tag/callback' value='showMessaging' />
 <input type='hidden' name='_tag/message' value='Your changes have been saved.' />
 <input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
-<p class='hint clearfix marginBottom'>The following fields are all optional, but highly recommended. These settings are partition specific.</p>
+
 <fieldset class='floatRight width50'>
 	<legend>Properties</legend>
 	<label>
@@ -410,33 +432,70 @@
 		<span class='toolTip' title="If all the hosts on this partition are apps, set this to app. If any are v-store, set this to vstore and be sure your app-based hosts are set to vstore/app.">?</span>
 </fieldset>
 
-<fieldset>
-	<legend>Contact</legend>
+<fieldset class='alignedLabels'>
+	<legend>Partition Macros</legend>
 	
 	<label>
-		<span>Domain</span>
+		<span>%DOMAIN%</span>
 		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
 		<span class='toolTip' title="You should start this with www.  You do NOT need to add the http:// or https://">?</span>
 	</label>
 	<label>
-		<span>Phone</span>
+		<span>%PHONE%</span>
 		<input type='tel' name='PRT.PHONE' value='' data-tlc="bind $var '.%PRT.PHONE'; apply --select=$var;" />
 		<span class='toolTip' title="This should include the area code, if applicable.">?</span>
 	</label>
 	<label>
-		<span>Email</span>
-		<input type='email' name='PRT.EMAIL' value='' data-tlc="bind $var '.%PRT.EMAIL'; apply --select=$var;" />
+		<span>%HELP_EMAIL%</span>
+		<input type='email' name='PRT.HELPEMAIL' value='' data-tlc="bind $var '.%PRT.HELPEMAIL'; apply --select=$var;" />
 	</label>
 	<label>
-		<span>Mailing Address</span>
-		<textarea name='PRT.MAILADDR' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" />
+		<span>%COMPANY%</span>
+		<input type='text' name='PRT.COMPANY' value='' data-tlc="bind $var '.%PRT.COMPANY'; apply --select=$var;" />
 	</label>
+	<label>
+		<span>%MAILADDR%</span>
+		<textarea name='PRT.MAILADDR' rows='5' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" class='fullwidth' />
+	</label>
+
+
+	<div class="label" data-app-role='companyLogoContainer'>
+		<span class='prompt floatLeft'>%LOGOIMAGE%</span>
+		<span data-app-role='companyLogoImgContainer'>
+		<img width="50" height="50" border="0" name='companyLogo' src="blank.gif" data-tlc="bind $var '.%PRT.LOGOIMAGE'; if(is $var --notblank;){{apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};">
+		</span>
+	<input type='hidden' name='PRT.LOGOIMAGE' data-tlc="bind $var '.%PRT.LOGOIMAGE'; apply --select=$var;" />
+	</div>
+
+
+
+
 </fieldset>
 
+	<div class='buttonset'>
+	<button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+
+</form>
+</div>
 
 
 
-	<div class='buttonset'><button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button></div>
 
+
+
+<div id='headerFooterTemplate' data-app-role='headerFooterEditorContainer'>
+	<p>The header and footer blocks are macros. That means they can not contain macros because they don't get interpreted. You can use TLC to load variables, if desired. <b>Please make a local copy/backup prior to making changes</b> so that you can easily restore at a later time.</p>
+
+
+	<section data-app-role='headerEditor' data-editor-role='container'>
+		<h3>Header</h3>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
+	</section>
+	<br />
+	<section data-app-role='footerEditor' data-editor-role='container'>
+		<h3>Footer</h3>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
+	</section>
 </form>
 </div>

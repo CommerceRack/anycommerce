@@ -6,6 +6,29 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
 
+
+201403
+
+GLOBAL
+	'elastic-native' changed to 'elastic-search' for appPublicSearch
+	Elastic is now inventory aware (optionally).
+	Elastic can now search by category.
+
+ADMIN
+	Product editor debug now includes 'inventory transactions'.
+
+
+QUICKSTART
+	Enhancements to appNav
+	-> The container is hidden/visible as well as the buttons to allow for css adjustments.
+	-> if referring page only had 1 product, appnav will remain hidden.
+	Enhancement - keyword and tag search will now only return results w/ positive inventory.
+	Enhancement - infoObj now passed into pageTransition. Allows more customization and control.
+	Bug fix - edit address in checkout was broken (as of 201402)
+	Enhancement - some better responsiveness for checkout on small screens.
+
+
+
 201402
 
 GLOBAL
@@ -42,6 +65,7 @@ QUICKSTART
 	cart template now has a 'refresh' button.
 	Integrated new router. big changes on how to link to pages (no more showContent).
 	enhancements to cart messaging (more buyer events get logged).
+	searchlink render format in quickstart removed. see mfg in producttemplate for working example of tlc.
 
 
 201401

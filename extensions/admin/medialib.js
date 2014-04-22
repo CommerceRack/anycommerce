@@ -488,6 +488,19 @@ setTimeout(function(){
 				$target.dialog('open');
 				}, //showMediaLib
 
+
+
+
+
+			publicFiles : function($target,p){
+				$target.anycontent({'templateID':'page-setup-publicfiles','data':{}});
+				_app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
+				_app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
+				_app.model.dispatchThis();
+				},
+
+
+
 //first param is thumbnail object on page.
 //second param is string (src in api call) or object (ref to text input, hidden, something). must determine
 //third param is The title.
@@ -585,7 +598,8 @@ setTimeout(function(){
 //						dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						dump(" -> selector.length: "+$(_app.u.jqSelector('#',mediaData.eleSelector)).length);
 // * 201332 -> added 'edited' class on save. used in a lot of UI to count the number of updated elements and, in several cases, unlocks the save button.
-						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform');
+						$(correctedSelector).val(newFilename).addClass('edited').triggerHandler('keyup.trackform')
+						$(correctedSelector).triggerHandler('change');
 // * 201336
 //						if($(correctedSelector).closest('form').length)	{
 //							_app.ext.admin.u.handleSaveButtonByEditedClass($(correctedSelector).closest('form'));
@@ -1410,14 +1424,6 @@ $('#mediaLibActionsBar span',$target).buttonset();
 $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				}, //handleMediaLibButtons
 
-
-			showPublicFiles : function(path,P){
-				var $target = $('#setupContent');
-				$target.empty().append(_app.renderFunctions.transmogrify({},'page-setup-publicfiles',{})); //load the page template.
-				_app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
-				_app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
-				_app.model.dispatchThis();
-				}
 
 			}, //u
 

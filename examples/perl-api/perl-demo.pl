@@ -15,9 +15,11 @@ use Data::Dumper;
 sub make_call {
 	my ($input) = @_;
 
+
+	## NOTE: it would be better to do this with HTTP::Tiny + JSON::XS for speed+performance
 	my ($ua) = LWP::UserAgent->new();
 	$ua->env_proxy;
-	my $req = HTTP::Request->new("POST","http://www.zoovy.com/webapi/jquery/index.cgi");
+	my $req = HTTP::Request->new("POST","https://www.YOURDOMAIN.com/jsonapi/");
 	$req->header('Content_Type' => 'application/json');
 	$req->content(JSON::Syck::Dump($input));
 	my ($r) = $ua->request($req);
@@ -31,7 +33,8 @@ my $PASSWORD = 'asdf';
 my $t = time();
 my %vars = ();
 $vars{'_uuid'} = time();
-$vars{'_cmd'} = 'appSessionStart';
+$vars{'_cmd'} = 'ping';
+## Long term we will likely replace login + hashtype + security with a token + secret-password
 $vars{'login'} = $USERNAME;
 $vars{'hashtype'} = 'md5';
 $vars{'security'} = 'xyz';

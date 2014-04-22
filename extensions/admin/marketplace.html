@@ -371,10 +371,16 @@
 		
 	</label>
 
+	<label class='showForZoovyOnly'>
+		<span>Link Syntax</span>
+		<select name='linkstyle' data-bind="var: mkt(linkstyle); format:popVal;">
+			<option value='vstore'>Vstore</option>
+			<option value='app' selected='selected'>App</option>
+		</select>
+		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is #! syntax.'>?</span>
+	</label>
+
 </fieldset>
-
-
-<p>These settings *MUST* match the settings in your Google Shopping account.</p>
 
 </div>
 

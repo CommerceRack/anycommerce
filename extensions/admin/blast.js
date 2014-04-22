@@ -97,8 +97,18 @@ var admin_blast = function(_app) {
 								var msgs = _app.data[rd.datapointer]['@MSGS'];
 								for(var i = 0, L = msgs.length; i < L; i += 1)	{
 //									if(msgs[i].OBJECT != 'PRODUCT' && msgs[i].OBJECT != 'ACCOUNT' && msgs[i].OBJECT != 'ORDER')	{dump(msgs[i].OBJECT);}
-									if(msgs[i].OBJECT)	{
-										$("[data-app-role='blastmessages_"+msgs[i].OBJECT+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+">"+(msgs[i].SUBJECT || msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"<\/li>");
+function buildLink(section)	{
+	$("[data-app-role='blastmessages_"+section+"']",$target).append("<li class='lookLikeLink' data-app-click='admin_blast|msgDetailView' title='"+msgs[i].MSGID+"' data-msgid="+msgs[i].MSGID+"><b>"+(msgs[i].MSGID.substring(msgs[i].MSGID.indexOf('.')+1).toLowerCase())+"</b> : "+msgs[i].SUBJECT+"<\/li>");
+	}
+
+									if(msgs[i].MSGID.indexOf('PRINTABLE') == 0)	{
+										buildLink('PRINTABLE')
+										}
+									else if(msgs[i].OBJECT)	{
+										buildLink(msgs[i].OBJECT)
+										}
+									else	{
+										//unclassified.
 										}
 									}
 								//when the accordion is originally generated, there's no content, so the accordion panels have no height. this corrects.
@@ -120,6 +130,48 @@ var admin_blast = function(_app) {
 					},"mutable");
 				_app.model.dispatchThis("mutable");
 				}, //blastMessagesList
+
+			
+			headerFooterEditor : function($target,params){
+				if($target.data('isTLC'))	{
+					$target.tlc('destroy');
+					}
+				$("[data-editor-role='container']",$target).showLoading();
+				// the header and footer have the same tlc bind value, so the template is added but two of the children actually get translated.
+				$target.tlc({'verb':'template','templateid':'headerFooterTemplate'});
+				
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroList","_tag":{"datapointer":"adminBlastMacroList","callback":function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+
+						function populateTextarea(type)	{
+							var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@MACROS'],'MACROID','%'+type.toUpperCase()+'%');
+							if(dataset)	{
+								dataset.TITLE = dataset.TITLE || type; //set a default title if none set.
+								var $editor = $("[data-app-role='"+type+"Editor']",$target);
+								$editor.tlc({'verb':'translate','dataset':dataset});
+								$("[name='MACROID']",$editor).prop('disabled','disabled');
+								$('.showForHeaderFooterEditor',$editor).show();
+								$editor.hideLoading();
+								_app.u.handleButtons($editor);
+								$('button',$editor).button('enable'); //buttons are disabled by default, so that they aren't clicked prior to content loading.
+								}
+							else	{
+								$target.anymessage({'message':'Unable to gather dataset for '+type+' in editor','gMessage':true});
+								}
+							}
+
+						populateTextarea('header');
+						populateTextarea('footer');
+						
+						}
+					}}},"mutable");
+				_app.model.dispatchThis("mutable");
+				
+				},
+
 
 			//used in the blast message list tool for editing a specific message.			
 			//can be used outside that interface by calling directly.
@@ -220,9 +272,73 @@ var admin_blast = function(_app) {
 
 			blastMacroProperyEditor : function($target,params)	{
 				$target.showLoading({"message":"Fetching macro properties"});
-				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","templateid":"blastMacroProperyEditorTemplate","jqObj":$target,"trackEdits":true}},"mutable");
+				$target.tlc({'verb':'template','templateid':'blastMacroProperyEditorTemplate'});
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroPropertyDetail","_tag":{"datapointer":"adminBlastMacroPropertyDetail","callback":"tlc","verb":"translate","jqObj":$target,"trackEdits":true}},"mutable");
+				
+				$("[data-app-role='companyLogoContainer']",$target).anyupload({
+					fileclass : "image",
+					"encode" : "base64",
+					"maxSelectableFiles" : 1,
+					"filesChange" : function(e,f,c)	{
+						c.container.showLoading({'message':'Generating instance of image with the correct dimensions...'});
+						var $button = c.container.closest('form').find("button[data-app-role='saveButton']");
+						$button.button('disable');
+						$('.fileUpload_default:not(:last)',c.container).remove(); //anyupload only enforces selecting one file at a time so here we manually remove any images previously selected.
+						var base64 = $('.fileUpload_default',c.container).attr('src');
+//						dump(" -> base64: "); dump(base64);
+						if(base64)	{
+							base64 = base64.substring(base64.indexOf(',')+1); //strip off the data:... base64, from beginning of string
+							//pixel of 1 is for better image quality on graphics
+							var filename = "logo_"+_app.u.guidGenerator();
+							//image reference is stores with height/width as params. do not change them in the adminImageMagick cmd without updating the PRT.LOGOIMAGE.val() as well.
+							_app.model.addDispatchToQ({"_cmd":"adminImageMagick","folder":"logos","filename":filename,"base64":base64,"@updates":["MinimalResize?width=200&height=200&pixel=1"],"_tag":{"datapointer":"adminImageMagick","callback":function(rd){
+								c.container.hideLoading();
+								if(_app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									//sample action. success would go here.
+									$("[data-app-role='companyLogoImgContainer'] img:first",$target).addClass('edited').attr('src','data:'+_app.data[rd.datapointer]['%properties'].mime+';base64,'+_app.data[rd.datapointer].base64);
+									$("[name='PRT.LOGOIMAGE']",$target).val("logos/"+filename+"?width=200&height=200&pixel=1").closest('.anyformEnabled').anyform('updateChangeCounts');
+									$('.fileUpload_default',c.container).remove();
+									$button.button('enable');
+									}
+								}}},"mutable");
+							_app.model.dispatchThis("mutable");
+							}
+						else	{
+							$("#globalMessaging").anymessage({"message":"In admin_blast.e.blastMacroPropertyEditor, unable to ascertain base64 on company logo.","gMessage":true});
+							}
+
+						},
+					"ajaxRequest" : function(file,$ele){
+						dump(" -> file: "); dump(file);
+						}
+					});
 				_app.model.dispatchThis("mutable");
 				_app.u.addEventDelegation($target);
+				},
+
+			blastSystemMacroList : function($target,params)	{
+				_app.model.addDispatchToQ({"_cmd":"adminBlastMacroList","custom":0,"_tag":{
+					"datapointer":"adminBlastMacroList","callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							var macros = _app.data[rd.datapointer]['@MACROS'], L = macros.length, $content = $("<div \/>");
+							for(var i = 0; i < L; i += 1)	{
+								$content.append("<h3>"+macros[i].MACROID +( macros[i].TITLE ? " : "+ macros[i].TITLE : "" )+"<\/h3>");
+								$content.append(new tlc().runTLC({'templateid':'blastSystemMacroItemTemplate','dataset':macros[i]}).data(macros[i])); //
+								}
+							$target.append($content);
+							$content.accordion({heightStyle: "content"});
+							_app.u.handleButtons($target);
+							_app.u.handleCommonPlugins($target);
+							_app.u.addEventDelegation($target);
+							}
+						}}},"mutable");
+				_app.model.dispatchThis('mutable');
 				},
 
 			blastMacroEditor : function($target,params)	{
@@ -235,6 +351,7 @@ var admin_blast = function(_app) {
 					'cmdVars' : {
 						'_cmd' : 'adminBlastMacroList', //this is partition specific. if we start storing this locally, add prt to datapointer.
 						'system' : 0, //exclude system messages.
+						'custom' : 1,
 						'_tag' : {
 							'datapointer' : 'adminBlastMacroList'},
 							}
@@ -333,6 +450,12 @@ var admin_blast = function(_app) {
 						_app.u.handleButtons($target);
 						_app.ext.admin_blast.a.blastMacroProperyEditor($("[data-app-role='propertiesContainer']",$target));
 						}
+					else if($ele.data('setting') == 'systemmacros')	{
+						_app.ext.admin_blast.a.blastSystemMacroList($target);
+						}
+					else if($ele.data('setting') == 'headerfooter')	{
+						_app.ext.admin_blast.a.headerFooterEditor($target);
+						}
 					else if($ele.data('setting') == 'macros')		{
 						_app.ext.admin_blast.a.blastMacroEditor($target);
 						}
@@ -367,7 +490,7 @@ var admin_blast = function(_app) {
 				var $form = $ele.closest('form');
 				if(_app.u.validateForm($form))	{
 					var sfo = $form.serializeJSON();
-					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+".CUSTOM."+sfo.msgid, "_tag":{"callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"adminBlastMsgCreate","MSGID" : sfo.msgtype+"."+sfo.msgid, "_tag":{"callback":function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
@@ -502,6 +625,7 @@ var admin_blast = function(_app) {
 				},
 
 			blastMacroAddShow : function($ele,P)	{
+				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
 					title : "Add Macro",
 					'templateID' : 'adminBlastMacroCreateUpdateTemplate',
@@ -510,9 +634,52 @@ var admin_blast = function(_app) {
 					handleAppEvents : false //defaults to true
 					});
 				$('form',$D).append("<input type='hidden' name='_cmd' value='adminBlastMacroCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The macro has been created' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/persistent' value='true' />");
+				var $dataSrc = $ele.closest("[data-app-role='macroDataContainer']"); //used in the system macro list.
+				if($dataSrc.length)	{
+					$D.tlc({'verb':'translate','dataset':$dataSrc.data()});
+					}
 				$D.dialog('open');
+				return false;
+				},
+			
+			blastGlobalSettingLogoSelectChange : function($ele,P)	{
+				//?alt=xyz&height=100&width=100&base64=
+				var $saveButton = $ele.closest('form').find("[data-app-role='saveButton']");
+				$saveButton.button('disable'); //disable button while dimensions are being computed.
+				_app.model.addDispatchToQ({"_cmd":"adminImageMagick","@updates":["Resize?width=200&height=65"],"_tag":{"datapointer":"adminImageMagick","callback":function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						//sample action. success would go here.
+						
+						}
+					}}},"mutable");
+				_app.model.dispatchThis("mutable");
 				}
-
+			
+			 /* ,
+			
+			textarea2editor : function($ele,P)	{
+				P.preventDefault();
+				$ele.closest("[data-editor-role='container']").find('textarea').each(function(){
+					$(this).tinymce({
+						menubar : 'edit insert view format table tools',
+						height : 300,
+						visual: false, //turn off visual aids by default. menu choice will still show up.
+						keep_styles : true,
+						image_list: [],
+						plugins: [
+							"_image advlist autolink lists link charmap print preview anchor",
+							"searchreplace visualblocks code fullscreen", //fullpage is what allows for the doctype, head, body tags, etc.
+							"media table contextmenu paste"
+							],
+						toolbar: "undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link _image | code"
+						});
+					});
+				return false;
+				}
+*/
 
 			} //e [app Events]
 		} //r object.

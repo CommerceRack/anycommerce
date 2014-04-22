@@ -57,21 +57,22 @@ css files should be included before any .js file to ensure they are downloaded i
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
 		"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
 		"addjQueryPointer" : true,
-		"initComplete" : function(t){
+		"initComplete" : function(){
 			dump(" -> init is complete");
-			t.u.loadScript('app-quickstart-init.js',function(){
-				var progress = t.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-				t.u.showProgress(progress);
+			myApp.u.loadScript('app-quickstart-init.js',function(){
+				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+				myApp.u.showProgress(progress);
 				});
-			$('#appversion').text(t.vars.release);
+			$('#appversion').text(myApp.vars.release);
 			}
 		});
+	myApp.vars.initComplete();
 	myCreole = new Parse.Simple.Creole();
 	});
 </script>
@@ -263,6 +264,7 @@ each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
 <div id="categoryTemplate" class=" categoryTemplate">
+	<span class="displayNone" data-tlc="bind $navcat '.navcat'; bind $seo '.pretty'; bind $hash ''; store_routing#categorylink --navcat=$navcat --seo=$seo; apply --attrib='data-routing-hash';"></span>
 	
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
@@ -418,10 +420,10 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
 
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
+		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
 		
 	</div>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
+	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
 </li>
 
 <li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
@@ -434,7 +436,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
 	</a>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';">more details</a>
+	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
 </li>
 </ul>
 
@@ -464,7 +466,8 @@ this will likely become more flexible in the future. ###
 
 
 <div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
-	<div data-tlc="set $bob '1234';"></div>
+	<span class="displayNone" data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='data-routing-hash';"></span>
+	
 	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
 	
 	<table class="prodViewerContainer">
@@ -495,10 +498,10 @@ this will likely become more flexible in the future. ###
 
 		<div class="marginBottom">
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; quickstart#searchlink  --legacy;"></h5>
+			<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></h5>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
 		</div>
-	
+
 		<div class="priceContainer marginBottom">
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
@@ -734,7 +737,9 @@ if you change these, you should move them above this comment so that when you (o
 <!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
 		<div id="aboutArticle" class="textContentArea article">
 			<h1>About Us</h1>
-			<div data-tlc="bind $var '.zoovy:about'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="aboutUsContent"></div>
+			<div>
+			<!-- ::: add your about us information here -->
+			</div>
 		</div>
 
 
@@ -752,15 +757,14 @@ if you change these, you should move them above this comment so that when you (o
 				<label><span class="prompt">Email Address</span><input name="sender" required type="email" class='alignInput'></label>
 				<label><span class="prompt">Subject</span><input name="subject" required type="text" class='alignInput'></label>
 				<label><span class="prompt">Order ID</span><input name="OID" type="text" class='alignInput'></label>
-				<label><span class="prompt">Message</span><textarea name="body" required class='alignInput'></textarea></label>
+				<label><span class="prompt">Message</span><textarea name="body" required rows='6' class='alignInput'></textarea></label>
 				<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
 			</fieldset>
 			</form>
-			<div data-tlc="bind $var '.zoovy:contact'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="contactContent"></div>
 		</div>
 
 
-
+		<!-- faq are generated through the faq manager in the admin UI. do not add content in the faqContent area -->
 		<div id="faqArticle" class="displayNone textContentArea">
 			<h1>Frequently Asked Questions</h1>
 			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
@@ -770,7 +774,9 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="paymentArticle">
 			<h1>Payment Policy</h1>
-			<div data-tlc="bind $var '.zoovy:payment_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="paymentContent"></div>
+			<div>
+			<!-- ::: add your payment policy here ::: -->
+			</div>
 		</div>
 
 
@@ -820,14 +826,18 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div class="displayNone textContentArea" id="returnArticle">
 			<h1>Return Policy</h1>
-			<div data-tlc="bind $var '.zoovy:return_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="returnContent"></div>
+			<div>
+			<!-- ::: add your return policy here ::: -->
+			</div>
 		</div>
 
 
 
 		<div class="displayNone textContentArea" id="shippingArticle">
 			<h1>Shipping Information</h1>
-			<div data-tlc="bind $var '.zoovy:shipping_policy'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="shippingContent"></div>
+			<div>
+			<!-- ::: add your shipping information here ::: -->
+			</div>
 		</div>
 
 	</div>
@@ -1000,8 +1010,9 @@ onclicks are recursive, so only add it to the parent element.
 	<li>
 
 	<a href="#" onclick="return false;">
-	<span data-tlc="bind $var '.page_in_focus'; format --prepend='page '; if (is $var --notblank;) {{apply --append;}};"></span>
-	<span data-tlc="bind $var '.total_page_count'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></span>	</a>
+		<span data-tlc="bind $var '.page_in_focus'; format --prepend='page '; if (is $var --notblank;) {{apply --append;}};"></span>
+		<span data-tlc="bind $var '.total_page_count'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></span>
+	</a>
 	<ul data-tlc="bind $var '.total_page_count'; store_prodlist#mppagesaslistitems  --legacy; apply --append;" class="ui-widget-content ui-corner-bottom"></ul>
 	</li>
 </ul>
@@ -1082,8 +1093,8 @@ This is the template used both within a dialog and inline, unless implicitly ove
 	<h3>Shipping:</h3>
 
 	<div class="cartZipCodeContainer marginBottom">
-		<label for="data-ship_zip">Zip/Postal Code:</label>
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
+		<label>Zip/Postal Code:
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
 	</div>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
@@ -1141,8 +1152,8 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<div>
 		qty: <input data-tlc="cco#cartitemqty  --legacy;" class="qtyInput numberInput" data-app-change="cco|cartItemUpdateExec" data-bind="format:cartItemQty;extension:cco;useParentData:true;" name="quantity" type="number">
 		<button class="displayNone">update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-tlc="bind $var '.price'; format --prepend='x '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
-		<span data-tlc="bind $var '.extended'; format --prepend='= '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};"></span>
+		<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{ format --currency='USD'; format --prepend=' x '; apply --append;}};"></span>
+		<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD';  format --prepend='= '; apply --append;}};"></span>
 
 		</div>
 
