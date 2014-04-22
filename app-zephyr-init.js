@@ -130,7 +130,7 @@ $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
 	var $primaryImage = $('.MagicZoomPlus:first img',$ele);
 	//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
 	$primaryImage.parent().zoom({
-		'touch' : true,
+//		'touch' : true,
 		'url' : myApp.u.makeImage({name : $primaryImage.data('media'), tag : false})
 		});
 /*	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
@@ -142,7 +142,7 @@ $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
 	function execCycle()	{
 		if(myApp.u.carouselIsReady())	{$prodlist.cycle();}
-		else {setTimeout(execCycle,500); dump(" -> cycle not ready yet");}
+		else {setTimeout(execCycle,500);}
 		}
 	
 	if($prodlist.children().length > 1)	{

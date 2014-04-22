@@ -1399,6 +1399,7 @@ in a reorder, that data needs to be converted to the variations format required 
 					}
 				return false;
 				}, //cartItemUpdateExec
+
 			//will post the input to the cart, passively.
 			cartSetAttrib : function($ele,p)	{
 				p.preventDefault();
