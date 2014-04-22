@@ -26,9 +26,9 @@ var store_seo = function(_app) {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : {
-		defaultTitle : "", //Should not include any Prefix or Postfix
+		defaultTitle : "Chicago Cubs Gear", //Should not include any Prefix or Postfix
 		titlePrefix : "",
-		titlePostfix : ""
+		titlePostfix : " - SportsWorldChicago.com"
 		},
 
 	callbacks : {
@@ -37,14 +37,7 @@ var store_seo = function(_app) {
 			onSuccess : function()	{
 				var r = false; 
 				
-				_app.templates.homepageTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.categoryTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.productTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.companyTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.customerTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.checkoutTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.cartTemplate.on('complete',		function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
-				_app.templates.searchTemplate.on('complete',	function(event,$context,infoObj){_app.ext.store_seo.u.generateMeta(infoObj);});
+				
 				
 				r = true;
 
@@ -52,6 +45,20 @@ var store_seo = function(_app) {
 				},
 			onError : function()	{
 				_app.u.dump('BEGIN store_seo.callbacks.init.onError');
+				}
+			},
+		attachHandlers : {
+			onSuccess : function(){
+				var callback = function(event, $context, infoObj){dump('--> store_seo complete event'); event.stopPropagation(); _app.ext.store_seo.u.generateMeta($context, infoObj);}
+				for(var i in _app.templates){
+					_app.templates[i].on('complete.seo', callback);
+					}
+				$('#appTemplates').children().each(function(){
+					$(this).on('complete.seo', callback);
+					});
+				},
+			onError : function()	{
+				_app.u.dump('BEGIN store_seo.callbacks.attachHandlers.onError');
 				}
 			}
 		}, //callbacks
@@ -72,7 +79,7 @@ var store_seo = function(_app) {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		u : {
-			generateMeta : function(infoObj){
+			generateMeta : function($context, infoObj){
 				var baseTitle = '';
 				var desc = '';
 				switch(infoObj.pageType){
@@ -80,8 +87,10 @@ var store_seo = function(_app) {
 						//Use Default Title
 						break;
 					case "category" :
-						break;
 					case "product" :
+						//Grab from the titles and descriptions on the page
+						var baseTitle = $('[data-seo-title]', $context).attr('data-seo-title');
+						desc = $('[data-seo-desc]', $context).attr('data-seo-desc');
 						break;
 					case "company" :
 						break;
@@ -100,7 +109,7 @@ var store_seo = function(_app) {
 					baseTitle = _app.ext.store_seo.vars.defaultTitle;
 					}
 				
-				document.title = _app.ext.store_seo.vars.titlePrefix + title + _app.ext.store_seo.vars.titlePostfix;
+				document.title = _app.ext.store_seo.vars.titlePrefix + baseTitle + _app.ext.store_seo.vars.titlePostfix;
 				$('meta[name=description]').attr('content', desc);
 				}
 			}, //u [utilities]
