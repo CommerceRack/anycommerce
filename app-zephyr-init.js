@@ -128,7 +128,7 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
 	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
 		dump(" -> onComplete for pid: "+infoObj.pid);
-		myApp.ext.store_zephyrapp.u.handleMZP($ele);
+		myApp.ext.store_zephyrapp.u.handleMZP($ele,infoObj);
 		});
 	});
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
@@ -227,7 +227,6 @@ myApp.u.appInitComplete = function()	{
 	
 	dump(" -> HEY! just a head's up, the default pageTransition was just overwritten from app-zephyr-init.js");
 	myApp.ext.quickstart.pageTransition = function($o,$n,infoObj){
-
 
 		function transitionThePage()	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.

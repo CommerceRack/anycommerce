@@ -483,8 +483,8 @@ var store_zephyrapp = function(_app) {
 			//it will add an id to the primary image, which is used for the mzp.start() and the 'rel' on the thumbnails.
 			//the rel will be generated for the thumbnails as well, so that the correct is used.
 			//for this reason, the 768 and 1024 image sizes should be the same for the primary product pic (so switching from portrait to landscape works ok)
-			handleMZP : function($product)	{
-				dump("BEGIN handleMZP");
+			handleMZP : function($product,infoObj)	{
+//				dump("BEGIN handleMZP");
 				if($product instanceof jQuery)	{
 					var $href = $("[data-app-role='primaryImageHref']:first",$product), ID;
 					if($href.length)	{
@@ -498,11 +498,15 @@ var store_zephyrapp = function(_app) {
 							}
 						//the rel gets set there because we have the ID.  the rev is generated at the thumbs tlcFormat so that resolution specific sizing is all in the same place.
 						$("[data-app-role='productThumbnailsContainer']:first",$product).find('a').each(function(){
-							$(this).attr({'rel':'zoom-id:'+ID});
+							$(this).attr({'id':'jt_'+_app.u.guidGenerator(),'rel':'zoom-id:'+ID+";group:"+infoObj.pid+";"});
+							MagicZoomPlus.refresh($(this).attr('id')); //without this, the thumbnail won't register itself as part of the MZP (after the first page load. odd).
 							});
 
 						if($(document.body).outerWidth() > 760)	{
-							$href.attr('rel','zoom-position: right');
+							$href.attr('rel',"zoom-position: right; group:"+infoObj.pid+";");
+							}
+						else	{
+							$href.attr('rel',"zoom-position: bottom; group:"+infoObj.pid+";");
 							}
 // SANITY -> tried to specify a specific ID for the refresh and it did not work to well in FF.
 //it would, more often than not, fail to init which resulted in an image click opening the image in the window/tab in focus.
