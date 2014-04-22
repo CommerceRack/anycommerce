@@ -90,11 +90,12 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
-				if(_app.ext.store_search.vars.universalFilters.length){
+				var universalFilters = $.extend(true, {}, _app.ext.store_search.vars.universalFilters);
+				if(universalFilters.length){
 					if(obj.filter){
 						var tmp = obj.filter;
 						obj.filter = {
-							"and" : _app.ext.store_search.vars.universalFilters
+							"and" : universalFilters
 							}
 						obj.filter.and.push(tmp);
 						}
@@ -104,7 +105,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							"filtered" : {
 								"query" : tmp,
 								"filter" : {
-									"and" : _app.ext.store_search.vars.universalFilters
+									"and" : universalFilters
 									}
 								}
 							}
