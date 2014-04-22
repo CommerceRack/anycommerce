@@ -154,7 +154,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .productPage .addtocartbutton{border:none;}
 
-.productPage .tabContent{overflow-y: auto; height:400px;}
+.productPage .tabContent{overflow-y: auto; height:400px; font-size: .9em;}
 
 .filteredSearchPage form {color:white;}
 .filterList { width: 16%; padding: 15px 2%;}

@@ -27,7 +27,7 @@
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
 .productPage .mfgLogoContainer img {
 	max-width: 100px;
-	max-height: 46px;
+	max-height: 80px;
 	padding-right: 20px;
 }
 .productListItem .prodListTagsContainer {
