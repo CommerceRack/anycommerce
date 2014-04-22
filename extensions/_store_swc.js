@@ -277,22 +277,25 @@ var store_swc = function(_app) {
 				var countFilters = [];
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
-					var cf = [];
+					//var cf = [];
 					$('[data-filter=count]', $(this)).empty();
 					$('input', $(this)).each(function(){
 						var f = {"term" : {}};
 						f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
 						if($(this).is(":checked")){
-							countFilters.push({"query":f, "$input":$(this)});
+							dump(f);
+							dump('checked')
+							//countFilters.push({"query":f, "$input":$(this)});
 							filter.or.push(f);
 							}
-						cf.push({"query":f, "$input":$(this)});
+						countFilters.push({"query":f, "$input":$(this)});
+						//cf.push({"query":f, "$input":$(this)});
 						});
 					if(filter.or.length > 0){
 						elasticsearch.filter.and.push(filter);
 						}
 					else {
-						countFilters = countFilters.concat(cf);
+						//countFilters = countFilters.concat(cf);
 						}
 					});
 				dump(countFilters);
@@ -315,19 +318,25 @@ var store_swc = function(_app) {
 					delete countES.size;
 					_app.ext.store_search.calls.appPublicSearch.init(countES, {'callback':function(rd){
 						//dump(rd);
-					//	if(_app.data[rd.datapointer].count){
-					//		rd.$input.closest('[data-filter=inputContainer]').show();
-					//		}
-					//	else {
-					//		rd.$input.closest('[data-filter=inputContainer]').hide();
-					//		rd.$input.prop('checked',false);
-					//		}
+						if(_app.data[rd.datapointer].count){
+							rd.$input.closest('[data-filter=inputContainer]').show();
+							}
+						else {
+							rd.$input.closest('[data-filter=inputContainer]').hide();
+							rd.$input.prop('checked',false);
+							if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
+								
+								rd.$input.closest('.filterGroup').hide();
+								}
+							}
 						$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
 						_app.model.destroy(rd.datapointer);
 						}, 'datapointer':'appFilteredCount|'+i, "$input":$input});
 				
 					}
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,es,1);
+				dump(es);
+				_app.model.dispatchThis();
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleInfiniteElasticResults', 'datapointer':'appFilteredSearch','extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$resultsContainer});
 				_app.model.dispatchThis();
 				
