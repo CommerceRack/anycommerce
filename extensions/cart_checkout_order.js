@@ -885,9 +885,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
 					delete formObj['want/bill_to_ship_cb'];
-//cc and cv should never go. They're added as part of cartPaymentQ
-					delete formObj['payment/cc'];
-					delete formObj['payment/cv'];
+//CC and CV should never go. They're added as part of cartPaymentQ
+					delete formObj['payment/CC'];
+					delete formObj['payment/CV'];
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
@@ -1336,16 +1336,16 @@ in a reorder, that data needs to be converted to the variations format required 
 		e : {
 			
 			cartFetchExec : function($ele,p)	{
+				p.preventDefault();
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'}); //will work if getCartAsJqObj was used to create the cart.
 				_app.model.dispatchThis('immutable');
+				return false;
 				},
 			
 			cartItemRemove	: function($ele,p)	{
 				p.preventDefault();
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
-					
-
 					_app.ext.cco.calls.cartItemUpdate.init({'stid':stid,'quantity':0,'_cartid':cartid},{
 						'callback' : 'showMessaging',
 						'message' : 'Item '+stid+' removed from your cart',
@@ -1374,6 +1374,7 @@ in a reorder, that data needs to be converted to the variations format required 
 			
 			//this can be used to update a store or admin session. the callback here is fixed and will update the cart IF the cart was generated using getCartAsJqObj
 			cartItemUpdateExec : function($ele,p){
+				p.preventDefault();
 				var
 					$container = $ele.closest('[data-stid]'),
 					$cart = $ele.closest("[data-template-role='cart']"),
@@ -1396,9 +1397,11 @@ in a reorder, that data needs to be converted to the variations format required 
 				else	{
 					//cartItemUpdate will handle error display.
 					}
+				return false;
 				}, //cartItemUpdateExec
 			//will post the input to the cart, passively.
 			cartSetAttrib : function($ele,p)	{
+				p.preventDefault();
 				var cartid = $ele.data('cartid') || $ele.closest("[data-cartid]").data('cartid');
 				if(cartid)	{
 					var cmdObj = {
@@ -1410,12 +1413,15 @@ in a reorder, that data needs to be converted to the variations format required 
 				else	{
 					$("#globalMessaging").anymessage({"message":"In cco.e.cartSetAttib, unable to ascertain cart id. Be sure data-cartid is set on/above trigger element.","gMessage":true});
 					}
+				return false;
 				},
 
 			cartZipUpdateExec : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				_app.model.dispatchThis('immutable');
+				return false;
 				} //cartZipUpdateExec
 
 			}
