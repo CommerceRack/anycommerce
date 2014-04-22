@@ -1341,6 +1341,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				},
 			
 			cartItemRemove	: function($ele,p)	{
+				p.preventDefault();
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
 					
@@ -1360,6 +1361,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				else	{
 					$ele.closest('form').anymessage({'message':'In cco.e.cartItemRemove, unable to ascertain item STID ['+stid+'] and/or the cart id ['+cartid+'].','gMessage':true})
 					}
+				return false;
 				}, //cartItemRemove
 			
 			cartShipmethodSelect : function($ele,p)	{
