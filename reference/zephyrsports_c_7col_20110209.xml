@@ -1,0 +1,729 @@
+<TEMPLATE ID="~zephyrsports_c_7col_20110209" FORMAT="LAYOUT">
+
+
+<!-- ******* -->
+<ELEMENT FORMAT="LAYOUT" ID="DGFVQKP" AUTHOR="jt" TYPE="CONFIG" PROJECT="334468" EXPORT="1" TITLE="Category: 7 col subcats" CREATED="20100727054644" FOLDER="_ticket_334468"><SUMMARY><![CDATA[7 columns of subcategories followed by a product list with a multipage format. Requires use of the zephyrsportscom_20100727 or newer theme.]]></SUMMARY>
+</ELEMENT>
+<ELEMENT ID="VAR_LAYOUT_URL" SUB="LAYOUT_URL" TYPE="READONLY" LOAD="URL::LAYOUT_URL" RAW="1"></ELEMENT>
+<ELEMENT ID="DYNIMAGE_JS" HELPER="NOT_USED_REMOVED_20111121" TYPE="HIDDEN" OUTPUTSKIP="4096"><DEFAULT><![CDATA[
+
+<link rel="stylesheet" type="text/css" href="%LAYOUT_URL%/global-20110406.css" />
+
+<script type='text/javascript'>
+
+/* default zoovy slideshow functions  (DYNIMAGE) */
+function iList () {
+	this.name = '';
+	this.img = new Array();
+	this.url = new Array();
+	this.zum = new Array();
+	this.pause = new Array();
+	this.last = null;
+	this.current = null;
+	this.defaultpause = 2000;
+	this.buttons = false;
+	this.stopped = false;
+	this.loaded = false;
+	this.startstop = false;
+	}
+function iLoad (i) {
+	if (i.loaded == true) { return; }
+	i.loaded = true;
+	iRotate(i);
+	}
+function iLink (i) {
+	if (!i.loaded) { return; }
+	if (typeof(i.url[i.current]) != "undefined") { window.location.href = i.url[i.current]; }
+	else if (typeof(i.zum[i.current]) != "undefined") { zoom(i.zum[i.current]); }
+	else if (i.startstop) { iSwitch(i); }
+	}
+function iSwitch (i) {
+	if (!i.loaded) { return; }
+	if (i.stopped) { i.stopped = false; iRotate(i); }
+	else { i.stopped = true; }
+	}
+function iRotate (i) {
+	if (i.stopped) { return; }
+	iNext(i);
+	var pause = i.defaultpause;
+	if (typeof(i.pause[i.current]) != "undefined") { pause = i.pause[i.current]; }
+	setTimeout("iRotate("+i.name+")",pause);
+	}
+function iNext (i) {
+	if (!i.loaded||!document['image_'+i.name]) { return; }
+	if (i.buttons) { document['form_'+i.name].nextButton.value = "Loading..."; }
+	i.current++; if (i.current > i.last) { i.current = 0; }
+	document['image_'+i.name].src = i.img[i.current].src;
+	if (i.buttons) { document['form_'+i.name].nextButton.value = "Next Image"; }
+	}
+function iPrev (i) {
+	if (!i.loaded||!document['image_'+i.name]) { return; }
+	if (i.buttons) { document['form_'+i.name].prevButton.value = "Loading..."; }
+	i.current--; if (i.current < 0) { i.current = i.last; }
+	document['image_'+i.name].src = i.img[i.current].src;
+	if (i.buttons) { document['form_'+i.name].prevButton.value = "Previous Image"; }
+	}
+function zoom (url) {
+	z = window.open('','zoom_popUp','status=0,directories=0,toolbar=0,menubar=0,resizable=1,scrollbars=1,location=0');
+	z.document.write("<html>\n<head>\n<title>Picture Zoom</title>\n</head>\n<body>\n<div align=\"center\">\n<img src=\"" + url + "\"><br>\n<form><input type=\"button\" value=\"Close Window\" onClick=\"self.close(true)\"></form>\n</div>\n</body>\n</html>\n");
+	z.document.close();
+	z.focus(true);
+	}
+	
+</script>
+
+
+
+]]></DEFAULT>
+</ELEMENT>
+<ELEMENT ID="TOP_DESCRIPTION" WIKI="3" HELPER="" PROMPT="Description for top of page" FONT="0" TYPE="TEXT" EDITOR="INLINE" DATA="page:top_description"><POSTTEXT><![CDATA[</div><!-- end text area -->]]></POSTTEXT>
+<PRETEXT><![CDATA[<!-- begin text area --><div style='' class='ztxt txt_border_box'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="PAGE_BANNER_RIGHT1" PROMPT="Banner: right col (appears in theme)" WIDTH="183" BGCOLOR="FFFFFF" TYPE="BANNER" EDITOR="INLINE" DATA="page:zs_banner_right1" OUTPUTSKIP="4096"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:5px;'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="PAGE_BANNER_RIGHT2" PROMPT="Banner: right col 2 (appears in theme)" WIDTH="183" BGCOLOR="FFFFFF" TYPE="BANNER" EDITOR="INLINE" DATA="page:zs_banner_right2" OUTPUTSKIP="4096"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:5px;'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="PAGE_BANNER_RIGHT3" PROMPT="Banner: right col 3 (appears in theme)" WIDTH="183" BGCOLOR="FFFFFF" TYPE="BANNER" EDITOR="INLINE" DATA="page:zs_banner_right3" OUTPUTSKIP="4096"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:5px;'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="PAGE_BANNER_RIGHT4" PROMPT="Banner: right col 4 (appears in theme)" WIDTH="183" BGCOLOR="FFFFFF" TYPE="BANNER" EDITOR="INLINE" DATA="page:zs_banner_right4" OUTPUTSKIP="4096"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:5px;'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="PAGE_BANNER_RIGHT5" PROMPT="Banner: right col 5 (appears in theme)" WIDTH="183" BGCOLOR="FFFFFF" TYPE="BANNER" EDITOR="INLINE" DATA="page:zs_banner_right5" OUTPUTSKIP="4096"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:5px;'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="SLIDESHOW01" HEIGHT="265" PROMPT="SlideShow IMG 605x265" WIDTH="605" TYPE="DYNIMAGE" EDITOR="INLINE" DATA="page:dynimage1"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style='margin-bottom:3px;' class='ztxt'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="BANNER01_LINK" SUB="BANNER01_LINK" PROMPT="Link for banner image 01" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:banner01_link"></ELEMENT>
+<ELEMENT ID="BANNER01" PROMPT="banner image 01 width-605px" WIDTH="605" TYPE="IMAGE" EDITOR="INLINE" DATA="page:zoovy:banner01"><PRETEXT><![CDATA[<div style="margin-bottom:3px; width:605px; margin-right:auto;"><a href="%BANNER01_LINK%">]]></PRETEXT>
+<POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="BANNER02_LINK" SUB="BANNER02_LINK" PROMPT="Link for banner image 02" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:banner02_link"></ELEMENT>
+<ELEMENT ID="BANNER02" PROMPT="banner image 02 width-605px" WIDTH="605" TYPE="IMAGE" EDITOR="INLINE" DATA="page:zoovy:banner02"><PRETEXT><![CDATA[<div style="margin-bottom:3px; width:605px; margin-right:auto;"><a href="%BANNER02_LINK%">]]></PRETEXT>
+<POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="TOP_DESCRIPTION2" WIKI="3" HELPER="" PROMPT="Description for top of page UNDER BANNERS" FONT="0" TYPE="TEXT" EDITOR="INLINE" DATA="page:top_description2"><POSTTEXT><![CDATA[</div><!-- end text area -->]]></POSTTEXT>
+<PRETEXT><![CDATA[<!-- begin text area --><div class='ztxt txt_border_box'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="3WIDEAD_TITLE" PROMPT="Title for 3 Wide Ad" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:3widead_title"><PRETEXT><![CDATA[<div class='section_title'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKCZ" TYPE="OUTPUT"><HTML><![CDATA[
+<table border="0" width="605" cellpadding="0" cellspacing="0" align="center">
+  <tr valign="middle">
+    <td align="left">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="AD1_LINK" SUB="AD1_LINK" PROMPT="Link for Ad 1" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:ad1_link"></ELEMENT>
+<ELEMENT ID="AD1" HEIGHT="120" PROMPT="Ad 1" WIDTH="183" TYPE="IMAGE" EDITOR="INLINE" DATA="page:ad1"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:3px;"><img src="%IMAGE_URL%/-/images/site_specific/titles/great_buys_title004.jpg" /></div></td><td align="right"><div style="margin-bottom:3px;"><a href="%AD1_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDA" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+    <td align="right">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="AD2_LINK" SUB="AD2_LINK" PROMPT="Link for Ad 2" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:ad2_link"></ELEMENT>
+<ELEMENT ID="AD2" HEIGHT="120" PROMPT="Ad 2" WIDTH="183" TYPE="IMAGE" EDITOR="INLINE" DATA="page:ad2"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:3px;"><a href="%AD2_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDB" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+    <td align="right">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="AD3_LINK" SUB="AD3_LINK" PROMPT="Link for Ad 3" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:ad3_link"></ELEMENT>
+<ELEMENT ID="AD3" HEIGHT="120" PROMPT="Ad 3" WIDTH="183" TYPE="IMAGE" EDITOR="INLINE" DATA="page:ad3"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:3px;"><a href="%AD3_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDC" TYPE="OUTPUT"><HTML><![CDATA[
+      </td>
+    </tr>
+</table>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="BTN_TITLE" PROMPT="Title for Buttons" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:btn_title"><PRETEXT><![CDATA[<div class='section_title'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDD" TYPE="OUTPUT"><HTML><![CDATA[
+<table border="0" width="605" cellpadding="0" cellspacing="0" align="center">
+  <tr valign="middle">
+    <td align="center" width="25%">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="BTN1_LINK" SUB="BTN1_LINK" PROMPT="Link for Button 1" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:btn1_link"></ELEMENT>
+<ELEMENT ID="BTN1" HEIGHT="120" PROMPT="Button 1" WIDTH="120" TYPE="IMAGE" EDITOR="INLINE" DATA="page:btn1"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; padding-top:10px; background-color:DDDDDD;"><a href="%BTN1_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDE" PROMPT="Enter Button Name" WIDTH="120" TYPE="TEXT" HELP="Enter the Name of the Button here" EDITOR="INLINE" DATA="page:buttonname_01"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; height:100%; padding-bottom:8px; background-color:DDDDDD;"><a href="%BTN1_LINK%" style="text-decoration:none; font-size:110%; font-weight:bold;">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDF" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+    <td align="center" width="25%">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="BTN2_LINK" SUB="BTN2_LINK" PROMPT="Link for Button 2" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:btn2_link"></ELEMENT>
+<ELEMENT ID="BTN2" HEIGHT="120" PROMPT="Button 2" WIDTH="120" TYPE="IMAGE" EDITOR="INLINE" DATA="page:btn2"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; padding-top:10px; background-color:DDDDDD;"><a href="%BTN2_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDH" PROMPT="Enter Button Name" WIDTH="120" TYPE="TEXT" HELP="Enter the Name of the Button here" EDITOR="INLINE" DATA="page:buttonname_02"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; height:100%; padding-bottom:8px; background-color:DDDDDD;"><a href="%BTN2_LINK%" style="text-decoration:none; font-size:110%; font-weight:bold;">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDI" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+    <td align="center" width="25%">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="BTN3_LINK" SUB="BTN3_LINK" PROMPT="Link for Button 3" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:btn3_link"></ELEMENT>
+<ELEMENT ID="BTN3" HEIGHT="120" PROMPT="Button 3" WIDTH="120" TYPE="IMAGE" EDITOR="INLINE" DATA="page:btn3"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; padding-top:10px; background-color:DDDDDD;"><a href="%BTN3_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDK" PROMPT="Enter Button Name" WIDTH="120" TYPE="TEXT" HELP="Enter the Name of the Button here" EDITOR="INLINE" DATA="page:buttonname_03"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; height:100%; padding-bottom:8px; background-color:DDDDDD;"><a href="%BTN3_LINK%" style="text-decoration:none; font-size:110%; font-weight:bold;">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDL" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+    <td align="center" width="25%">
+      ]]></HTML>
+</ELEMENT>
+<ELEMENT ID="BTN4_LINK" SUB="BTN4_LINK" PROMPT="Link for Button 4" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:btn4_link"></ELEMENT>
+<ELEMENT ID="BTN4" HEIGHT="120" PROMPT="Button 4" WIDTH="120" TYPE="IMAGE" EDITOR="INLINE" DATA="page:btn4"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; padding-top:10px; background-color:DDDDDD;"><a href="%BTN4_LINK%">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDN" PROMPT="Enter Button Name" WIDTH="120" TYPE="TEXT" HELP="Enter the Name of the Button here" EDITOR="INLINE" DATA="page:buttonname_04"><POSTTEXT><![CDATA[</a></div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div style="margin-bottom:0px; width:100%; height:100%; padding-bottom:8px; background-color:DDDDDD;"><a href="%BTN4_LINK%" style="text-decoration:none; font-size:110%; font-weight:bold;">]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="DBCPKDO" TYPE="OUTPUT"><HTML><![CDATA[
+    </td>
+  </tr>
+</table>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="TOP_HTML_FOCUS" HELPER="" PROMPT="HTML BOX" FONT="0" TYPE="HTML" EDITOR="INLINE" DATA="page:top_html_focus"></ELEMENT>
+<ELEMENT ID="TOP_HTML" PROMPT="HTML BOX for CUSTOM CATEGORIES" FONT="0" TYPE="HTML" EDITOR="INLINE" DATA="page:top_html"><HELPER><![CDATA[Used to contain html lists of categories. JS function handles trimming to only 5 list items displayed and a more/less link as neeeded.]]></HELPER>
+<POSTTEXT><![CDATA[
+<script type='text/javascript'>
+
+
+$(document).ready(function(){
+	handleCustomCatList();
+	});
+	
+
+</script>
+</div>
+]]></POSTTEXT>
+<PRETEXT><![CDATA[
+<div style='border:1px double #BBBBBB; padding: 3px 3px 3px 3px; text-align:justify; width:auto; margin-bottom:3px;' class='ztxt'>
+]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="SUBCAT1_HEADER" SUB="PAGE_SUBCATS_HEADER" PROMPT="Title for Sub Categories" TYPE="TEXTBOX" FONT="0" MAXLENGTH="200" EDITOR="INLINE" DATA="page:subcat1_header"><POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+<PRETEXT><![CDATA[<div class='section_title'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="SUBCAT" SUB="PAGE_SUBCATS_WITH_THUMBS" TYPE="SUBCAT" DESCENDTREE="0" NOROOT="1" FORCECOLUMNS="7" DATA="page:subcat" MODE="LIST"><HTML><![CDATA[
+
+
+
+<!-- slightly different css for image positioning on hover. old ratt code -->
+<!--[if IE 8]>
+
+<style type="text/css">
+
+.thumbnail:hover span {
+visibility: visible;
+left: -19px; /*position where enlarged image should offset horizontally */
+top: 102px;
+z-index: 10;
+}
+
+</style>
+
+<![endif]-->
+
+
+ 
+<script type="text/javascript"> 
+$(document).ready(function(){
+	handleCatThumbs(82);
+	});
+</script>
+
+<div class="catborder">
+<table cellpadding="0" width="606" cellspacing="4" align="center">
+<!-- ROW -->
+<tr>
+<!-- CATEGORY -->
+	<td width="82" align="left" class="ztable_row" valign="top">
+	<div style="margin-bottom:0px; width:82px;">
+	<ul class="thumb">
+	<li><a class="thumbnail" style="text-decoration:none;" href="<% print($cat_url); %>" title="<% load($cat_pretty); default(""); format(encode=>"entity"); print(); %>"><%
+	load($cat_thumb); default(""); image(w=>"120",h=>"120",tag=>"1",bg=>"FFFFFF",alt=>$cat_pretty); print(); %>
+	<span class="zlink" style="text-decoration: none; font-weight:normal;">
+	<% load($cat_pretty); default(""); print(); %></span></a>
+	</li>
+	</ul>
+	</div>
+	</td>
+<!-- /CATEGORY -->
+<!-- BLANK -->
+<td width="82"></td>
+<!-- /BLANK -->
+</tr>
+<!-- /ROW -->
+</table>
+</div>
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="CONTROLS_DISPLAY_OF_CATTHUMBS" TYPE="SPECL"><HTML><![CDATA[
+<%
+loadurp("VAR::hidecatthumbs"); default("");
+goto(label=>"HIDECATEGORIES",gt=>"0");
+	print("%PAGE_SUBCATS_HEADER%%PAGE_SUBCATS_WITH_THUMBS%");
+	stop();
+
+:HIDECATEGORIES();
+	print("<!-- categories are hidden due to uri param -->");
+%>
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="TOP_DESCRIPTION3" WIKI="3" HELPER="" PROMPT="Description for top of page UNDER CAT LISTS" FONT="0" TYPE="TEXT" EDITOR="INLINE" DATA="page:top_description3"><POSTTEXT><![CDATA[</div><!-- end text area -->]]></POSTTEXT>
+<PRETEXT><![CDATA[<!-- begin text area --><div class='ztxt txt_border_box'>]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="SORTBY_VAR" PROMPT="Define what Sort By is" SUB="SORTBY_VAR" DEFAULT="Brand" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:sortby_var"></ELEMENT>
+<ELEMENT ID="SUBCAT2" SUB="SUBCAT2" TYPE="SUBCAT" DESCENDTREE="0" NOROOT="1" FORCECOLUMNS="1" DATA="page:subcat2" MODE="LIST"><HTML><![CDATA[
+
+<select name='brand' id='brand' class='zform_select' style=' font-size:10px;' onchange="window.open(this.options[this.selectedIndex].value,'_top')">
+<option value=''>Sort By %SORTBY_VAR%</option>
+<!-- CATEGORY -->
+<option value='<%load($cat_url); default(''); print();%>'><% load($cat_pretty); default(""); print(); %></option>
+<!-- /CATEGORY -->
+</select>
+
+]]></HTML>
+</ELEMENT>
+<ELEMENT ID="PRODLIST1_HEADER" PROMPT="Title for Featured Items" TYPE="TEXTBOX" FONT="0" EDITOR="INLINE" DATA="page:prodlist1_header"><PRETEXT><![CDATA[<div  class='section_title'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+<ELEMENT FORMAT="CUSTOM" ID="PRODLIST_GEN3_MPHEAD" SIZE="15" PROMPT="Product List" MAX="2500" TYPE="PRODLIST" MULTIPAGE="1" ALTERNATE="0" SORTBY="RANDOM" INVENTORY="1" DATA="page:prodlist_custom" COLS="3"><HTML><![CDATA[
+
+<a name='productList'></a>
+<div id='prodlist'>
+
+<table cellspacing='10' cellpadding='0' width='605'>
+<!-- ROW -->
+<tr>
+<!-- PRODUCT -->
+<!-- product: <% print($COUNT); %> -->
+	<td class='ztable_row' align='left' width='33%' valign='top'>
+	<div class='prodContainer' onClick="document.location = '<% print($PROD_URL); %>';" title='<% load($zoovy:prod_name); default(""); format(encode=>"entity"); print(); %>'>
+
+
+
+<div class='prodThumb'>
+	<div class='prodTag'>
+<%
+print("");
+/* load each tag and see if it is set.  If so, display a sticker.  If not, skip to the next tag. */
+
+load($is:specialorder); default("");
+goto(label=>"SKIP_SPECIALORDER",ne=>"1");
+	image(src=>"/tags/small/specialorder",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Special Order");
+	print();
+	stop();
+:SKIP_SPECIALORDER();
+
+
+load($is:preorder); default("");
+goto(label=>"SKIP_PREORDER",ne=>"1");
+	image(src=>"/tags/small/preorder",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Preorder");
+	print();
+	stop();
+:SKIP_PREORDER();
+
+
+/* user2 = packagedeal */
+load($is:user2); default("");
+goto(label=>"SKIP_USER2",ne=>"1");
+	image(src=>"/tags/small/packagedeal",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Package Deal");
+	print();
+	stop();
+:SKIP_USER2();
+
+
+/* user1 = clearance */
+load($is:user1); default("");
+goto(label=>"SKIP_USER1",ne=>"1");
+	image(src=>"/tags/small/clearance",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Clearance");
+	print();
+	stop();
+:SKIP_USER1();
+
+
+load($is:newarrival); default("");
+goto(label=>"SKIP_NEWARRIVAL",ne=>"1");
+	image(src=>"/tags/small/newarrival",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"New Arrival");
+	print();
+	stop();
+:SKIP_NEWARRIVAL();
+
+
+load($is:sale); default("");
+goto(label=>"SKIP_SALE",ne=>"1");
+	image(src=>"/tags/small/sale",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Sale");
+	print();
+	stop();
+:SKIP_SALE();
+
+
+load($is:bestseller); default("");
+goto(label=>"SKIP_BESTSELLER",ne=>"1");
+	image(src=>"/tags/small/bestseller",h=>"25",w=>"125",bg=>"TTTTTT",tag=>"1",alt=>"Best Seller");
+	print();
+	stop();
+:SKIP_BESTSELLER();
+
+
+print("<!-- product is not tagged -->");
+%>
+	</div>
+	<% load($zoovy:prod_thumb); default(""); default($zoovy:prod_image1); image(w=>"150",h=>"150",tag=>"1",alt=>$zoovy:prod_name); print(); %></a>
+</div>
+
+<div class='no_underline prodName' class='zlink'><a href='<% print($PROD_URL); %>'><% load($zoovy:prod_name); default(""); print(); %></a></div>
+
+
+<div class='prodPricing'>
+	<div class='ztable_row_title basePrice'><span class='prompt'><%
+load($is:sale); default("");
+goto(label=>"ISSALE",eq=>"1"); 
+	print("Zephyr Low Price:");
+	stop();
+:ISSALE();
+	print("Zephyr Sale Price:");
+%> </span><span class='value'><% load($zoovy:base_price); default(""); format(money); print(); %></span></div>
+
+	<div>
+<%
+print("");
+
+/* the div around the price is closed at the start of the MSRP div OR at the very end. */
+loadurp("product:zoovy:prod_show_no_price"); default("");
+goto(label=>"DISABLEDPRICE",ne=>"");
+
+	loadurp("product:zoovy:base_price");
+	set($price=>$_);
+	
+/* if the msrp is blank or the  - price is less than 0, do not display savings */
+	loadurp("product:zoovy:prod_msrp");
+	stop(unless=>$_);
+	goto(label=>"END",lt=>$price);
+	goto(label=>"END",eq=>$price);
+		set($MSRP=>$_);
+		load($MSRP);
+		math(op=>"subtract",var=>$price);
+/* don't show savings of less than one dollar */
+		goto(label=>"END",lt=>"1"); 
+		format(hidezero); format(money);
+		format(pretext=>"<span  class='ztxt priceSavings'><b>Save:  </b>",posttext=>""); 
+		print();
+		
+		load($zoovy:prod_msrp);
+  stop(unless=>$_);
+	set($MSRP=>$_);
+
+	load($zoovy:base_price);
+	math(op=>"divide",var=>$MSRP); 
+	math(op=>"subtract",var=>"1");
+	math(op=>"multiply",var=>"-100"); format(hidezero);
+	format(convert=>"number",precision=>"0"); format(pretext=>" <b>(",posttext=>"%)</b></span>"); print();
+	
+:END();
+:DISABLEDPRICE();
+%>
+	</div>
+</div>	
+	
+	</div>
+	
+<div class='clearAll'></div>
+<div class='prodContainer'>
+
+	<div class='floatLeft'><button class='zform_button' onClick="document.location = '<% print($PROD_URL); %>';">More Details</button></div>
+
+	<div class='floatRight'><button class='zform_button zform_atc_button' onClick="document.location = '<%
+load($POGS); default("");
+goto(label=>"HASPOGSORCHILDREN",ne=>"");
+load($zoovy:grp_type); default("");
+goto(label=>"HASPOGSORCHILDREN",eq=>"PARENT");
+	print($ADD_URL);
+	stop();
+	
+:HASPOGSORCHILDREN();
+	print($PROD_URL);
+%>'">Add to Cart</button></div>
+
+</div>
+
+	</td>
+<!-- /PRODUCT -->
+<!-- BLANK -->
+<td class='ztable_row'> </td>
+<!-- /BLANK -->
+</tr>
+<!-- /ROW -->
+</table>
+
+</div>
+
+]]></HTML>
+<MULTIPAGE_HEADER><![CDATA[
+<!-- begin multipage header -->
+
+
+<div style='height:30px;' class='ztxt zcolor_light' id='mpHeaderControls'>
+
+	<div style='float:left; padding:6px; font-weight:bold;'>
+<%
+print("");
+
+/* the header is a little different based on whether or not multiple pages are present */
+load($TOTALPAGES); default("1");
+goto(label=>"MULTIPAGES",ne=>"1");
+	print("Displaying ");
+	print($TOTALPRODUCTS);
+	print(" items");
+	stop();
+
+
+:MULTIPAGES();
+
+/* outputs: displaying items X - Y of Z items.  */
+
+/* used to set X (see example above) */
+loadurp("VAR::size"); default("30"); set($VSIZE=>$_);
+
+/* used to generate Y.  If Y is greater than Z, Z is used for Y (this could occur on the last page of multipage) */
+
+loadurp("VAR::p"); default("1"); math(op=>"multiply",var=>$VSIZE);
+set($LASTPROD=>$_);
+goto(label=>"NOTLASTPAGE",lt=>$TOTALPRODUCTS);
+	set($LASTPROD=>$TOTALPRODUCTS);
+:NOTLASTPAGE();
+
+math(op=>"subtract",var=>$VSIZE);
+math(op=>"add",var=>"1");
+
+format(pretext=>"Displaying ",posttext=>" - "); format(posttext=>$LASTPROD); format(posttext=>" of ");  format(posttext=>$TOTALPRODUCTS);  format(posttext=>" items");  print();
+%>
+	</div>
+
+
+	<div style='float:right; padding:6px;'>
+<form name='viewSortCriteria' id='viewSortCriteria' style='display:inline;'>
+
+
+<%
+/* if any URI variables exist, preserve them. */
+/* this is the default behavior of the auto-generated links, so this is for behavioral consistency. */
+/* only params that are NOT p, size or sortby are preserved because sortby and size are in the form and P should be reset each time this form is submitted */
+
+
+print("");
+urivars();
+stop(unless=>$_);
+	load("sortby,p,size");
+	set($urivariables=>$_);
+	urivars(blacklist=>$urivariables);
+	stop(unless=>$_);
+		pull(stack=>>$PARAMSTACK,format=>"textlist",delimiter=>"=",p0=>"KEY",p1=>"VALUE",linedelimiter=>"&");
+		count(stack=>>$PARAMSTACK);
+		
+		
+:PARAMLOOP();
+pop(stack=>>$PARAMSTACK,namespace=>"PARAM");
+print("
+<input type='hidden' name='");
+print($PARAM.KEY);
+print("' value='");
+print($PARAM.VALUE);
+print("' />");
+	
+	goto(nb=>$PARAMSTACK,label=>"PARAMLOOP");
+		
+%>
+
+%SUBCAT2%
+
+<select name='sortby' id='sortby' class='zform_select' style=' font-size:10px;' onchange="document.forms['viewSortCriteria'].submit();">
+	<option value=''>Sort Order</option>
+	<option value='zoovy:prod_name' id='zoovy:prod_name'>Name: A to Z</option>
+	<option value='!zoovy:prod_name' id='!zoovy:prod_name'>Name: Z to A</option>
+	<option value='zoovy:base_price' id='zoovy:base_price'>Price: Low to High</option>
+	<option value='!zoovy:base_price' id='!zoovy:base_price'>Price: High to Low</option>
+	<option value='zoovy:prod_mfg' id='zoovy:prod_mfg'>Brand: A to Z</option>
+	<option value='!zoovy:prod_mfg' id='!zoovy:prod_mfg'>Brand: Z to A</option>
+</select>
+
+
+<select name='size' id='size' class='zform_select' style=' font-size:10px;' onchange="document.forms['viewSortCriteria'].submit();">
+	<option value=''>Items per Page</option>
+	<option value='15' id='size_15'>15 items per page</option>
+	<option value='30' id='size_30'>30 items per page</option>
+	<option value='60' id='size_60'>60 items per page</option>
+	<option value='2500' id='size_2500'>View All</option>
+</select>
+
+
+</form>
+
+	</div>
+
+<div style="clear:both;"></div>
+
+</div>
+
+
+<div id='mpHeaderPages'>
+<table cellspacing='0' cellpadding='0'>
+<tr>
+	<td align='left' NOWRAP class='ztable_head'>
+<%
+/* outputs the previous page link IF the first page of products isnt loaded */
+print("");
+loadurp("VAR::p"); default("1");
+goto(ne=>"1",label=>"PREVIOUS");
+	stop();
+	
+:PREVIOUS();
+	print("<div style='padding:4px;'><a href='");
+	print($PREVURL);
+	print("' class='ztable_head'>&#171; Previous</a></div>");
+%>
+	</td>
+	<td align='center' width='99%' class='ztable_head'>
+
+<div><% load($PAGELINKS); default(""); print(); %></div>
+	</td>
+	<td align='right' NOWRAP class='ztable_head'>
+	<%
+/* outputs the next page link IF the last page of products isnt loaded and there is more than one page total  */
+
+print("");
+
+load($TOTALPAGES); default("1");
+	goto(label=>"MULTIPAGES",ne=>"1");
+	stop();
+
+:MULTIPAGES();
+
+loadurp("VAR::p"); default("1");
+/* if we are on the last page do NOT show the link to the next page */
+goto(ne=>$TOTALPAGES,label=>"NEXT");
+	stop();
+	
+:NEXT();
+	 print("</td><td align='right' NOWRAP class='ztable_head'><div style='padding:4px;'><a href='");
+	 load($NEXTURL); default(""); print();
+	 print("'  class='ztable_head'>Next &#187;</a></div>");
+%>
+
+	</td>
+</tr>
+</table>
+</div>
+
+
+<script type="text/javascript">
+
+<!--
+
+
+
+if(typeof(selectOption) == 'function')	{
+// preselect the products per page and sort order select lists
+	selectOption("size_<% loadurp("VAR::size"); default("15"); print(); %>",document.viewSortCriteria.size);
+	selectOption("<% loadurp("VAR::sortby"); default("RANDOM"); print(); %>",document.viewSortCriteria.sortby);
+	}
+
+
+//-->
+</script>
+
+]]></MULTIPAGE_HEADER>
+<MULTIPAGE_FOOTER><![CDATA[
+
+<div id='mpFooterPages'>
+<table cellspacing='0' cellpadding='0'>
+<tr>
+	<td align='left' NOWRAP class='ztable_head'>
+<%
+/* outputs the previous page link IF the first page of products isnt loaded */
+print("");
+loadurp("VAR::p"); default("1");
+goto(ne=>"1",label=>"PREVIOUS");
+	stop();
+	
+:PREVIOUS();
+	print("<div style='padding:4px;'><a href='");
+	print($PREVURL);
+	print("' class='ztable_head'>&#171; Previous</a></div>");
+%>
+	</td>
+	<td align='center' width='99%' class='ztable_head'>
+
+<div><% load($PAGELINKS); default(""); print(); %></div>
+	</td>
+	<td align='right' NOWRAP class='ztable_head'>
+	<%
+/* outputs the next page link IF the last page of products isnt loaded and there is more than one page total  */
+
+print("");
+
+load($TOTALPAGES); default("1");
+	goto(label=>"MULTIPAGES",ne=>"1");
+	stop();
+
+:MULTIPAGES();
+
+loadurp("VAR::p"); default("1");
+/* if we are on the last page do NOT show the link to the next page */
+goto(ne=>$TOTALPAGES,label=>"NEXT");
+	stop();
+	
+:NEXT();
+	 print("</td><td align='right' NOWRAP class='ztable_head'><div style='padding:4px;'><a href='");
+	 load($NEXTURL); default(""); print();
+	 print("'  class='ztable_head'>Next &#187;</a></div>");
+%>
+
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+]]></MULTIPAGE_FOOTER>
+<INIT><![CDATA[<%
+
+/* override the default INI values here. this gets preprocessed.  */
+
+loadurp("VAR::size"); default($SIZE); initset(SIZE=>$_);
+loadurp("VAR::sortby"); default($SORTBY); initset(SORTBY=>$_);
+
+%>]]></INIT>
+</ELEMENT>
+<ELEMENT ID="HTMLVIDS" PROMPT="HTML VIDS" TYPE="HTML" HELP="Please enter a message that will appear on this page" EDITOR="INLINE" DATA="page:htmlvids"></ELEMENT>
+<ELEMENT ID="DESCRIPTION" WIKI="3" PROMPT="Page Description (WIKI)" FONT="0" TYPE="TEXT" EDITOR="INLINE" DATA="page:description"><POSTTEXT><![CDATA[</div><!-- end text area -->]]></POSTTEXT>
+<PRETEXT><![CDATA[<!-- begin text area --><div style='margin-top:5px; margin-bottom:5px;' class='ztxt txt_border_box'><span style='font-size:1.1em; color:#777777;'><b>More Information:</b></span><br />]]></PRETEXT>
+</ELEMENT>
+<ELEMENT ID="HTMLLINKS" PROMPT="HTML LINKS" TYPE="HTML" HELP="HTML CODED LINKS" EDITOR="INLINE" DATA="page:htmllinks"><PRETEXT><![CDATA[<div class='ztxt txt_border_box'>]]></PRETEXT>
+<POSTTEXT><![CDATA[</div>]]></POSTTEXT>
+</ELEMENT>
+
+</TEMPLATE>

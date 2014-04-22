@@ -57,8 +57,9 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 //a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
 //there's an 'activator' for this in the 'complete' for product, home and category pages.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //a srcset polyfill. used for a lot of imagery.
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.min.js']);
+//myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
+//myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
 
 
 
@@ -126,11 +127,17 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 
 $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
-	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
+	var $primaryImage = $('.MagicZoomPlus:first img',$ele);
+	//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
+	$primaryImage.parent().zoom({
+		'touch' : true,
+		'url' : myApp.u.makeImage({name : $primaryImage.data('media'), tag : false})
+		});
+/*	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
 		dump(" -> onComplete for pid: "+infoObj.pid);
 		myApp.ext.store_zephyrapp.u.handleMZP($ele,infoObj);
 		});
-	});
+*/	});
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
 	function execCycle()	{
