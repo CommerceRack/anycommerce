@@ -40,7 +40,13 @@ var store_routing = function(_app) {
 				
 				
 				_app.router.addAlias('homepage', 	function(routeObj){showContent('homepage',	routeObj.params);});
-				_app.router.addAlias('category', 	function(routeObj){showContent('category',	routeObj.params);});
+				_app.router.addAlias('category', 	function(routeObj){
+					// having an issue with chrome on iOS. this is a test to see if removing /. solves it.
+					if(routeObj.params && routeObj.params.navcat && routeObj.params.navcat.charAt(0) != '.')	{
+						routeObj.params.navcat = '.'+routeObj.params.navcat;
+						}
+					showContent('category',	routeObj.params);
+					});
 				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
 				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
 				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});
