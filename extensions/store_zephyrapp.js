@@ -368,8 +368,9 @@ var store_zephyrapp = function(_app) {
 						var dayOfTheWeek = now.getDay();
 						var hour = now.getHours();
 						//after 12, add 1 business day.
-						var calendarDays = (hour < 13) ? businessDaysLeftForDelivery : businessDaysLeftForDelivery+1; // * 201403 -> added a +1 day for after 12:00
-						
+// this didn't work as expected. didn't take weekends into consideration.
+//						var calendarDays = (hour < 13) ? businessDaysLeftForDelivery : businessDaysLeftForDelivery+1; // * 201403 -> added a +1 day for after 12:00
+						var calendarDays = businessDaysLeftForDelivery;
 						var deliveryDay = dayOfTheWeek + businessDaysLeftForDelivery;
 						if (deliveryDay >= 6) {
 							//deduct this-week days
