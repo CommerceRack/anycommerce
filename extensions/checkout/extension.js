@@ -1056,7 +1056,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					if($checkout instanceof jQuery && $checkout.length)	{
 						var orderID = checkoutData.orderid;
 //show post-checkout invoice and success messaging.
-						$checkout.empty();
+						$checkout.empty().show();
 						$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
 		
 		
@@ -1084,7 +1084,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 										_app.u.throwMessage(rd);
 										}
 									else {
-										_app.calls.cartDetail.init(rd._cartid,{},'immutable');
+										_app.calls.cartDetail.init(rd.cartid,{},'immutable');
 										_app.model.dispatchThis('immutable');
 										}
 									}
@@ -1652,7 +1652,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else	{
 					if(_app.ext.order_create.validate.checkout($form))	{
-						$('body').showLoading({'message':'Creating order...'});
+						$form.slideUp('fast',function(){
+							$('body').showLoading({'message':'Creating order...'});
+							});
 						_app.ext.cco.u.sanitizeAndUpdateCart($form);
 						var cartid = $ele.closest("[data-app-role='checkout']").data('cartid'), payments;
 //paypal payments are added to the q as soon as the user returns from paypal.
