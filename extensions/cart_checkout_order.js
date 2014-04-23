@@ -543,16 +543,17 @@ left them be to provide guidance later.
 				},
 
 //will get the items from a cart and return them as links. used for social marketing.
-			cartContentsAsLinks : function(cartid)	{
+			cartContentsAsLinks : function(cartObj)	{
 //				_app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				_app.u.dump(' -> datapointer = '+datapointer);
-				var r = "";
-				if(cartid && _app.u.thisNestedExists("data.cartDetail|"+cartid+".@items",_app))	{
-					var items = _app.data[datapointer]['@ITEMS'], L = items.length;
+				var r = false;
+				if(!$.isEmptyObject(cartObj))	{
+					var items = cartObj['@ITEMS'] || [], L = items.length;
+					if(L)	{r = ''}; //set to blank so += doesn't start with undefined. 
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
 						if(items[i].sku.charAt(0) != '%')	{
-							r += "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n";
+							r +=  (_app.vars._clientid == '1pc') ? "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n" : "http://"+_app.vars.sdomain+"#!product/"+items[i].sku+"/\n";
 							}
 						}
 					}
@@ -821,7 +822,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
-				dump("BEGIN cco.u.sanitizeAndUpdateCart");
+//				dump("BEGIN cco.u.sanitizeAndUpdateCart");
 				if($form instanceof jQuery)	{
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON({cb:true});
@@ -884,7 +885,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
 					delete formObj['want/bill_to_ship_cb'];
-//CC and CV should never go. They're added as part of cartPaymentQ
+//CC and CV should never go. They're saved in memory and added as part of cartPaymentQ
 					delete formObj['payment/CC'];
 					delete formObj['payment/CV'];
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
@@ -1153,7 +1154,7 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
-				var r = '', cart;
+				var r = '', cartid;
 				
 				if(data.value.cart && data.value.cart.cartid){
 					cartid = data.value.cart.cartid;
