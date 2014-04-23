@@ -397,10 +397,13 @@ left them be to provide guidance later.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
 						var $c = $(this);
-						$c.empty().showLoading({'message':'Updating cart contents'});
+						$c.showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
 						_app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'tlc',
+							'before' : function(r)	{
+								r.jqObj.empty();
+								},
 							'onComplete' : function(){
 								$cart.trigger('complete',$.extend(true,{},P,event));
 								},
