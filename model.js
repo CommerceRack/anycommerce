@@ -354,9 +354,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 				}
 			}
 		else	{
-//			_app.u.dump(j);
-			_app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-//			_app.u.dump("pipeUUID: "+pipeUUID);
+			_app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown,'error');
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			_app.model.handleCancellations(Q,QID);
 			if(typeof jQuery().hideLoading == 'function'){
