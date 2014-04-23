@@ -1359,14 +1359,8 @@ in a reorder, that data needs to be converted to the variations format required 
 				return false;
 				}, //cartItemRemove
 			
-			cartShipmethodSelect : function($ele,p)	{
-				p.preventDefault();
-				// ### TODO -> wrap this up once template on completes are ready.
-				},
 			//this update could get triggered by a quantity update, a button or a price change (admin).
 			//$container will contain the qty and, if present, the price.
-			
-			
 			//this can be used to update a store or admin session. the callback here is fixed and will update the cart IF the cart was generated using getCartAsJqObj
 			cartItemUpdateExec : function($ele,p){
 				p.preventDefault();

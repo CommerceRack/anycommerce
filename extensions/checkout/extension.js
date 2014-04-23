@@ -1200,6 +1200,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					_app.u.validateForm($ele.closest('fieldset')); //this will handle the error display.
 					}
+				return false;
 				},
 			
 			adminAddressCreateUpdateShow : function($ele,p)	{
@@ -1230,13 +1231,17 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						$("fieldset[data-app-addresstype='"+addressType+"']",$checkout).find("address[data-_id='"+addrObj.SHORTCUT+"'] button[data-app-role='addressSelectButton']").trigger('click');
 						}
 					},_app.ext.cco.u.getAndRegularizeAddrObjByID(_app.data['adminCustomerDetail|'+CID]['@'+vars.TYPE.toUpperCase()],$ele.closest("[data-_id]").data('_id'),vars.TYPE,false));
+				return false;
 				},
 
 			adminCartRemoveFromSession : function($ele,p)	{
+				p.preventDefault();
 				_app.model.removeCartFromSession($ele.closest("[data-app-role='checkout']").data('cartid'));
 				navigateTo("#!tab/orders");
+				return false;
 				},
 			adminOrderDetailShow : function($ele,p)	{
+				p.preventDefault();
 				var orderID = $ele.closest("[data-orderid]").data('orderid');
 				if(orderID)	{
 					var $orderContent = $("[data-app-role='orderContents']:first",$ele.closest("[data-app-role='orderContainer']")).show();
@@ -1250,9 +1255,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					$('#globalMessaging').anymessage({"message":"In order_create.e.adminOrderDetailShow, unable to ascertain orderid.","gMessage":true});
 					}
+				return false;
 				},
 
 			buyerLogout : function($ele,p)	{
+				p.preventDefault;
 //				_app.u.dump(" BEGIN order_create.e.buyerLogout");
 //					_app.u.dump(" -> order_create.e.buyerLogout (Click!)");
 				_app.calls.buyerLogout.init({'callback':function(rt){
@@ -1263,17 +1270,19 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.model.dispatchThis('immutable');
 					}});
 				_app.model.dispatchThis('immutable');
+				return false;
 				},
 
 			cartItemAppendSKU : function($ele,p)	{
-//				dump("BEGIN order_create.e.cartItemAppendSKU");
+				p.preventDefault();
 				p.skuArr = [$ele.closest("[data-sku]").data('sku')];
-//				dump(" -> p.skuArr: "); dump(p.skuArr);
 				this.cartItemAppendAllSKUsFromOrder($ele,p);
+				return false;
 				},
 
 			//SKU/STID required (fully qualified, w/ variations et all);
 			cartItemAppendAllSKUsFromOrder : function($ele,p)	{
+				p.preventDefault();
 				var $container = $ele.closest("[data-app-role='orderContainer']"), orderID = $container.data('orderid');
 				if(orderID)	{
 					var $checkout = $ele.closest("[data-app-role='checkout']"), cartID = $checkout.data('cartid');
@@ -1289,10 +1298,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					
 					}
+				return false;
 				},
 
 			//updates line item in cart. This event can be fired on an element (input, button, etc) within the scope of the line item template.
 			cartItemUpdateExec : function($ele,p){
+				p.preventDefault();
 				var
 					$container = $ele.closest('[data-stid]'),
 					cartid = $ele.closest(":data(cartid)").data('cartid'),
@@ -1315,6 +1326,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					//cartItemUpdate will handle error display.
 					}
+				return false;
 				}, //cartItemUpdateExec
 
 
@@ -1347,11 +1359,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					if($("[name='sum/shp_total']",$container).val())	{}
 					else	{$("[name='sum/shp_total']",$container).addClass('ui-state-error')}
 					}
-
+				return false;
 				}, //orderSummarySave
 
 
 			cartItemAddFromForm : function($ele,p)	{
+				p.preventDefault();
 				var $chkoutForm	= $ele.closest("[data-add2cart-role='container']"), $checkout = $ele.closest("[data-app-role='checkout']");
 				_app.ext.store_product.u.handleAddToCart($chkoutForm,{'callback': function(){
 					_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
@@ -1373,7 +1386,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
 					_app.model.dispatchThis('immutable');
 					}});
-				
+				return false;
 				}, //cartItemAddFromForm
 
 			cartItemAddWithChooser : function($ele,p)	{
@@ -1432,10 +1445,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						}
 					});
 				_app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button});
+				return false;
 				},
 
 //ele is likely a div or section. the element around all the inputs.
 			addTriggerPayMethodUpdate : function($ele,p)	{
+				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset');
 				$("input[type='radio']",$ele).each(function(){
 					var $input = $(this);
@@ -1445,11 +1460,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						_app.ext.order_create.u.showSupplementalInputs($input);
 						_app.ext.order_create.u.handlePanel($input.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic']); //for toggling display of ref. # field.
 						});
-					})
+					});
+				return false;
 				}, //addTriggerPayMethodUpdate
 			
 			shipOrPayMethodSelectExec : function($ele,p)	{
-				_app.u.dump("BEGIN order_create.e.shipOrPayMethodSelectExec");
+				p.preventDefault();
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
 				if($ele.data('updatemode') == 'cart')	{
@@ -1461,11 +1477,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //destroys cart and updates big three panels (shipping, payment and summary)
 				_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 				_app.model.dispatchThis("immutable");
+				return false;
 				},
 			
 
 //triggered on specific address inputs. When an address is updated, several things could be impacted, including tax, shipping options and payment methods.
 			execAddressUpdate : function($ele,p)	{
+				p.preventDefault();
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
 				//if bill/ship are the same, duplicate data in both places OR shipping methods won't update.
@@ -1476,11 +1494,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				_app.ext.cco.calls.cartSet.init(obj); //update the cart
 				_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 				_app.model.dispatchThis('immutable');
+				return false
 				}, //execAddressUpdate
 
 //executed when an predefined address (from a buyer who is logged in) is selected.
 			execBuyerAddressSelect : function($ele,p)	{
-				dump(" -> BEGIN order_create.e.execBuyerAddressSelect");
 				p.preventDefault();
 				var
 					addressType = $ele.closest('fieldset').data('app-addresstype'), //will be ship or bill.
@@ -1532,20 +1550,23 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					$ele.closest('fieldset').anymessage({'message':'In order_create.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
 					}
-
+				return false;
 				}, //execBuyerAddressSelect
 
 //immediately update cart anytime the email address is added/changed. for remarketing purposes.
 //no need to refresh the cartDetail here.
 
 			execBuyerEmailUpdate : function($ele,p)	{
+				p.preventDefault();
 				if(_app.u.isValidEmail($ele.val()))	{
 					_app.ext.cco.calls.cartSet.init({'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid'),'bill/email':$ele.val()},{},'immutable');
 					_app.model.dispatchThis('immutable');
 					}
+				return false;
 				}, //execBuyerEmailUpdate
 
 			execBuyerLogin : function($ele,p)	{
+				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset'),
 				$email = $("[name='bill/email']",$fieldset),
 				$password = $("[name='password']",$fieldset),
@@ -1600,6 +1621,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						$password.addClass('ui-state-error');
 						}
 					}
+				return false;
 				}, //execBuyerLogin
 
 			cartOrderSave : function($ele,p)	{
@@ -1614,6 +1636,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				},
 
 			execCartOrderCreate : function($ele,p)	{
+				p.preventDefault();
 				var $form = $ele.closest('form');
 				
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
@@ -1667,19 +1690,23 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage, .ui-state-error',$form).first().offset().top},1000); //scroll to first instance of error.
 						}
 					}
+				return false;
 				}, //execCartOrderCreate
 
 //update the cart. no callbacks or anything like that, just get the data to the api.
 //used on notes and could be recyled if needed.
 			execCartSet : function($ele,p)	{
+				p.preventDefault();
 				var obj = {};
 				obj[$ele.attr('name')] = $ele.val();
 				obj._cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
 				_app.ext.cco.calls.cartSet.init(obj);
 				_app.model.dispatchThis('immutable');
+				return false;
 				}, //execCartSet
 
 			execChangeFromPayPal : function($ele,p)	{
+				p.preventDefault();
 				_app.ext.cco.u.nukePayPalEC();
 				var $form = $ele.closest('form');
 				_app.ext.order_create.u.handleCommonPanels($form);
@@ -1688,9 +1715,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.ext.order_create.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic']);
 					}},'immutable');
 				_app.model.dispatchThis('immutable');
+				return false;
 				},
 
 			execCountryUpdate : function($ele,p)	{
+				p.preventDefault();
 				//recalculate the shipping methods and payment options.
 				var obj = {}, $form = $ele.closest('form');
 //temporary workaround. setting bill country to int isn't updating ship methods correctly.
@@ -1704,9 +1733,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				_app.ext.cco.calls.cartSet.init(obj); //update the cart w/ the country.
 				_app.ext.order_create.u.handleCommonPanels($form);
 				_app.model.dispatchThis('immutable');
+				return false;
 				}, //execCountryUpdate
 
 			execCouponAdd : function($ele,p)	{
+				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset'),
 				$form = $ele.closest('form'),
 				cartid = $ele.closest("[data-app-role='checkout']").data('cartid'),
@@ -1736,21 +1767,28 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				
 				_app.ext.order_create.u.handleCommonPanels($form);
 				_app.model.dispatchThis('immutable');
+				return false;
 				}, //execCouponAdd
+
 //executed on a giftcard when it is in the list of payment methods.
 			addGiftcardPaymethodAsPayment : function($ele,p)	{
+				p.preventDefault();
 				if($ele.attr('data-giftcard-id'))	{
 					$ele.button('disable');
 					var $checkout = $ele.closest("[data-app-role='checkout']");
-					_app.ext.cco.calls.cartGiftcardAdd.init($ele.attr('data-giftcard-id'),$checkout.data('cartid'),{'callback':'updateAllPanels','extension':'order_create','jqObj':$checkout},'immutable');
+					_app.ext.cco.calls.cartGiftcardAdd.init($ele.attr('data-giftcard-id'),$checkout.data('cartid'),{'jqObj':$checkout},'immutable'); //jqObj passed for error handling. callback handled by cart update.
+					_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
+					_app.calls.cartDetail.init($checkout.data('cartid'),{'callback':'updateAllPanels','extension':'order_create','jqObj':$checkout},'immutable');
 					_app.model.dispatchThis('immutable');
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In order_create.e.addGiftcardPaymethodAsPayment, data-giftcard-id is not set on trigger element.","gMessage":true});
 					}
+				return false;
 				},
 
 			execGiftcardAdd : function($ele,p)	{
+				p.preventDefault();
 				var $fieldset = $ele.closest('fieldset'),
 				cartid = $ele.closest("[data-app-role='checkout']").data('cartid'),
 				$input = $("[name='giftcard']",$fieldset);
@@ -1776,13 +1814,17 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}});
 				_app.ext.order_create.u.handleCommonPanels($input.closest('form'));
 				_app.model.dispatchThis('immutable');
+				return false;
 				}, //execGiftcardAdd
 
 			execInvoicePrint : function($ele,p)	{
+				p.preventDefault();
 				_app.u.printByjqObj($ele.closest("[data-app-role='invoiceContainer']"));
+				return false;
 				}, //execInvoicePrint
 
 			showBuyerAddressAdd : function($ele)	{
+				p.preventDefault();
 				var
 					$checkoutForm = $ele.closest('form'), //used in some callbacks later.
 					$checkoutAddrFieldset = $ele.closest('fieldset'),
@@ -1814,9 +1856,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.model.dispatchThis('immutable');
 					});
 					}
+				return false;
 				}, //showBuyerAddressAdd
 
 			showBuyerAddressUpdate : function($ele,p)	{
+				p.preventDefault();
 				p = p || {};
 				var $checkoutForm = $ele.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $ele.closest('fieldset');
@@ -1840,10 +1884,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						}},'immutable');
 
 					_app.model.dispatchThis('immutable');
-					})
+					});
+				return false;
 				}, //showBuyerAddressUpdate
 
 			tagAsAccountCreate : function($ele,p)	{
+				p.preventDefault();
 				var $checkout = $ele.closest("[data-app-role='checkout']");
 				_app.ext.cco.calls.cartSet.init({'_cartid':$checkout.data('cartid'),'want/create_customer': $ele.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
 				_app.model.destroy('cartDetail|'+$checkout.data('cartid'));
@@ -1852,9 +1898,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.ext.order_create.u.handlePanel($ele.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
 					}},'immutable');
 				_app.model.dispatchThis('immutable');
+				return false;
 				}, //tagAsAccountCreate
 
 			tagAsBillToShip : function($ele,p)	{
+				p.preventDefault();
 				var $form = $ele.closest('form');
 				_app.ext.cco.calls.cartSet.init({'want/bill_to_ship':($ele.is(':checked')) ? 1 : 0,_cartid : $ele.closest("[data-app-role='checkout']").data('cartid')},{},'immutable'); //adds dispatches.
 //when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
@@ -1874,6 +1922,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				_app.ext.order_create.u.handleCommonPanels($form);
 				_app.model.dispatchThis('immutable');
+				return false;
 				} //tagAsBillToShip
 			},
 
