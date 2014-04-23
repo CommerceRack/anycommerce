@@ -190,146 +190,51 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					r += "<\/ul><\/p>";
 					$('#globalMessaging').anymessage({'message':r,'persistent':true});
 					}
-
 				return r;
-				
 				}
 			},	//handleInventoryUpdate
 
 
+//callback executed on the cartOrderCreate AND subsequent cartOrderStatus calls.
 
-
-/*
-this callback is executed after a successful checkout.  'success' is defined as an order created, the order may contain 'payment required' warnings.
-this is what would traditionally be called an 'invoice' page, but certainly not limited to just showing the invoice.
-*/
-		cart2OrderIsComplete : {
+		cartOrderStatus : {
 			onSuccess : function(_rtag)	{
-//				_app.u.dump('BEGIN _app.ext.order_create.callbacks.checkoutSuccess.onSuccess   datapointer = '+_rtag.datapointer);
-				$('body').hideLoading();
-//nuke old form content. not needed anymore. gets replaced with invoice-ish content.
-				var $checkout = _rtag.jqObj,
-				checkoutData = _app.data[_rtag.datapointer],
-				oldCartID = $checkout.closest("[data-app-role='checkout']").data('cartid'),
-				orderID = _app.data[_rtag.datapointer].orderid;
-				
-//show post-checkout invoice and success messaging.
-				$checkout.empty();
-				$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
-
-//This will add a cart message. handy if the buyer and merchant are dialoging.
-				if(cartMessagePush in window)	{
-					cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
+				dump("BEGIN order_create.callbacks.cartOrderStatus.onSuccess"); 
+				if(_app.data[_rtag.datapointer].finished)	{
+					_app.ext.order_create.a.checkoutComplete(_rtag);
 					}
-
-//time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart id, if necessary (admin doesn't auto-create a new one).
-
-				_app.model.removeCartFromSession(oldCartID); //keep this remove high in code so that if anything else goes wrong, this still gets done.
-
-
-//if a cart messenger is open, log the cart update.
-				if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
-					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
-					}
-
-				
-				if(_app.u.thisIsAnAdminSession())	{} //no need to get a new cart id for an admin session or handle any third party display code.
 				else	{
-
-					var cartContentsAsLinks = encodeURI(_app.ext.cco.u.cartContentsAsLinks(oldCartID));
-	
-
-
-//cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
-//			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
-//			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
-					_app.calls.appCartCreate.init({
-						"callback" : function(rd){
-							if(_app.model.responseHasErrors(rd)){
-								_app.u.throwMessage(rd);
-								}
-							else {
-								_app.calls.cartDetail.init(rd._cartid,{},'immutable');
-								_app.model.dispatchThis('immutable');
-								}
-							}
-						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid.
-
-					if(typeof _gaq != 'undefined')	{
-						_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-						_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+					_rtag.attempt ? _rtag.attempt++ : 0;
+					//try again in 2 seconds. This same callback gets executed.
+					if(_rtag.attempt === 0 && app.data[_rtag.datapointer].cartid && app.data[_rtag.datapointer].cartid.indexOf('$') >= 0)	{
+						//first attempt. To get here, the 'cart' has been received by the API and is in memory and being processed. Pull the cart out of memory.
+						_app.model.removeCartFromSession(app.data[_rtag.datapointer].cartid.split('$')[0]);
 						}
-
-	
-					if(_app.ext.order_create.checkoutCompletes)	{
-						var L = _app.ext.order_create.checkoutCompletes.length;
-						for(var i = 0; i < L; i += 1)	{
-							_app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
-							}
-						}
-	
-					_app.ext.order_create.u.scripts2iframe(checkoutData['@TRACKERS'])
-	// ### TODO -> move this out of here. move it into the appropriate app init.
-					if(_app.vars._clientid == '1pc')	{
-	//add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-	//this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
-	
-	// *** -> new method for handling third party checkout scripts.
-	/*	setTimeout(function(){
-			$checkout.append(checkoutData['html:roi']);
-			_app.u.dump('wrote html:roi to DOM.');
-			},1000); 
-	*/
-	
-					//GTS for apps is handled in google extension
-						if(typeof window.GoogleTrustedStore)	{
-							delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
-					//running this will reload the script. the 'span' will be added as part of html:roi
-					//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-							(function() {
-								var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-								var gts = document.createElement("script");
-								gts.type = "text/javascript";
-								gts.async = true;
-								gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-								var s = document.getElementsByTagName("script")[0];
-								s.parentNode.insertBefore(gts, s);
-								})();
-							}
-					
-						}
-					else	{
-						_app.u.dump("Not 1PC.");
-						_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
-						//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
-						$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
-							event.preventDefault();
-							});
-						$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
-							event.preventDefault();
-							//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-							showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
-							});
-						}
-
-
-
-
-
+					setTimeout(function(){
+						dump(" -------------> timeout triggered. dispatch cartOrderStatus. attempt: "+_rtag.attempt);
+						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","cartid":_app.data[_rtag.datapointer].cartid,"_tag":{"datapointer":_rtag.datapointer,"attempts" : _rtag.attempt, "callback":"cartOrderStatus","extension":"order_create","cartid":_app.data[_rtag.datapointer].cartid}},"mutable");
+						_app.model.dispatchThis("mutable");
+						},2000);
 					}
-				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
-				_app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.					
-
 				},
 			onError : function(rd)	{
-				$('body').hideLoading();
-				$('#globalMessaging').anymessage({'message':rd});
-				if(typeof _gaq != 'undefined')	{
-					_gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+rd['_msg_1_id']+')']);
+				//could get here from cartOrderStatus inquiry OR cartOrderCreate response.
+				//if a cart id is set, keep polling. could mean that one orderStatus call failed for some reason.
+				//but no order id likely means the cartOrderCreate call failed. show the errors.
+				if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer].cartid)	{
+					rd._rtag.attempt ? rd._rtag.attempt++ : 0;
+					setTimeout(function(){
+						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","cartid":_app.data[rd._rtag.datapointer].cartid,"_tag":{"datapointer":rd._rtag.datapointer,"attempts" : rd._rtag.attempt, "callback":"cartOrderStatus","extension":"order_create","cartid":_app.data[rd._rtag.datapointer].cartid}},"mutable");
+						_app.model.dispatchThis("mutable");
+						},2000);
 					}
-
+				else	{
+					$('body').hideLoading();
+					$("[data-app-role='chkoutCartSummary']",rd._rtag.jqobj).anymessage({'message':rd});
+					}
+				
 				}
-			} //cart2OrderIsComplete
+			}
 
 		}, //callbacks
 
@@ -1118,7 +1023,139 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else	{
 					$('#globalMessaging').anymessage({'message':'in order_create.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
 					}
-				} //startCheckout
+				}, //startCheckout
+			
+			
+			checkoutComplete : function(_rtag)	{
+
+
+//				_app.u.dump('BEGIN _app.ext.order_create.callbacks.checkoutSuccess.onSuccess   datapointer = '+_rtag.datapointer);
+				$('body').hideLoading();
+//nuke old form content. not needed anymore. gets replaced with invoice-ish content.
+				var $checkout = _rtag.jqObj,
+				checkoutData = _app.data[_rtag.datapointer],
+				oldCartID = $checkout.closest("[data-app-role='checkout']").data('cartid');
+				
+				
+				if(!$.isEmptyObject(checkoutData))	{
+					var orderID = _app.data[_rtag.datapointer].orderid;
+					
+					//cartOrderStatus is new call for determining if order is processed.
+					}
+				else	{
+					//something went wrong. No data in memory.
+					}
+				
+				
+				
+				
+//show post-checkout invoice and success messaging.
+				$checkout.empty();
+				$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
+
+//This will add a cart message. handy if the buyer and merchant are dialoging.
+				if(cartMessagePush in window)	{
+					cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
+					}
+
+//time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart id, if necessary (admin doesn't auto-create a new one).
+
+				_app.model.removeCartFromSession(oldCartID); //keep this remove high in code so that if anything else goes wrong, this still gets done.
+
+
+//if a cart messenger is open, log the cart update.
+				if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
+					_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
+					}
+
+				
+				if(_app.u.thisIsAnAdminSession())	{} //no need to get a new cart id for an admin session or handle any third party display code.
+				else	{
+
+					var cartContentsAsLinks = encodeURI(_app.ext.cco.u.cartContentsAsLinks(oldCartID));
+	
+
+
+//cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
+//			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
+//			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
+					_app.calls.appCartCreate.init({
+						"callback" : function(rd){
+							if(_app.model.responseHasErrors(rd)){
+								_app.u.throwMessage(rd);
+								}
+							else {
+								_app.calls.cartDetail.init(rd._cartid,{},'immutable');
+								_app.model.dispatchThis('immutable');
+								}
+							}
+						}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid.
+
+					if(typeof _gaq != 'undefined')	{
+						_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
+						_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+						}
+
+	
+					if(_app.ext.order_create.checkoutCompletes)	{
+						var L = _app.ext.order_create.checkoutCompletes.length;
+						for(var i = 0; i < L; i += 1)	{
+							_app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
+							}
+						}
+	
+					_app.ext.order_create.u.scripts2iframe(checkoutData['@TRACKERS'])
+	// ### TODO -> move this out of here. move it into the appropriate app init.
+					if(_app.vars._clientid == '1pc')	{
+	//add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
+	//this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
+	
+	// *** -> new method for handling third party checkout scripts.
+	/*	setTimeout(function(){
+			$checkout.append(checkoutData['html:roi']);
+			_app.u.dump('wrote html:roi to DOM.');
+			},1000); 
+	*/
+	
+					//GTS for apps is handled in google extension
+						if(typeof window.GoogleTrustedStore)	{
+							delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+					//running this will reload the script. the 'span' will be added as part of html:roi
+					//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
+							(function() {
+								var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+								var gts = document.createElement("script");
+								gts.type = "text/javascript";
+								gts.async = true;
+								gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+								var s = document.getElementsByTagName("script")[0];
+								s.parentNode.insertBefore(gts, s);
+								})();
+							}
+					
+						}
+					else	{
+						_app.u.dump("Not 1PC.");
+						_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+						//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
+						$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
+							event.preventDefault();
+							});
+						$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
+							event.preventDefault();
+							//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
+							showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
+							});
+						}
+
+					}
+				//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
+				_app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.		
+
+
+
+				}
+			
 			
 			}, //a
 
@@ -1601,15 +1638,24 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					if(_app.ext.order_create.validate.checkout($form))	{
 						$('body').showLoading({'message':'Creating order...'});
 						_app.ext.cco.u.sanitizeAndUpdateCart($form);
-						var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
+						var cartid = $ele.closest("[data-app-role='checkout']").data('cartid'), payments;
 //paypal payments are added to the q as soon as the user returns from paypal.
 //This will solve the double-add to the payment Q
 //payment method validation ensures a valid tender is present.
 						if(_app.ext.cco.u.thisSessionIsPayPal())	{}
 						else	{
-							_app.ext.cco.u.buildPaymentQ($form,cartid);
+							payments = _app.ext.cco.u.getPaymentQArray($form,cartid);
 							}
-						_app.ext.cco.calls.cartOrderCreate.init(cartid,{'callback':'cart2OrderIsComplete','extension':'order_create','jqObj':$form});
+//						_app.ext.cco.calls.cartOrderCreate.init(cartid,{'callback':'cart2OrderIsComplete','extension':'order_create','jqObj':$form});
+						_app.model.addDispatchToQ({
+							'_cartid':cartid,
+							'_cmd':'cartOrderCreate',
+							'@PAYMENTS' : payments,
+							'async' : 1,
+							'_tag':{'callback':'cartOrderStatus','extension':'order_create','jqObj':$form},
+							'iama':_app.vars.passInDispatchV, 
+							'domain' : (_app.vars.thisSessionIsAdmin ? 'www.'+_app.vars.domain : '')
+							},'immutable');
 						_app.model.dispatchThis('immutable');						
 						
 						}
@@ -2005,7 +2051,6 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						_app.u.dump("It appears we've just returned from PayPal.");
 						_app.ext.order_create.vars['payment-pt'] = token;
 						_app.ext.order_create.vars['payment-pi'] = payerid;
-						
 						_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC",'_cartid':cartID},{"extension":"order_create","callback":"handlePayPalIntoPaymentQ",'jqObj':$context});
 						}
 					}

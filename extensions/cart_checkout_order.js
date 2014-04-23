@@ -179,7 +179,8 @@ calls should always return the number of dispatches needed. allows for cancellin
 				}
 			}, //cartSet
 
-
+/*
+201403 -> this is no longer necessary. this call is inline.
 //uses the cart ID, which is passed on the parent/headers.
 //always immutable.
 		cartOrderCreate : {
@@ -201,7 +202,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 				_app.model.addDispatchToQ({'_cartid':cartID,'_cmd':'cartOrderCreate','_tag':_tag,'iama':_app.vars.passInDispatchV, 'domain' : (_app.vars.thisSessionIsAdmin ? 'www.'+_app.vars.domain : '')},'immutable');
 				}
 			},//cartOrderCreate
-
+*/
 
 		cartPaypalSetExpressCheckout : {
 			init : function(obj,_tag,Q)	{
@@ -439,40 +440,33 @@ left them be to provide guidance later.
 
 		u : {
 
-//NOTE TO SELF:
-//use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
-//that way if a new payment type is added, it's handled (as long as there's no extra inputs).
-			buildPaymentQ : function($form,cartid)	{
-//				_app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var r = false;
+			getPaymentQArray : function($form,cartid){
+				var payments = new Array();
 //				_app.u.dump(" -> payby: "+payby);
 				if($form instanceof jQuery && cartid)	{
 					var sfo = $form.serializeJSON() || {}, payby = sfo["want/payby"];
 					if(payby)	{
 						if(payby.indexOf('WALLET') == 0)	{
-							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby,cartid)));
+							payments.push("insert?TN=WALLET&"+_app.u.hash2kvp(_app.ext.cco.u.getWalletByID(payby,cartid)));
 							}
 						else if(payby == 'CREDIT')	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
+							payments.push("insert?TN=CREDIT&CC="+encodeURIComponent(sfo['payment/CC'])+"&CV="+encodeURIComponent(sfo['payment/CV'])+"&YY="+encodeURIComponent(sfo['payment/YY'])+"&MM="+encodeURIComponent(sfo['payment/MM']));
 							}				
 						else if(payby == 'PO')	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"PO","PO":sfo['payment/PO']});
+							payments.push("insert?TN=PO&PO="+encodeURIComponent(sfo['payment/PO']));
 							}				
 						else if(payby == 'ECHECK')	{
-							_app.ext.cco.calls.cartPaymentQ.init({
-								"cmd":"insert",
-								'_cartid':cartid,
-								"TN":"ECHECK",
-								"EA":sfo['payment/EA'],
-								"ER":sfo['payment/ER'],
-								"EN":sfo['payment/EN'],
-								"EB":sfo['payment/EB'],
-								"ES":sfo['payment/ES'],
-								"EI":sfo['payment/EI']
-								});
+							payments.push("insert?TN=ECHECK"
+								+"&EA"+encodeURIComponent(sfo['payment/EA'])
+								+"&ER"+encodeURIComponent(sfo['payment/ER'])
+								+"&EN"+encodeURIComponent(sfo['payment/EN'])
+								+"&EB"+encodeURIComponent(sfo['payment/EB'])
+								+"&ES"+encodeURIComponent(sfo['payment/ES'])
+								+"&EI"+encodeURIComponent(sfo['payment/Ei'])
+								);
 							}
 						else	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":payby });
+							payments.push("insert?TN="+encodeURIComponent(payby));
 							}
 						r = true;
 						}
@@ -482,10 +476,12 @@ left them be to provide guidance later.
 						}
 					}
 				else	{
-					$("#globalMessaging").anymessage({'message':'In cco.u.buildPaymentQ, either form was not a valid jquery instance ['+($form instanceof jQuery)+'] or no cart id ['+cartid+'] was passed.','gMessage':true});
+					payments = false;
+					$("#globalMessaging").anymessage({'message':'In cco.u.getPaymentQArray, either form was not a valid jquery instance ['+($form instanceof jQuery)+'] or no cart id ['+cartid+'] was passed.','gMessage':true});
 					}
-				return r;
+				return payments;
 				},
+
 
 
 			paymentMethodsIncludesGiftcard : function(datapointer)	{
@@ -885,9 +881,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
 					delete formObj['want/bill_to_ship_cb'];
-//cc and cv should never go. They're added as part of cartPaymentQ
-					delete formObj['payment/cc'];
-					delete formObj['payment/cv'];
+//CC and CV should never go. They're added as part of cartPaymentQ
+					delete formObj['payment/CC'];
+					delete formObj['payment/CV'];
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
