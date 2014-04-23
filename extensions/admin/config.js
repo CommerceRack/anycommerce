@@ -1528,7 +1528,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							$('tr',$tbody).each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 								else	{
-									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
+									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+_app.u.hash2kvp(_app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
 									}
 								});
 							
