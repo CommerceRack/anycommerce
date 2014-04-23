@@ -2342,7 +2342,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
 					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
 					else	{
-					
 						switch(infoObj.show)	{
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
