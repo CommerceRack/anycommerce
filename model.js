@@ -871,7 +871,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 */	
 		responseHasErrors : function(responseData)	{
 //			_app.u.dump('BEGIN model.responseHasErrors');
-//			_app.u.dump(" -> responseData"); _app.u.dump(responseData);
 //at the time of this version, some requests don't have especially good warning/error in the response.
 //as response error handling is improved, this function may no longer be necessary.
 			var r = false; //defaults to no errors found.
@@ -919,17 +918,17 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							} //a response errid of zero 'may' mean no errors.
 						break;
 	
-					case 'cartOrderCreate':
-		//				_app.u.dump(' -> case = createOrder');
-						if(!_app.u.isSet(responseData['orderid']))	{
-		//					_app.u.dump(' -> request has errors. orderid not set. orderid = '+responseData['orderid']);
-							r = true;
-							}  
-//						break; // *** 201403 -> on cartOrderCreate, default error handling code should still be run.
 					default:
 						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //warnings do not constitute errors.
-						if(Number(responseData['errid']) > 0 && responseData.errtype != 'processing') {r = true;} //processing does not constitute errors. used for async checkout.
-						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
+						else if(Number(responseData['_msgs']) > 0)	{
+							//the _msg format index starts at one, not zero.
+							for(var i = 1, L = Number(responseData['_msgs']); i <= L; i += 1)	{
+								if(responseData['_msg_'+i+'_type'] == 'error')	{
+									r = true;
+									break; //once an error type is found, exit. one positive is enough.
+									}
+								}
+							}
 // *** 201336 -> mostly impacts admin UI. @MSGS is another mechanism for alerts that needs to be checked.
 						else if(responseData['@MSGS'] && responseData['@MSGS'].length)	{
 							var L = responseData['@MSGS'].length;
@@ -953,6 +952,9 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						break;
 					}
 				}
+//			if(r)	{
+//				_app.u.dump(" -> responseData"); _app.u.dump(responseData);
+//				}
 	//		_app.u.dump('//END responseHasErrors. has errors = '+r);
 			return r;
 			},
@@ -1616,7 +1618,7 @@ ADMIN/USER INTERFACE
 				}
 
 
-			cmdObj = {
+			var cmdObj = {
 				_cmd : 'adminUIExecuteCGI',
 				uri : path,
 				'_tag' : {
