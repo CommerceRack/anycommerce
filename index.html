@@ -696,7 +696,17 @@ this will likely become more flexible in the future. ###
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	
-	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+	<section class='clearfix marginBottom'>
+	
+		<div class='floatRight shortReviewSummary alignCenter'>
+			<div data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></div>
+			<div class='hint' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend='from ' --append=' review'; apply --append;}}; if(is $var --gt='1';) {{apply --append='s';}};"></div>
+		</div>
+	
+	
+		<h1 class='noPadOrMargin' data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+		<div class='displayNone' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{apply --show;}};">Mfg: <a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></div>
+	</section>
 	
 	<section class='vidsAndPics' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --add --class='applyAnytabs';}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --add --class='applyAnytabs';}};">
 	<ul data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --show;}};" class='displayNone'>
@@ -769,7 +779,6 @@ this will likely become more flexible in the future. ###
 
 	<section class='marginBottom'>
 		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></div>
-		<div class='displayNone' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{apply --show;}};">Mfg: <a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></div>
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></div>
 	</section>
 
