@@ -527,6 +527,7 @@ _app.u.throwMessage(responseData); is the default error handler.
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
+//tlc is a VERY common callback. To keep it tight but flexible, before and onComplete functions can be passed to handle special cases.
 		tlc : {
 			onMissing : function(rd)	{
 				rd._rtag.jqObj.anymessage(rd);
@@ -534,7 +535,10 @@ _app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(_rtag)	{
 //				_app.u.dump("BEGIN callbacks.tlc ------------------------"); _app.u.dump(_rtag);
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
-					
+//allows for the callback to perform a lot of the common handling, but to append a little extra functionality at the end of a success.
+					if(typeof _rtag.before == 'function')	{
+						_rtag.before(_rtag);
+						}					
 					var $target = _rtag.jqObj
 					$target.hideLoading(); //shortcut
 					if(_rtag.templateID && !_rtag.templateid)	{_rtag.templateid = _rtag.templateID} //anycontent used templateID. tlc uses templateid. rather than put this into the core tranlsator, it's here as a stopgap.
@@ -1688,7 +1692,6 @@ AUTHENTICATION/USER
 				var r = false;
 				if(_app.data.whoAmI && _app.data.whoAmI.cid)	{r = true}
 				else if(_app.data.appBuyerLogin && _app.data.appBuyerLogin.cid)	{r = true}
-				dump("buyerIsAuthenticated: "+r);
 				return r;
 				}, //buyerIsAuthenticated
 
