@@ -209,9 +209,9 @@ document.write = function(v){
 				
 				
 				if(cartID)	{
-					myApp.router.init();//instantiates the router.
 					_app.model.addDispatchToQ({"_cmd":"whoAmI",_cartid : cartID, "_tag":{"datapointer":"whoAmI",callback:function(rd){
-						_app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+						myApp.router.init();//instantiates the router.
+						_app.ext.quickstart.u.handleAppInit(); //finishes loading RQ. handles some authentication based features.
 						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
 						_app.model.dispatchThis('mutable');
 						

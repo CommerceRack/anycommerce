@@ -1688,6 +1688,7 @@ AUTHENTICATION/USER
 				var r = false;
 				if(_app.data.whoAmI && _app.data.whoAmI.cid)	{r = true}
 				else if(_app.data.appBuyerLogin && _app.data.appBuyerLogin.cid)	{r = true}
+				dump("buyerIsAuthenticated: "+r);
 				return r;
 				}, //buyerIsAuthenticated
 
