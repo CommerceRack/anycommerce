@@ -794,8 +794,10 @@ this will likely become more flexible in the future. ###
 
 		</div>
 	</section>
-	
-	<section class='marginBottom displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}};" >
+
+
+	<section class='marginBottom displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}}; bind $var '.pid'; apply --attrib='data-pid';" >
+		<a href="#" data-app-click="store_crm|productReviewShow" class='floatRight'>Write Review</a>
 		<h4>Customer Reviews</h4>
 		<div class='clearfix reviewSummary'>
 			<div data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --append=' reviews'; apply --append;}};"></div>
@@ -1501,7 +1503,7 @@ used for store_crm.js
 <label><span class="prompt">Review</span><textarea required name="MESSAGE" class='alignInput'></textarea></label>
 
 <label>
-	<span class="prompt">Score</span>
+	<span class="prompt">Score</span> 
 	<select name="RATING" id="reviewsRating">
 		<option value="10">5</option>
 		<option value="9">4.5</option>
