@@ -166,6 +166,12 @@ function buildLink(section)	{
 						populateTextarea('header');
 						populateTextarea('footer');
 						
+						//the forms used in adminBlastMacroCreateUpdateTemplate don't contain _cmd because they're recycled. add them now.
+						$('form',$target).each(function(){
+							$(this).append("<input type='hidden' name='_cmd' value='adminBlastMacroUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The macro has been updated.' />");
+
+							});
+						
 						}
 					}}},"mutable");
 				_app.model.dispatchThis("mutable");
