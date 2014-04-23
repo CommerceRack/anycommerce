@@ -911,6 +911,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errtype'] = "apperr"; 
 							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.PROFILE.";
 							}
+						break;
 					case 'appNavcatDetail':
 						if(responseData.errid > 0 || responseData['exists'] == 0)	{
 							r = true
@@ -919,18 +920,17 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find category (may not exist)";
 							} //a response errid of zero 'may' mean no errors.
 						break;
-		
-					case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
-		
+	
 					case 'cartOrderCreate':
 		//				_app.u.dump(' -> case = createOrder');
 						if(!_app.u.isSet(responseData['orderid']))	{
 		//					_app.u.dump(' -> request has errors. orderid not set. orderid = '+responseData['orderid']);
 							r = true;
 							}  
-						break;
+//						break; // *** 201403 -> on cartOrderCreate, default error handling code should still be run.
 					default:
-						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //** 201338 -> warnings do not constitute errors.
+						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //warnings do not constitute errors.
+						if(Number(responseData['errid']) > 0 && responseData.errtype != 'processing') {r = true;} //processing does not constitute errors. used for async checkout.
 						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
 // *** 201336 -> mostly impacts admin UI. @MSGS is another mechanism for alerts that needs to be checked.
 						else if(responseData['@MSGS'] && responseData['@MSGS'].length)	{
@@ -943,8 +943,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 								}
 							}
 						else if(responseData['@RESPONSES'] && responseData['@RESPONSES'].length)	{
-							var L = responseData['@RESPONSES'].length;
-							for(var i = 0; i < L; i += 1)	{
+							for(var i = 0, L = responseData['@RESPONSES'].length; i < L; i += 1)	{
 								if(responseData['@RESPONSES'][i]['msgtype'] == 'ERROR' || responseData['@RESPONSES'][i]['msgtype'] == 'apierr')	{
 									r = true;
 									break; //if we have an error, exit early.
