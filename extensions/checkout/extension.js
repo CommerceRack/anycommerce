@@ -1073,6 +1073,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
 							}
 		
+						_app.u.handleButtons($checkout);
 						
 						if(_app.u.thisIsAnAdminSession())	{} //no need to get a new cart id for an admin session or handle any third party display code.
 						else	{
