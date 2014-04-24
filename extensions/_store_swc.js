@@ -195,9 +195,30 @@ var store_swc = function(_app) {
 						$tag.append($t);
 						}
 					return true;
-				} else {
+					} 
+				else {
 					return false;
-				}
+					}
+				},
+			relatedproducts : function(data,thisTLC){
+				var pid = data.globals.binds[data.globals.focusBind];
+				var reqObj = {
+					"_cmd":"appPublicSearch",
+					"mode":"elastic-mlt",
+					"type":"product",
+					"min_doc_freq":1,
+					"id":pid,
+					"search_size":6,
+					"_tag" : {
+						"callback":"handleElasticResults",
+						"datapointer":"relatedProducts|"+pid,
+						"extension":"store_search",
+						"list":data.globals.tags[data.globals.focusTag],
+						"templateID":"productListTemplateResults"
+						}
+					}
+				_app.model.addDispatchToQ(reqObj, 'immutable');
+				_app.model.dispatchThis('immutable');
 				},
 			dump : function(data,thisTLC){
 				dump(data);

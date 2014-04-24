@@ -500,7 +500,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 			getElasticResultsAsJQObject : function(P)	{
 //				_app.u.dump("BEGIN store_search.u.getElasticResultsAsJQObject ["+P.datapointer+"]")
 				var pid;//recycled shortcut to product id.
-				var L = _app.data[P.datapointer]['_count'];
+				var L = _app.data[P.datapointer]['_count'] || _app.data[P.datapointer].hits.hits.length;
 				var $r = $("<ul />"); //when this was a blank jquery object, it didn't work. so instead, we append all content to this imaginary list, then just return the children.
 //				_app.u.dump(" -> parentID: "+P.parentID); //resultsProductListContainer
 //				_app.u.dump(" -> L: "+L);
