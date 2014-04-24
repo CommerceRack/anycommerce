@@ -235,7 +235,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				//if a cart id is set, keep polling. could mean that one orderStatus call failed for some reason.
 				//but no order id likely means the cartOrderCreate call failed. show the errors.
 				
-				if(_app.data[rd._rtag.datapointer].finished)	{
+				if(rd._rtag && _app.data[rd._rtag.datapointer].finished)	{
 					_app.ext.order_create.a.checkoutComplete(_rtag);
 					}
 				else if(rd._rtag && _app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer]['status-cartid'])	{
