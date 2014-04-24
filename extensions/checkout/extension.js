@@ -223,7 +223,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 						}
 //Continue polling till order is finished.
 					setTimeout(function(){
-						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[_rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":_rtag.parentID,"attempt" :_rtag.attempt++, "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
+						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[_rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":_rtag.parentID,"attempt" :(_rtag.attempt+1), "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
 						dump(" -------------> timeout triggered. dispatch cartOrderStatus. attempt: "+_rtag.attempt);
 						_app.model.dispatchThis("mutable");
 						},2000);
