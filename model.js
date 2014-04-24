@@ -1122,7 +1122,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		fetchCartID : function()	{
 			var s = false;
 //			_app.u.dump('BEGIN: model.fetchCartID');
-			if(_app.vars._client === '1pc')	{
+			if(_app.vars._clientid == '1pc')	{
 				s = _app.vars.cartID;
 				}
 			else	{

@@ -622,7 +622,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						} //paymentQ is empty. no error or warning.
 					}
 				else	{
-					_app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] or cartID ["+cartID+"] not set or @PAYMENTQ does not exist.");
+					_app.u.dump("WARNING! modifyPaymentQbyTender failed because tender ["+tender+"] or cartID ["+cartID+"] not set or @PAYMENTQ does not exist.");
 					}
 //				_app.u.dump(" -> num tender matches: "+r);
 				return returned;
