@@ -685,6 +685,7 @@ This is used to get add an array of skus, most likely for a product list.
 			
 			productReviewShow : function($ele,p)	{
 				p.preventDefault();
+				//checkout uses data-stid.
 				var pid = $ele.closest("data-stid").data('stid') || $ele.closest("[data-pid]").data('pid'); //used on product page
 				if(pid)	{
 					_app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});
