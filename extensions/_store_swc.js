@@ -375,6 +375,13 @@ var store_swc = function(_app) {
 						}
 					}
 				var countFilters = [];
+				$('[data-filter-type=sort]', $form).each(function(){
+					elasticsearch.sort = elasticsearch.sort || [];
+					var sort = {};
+					var $selectedOption = $('option:selected',$(this));
+					sort[$selectedOption.attr('data-filter-sort-attribute')] = $selectedOption.attr('data-filter-sort-direction');
+					elasticsearch.sort.push(sort);
+					});
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
 					//var cf = [];
@@ -416,26 +423,31 @@ var store_swc = function(_app) {
 					var countES = _app.ext.store_search.u.buildElasticRaw(q);
 					countES.mode = 'elastic-count';
 					delete countES.size;
-					_app.ext.store_search.calls.appPublicSearch.init(countES, {'callback':function(rd){
-						//dump(rd);
-						if(_app.data[rd.datapointer].count){
-							rd.$input.closest('[data-filter=inputContainer]').show();
-							}
-						else {
-							rd.$input.closest('[data-filter=inputContainer]').hide();
-							rd.$input.prop('checked',false);
-							if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
-								
-								rd.$input.closest('.filterGroup').hide();
+					var _tag = {
+						'callback':function(rd){
+							//dump(rd);
+							if(_app.data[rd.datapointer].count){
+								rd.$input.closest('[data-filter=inputContainer]').show();
 								}
-							}
-						$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
-						_app.model.destroy(rd.datapointer);
-						}, 'datapointer':'appFilteredCount|'+i, "$input":$input});
+							else {
+								rd.$input.closest('[data-filter=inputContainer]').hide();
+								rd.$input.prop('checked',false);
+								if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
+									
+									rd.$input.closest('.filterGroup').hide();
+									}
+								}
+							$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
+							_app.model.destroy(rd.datapointer);
+							},
+						'datapointer':'appFilteredCount|'+i, 
+						"$input":$input
+						};
+					_app.ext.store_search.calls.appPublicSearch.init(countES, _tag);
 				
 					}
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,es,1);
-				dump(es);
+				//dump(es);
 				_app.model.dispatchThis();
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleInfiniteElasticResults', 'datapointer':'appFilteredSearch','extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$resultsContainer});
 				_app.model.dispatchThis();
