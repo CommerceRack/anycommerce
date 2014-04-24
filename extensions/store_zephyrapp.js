@@ -57,7 +57,7 @@ var store_zephyrapp = function(_app) {
 	$(window).bind('resizeEnd', function(P) {
 		//resize the logo to maximum available space.
 		if(typeof handleSrcSetUpdate == 'function')	{
-//			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length);
+//			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length+" and ID: "+$("#mainContentArea :visible:first").attr('id'));
 			handleSrcSetUpdate($("#mainContentArea :visible:first"))
 			}
 		}).trigger('resizeEnd');
@@ -275,21 +275,22 @@ var store_zephyrapp = function(_app) {
 
 			//this tlcformat gets run AFTER the image has been appended/replaced. It needs the data-attributes set.
 			srcset : function(data,thisTLC)	{
+				dump(" -> srcset data: "); dump(data,'dir');
 				if(data.value)	{
-//					dump(" -> data: "); dump(data);
 					var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 					var srcset = new Array();
+					dump(" -> argObj"); dump(argObj,'dir');
 					if(argObj.views)	{
-						var $tag = $(data.globals.tags[data.globals.focusTag]), viewArr = argObj.views.split(','), L = viewArr.length;
+						dump(" -> argObj.views IS set");
+						var viewArr = argObj.views.split(','), L = viewArr.length;
 						for(var i = 0; i < L; i += 1)	{
 							var obj = _app.u.kvp2Array(viewArr[i]), string = '';
-							string = thisTLC.makeImageURL({'width':obj.w,'height':obj.h,'data-media':$tag.data('media'),'data-bgcolor':$tag.data('bgcolor')});
+							string = thisTLC.makeImageURL({'width':obj.w,'height':obj.h,'data-media':data.value,'data-bgcolor':'ffffff'});
 							if(obj.vp)	{string += " "+obj.vp;}
 							if(obj.dpi)	{string += " "+obj.dpi;}
 							srcset.push(string);
 							}
-						$tag.removeAttr('width'); $tag.removeAttr('height'); //polyfill requires no height/width tag be specified.
-						$tag.attr("srcset",srcset.join(','));
+						data.globals.binds[data.globals.focusBind] = srcset.join(',');
 						}
 					}
 				return true; //continue processing tlc
@@ -323,7 +324,7 @@ var store_zephyrapp = function(_app) {
 					else	{} //use default.
 					for(var i = 1; i <= 20; i += 1)	{
 						if(data.value['zoovy:prod_image'+i])	{
-							$("<a \/>",{'href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),'rev':thisTLC.makeImageURL({'width':dim,'height':dim,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).append($("<img \/>",{
+							$("<a \/>",{'data-app-click':'store_zephyrapp|prodThumb2Primary','href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).append($("<img \/>",{
 								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
 								'data-media' : data.value['zoovy:prod_image'+i],
 								//the first srcset value should match the default height and width, then grow from there.
@@ -477,12 +478,28 @@ var store_zephyrapp = function(_app) {
 					
 					});
 				},
+			//this is a function because it's called as part of the productTemplate onComplete as well as in prodThumb2Primary
+			applyZoom : function($primaryImage)	{
+				dump(" -> $primaryImage.length: "+$primaryImage.length);
+				//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
+				$primaryImage.parent().zoom({
+					'url' : $primaryImage.parent().attr('href'),
+			//		'touch' : true,
+					onZoomIn : function(){
+						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show()
+						},
+					onZoomOut : function(){
+						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').hide()
+						},
+					'target' : $primaryImage.closest(".vidsAndPics").find('.zoomToolZoomContainer')
+					});				
+				},
 			
 			//MZP is, unfortunately, very ID centric. This function is executed in a product template oncomplete.
 			//it will add an id to the primary image, which is used for the mzp.start() and the 'rel' on the thumbnails.
 			//the rel will be generated for the thumbnails as well, so that the correct is used.
 			//for this reason, the 768 and 1024 image sizes should be the same for the primary product pic (so switching from portrait to landscape works ok)
-			handleMZP : function($product,infoObj)	{
+/*			handleMZP : function($product,infoObj)	{
 //				dump("BEGIN handleMZP");
 				if($product instanceof jQuery)	{
 					var $href = $("[data-app-role='primaryImageHref']:first",$product), ID;
@@ -519,7 +536,7 @@ var store_zephyrapp = function(_app) {
 					dump("$product not a valid jquery instance for handleMZP. MZP will likely not work quite right.",'warn');
 					}
 				},
-			
+			*/
 			randomizeList : function($list){
 				$list.children().shuffle();
 				},
@@ -586,6 +603,23 @@ var store_zephyrapp = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
+			prodThumb2Primary : function($ele,p)	{
+				p.preventDefault();
+				var $primaryImageHref = $ele.closest("[data-anytab-content='images']").find("[data-app-role='primaryImageHref']:first");
+				if($primaryImageHref.length)	{
+					//re-translate the href, which will update the srcset attribute et all, passing in the clicked media elements filename (media) as image1
+					$primaryImageHref.parent().tlc({
+						"verb":"translate",
+						"dataset":{'%attribs':{'zoovy:prod_image1':$('img',$ele).data('media')}}
+						});
+					$primaryImageHref.trigger('zoom.destroy'); // remove zoom
+					myApp.ext.store_zephyrapp.u.applyZoom($('img',$primaryImageHref));
+					}
+				else	{
+					dump("In zephyr_storeapp.e.prodThumb2Primary, unable to local primary image href. zoom will not work.","warn");
+					}
+				return false;
+				},
 			
 			revealation : function($ele,p)	{
 				p.preventDefault();

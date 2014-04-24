@@ -57,7 +57,7 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 //a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
 //there's an 'activator' for this in the 'complete' for product, home and category pages.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //a srcset polyfill. used for a lot of imagery.
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.min.js']);
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.min.js']); //used for mouseover zoom on product detail page.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
 
@@ -73,7 +73,7 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.
 
 //triggers the resize of the images for srcset and also revealation. Both of these could have big impacts on the pages attributes (height/width) so it happens early.
 $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblocks',function(state,$ele,infoObj){
-	$(window).trigger('resizeEnd'); //this triggers the srcset code.  It isn't strictly required, but I found the polyfill works better when this is manually executed.
+	handleSrcSetUpdate($ele); //this triggers the srcset code.
 	myApp.ext.store_zephyrapp.u.revealation($ele);
 	});
 
@@ -127,24 +127,10 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 
 $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
-	var $primaryImage = $('.zoomTool:first img',$ele);
-	//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
-	$primaryImage.parent().zoom({
-		'url' : myApp.u.makeImage({name : $primaryImage.data('media'), tag : false}),
-//		'touch' : true,
-		onZoomIn : function(){
-			$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show()
-			},
-		onZoomOut : function(){
-			$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').hide()
-			},
-		'target' : $primaryImage.closest(".vidsAndPics").find('.zoomToolZoomContainer')
-		});
-/*	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
-		dump(" -> onComplete for pid: "+infoObj.pid);
-		myApp.ext.store_zephyrapp.u.handleMZP($ele,infoObj);
-		});
-*/	});
+	myApp.ext.store_zephyrapp.u.applyZoom($('.zoomTool:first img',$ele));
+	});
+
+
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
 	function execCycle()	{
