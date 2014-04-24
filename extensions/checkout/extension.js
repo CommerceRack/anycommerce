@@ -238,7 +238,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				if(_app.data[rd._rtag.datapointer].finished)	{
 					_app.ext.order_create.a.checkoutComplete(_rtag);
 					}
-				else if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer]['status-cartid'])	{
+				else if(rd._rtag && _app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer]['status-cartid'])	{
 					rd._rtag.attempt = rd._rtag.attempt || 0; //start at zero for an error. so '1' is hit next time.
 					setTimeout(function(){
 						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[rd._rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":rd._rtag.parentID,"attempt" : rd._rtag.attempt++, "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
@@ -1075,15 +1075,16 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 		
 						_app.u.handleButtons($checkout);
 						
-						if(_app.u.thisIsAnAdminSession())	{} //no need to get a new cart id for an admin session or handle any third party display code.
+						if(_app.u.thisIsAnAdminSession() || _app.vars._clientid == '1pc')	{} //no need to get a new cart id for an admin session or 1PC. handle any third party display code.
 						else	{
-		
 	
 //cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
 //			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
 							_app.calls.appCartCreate.init({
 								"callback" : function(rd){
+									dump(" -----------> rd: "); dump(rd);
+									
 									if(_app.model.responseHasErrors(rd)){
 										_app.u.throwMessage(rd);
 										}
