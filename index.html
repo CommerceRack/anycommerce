@@ -2308,5 +2308,68 @@ The 'data-action' attribute is used to assign an onclick.
 
 <div id="myTeamChooser" data-templateid="myTeamChooserTemplate" ></div>
 
+<div id="rma-form" class="displayNone">
+	<form id="rma-form-form" onSubmit="myApp.ext.store_swc.u.handleRMAForm(); return false;">
+		
+			
+			<div><label for='RMAFormSender'>Full Name: </label><input type='text' name='sender' required='required' id='RMAFormSender' /></div>
+			<div><label for='RMAFormOID'>Order ID: </label><input type='text' name='OID' id='RMAFormOID' required='required'/></div>
+			<div><label for='RMAFormPhone'>Phone number: </label><input type='text' name='phone' id='RMAFormPhone' required='required' /></div>
+			<div><label for='RMAFormEmail'>Email address: </label><input type='text' name='email' id='RMAFormEmail' required='required' /></div>
+			
+			<div>
+				<label>Return/refund:</label>
+				<div id="rmaItems">
+					<div class="rmaItemLabels"><label class="col1">#</label><label class="col2">Sku/manufacturer's id</label><label class="col3">Refund</label><label class="col4">Exchange</label><label class="col5">Exchange for sku</label></div>
+					<div class="rmaItem"><label class="col1">1</label><input class="col2" type="text" value="" name="returnid_1" id="returnid_1" /><input class="col3" type="radio" name="retex_1" id="retex_1" value="refund" /><input class="col4" type="radio" name="retex_1" id="retex_1" value="exchange" /><input class="col5" type="text" name="exchangeid_1" id="exchangeid_1" value="" /><button onClick="app.ext.cubworld.a.removeRMAItem($(this).parent()); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span></button></div>
+				</div>
+				<button onClick="myApp.ext.store_swc.u.addRMAItem(); return false;" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+					<span class="ui-button-text">Add an Item</span>
+				</button>
+				
+								
+			</div>
+			
+			<div><label for='RMAFormBody'>Questions/Comments: </label>
+			<textarea name='body' required='required' id='RMAFormBody'></textarea></div>
+			<h4>Easy Exchange / Return Instructions</h4>
+			<ul class="wiki_list">
+				<li class="wiki_listitem"> Please enclose a check / cashiers check / money order for $4.95 for any exchanges (not returns) (This amount covers the reshipping & restocking charges)</li>
+				<li class="wiki_listitem"> No payment for $4.95 is necessary for exchanges based on a SportsWorldChicago.com shipping error of the wrong product</li>
+				<li class="wiki_listitem"> All returns (not exchanges) are subject to a 15% restocking fee, unless items were received in error from SportsWorldChicago.com</li>
+				<li class="wiki_listitem"> All orders being returned (not exchanged) that qualified for free shipping are also subject to the original shipping charges</li>
+				<li class="wiki_listitem"> All custom items returned or exchanged are subject to a 20% restocking fee and subject to the original shipping charges. </li>
+				<li class="wiki_listitem"> We will gladly accept the return of products that are defective due to defects in manufacturing and/or workmanship for 30 days from the date of purchase</li>
+				<li class="wiki_listitem"> ALL SALES ARE FINAL ON CUSTOM JERSEYS, DATED ITEMS & TRADED CHICAGO CUBS PLAYERS</li>
+			</ul>
+			
+			<hr/>
+			If exchanging items and there is a price difference, do you give us permission to charge / refund your credit card accordingly?
+			<div><label>Yes</label> <input type='radio' name='cc_charge_confirm' id='cc_charge_confirm' value="yes" /></div>
+			<div><label>No</label> <input type='radio' name='cc_charge_confirm' id='cc_charge_confirm' value="no" /></div>
+			<hr />
+			
+			
+			<div id="RMAFormMessaging" class='alignCenter'>
+				<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="myApp.u.printByElementID('rma-form-form'); $('#rma-form-form').submit();">
+					<span class="ui-button-text">Submit Return Request</span>
+				</button>
+			</div>
+			
+			<div class="mailingAddress">
+				<h5>
+				Please mail your return / exchange to the following address:
+				</h5>
+				SportsWorldChicago.com
+				<br />
+				c/o Returns & Exchanges
+				<br />
+				3555 N. Clark Street
+				<br />
+				Chicago, IL 60657
+			</div>
+	</form>
+</div>
+
 </body>
 </html>
