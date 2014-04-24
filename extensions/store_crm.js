@@ -627,9 +627,11 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					dump(" -> did not pass validation.");
 					} //validateForm handles error display.
+				return false;
 				},
 			
 			productBuyerListRemoveExec : function($ele,p)	{
+				p.preventDefault();
 				var pid = $ele.closest("[data-stid]").data('stid') || $ele.closest("[data-pid]").data('pid');
 				var listid = $ele.closest("[data-buyerlistid]").data('buyerlistid');
 				if(pid && listid)	{
@@ -654,6 +656,7 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					$('#globalMessaging').anymessage({"message":"In store_crm.e.productByerListRemoveExec, either unable to ascertain pid ["+pid+"] and/or buyerlistid ["+listid+"].","gMessage":true});
 					}
+				return false;
 				},
 			
 			//add this as submit action on the form.
@@ -677,6 +680,7 @@ This is used to get add an array of skus, most likely for a product list.
 						}
 					}
 				else	{} //validateForm will handle error display.
+				return false;
 				},
 			
 			productReviewShow : function($ele,p)	{
@@ -688,6 +692,7 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					$('#globalMessaging').anymessage({'message':'In store_crm.e.productReviewShow, unable to determine pid/stid','gMessage':true});
 					}
+				return false;
 				}
 
 			} //e/events
