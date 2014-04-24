@@ -377,7 +377,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					}
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
-				
+
 //in addition to selecting a pay option, certain extra fields may be present and must be checked for.
 			chkoutMethodsPay : function($fieldset,formObj)	{
 				var valid = 0;
@@ -410,7 +410,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					}
 				return valid;
 				}, //chkoutPayOptionsFieldset
-				
+
 			chkoutAddressBill: function($fieldset,formObj)	{
 				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
 				if($fieldset && formObj)	{
@@ -471,7 +471,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					}
 				return valid;
 				}, //chkoutBillAddressFieldset
-				
+
 			chkoutAddressShip: function($fieldset,formObj)	{
 				dump("BEGIN ship address validation");
 				var valid = 0, cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');

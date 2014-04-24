@@ -1120,13 +1120,18 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //gets the cart id.  carts are stored as an array.  the latest cart is always put on top of the array, which is what this returns.
 //Check to see if it's already set. If not, request a new session via ajax.
 		fetchCartID : function()	{
-//			_app.u.dump('BEGIN: model.fetchCartID');
 			var s = false;
-			var carts = _app.vars.carts || this.dpsGet('app','carts') || []; //will return an array.
-			if(carts.length)	{
-				s = carts[0]; //most recent carts are always added to the top of the stack.
+//			_app.u.dump('BEGIN: model.fetchCartID');
+			if(_app.vars._client === '1pc')	{
+				s = _app.vars.cartID;
 				}
-			else	{}
+			else	{
+				var carts = _app.vars.carts || this.dpsGet('app','carts') || []; //will return an array.
+				if(carts.length)	{
+					s = carts[0]; //most recent carts are always added to the top of the stack.
+					}
+				else	{}
+				}
 			return s;
 			}, //fetchCartID
 	
