@@ -1064,7 +1064,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 		
 		
 //This will add a cart message. handy if the buyer and merchant are dialoging.
-						if(cartMessagePush in window)	{
+						if(typeof cartMessagePush === 'function')	{
 							cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
 							}
 		
