@@ -366,8 +366,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id="homepageTemplate" class="homeTemplate alignCenter">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<a href="#!category/.new-arrivals.100_years_of_wrigley_field/" class="homepageBanner alignCenter highlightBG_1">
 		<span class="bannerImg">
 			<img src="images/homepage/wrigley_centennial_banner.png">
@@ -431,8 +430,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="fieldcamTemplate" class="fieldCamPage alignCenter">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<div data-tlc="bind $html '.cam1'; apply --append;"></div>
 	<div data-tlc="bind $html '.cam2'; apply --append;"></div>
 	<!--
@@ -443,8 +441,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="ticketsTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	<div class="content_body_pad">
 		<div style="margin:10px 0;">
@@ -531,8 +528,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="affiliatesTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<div class="affiliate_category">
 		<div class="affliate_banner">
 			<img width="760" height="100" border="0" alt="CubWorld.com Affiliate Program" src="img/categoryPages/affiliates/affiliate_banner.jpg" id="TOP_SIDE1_img">
@@ -572,8 +568,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="inquiryTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<form class="floatRight" action="#" onSubmit="return false;">
 		<fieldset class="marginTop">
 			<legend>Contact Us for a Player Specific Product</legend>
@@ -595,20 +590,17 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="rewardsTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 </div>
 
 <div id="contestTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 </div>
 
 <div id="categoryTemplateHTML">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
@@ -678,8 +670,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id="categoryTemplate" class=" categoryTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var ''}}; apply --attrib='data-seo-desc';"></span>
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
 	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="">
