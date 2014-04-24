@@ -238,6 +238,7 @@ var store_swc = function(_app) {
 							//_app.u.dump(_app.ext.store_swc.vars.homepageBanners[i]);
 							var b = _app.ext.store_swc.vars.homepageBanners[i];
 							var $banner = $('<a href="'+b.href+'"></a>'); 
+							$banner.append('<span class="vAlignHelper"></span>');
 							$banner.append(_app.u.makeImage({
 								"name" : b.src,
 								"title" : b.title,

@@ -30,7 +30,6 @@
 #mainContentArea, #globalMessaging {max-width:1280px; margin: auto;}
 
 .homepageBanner {height:322px;}
-.homepageBanner .bannerImg{line-height:322px;}
 .blockLink, li.blockLink {width: 19%; margin: .3%;}
 
 .productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
