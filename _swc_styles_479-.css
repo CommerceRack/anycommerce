@@ -8,6 +8,9 @@
 #appView.showFooter {padding-bottom: 402px;}
 #appView #footer {bottom:-362px; font-size:16px;}
 
+#contact{font-size:11px;}
+#mininav{font-size:12px;}
+
 #logo img {
 	height: 30px;
 }
