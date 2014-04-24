@@ -921,9 +921,10 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 					default:
 						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //warnings do not constitute errors.
 						else if(Number(responseData['_msgs']) > 0)	{
+							var errorTypes = new Array("youerr","fileerr","apperr","apierr","iseerr","cfgerr");
 							//the _msg format index starts at one, not zero.
 							for(var i = 1, L = Number(responseData['_msgs']); i <= L; i += 1)	{
-								if(responseData['_msg_'+i+'_type'] == 'error')	{
+								if($.inArray(responseData['_msg_'+i+'_type'],errorTypes) >= 0)	{
 									r = true;
 									break; //once an error type is found, exit. one positive is enough.
 									}
