@@ -904,23 +904,31 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div id="contactArticle" class="displayNone textContentArea">
 			<h1>Contact Information</h1>
-			<div class="companyAddress">
-			<!-- ::: add your contact information here ::: -->
-			<p>We can be reached Mon - Fri 10-6 Pacific at sales@zephyrpaintball.com or 805-275-2040</p>
+			
+			
+			<div class='hideIfLoggedIn'>
+				<p>Our customer service hours are Mon - Fri 10-6 PST.  You can contact us by phone or electronically once you are logged in.</p>
+				<p><a href='#!customer/myaccount'>Click here</a> to log in or create an account</p>
 			</div>
-
-			<form action="#" data-app-submit="store_crm|contactFormSubmit" name="contactForm" class='alignedForm'>
-			<input name="msgtype" value="feedback" type="hidden">
-			<fieldset>
-				<legend>Contact Us</legend>
-				<div id="contactFormMessaging"></div>
-				<label><span class="prompt">Email Address</span><input name="sender" required type="email" class='alignInput'></label>
-				<label><span class="prompt">Subject</span><input name="subject" required type="text" class='alignInput'></label>
-				<label><span class="prompt">Order ID</span><input name="OID" type="text" class='alignInput'></label>
-				<label><span class="prompt">Message</span><textarea name="body" required class='alignInput' rows='6'></textarea></label>
-				<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
-			</fieldset>
-			</form>
+			
+			<div class='hideIfLoggedOut'>
+				<div class="companyAddress">
+				<!-- ::: add your contact information here ::: -->
+				<p>We can be reached Mon - Fri 10-6 Pacific at sales@zephyrpaintball.com or 805-275-2040</p>
+				</div>
+				<form action="#" data-app-submit="store_crm|contactFormSubmit" name="contactForm" class='alignedForm'>
+				<input name="msgtype" value="feedback" type="hidden">
+				<fieldset>
+					<legend>Contact Us</legend>
+					<div id="contactFormMessaging"></div>
+					<label><span class="prompt">Email Address</span><input name="sender" required type="email" class='alignInput'></label>
+					<label><span class="prompt">Subject</span><input name="subject" required type="text" class='alignInput'></label>
+					<label><span class="prompt">Order ID</span><input name="OID" type="text" class='alignInput'></label>
+					<label><span class="prompt">Message</span><textarea name="body" required class='alignInput' rows='6'></textarea></label>
+					<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
+				</fieldset>
+				</form>
+			</div>
 		</div>
 
 
