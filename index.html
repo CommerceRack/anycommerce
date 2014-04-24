@@ -887,7 +887,7 @@ this will likely become more flexible in the future. ###
 	<h1 class="dosis productTitle marginBottom" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 	
 	<div class="productImages">
-		<div class="pointer clearfix positionRelative">
+		<div class="pointer clearfix positionRelative alignCenter">
 			<!-- 
 			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
 			-->
@@ -908,7 +908,11 @@ this will likely become more flexible in the future. ###
 			</a>
 		</div>
 
-		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodThumbs displayTable fillWidth">
+		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; 
+						bind $img '.%attribs.zoovy:prod_image2'; 
+						if(is $img --blank;){{ bind $img '.%attribs.zoovy:prod_image3';}};
+						if(is $img --blank;){{ bind $img '.%attribs.zoovy:prod_image4';}};
+						if(is $img --blank;){{apply --hide;}};" class="prodThumbs displayTable fillWidth">
 			<a data-tlc="
 				bind $href '.%attribs.zoovy:prod_image2'; 
 				if(is $href --notblank;) {{
@@ -1071,7 +1075,10 @@ this will likely become more flexible in the future. ###
 	
 	</div>
 	
-	<ul class="prodlistRelated" data-tlc="bind $pid '.pid'; store_swc#relatedproducts"></ul>
+	<div class="clear">
+		<h3>You May Also Like:</h3>
+		<ul class="prodlistRelated alignCenter listStyleNone noPadOrMargin"  data-tlc="bind $pid '.pid'; store_swc#relatedproducts"></ul>
+	</div>
 	<!--
 	<div class="prodlistRelatedContainer">
 		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --before='<h2>Similar Items</h2>' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>

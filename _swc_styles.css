@@ -162,9 +162,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .productImages {float:left; width: 60%;}
 .productImages a {text-decoration:none;}
-.prodBigImage{width: 100%;}
 .productImages .prodThumb { width: 30%; padding: 1.6%;}
-.productImages .prodThumb img{width:100%;}
+.productImages .prodThumb img{max-width:100%; max-height: 550px;}
+.productImages .prodThumbs .prodThumb img{width:100%;}
 
 .productImages canvas.prodPreviewer {
 	position:absolute;

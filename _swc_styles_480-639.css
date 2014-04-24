@@ -39,6 +39,9 @@
 	max-height: 80px;
 	padding-right: 20px;
 }
+.productTabs{float:none; clear:both; width: 100%;}
+.productTitle, .productInfo {width: 50%;}
+.productImages {width: 46%;}
 
 .filterList { width: 26%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 70%;}

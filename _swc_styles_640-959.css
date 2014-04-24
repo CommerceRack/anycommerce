@@ -38,4 +38,8 @@
 	max-height: 80px;
 	padding-right: 20px;
 }
+.productTabs{float:none; clear:both; width: 100%;}
+.productTitle, .productInfo {width: 50%;}
+.productImages {width: 46%;}
+
 #myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:80px;}

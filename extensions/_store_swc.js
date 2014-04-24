@@ -208,7 +208,7 @@ var store_swc = function(_app) {
 					"type":"product",
 					"min_doc_freq":1,
 					"id":pid,
-					"search_size":6,
+					"search_size":8,
 					"_tag" : {
 						"callback":"handleElasticResults",
 						"datapointer":"relatedProducts|"+pid,
