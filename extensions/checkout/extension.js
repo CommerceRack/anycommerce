@@ -1086,9 +1086,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 									if(_app.model.responseHasErrors(rd)){
 										_app.u.throwMessage(rd);
 										}
-									else {
-										_app.calls.cartDetail.init(rd.cartid,{},'immutable');
+									else if(_app.data[rd.datapointer]._cartid) {
+										_app.calls.cartDetail.init(_app.data[rd.datapointer]._cartid,{},'immutable');
 										_app.model.dispatchThis('immutable');
+										}
+									else	{
+										//something went wrong.  no cart id in the appcartcreate.
 										}
 									}
 								}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid.
