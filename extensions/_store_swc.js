@@ -49,6 +49,8 @@ var store_swc = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
+				_app.ext.store_swc.u.loadBanners();
+				
 				var userTeams = false;
 				if(userTeams = _app.model.readLocal('swcUserTeams')){
 					for(var i in _app.ext.store_swc.vars.userTeams){
@@ -117,6 +119,9 @@ var store_swc = function(_app) {
 		attachHandlers : {
 			onSuccess : function(){
 				_app.ext.store_swc.u.renderMyTeams();
+				_app.templates.homepageTemplate.on('complete.swc', function(event, $context, infoObj){
+					_app.ext.store_swc.u.showHomepageSlideshow();
+					});
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
 					$('form.filterList', $context).trigger('submit');
 					});
@@ -216,6 +221,45 @@ var store_swc = function(_app) {
 					}
 				
 				return r;
+				},
+			loadBanners : function(){
+				_app.u.dump("loadbanners");
+				$.getJSON("_banners.json?_v="+(new Date()).getTime(), function(json){
+					_app.ext.store_swc.vars.homepageBanners = json;
+					}).fail(function(){
+						_app.u.dump("BANNERS FAILED TO LOAD");
+						});
+				},
+			showHomepageSlideshow : function(){
+				if(_app.ext.store_swc.vars.homepageBanners){
+					var $slideshow = $('#homeSlideshow');
+					if($slideshow.data('slideshow') !== 'true'){
+						for(var i=0; i<_app.ext.store_swc.vars.homepageBanners.length; i++){
+							//_app.u.dump(_app.ext.store_swc.vars.homepageBanners[i]);
+							var b = _app.ext.store_swc.vars.homepageBanners[i];
+							var $banner = $('<a href="'+b.href+'"></a>'); 
+							$banner.append(_app.u.makeImage({
+								"name" : b.src,
+								"title" : b.title,
+								"alt" : b.alt,
+								"b" : "tttttt",
+								"tag" : 1
+								}));
+							$slideshow.append($banner);
+							}
+						
+						$slideshow.data('slideshow','true').cycle({
+							fx:     'fade',
+							speed:  'slow',
+							timeout: 5000,
+							//pager:  '#slideshowNav',
+							slideExpr: 'a'
+							});
+						}
+					}
+				else {
+					setTimeout(function(){_app.ext.store_swc.u.showHomepageSlideshow();}, 250);
+					}
 				},
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':Math.min($(window).innerWidth() - 20, 800), height:Math.min($(window).innerHeight()-20, 550)});
