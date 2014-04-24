@@ -254,7 +254,7 @@ var store_swc = function(_app) {
 							speed:  'slow',
 							timeout: 5000,
 							//pager:  '#slideshowNav',
-							slideExpr: 'a'
+							slides : 'a'
 							});
 						}
 					}
