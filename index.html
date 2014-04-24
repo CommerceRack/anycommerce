@@ -734,7 +734,7 @@ this will likely become more flexible in the future. ###
 	<div data-anytab-content='images' class='clearfix'>
 		<div class='productPrimaryImage'>
 			<!-- rel is overwritten in handleMZP for browsers > 768 -->
-			<a href='#' class='MagicZoomPlus' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
+			<a href='#' class='zoomTool' data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
 			<!-- the proddetailthumbs tlc format has some dimensions for MZP that correspond to the srcset's used below. if you change these, change them as well -->
 			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --img --media=$var --width=250 --height=250 --bgcolor='#ffffff' --replace; }}; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=400w,h=350&w=350&dpi=1x&vp=1100w,h=500&w=500&dpi=1x&vp=1800w';" src="blank.gif" alt="" height="250" width="250" />
 			<!-- goes in tlc srcset views ,h=1000&w=1000&dpi=2x&vp=1024w  -->
@@ -746,6 +746,8 @@ this will likely become more flexible in the future. ###
 		</div>
 		
 	</div>
+
+	<div class='zoomToolZoomContainer'></div><!-- used in conjuction with zoom as a container for the zoom itself -->
 
 	</section>
 

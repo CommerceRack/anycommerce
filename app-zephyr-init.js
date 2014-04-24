@@ -127,11 +127,18 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 
 $("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
-	var $primaryImage = $('.MagicZoomPlus:first img',$ele);
+	var $primaryImage = $('.zoomTool:first img',$ele);
 	//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
 	$primaryImage.parent().zoom({
+		'url' : myApp.u.makeImage({name : $primaryImage.data('media'), tag : false}),
 //		'touch' : true,
-		'url' : myApp.u.makeImage({name : $primaryImage.data('media'), tag : false})
+		onZoomIn : function(){
+			$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show()
+			},
+		onZoomOut : function(){
+			$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').hide()
+			},
+		'target' : $primaryImage.closest(".vidsAndPics").find('.zoomToolZoomContainer')
 		});
 /*	$("[data-anytab-content='images']:first",$ele).imagesLoaded().always( function( instance ) {
 		dump(" -> onComplete for pid: "+infoObj.pid);

@@ -317,11 +317,16 @@ hr.subtle	{margin:.1em 0;
 
 /* product template */
 
+
+.zoomToolZoomContainer	{width:250px; height:250px; position:absolute; top: 300px; left:0; display:none; z-index:1000;}
+.zoomTool	{display:inline-block;} /* the class on the href that contains the image for zoom.  MUST be display block or the zoom only pans horizontally */
+
+.prodVideoTab	{min-height:200px;}
+.vidsAndPics	{max-width:600px; position:relative;}
+
 /* responsive video/youtube -> found here: http://avexdesigns.com/responsive-youtube-embed/ 
 doesn't respond quite as well once in a tab. will need media queries to adjust the height. ####TODO
 */
-.prodVideoTab	{min-height:200px;}
-.vidsAndPics	{max-width:600px;}
 .videoContainer {
     position: relative;
     padding-bottom: 56.25%;

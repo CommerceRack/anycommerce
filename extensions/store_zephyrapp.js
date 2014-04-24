@@ -321,7 +321,6 @@ var store_zephyrapp = function(_app) {
 					if(bodyWidth >= 640)	{dim = 350}
 					else if(bodyWidth >= 1100)	{dim = 500}
 					else	{} //use default.
-					dump(" ---------------------->>>>>>>>> "+bodyWidth);
 					for(var i = 1; i <= 20; i += 1)	{
 						if(data.value['zoovy:prod_image'+i])	{
 							$("<a \/>",{'href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),'rev':thisTLC.makeImageURL({'width':dim,'height':dim,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).append($("<img \/>",{
@@ -330,7 +329,6 @@ var store_zephyrapp = function(_app) {
 								//the first srcset value should match the default height and width, then grow from there.
 								'srcset' : thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 760w 1x, "+thisTLC.makeImageURL({'width':100,'height':100,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1100w 1x"
 								}).addClass('productThumb')).appendTo($div);
-
 
 // NOTE -> iphone wasn't reacting well to the 2x.
 // , "+thisTLC.makeImageURL({'width':200,'height':200,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})+" 1024w 2x
