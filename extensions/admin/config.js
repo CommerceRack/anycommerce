@@ -1749,6 +1749,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
 					_app.u.handleButtons($target);
 					$('form',$target).anyform();
+					$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
 					}
 				else if(!$ele.data('event'))	{
 					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, data-event not set on trigger element.","gMessage":true});
