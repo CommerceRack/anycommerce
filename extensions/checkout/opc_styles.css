@@ -143,3 +143,10 @@ and offMenu is toggle off, hiding the change button.
 .buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
 #mainContentArea .hint	{font-weight:normal; font-size:.8em;}
+
+/* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
+.appAccordianesque .ui-accordion-header {padding:.5em 2em;}
+
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:1em; padding:0; display:inline-block;}
