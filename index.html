@@ -1390,12 +1390,12 @@ if you change these, you should move them above this comment so that when you (o
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
 		-->
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var; apply --attrib='src';">
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';">
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|removeteam">-</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 	<li id="validteamTemplate" class="teamTemplate" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';">
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var; apply --attrib='src';">
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';">
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|addteam">+</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
