@@ -614,22 +614,6 @@ var store_swc = function(_app) {
 					"app_brands"
 					]
 				},
-			'new_arrivals' :{
-				title : "New Arrivals",
-				baseFilter  : {
-					"term" : {"tags":"IS_NEWARRIVAL"}
-					},
-				options : [
-					"app_promo",
-					"app_department",
-					"app_sub_department",
-					"app_prod_demographic",
-					"app_tshirts",
-					"app_souvenirs",
-					"app_jerseys",
-					"app_brands"
-					]
-				},
 			'shirts' : {
 				title : "Shirts",
 				baseFilter : {
