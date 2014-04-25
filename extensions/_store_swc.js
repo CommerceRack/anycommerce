@@ -693,8 +693,8 @@ var store_swc = function(_app) {
 		validTeams : {
 			//These values taken from flex field setup, and should be adjusted when / if these are expanded
 			'app_nba' : [{"p":"Chicago Bulls","v":"chicago_bulls"}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"images/homepage/Arizona Diamondbacks Game Cap.jpg"},
-						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"images/homepage/Atlanta Braves Home Cap.jpg"},
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"images/homepage/Arizona_Diamondbacks_Game_Cap.jpg"},
+						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"images/homepage/Atlanta_Braves_Home_Cap.jpg"},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.png"},
 						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.png"},
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg"},
