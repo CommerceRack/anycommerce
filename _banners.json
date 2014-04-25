@@ -9,6 +9,18 @@
 		"src":"banners/2014/mothersday.png",
 		"alt":"Chicago Cubs Mother's Day 2014",
 		"title":"Chicago Cubs Mother's Day 2014",
-		"href":"#!filter/100_years_of_wrigley_field/"
+		"href":"#!filter/shirts/"
+	},
+	{
+		"src":"banners/chicago_cubs_authentic_jersey_homepage_banner.png",
+		"alt":"Authentic Jerseys at SportsWorldChicago.com",
+		"title":"Authentic Jerseys at SportsWorldChicago.com",
+		"href":"#!filter/jerseys/"
+	},
+	{
+		"src":"banners/chicago_cubs_hats_banner_homepage.png",
+		"alt":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
+		"title":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
+		"href":"#!filter/hats/"
 	}
 ]
