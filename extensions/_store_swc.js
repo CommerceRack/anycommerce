@@ -60,9 +60,8 @@ var store_swc = function(_app) {
 				else {
 					for(var i in _app.ext.store_swc.validTeams.app_mlb){
 						var t = _app.ext.store_swc.validTeams.app_mlb[i];
-						dump(t);
-						dump(t.v);
 						if(t.v == "chicago_cubs"){
+							t.checked = "checked";
 							_app.ext.store_swc.u.setUserTeams('app_mlb',[t]);
 							break;
 							}
@@ -511,7 +510,11 @@ var store_swc = function(_app) {
 								rd.$input.closest('[data-filter=inputContainer]').show();
 								}
 							else {
-								rd.$input.closest('[data-filter=inputContainer]').hide();
+								var $inputContainer = rd.$input.closest('[data-filter=inputContainer]');
+								
+								if($inputContainer.closest('.filterGroup').hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
+								else {$inputContainer.hide();}
+								
 								rd.$input.prop('checked',false);
 								if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
 									
