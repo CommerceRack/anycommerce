@@ -234,9 +234,9 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				//could get here from cartOrderStatus inquiry OR cartOrderCreate response.
 				//if a cart id is set, keep polling. could mean that one orderStatus call failed for some reason.
 				//but no order id likely means the cartOrderCreate call failed. show the errors.
-				
+				dump(" -> rd: "); dump(rd);
 				if(rd._rtag)	{
-					if(_app.data[rd._rtag.datapointer].finished)	{
+					if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer].finished)	{
 						_app.ext.order_create.a.checkoutComplete(_rtag);
 						}
 					else if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer]['status-cartid'])	{
@@ -247,14 +247,15 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 							},2000);
 						}
 					else	{
+						//error messaging is persistent so that buyer has adequate time to read/copy it.
 						$(document.body).hideLoading();
-						$("#globalMessaging").anymessage({"message":rd,"gMessage":true});
+						$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true});
 						}
 					}
 				else	{
 					//if rd._rtag is not set, the error is pretty big, probably an ISE or ISEERR
 					$(document.body).hideLoading();
-					$("#globalMessaging").anymessage({"message":rd,"gMessage":true});
+					$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true});
 					}
 				}
 			}
