@@ -235,6 +235,12 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				//if a cart id is set, keep polling. could mean that one orderStatus call failed for some reason.
 				//but no order id likely means the cartOrderCreate call failed. show the errors.
 //				dump(" -> rd: "); dump(rd);
+				
+				function handleError()	{
+					$(document.body).hideLoading();
+					$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true}); //error messaging is persistent so that buyer has adequate time to read/copy it.
+					}
+				
 				if(rd._rtag)	{
 					if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer].finished)	{
 						_app.ext.order_create.a.checkoutComplete(_rtag);
@@ -246,16 +252,23 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 							_app.model.dispatchThis("mutable");
 							},2000);
 						}
+					else if(rd._rtag.datapointer.indexOf('cartOrderCreate') >= 0)	{
+						//if the error came back as part of cartOrderCreate, then we should show checkout again so the user has the chance to resubmit.
+						if(rd._rtag.parentID)	{
+							handleError();
+							$(_app.u.jqSelector('#',rd._rtag.parentID)).show();
+							}
+						else	{
+							handleError();
+							}
+						}
 					else	{
-						//error messaging is persistent so that buyer has adequate time to read/copy it.
-						$(document.body).hideLoading();
-						$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true});
+						handleError()
 						}
 					}
 				else	{
 					//if rd._rtag is not set, the error is pretty big, probably an ISE or ISEERR
-					$(document.body).hideLoading();
-					$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true});
+					handleError()
 					}
 				}
 			}
@@ -1668,7 +1681,8 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else	{
 					if(_app.ext.order_create.validate.checkout($form))	{
-						$form.slideUp('fast',function(){
+						var $checkout = $form.closest("[data-app-role='checkout']");
+						$checkout.slideUp('fast',function(){
 							$('body').showLoading({'message':'Creating order...'});
 							});
 						_app.ext.cco.u.sanitizeAndUpdateCart($form);
@@ -1686,7 +1700,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							'_cmd':'cartOrderCreate',
 							'@PAYMENTS' : payments,
 							'async' : 1,
-							'_tag':{'datapointer':'cartOrderCreate|'+cartid,'callback':'cartOrderStatus','extension':'order_create','parentID':$form.closest("[data-app-role='checkout']").attr('id')},
+							'_tag':{'datapointer':'cartOrderCreate|'+cartid,'callback':'cartOrderStatus','extension':'order_create','parentID':$checkout.attr('id')},
 							'iama':_app.vars.passInDispatchV, 
 							'domain' : (_app.vars.thisSessionIsAdmin ? 'www.'+_app.vars.domain : '')
 							},'immutable');
