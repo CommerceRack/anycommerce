@@ -614,6 +614,19 @@ var store_swc = function(_app) {
 					"app_brands"
 					]
 				},
+			'chicago' : {
+				title : "Chicago",
+				baseFilter : {
+					"term" : {"app_promo":"Chicago"}
+					},
+				options : [
+					"app_department",
+					"app_sub_department",
+					"app_tshirts",
+					"app_souvenirs",
+					"app_brands"
+					]
+				},
 			'shirts' : {
 				title : "Shirts",
 				baseFilter : {
