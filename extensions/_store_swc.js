@@ -693,7 +693,7 @@ var store_swc = function(_app) {
 		validTeams : {
 			//These values taken from flex field setup, and should be adjusted when / if these are expanded
 			'app_nba' : [{"p":"Chicago Bulls","v":"chicago_bulls"}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlb_team_jersey_pics/arizona_diamondbacks_authentic_personalized_alternate_cool_base_jersey_1"},
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.png"},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlb_team_jersey_pics/atlanta_braves_authentic_personalized_or_mlb_player_home_cool_base_jersey"},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles"},
 						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlb_team_jersey_pics/boston_red_sox_authentic_home_cool_base_jersey"},
