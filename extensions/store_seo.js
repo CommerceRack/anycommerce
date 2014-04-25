@@ -49,7 +49,7 @@ var store_seo = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				var callback = function(event, $context, infoObj){dump('--> store_seo complete event'); event.stopPropagation(); _app.ext.store_seo.u.generateMeta($context, infoObj);}
+				var callback = function(event, $context, infoObj){dump('--> store_seo complete event'); event.stopPropagation(); if(infoObj){_app.ext.store_seo.u.generateMeta($context, infoObj);}}
 				for(var i in _app.templates){
 					_app.templates[i].on('complete.seo', callback);
 					}
