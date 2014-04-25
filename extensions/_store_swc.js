@@ -198,9 +198,7 @@ var store_swc = function(_app) {
 					for(var i in list){
 						var o = list[i];
 						var $t = $('<div data-filter="inputContainer"></div>');
-						$t.append('<input type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />');
-						$t.append('<label>'+o.p+'</label>');
-						$t.append(' <span data-filter="count"></span>');
+						$t.append('<label><input type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />'+o.p+' <span data-filter="count"></span></label>');
 						if(o.hidden){$t.addClass('displayNone');}
 						$tag.append($t);
 						}
