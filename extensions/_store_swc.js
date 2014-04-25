@@ -70,7 +70,9 @@ var store_swc = function(_app) {
 					//_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
-				
+				_app.router.appendHash({'type':'exact','route':'shop-by-player/','callback':function(routeObj){
+					showContent('static',{dataset:_app.ext.store_swc.vars.userTeams, 'templateID':'shopByPlayerTemplate'});
+					}});
 				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
 					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
 					}});
@@ -306,9 +308,13 @@ var store_swc = function(_app) {
 				$('#appView .myTeamsFilter').each(function(){
 					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
 					});
-				//$('#appView .filteredSearchPage').each(function(){
-				//	$(this).intervaledEmpty().remove();
-				//	}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
+				$('#appView .filteredSearchPage').each(function(){
+					$(this).intervaledEmpty().remove();
+					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
+				$('#appView #shopByPlayerTemplate_').intervaledEmpty().remove();
+				if($('#appView #mainContentArea :visible').length < 1){
+					_app.router.handleHashChange();
+					}
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
 			renderMyTeams : function(){
@@ -699,36 +705,36 @@ var store_swc = function(_app) {
 		validTeams : {
 			//These values taken from flex field setup, and should be adjusted when / if these are expanded
 			'app_nba' : [{"p":"Chicago Bulls","v":"chicago_bulls"}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg"},
-						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg"},
-						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.png"},
-						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.png"},
-						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg"},
-						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.png"},
-						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.png"},
-						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.png"},
-						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.png"},
-						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.png"},
-						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.png"},
-						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.png"},
-						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.png"},
-						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.png"},
-						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.png"},
-						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.png"},
-						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.png"},
-						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.png"},
-						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.png"},
-						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.png"},
-						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.png"},
-						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.png"},
-						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.png"},
-						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.png"},
-						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.png"},
-						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.png"},
-						{"p":"Tampa Bay Rays","v":"tampa_bay_Rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.png"},
-						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.png"},
-						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.png"},
-						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.png"}],
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks"},
+						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves"},
+						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.png", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles"},
+						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox"},
+						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs"},
+						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox"},
+						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.png", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds"},
+						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.png", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians"},
+						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.png", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies"},
+						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.png", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers"},
+						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.png", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros"},
+						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals"},
+						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.png", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim"},
+						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.png", "catlink":"#!category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers"},
+						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.png", "catlink":"#!category/.mlb.miami_marlins/Miami%20Marlins"},
+						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.png", "catlink":"#!category/.mlb.milwaukee_brewers/Milwaukee%20Brewers"},
+						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.png", "catlink":"#!category/.mlb.minnesota_twins/Minnesota%20Twins"},
+						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.new_york_mets/New%20York%20Mets"},
+						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.new_york_yankees/New%20York%20Yankees"},
+						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.png", "catlink":"#!category/.mlb.oakland_athletics/Oakland%20Athletics"},
+						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.png", "catlink":"#!category/.mlb.philadelphia_phillies/Philadelphia%20Phillies"},
+						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.png", "catlink":"#!category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates"},
+						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.san_diego_padres/San%20Diego%20Padres"},
+						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.png", "catlink":"#!category/.mlb.san_francisco_giants/San%20Francisco%20Giants"},
+						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.png", "catlink":"#!category/.mlb.seattle_mariners/Seattle%20Mariners"},
+						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.png", "catlink":"#!category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals"},
+						{"p":"Tampa Bay Rays","v":"tampa_bay_Rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays"},
+						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.png", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers"},
+						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.png", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays"},
+						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.png", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals"}],
 			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals"},
 						{"p":"Atlanta Falcons","v":"atlanta_falcons"},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens"},

@@ -952,7 +952,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 					case 'static':
 						infoObj.pageType = 'static';
-						var parentID = infoObj.templateID+"_"+infoObj.id;
+						var parentID = infoObj.templateID+"_"+(infoObj.id || "");
 						var $parent = $(_app.u.jqSelector('#',parentID));
 						if($parent.length > 0){
 							infoObj.state = 'init';
@@ -960,6 +960,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						else {
 							$parent = new tlc().getTemplateInstance(infoObj.templateID);
+							$parent.attr('id', parentID);
 							infoObj.state = 'init';
 							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
 							if(infoObj.dataset){

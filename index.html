@@ -158,8 +158,8 @@ $(document).ready(function(){
 			<a href="#!filter/sweatshirts/" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
 			<a href="#!filter/hats/" class="navLink displayTableCell alignCenter">HATS</a>
 			<a href="#!filter/souvenirs/" class="navLink displayTableCell alignCenter">SOUVENIRS</a>
-			<a href="#!filter/hats/" class="navLink displayTableCell alignCenter">SHOP BY PLAYER</a>
-			<a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink displayTableCell alignCenter">MY TEAMS</a>
+			<a href="#!shop-by-player/" class="navLink displayTableCell alignCenter">SHOP BY PLAYER</a>
+			<!-- <a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink displayTableCell alignCenter">MY TEAMS</a> -->
 			<a href="#!product/OGC/" class="navLink displayTableCell alignCenter">GIFT CARDS</a>
 			<a href="#!filter/chicago/" class="navLink displayTableCell alignCenter">CHICAGO</a>
 		
@@ -616,6 +616,17 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 </div>
 
+<div id="shopByPlayerTemplate">
+	<ul class="listStyleNone alignCenter clearfix noPadOrMargin" data-tlc="bind $var '.app_mlb'; controller#loop --templateid='userTeamTemplate'; apply --append;"></ul>
+</div>
+<ul>
+	<li id="userTeamTemplate" class="categoryListItem blockLink alignLeft">
+		<a data-tlc="bind $var '.catlink'; apply --attrib='href';" >
+			<div class="thumbContainer"><img data-tlc="bind $var '.img'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
+			<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.p'; apply --append;"></span></div>
+		</a>
+	</li>
+</ul>
 <div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage">
 	<span class="displayNone" data-tlc="bind $var '.seo_title'; if(is $var --notblank;){{apply --attrib='data-seo-title';}};"></span>
 	<span class="displayNone" data-tlc="bind $var '.seo_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
