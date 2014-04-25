@@ -639,7 +639,7 @@ var store_swc = function(_app) {
 					},
 				options : [
 					"app_prod_demographic",
-					"app_tshirts",
+					"app_t_shirts",
 					"app_brands"
 					]
 				},
