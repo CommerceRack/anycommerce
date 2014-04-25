@@ -250,8 +250,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 	max-height: 100%;
 }
 #myTeamChooser .teamlist {width: 45%; display: inline-block; padding: 0px 2.4%; overflow: auto; height: 90%;}
-#myTeamChooser .teamlist .teamTemplate {height:30px;}
-#myTeamChooser .teamlist .teamTemplate button {height:25px; width: 25px; text-align:center;}
+#myTeamChooser .teamlist .teamTemplate {height:45px; font-size:1.2em; vertical-align:middle; line-height: 45px;}
+#myTeamChooser .teamlist .teamTemplate button {height:30px; width: 30px; text-align:center; vertical-align:middle; display:inline-block;}
+#myTeamChooser .teamlist .teamTemplate button {vertical-align:middle;}
 #myTeamChooser .teamlist .teamTemplate img {height:100%;}
 #myTeamChooser .sportContainer{
 	position:absolute;
