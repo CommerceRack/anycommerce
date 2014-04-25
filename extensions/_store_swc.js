@@ -735,7 +735,7 @@ var store_swc = function(_app) {
 			//THIS IS CAP TYPE
 			"app_sub_department" : [{"p":"Adjustable","v":"adjustable"},{"p":"Fitted","v":"fitted"},{"p":"Flex Fit / Stretch","v":"flex_fit_stretch"},{"p":"Snapback","v":"snapback"},{"p":"Visors / Floppy","v":"visors_floppy"},{"p":"Winter","v":"winter"}], 
 			"app_tshirts" : [{"p":"Customized","v":"customized"},{"p":"Long Sleeve","v":"long_sleeve"},{"p":"Short Sleeve","v":"short_sleeve"}],
-			"app_jerseys" : [{"p":"Alternate","v":"alternate"},{"p":"Authentic","v":"authentic"},{"p":"Cooperstown","v":"cooperstown"},{"p":"Custom Personalized","v":"custom_personalized"},{"p":"Institutionalized","v":"institutionalized"},{"p":"Replica","v":"replica"}],
+			"app_jerseys" : [{"p":"Alternate","v":"alternate"},{"p":"Authentic","v":"authentic"},{"p":"Blank","v":"blank"},{"p":"Cooperstown","v":"cooperstown"},{"p":"Custom Personalized","v":"custom_personalized"},{"p":"Institutionalized","v":"institutionalized"},{"p":"Replica","v":"replica"}],
 			"app_souvenirs" : [{"p":"Auto","v":"auto"},{"p":"Books / Movies / Music","v":"books_movies_music"},{"p":"Die Hard Cub Fan","v":"die_hard_cub_fan"},{"p":"Display Cases","v":"display_cases"},{"p":"Games","v":"games"},{"p":"Holiday","v":"holiday"},{"p":"Home Decor","v":"home_decor"},{"p":"Lapel Pins","v":"lapel_pins"},{"p":"Pet Products","v":"pet_products"},{"p":"Pictures","v":"pictures"},{"p":"School / Office / Home","v":"school_office_home"},{"p":"Signs & Flags","v":"signs_flags"},{"p":"Under $20","v":"under_20"},{"p":"Watches, Jewelry & Keychains","v":"watches_jewelry_keychains"},{"p":"Souvenirs","v":"souvenirs"}]
 			},
 			
