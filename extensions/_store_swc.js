@@ -58,8 +58,17 @@ var store_swc = function(_app) {
 						}
 					}
 				else {
-					_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
-					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#!customer/myteams/'>here!</a>", timeout:30000});
+					for(var i in _app.ext.store_swc.validTeams.app_mlb){
+						var t = _app.ext.store_swc.validTeams.app_mlb[i];
+						dump(t);
+						dump(t.v);
+						if(t.v == "chicago_cubs"){
+							_app.ext.store_swc.u.setUserTeams('app_mlb',[t]);
+							break;
+							}
+						}
+					//_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
+					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
 				
 				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
