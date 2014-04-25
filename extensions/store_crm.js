@@ -321,6 +321,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					$parent.tlc({'templateid' : P.templateID,'dataset' : {'pid':P.pid}});
 					$parent.dialog('open');
 					_app.u.handleButtons($parent);
+					_app.u.addEventDelegation($parent); //1PC doesn't have delegation on the body.
 					}
 				},
 
