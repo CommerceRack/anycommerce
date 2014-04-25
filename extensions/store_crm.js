@@ -308,18 +308,19 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					var $parent = $('#review-modal');
 //if no review modal has been created before, create one. 
 					if($parent.length == 0)	{
-						_app.u.dump(" -> modal window doesn't exist. create it.");
 						$parent = $("<div \/>").attr({"id":"review-modal",'data-pid':P.pid}).appendTo(document.body);
 						}
 					else	{
-						_app.u.dump(" -> use existing modal. empty it.");
 //this is a new product being displayed in the viewer.
 						$parent.empty();
 						}
 					$parent.dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',height:500,autoOpen:false,"title":"Write a review for "+P.pid});
 //the only data needed in the reviews form is the pid.
 //the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
-					$parent.dialog('open').append(_app.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
+//					$parent.dialog('open').append(_app.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
+					$parent.tlc({'templateid' : P.templateID,'dataset' : {'pid':P.pid}});
+					$parent.dialog('open');
+					_app.u.handleButtons($parent);
 					}
 				},
 
