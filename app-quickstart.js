@@ -209,9 +209,9 @@ document.write = function(v){
 				
 				
 				if(cartID)	{
-					myApp.router.init();//instantiates the router.
 					_app.model.addDispatchToQ({"_cmd":"whoAmI",_cartid : cartID, "_tag":{"datapointer":"whoAmI",callback:function(rd){
-						_app.ext.quickstart.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
+						myApp.router.init();//instantiates the router.
+						_app.ext.quickstart.u.handleAppInit(); //finishes loading RQ. handles some authentication based features.
 						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
 						_app.model.dispatchThis('mutable');
 						
@@ -330,7 +330,6 @@ document.write = function(v){
 
 // passing in unsanitized tagObj caused an issue with showPageContent
 				_app.ext.quickstart.u.buildQueriesFromTemplate($.extend(true, {}, tagObj));
-				dump(" ----> queries were just built");
 				_app.model.dispatchThis();
 				},
 			onError : function(responseData)	{
@@ -2342,7 +2341,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
 					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
 					else	{
-					
 						switch(infoObj.show)	{
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
@@ -2410,7 +2408,10 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 										populateBuyerProdlist(data[i].id,rd.jqObj)
 										}
 									_app.model.dispatchThis('mutable');
-									$('.applyAccordion',rd.jqObj).accordion({heightStyle: "content"});
+									//no sense putting 1 list into an accordion.
+									if(L > 1)	{
+										$('.applyAccordion',rd.jqObj).accordion({heightStyle: "content"});
+										}
 									}}},"mutable");
 								break;
 							case 'myaccount':
