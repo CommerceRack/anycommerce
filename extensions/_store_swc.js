@@ -666,6 +666,7 @@ var store_swc = function(_app) {
 				options : [
 					"app_prod_demographic",
 					"app_jerseys",
+					"app_jerseys_kind",
 					"app_brands"
 					]
 				},
@@ -779,6 +780,7 @@ var store_swc = function(_app) {
 			"app_sub_department" : [{"p":"Adjustable","v":"adjustable"},{"p":"Fitted","v":"fitted"},{"p":"Flex Fit / Stretch","v":"flex_fit_stretch"},{"p":"Snapback","v":"snapback"},{"p":"Visors / Floppy","v":"visors_floppy"},{"p":"Winter","v":"winter"}], 
 			"app_t_shirts" : [{"p":"Customized","v":"customized"},{"p":"Long Sleeve","v":"long_sleeve"},{"p":"Short Sleeve","v":"short_sleeve"}],
 			"app_jerseys" : [{"p":"Alternate","v":"alternate"},{"p":"Authentic","v":"authentic"},{"p":"Blank","v":"blank"},{"p":"Cooperstown","v":"cooperstown"},{"p":"Custom Personalized","v":"custom_personalized"},{"p":"Institutionalized","v":"institutionalized"},{"p":"Replica","v":"replica"}],
+			"app_jerseys_kind" : [{"p":"Alternate","v":"alternate"},{"p":"Batting Practice","v":"bp"},{"p":"Home","v":"home"},{"p":"Road","v":"road"}],
 			"app_souvenirs" : [{"p":"Auto","v":"auto"},{"p":"Books / Movies / Music","v":"books_movies_music"},{"p":"Die Hard Cub Fan","v":"die_hard_cub_fan"},{"p":"Display Cases","v":"display_cases"},{"p":"Games","v":"games"},{"p":"Holiday","v":"holiday"},{"p":"Home Decor","v":"home_decor"},{"p":"Lapel Pins","v":"lapel_pins"},{"p":"Pet Products","v":"pet_products"},{"p":"Pictures","v":"pictures"},{"p":"School / Office / Home","v":"school_office_home"},{"p":"Signs & Flags","v":"signs_flags"},{"p":"Under $20","v":"under_20"},{"p":"Watches, Jewelry & Keychains","v":"watches_jewelry_keychains"},{"p":"Souvenirs","v":"souvenirs"}]},
 			"app_promo" : [{"p":"Wrigley 100","v":"wrigley100"},{"p":"City of Chicago","v":"chicago"}],
 
