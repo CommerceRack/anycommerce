@@ -1854,7 +1854,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				return false;
 				}, //execInvoicePrint
 
-			showBuyerAddressAdd : function($ele)	{
+			showBuyerAddressAdd : function($ele,p)	{
 				p.preventDefault();
 				var
 					$checkoutForm = $ele.closest('form'), //used in some callbacks later.
@@ -2356,9 +2356,6 @@ _app.model.dispatchThis('passive');
 					}
 				$tag.html(o);
 				} //paymethodsasradiobuttons
-			
-
-			
 			} //renderFormats
 
 		
