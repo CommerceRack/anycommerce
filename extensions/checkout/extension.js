@@ -241,7 +241,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true}); //error messaging is persistent so that buyer has adequate time to read/copy it.
 					}
 				
-				if(rd._rtag)	{
+				if(rd._rtag && rd._rtag.datapointer)	{
 					if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer].finished)	{
 						_app.ext.order_create.a.checkoutComplete(_rtag);
 						}
