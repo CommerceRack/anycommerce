@@ -61,6 +61,9 @@ myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
 
+//used for image enlargement in product layout
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
 
 
@@ -126,8 +129,15 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 
 
 
-$("#productTemplate").on('complete.mzpandsrcset',function(state,$ele,infoObj){
+
+$("#productTemplate, #productTemplateQuickView").on('complete.dynimaging',function(state,$ele,infoObj){
 	myApp.ext.store_zephyrapp.u.applyZoom($('.zoomTool:first img',$ele));
+	$('.productPrimaryImage',$ele).imagegallery({
+		show: 'fade',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: false
+		});
 	});
 
 
