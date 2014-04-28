@@ -1154,8 +1154,8 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
+				dump(" -----------------------------> GOT HERE!!!!!!!!!!");
 				var r = '', cartid;
-				
 				if(data.value.cart && data.value.cart.cartid){
 					cartid = data.value.cart.cartid;
 					}
