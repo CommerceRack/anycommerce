@@ -13,6 +13,7 @@ GLOBAL
 	'elastic-native' changed to 'elastic-search' for appPublicSearch
 	Elastic is now inventory aware (optionally).
 	Elastic can now search by category.
+	checkout is now asynchronous (see video for details)
 
 ADMIN
 	Product editor debug now includes 'inventory transactions'.
