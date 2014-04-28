@@ -1867,25 +1867,25 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.ext.store_crm.u.showAddressAddModal({'addressType':addressType},function(rd,serializedForm){
 //by here, the new address has been created.
 //set appropriate address panel to loading.
-					_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+						_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
 //update cart and set shortcut as address.
-					var updateObj = {'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid')}
-					updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
-					_app.ext.cco.calls.cartSet.init(updateObj,{},'immutable');
-
+						var updateObj = {'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid')}
+						updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
+						_app.ext.cco.calls.cartSet.init(updateObj,{},'immutable');
+	
 //update DOM/input for shortcut w/ new shortcut value.
-					$("[name='"+addressType+"/shortcut']",$checkoutForm);
-
+						$("[name='"+addressType+"/shortcut']",$checkoutForm);
+	
 //get the updated address list and update the address panel.
-					_app.model.destroy('buyerAddressList');
-					_app.calls.buyerAddressList.init({'callback':function(rd){
-						_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
-						}},'immutable');
-
+						_app.model.destroy('buyerAddressList');
+						_app.calls.buyerAddressList.init({'callback':function(rd){
+							_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
+							}},'immutable');
+	
 //update appropriate address panel plus big three.
-					_app.ext.order_create.u.handleCommonPanels($checkoutForm);
-					_app.model.dispatchThis('immutable');
-					});
+						_app.ext.order_create.u.handleCommonPanels($checkoutForm);
+						_app.model.dispatchThis('immutable');
+						});
 					}
 				return false;
 				}, //showBuyerAddressAdd
