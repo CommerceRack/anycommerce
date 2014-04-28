@@ -773,7 +773,7 @@ var store_swc = function(_app) {
 						{"p":"Boston Bruins","v":"boston_bruins", "img":"nfl/washington_redskins_cap.jpg"},
 						{"p":"Buffalo Sabres","v":"buffalo_sanres", "img":"nfl/washington_redskins_cap.jpg"},
 						{"p":"Calgary Flames","v":"calgary_flames", "img":"nfl/washington_redskins_cap.jpg"},
-						{"p":"Carolina Panthers","v":"carolina_panthers"}, "img":"nfl/washington_redskins_cap.jpg"},
+						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/washington_redskins_cap.jpg"},
 						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nfl/washington_redskins_cap.jpg"},
 						{"p":"Colorado Avalanche","v":"colorado_alavanche", "img":"nfl/washington_redskins_cap.jpg"},
 						{"p":"Columbus Blue Jackets","v":"columbus_blue_jackets", "img":"nfl/washington_redskins_cap.jpg"},
