@@ -757,9 +757,13 @@ this will likely become more flexible in the future. ###
 	</section>
 
 
-	<table class="marginBottom fullWidth gridTable" data-app-role="childrenSiblingsContainer">
-		<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
-	</table>
+	<form class="marginBottom fullWidth gridTable" data-app-role='childrenSiblingsContainer'>
+		<label data-tlc="bind $var '.%attribs.amz:grp_varkey'; if (is $var --notblank;) {{apply --prepend;}};">
+		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|jump2PidByValue'>
+			<option value=''>Please choose</option>
+		</select>
+		</label>
+	</form>
 
 	<!-- if this is a parent, the 'children' list will detail what's available and each will have an add to cart button. -->
 	<section class='marginBottom addToCartContainer' data-tlc="bind $children '.%attribs.zoovy:grp_children'; if (is $children --notblank;) {{apply --hide;}}; ">
@@ -1431,23 +1435,10 @@ Cart template
 used on a product layout. Some product have 'children' which may represent the same item in a different color (variations are commonly used for sizing)
 -->
 
-<table>
-<tbody>
-<tr id="productListTemplateChildren">
-	<td class='smallButton'>
-	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
 
-	<div class='clearfix'>
-		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone floatRight marginLeft" type="submit">
-		<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone floatRight"></fieldset>
-		<div  data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></div>
-	</div>
-	<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-	</form></td>
-</tr>
-
-</tbody>
-</table>
+<select>
+	<option id="productListTemplateChildren" data-tlc="bind $pid '.pid'; apply --attrib='value'; bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></option>
+</select>
 
 
 

@@ -275,13 +275,13 @@ var store_zephyrapp = function(_app) {
 
 			//this tlcformat gets run AFTER the image has been appended/replaced. It needs the data-attributes set.
 			srcset : function(data,thisTLC)	{
-				dump(" -> srcset data: "); dump(data,'dir');
+//				dump(" -> srcset data: "); dump(data,'dir');
 				if(data.value)	{
 					var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 					var srcset = new Array();
-					dump(" -> argObj"); dump(argObj,'dir');
+//					dump(" -> argObj"); dump(argObj,'dir');
 					if(argObj.views)	{
-						dump(" -> argObj.views IS set");
+//						dump(" -> argObj.views IS set");
 						var viewArr = argObj.views.split(','), L = viewArr.length;
 						for(var i = 0; i < L; i += 1)	{
 							var obj = _app.u.kvp2Array(viewArr[i]), string = '';
@@ -618,6 +618,12 @@ var store_zephyrapp = function(_app) {
 				else	{
 					dump("In zephyr_storeapp.e.prodThumb2Primary, unable to local primary image href. zoom will not work.","warn");
 					}
+				return false;
+				},
+			
+			jump2PidByValue : function($ele,p)	{
+				p.preventDefault();
+				document.location.hash = "#!product/"+$ele.val();
 				return false;
 				},
 			

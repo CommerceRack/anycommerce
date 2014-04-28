@@ -127,8 +127,24 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 		}
 	});
 
-
-
+//After the children are added to the select list, check for inventory availability and disable if not purchaseable.
+//also, set the option of the pid in focus to selected.
+$("select[data-app-role='childrenSiblingsProdlist']",'#productTemplate').on('listcomplete',function(){
+	var $prodlist = $(this), focusPID = $prodlist.closest("[data-templateid='productTemplate']").data('pid');
+	$('option',$prodlist).each(function(index){
+		var pid = this.value;
+		if(myApp.u.thisNestedExists("data.appProductGet|"+pid+".@inventory",myApp))	{
+			if(myApp.ext.store_product.u.productIsPurchaseable(pid))	{
+//				dump(" -> product is in memory and is purchaseable");
+				}
+			else	{
+//				dump(" -> product is in memory but NOT purchaseable");
+				$(this).prop('disabled','disabled');
+				}
+			}
+		});
+	$prodlist.val(focusPID); //okay to 'select' this even if inventory not available because the add to cart button will be disabled. provides a clear indicator of which product is currently in focus.
+	});
 
 $("#productTemplate, #productTemplateQuickView").on('complete.dynimaging',function(state,$ele,infoObj){
 	myApp.ext.store_zephyrapp.u.applyZoom($('.zoomTool:first img',$ele));
