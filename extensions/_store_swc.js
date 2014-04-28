@@ -798,7 +798,7 @@ var store_swc = function(_app) {
 						{"p":"Toronto Maple Leafs","v":"toronto_maple_leafs"}, "img":"nfl/washington_redskins_cap.jpg"}],
 						{"p":"Vancouver Canucks","v":"vancouver_canucks"}, "img":"nfl/washington_redskins_cap.jpg"}],
 						{"p":"Washington Capitals","v":"washington_capitals"}, "img":"nfl/washington_redskins_cap.jpg"}],
-						{"p":"Winnipeg Jets","v":"winnipeg_jets"}, "img":"nfl/washington_redskins_cap.jpg"}]
+						{"p":"Winnipeg Jets","v":"winnipeg_jets"}, "img":"nfl/washington_redskins_cap.jpg"}],
 				},		
 		
 		options : {
