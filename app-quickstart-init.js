@@ -47,7 +47,6 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
 	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
 
 //Cart Messaging Responses.
-
 myApp.cmr.push(['chat.join',function(message){
 //	dump(" -> message: "); dump(message);
 	var $ui = myApp.ext.quickstart.a.showBuyerCMUI();

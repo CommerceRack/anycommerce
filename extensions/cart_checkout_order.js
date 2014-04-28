@@ -405,7 +405,7 @@ left them be to provide guidance later.
 								r.jqObj.empty();
 								},
 							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
+								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
@@ -420,7 +420,7 @@ left them be to provide guidance later.
 						_app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'tlc',
 							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
+								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c

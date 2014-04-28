@@ -2216,6 +2216,7 @@ elasticsearch.size = 50;
 				if(typeof infoObj != 'object'){var infoObj = {}}
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = 'mainContentArea_cart';
+				infoObj.trigger = '';
 				infoObj.state = 'init'; //needed for handleTemplateEvents.
 				
 				var $cart = $('#'+infoObj.parentID);
@@ -2225,12 +2226,12 @@ elasticsearch.size = 50;
 //only create instance once.
 				$cart = $('#mainContentArea_cart');
 				if($cart.length)	{
-					//show cart
-					$cart.hide().trigger('refresh');
-					infoObj.state = 'complete';
-					_app.renderFunctions.handleTemplateEvents($cart,infoObj);
+					//the cart has already been rendered.
+					infoObj.trigger = 'refresh';
+					$cart.hide();
 					}
 				else	{
+					infoObj.trigger = 'fetch';
 					infoObj.cartid = _app.model.fetchCartID();
 					$cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
 					$cart.hide().on('complete',function(){
@@ -2243,11 +2244,9 @@ elasticsearch.size = 50;
 					}
 //This will load the cart from memory, if set. otherwise it will fetch it.
 //so if you need to update the cart, run a destroy prior to showCart.
-				$cart.trigger((_app.data['cartDetail|'+infoObj.cartid] ? 'refresh' : 'fetch'),{'Q':'mutable'});
-				_app.model.dispatchThis();
-
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				_app.renderFunctions.handleTemplateEvents($cart,infoObj);
+				$cart.trigger(infoObj.trigger,$.extend({'Q':'mutable'},infoObj));
+				_app.model.dispatchThis('mutable');
 				return $cart;
 				}, //showCart
 
