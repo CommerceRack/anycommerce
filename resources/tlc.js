@@ -602,7 +602,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 //passing the command into this will verify that the format exists (whether it be core or not)
 
 	this.format_currency = function(argObj,globals)	{
-		dump(" BEGIN format_currency");
+//		dump("BEGIN format_currency");
 		var
 			decimalPlace = 2,
 			a = argObj.bind ? globals.binds[argObj.bind] : globals.binds[globals.focusBind];

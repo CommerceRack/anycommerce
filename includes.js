@@ -1625,6 +1625,7 @@ if (!this.JSON) {
             if (replacer && typeof replacer !== 'function' &&
                     (typeof replacer !== 'object' ||
                      typeof replacer.length !== 'number')) {
+
                 throw new Error('JSON.stringify');
             }
 
