@@ -689,6 +689,9 @@ an existing user gets a list of previous addresses they've used and an option to
 					if(_app.data['appCheckoutDestinations|'+cartID] && _app.data['appCheckoutDestinations|'+cartID]['@destinations'] && _app.data['appCheckoutDestinations|'+cartID]['@destinations'].length < 2)	{
 						$("[data-app-role='billCountry']",$fieldset).hide();
 						}
+//The template used for address input is shared w/ address edit for authenticated users. In edit, certain events are not desired. So the events are added here.
+					$("input[name='bill/address1'], input[name='bill/address2'], input[name='bill/city'], input[name='bill/region'], input[name='bill/postal']",$fieldset).attr('data-app-blur','order_create|execAddressUpdate');
+					$("select[name='bill/countrycode']",$fieldset).attr('data-app-change','order_create|execCountryUpdate');
 					}
 				_app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressBill
@@ -732,6 +735,9 @@ an existing user gets a list of previous addresses they've used and an option to
 					if(_app.data['appCheckoutDestinations|'+cartID] && _app.data['appCheckoutDestinations|'+cartID]['@destinations'] && _app.data['appCheckoutDestinations|'+cartID]['@destinations'].length < 2)	{
 						$("[data-app-role='shipCountry']",$fieldset).hide();
 						}
+//The template used for address input is shared w/ address edit for authenticated users. In edit, certain events are not desired. So the events are added here.
+					$("input[name='ship/address1'], input[name='ship/address2'], input[name='ship/city'], input[name='ship/region'], input[name='ship/postal']",$fieldset).attr('data-app-blur','order_create|execAddressUpdate');
+					$("select[name='ship/countrycode']",$fieldset).attr('data-app-change','order_create|execCountryUpdate');
 					}
 				_app.ext.order_create.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressShip

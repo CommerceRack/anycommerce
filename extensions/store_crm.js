@@ -462,21 +462,19 @@ This is used to get add an array of skus, most likely for a product list.
 								'save' : function(event,ui) {
 									event.preventDefault();
 									var $form = $('form',$(this)).first();
-									
+									var $editor = $(this);
 									if(_app.u.validateForm($form))	{
 										$form.showLoading('Updating Address');
-										var serializedForm = $form.serializeJSON();
-//save and then refresh the page to show updated info.
-										_app.model.addDispatchToQ({
-											'_cmd':'buyerAddressAddUpdate',
-											'_tag':	{
+										var sfo = $form.serializeJSON();
+											sfo._cmd = 'buyerAddressAddUpdate',
+											sfo._tag =	{
 												'callback':function(rd){
 													$form.hideLoading(); //always hide loading, regardless of errors.
 													if(_app.model.responseHasErrors(rd)){
 														$form.anymessage({'message':rd});
 														}
 													else if(typeof onSuccessCallback === 'function')	{
-														onSuccessCallback(rd,serializedForm);
+														onSuccessCallback(rd,sfo);
 														$editor.dialog('close');
 														}
 													else	{
@@ -485,7 +483,9 @@ This is used to get add an array of skus, most likely for a product list.
 														}
 													}
 												}
-											},'immutable');
+										
+//save and then refresh the page to show updated info.
+										_app.model.addDispatchToQ(sfo,'immutable');
 //dump data in memory and local storage. get new copy up updated address list for display.
 										_app.model.destroy('buyerAddressList');
 										_app.calls.buyerAddressList.init({},'immutable');
