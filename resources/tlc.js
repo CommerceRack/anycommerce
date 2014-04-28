@@ -554,7 +554,8 @@ This one block should get called for both img and imageurl but obviously, imageu
 			case "lt":
 				if(Number(p1) < Number(p2)){r = true;} break;
 			case "lte":
-				if(Number(p1) <= Number(p2)){r = true;} break;
+				dump(" -> p1: "+p1); dump(" -> p2: "+p2);
+				if(Number(p1) <= Number(p2)){r = true;} dump(" -> LTE: "+r); break;
 			case "true":
 				if(p1){r = true}; break;
 			case "false":
@@ -636,7 +637,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 		} //currency
 
 	this.format_prepend = function(argObj,globals,arg)	{
-		var r = (arg.type == 'longopt' ? arg.value.value : arg.value)+globals.binds[argObj.bind]
+		var r = (arg.type == 'longopt' ? arg.value.value : arg.value)+globals.binds[argObj.bind];
 		return r;
 		} //prepend
 
@@ -644,6 +645,16 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
 		return r;
 		} //append
+
+	this.format_lowercase = function(argObj,globals,arg)	{
+		globals.binds[argObj.bind] = globals.binds[argObj.bind].toLowerCase();
+		return globals.binds[argObj.bind];
+		} //lowercase
+
+	this.format_uppercase = function(argObj,globals,arg)	{
+		globals.binds[argObj.bind] = globals.binds[argObj.bind].toUpperCase();
+		return globals.binds[argObj.bind];
+		} //lowercase
 
 	this.format_default = function(argObj,globals,arg)	{
 		var r = (arg.type == 'longopt' ? arg.value.value : arg.value);

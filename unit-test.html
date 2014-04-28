@@ -51,7 +51,12 @@
 		
 		<!-- remove -->
 		<div data-testtype='remove-class' data-class='simple' data-visible='false' data-tlc="apply --remove --class='simple';" data-testname="remove class">should not have 'simple' class.</div>
-		<div id='this-gets-removed' data-tlc="apply --remove --tag='$tag';">This should not be on the DOM.</div>
+		
+		
+		<div style='border:1px solid #6CF;' id='this-should-be-empty'>
+			<div id='this-gets-removed' data-tlc="apply --remove --tag='$tag';">This should not be on the DOM.</div>
+			<div id='this-gets-removed-too' data-tlc="apply --tag --remove;">This should not be on the DOM either.</div>
+		</div>
 		
 	
 		<table>
@@ -105,6 +110,10 @@
 		<div data-testtype='output-compare' data-output='unknown' data-tlc="bind $var '.undefined'; format --default='unknown'; apply --append;"  data-testname="set default"></div>
 		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $name '.name'; bind $var '.undefined'; format --default=$name; apply --append;"  data-testname="set default to var"></div>
 		<div data-testtype='output-compare' data-output='this%20is%20a%20long%20string%20to%20use%20for%20testing.' data-tlc="bind $var '.long-string'; format --uriencode; apply --append;" data-testname="uriencode" ></div>
+		
+		
+		<div data-testtype='output-compare' data-output='BOB' data-tlc="bind $name '.name'; format --uppercase; apply --append;"  data-testname="format uppercase"></div>
+		<div data-testtype='output-compare' data-output='han' data-tlc="bind $name '.uppercase'; format --lowercase; apply --append;"  data-testname="format lowercase"></div>
 	</section>
 	<!--
 	<section id='render-tests'>
