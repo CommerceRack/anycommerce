@@ -158,8 +158,20 @@
 		<li data-testtype='output-compare' data-output='gt ' data-tlc="bind $var '.number'; if(is $var --gt='11') {{apply --append;}};" data-testname="gt false " >gt </li>
 		<li data-testtype='output-compare' data-output='gt 10' data-tlc="bind $price '.price'; bind $var '.number'; if(is $var --lt=$price) {{apply --append;}};" data-testname="lt variable comparison " >gt </li>
 		
+		<li data-testtype='output-compare' data-output='gte ' data-tlc="bind $var '.undefined'; if(is $var --gte='9') {{bind $bob '.name'; apply --append;}};" data-testname="gte undefined false " >gte </li>
+		<li data-testtype='output-compare' data-output='gte bob' data-tlc="bind $var '.undefined'; if(is $var --gte='0') {{bind $bob '.name'; apply --append;}};" data-testname="gte undefined true (0)" >gte </li>
+		<li data-testtype='output-compare' data-output='gte bob' data-tlc="bind $var '.undefined'; if(is $var --gte='-5') {{bind $bob '.name'; apply --append;}};" data-testname="gte undefined true " >gte </li>
+		
+		
 		<li data-testtype='output-compare' data-output='lt 10' data-tlc="bind $var '.number'; if(is $var --lt='11') {{apply --append;}};" data-testname="lt true" >lt </li>
 		<li data-testtype='output-compare' data-output='lt ' data-tlc="bind $var '.number'; if(is $var --lt='9') {{apply --append;}};" data-testname="lt false " >lt </li>
+		
+		<li data-testtype='output-compare' data-output='lte 10' data-tlc="bind $var '.number'; if(is $var --lte='11') {{apply --append;}};" data-testname="lte true" >lte </li>
+		<li data-testtype='output-compare' data-output='lte ' data-tlc="bind $var '.number'; if(is $var --lte='9') {{apply --append;}};" data-testname="lte false " >lte </li>
+		
+		<li data-testtype='output-compare' data-output='lte bob' data-tlc="bind $var '.undefined'; if(is $var --lte='9') {{bind $bob '.name'; apply --append;}};" data-testname="lte undefined true " >lte </li>
+		<li data-testtype='output-compare' data-output='lte bob' data-tlc="bind $var '.undefined'; if(is $var --lte='0') {{bind $bob '.name'; apply --append;}};" data-testname="lte undefined true (0)" >lte </li>
+		<li data-testtype='output-compare' data-output='lte ' data-tlc="bind $var '.undefined'; if(is $var --lte='-5') {{bind $bob '.name'; apply --append;}};" data-testname="lte undefined false " >lte </li>
 		
 		
 		<li data-testtype='output-compare' data-output='inteq 10' data-tlc="bind $var '.number'; if(is $var --inteq='10') {{apply --append;}};" data-testname="inteq true " >inteq </li>

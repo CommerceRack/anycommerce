@@ -54,6 +54,7 @@ function runTests()	{
 		'small-hash' : {'name':'ron','nickname' : 'tater salad'},
 		'price' : 24.95,
 		'decimal' : 18.9,
+		'negative' : -3,
 		'cents' : .71,
 		'boolean-true' : true,
 		'boolean-false' : false,
