@@ -33,7 +33,7 @@ myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram'])
 //myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
 //myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
 
-//myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
 myApp.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js', 'attachHandlers']);
 //myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.

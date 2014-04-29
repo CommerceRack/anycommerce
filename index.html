@@ -19,7 +19,10 @@
 
 
 <script type="text/javascript">
-var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-370308-1']);
+_gaq.push(['_trackPageview']);
+
 var myCreole, baseURL;
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -675,33 +678,33 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; store_swc#filterrange --index='base_price';"></div>
 		</div>
 		
-		<div data-tlc="bind $var '.options.app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Demographic:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_prod_demographic'; store_swc#filtercheckboxlist --index='app_prod_demographic';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_prod_demographic.index';bind $cbl '.options.user:app_prod_demographic.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Department:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_department'; store_swc#filtercheckboxlist --index='app_department';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_department.index';bind $cbl '.options.user:app_department.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_sub_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_sub_department'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Cap Type:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_sub_department'; store_swc#filtercheckboxlist --index='app_sub_department';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_sub_department.index';bind $cbl '.options.user:app_sub_department.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_t_shirts'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_t_shirts'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Tee Shirt Type:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_t_shirts'; store_swc#filtercheckboxlist --index='app_t_shirts';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_t_shirts.index';bind $cbl '.options.user:app_t_shirts.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_jerseys'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_jerseys'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Jersey Type:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_jerseys'; store_swc#filtercheckboxlist --index='app_jerseys';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_jerseys.index';bind $cbl '.options.user:app_jerseys.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_souvenirs'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_souvenirs'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Souvenir Type:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_souvenirs'; store_swc#filtercheckboxlist --index='app_souvenirs';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_souvenirs.index';bind $cbl '.options.user:app_souvenirs.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
-		<div data-tlc="bind $var '.options.app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+		<div data-tlc="bind $var '.options.user:app_brands'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Brand:</legend>
-			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_brands'; store_swc#filtercheckboxlist --index='app_brands';"></div>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_brands.index';bind $cbl '.options.user:app_brands.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
 	</form>
 	<div class="filterResultsContainer">

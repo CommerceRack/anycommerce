@@ -32,6 +32,7 @@ var store_swc = function(_app) {
 			"fieldcamTemplate"
 			],
 		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
+		elasticFields : {},
 		userTeams : {
 			app_nba : [],
 			app_mlb : [],
@@ -50,6 +51,9 @@ var store_swc = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
 				_app.ext.store_swc.u.loadBanners();
+				
+				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'immutable');
+				_app.model.dispatchThis('immutable');
 				
 				var userTeams = false;
 				if(userTeams = _app.model.readLocal('swcUserTeams')){
@@ -96,13 +100,15 @@ var store_swc = function(_app) {
 						routeObj.params.dataset.options = routeObj.params.dataset.options || {};
 						for(var i in optStrs){
 							var o = optStrs[i];
-							if(_app.ext.store_swc.options[o]){
-								routeObj.params.dataset.options[o] = _app.ext.store_swc.options[o];
+							if(_app.ext.store_swc.vars.elasticFields[o]){
+								routeObj.params.dataset.options[o] = _app.ext.store_swc.vars.elasticFields[o];
 								}
 							else {
 								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
 								}
 							}
+						dump("HERE");
+						dump(routeObj.params.dataset);
 						routeObj.params.dataset.userTeams = _app.ext.store_swc.vars.userTeams;
 						showContent('static',routeObj.params)
 						}
@@ -136,6 +142,16 @@ var store_swc = function(_app) {
 					$context.empty().remove();
 					});
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
+				},
+			onError : function(){}
+			},
+		handleElasticFields : {
+			onSuccess : function(rd){
+				var data = _app.data[rd.datapointer];
+				for(var i in data.contents['@products']){
+					var field = data.contents['@products'][i];
+					_app.ext.store_swc.vars.elasticFields[field.id] = field;
+					}
 				},
 			onError : function(){}
 			}
@@ -218,6 +234,8 @@ var store_swc = function(_app) {
 				return true;
 				},
 			filtercheckboxlist : function(data, thisTLC){
+				dump("FILTERCHECKBOXLIST");
+				dump(data);
 				var args = thisTLC.args2obj(data.command.args, data.globals);
 				if(typeof args.filterType === "undefined"){
 					args.filterType = 'checkboxList';
@@ -681,12 +699,12 @@ var store_swc = function(_app) {
 					"term" : {"app_promo":"wrigley100"}
 					},
 				optionList : [
-					"app_department",
-					"app_sub_department",
-					"app_t_shirts",
-					"app_souvenirs",
-					"app_jerseys",
-					"app_brands"
+					"user:app_department",
+					"user:app_sub_department",
+					"user:app_t_shirts",
+					"user:app_souvenirs",
+					"user:app_jerseys",
+					"user:app_brands"
 					]
 				},
 			'chicago' : {
@@ -696,11 +714,11 @@ var store_swc = function(_app) {
 					"term" : {"app_promo":"chicago"}
 					},
 				optionList : [
-					"app_department",
-					"app_sub_department",
-					"app_t_shirts",
-					"app_souvenirs",
-					"app_brands"
+					"user:app_department",
+					"user:app_sub_department",
+					"user:app_t_shirts",
+					"user:app_souvenirs",
+					"user:app_brands"
 					]
 				},
 			'shirts' : {
@@ -711,9 +729,9 @@ var store_swc = function(_app) {
 						]
 					},
 				optionList : [
-					"app_prod_demographic",
-					"app_t_shirts",
-					"app_brands"
+					"user:app_prod_demographic",
+					"user:app_t_shirts",
+					"user:app_brands"
 					]
 				},
 			'jerseys' : {
@@ -730,10 +748,10 @@ var store_swc = function(_app) {
 						}
 					},
 				optionList : [
-					"app_prod_demographic",
-					"app_jerseys",
-					"app_jerseys_kind",
-					"app_brands"
+					"user:app_prod_demographic",
+					"user:app_jerseys",
+					"user:app_jerseys_kind",
+					"user:app_brands"
 					]
 				},
 			'sweatshirts' : {
@@ -744,8 +762,8 @@ var store_swc = function(_app) {
 						]
 					},
 				optionList : [
-					"app_prod_demographic",
-					"app_brands"
+					"user:app_prod_demographic",
+					"user:app_brands"
 					]
 				},
 			'hats' : {
@@ -754,9 +772,9 @@ var store_swc = function(_app) {
 					"term" : {"app_department":"hat"}
 					},
 				optionList : [
-					"app_prod_demographic",
-					"app_sub_department",
-					"app_brands"
+					"user:app_prod_demographic",
+					"user:app_sub_department",
+					"user:app_brands"
 					]
 				},
 			'souvenirs' : {
@@ -765,8 +783,8 @@ var store_swc = function(_app) {
 					"term" : {"app_department":"souvenir"}
 					},
 				optionList : [
-					"app_souvenirs",
-					"app_brands"
+					"user:app_souvenirs",
+					"user:app_brands"
 					]
 				}
 			},
@@ -866,18 +884,6 @@ var store_swc = function(_app) {
 						{"p":"Washington Capitals","v":"washington_capitals"},
 						{"p":"Winnipeg Jets","v":"winnipeg_jets"}],
 				},
-				
-options : {
-"app_brands" : [{"p":"47 Brand","v":"47_brand"},{"p":"5th & Ocean","v":"5th_ocean"},{"p":"Adidas","v":"adidas"},{"p":"American Needle","v":"american_needle"},{"p":"Aminco","v":"aminco"},{"p":"Antigua","v":"antigua"},{"p":"Baby Fanatic","v":"baby_fanatic"},{"p":"Bare Feet","v":"bare_feet"},{"p":"Belle View","v":"belle_view"},{"p":"Big League Promotions","v":"big_league_promotions"},{"p":"Concept One","v":"concept_one"},{"p":"Coopersburg Sports","v":"coopersburg_sports"},{"p":"Cooperstown Cookie","v":"cooperstown_cookie"},{"p":"Cooperstown Cookie","v":"cooperstown_cookie"},{"p":"Cufflinks, Inc","v":"cufflinks_inc"},{"p":"Ditka Gridiron Clothing","v":"ditka_gridiron_clothing"},{"p":"Emblem Source","v":"emblem_source"},{"p":"Fan Mats","v":"fan_mats"},{"p":"Forever Collectibles","v":"forever_collectibles"},{"p":"Fremont Die","v":"fremont_die"},{"p":"G-III","v":"g_iii"},{"p":"Game Time","v":"game_time"},{"p":"Gold Sport Collectibles","v":"gold_sport_collectibles"},{"p":"Great American","v":"great_american"},{"p":"Holy Cow Canvas","v":"holy_cow_canvas"},{"p":"Hunter","v":"hunter"},{"p":"Imperial International","v":"imperial_international"},{"p":"Jarden","v":"jarden"},{"p":"Kolder","v":"kolder"},{"p":"Label Daddy","v":"label_daddy"},{"p":"Littlearth","v":"littlearth"},{"p":"LogoArt Watches","v":"logoart_watches"},{"p":"Majestic Athletic","v":"majestic_athletic"},{"p":"McArthur","v":"mcarthur"},{"p":"Milliken","v":"milliken"},{"p":"My Owners Box","v":"my_owners_box"},{"p":"New Era","v":"new_era"},{"p":"NFL Brand","v":"nfl_brand"},{"p":"Nike","v":"nike"},{"p":"Northwest","v":"northwest"},{"p":"Nostalgic Images","v":"nostalgic_images"},{"p":"Original Retro Brand","v":"original_retro_brand"},{"p":"Pangea Brands","v":"pangea_brands"},{"p":"Party Animal","v":"party_animal"},{"p":"Phiten","v":"phiten"},{"p":"ProMark","v":"promark"},{"p":"Rawlings","v":"rawlings"},{"p":"Red Jacket","v":"red_jacket"},{"p":"Reebok","v":"reebok"},{"p":"Reyn Spooner","v":"reyn_spooner"},{"p":"Rico Tag","v":"rico_tag"},{"p":"S. Propaganda","v":"s_propaganda"},{"p":"Section 101","v":"section_101"},{"p":"Siskiyou","v":"siskiyou"},{"p":"Soft as a Grape","v":"soft_as_a_grape"},{"p":"Sports Coverage","v":"sports_coverage"},{"p":"Stitches","v":"stitches"},{"p":"Team Sports America","v":"team_sports_america"},{"p":"That's My Ticket","v":"thats_my_ticket"},{"p":"ThirtyFive55","v":"thirtyfive55"},{"p":"Touch by Alyssa Milano","v":"touch_by_alyssa_milano"},{"p":"True Fan","v":"true_fan"},{"p":"Wild Sports","v":"wild_sports"},{"p":"Wincraft","v":"wincraft"},{"p":"Winning Streak","v":"winning_streak"},{"p":"Wright & Ditson","v":"wright_ditson"}],
-"app_prod_demographic" : [{"p":"Kids / Infants","v":"kids"},{"p":"Mens","v":"men"},{"p":"Womens","v":"women"}],
-"app_department" : [{"p":"Accessories","v":"accessories"},{"p":"Hat","v":"hat"},{"p":"Jersey","v":"jersey"},{"p":"Sale","v":"sale"},{"p":"Souvenir","v":"souvenir"},{"p":"Sweatshirt/Jacket","v":"sweatshirt_jacket"},{"p":"T-Shirt","v":"t_shirt"}],
-//THIS IS CAP TYPE
-"app_sub_department" : [{"p":"Adjustable","v":"adjustable"},{"p":"Fitted","v":"fitted"},{"p":"Flex Fit / Stretch","v":"flex_fit_stretch"},{"p":"Snapback","v":"snapback"},{"p":"Visors / Floppy","v":"visors_floppy"},{"p":"Winter","v":"winter"}],
-"app_t_shirts" : [{"p":"Customized","v":"customized"},{"p":"Long Sleeve","v":"long_sleeve"},{"p":"Short Sleeve","v":"short_sleeve"}],
-"app_jerseys" : [{"p":"Alternate","v":"alternate"},{"p":"Authentic","v":"authentic"},{"p":"Blank","v":"blank"},{"p":"Cooperstown","v":"cooperstown"},{"p":"Custom Personalized","v":"custom_personalized"},{"p":"Institutionalized","v":"institutionalized"},{"p":"Replica","v":"replica"}],
-"app_jerseys_kind" : [{"p":"Alternate","v":"alternate"},{"p":"Batting Practice","v":"bp"},{"p":"Home","v":"home"},{"p":"Road","v":"road"}],
-"app_souvenirs" : [{"p":"Auto","v":"auto"},{"p":"Books / Movies / Music","v":"books_movies_music"},{"p":"Die Hard Cub Fan","v":"die_hard_cub_fan"},{"p":"Display Cases","v":"display_cases"},{"p":"Games","v":"games"},{"p":"Holiday","v":"holiday"},{"p":"Home Decor","v":"home_decor"},{"p":"Lapel Pins","v":"lapel_pins"},{"p":"Pet Products","v":"pet_products"},{"p":"Pictures","v":"pictures"},{"p":"School / Office / Home","v":"school_office_home"},{"p":"Signs & Flags","v":"signs_flags"},{"p":"Under $20","v":"under_20"},{"p":"Watches, Jewelry & Keychains","v":"watches_jewelry_keychains"},{"p":"Souvenirs","v":"souvenirs"}]},
-"app_promo" : [{"p":"Wrigley 100","v":"wrigley100"},{"p":"City of Chicago","v":"chicago"}],
 
 
 staticData : {
