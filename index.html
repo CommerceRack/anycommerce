@@ -744,7 +744,7 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id="productListTemplate" class="alignLeft loadingBG productListItem blockLink" onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
+<li id="productListTemplate" class="alignLeft loadingBG productListItem blockLink" onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();" data-tlc="bind $var '%attribs.zoovy:prod_name'; apply --attrib='title';">
 	<!--
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 	-->
@@ -752,7 +752,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		<div class="prodInfo highlightBG_1_alpha">
-			<h6 class="prodName" data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='60';apply --append;}};"></h6>
+			<h6 class="prodName" data-tlc="bind $orig '.%attribs.zoovy:prod_name'; bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='60';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
 
 			<h5 class="alignRight price" data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='<span>Our Price: </span>'; apply --append;}};"></h5>
 		</div>
@@ -841,12 +841,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink">
+<li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink" data-tlc="bind $var '.prod_name'; apply --attrib='title';">
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		
 		<div class="prodInfo highlightBG_1_alpha">
-			<h6 class="prodName" data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='60'; apply --append;}};"></h6>
+			<h6 class="prodName" data-tlc="bind $orig '.prod_name'; bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='60';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
 
 			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD';  format --prepend='<span>Our Price: </span>'; apply --append;}};"></h5>
 		</div>
