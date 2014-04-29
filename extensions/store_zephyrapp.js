@@ -633,7 +633,7 @@ var store_zephyrapp = function(_app) {
 			//used on a select element where the option value is the pid. selecting the option goes to the pid page.
 			changePageByOptionValue : function($ele,p)	{
 				p.preventDefault();
-				document.location.hash = "#!product/"+$ele.val();
+				document.location.hash = $ele.val();
 				return false;
 				},
 			

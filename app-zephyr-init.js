@@ -132,7 +132,13 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 $("select[data-app-role='childrenSiblingsProdlist']",'#productTemplate').on('listcomplete',function(){
 	var $prodlist = $(this), focusPID = $prodlist.closest("[data-templateid='productTemplate']").data('pid');
 	$('option',$prodlist).each(function(index){
-		var pid = this.value;
+		var $option = $(this), pid = $option.data('pid');
+
+//okay to 'select' this even if inventory not available because the add to cart button will be disabled. provides a clear indicator of which product is currently in focus.
+		if(pid == focusPID)	{
+			$option.prop('selected','selected');
+			}
+
 		if(myApp.u.thisNestedExists("data.appProductGet|"+pid+".@inventory",myApp))	{
 			if(myApp.ext.store_product.u.productIsPurchaseable(pid))	{
 //				dump(" -> product is in memory and is purchaseable");
@@ -143,7 +149,6 @@ $("select[data-app-role='childrenSiblingsProdlist']",'#productTemplate').on('lis
 				}
 			}
 		});
-	$prodlist.val(focusPID); //okay to 'select' this even if inventory not available because the add to cart button will be disabled. provides a clear indicator of which product is currently in focus.
 	});
 
 $("#productTemplate, #productTemplateQuickView").on('complete.dynimaging',function(state,$ele,infoObj){

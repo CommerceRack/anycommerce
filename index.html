@@ -758,7 +758,7 @@ this will likely become more flexible in the future. ###
 	</section>
 
 
-	<form class="marginBottom fullWidth gridTable" data-app-role='childrenSiblingsContainer'>
+	<form class="marginBottom fullWidth gridTable displayNone" data-app-role='childrenSiblingsContainer' data-tlc="bind $var '.%attribs.zoovy:grp_type'; if (is $var --notblank;) {{apply --show;}}; " >
 		<label data-tlc="bind $var '.%attribs.amz:grp_varkey'; if (is $var --notblank;) {{apply --prepend;}};">
 		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
 			<option value=''>Please choose</option>
@@ -1438,7 +1438,7 @@ used on a product layout. Some product have 'children' which may represent the s
 
 
 <select>
-	<option id="productListTemplateChildren" data-tlc="bind $pid '.pid'; format --prepend='#!product/'; apply --attrib='value'; bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></option>
+	<option id="productListTemplateChildren" data-tlc="bind $pid '.pid'; apply --attrib='data-pid'; format --prepend='#!product/'; apply --attrib='value'; bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></option>
 </select>
 
 
