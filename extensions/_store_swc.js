@@ -245,6 +245,9 @@ var store_swc = function(_app) {
 				if(_app.ext.store_swc.pages[navcat]){
 					r = _app.ext.store_swc.pages[navcat];
 					}
+				else if((/\.mlb\.[^.]+\.[^.]+/).test(navcat)){
+					r = 'categoryTemplatePlayer';
+					}
 				else if(navcat.indexOf('.aa.')==0){
 					r = 'categoryTemplateHTML';
 					}
