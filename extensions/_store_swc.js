@@ -744,7 +744,7 @@ var store_swc = function(_app) {
 				options : {
 					"base_price" : {
 						"min":0,
-						"max":500
+						"max":400
 						}
 					},
 				optionList : [
