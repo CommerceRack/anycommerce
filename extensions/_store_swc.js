@@ -90,7 +90,7 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 					if(_app.ext.store_swc.filterData[routeObj.params.id]){
 						routeObj.params.templateID = "filteredSearchTemplate";
-						dump(routeObj);
+						//dump(routeObj);
 						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
 						if(routeObj.params.dataset.options.explicit){} //Options are passed with explicit values, leave them alone.
 						else {
@@ -411,8 +411,8 @@ var store_swc = function(_app) {
 					i++;
 					});
 				
-				_app.u.dump(obj);
-				_app.u.dump(errors);
+				//_app.u.dump(obj);
+				//_app.u.dump(errors);
 				if(errors.length == 0){
 					var _tag = {
 						callback : function(){
@@ -468,8 +468,8 @@ var store_swc = function(_app) {
 						var f = {"term" : {}};
 						f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
 						if($(this).is(":checked")){
-							dump(f);
-							dump('checked')
+							//dump(f);
+							//dump('checked')
 							//countFilters.push({"query":f, "$input":$(this)});
 							filter.or.push(f);
 							}
@@ -483,7 +483,7 @@ var store_swc = function(_app) {
 						//countFilters = countFilters.concat(cf);
 						}
 					});
-				dump(countFilters);
+				//dump(countFilters);
 				var es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
 				es.size = 30;
 				$resultsContainer.empty();
