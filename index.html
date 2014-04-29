@@ -698,6 +698,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<legend>Jersey Type:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_jerseys.index';bind $cbl '.options.user:app_jerseys.options'; store_swc#filtercheckboxlist --index=$index;"></div>
 		</div>
+		<div data-tlc="bind $var '.options.user:app_jerseys_kind'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
+			<legend>Jersey Kind:</legend>
+			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_jerseys_kind.index';bind $cbl '.options.user:app_jerseys_kind.options'; store_swc#filtercheckboxlist --index=$index;"></div>
+		</div>
 		<div data-tlc="bind $var '.options.user:app_souvenirs'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend>Souvenir Type:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_souvenirs.index';bind $cbl '.options.user:app_souvenirs.options'; store_swc#filtercheckboxlist --index=$index;"></div>
