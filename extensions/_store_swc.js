@@ -92,18 +92,15 @@ var store_swc = function(_app) {
 						routeObj.params.templateID = "filteredSearchTemplate";
 						//dump(routeObj);
 						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
-						if(routeObj.params.dataset.options.explicit){} //Options are passed with explicit values, leave them alone.
-						else {
-							var optStrs = routeObj.params.dataset.options;
-							routeObj.params.dataset.options = {};
-							for(var i in optStrs){
-								var o = optStrs[i];
-								if(_app.ext.store_swc.options[o]){
-									routeObj.params.dataset.options[o] = _app.ext.store_swc.options[o];
-									}
-								else {
-									dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
-									}
+						var optStrs = routeObj.params.dataset.optionList;
+						routeObj.params.dataset.options = routeObj.params.dataset.options || {};
+						for(var i in optStrs){
+							var o = optStrs[i];
+							if(_app.ext.store_swc.options[o]){
+								routeObj.params.dataset.options[o] = _app.ext.store_swc.options[o];
+								}
+							else {
+								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
 								}
 							}
 						routeObj.params.dataset.userTeams = _app.ext.store_swc.vars.userTeams;
@@ -182,6 +179,43 @@ var store_swc = function(_app) {
 				else {
 					return false;
 					}
+				},
+			filterrange : function(data, thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(typeof args.filterType === "undefined"){
+					args.filterType = 'range';
+					}
+				if(args.index){
+					
+					var range = data.globals.binds[data.globals.focusBind];
+					range.min = range.min || 0;
+					range.step = range.step || 1;
+					var $tag = data.globals.tags[data.globals.focusTag];
+
+					$tag.attr('data-filter-index',args.index);
+					$tag.attr('data-filter-type',args.filterType);
+					
+					$tag.slider({
+						range : true,
+						min : range.min,
+						max : range.max,
+						step : range.step,
+						values : [range.min, range.max],
+						change : function(event, ui){_app.ext.store_swc.e.execFilteredSearch($(this), event);},
+						slide : function(event, ui){$('.sliderVal', ui.handle).text(ui.value);},
+						create : function(event, ui){
+							$(this).find(".ui-slider-handle").each(function(i){
+								var vals = $tag.slider('values');
+								var $tooltip = $('<span class="sliderValContainer ui-state-default">$<span class="sliderVal">'+vals[i]+'</span></span>');
+								$(this).append($tooltip);
+								});
+							}
+						})
+					}
+				else {
+					return false;
+					}
+				return true;
 				},
 			filtercheckboxlist : function(data, thisTLC){
 				var args = thisTLC.args2obj(data.command.args, data.globals);
@@ -467,6 +501,19 @@ var store_swc = function(_app) {
 					sort[$selectedOption.attr('data-filter-sort-attribute')] = $selectedOption.attr('data-filter-sort-direction');
 					elasticsearch.sort.push(sort);
 					});
+				$('[data-filter-type=range]', $form).each(function(){
+					var f = {"range" : {}};
+					var vals = $(this).slider('values');
+					var m =$(this).attr('data-filter-range-mult')
+					if(m){
+						vals = $.map(vals, function(e, i){ return e*m; });
+						}
+					f.range[$(this).attr('data-filter-index')] = {
+						"gte" : vals[0],
+						"lte" : vals[1]
+						}
+					elasticsearch.filter.and.push(f);
+					});
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
 					//var cf = [];
@@ -512,15 +559,18 @@ var store_swc = function(_app) {
 						'callback':function(rd){
 							//dump(rd);
 							if(_app.data[rd.datapointer].count){
+								rd.$input.closest('.filterGroup').show();
 								rd.$input.closest('[data-filter=inputContainer]').show();
 								}
 							else {
 								var $inputContainer = rd.$input.closest('[data-filter=inputContainer]');
 								
 								if($inputContainer.closest('.filterGroup').hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
-								else {$inputContainer.hide();}
+								else {
+									$inputContainer.hide();
+									rd.$input.prop('checked',false);
+									}
 								
-								rd.$input.prop('checked',false);
 								if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
 									
 									rd.$input.closest('.filterGroup').hide();
@@ -628,7 +678,7 @@ var store_swc = function(_app) {
 				baseFilter : {
 					"term" : {"app_promo":"wrigley100"}
 					},
-				options : [
+				optionList : [
 					"app_department",
 					"app_sub_department",
 					"app_t_shirts",
@@ -643,7 +693,7 @@ var store_swc = function(_app) {
 				baseFilter : {
 					"term" : {"app_promo":"chicago"}
 					},
-				options : [
+				optionList : [
 					"app_department",
 					"app_sub_department",
 					"app_t_shirts",
@@ -658,7 +708,7 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"t_shirt"}}
 						]
 					},
-				options : [
+				optionList : [
 					"app_prod_demographic",
 					"app_t_shirts",
 					"app_brands"
@@ -671,7 +721,13 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"jersey"}}
 						]
 					},
-				options : [
+				options : {
+					"base_price" : {
+						"min":0,
+						"max":500
+						}
+					},
+				optionList : [
 					"app_prod_demographic",
 					"app_jerseys",
 					"app_jerseys_kind",
@@ -685,7 +741,7 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"sweatshirt_jacket"}}
 						]
 					},
-				options : [
+				optionList : [
 					"app_prod_demographic",
 					"app_brands"
 					]
@@ -695,7 +751,7 @@ var store_swc = function(_app) {
 				baseFilter : {
 					"term" : {"app_department":"hat"}
 					},
-				options : [
+				optionList : [
 					"app_prod_demographic",
 					"app_sub_department",
 					"app_brands"
@@ -706,7 +762,7 @@ var store_swc = function(_app) {
 				baseFilter : {
 					"term" : {"app_department":"souvenir"}
 					},
-				options : [
+				optionList : [
 					"app_souvenirs",
 					"app_brands"
 					]

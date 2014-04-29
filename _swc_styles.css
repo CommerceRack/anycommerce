@@ -202,6 +202,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 .filterCheckboxList {max-height: 120px; overflow:auto;}
 .filterGroup {margin-bottom: 10px;}
 
+.sliderValContainer {text-decoration: none;}
+.ui-slider-handle {text-decoration: none;}
+
 .sportWidget button {width: 20px; font-weight:bold;}
 .sportWidget {width: 25%; float: left;}
 .sportWidget .myteams ul { height: 200px; overflow-y:auto;}
