@@ -190,7 +190,7 @@
 		<h2 data-tlc="bind $var '.MSGID'; apply --select=$var;"></h2>
 		<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight applyButton' data-text='true' data-app-click='admin_blast|adminBlastMsgSendTestShow'>Send Test</button>
-		<button data-app-click="admin_blast|adminBlastMsgRemoveConfirm" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash' data-tlc="bind $var '.%MSG.MSGID'; apply --attrib='data-msgid';">Remove Message</button>
+		<button data-app-click="admin_blast|adminBlastMsgRemoveConfirm" class='applyButton toolTip' data-text='true' data-icon-primary='ui-icon-trash' data-tlc="bind $var '.%MSG.MSGID'; apply --attrib='data-msgid';" title="Remove a custom message or restore a system message to it's default content.">Remove/Restore</button>
 		
 	</div>
 
