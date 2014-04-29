@@ -655,20 +655,19 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<span class="displayNone" data-tlc="bind $var '.seo_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
 	
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
-		<!--
-		<div class="filterGroup">
-			<select data-filter-type="sort">
-				<option data-filter-sort-attribute="base_price" data-filter-sort-direction="asc">Price (asc)</option>
-				<option data-filter-sort-attribute="base_price" data-filter-sort-direction="desc">Price (desc)</option>
-			</select>
-		</div>
-		-->
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
 			<legend>My Teams [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">edit</span>]:</legend>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='';"></div>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl' --filterType='';"></div>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='';"></div>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='';"></div>
+		</div>
+		<div class="filterGroup">
+			<select data-filter-type="sort" data-app-change="store_swc|execFilteredSearch">
+				<option>Sort By...</option>
+				<option data-filter-sort-attribute="base_price" data-filter-sort-direction="asc">Price (asc)</option>
+				<option data-filter-sort-attribute="base_price" data-filter-sort-direction="desc">Price (desc)</option>
+			</select>
 		</div>
 		
 		<div class="filterGroup countHideImmune" data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};">

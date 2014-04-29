@@ -498,8 +498,10 @@ var store_swc = function(_app) {
 					elasticsearch.sort = elasticsearch.sort || [];
 					var sort = {};
 					var $selectedOption = $('option:selected',$(this));
-					sort[$selectedOption.attr('data-filter-sort-attribute')] = $selectedOption.attr('data-filter-sort-direction');
-					elasticsearch.sort.push(sort);
+					if($selectedOption.attr('data-filter-sort-attribute')){
+						sort[$selectedOption.attr('data-filter-sort-attribute')] = {"order":$selectedOption.attr('data-filter-sort-direction')};
+						elasticsearch.sort.push(sort);
+						}
 					});
 				$('[data-filter-type=range]', $form).each(function(){
 					var f = {"range" : {}};
