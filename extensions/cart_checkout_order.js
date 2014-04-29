@@ -396,31 +396,59 @@ left them be to provide guidance later.
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
-						var $c = $(this);
+						var $c = $(this), cartid = $c.data('cartid');
+						P = P || {};
 						$c.showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
-						_app.calls.cartDetail.init($c.data('cartid'),{
-							'callback':'tlc',
-							'before' : function(r)	{
-								r.jqObj.empty();
-								},
-							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
-								},
-							'templateID' : $c.data('templateid'),
-							'jqObj' : $c
-							},P.Q);
+						_app.ext.cco.calls.cartItemsInventoryVerify.init(cartid,{'callback':function(rd){
+// This code is for an inventory check when the cart is updated. It will make sure that the # of items in the cart reflect the inventory available in the store.
+// this check is performed again at checkout.
+if(_app.model.responseHasErrors(rd)){
+	$c.anymessage({'message':rd});
+	$c.hideLoading();
+	}
+else	{
+	var adjustments;
+	if(_app.data[rd.datapointer] && !$.isEmptyObject(_app.data[rd.datapointer]['%changes']))	{
+		adjustments = "<ol>";
+		for(var key in _app.data[rd.datapointer]['%changes']) {
+			adjustments += "<li>sku: "+key+" was set to "+_app.data[rd.datapointer]['%changes'][key]+" due to availability<\/li>";
+			_app.ext.cco.calls.cartItemUpdate.init({'_cartid':cartid,'stid':key,'quantity':_app.data[rd.datapointer]['%changes'][key]});
+			}
+		adjustments += "</ol>";
+		}
+	_app.calls.cartDetail.init($c.data('cartid'),{
+		'callback':'tlc',
+		'before' : function(r)	{
+			r.jqObj.empty();
+			},
+		'onComplete' : function(r){
+			P.state = 'complete';
+			_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
+			if(adjustments)	{
+				r.jqObj.anymessage({"message":"Some inventory adjustments were made based on availability. "+adjustments,"persistent":true});
+				}
+			},
+		'templateID' : $c.data('templateid'),
+		'jqObj' : $c
+		},P.Q);
+	_app.model.dispatchThis(P.Q);
+	}
+
+
+							},'jqObj':$c},P.Q);
 						});
 //will update the cart based on what's in memory.
 					$cart.on('refresh.cart',function(event,P){
-						var $c = $(this);
+						var $c = $(this); P = P || {};
 						$c.intervaledEmpty();
 						if($c.data('tlc'))	{$c.tlc('destroy')}
 						//w/ no destroy here, refresh will use what's in memory IF it's available. If not, it will fetch the cart.
 						_app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'tlc',
 							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
+								P.state = 'complete';
+								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c

@@ -636,7 +636,41 @@ var store_zephyrapp = function(_app) {
 				document.location.hash = $ele.val();
 				return false;
 				},
-			
+
+			productAdd2Cart : function($ele,p)	{
+				p.preventDefault();
+				//the buildCartItemAppendObj needs a _cartid param in the form.
+				if($("input[name='_cartid']",$ele).length)	{}
+				else	{
+					$ele.append("<input type='hidden' name='_cartid' value='"+_app.model.fetchCartID()+"' \/>");
+					}
+
+				var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($ele);
+				if(cartObj)	{
+					_app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');
+					
+					_app.model.destroy('cartDetail|'+cartObj._cartid);
+					_app.calls.cartDetail.init(cartObj._cartid,{'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							if($ele.data('show') == 'inline')	{
+								document.location.hash = '#!cart';
+								}
+							else	{
+								_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+								}
+							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
+							}
+						}},'immutable');
+					_app.model.dispatchThis('immutable');
+					
+					}
+				else	{} //do nothing, the validation handles displaying the errors.
+				return false;
+				},
+
 			revealation : function($ele,p)	{
 				p.preventDefault();
 				var $container = $ele.closest("[data-textblock-role='container']");

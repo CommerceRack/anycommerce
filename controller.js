@@ -2959,7 +2959,7 @@ return $r;
 					$ele.anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, infoObj.state not set.','gMessage':true});
 					}
 				else	{
-					$ele.anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
 					}
 				} //handleTemplateEvents 
 
