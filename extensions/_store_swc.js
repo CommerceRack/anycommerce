@@ -744,7 +744,28 @@ var store_swc = function(_app) {
 				options : {
 					"base_price" : {
 						"min":0,
-						"max":400
+						"max":500
+						}
+					},
+				optionList : [
+					"user:app_prod_demographic",
+					"user:app_jerseys",
+					"user:app_jerseys_kind",
+					"user:app_brands"
+					]
+				},
+			'personalized_jerseys' : {
+				title : "Personalized Jerseys",
+				baseFilter : {
+					"and" : [
+						{"term":{"app_department":"jersey"}},
+						{"term":{"app_jerseys":"custom_personalized"}}
+						]
+					},
+				options : {
+					"base_price" : {
+						"min":0,
+						"max":500
 						}
 					},
 				optionList : [
