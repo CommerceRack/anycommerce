@@ -179,7 +179,8 @@ calls should always return the number of dispatches needed. allows for cancellin
 				}
 			}, //cartSet
 
-
+/*
+201403 -> this is no longer necessary. this call is inline.
 //uses the cart ID, which is passed on the parent/headers.
 //always immutable.
 		cartOrderCreate : {
@@ -201,7 +202,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 				_app.model.addDispatchToQ({'_cartid':cartID,'_cmd':'cartOrderCreate','_tag':_tag,'iama':_app.vars.passInDispatchV, 'domain' : (_app.vars.thisSessionIsAdmin ? 'www.'+_app.vars.domain : '')},'immutable');
 				}
 			},//cartOrderCreate
-
+*/
 
 		cartPaypalSetExpressCheckout : {
 			init : function(obj,_tag,Q)	{
@@ -395,13 +396,17 @@ left them be to provide guidance later.
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
-						var $c = $(this);
-						$c.empty().showLoading({'message':'Updating cart contents'});
+						var $c = $(this); P = P || {};
+						$c.showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
 						_app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'tlc',
+							'before' : function(r)	{
+								r.jqObj.empty();
+								},
 							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
+								P.state = 'complete';
+								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
@@ -409,14 +414,15 @@ left them be to provide guidance later.
 						});
 //will update the cart based on what's in memory.
 					$cart.on('refresh.cart',function(event,P){
-						var $c = $(this);
+						var $c = $(this); P = P || {};
 						$c.intervaledEmpty();
 						if($c.data('tlc'))	{$c.tlc('destroy')}
 						//w/ no destroy here, refresh will use what's in memory IF it's available. If not, it will fetch the cart.
 						_app.calls.cartDetail.init($c.data('cartid'),{
 							'callback':'tlc',
 							'onComplete' : function(){
-								$cart.trigger('complete',$.extend(true,{},P,event));
+								P.state = 'complete';
+								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
@@ -439,40 +445,33 @@ left them be to provide guidance later.
 
 		u : {
 
-//NOTE TO SELF:
-//use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
-//that way if a new payment type is added, it's handled (as long as there's no extra inputs).
-			buildPaymentQ : function($form,cartid)	{
-//				_app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var r = false;
+			getPaymentQArray : function($form,cartid){
+				var payments = new Array();
 //				_app.u.dump(" -> payby: "+payby);
 				if($form instanceof jQuery && cartid)	{
 					var sfo = $form.serializeJSON() || {}, payby = sfo["want/payby"];
 					if(payby)	{
 						if(payby.indexOf('WALLET') == 0)	{
-							_app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert','_cartid':cartid},_app.ext.cco.u.getWalletByID(payby,cartid)));
+							payments.push("insert?TN=WALLET&"+_app.u.hash2kvp(_app.ext.cco.u.getWalletByID(payby,cartid)));
 							}
 						else if(payby == 'CREDIT')	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
+							payments.push("insert?TN=CREDIT&CC="+encodeURIComponent(sfo['payment/CC'])+"&CV="+encodeURIComponent(sfo['payment/CV'])+"&YY="+encodeURIComponent(sfo['payment/YY'])+"&MM="+encodeURIComponent(sfo['payment/MM']));
 							}				
 						else if(payby == 'PO')	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":"PO","PO":sfo['payment/PO']});
+							payments.push("insert?TN=PO&PO="+encodeURIComponent(sfo['payment/PO']));
 							}				
 						else if(payby == 'ECHECK')	{
-							_app.ext.cco.calls.cartPaymentQ.init({
-								"cmd":"insert",
-								'_cartid':cartid,
-								"TN":"ECHECK",
-								"EA":sfo['payment/EA'],
-								"ER":sfo['payment/ER'],
-								"EN":sfo['payment/EN'],
-								"EB":sfo['payment/EB'],
-								"ES":sfo['payment/ES'],
-								"EI":sfo['payment/EI']
-								});
+							payments.push("insert?TN=ECHECK"
+								+"&EA"+encodeURIComponent(sfo['payment/EA'])
+								+"&ER"+encodeURIComponent(sfo['payment/ER'])
+								+"&EN"+encodeURIComponent(sfo['payment/EN'])
+								+"&EB"+encodeURIComponent(sfo['payment/EB'])
+								+"&ES"+encodeURIComponent(sfo['payment/ES'])
+								+"&EI"+encodeURIComponent(sfo['payment/Ei'])
+								);
 							}
 						else	{
-							_app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert",'_cartid':cartid,"TN":payby });
+							payments.push("insert?TN="+encodeURIComponent(payby));
 							}
 						r = true;
 						}
@@ -482,10 +481,12 @@ left them be to provide guidance later.
 						}
 					}
 				else	{
-					$("#globalMessaging").anymessage({'message':'In cco.u.buildPaymentQ, either form was not a valid jquery instance ['+($form instanceof jQuery)+'] or no cart id ['+cartid+'] was passed.','gMessage':true});
+					payments = false;
+					$("#globalMessaging").anymessage({'message':'In cco.u.getPaymentQArray, either form was not a valid jquery instance ['+($form instanceof jQuery)+'] or no cart id ['+cartid+'] was passed.','gMessage':true});
 					}
-				return r;
+				return payments;
 				},
+
 
 
 			paymentMethodsIncludesGiftcard : function(datapointer)	{
@@ -544,16 +545,17 @@ left them be to provide guidance later.
 				},
 
 //will get the items from a cart and return them as links. used for social marketing.
-			cartContentsAsLinks : function(cartid)	{
+			cartContentsAsLinks : function(cartObj)	{
 //				_app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				_app.u.dump(' -> datapointer = '+datapointer);
-				var r = "";
-				if(cartid && _app.u.thisNestedExists("data.cartDetail|"+cartid+".@items",_app))	{
-					var items = _app.data[datapointer]['@ITEMS'], L = items.length;
+				var r = false;
+				if(!$.isEmptyObject(cartObj))	{
+					var items = cartObj['@ITEMS'] || [], L = items.length;
+					if(L)	{r = ''}; //set to blank so += doesn't start with undefined. 
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
 						if(items[i].sku.charAt(0) != '%')	{
-							r += "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n";
+							r +=  (_app.vars._clientid == '1pc') ? "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n" : "http://"+_app.vars.sdomain+"#!product/"+items[i].sku+"/\n";
 							}
 						}
 					}
@@ -622,7 +624,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						} //paymentQ is empty. no error or warning.
 					}
 				else	{
-					_app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] or cartID ["+cartID+"] not set or @PAYMENTQ does not exist.");
+					_app.u.dump("WARNING! modifyPaymentQbyTender failed because tender ["+tender+"] or cartID ["+cartID+"] not set or @PAYMENTQ does not exist.");
 					}
 //				_app.u.dump(" -> num tender matches: "+r);
 				return returned;
@@ -822,7 +824,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //run this just prior to creating an order.
 //will clean up cart object.
 			sanitizeAndUpdateCart : function($form,_tag)	{
-				dump("BEGIN cco.u.sanitizeAndUpdateCart");
+//				dump("BEGIN cco.u.sanitizeAndUpdateCart");
 				if($form instanceof jQuery)	{
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON({cb:true});
@@ -885,9 +887,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
 					delete formObj['want/bill_to_ship_cb'];
-//cc and cv should never go. They're added as part of cartPaymentQ
-					delete formObj['payment/cc'];
-					delete formObj['payment/cv'];
+//CC and CV should never go. They're saved in memory and added as part of cartPaymentQ
+					delete formObj['payment/CC'];
+					delete formObj['payment/CV'];
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 					delete formObj['giftcard'];
 					delete formObj['want/bill_to_ship_cb'];
@@ -1154,7 +1156,7 @@ in a reorder, that data needs to be converted to the variations format required 
 		renderFormats : {
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
-				var r = '', cart;
+				var r = '', cartid;
 				
 				if(data.value.cart && data.value.cart.cartid){
 					cartid = data.value.cart.cartid;
@@ -1363,14 +1365,8 @@ in a reorder, that data needs to be converted to the variations format required 
 				return false;
 				}, //cartItemRemove
 			
-			cartShipmethodSelect : function($ele,p)	{
-				p.preventDefault();
-				// ### TODO -> wrap this up once template on completes are ready.
-				},
 			//this update could get triggered by a quantity update, a button or a price change (admin).
 			//$container will contain the qty and, if present, the price.
-			
-			
 			//this can be used to update a store or admin session. the callback here is fixed and will update the cart IF the cart was generated using getCartAsJqObj
 			cartItemUpdateExec : function($ele,p){
 				p.preventDefault();

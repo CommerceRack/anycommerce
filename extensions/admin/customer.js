@@ -1793,7 +1793,7 @@ _app.model.dispatchThis('immutable');
 								$ele.closest("[data-app-role='passwordButtonContainer']").anymessage({
 									'errtype':'success','iconClass':'app-icon-success',
 									'message' : 'Temporary password generated: '+_app.data[rd.datapointer]['PASSWORD-RECOVER'].password,
-									'persistant' : true,
+									'persistent' : true,
 									'msgType' : 'success'
 									});
 								delete _app.data[rd.datapointer]; //no sense keeping this around.

@@ -846,7 +846,7 @@ if you change these, you should move them above this comment so that when you (o
 
 
 
-<div id="customerTemplate" class="clearfix">
+<div id="customerTemplate" class="clearfix smallButton">
 
 	<div class="sideline">
 	<nav id="customerNav">
@@ -895,7 +895,7 @@ subscribeListsArticle is used for authenticated buyers
 		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
 		<h2>Billing Address(es)</h2>
 	</div>
-	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
+	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
 </div>
 
 <div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
@@ -903,7 +903,7 @@ subscribeListsArticle is used for authenticated buyers
 		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
 	</div>
-	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
+	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
 </div>
 
 

@@ -255,7 +255,7 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 
 		renderFormats : {
 //Displays a list of the merchants newsletters.
-			subscribeCheckboxes : function($tag,data)	{
+			subscribecheckboxes : function($tag,data)	{
 //				_app.u.dump('BEGIN _app.ext.store_prodlist.renderFormats.mpPagesAsListItems');
 //				_app.u.dump(data);
 				var o = "";
@@ -271,18 +271,19 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 			
 			ordertrackinglinks : function($tag,data)	{
 //				_app.u.dump("BEGIN quickstart.renderFormats.ordertrackinglinks");
-				_app.u.dump(data.value);
-				
-				var L = data.value.length;
-				var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
-				for(var i = 0; i < L; i += 1)	{
-					// ### TODO -> need to get the link to quickstart out of here.
-					o += "<li><a href='"+_app.ext.quickstart.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
-					if(_app.u.isSet(data.value[i].cost))
-						o += " ("+_app.u.formatMoney(data.value[i].cost,'$',2,true)+")";
-					o += "<\/li>";
+//				_app.u.dump(data.value);
+				if(data.value)	{
+					var L = data.value.length;
+					var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
+					for(var i = 0; i < L; i += 1)	{
+						// ### TODO -> need to get the link to quickstart out of here.
+						o += "<li><a href='"+_app.ext.quickstart.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
+						if(_app.u.isSet(data.value[i].cost))
+							o += " ("+_app.u.formatMoney(data.value[i].cost,'$',2,true)+")";
+						o += "<\/li>";
+						}
+					$tag.show().append("<h4>Tracking Number(s):</h4>").append(o);
 					}
-				$tag.show().append("<h4>Tracking Number(s):</h4>").append(o);
 				}
 
 			},
@@ -307,18 +308,20 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 					var $parent = $('#review-modal');
 //if no review modal has been created before, create one. 
 					if($parent.length == 0)	{
-						_app.u.dump(" -> modal window doesn't exist. create it.");
 						$parent = $("<div \/>").attr({"id":"review-modal",'data-pid':P.pid}).appendTo(document.body);
 						}
 					else	{
-						_app.u.dump(" -> use existing modal. empty it.");
 //this is a new product being displayed in the viewer.
 						$parent.empty();
 						}
 					$parent.dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',height:500,autoOpen:false,"title":"Write a review for "+P.pid});
 //the only data needed in the reviews form is the pid.
 //the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
-					$parent.dialog('open').append(_app.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
+//					$parent.dialog('open').append(_app.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
+					$parent.tlc({'templateid' : P.templateID,'dataset' : {'pid':P.pid}});
+					$parent.dialog('open');
+					_app.u.handleButtons($parent);
+					_app.u.addEventDelegation($parent); //1PC doesn't have delegation on the body.
 					}
 				},
 
@@ -459,21 +462,19 @@ This is used to get add an array of skus, most likely for a product list.
 								'save' : function(event,ui) {
 									event.preventDefault();
 									var $form = $('form',$(this)).first();
-									
+									var $editor = $(this);
 									if(_app.u.validateForm($form))	{
 										$form.showLoading('Updating Address');
-										var serializedForm = $form.serializeJSON();
-//save and then refresh the page to show updated info.
-										_app.model.addDispatchToQ({
-											'_cmd':'buyerAddressAddUpdate',
-											'_tag':	{
+										var sfo = $form.serializeJSON();
+											sfo._cmd = 'buyerAddressAddUpdate',
+											sfo._tag =	{
 												'callback':function(rd){
 													$form.hideLoading(); //always hide loading, regardless of errors.
 													if(_app.model.responseHasErrors(rd)){
 														$form.anymessage({'message':rd});
 														}
 													else if(typeof onSuccessCallback === 'function')	{
-														onSuccessCallback(rd,serializedForm);
+														onSuccessCallback(rd,sfo);
 														$editor.dialog('close');
 														}
 													else	{
@@ -482,7 +483,9 @@ This is used to get add an array of skus, most likely for a product list.
 														}
 													}
 												}
-											},'immutable');
+										
+//save and then refresh the page to show updated info.
+										_app.model.addDispatchToQ(sfo,'immutable');
 //dump data in memory and local storage. get new copy up updated address list for display.
 										_app.model.destroy('buyerAddressList');
 										_app.calls.buyerAddressList.init({},'immutable');
@@ -521,15 +524,17 @@ This is used to get add an array of skus, most likely for a product list.
 					var $editor = $("<div \/>");
 					
 					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
-					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','verb':'template'});
-//* 201338 -> the address id should be at the bottom of the form, not the top. isn't that important or required.
+// ** 201403 -> need to pass in a blank dataset so translation occurs. required for country dropdown.
+					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','dataset':{}});
+//the address id should be at the bottom of the form, not the top. isn't that important or required.
 					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 
-//** 201338 -> if the placeholder attribute on an input is not supported (thx IE8), then add labels.
+//if the placeholder attribute on an input is not supported (thx IE8), then add labels.
 					if(_app.ext.order_create)	{
 						_app.ext.order_create.u.handlePlaceholder($editor);
 						}
+//adds a tooltip which is displayed on focus. lets the user know what field they're working on once they start typing and placeholder goes away.
 					$(":input",$editor).each(function(index){
 						var $input = $(this);
 						if($input.attr('placeholder') && !$input.attr('title'))	{
@@ -626,9 +631,11 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					dump(" -> did not pass validation.");
 					} //validateForm handles error display.
+				return false;
 				},
 			
 			productBuyerListRemoveExec : function($ele,p)	{
+				p.preventDefault();
 				var pid = $ele.closest("[data-stid]").data('stid') || $ele.closest("[data-pid]").data('pid');
 				var listid = $ele.closest("[data-buyerlistid]").data('buyerlistid');
 				if(pid && listid)	{
@@ -653,6 +660,7 @@ This is used to get add an array of skus, most likely for a product list.
 				else	{
 					$('#globalMessaging').anymessage({"message":"In store_crm.e.productByerListRemoveExec, either unable to ascertain pid ["+pid+"] and/or buyerlistid ["+listid+"].","gMessage":true});
 					}
+				return false;
 				},
 			
 			//add this as submit action on the form.
@@ -676,17 +684,20 @@ This is used to get add an array of skus, most likely for a product list.
 						}
 					}
 				else	{} //validateForm will handle error display.
+				return false;
 				},
 			
 			productReviewShow : function($ele,p)	{
 				p.preventDefault();
-				var pid = $ele.closest("data-stid").data('stid') || $ele.closest("[data-pid]").data('pid'); //used on product page
+
+				var pid = $ele.data('pid') || $ele.closest("[data-pid]").data('pid'); //used on product page
 				if(pid)	{
 					_app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In store_crm.e.productReviewShow, unable to determine pid/stid','gMessage':true});
 					}
+				return false;
 				}
 
 			} //e/events

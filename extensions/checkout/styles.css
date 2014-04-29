@@ -1,8 +1,8 @@
-
+/* 1PC uses this file in addition to quickstart, admin and any other app referencing checkout */
 .checkoutSprite	{background-color:#660000;} /* add this to any element that uses one of the following classes (preparation for sprite) */
 
 .ocmFacebookComment	{background:url(images/fb_comment-133x32.png) no-repeat; width:133px; height:32px;}
-.ocmTwitterComment	{background:url(images/tweet_comment-133x32.png) no-repeat; width:133px; height:32px;}
+.ocmTwitterComment	{background:url(images/tweet-133x32.png) no-repeat; width:133px; height:32px;}
 .ocmContinue	{background:url(images/continue_shopping-133x32.png) no-repeat; width:133px; height:32px;}
 
 .secCode_vmd	{background:url(images/sec_code-159x100.gif) no-repeat; width:159px; height:100px;} /* Visa/Mastercard/Discover */
@@ -14,3 +14,21 @@
 
 .checkoutFormContainer fieldset	{padding:1em;}
 .checkoutFormContainer legend.smallPadding	{margin:0; padding:.2em .6em} /* the fieldset padding sets the left margin on the legend */
+
+
+
+
+#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:.5em;}
+
+
+.paybySupplemental {padding:1em; font-weight:normal; border-top-width:0;}
+.paybySupplemental select {margin-right:1em;}
+
+.addressList address	{float:left; margin:0 1em 1em 0;}
+
+.creditCardCVVIcon	{display:inline-block !important;}
+
+.checkoutFormContainer input, checkoutFormContainer select	{margin:.3em .5em .3em 0;}
+.checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
+
+.headerPadding label	{padding:.3em .5em;}

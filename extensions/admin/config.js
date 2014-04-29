@@ -1528,7 +1528,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							$('tr',$tbody).each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 								else	{
-									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+$.param(_app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
+									macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+_app.u.hash2kvp(_app.u.getWhitelistedObject($(this).data(),['guid','created','name','match','filter','exec','value','schedule'])));
 									}
 								});
 							
@@ -1749,6 +1749,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
 					_app.u.handleButtons($target);
 					$('form',$target).anyform();
+					$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
 					}
 				else if(!$ele.data('event'))	{
 					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, data-event not set on trigger element.","gMessage":true});

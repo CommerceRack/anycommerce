@@ -354,13 +354,13 @@ can't be added to a 'complete' because the complete callback gets executed after
 				}
 			}
 		else	{
-//			_app.u.dump(j);
-			_app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-//			_app.u.dump("pipeUUID: "+pipeUUID);
+			_app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown,'error');
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			_app.model.handleCancellations(Q,QID);
 			if(typeof jQuery().hideLoading == 'function'){
-				$(".loading-indicator-overlay").parent().hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
+//				$(".loading-indicator-overlay").parent().hideLoading(); 
+// ** 201403 -> rather than targeting a child and then going up the dom, we'll target the element that had showLoading applied to it directly.
+				$(".ui-showloading").hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
 				}
 //			setTimeout("_app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 			}
@@ -873,7 +873,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 */	
 		responseHasErrors : function(responseData)	{
 //			_app.u.dump('BEGIN model.responseHasErrors');
-//			_app.u.dump(" -> responseData"); _app.u.dump(responseData);
 //at the time of this version, some requests don't have especially good warning/error in the response.
 //as response error handling is improved, this function may no longer be necessary.
 			var r = false; //defaults to no errors found.
@@ -911,6 +910,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errtype'] = "apperr"; 
 							responseData['errmsg'] = "profile came back either without %PROFILE or without %PROFILE.PROFILE.";
 							}
+						break;
 					case 'appNavcatDetail':
 						if(responseData.errid > 0 || responseData['exists'] == 0)	{
 							r = true
@@ -919,19 +919,19 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find category (may not exist)";
 							} //a response errid of zero 'may' mean no errors.
 						break;
-		
-					case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
-		
-					case 'cartOrderCreate':
-		//				_app.u.dump(' -> case = createOrder');
-						if(!_app.u.isSet(responseData['orderid']))	{
-		//					_app.u.dump(' -> request has errors. orderid not set. orderid = '+responseData['orderid']);
-							r = true;
-							}  
-						break;
+	
 					default:
-						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //** 201338 -> warnings do not constitute errors.
-						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
+						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //warnings do not constitute errors.
+						else if(Number(responseData['_msgs']) > 0)	{
+							var errorTypes = new Array("youerr","fileerr","apperr","apierr","iseerr","cfgerr");
+							//the _msg format index starts at one, not zero.
+							for(var i = 1, L = Number(responseData['_msgs']); i <= L; i += 1)	{
+								if($.inArray(responseData['_msg_'+i+'_type'],errorTypes) >= 0)	{
+									r = true;
+									break; //once an error type is found, exit. one positive is enough.
+									}
+								}
+							}
 // *** 201336 -> mostly impacts admin UI. @MSGS is another mechanism for alerts that needs to be checked.
 						else if(responseData['@MSGS'] && responseData['@MSGS'].length)	{
 							var L = responseData['@MSGS'].length;
@@ -943,8 +943,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 								}
 							}
 						else if(responseData['@RESPONSES'] && responseData['@RESPONSES'].length)	{
-							var L = responseData['@RESPONSES'].length;
-							for(var i = 0; i < L; i += 1)	{
+							for(var i = 0, L = responseData['@RESPONSES'].length; i < L; i += 1)	{
 								if(responseData['@RESPONSES'][i]['msgtype'] == 'ERROR' || responseData['@RESPONSES'][i]['msgtype'] == 'apierr')	{
 									r = true;
 									break; //if we have an error, exit early.
@@ -956,6 +955,9 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						break;
 					}
 				}
+//			if(r)	{
+//				_app.u.dump(" -> responseData"); _app.u.dump(responseData);
+//				}
 	//		_app.u.dump('//END responseHasErrors. has errors = '+r);
 			return r;
 			},
@@ -1121,13 +1123,18 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //gets the cart id.  carts are stored as an array.  the latest cart is always put on top of the array, which is what this returns.
 //Check to see if it's already set. If not, request a new session via ajax.
 		fetchCartID : function()	{
-//			_app.u.dump('BEGIN: model.fetchCartID');
 			var s = false;
-			var carts = _app.vars.carts || this.dpsGet('app','carts') || []; //will return an array.
-			if(carts.length)	{
-				s = carts[0]; //most recent carts are always added to the top of the stack.
+//			_app.u.dump('BEGIN: model.fetchCartID');
+			if(_app.vars._clientid == '1pc')	{
+				s = _app.vars.cartID;
 				}
-			else	{}
+			else	{
+				var carts = _app.vars.carts || this.dpsGet('app','carts') || []; //will return an array.
+				if(carts.length)	{
+					s = carts[0]; //most recent carts are always added to the top of the stack.
+					}
+				else	{}
+				}
 			return s;
 			}, //fetchCartID
 	
@@ -1619,7 +1626,7 @@ ADMIN/USER INTERFACE
 				}
 
 
-			cmdObj = {
+			var cmdObj = {
 				_cmd : 'adminUIExecuteCGI',
 				uri : path,
 				'_tag' : {
