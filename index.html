@@ -535,7 +535,7 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id="productListTemplate" class="loadingBG clearfix plLineItem">
+<li id="productListTemplate" class="loadingBG plLineItem">
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class='prodListArrow'><img src="images/prodlist_arrow.png" class="prodListArrow"></a>
 	
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; " class='positionRelative'>
@@ -643,7 +643,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults"  class="loadingBG clearfix plLineItem">
+<li id="productListTemplateResults"  class="loadingBG plLineItem">
 
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; ">
 		<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">

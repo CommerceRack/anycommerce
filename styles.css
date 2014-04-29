@@ -294,7 +294,8 @@ hr.subtle	{margin:.1em 0;
 .blockLink	{text-decoration:none;}
 .zProductList a 	{color:#333;}
 .prodListArrow {position:absolute; right: 5px; top:20px;}
-.reviewPLAdjust	{margin:0em 0 -.5em 1em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
+.plAdd2Cart {margin-right:1em;} /* for padding next to reviews. can't put it on reviews because it'll sometimes be on the next line down */
+.reviewPLAdjust	{margin:0em 0 -.5em 0em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
 .plLineItem .marginBottom	{margin-bottom:.3em;}
 
 .plAdd2Cart	{letter-spacing: .08em;}
@@ -481,7 +482,20 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.sbb7	{background-position:0 -620px;}
 
 	.textBlockMaxHeight	{max-height:400px;}
-
+	
+	
+	.prodListArrow	{display:none;}
+	.zProductList li.plLineItem	{
+	margin:0 1% .5em 0; 
+	width:49%; 
+	float:left;
+	font-size:.8em;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	height:120px;
+	}
+	
 	}
 
 
@@ -501,8 +515,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#shopNowLink	{display:none;}
 	
 	
-	.zProductList li.plLineItem	{display:block; margin:0 1% .5em 0; width:32%; float:left;}
-	.prodListArrow	{display:none;}
+	.zProductList li.plLineItem	{width:32%;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
 	}
 
