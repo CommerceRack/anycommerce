@@ -781,7 +781,7 @@ var store_swc = function(_app) {
 						{"p":"Boston Bruins","v":"boston_bruins"},
 						{"p":"Buffalo Sabres","v":"buffalo_sabres"},
 						{"p":"Calgary Flames","v":"calgary_flames"},
-						{"p":"Carolina Panthers","v":"carolina_panthers"},
+						{"p":"Carolina Hurricanes","v":"carolina_hurricanes"},
 						{"p":"Chicago Blackhawks","v":"chicago_blackhawks"},
 						{"p":"Colorado Avalanche","v":"colorado_alavanche"},
 						{"p":"Columbus Blue Jackets","v":"columbus_blue_jackets"},
