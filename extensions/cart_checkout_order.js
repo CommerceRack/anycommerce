@@ -404,9 +404,9 @@ left them be to provide guidance later.
 							'before' : function(r)	{
 								r.jqObj.empty();
 								},
-							'onComplete' : function(){
+							'onComplete' : function(r){
 								P.state = 'complete';
-								_app.renderFunctions.handleTemplateEvents($c,$.extend(true,{},P,event));
+								_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
 								},
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
