@@ -358,7 +358,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			_app.model.handleCancellations(Q,QID);
 			if(typeof jQuery().hideLoading == 'function'){
-				$(".loading-indicator-overlay").parent().hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
+//				$(".loading-indicator-overlay").parent().hideLoading(); 
+// ** 201403 -> rather than targeting a child and then going up the dom, we'll target the element that had showLoading applied to it directly.
+				$(".ui-showloading").hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
 				}
 //			setTimeout("_app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 			}
