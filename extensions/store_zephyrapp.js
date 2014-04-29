@@ -621,7 +621,17 @@ var store_zephyrapp = function(_app) {
 				return false;
 				},
 			
-			jump2PidByValue : function($ele,p)	{
+			jump2 : function($ele,p)	{
+				p.preventDefault();
+				var $jump2 = $ele.closest(".isPageTemplate").find("[data-landing-point='"+$ele.data('jump2')+"']");
+				$('html, body').animate({
+			        scrollTop: $jump2.offset().top
+    				}, 2000);
+				return false;
+				},
+			
+			//used on a select element where the option value is the pid. selecting the option goes to the pid page.
+			changePageByOptionValue : function($ele,p)	{
 				p.preventDefault();
 				document.location.hash = "#!product/"+$ele.val();
 				return false;

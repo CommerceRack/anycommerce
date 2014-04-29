@@ -301,7 +301,8 @@ hr.subtle	{margin:.1em 0;
 
 
 /***** Review Section CSS Start *****/
-.reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px;}
+.reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; min-width:86px; height:18px; line-height:14px;}
+.reviewSprite .hint	{padding-left:70px;}
 .review_1 	{background-position: 0px 0px;}
 .review_2	{background-position: 0px 0px;}
 .review_3	{background-position: 0px -28px;}
@@ -312,6 +313,7 @@ hr.subtle	{margin:.1em 0;
 .review_8	{background-position: 0px -84px;}
 .review_9	{background-position: 0px -112px;}
 .review_10	{background-position: 0px -112px;}
+
 /***** Review Section CSS End *****/
 
 

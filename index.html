@@ -696,15 +696,16 @@ this will likely become more flexible in the future. ###
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	
+	<h1 class='noPadOrMargin' data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
+	
 	<section class='clearfix marginBottom'>
 	
-		<div class='floatRight shortReviewSummary alignCenter'>
-			<div data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></div>
-			<div class='hint' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend='from ' --append=' review'; apply --append;}}; if(is $var --gt='1';) {{apply --append='s';}};"></div>
+		<div class='floatRight shortReviewSummary alignCenter pointer' data-app-click='store_zephyrapp|jump2' data-jump2='productReviews'>
+			<div data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite">
+			<span class='hint' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></span>
+			</div>
 		</div>
 	
-	
-		<h1 class='noPadOrMargin' data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
 		<div class='displayNone' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{apply --show;}};">Mfg: <a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></div>
 	</section>
 	
@@ -759,7 +760,7 @@ this will likely become more flexible in the future. ###
 
 	<form class="marginBottom fullWidth gridTable" data-app-role='childrenSiblingsContainer'>
 		<label data-tlc="bind $var '.%attribs.amz:grp_varkey'; if (is $var --notblank;) {{apply --prepend;}};">
-		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|jump2PidByValue'>
+		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
 			<option value=''>Please choose</option>
 		</select>
 		</label>
@@ -799,7 +800,7 @@ this will likely become more flexible in the future. ###
 	</section>
 
 
-	<section class='marginBottom displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}}; bind $var '.pid'; apply --attrib='data-pid';" >
+	<section class='marginBottom displayNone' data-landing-point='productReviews' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --notblank;) {{apply --show;}}; bind $var '.pid'; apply --attrib='data-pid';" >
 		<a href="#" data-app-click="store_crm|productReviewShow" class='floatRight'>Write Review</a>
 		<h4>Customer Reviews</h4>
 		<div class='clearfix reviewSummary'>
@@ -1437,7 +1438,7 @@ used on a product layout. Some product have 'children' which may represent the s
 
 
 <select>
-	<option id="productListTemplateChildren" data-tlc="bind $pid '.pid'; apply --attrib='value'; bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></option>
+	<option id="productListTemplateChildren" data-tlc="bind $pid '.pid'; format --prepend='#!product/'; apply --attrib='value'; bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></option>
 </select>
 
 
