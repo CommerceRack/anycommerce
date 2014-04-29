@@ -505,6 +505,11 @@ need to be customized on a per-ria basis.
 		pageTransition : function($o,$n, infoObj)	{
 			$n.removeClass('displayNone').show();
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
+			
+			if(infoObj.performJumpToTop){
+				$('html, body').animate({scrollTop : 0}, 400);
+				}
+			
 			if($o.length)	{
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
