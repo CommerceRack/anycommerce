@@ -1080,11 +1080,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else	{
 					var $checkout = $(_app.u.jqSelector('#',_rtag.parentID)),
-					checkoutData = _app.data[_rtag.datapointer] || {},
-					oldCartID = _rtag.datapointer['previous-cartid'];
+					checkoutData = _app.data[_rtag.datapointer] || {};
 					
 					if($checkout instanceof jQuery && $checkout.length)	{
-						var orderID = checkoutData.orderid;
+						var orderID = checkoutData.orderid,
+						previousCartid = checkoutData.order.cart.cartid;
 //show post-checkout invoice and success messaging.
 						$checkout.empty().show();
 						$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
@@ -1092,13 +1092,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 		
 //This will add a cart message. handy if the buyer and merchant are dialoging.
 						if(typeof cartMessagePush === 'function')	{
-							cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
+							cartMessagePush(previousCartid,'cart.orderCreate',{'vars':{'orderid':orderID,'description':'Order created.'}});
 							}
-		
+// * 201403 -> duplicate of cartMessagePush above.		
 //if a cart messenger is open, log the cart update.
-						if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
-							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
-							}
+//						if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+previousCartid,_app))	{
+//							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':previousCartid},'immutable');
+//							}
 		
 						_app.u.handleButtons($checkout);
 						
@@ -1135,7 +1135,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							if(_app.ext.order_create.checkoutCompletes)	{
 								var L = _app.ext.order_create.checkoutCompletes.length;
 								for(var i = 0; i < L; i += 1)	{
-									_app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
+									_app.ext.order_create.checkoutCompletes[i]({'cartID':previousCartid,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
 									}
 								}
 //This will handle the @trackers code.			
@@ -1170,7 +1170,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 								$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
 									event.preventDefault();
 									//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-									showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
+									showContent('customer',{'show':'invoice','uriParams':{'cartid':previousCartid,'orderid':orderID}});
 									});
 								}
 		
