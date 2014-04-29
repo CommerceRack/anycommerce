@@ -26,9 +26,9 @@ var store_seo = function(_app) {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	vars : {
-		defaultTitle : "Chicago Cubs Gear", //Should not include any Prefix or Postfix
+		defaultTitle : "Chicago Cubs Apparel & Merchandise", //Should not include any Prefix or Postfix
 		titlePrefix : "",
-		titlePostfix : " - SportsWorldChicago.com"
+		titlePostfix : " | SportsWorldChicago.com"
 		},
 
 	callbacks : {
