@@ -371,7 +371,7 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
-<div id="homepageTemplate" class="homeTemplate alignCenter">
+<div id="homepageTemplate" class="homeTemplate alignCenter noBG">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<div class="homepageBanner highlightBG_1 alignCenter">
@@ -650,7 +650,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 </div>
 
-<div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage">
+<div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage noBG">
 	<span class="displayNone" data-tlc="bind $var '.seo_title'; if(is $var --notblank;){{apply --attrib='data-seo-title';}};"></span>
 	<span class="displayNone" data-tlc="bind $var '.seo_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
 	
@@ -698,10 +698,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<legend>Brand:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $cbl '.options.app_brands'; store_swc#filtercheckboxlist --index='app_brands';"></div>
 		</div>
-		<input type="submit" value="Search!"></input>
 	</form>
 	<div class="filterResultsContainer">
-		<h2 data-tlc="bind $var '.title'; apply --append;"></h2>
+		<h2 class="highlightBG_1 white" data-tlc="bind $var '.title'; apply --append;"></h2>
 		<ul class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
 	</div>
 </div>

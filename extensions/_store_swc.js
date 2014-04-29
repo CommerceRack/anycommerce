@@ -199,6 +199,9 @@ var store_swc = function(_app) {
 						var o = list[i];
 						var $t = $('<div data-filter="inputContainer"></div>');
 						$t.append('<label><input type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />'+o.p+' <span data-filter="count"></span></label>');
+						$('input', $t).on('change', function(event){
+							_app.ext.store_swc.e.execFilteredSearch($(this), event);
+							});
 						if(o.hidden){$t.addClass('displayNone');}
 						$tag.append($t);
 						}
@@ -447,6 +450,7 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				$form = $form.closest('form');
 				p.preventDefault();
 				var $resultsContainer = $form.closest('[data-filter-page=parent]').find('.filterResults');
 				var filterBase = JSON.parse($form.attr('data-filter-base'));
