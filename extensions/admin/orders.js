@@ -168,7 +168,12 @@ function pools2Object()	{
 	var pools = _app.ext.admin_orders.vars.pools;
 	var L = pools.length;
 	for(var i = 0; i < L; i += 1)	{
-		r["order_pool_change|"+pools[i]] = {"name": pools[i]};
+		if(pools[i] == 'CANCELLED')	{
+			//create some separation between 'cancelled' and the other menu items. Canceling an order by mistake has repercussions.
+			r["sep1"] = "---------";
+			r["sep2"] = "---------";
+			}
+		r["order_pool_change|"+pools[i]] = {"name": pools[i].toLowerCase()};
 		}
 	return r;
 	}
@@ -703,11 +708,15 @@ else	{
 				}
 			}, //orderFlagsAsSpans
 		orderPoolSelect : function($tag,data)	{
-			var $opt;
 			var pools = _app.ext.admin_orders.vars.pools;
 			var L = pools.length;
 			
 			for(var i = 0; i < L; i += 1)	{
+				var $opt;
+				//This creates a litle separation between cancelled and the other's, decreasing the likelyhood cancelled will be selected by mistake.
+				if(pools[i] == 'CANCELLED')	{
+					$tag.append("<option value='' disabled='disabled'>------------------------</option>");
+					}
 				$opt = $("<option />").val(pools[i]).text(pools[i].toLowerCase());
 				if(data.value == pools[i])	{
 					$opt.attr('selected','selected').css('font-style','italic');
