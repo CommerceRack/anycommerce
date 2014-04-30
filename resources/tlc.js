@@ -154,6 +154,7 @@ var tlc = function()	{
 		return r;
 		}
 
+//This is used for a '<template>' which is INSIDE of an element that is being translated.
 	this.handleTemplates = function($target)	{
 		$("template",$target).each(function(index){
 			//for a <template>, the content makes up the template itself. adding <template> back onto the DOM wouldn't accomplish much.

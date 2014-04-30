@@ -174,8 +174,10 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 					if(L > 0)	{
 						for(var i = 0; i < L; i += 1)	{
 							topicID = _app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
-							_app.u.dump(" -> TOPIC ID = "+topicID);
-							$parent.append(_app.renderFunctions.transmogrify({'id':topicID,'topicid':topicID},tagObj.templateID,_app.data[tagObj.datapointer]['@topics'][i]))
+//							_app.u.dump(" -> TOPIC ID = "+topicID);
+// ** 201403 -> transmogrify is data-bind, so this didn't work.
+//							$parent.append(_app.renderFunctions.transmogrify({'id':topicID,'topicid':topicID},tagObj.templateID,_app.data[tagObj.datapointer]['@topics'][i]))
+							$parent.tlc({'templateid':tagObj.templateID,'dataset':_app.data[tagObj.datapointer]['@topics'][i],'dataAttribs':{'topicid':topicID}});
 							}
 						}
 					else	{

@@ -1424,7 +1424,7 @@ setTimeout(function(){
 
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
-				dump("BEGIN showFAQbyTopic ["+topicID+"]");
+//				dump("BEGIN showFAQbyTopic ["+topicID+"]");
 				var templateID = 'faqQnATemplate'
 				
 				if(!topicID)	{
@@ -1439,13 +1439,13 @@ setTimeout(function(){
 					if($target.children().length)	{} //if children are present, this faq topic has been opened before or is empty. no need to re-render content.
 					else	{
 						var L = _app.data['appFAQs']['@detail'].length;
-						dump(" -> total #faq: "+L);
+//						dump(" -> total #faq: "+L);
 						for(var i = 0; i < L; i += 1)	{
 							if(_app.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
-								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
+//								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
 //								$target.append(_app.renderFunctions.transmogrify({'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},templateID,_app.data['appFAQs']['@detail'][i]))
 $target.tlc({
-	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
+//	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
 	templateid : templateID,
 	dataset : _app.data['appFAQs']['@detail'][i]
 	})
