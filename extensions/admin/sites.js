@@ -615,7 +615,7 @@ used, but not pre-loaded.
 							//success content goes here.
 							$("[data-panel-id='domainNewHostTypeSITEPTR']",$D).anycontent({'datapointer':rd.datapointer});
 							if($ele.data('mode') == 'update')	{
-								$("input[name='PROJECT']",$D).val(_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
+								$("select[name='PROJECT']",$D).val(_app.data['adminDomainDetail|'+domain]['@HOSTS'][$ele.closest('tr').data('obj_index')].PROJECT)
 								}
 							_app.u.handleButtons($D);
 							_app.u.handleCommonPlugins($D);
