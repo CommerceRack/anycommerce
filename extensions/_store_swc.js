@@ -711,7 +711,9 @@ var store_swc = function(_app) {
 				title : "Chicago",
 				noteams : true,
 				baseFilter : {
-					"term" : {"app_promo":"chicago"}
+					"and" : [
+						{"app_promo":"chicago"}
+						]
 					},
 				optionList : [
 					"user:app_department",
