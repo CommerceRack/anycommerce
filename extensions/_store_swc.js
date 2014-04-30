@@ -831,7 +831,7 @@ var store_swc = function(_app) {
 						{"p": "Minnesota Timberwolves",	"v": "minnesota_timberwolves", "img":"nbahats/minnesota_timberwolves_hat.jpg"},
 						{"p": "New Orleans Pelicans","v": "new_orleans_pelicans", "img":"nbahats/new_orleans_pelicans_hat.jpg"},
 						{"p": "New York Knicks","v": "new_york_knicks", "img":"nbahats/new_york_knicks_hat.jpg"},
-						{"p": "Oklahoma City Thunder",	"v": "oklahoma_city_thunder", "img":"oklahoma_city_thunder_hat.jpg"},
+						{"p": "Oklahoma City Thunder",	"v": "oklahoma_city_thunder", "img":"nbahats/oklahoma_city_thunder_hat.jpg"},
 						{"p": "Orlando Magic","v": "orlando_magic", "img":"nbahats/orlando_magic_hat.jpg"},
 						{"p": "Philadelphia 76ers","v": "philadelphia_76ers", "img":"nbahats/philadelphia_76ers_hat.jpg"},
 						{"p": "Phoenix Suns","v": "phoenix_suns", "img":"nbahats/phoenix_suns_hat.jpg"},
