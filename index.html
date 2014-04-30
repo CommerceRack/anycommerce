@@ -46,11 +46,11 @@ document.getElementsByTagName('base')[0].href = baseURL;
 <!-- <link rel="stylesheet" type="text/css" href="resources/magiczoomplus/magiczoomplus.css"> -->
 <link href='https://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
-<link rel="stylesheet" type="text/css" href="jquery-ui-1.10.4.custom.css" /><!-- quickstart.css is merged into this file along w/ the jquery ui theme -->
+<link rel="stylesheet" type="text/css" href="jquery-ui-1.10.4.custom.css" />
 <link rel="stylesheet" type="text/css" href="styles.css" />
 
 
-<script src="jquery-1.10.2.js"></script>
+<script src="jquery-1.10.2.min.js"></script>
 <script src="jquery-ui-1.10.4.custom.min.js"></script>
 
 
@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201402.29c",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.30a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -761,7 +761,7 @@ this will likely become more flexible in the future. ###
 	<form class="marginBottom fullWidth gridTable displayNone" data-app-role='childrenSiblingsContainer' data-tlc="bind $var '.%attribs.zoovy:grp_type'; if (is $var --notblank;) {{apply --show;}}; " >
 		<label data-tlc="bind $var '.%attribs.amz:grp_varkey'; if (is $var --notblank;) {{apply --prepend;}};">
 		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
-			<option value=''>Please choose</option>
+			<option value='' data-tlc="bind $var '.%attribs.zephyrsports:prod_children_title'; if (is $var --notblank;) {{apply --empty; apply --append;}}; ">Please choose</option>
 		</select>
 		</label>
 	</form>
