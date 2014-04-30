@@ -313,16 +313,20 @@ $(document).ready(function(){
 	
 	<div class="contentContainer" class="positionRelative">
 		<div id="sportChooser" class="alignCenter">
-			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb" >MLB
+			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb">
+				<h2 class="highlightBG_1_alpha white">MLB</h2>
 				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
 			</div>
-			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_nfl" >NFL
+			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_nfl" >
+				<h2 class="highlightBG_1_alpha white">NFL</h2>
 				<img data-tlc="set $var 'app/football_image.jpg'; store_swc#imageurl --name=$var; apply --attrib='src';" />
 			</div>
-			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_nba" >NBA
+			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_nba" >
+				<h2 class="highlightBG_1_alpha white">NBA</h2>
 				<img data-tlc="set $var 'app/nba_basketball.jpg'; store_swc#imageurl --name=$var; apply --attrib='src';" />
 			</div>
-			<div class="pointer" data-app-click="store_swc|selectSport" data-swc-sport="app_nhl" >NHL
+			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_nhl" >
+				<h2 class="highlightBG_1_alpha white">NHL</h2>
 				<img data-tlc="set $var 'app/nhl_hockey_puck.jpg'; store_swc#imageurl --name=$var; apply --attrib='src';" />
 			</div>
 		</div>
@@ -332,11 +336,11 @@ $(document).ready(function(){
 			</div>
 			<div class="myteams teamlist">
 				<h4>My MLB Teams</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
 				<h4>Add More:</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nfl">
@@ -345,11 +349,11 @@ $(document).ready(function(){
 			</div>
 			<div class="myteams teamlist">
 				<h4>My NFL Teams</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
 				<h4>Add More:</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nba">
@@ -358,11 +362,11 @@ $(document).ready(function(){
 			</div>
 			<div class="myteams teamlist">
 				<h4>My NBA Teams</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
 				<h4>Add More:</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nhl">
@@ -371,11 +375,11 @@ $(document).ready(function(){
 			</div>
 			<div class="myteams teamlist">
 				<h4>My NHL Teams</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
 				<h4>Add More:</h4>
-				<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 	</div>

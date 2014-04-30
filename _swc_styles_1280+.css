@@ -39,4 +39,8 @@
 	padding-right: 20px;
 }
 
-#myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:100px;}
+#myTeamChooser .chooser{left:60px; right:60px; bottom:60px; top:100px;}
+#myTeamChooser .myteams {width: 30%;}
+#myTeamChooser .moreteams {width: 60%;}
+#myTeamChooser .moreteams ul {text-align: center;}
+#myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}

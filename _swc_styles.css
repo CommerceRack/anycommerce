@@ -243,17 +243,20 @@ a.blockLink, li.blockLink {display: inline-block;}
 #myTeamChooser.hidden {z-index:-1000;}
 */
 #myTeamChooser .ui-button{width:1em;}
-#myTeamChooser .chooser {position:absolute; left:20px; right:20px; bottom:20px; top:20px; background: white; padding: 5px; box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);overflow:hidden;}
+#myTeamChooser .chooser {position:absolute; background: white; padding: 5px; box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);overflow:hidden;}
 #myTeamChooser .chooser h2{color:white; padding: 5px; height:30px;}
 #myTeamChooser .contentContainer{position:absolute; top:45px; bottom: 5px; left:5px; right:5px;}
 #myTeamChooser #sportChooser {height:100%;}
-#myTeamChooser #sportChooser > div {
-	width: 45%;
-	height: 40%;
-	padding: 2.4% 2.4%;
+#myTeamChooser #sportChooser .selector h2 {position:absolute; bottom:0px; right:0px; left:0px;}
+#myTeamChooser #sportChooser .selector {
+	position:relative;
+	width: 40%;
+	height: 36%;
+	padding-bottom: 2.4%;
+	padding-top: 2.4%;
 	display:inline-block;
 }
-#myTeamChooser #sportChooser > div img{
+#myTeamChooser #sportChooser .selector img{
 	max-width: 100%;
 	max-height: 100%;
 }
@@ -274,6 +277,8 @@ a.blockLink, li.blockLink {display: inline-block;}
 }
 #myTeamChooser[data-swc-sport=app_mlb] .sportContainer[data-swc-sport=app_mlb]{left: 0px;}
 #myTeamChooser[data-swc-sport=app_nfl] .sportContainer[data-swc-sport=app_nfl]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nba] .sportContainer[data-swc-sport=app_nba]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nhl] .sportContainer[data-swc-sport=app_nhl]{left: 0px;}
 
 #rma-form {
 	font-size: .8em;

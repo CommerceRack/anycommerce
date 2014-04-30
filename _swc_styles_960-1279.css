@@ -34,3 +34,8 @@
 }
 
 #myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:100px;}
+#myTeamChooser .myteams {width: 30%;}
+#myTeamChooser .moreteams {width: 60%;}
+#myTeamChooser .moreteams ul {text-align: center;}
+#myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
+#myTeamChooser .teamlist .teamTemplate {font-size:1.0em}
