@@ -921,7 +921,7 @@ var store_swc = function(_app) {
 						{"p":"Nashville Predators","v":"nashville_predators", "img":"nhlhats/nashville_predators_hat.jpg"},
 						{"p":"New Jersey Devils","v":"new_jersey_devils", "img":"nhlhats/new_jersey_devils_hat.jpg"},
 						{"p":"New York Islanders","v":"new_york_islanders", "img":"nhlhats/new_york_islanders_hat.jpg"},
-						{"p":"New York Rangers","v":"new_york_rangers", "img":"nhlhats/new_york_rangers_hat1.jpg.jpg"},
+						{"p":"New York Rangers","v":"new_york_rangers", "img":"nhlhats/new_york_rangers_hat1.jpg"},
 						{"p":"Ottawa Senators","v":"ottawa_senators", "img":"nhlhats/ottawa_senators_hat.jpg"},
 						{"p":"Philadelphia Flyers","v":"philadelphia_flyers", "img":"nhlhats/philadelphia_flyers_hat.jpg"},
 						{"p":"Phoenix Coyotes","v":"phoenix_coyotes", "img":"nhlhats/phoenix_coyotes_hat.jpg"},
