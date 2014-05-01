@@ -9,7 +9,7 @@ body{background:url(images/ivy2.jpg) repeat fixed center top;}
 a.redText{color:#7e0000}
 .underline {text-decoration:underline;}
 .blockLink, .blockLink a {text-decoration:none;}
-
+.bold {font-weight:bold;}
 .white{color:white;}
 
 #mainContentArea > div {background:rgba(256,256,256,.8);}
