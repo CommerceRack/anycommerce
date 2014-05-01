@@ -1008,7 +1008,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.templateID = 'checkoutTemplate'
 						infoObj.state = 'init'; //needed for handleTemplateEvents.
 						var $checkoutContainer = $("#checkoutContainer");
-						$new = $checkoutContainer;
 						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
 
 //for local, don't jump to secure. ### this may have to change for a native _app. what's the protocol? is there one?
@@ -1032,7 +1031,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
-
+// **201403 moved this to the bottom so $new gets the right pointer. -mc  
+						$new = $checkoutContainer;
 						break;
 	
 					case 'company':
