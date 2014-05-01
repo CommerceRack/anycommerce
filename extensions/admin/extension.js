@@ -3778,6 +3778,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 //for delegated events. Also triggered by process form.
 // $ele could be the form itself or the button.
 			submitForm : function($ele,p)	{
+				dump("BEGIN admin.e.submitForm");
 				var $form = $ele.closest('form');
 				p.preventDefault();
 				if($ele.data('skipvalidation') || _app.u.validateForm($form))	{					

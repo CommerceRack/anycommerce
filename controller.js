@@ -1924,7 +1924,7 @@ VALIDATION
 // ## FUTURE -> if the field is required and no value is set and type != radio, add required to span and exit early. cuts out a big block of code for something fairly obvious. (need to take skipIfHidden into account)
 //				errors for each input should be an array. format-rules should return a string and not get passed span for an error.
 		validateForm : function($form)	{
-//			_app.u.dump("BEGIN admin.u.validateForm");
+			_app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
 
 				
@@ -1948,6 +1948,7 @@ VALIDATION
 
 //					_app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
+						dump(" -> skipIfHidden is enabled");
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						//indexOf instead of == means validation-rules (notice the plural) can be a space seperated list
 						}
