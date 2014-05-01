@@ -918,7 +918,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 -->
 <li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink" data-tlc="bind $var '.prod_name'; apply --attrib='title';">
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
-		<div data-tlc="bind $var '.tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
+		<div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div>
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		
 		<div class="prodInfo highlightBG_1_alpha">

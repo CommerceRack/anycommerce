@@ -266,6 +266,7 @@ else	{
 
 				},
 			handleElasticScroll : function(_rtag, $tag){
+				dump('here');
 				var EQ = $tag.data('elastic-query');
 				var currPage = $tag.data('page-in-focus');
 				var totalPages = $tag.data('total-page-count');
@@ -278,6 +279,7 @@ else	{
 				else	{
 					$(window).on('scroll.infiniteScroll',function(){
 						//will load data when two rows from bottom.
+						dump('here');
 						if( $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
 							$(window).off('scroll.infiniteScroll');
 							if($tag.data('isDispatching') == true)	{}

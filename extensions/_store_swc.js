@@ -235,8 +235,6 @@ var store_swc = function(_app) {
 				return true;
 				},
 			filtercheckboxlist : function(data, thisTLC){
-				dump("FILTERCHECKBOXLIST");
-				dump(data);
 				var args = thisTLC.args2obj(data.command.args, data.globals);
 				if(typeof args.filterType === "undefined"){
 					args.filterType = 'checkboxList';
