@@ -3352,7 +3352,7 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugin/shipstation.xml'; apply --append;}};"></div>
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
