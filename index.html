@@ -997,7 +997,7 @@ this will likely become more flexible in the future. ###
 					format --prepend='prodPage_';
 					apply --attrib='data-lightbox';
 				}};" class="prodThumb" href="#">
-				<div class="positionRelative">
+				<div class="imgContainer positionRelative">
 					<canvas class="prodPreviewer displayNone" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';"></canvas>
 					<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
 					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=768 --h=768 --b='ffffff'; apply --attrib='src'}};" src="blank.gif" class="prodBigImage" alt="">
