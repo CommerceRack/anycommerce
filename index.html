@@ -61,12 +61,12 @@ css files should be included before any .js file to ensure they are downloaded i
 <!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script src="controller.js"></script>
-<script src="model.js"></script>
+<script data-apptimize="embed" src="controller.js"></script>
+<script data-apptimize="embed" src="model.js"></script>
 
 <!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
-<script src="resources/jquery.ui.anyplugins.js"></script>
-<script type="text/javascript" src="includes.js"></script>
+<script data-apptimize="embed" src="resources/jquery.ui.anyplugins.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="includes.js"></script>
 
 
 <script type="text/javascript">
@@ -119,15 +119,15 @@ $(document).ready(function(){
 	<div id="headerContent" class="dosis">
 		<div class="fixedContainer">
 			<a href="#!" id="logo" class="floatLeft">
-				<img src="images/wrapper/logo_364x62.png" class="displayNone_640 displayNone_480"/>
-				<img src="images/wrapper/logo_243x41.png" class="displayNone_960 displayNone_1280 displayNone_320"/>
+				<img data-apptimize="embed" src="images/wrapper/logo_364x62.png" class="displayNone_640 displayNone_480"/>
+				<img data-apptimize="embed" src="images/wrapper/logo_243x41.png" class="displayNone_960 displayNone_1280 displayNone_320"/>
 			</a>
 			
 			<div id="livechat" class="displayNone_320 displayNone_480 floatLeft">
 				<div id="ciQYEp" style="z-index:100;position:absolute;"></div><div id="scQYEp" style="display:inline"></div><div id="sdQYEp" style="display:none"></div><script type="text/javascript">var seQYEp=document.createElement("script");seQYEp.type="text/javascript";var seQYEps=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/cubworld/safe-standard.js?ps_h=QYEp&ps_t="+new Date().getTime()+"&online-image=images/wrapper/livechat_172x67.png&offline-image=images/wrapper/livechat_172x67.png";setTimeout("seQYEp.src=seQYEps;document.getElementById('sdQYEp').appendChild(seQYEp)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=cubworld">Live Support</a></div></noscript>
 				<!--
-				<img src="images/wrapper/livechat_172x67.png" class="displayNone_640"/>
-				<img src="images/wrapper/livechat_115x42.png" class="displayNone_1280 displayNone_960"/>
+				<img data-apptimize="embed" src="images/wrapper/livechat_172x67.png" class="displayNone_640"/>
+				<img data-apptimize="embed" src="images/wrapper/livechat_115x42.png" class="displayNone_1280 displayNone_960"/>
 				-->
 			</div>
 			
@@ -146,8 +146,8 @@ $(document).ready(function(){
 			<form id="search" class="floatRight clearRight displayNone_320" onSubmi="return false;" data-app-submit="quickstart|searchFormSubmit">
 				<input type="text" name="KEYWORDS"/>
 				<span class="searchBtn" onClick="$(this).parent().trigger('submit');">
-					<img src="images/wrapper/searchbutton_62x25.png" class="displayNone_640 displayNone_480 alignBottom"/>
-					<img src="images/wrapper/searchbutton_42x17.png" class="displayNone_1280 displayNone_960 alignBottom"/>
+					<img data-apptimize="embed" src="images/wrapper/searchbutton_62x25.png" class="displayNone_640 displayNone_480 alignBottom"/>
+					<img data-apptimize="embed" src="images/wrapper/searchbutton_42x17.png" class="displayNone_1280 displayNone_960 alignBottom"/>
 				</span>
 			</form>
 		</div>
@@ -229,12 +229,12 @@ $(document).ready(function(){
 				<input type="submit" value="Sign Up"/>
 			</form>
 			<div class="displayTable fillWidth socialIcons alignCenter" >
-				<a class="displayTableCell" href="https://www.facebook.com/SportsWorldChicago" target="_blank"><img src="images/wrapper/social/social_icon_facebook.png" /></a>
-				<a class="displayTableCell" href="https://plus.google.com/+SportsWorldChicago" target="_blank"><img src="images/wrapper/social/social_icon_googleplus.png" /></a>
-				<a class="displayTableCell" href="https://twitter.com/SportsWorldChi" target="_blank"><img src="images/wrapper/social/social_icon_twitter.png" /></a>
-				<a class="displayTableCell" href="https://www.pinterest.com/sportsworldchi/" target="_blank"><img src="images/wrapper/social/social_icon_pinterest.png" /></a>
-				<a class="displayTableCell" href="#" target="_blank"><img src="images/wrapper/social/social_icon_youtube.png" /></a>
-				<a class="displayTableCell" href="#" target="_blank"><img src="images/wrapper/social/social_icon_gray.png" /></a>
+				<a class="displayTableCell" href="https://www.facebook.com/SportsWorldChicago" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_facebook.png" /></a>
+				<a class="displayTableCell" href="https://plus.google.com/+SportsWorldChicago" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_googleplus.png" /></a>
+				<a class="displayTableCell" href="https://twitter.com/SportsWorldChi" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_twitter.png" /></a>
+				<a class="displayTableCell" href="https://www.pinterest.com/sportsworldchi/" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_pinterest.png" /></a>
+				<a class="displayTableCell" href="#" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_youtube.png" /></a>
+				<a class="displayTableCell" href="#" target="_blank"><img data-apptimize="embed" src="images/wrapper/social/social_icon_gray.png" /></a>
 			</div>
 		</div>
 		<div id="copyright" class="alignCenter">
@@ -415,56 +415,56 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 		
 	<a class="blockLink" href="">
-		<img src="images/homepage/chicago_teams_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/chicago_teams_v4.jpg"/>
 	</a>
 	
 	<a class="blockLink" href="index.html#!product/OGC/">
-		<img src="images/homepage/gift_cards_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/gift_cards_v4.jpg"/>
 	</a>
 	
 	
 	<a class="blockLink" href="#" data-app-click="store_swc|showMyTeamChooser">
-		<img src="images/homepage/other_teams_v5.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/other_teams_v5.jpg"/>
 		
 	</a>
 	
 	<a class="blockLink" href="#!filter/personalized_jerseys/">
-		<img src="images/homepage/personalized_jersey_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/personalized_jersey_v4.jpg"/>
 	</a>
 	
 	<!--
 	<a class="blockLink" href="#!category/.chicago-cubs-jerseys.custom/">
-		<img src="images/homepage/personalized.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/personalized.jpg"/>
 	</a>
 	-->
 	
 		
 	<a class="blockLink" href="#!filter/hats/">
-		<img src="images/homepage/caps_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/caps_v4.jpg"/>
 	
 	</a>
 	
 	<a class="blockLink" href="#!filter/jerseys/">
-		<img src="images/homepage/authentic_jerseys_v5.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/authentic_jerseys_v5.jpg"/>
 	
 	</a>
 	
 	<a class="blockLink" href="#!fieldcam/">
-		<img src="images/homepage/webcam_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/webcam_v4.jpg"/>
 	
 	</a>
 	
 	<a class="blockLink" href="">
-		<img src="images/homepage/social_banner_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/social_banner_v4.jpg"/>
 	
 	</a>
 	
 	<a class="blockLink" href="#!company/shipping/">
-		<img src="images/homepage/free_shipping_v4.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/free_shipping_v4.jpg"/>
 	</a>
 	
 	<a class="blockLink" href="#!filter/100_years_of_wrigley_field/">
-		<img src="images/homepage/100_years_wrigley_v5.jpg"/>
+		<img data-apptimize="embed" src="images/homepage/100_years_wrigley_v5.jpg"/>
 	</a>
 	
 	
@@ -501,7 +501,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 	<div class="content_body_pad">
 		<div style="margin:10px 0;">
-			<img width="641" height="48" alt="Major League Baseball Tickets" src="img/categoryPages/tickets/cw2_c_head_tickets-641x48.jpg">
+			<img data-apptimize="embed" width="641" height="48" alt="Major League Baseball Tickets" src="img/categoryPages/tickets/cw2_c_head_tickets-641x48.jpg">
 		</div>
 		<table cellpadding="3" border="0" style="margin-left:10px;">
 			<tbody>
@@ -587,14 +587,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<div class="affiliate_category">
 		<div class="affliate_banner">
-			<img width="760" height="100" border="0" alt="CubWorld.com Affiliate Program" src="img/categoryPages/affiliates/affiliate_banner.jpg" id="TOP_SIDE1_img">
+			<img data-apptimize="embed" width="760" height="100" border="0" alt="CubWorld.com Affiliate Program" src="img/categoryPages/affiliates/affiliate_banner.jpg" id="TOP_SIDE1_img">
 		</div>
 		<div class="text_desc">
 			<h2>Why Affiliate with SportsWorldChicago.com?</h2>
 			SportsWorld has the latest and greatest Chicago Cubs, Wrigley Field and Chicago Bears merchandise and apparel. With one of the largest selections in Wrigleyville, we are located at the corner of Clark and Addison Streets, across from the front gate at Wrigley Field. Our brick and mortar store is known as Sports World.
 			<div class="signup alignCenter">
 				<a href="http://www.pepperjamnetwork.com/affiliate/registration.php?refid=109945" title="CubWorld SignUp" target="_blank">
-					<img width="180" height="57" border="0" alt="CubWorld SignUp" src="img/categoryPages/affiliates/cw_btn_signmeup_180x57.jpg" >
+					<img data-apptimize="embed" width="180" height="57" border="0" alt="CubWorld SignUp" src="img/categoryPages/affiliates/cw_btn_signmeup_180x57.jpg" >
 				</a>
 			</div>
 		</div>
