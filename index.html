@@ -66,7 +66,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.30a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0501a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -429,15 +429,15 @@ The images get .slide only if populated. the category complete event counts the 
 	
 	<section data-app-role="catTrioSlideshowContainer" class="clearfix marginBottom catTrioSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="carousel" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-allow-wrap="false" data-cycle-pause-on-hover="true" data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show;">
 		
-		<a href='#' data-tlc="bind $var '.page:ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
 		<img data-tlc="bind $var '.%page.ad1'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 		
-		<a href='#' data-tlc="bind $var '.page:ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
 		<img data-tlc="bind $var '.%page.ad2'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 		
-		<a href='#' data-tlc="bind $var '.page:ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
 		<img data-tlc="bind $var '.%page.ad3'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 

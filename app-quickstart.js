@@ -747,7 +747,7 @@ fallback is to just output the value.
 
 //could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
 			legacyurltoria : function($tag,data)	{
-				dump("BEGIN quickstart.renderFormats.legacyurltoria"); dump(data.value);
+//				dump("BEGIN quickstart.renderFormats.legacyurltoria"); dump(" -> data: "); dump(data);
 				if(data.value == '#')	{
 					$tag.removeClass('pointer');
 					}
@@ -755,7 +755,7 @@ fallback is to just output the value.
 					//link is formatted correctly. do nothing.
 					}
 				else if(data.value)	{
-					$tag.attrib('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
+					$tag.attr('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
 					}
 				else	{
 					//data.value is not set. do nothing.
