@@ -248,7 +248,8 @@ used, but not pre-loaded.
 					newSfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
 					}
 				else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
-					newSfo['@updates'].push("DOMAIN-RESERVE")					
+					newSfo['@updates'].push("DOMAIN-RESERVE");
+					newSfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
 					}
 				else	{
 					newSfo = false;

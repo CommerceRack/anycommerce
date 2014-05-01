@@ -1165,8 +1165,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							
 								}
 							else	{
-								_app.u.dump("Not 1PC.");
-								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+//								_app.u.dump("Not 1PC.");
+//								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+								
+								//MUST destroy the cart. it has data-cartid set that would point to the wrong cart.
+								$('#modalCart').empty().remove(); 
+								$('#mainContentArea_cart').empty().remove();
+
 								//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
 								$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
 									event.preventDefault();
