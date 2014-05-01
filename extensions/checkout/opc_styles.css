@@ -1,5 +1,16 @@
 @charset "utf-8";
 
+
+/*
+*** 201403 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+	}
+
+
+
 /*
 this file is included by the checkout extension IF _clientid = 1pc
 */
