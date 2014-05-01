@@ -357,7 +357,9 @@ var store_swc = function(_app) {
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
-					this.renderMyTeams();
+					if($('#myTeamChooser').hasClass('active'){
+						this.renderMyTeams();
+						}
 					}
 				},
 			saveUserTeams : function(){
@@ -676,6 +678,7 @@ var store_swc = function(_app) {
 				},
 			showMyTeamChooser : function($ele, p){
 				p.preventDefault();
+				_app.ext.store_swc.u.renderMyTeams();
 				this.selectSport($ele,p);
 				$('#myTeamChooser').addClass('active');
 				},
