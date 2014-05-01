@@ -6,7 +6,7 @@
 }
 #appView {padding-top: 30px;padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 402px;}
-#appView #footer {bottom:-362px; font-size:16px;}
+#appView #footer {bottom:-381px; font-size:16px;}
 
 #contact{font-size:11px;}
 #mininav{font-size:12px;}
@@ -16,7 +16,7 @@
 }
 
 .footerColumn {width:320px;}
-
+#footer #copyright {position:static; margin-top:5px;}
 .homepageBanner {height:322px;}
 #homeSlideshow {max-width: 100%;}
 .blockLink, li.blockLink {width: 32%; margin: .4%;}

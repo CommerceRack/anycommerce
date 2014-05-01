@@ -7,15 +7,16 @@
 #appView {
 	padding-top: 70px;
 	padding-bottom:40px;}
-#appView.showFooter {padding-bottom: 216px;}
-#appView #footer {bottom:-176px;}
+#appView.showFooter {padding-bottom: 210px;}
+#appView #footer {bottom:-150px;}
+#footer{padding: 10px 0px;}
 
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}
 #nav {font-size: .6em; padding: 5px 0px;}
 #footer{font-size:.8em}
-#footer > div{position:relative; height:136px;}
+#footer > div{position:relative; height:130px;}
 .footerColumn {
 	position:absolute;
 	width:150px;

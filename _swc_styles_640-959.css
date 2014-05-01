@@ -7,8 +7,9 @@
 #appView {
 	padding-top: 74px;
 	padding-bottom:40px;}
-#appView.showFooter {padding-bottom: 216px;}
-#appView #footer {bottom:-176px;}
+#appView.showFooter {padding-bottom: 210px;}
+#appView #footer {bottom:-150px;}
+#footer{padding: 10px 0px;}
 
 #livechat {margin-left: 42px;}
 #livechat img {width:115px; height:42px;}
@@ -16,7 +17,7 @@
 #contact{font-size:.7em;}
 #search input{ height:13px;}
 
-#footer > div{position:relative; height:136px;}
+#footer > div{position:relative; height:130px;}
 .footerColumn {
 	position:absolute;
 	width:170px;

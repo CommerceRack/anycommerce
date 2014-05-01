@@ -131,7 +131,7 @@ var store_swc = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				_app.ext.store_swc.u.renderMyTeams();
+				//_app.ext.store_swc.u.renderMyTeams();
 				_app.templates.homepageTemplate.on('complete.swc', function(event, $context, infoObj){
 					_app.ext.store_swc.u.showHomepageSlideshow();
 					});
