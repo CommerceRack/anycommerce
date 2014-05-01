@@ -52,7 +52,7 @@ var cart_message = function(_app) {
 						delete _app.cmr[i];
 						}
 					_app.cmr.push = addCMResponse; // all future pushes will get added immediately to the response list.
-					_app.u.loadCSSFile(_app.vars.baseURL+"extensions/cart_message/styles.css","cart_messageCSS");
+					//_app.u.loadCSSFile(_app.vars.baseURL+"extensions/cart_message/styles.css","cart_messageCSS");
 					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_message/templates.html',theseTemplates);
 					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 					r = true;
