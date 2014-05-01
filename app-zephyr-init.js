@@ -20,6 +20,7 @@ myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 myApp.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
+myApp.rq.push(['extension',0,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 
 //custom extensions
 myApp.rq.push(['extension',0,'tools_zoom','extensions/tools_zoom/tools_zoom.js']);
