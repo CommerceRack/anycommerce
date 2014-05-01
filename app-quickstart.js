@@ -753,7 +753,7 @@ fallback is to just output the value.
 					//link is formatted correctly. do nothing.
 					}
 				else if(data.value)	{
-					$tag.attrib('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
+					$tag.attr('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
 					}
 				else	{
 					//data.value is not set. do nothing.
@@ -1952,7 +1952,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				$nav = $('#appNav'),
 				$nextBtn = $("[data-app-role='prodDetailNextItemButton']",$nav),
 				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']",$nav);
-				
+
 //				dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
 				
 //The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
