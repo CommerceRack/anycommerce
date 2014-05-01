@@ -200,7 +200,7 @@ a.blockLink {border:none; display:block;}
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
 .productList > li	{width:150px; height:250px; position:relative;}
-.lineItemProdlist > li	{position:relative; display:block; padding:1em 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+.lineItemProdlist > li	{position:relative; display:block; padding:1em 0; float:none; width:auto; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
 .lineItemProdlist .prodThumb	{margin-right:1em;}
 

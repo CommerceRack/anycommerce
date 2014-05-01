@@ -636,7 +636,6 @@ NOTES
 					
 //					$parent.dialog('open').append(_app.renderFunctions.createTemplateInstance(P.templateID,P));
 					$parent.dialog('open').append(new tlc().getTemplateInstance(P.templateID).attr('data-pid',P.pid));
-					_app.u.handleCommonPlugins($parent);
 					P.state = 'init';
 					_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 					_app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
@@ -646,6 +645,7 @@ NOTES
 						else	{
 							$parent.dialog( "option", "title", _app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
 							$parent.tlc({'templateid':P.templateID,'verb':'translate','datapointer':"appProductGet|"+P.pid});
+							_app.u.handleCommonPlugins($parent);
 							P.state = 'complete';
 							_app.renderFunctions.handleTemplateEvents($parent.find("[data-templateid='"+P.templateID+"']:first"),P);
 							}
