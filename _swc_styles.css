@@ -169,6 +169,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .fieldCamPage object {max-width: 100%;}
 
 .productPage {color:#333333;}
+.productPage a {color:#333333;}
 .productTitle, .productInfo, .productTabs{float:right; clear:right; width: 36%;}
 
 .productImages {float:left; width: 60%;}
