@@ -242,9 +242,10 @@ used, but not pre-loaded.
 					'_tag':sfo._tag,
 					'@updates':[]
 					};
-				if(sfo.domaintype == 'DOMAIN-DELEGATE')	{
+				if(sfo.domaintype == 'DOMAIN-CREATE')	{
 					newSfo.DOMAINNAME = sfo.DOMAINNAME;
-					newSfo['@updates'].push("DOMAIN-DELEGATE");
+					newSfo['@updates'].push("DOMAIN-CREATE");
+					newSfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
 					}
 				else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
 					newSfo['@updates'].push("DOMAIN-RESERVE")					
@@ -254,6 +255,7 @@ used, but not pre-loaded.
 					}
 				return newSfo;
 				},
+			
 
 			//executed when save is pressed within the general panel of editing a domain.
 			adminDomainMacroGeneral : function(sfo,$form)	{
@@ -480,6 +482,45 @@ used, but not pre-loaded.
 				$D.anyform();
 				}, //adminDomainCreateShow
 
+
+			adminDomainRemoveConfirm : function($ele,p)	{
+				p.preventDefault();
+				var domain = $ele.closest("[data-element='domain']").data('domainname');
+				if(domain)	{
+					var $D = _app.ext.admin.i.dialogConfirmRemove({
+						"message" : "Are you sure you wish to remove the domain "+domain+"? There is no undo for this action.",
+						"removeButtonText" : "Remove Domain", //will default if blank
+						"title" : "Remove Domain: "+domain, //will default if blank
+						"removeFunction" : function(p,$D){
+							$D.parent().showLoading({"message":"Removing domain "+domain+"..."});
+							_app.model.addDispatchToQ({
+								'_cmd':'adminDomainMacro',
+								'DOMAINNAME' : domain,
+								'@updates' : ["DOMAIN-REMOVE"],
+								'_tag':	{
+									'callback':function(rd){
+										$D.parent().hideLoading();
+										if(_app.model.responseHasErrors(rd)){
+											$D.anymessage({'message':rd});
+											}
+										else	{
+											$D.dialog('close');
+											$('#globalMessaging').anymessage(_app.u.successMsgObject('The domain '+domain+' has been removed'));
+											$ele.closest('tbody').hide().intervaledEmpty();
+											}
+										}
+									}
+								},'mutable');
+							_app.model.dispatchThis('mutable');
+							}
+						});
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_sites.e.adminDomainRemoveConfirm, unable to ascertain domain.","gMessage":true});
+					}
+				
+				return false;
+				}, //adminDomainCreateShow
 
 //if(domain == _app.vars.domain)	{$ele.addClass('ui-state-highlight')}
 			domainPutInFocus : function($ele,p)	{

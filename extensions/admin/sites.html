@@ -130,6 +130,7 @@
 	<td data-tlc="bind $var '.PRT'; apply --append;" class="isSearchable"></td>
 	<td></td>
 	<td class="alignRight">
+	<button data-app-click="admin_sites|adminDomainRemoveConfirm" class="applyButton" data-text="false" data-icon-primary="ui-icon-trash">Remove Domain</button>
 	<button data-app-click="admin_batchjob|adminBatchJobExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-refresh" data-type="UTILITY/SITEMAP" data-whitelist="DOMAINNAME,PRT">Update Sitemap</button>
 	<button data-app-click="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check" title="Use this domain">Use Domain</button>
 	<button data-app-click="admin_sites|adminDomainDetailShow" class="applyButton" data-text="false" data-icon-primary="ui-icon-pencil" title="Edit this domain">Details</button>
@@ -223,12 +224,12 @@
 	<label>
 		<span>Type</span>
 		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
-			<option value='DOMAIN-DELEGATE' data-show-panel='domainCreateDomaintypeDelegate'>I have a domain</option>
+			<option value='DOMAIN-CREATE' data-show-panel='domainCreateDomaintypeCreate'>I have a domain</option>
 			<option value='DOMAIN-RESERVE' data-show-panel='domainCreateDomaintypeReserve'>Create a temporary domain</option>
 		</select>
 	</label>
 
-	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
+	<div data-panel-id='domainCreateDomaintypeCreate' class='displayNone domainCreateDomaintype'>
 	<label>
 		<span>Domain</span>
 		<input type='text' required data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
