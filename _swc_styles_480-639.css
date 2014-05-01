@@ -75,6 +75,6 @@
 .productListItem .prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
 
 #myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:75px;}
-#myTeamChooser .teamlist  {width: 46%; padding: 0px 1.8%;}
-#myTeamChooser .teamlist .teamTemplate {height:30px; font-size:1em; vertical-align:middle; line-height: 30px;}
+#myTeamChooser .teamlist  {width: 49%; padding:0%;}
+#myTeamChooser .teamlist .teamTemplate {height:45px; font-size:1em; line-height: 45px;}
 #myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}

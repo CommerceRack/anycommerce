@@ -44,3 +44,4 @@
 #myTeamChooser .moreteams {width: 60%;}
 #myTeamChooser .moreteams ul {text-align: center;}
 #myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
+#myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;}
