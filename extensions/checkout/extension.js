@@ -436,7 +436,11 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				}, //chkoutPayOptionsFieldset
 
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid'), CID;
+				
+				if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0)	{
+					CID = _app.data['cartDetail|'+cartID].customer.cid;
+					}
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -450,8 +454,8 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
 							}
 						}
-//in an admin session w/ an existing user, make sure the address has been selected.
-					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
+//in an admin session w/ an existing user, make sure the address has been selected IF the buyer has pre-defined addresses.
+					else if(_app.u.thisIsAnAdminSession() && CID  && _app.u.thisNestedExists("data.adminCustomerDetail|"+CID+".@BILL",_app) && _app.data['adminCustomerDetail|'+CID]['@BILL'].length ) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
