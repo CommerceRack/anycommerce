@@ -17,7 +17,12 @@
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
 <script type="text/javascript">
-var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-16474042-11']);
+_gaq.push(['_setDomainName', 'app.zephyrpaintball.com']);
+_gaq.push(['_setAllowLinker', true]);
+
 var myCreole, baseURL;
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
