@@ -699,13 +699,13 @@ fallback is to just output the value.
 
 			banner : function($tag, data)	{
 				if(data.value)	{
-//				dump("begin quickstart.renderFormats.banner");
+//					dump("begin quickstart.renderFormats.banner"); dump(data.value);
 					var obj = _app.u.kvp2Array(data.value), //returns an object LINK, ALT and IMG
 					hash, //used to store the href value in hash syntax. ex: #company?show=return
 					pageInfo = {};
 					
-	//if value starts with a #, then most likely the hash syntax is being used.
-					if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
+//if value starts with a #!, then most likely the hash syntax is being used.
+					if(obj.LINK && obj.LINK.indexOf('#!') == 0)	{
 						hash = obj.LINK;
 						pageInfo = _app.ext.quickstart.u.getPageInfoFromHash(hash);
 						}
@@ -713,6 +713,7 @@ fallback is to just output the value.
 	//  && data.value.indexOf('/') == -1 || data.value.indexOf('http') == -1 || data.value.indexOf('www') > -1
 					else if(obj.LINK)	{
 						pageInfo = _app.ext.quickstart.u.detectRelevantInfoToPage(obj.LINK);
+//						dump(" -> pageInfo: "); dump(pageInfo);
 						if(pageInfo.pageType)	{
 							hash = _app.ext.quickstart.u.getHashFromPageInfo(pageInfo);
 							}
@@ -746,6 +747,7 @@ fallback is to just output the value.
 
 //could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
 			legacyurltoria : function($tag,data)	{
+				dump("BEGIN quickstart.renderFormats.legacyurltoria"); dump(data.value);
 				if(data.value == '#')	{
 					$tag.removeClass('pointer');
 					}
@@ -1424,7 +1426,7 @@ setTimeout(function(){
 
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
-				dump("BEGIN showFAQbyTopic ["+topicID+"]");
+//				dump("BEGIN showFAQbyTopic ["+topicID+"]");
 				var templateID = 'faqQnATemplate'
 				
 				if(!topicID)	{
@@ -1439,13 +1441,13 @@ setTimeout(function(){
 					if($target.children().length)	{} //if children are present, this faq topic has been opened before or is empty. no need to re-render content.
 					else	{
 						var L = _app.data['appFAQs']['@detail'].length;
-						dump(" -> total #faq: "+L);
+//						dump(" -> total #faq: "+L);
 						for(var i = 0; i < L; i += 1)	{
 							if(_app.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
-								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
+//								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
 //								$target.append(_app.renderFunctions.transmogrify({'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},templateID,_app.data['appFAQs']['@detail'][i]))
 $target.tlc({
-	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
+//	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
 	templateid : templateID,
 	dataset : _app.data['appFAQs']['@detail'][i]
 	})
@@ -1534,7 +1536,7 @@ $target.tlc({
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
-				infoObj.dateObj = new Date(); //milliseconds timestamp
+				infoObj.ts = Math.round(+new Date()/1000); //milliseconds timestamp
 				_app.ext.quickstart.vars.sotw = infoObj;
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
 				_app.ext.quickstart.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
@@ -2216,6 +2218,7 @@ elasticsearch.size = 50;
 				if(typeof infoObj != 'object'){var infoObj = {}}
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = 'mainContentArea_cart';
+				infoObj.trigger = '';
 				infoObj.state = 'init'; //needed for handleTemplateEvents.
 				
 				var $cart = $('#'+infoObj.parentID);
@@ -2225,12 +2228,12 @@ elasticsearch.size = 50;
 //only create instance once.
 				$cart = $('#mainContentArea_cart');
 				if($cart.length)	{
-					//show cart
-					$cart.hide().trigger('refresh');
-					infoObj.state = 'complete';
-					_app.renderFunctions.handleTemplateEvents($cart,infoObj);
+					//the cart has already been rendered.
+					infoObj.trigger = 'refresh';
+					$cart.hide();
 					}
 				else	{
+					infoObj.trigger = 'fetch';
 					infoObj.cartid = _app.model.fetchCartID();
 					$cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
 					$cart.hide().on('complete',function(){
@@ -2243,11 +2246,9 @@ elasticsearch.size = 50;
 					}
 //This will load the cart from memory, if set. otherwise it will fetch it.
 //so if you need to update the cart, run a destroy prior to showCart.
-				$cart.trigger((_app.data['cartDetail|'+infoObj.cartid] ? 'refresh' : 'fetch'),{'Q':'mutable'});
-				_app.model.dispatchThis();
-
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				_app.renderFunctions.handleTemplateEvents($cart,infoObj);
+				$cart.trigger(infoObj.trigger,$.extend({'Q':'mutable'},infoObj));
+				_app.model.dispatchThis('mutable');
 				return $cart;
 				}, //showCart
 

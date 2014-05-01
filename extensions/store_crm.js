@@ -174,8 +174,10 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 					if(L > 0)	{
 						for(var i = 0; i < L; i += 1)	{
 							topicID = _app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
-							_app.u.dump(" -> TOPIC ID = "+topicID);
-							$parent.append(_app.renderFunctions.transmogrify({'id':topicID,'topicid':topicID},tagObj.templateID,_app.data[tagObj.datapointer]['@topics'][i]))
+//							_app.u.dump(" -> TOPIC ID = "+topicID);
+// ** 201403 -> transmogrify is data-bind, so this didn't work.
+//							$parent.append(_app.renderFunctions.transmogrify({'id':topicID,'topicid':topicID},tagObj.templateID,_app.data[tagObj.datapointer]['@topics'][i]))
+							$parent.tlc({'templateid':tagObj.templateID,'dataset':_app.data[tagObj.datapointer]['@topics'][i],'dataAttribs':{'topicid':topicID}});
 							}
 						}
 					else	{
@@ -524,15 +526,17 @@ This is used to get add an array of skus, most likely for a product list.
 					var $editor = $("<div \/>");
 					
 					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
-					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','verb':'template'});
-//* 201338 -> the address id should be at the bottom of the form, not the top. isn't that important or required.
+// ** 201403 -> need to pass in a blank dataset so translation occurs. required for country dropdown.
+					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','dataset':{}});
+//the address id should be at the bottom of the form, not the top. isn't that important or required.
 					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 
-//** 201338 -> if the placeholder attribute on an input is not supported (thx IE8), then add labels.
+//if the placeholder attribute on an input is not supported (thx IE8), then add labels.
 					if(_app.ext.order_create)	{
 						_app.ext.order_create.u.handlePlaceholder($editor);
 						}
+//adds a tooltip which is displayed on focus. lets the user know what field they're working on once they start typing and placeholder goes away.
 					$(":input",$editor).each(function(index){
 						var $input = $(this);
 						if($input.attr('placeholder') && !$input.attr('title'))	{
