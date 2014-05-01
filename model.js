@@ -1214,11 +1214,11 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 				for(var i = 0; i < L; i += 1) {
 //					_app.u.dump(" -> i: "+i);
 //namespace and filename are required for any extension.
-					if(!extObj[i].namespace || !extObj[i].filename)	{
+					if(!extObj[i].namespace)	{
 						if(extObj.callback && typeof extObj.callback == 'string')	{
-							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] and/or filename ["+extObj[i].filename+"]  not set",'')
+							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] not set",'')
 							}
-						_app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") or filename ("+extObj[i].filename+") was left blank.");
+						_app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") was left blank.");
 						continue; //go to next index in loop.
 						}
 					else if (typeof window[extObj[i].namespace] == 'function')	{
@@ -1227,8 +1227,13 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 						//extension has already been imported. Here for cases where extensions are added as part of preloader (init.js)
 						}
 					else	{
-//						_app.u.dump(" -> fetch extension: "+extObj[i].namespace);
-						this.fetchExtension(extObj[i],i);
+						if(!extObj[i].filename){
+							_app.u.dump(" -> extension did not load because filename ("+extObj[i].filename+") was left blank.");
+							}
+						else {
+//							_app.u.dump(" -> fetch extension: "+extObj[i].namespace);
+							this.fetchExtension(extObj[i],i);
+							}
 						}
 					} // end loop.
 				this.executeCallbacksWhenExtensionsAreReady(extObj); //reexecutes itself. will execute callbacks when all extensions are loaded.

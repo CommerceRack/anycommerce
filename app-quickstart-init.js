@@ -9,13 +9,13 @@ myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.t
 	myApp.vars.jqurl = (document.location.protocol === 'file:') ? myApp.vars.testURL+'jsonapi/' : '/jsonapi/';
 	}]); //The config.js is dynamically generated.
 	
-myApp.rq.push(['extension',0,'order_create','extensions/checkout/extension.js']);
+myApp.rq.push(['extension',0,'order_create','']);
 myApp.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 myApp.rq.push(['extension',0,'store_routing','extensions/store_routing.js']);
 myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js', 'attachHandlers']);
 
-myApp.rq.push(['extension',0,'store_swc','extensions/_store_swc.js', 'attachHandlers']);
+myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
 myApp.rq.push(['script',0,'jquery.cycle2.min.js']);
 myApp.rq.push(['extension',0,'jerseypreview','extensions/jerseypreview/extension.js', 'attachHandlers']);
 //myApp.rq.push(['css',0,'lightbox/css/lightbox.css', 'lightboxCSS']); 

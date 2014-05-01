@@ -1165,7 +1165,12 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 		// because the model will execute it for all extensions once the controller is initiated.
 		// so instead, a generic callback function is added to track if the extension is done loading.
 		// which is why the extension is added to the extension Q (above).
-					_app.u.loadScript(_app.rq[i][3],callback,(_app.rq[i]));
+					if(_app.rq[i][3]){
+						_app.u.loadScript(_app.rq[i][3],callback,(_app.rq[i]));
+						}
+					else {
+						callback(_app.rq[i]);
+						}
 					_app.rq.splice(i, 1); //remove from old array to avoid dupes.
 					}
 				else	{
