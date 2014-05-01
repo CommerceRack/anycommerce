@@ -357,7 +357,7 @@ var store_swc = function(_app) {
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
-					if($('#myTeamChooser').hasClass('active'){
+					if($('#myTeamChooser').hasClass('active')){
 						this.renderMyTeams();
 						}
 					}
