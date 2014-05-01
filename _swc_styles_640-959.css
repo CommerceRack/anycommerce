@@ -4,8 +4,9 @@
 	max-width:640px;
 	margin: auto;
 }
+#header {height:74px;}
 #appView {
-	padding-top: 74px;
+	padding-top: 78px;
 	padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 210px;}
 #appView #footer {bottom:-150px;}
