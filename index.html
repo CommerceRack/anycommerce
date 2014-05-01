@@ -759,11 +759,9 @@ this will likely become more flexible in the future. ###
 
 
 	<form class="marginBottom fullWidth gridTable displayNone" data-app-role='childrenSiblingsContainer' data-tlc="bind $var '.%attribs.zoovy:grp_type'; if (is $var --notblank;) {{apply --show;}}; " >
-		<label data-tlc="bind $var '.%attribs.amz:grp_varkey'; if (is $var --notblank;) {{apply --prepend;}};">
 		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
 			<option value='' data-tlc="bind $var '.%attribs.zephyrsports:prod_children_title'; if (is $var --notblank;) {{apply --empty; apply --append;}}; ">Please choose</option>
 		</select>
-		</label>
 	</form>
 
 	<!-- if this is a parent, the 'children' list will detail what's available and each will have an add to cart button. -->
@@ -964,10 +962,13 @@ Saturday: 8:00 - 5:00
 
 		</div>
 
+
+		<!-- faq are generated through the faq manager in the admin UI. do not add content in the faqContent area -->
 		<div id="faqArticle" class="displayNone textContentArea">
 			<h1>Frequently Asked Questions</h1>
 			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
 		</div>
+
 
 
 
@@ -1579,7 +1580,7 @@ used for store_crm.js
 	<span data-tlc="bind $var '.TOPIC_TITLE'; if (is $var --notblank;) {{apply --append;}};"></span>
 	</div>
 
-	<div data-tlc="bind $var '.TOPIC_ID'; apply --attrib='id'; if (is $var --notblank;) {{apply --append;}};" class="ui-accordion-content ui-helper-reset ui-widget-content displayNone"></div>
+	<div data-tlc="bind $var '.TOPIC_ID'; format --prepend='faqDetails4Topic_'; apply --attrib='id';" class="ui-accordion-content ui-helper-reset ui-widget-content displayNone"></div>
 
 </section>
 
