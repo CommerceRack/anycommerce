@@ -1229,6 +1229,7 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 					else	{
 						if(!extObj[i].filename){
 							_app.u.dump(" -> extension did not load because filename ("+extObj[i].filename+") was left blank.");
+							_app.u.dump(extObj[i]);
 							}
 						else {
 //							_app.u.dump(" -> fetch extension: "+extObj[i].namespace);
