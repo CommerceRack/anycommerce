@@ -131,7 +131,6 @@ var store_swc = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				//_app.ext.store_swc.u.renderMyTeams();
 				_app.templates.productTemplate.on('complete.swc', function(event, $context, infoObj){
 					var data = _app.data['appProductGet|'+infoObj.pid];
 					var variations = data['@variations'];
@@ -369,9 +368,7 @@ var store_swc = function(_app) {
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
-					if($('#myTeamChooser').hasClass('active')){
-						this.renderMyTeams();
-						}
+					setTimeout(_app.ext.store_swc.u.renderMyTeams, 0);
 					}
 				},
 			saveUserTeams : function(){
@@ -404,7 +401,7 @@ var store_swc = function(_app) {
 						return false;
 						});
 					}
-				$teams.empty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
+				$teams.intervaledEmpty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
 				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
 				},
@@ -703,7 +700,6 @@ var store_swc = function(_app) {
 				},
 			showMyTeamChooser : function($ele, p){
 				p.preventDefault();
-				_app.ext.store_swc.u.renderMyTeams();
 				this.selectSport($ele,p);
 				$('#myTeamChooser').addClass('active');
 				},
