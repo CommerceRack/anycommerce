@@ -1836,21 +1836,26 @@ A note about cookies:
 //				}
 			getGrammar : function(id){
 				var script = $('#'+id).text();
+				if(script){
 				var success;
-				try{
-					var pegParserSource = PEG.buildParser(script);
-					window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
-					success = true;
+					try{
+						var pegParserSource = PEG.buildParser(script);
+						window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+						success = true;
+						}
+					catch(e)	{
+						_app.u.dump("Could not build pegParser.","warn");
+						_app.u.dump(buildErrorMessage(e),"error");
+						}
+					if(success)	{
+						_app.u.dump(" -> successfully built pegParser");
+						}
+					else	{
+						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+						}
 					}
-				catch(e)	{
-					_app.u.dump("Could not build pegParser.","warn");
-					_app.u.dump(buildErrorMessage(e),"error");
-					}
-				if(success)	{
-					_app.u.dump(" -> successfully built pegParser");
-					}
-				else	{
-					$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+				else {
+					$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar script. See console for details. The rendering engine will not run without that script.'});
 					}
 				}
 
