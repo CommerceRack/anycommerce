@@ -280,6 +280,11 @@ else	{
 					$(window).on('scroll.infiniteScroll',function(){
 						//will load data when two rows from bottom.
 						dump('here');
+						dump($(window).scrollTop());
+						dump($(document).height());
+						dump($(window).height());
+						dump($tag.children().first().height() * 2);
+						dump($(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ));
 						if( $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
 							$(window).off('scroll.infiniteScroll');
 							if($tag.data('isDispatching') == true)	{}
