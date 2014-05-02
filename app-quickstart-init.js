@@ -34,7 +34,7 @@ myApp.rq.push(['extension',0,'quickstart','','startMyProgram']);
 
 myApp.rq.push(['extension',1,'google_analytics','','startExtension']);
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
-myApp.rq.push(['extension',0,'partner_addthis','', 'attachHandlers']);
+//myApp.rq.push(['extension',0,'partner_addthis','', 'attachHandlers']);
 //myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
 //myApp.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
 //myApp.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
