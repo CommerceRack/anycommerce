@@ -514,10 +514,10 @@ var store_swc = function(_app) {
 					}
 				var countFilters = [];
 				$('[data-filter-type=sort]', $form).each(function(){
-					elasticsearch.sort = elasticsearch.sort || [];
-					var sort = {};
 					var $selectedOption = $('option:selected',$(this));
 					if($selectedOption.attr('data-filter-sort-attribute')){
+						elasticsearch.sort = elasticsearch.sort || [];
+						var sort = {};
 						sort[$selectedOption.attr('data-filter-sort-attribute')] = {"order":$selectedOption.attr('data-filter-sort-direction')};
 						elasticsearch.sort.push(sort);
 						}
@@ -559,7 +559,20 @@ var store_swc = function(_app) {
 						}
 					});
 				//dump(countFilters);
-				var es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
+				var es;
+				if(!elasticsearch.sort){
+					var tmp = {
+						"query" :{
+							"function_score" : elasticsearch
+							}
+						}
+					tmp.query.function_score.boost_mode = "sum";
+					tmp.query.function_score.script_score = {"script":"doc['boost'].value"};
+					es = _app.ext.store_search.u.buildElasticRaw(tmp);
+					}
+				else {
+					es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
+					}
 				es.size = 30;
 				$resultsContainer.empty();
 				for(var i in countFilters){
