@@ -91,7 +91,7 @@ a.redText{color:#7e0000}
 	z-index: 100;
 }
 
-#nav {padding:3px 0px;}
+#nav {padding:3px 0px; position:absolute; left:0px; right:0px; bottom:0px;}
 #nav a {
 	text-decoration:none;
 	font-weight:bold;
