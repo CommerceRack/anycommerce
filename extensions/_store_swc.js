@@ -132,6 +132,20 @@ var store_swc = function(_app) {
 		attachHandlers : {
 			onSuccess : function(){
 				//_app.ext.store_swc.u.renderMyTeams();
+				_app.templates.productTemplate.on('complete.swc', function(event, $context, infoObj){
+					var data = _app.data['appProductGet|'+infoObj.pid];
+					var variations = data['@variations'];
+					if(variations.length == 1 && variations[0].id.match(/A[BDEFGH]/) ){
+						var id = variations[0].id;
+						$('select[name='+id+'] option', $context).each(function(){
+							var sku = infoObj.pid+":"+id+""+$(this).attr("value");
+							//app.u.dump(sku);
+							if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
+								$(this).attr("disabled","disabled");
+								}
+							});
+						}
+					});
 				_app.templates.homepageTemplate.on('complete.swc', function(event, $context, infoObj){
 					_app.ext.store_swc.u.showHomepageSlideshow();
 					});
