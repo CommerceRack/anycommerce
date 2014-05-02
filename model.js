@@ -1806,33 +1806,52 @@ A note about cookies:
 					}
 				},
 
-			getGrammar : function(url)	{
-				$.ajax({
-					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
-					'dataType' : 'html',
-					'error' : function()	{
-						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
-						},
-					'success' : function(file){
-						var success;
-						try{
-							var pegParserSource = PEG.buildParser(file);
-							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
-							success = true;
-							}
-						catch(e)	{
-							_app.u.dump("Could not build pegParser.","warn");
+//			getGrammar : function(url)	{
+//				$.ajax({
+//					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
+//					'dataType' : 'html',
+//					'error' : function()	{
+//						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
+//						},
+//					'success' : function(file){
+//						var success;
+//						try{
+//							var pegParserSource = PEG.buildParser(file);
+//							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+//							success = true;
+//							}
+//						catch(e)	{
+//							_app.u.dump("Could not build pegParser.","warn");
 //							_app.u.dump(buildErrorMessage(e),"error");
-							}
-						if(success)	{
-							_app.u.dump(" -> successfully built pegParser");
-							}
-						else	{
-							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
-							}
-						}
-					})
-
+//							}
+//						if(success)	{
+//							_app.u.dump(" -> successfully built pegParser");
+//							}
+//						else	{
+//							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+//							}
+//						}
+//					})
+//
+//				}
+			getGrammar : function(id){
+				var script = $('#'+id).text();
+				var success;
+				try{
+					var pegParserSource = PEG.buildParser(script);
+					window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+					success = true;
+					}
+				catch(e)	{
+					_app.u.dump("Could not build pegParser.","warn");
+					_app.u.dump(buildErrorMessage(e),"error");
+					}
+				if(success)	{
+					_app.u.dump(" -> successfully built pegParser");
+					}
+				else	{
+					$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+					}
 				}
 
 

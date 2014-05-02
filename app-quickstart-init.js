@@ -43,7 +43,8 @@ myApp.rq.push(['extension',1,'google_analytics','','startExtension']);
 
 //once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
 myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
-	myApp.model.getGrammar(myApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	//myApp.model.getGrammar(myApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	myApp.model.getGrammar("pegjs");
 	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
 
 //Cart Messaging Responses.
