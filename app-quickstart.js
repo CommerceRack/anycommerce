@@ -1079,23 +1079,24 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 		
 //transition appPreView out on init.
-				if($('#appPreView').is(':visible'))	{
-//appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
-					$('#appPreView').hide();
-					_app.ext.quickstart.pageTransition({},$new,infoObj);
-					/*
-					var $bg = $('#appPreViewBG');
-					if($bg.length)	{
-						$bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
-						}
+				// if($('#appPreView').is(':visible'))	{
+// //appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
+					// $('#appPreView').hide();
+					// _app.ext.quickstart.pageTransition({},$new,infoObj);
+					// /*
+					// var $bg = $('#appPreViewBG');
+					// if($bg.length)	{
+						// $bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
+						// }
 
-					$('#appPreView').slideUp(1000,function(){
-						$new.show(); //have to show content area here because the slideDown will only make the parent visible
-						$('#appView').slideDown(3000);
-						});
-					*/
-					}
-				else if(infoObj.performTransition == false)	{
+					// $('#appPreView').slideUp(1000,function(){
+						// $new.show(); //have to show content area here because the slideDown will only make the parent visible
+						// $('#appView').slideDown(3000);
+						// });
+					// */
+					// }
+				// else 
+				if(infoObj.performTransition == false)	{
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
 					_app.ext.quickstart.pageTransition($old,$new,infoObj);
