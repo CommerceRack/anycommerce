@@ -109,11 +109,14 @@ $(window).load(function(){
 		"testURL":"http://app.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
 		"addjQueryPointer" : true,
 		"initComplete" : function(){
-			dump(" -> init is complete");
-			myApp.u.loadScript('app-quickstart-init.js',function(){
-				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-				myApp.u.showProgress(progress);
-				});
+			configureApp();
+			var progress = myApp.u.loadResources();
+			myApp.u.showProgress(progress);
+//			dump(" -> init is complete");
+//			myApp.u.loadScript('app-quickstart-init.js',function(){
+//				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+//				myApp.u.showProgress(progress);
+//				});
 			$('#appversion').text(myApp.vars.release);
 			}
 		});
@@ -121,7 +124,7 @@ $(window).load(function(){
 	myCreole = new Parse.Simple.Creole();
 	});
 </script>
-
+<script data-apptimize="embed" type="text/javascript" src="app-quickstart-init.js"></script>
 
 </head>
 
