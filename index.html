@@ -1,129 +1,5 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="utf-8">
-
-<!-- do not populate or add meta data, the SEO layer will add it -->
-<title>SportsWorldChicago</title><!-- this will get populated by the SEO layer -->
-
-<!-- used for optional social media extensions -->
-<meta property="og:type" content="" id='ogType' >
-<meta property="og:image" content="" id='ogImage' >
-<meta property="og:description" content="" id='ogDescription' >
-
-<meta name=viewport content="width=device-width, initial-scale=1">
-
-<base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
-
-<meta name="description" content="">
-
-
-<script type="text/javascript">
-var _gaq = _gaq || [];
-_gaq.push(['_setAccount','UA-370308-1']);
-_gaq.push(['_trackPageview']);
-
-var myCreole, baseURL;
-
-//set base url so images, css, js, etc all load from appropriate location once deployed.
-//baseURL as blank lets loadScript function run off local copy when testing locally.
-if(document.location.protocol == 'file:')	{
-	baseURL  = "";
-	}
-else	{
-	baseURL = document.location.protocol+"//"+document.domain+"/";
-	}
-document.getElementsByTagName('base')[0].href = baseURL;
-</script>
-
-
-
-<!--
-all css includes need to be after the js that changes the base url.
-css files should be included before any .js file to ensure they are downloaded in parallel
--->
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="app-quickstart.css" />
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles.css"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_1280+.css" media="(min-width:1280px)"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_960-1279.css" media="(min-width:960px) and (max-width:1279px)"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_640-959.css" media="(min-width:640px) and (max-width:959px)"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_480-639.css" media="(min-width:480px) and (max-width:639px)"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_479-.css" media="(max-width:479px)"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="lightbox/css/lightbox.css"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="jqueryui-theme/jquery-ui-1.10.4.custom.min.css"/>
-
-<link data-apptimize="embed" href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
-
-<link rel="SHORTCUT ICON" href="favicon-app.ico" />
-<link rel="ICON" href="favicon-app.ico" />
-
-<!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
-<script data-apptimize="embed" type="text/javascript" src="jquery.1.10.2.min.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="jquery.ui.1.10.2.min.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="controller.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="model.js"></script>
-
-<!-- EXTENSIONS -->
-<script data-apptimize="embed" type="text/javascript" src="extensions/_store_swc.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/checkout/extension.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/cart_checkout_order.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_routing.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/jerseypreview/extension.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_prodlist.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/prodlist_infinite.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_navcats.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_search.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_product.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/cart_message/extension.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/store_crm.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="app-quickstart.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/partner_google_analytics.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="extensions/partner_addthis.js"></script>
-
-<!-- SCRIPTS -->
-<script data-apptimize="embed" type="text/javascript" src="jquery.cycle2.min.js"></script>
-<script data-apptimize="embed" type="text/javascript"  src="resources/jquery.showloading-v1.0.jt.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="resources/jsonpath.0.8.0.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
-
-<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="resources/anyplugins.css"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/checkout/styles.css"/>
-<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/cart_message/styles.css"/>
-
-
-<!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
-<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
-<script data-apptimize="embed" type="text/javascript" src="includes.js"></script>
-
-
-<script type="text/javascript">
-$(window).load(function(){
-
-	window.myApp = new initApp({
-		"release":"20140501163700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
-		"baseURL":baseURL, //used in non-local mode.
-		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://app.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
-		"addjQueryPointer" : true,
-		"initComplete" : function(){
-			dump(" -> init is complete");
-			myApp.u.loadScript('app-quickstart-init.js',function(){
-				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-				myApp.u.showProgress(progress);
-				});
-			$('#appversion').text(myApp.vars.release);
-			}
-		});
-	myApp.vars.initComplete();
-	myCreole = new Parse.Simple.Creole();
-	});
-</script>
-
-
-</head>
 
 <body class="dosis">
 
@@ -300,6 +176,7 @@ $(window).load(function(){
 		</div>
 		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer displayNone'>
 			<textarea name='message' required='required' class='fullWidth' rows='5' placeholder='send a message'></textarea>
+
 			<button class='applyButton' data-app-click='cart_message|chatPostExec' data-app-role='messageSubmitButton'>Send Message</button>
 		</fieldset>
 		<input type='text' placeholder='first name' name='bill/firstname' value='' data-tlc="bind $var 'bill.firstname'; apply --select=$var;" data-app-blur='cco|cartSetAttrib' />
@@ -2504,4 +2381,128 @@ The 'data-action' attribute is used to assign an onclick.
 </div>
 
 </body>
+<head>
+<meta charset="utf-8">
+
+<!-- do not populate or add meta data, the SEO layer will add it -->
+<title>SportsWorldChicago</title><!-- this will get populated by the SEO layer -->
+
+<!-- used for optional social media extensions -->
+<meta property="og:type" content="" id='ogType' >
+<meta property="og:image" content="" id='ogImage' >
+<meta property="og:description" content="" id='ogDescription' >
+
+<meta name=viewport content="width=device-width, initial-scale=1">
+
+<base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
+
+<meta name="description" content="">
+
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-370308-1']);
+_gaq.push(['_trackPageview']);
+
+var myCreole, baseURL;
+
+//set base url so images, css, js, etc all load from appropriate location once deployed.
+//baseURL as blank lets loadScript function run off local copy when testing locally.
+if(document.location.protocol == 'file:')	{
+	baseURL  = "";
+	}
+else	{
+	baseURL = document.location.protocol+"//"+document.domain+"/";
+	}
+document.getElementsByTagName('base')[0].href = baseURL;
+</script>
+
+
+
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/themes/ui-lightness/jquery-ui.css" />
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_1280+.css" media="(min-width:1280px)"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_960-1279.css" media="(min-width:960px) and (max-width:1279px)"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_640-959.css" media="(min-width:640px) and (max-width:959px)"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_480-639.css" media="(min-width:480px) and (max-width:639px)"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="_swc_styles_479-.css" media="(max-width:479px)"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="lightbox/css/lightbox.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="jqueryui-theme/jquery-ui-1.10.4.custom.min.css"/>
+
+<link data-apptimize="embed" href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
+
+<link rel="SHORTCUT ICON" href="favicon-app.ico" />
+<link rel="ICON" href="favicon-app.ico" />
+
+<!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
+<script data-apptimize="embed" type="text/javascript" src="jquery.1.10.2.min.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="jquery.ui.1.10.2.min.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="controller.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="model.js"></script>
+
+<!-- EXTENSIONS -->
+<script data-apptimize="embed" type="text/javascript" src="extensions/_store_swc.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/checkout/extension.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/cart_checkout_order.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_routing.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/jerseypreview/extension.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_prodlist.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/prodlist_infinite.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_navcats.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_search.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_product.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/cart_message/extension.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/store_crm.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="app-quickstart.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/partner_google_analytics.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="extensions/partner_addthis.js"></script>
+
+<!-- SCRIPTS -->
+<script data-apptimize="embed" type="text/javascript" src="jquery.cycle2.min.js"></script>
+<script data-apptimize="embed" type="text/javascript"  src="resources/jquery.showloading-v1.0.jt.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jsonpath.0.8.0.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
+
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="resources/anyplugins.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/checkout/styles.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/cart_message/styles.css"/>
+
+
+<!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="includes.js"></script>
+
+
+<script type="text/javascript">
+$(window).load(function(){
+
+	window.myApp = new initApp({
+		"release":"20140501163700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
+		"baseURL":baseURL, //used in non-local mode.
+		"checkoutAuthMode" : "active",//can be passive, active or required
+		"testURL":"http://app.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
+		"addjQueryPointer" : true,
+		"initComplete" : function(){
+			dump(" -> init is complete");
+			myApp.u.loadScript('app-quickstart-init.js',function(){
+				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+				myApp.u.showProgress(progress);
+				});
+			$('#appversion').text(myApp.vars.release);
+			}
+		});
+	myApp.vars.initComplete();
+	myCreole = new Parse.Simple.Creole();
+	});
+</script>
+
+
+</head>
 </html>
