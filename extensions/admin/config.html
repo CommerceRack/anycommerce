@@ -3254,12 +3254,12 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
-<!--
-		<h4>Infrastructure</h4>
+<!--	
+		<h4>Analytics</h4>
 		<ul>
-			<li>Coming soon</li>
+			<li data-plugin="analytics.google.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
-		
+	
 		<h4>Native Platforms</h4>
 		<ul>
 			<li>Coming soon</li>
@@ -3336,6 +3336,23 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	
 </fieldset>
 
+
+
+
+<fieldset id="pluginTemplate_analytics.google.com">
+	<input name="plugin" value="analytics.google.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable Google Analytics
+	</label>
+	
+	<label>
+		<span class='prompt'>Tracking ID</span>
+		<input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text">
+	</label>
+	<p class='hint'>The google tracking id will start with UA- followed by a series of numbers. ex: UA-12345678-1</p>
+</fieldset>
 
 
 <fieldset id="pluginTemplate_shipworks.com">
