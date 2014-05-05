@@ -2221,7 +2221,7 @@ handleOrder(orders[i]);
 						query = {'size':Number(frmObj.size) || 30,'filter' : {
 						'or' : [
 						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/address']}},
-						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
+						{'has_child' : {'query' : {'query_string' : { 'fields':["C4","TN","PO","auth","txn"], 'query' : keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
 						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
 						{'has_child' : {'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}},'type' : ['order/item']}},
 						{'query' : {'query_string' : {'query' : keyword,'default_operator':'AND'}}}
