@@ -2,6 +2,15 @@
 
 body,html	{margin:0; padding:0; font-size:100%; font-family: 'Oswald', Arial,Helvetica,sans-serif; font-weight:300; color:#000; background-color: #707070;}
 
+
+/*
+*** 201338 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+	}
+
 a	{color:#0f4d82;}
 a:hover	{color:#000;}
 
@@ -529,3 +538,4 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 /* overrides */
 
 .ui-front	{z-index:500;} /* cycle2 uses 99 and 100 for the nav and slides. ui-dialog uses ui-front to set z-index to 100 by default, so this puts the dialog over the carousel nav */
+

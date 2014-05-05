@@ -981,7 +981,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
-						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
+						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
 							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
 							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
 								infoObj.performJumpToTop = false;
@@ -1139,7 +1139,6 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 							var obj = _app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
 							if(obj)	{
 								_app.ext.cco.calls.cartItemAppend.init(obj,{});
-
 								}
 							});
 						_app.calls.refreshCart.init({},'immutable');
@@ -2283,7 +2282,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
 								$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
 								});
-
 							});
 						$modal.dialog({modal: true,width:'80%'});  //browser doesn't like percentage for height
 						}
@@ -2451,6 +2449,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				switch(infoObj.show)	{
 					case 'myaccount':
 					case 'changepassword':
+					case 'subscriberLists':
 					case 'lists':
 					case 'orders':
 						r = true;
@@ -3034,6 +3033,7 @@ else	{
 					_app.model.dispatchThis('immutable');
 					
 					}
+
 				else	{} //do nothing, the validation handles displaying the errors.
 				return false;
 				},
