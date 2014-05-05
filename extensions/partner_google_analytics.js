@@ -17,7 +17,8 @@
 ************************************************************** */
 
 /*
-An extension for adding a variety of GA related events, including post-checkout e-commerce code.
+An extension for acquiring and displaying 'lists' of categories.
+The functions here are designed to work with 'reasonable' size lists of categories.
 */
 
 
@@ -174,12 +175,6 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 				}
 			}, //callbacks
 			u : {
-				
-				handleSOTWChange : function(changes)	{
-					dump(" -------------------------> CHANGE DETECTED");
-					dump(changes);
-					},
-				
 				handleAntiBounceEvent : function(P)	{
 //see comment up by var triggerBounceCode for what this is for.
 					if(!_app.ext.google_analytics.vars.triggeredBounceCode)	{

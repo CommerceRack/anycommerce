@@ -541,14 +541,14 @@ else	{
 			verifyAddressIsComplete : function(addrObj,addressType)	{
 				var r = true;
 				if(typeof addrObj === 'object')	{
-					if(!addrObj[addressType+'/address1'])	{r = false}
-					else if(!addrObj[addressType+'/city'])	{r = false}
-					else if(!addrObj[addressType+'/countrycode'])	{r = false}
+					if(!addrObj[addressType+'/address1'])	{r = false; dump('address1 did not validate');}
+					else if(!addrObj[addressType+'/city'])	{r = false; dump('city did not validate');}
+					else if(!addrObj[addressType+'/countrycode'])	{r = false; dump('country did not validate');}
 					else	{}
 	//we're returning boolean, so if we already a false, no need to verify further. if true, make sure postal and region are set for US
 					if(r == true && addrObj[addressType+'/countrycode'] == 'US')	{
-						if(!addrObj[addressType+'/postal'])	{r = false}
-						else if(!addrObj[addressType+'/region'])	{r = false}
+						if(!addrObj[addressType+'/postal'])	{r = false; dump('postal did not validate');}
+						else if(!addrObj[addressType+'/region'])	{r = false; dump('region did not validate');}
 						else	{}
 						}
 					}

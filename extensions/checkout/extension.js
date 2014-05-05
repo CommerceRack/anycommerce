@@ -241,7 +241,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					$("#globalMessaging").anymessage({"message":rd,"gMessage":true,"persistent":true}); //error messaging is persistent so that buyer has adequate time to read/copy it.
 					}
 				
-				if(rd._rtag)	{
+				if(rd._rtag && rd._rtag.datapointer)	{
 					if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer].finished)	{
 						_app.ext.order_create.a.checkoutComplete(_rtag);
 						}
@@ -436,7 +436,11 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				}, //chkoutPayOptionsFieldset
 
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid'), CID;
+				
+				if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0)	{
+					CID = _app.data['cartDetail|'+cartID].customer.cid;
+					}
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -450,8 +454,8 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
 							}
 						}
-//in an admin session w/ an existing user, make sure the address has been selected.
-					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
+//in an admin session w/ an existing user, make sure the address has been selected IF the buyer has pre-defined addresses.
+					else if(_app.u.thisIsAnAdminSession() && CID  && _app.u.thisNestedExists("data.adminCustomerDetail|"+CID+".@BILL",_app) && _app.data['adminCustomerDetail|'+CID]['@BILL'].length ) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -1080,11 +1084,11 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else	{
 					var $checkout = $(_app.u.jqSelector('#',_rtag.parentID)),
-					checkoutData = _app.data[_rtag.datapointer] || {},
-					oldCartID = _rtag.datapointer['previous-cartid'];
+					checkoutData = _app.data[_rtag.datapointer] || {};
 					
 					if($checkout instanceof jQuery && $checkout.length)	{
-						var orderID = checkoutData.orderid;
+						var orderID = checkoutData.orderid,
+						previousCartid = checkoutData.order.cart.cartid;
 //show post-checkout invoice and success messaging.
 						$checkout.empty().show();
 						$checkout.tlc({'templateid':'chkoutCompletedTemplate',dataset: checkoutData}); //show invoice
@@ -1092,13 +1096,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 		
 //This will add a cart message. handy if the buyer and merchant are dialoging.
 						if(typeof cartMessagePush === 'function')	{
-							cartMessagePush(oldCartID,'cart.orderCreate',{'vars':{'orderid':orderID}});
+							cartMessagePush(previousCartid,'cart.orderCreate',{'vars':{'orderid':orderID,'description':'Order created.'}});
 							}
-		
+// * 201403 -> duplicate of cartMessagePush above.		
 //if a cart messenger is open, log the cart update.
-						if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+oldCartID,_app))	{
-							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':oldCartID},'immutable');
-							}
+//						if(_app.u.thisNestedExists('ext.cart_message.vars.carts.'+previousCartid,_app))	{
+//							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','orderid':orderID,'description':'Order created.','_cartid':previousCartid},'immutable');
+//							}
 		
 						_app.u.handleButtons($checkout);
 						
@@ -1109,6 +1113,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
 //			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
 							_app.calls.appCartCreate.init({
+								"datapointer" : "appCartCreate",
 								"callback" : function(rd){
 									dump(" -----------> rd: "); dump(rd);
 									
@@ -1134,7 +1139,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							if(_app.ext.order_create.checkoutCompletes)	{
 								var L = _app.ext.order_create.checkoutCompletes.length;
 								for(var i = 0; i < L; i += 1)	{
-									_app.ext.order_create.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
+									_app.ext.order_create.checkoutCompletes[i]({'cartID':previousCartid,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
 									}
 								}
 //This will handle the @trackers code.			
@@ -1160,8 +1165,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							
 								}
 							else	{
-								_app.u.dump("Not 1PC.");
-								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+//								_app.u.dump("Not 1PC.");
+//								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+								
+								//MUST destroy the cart. it has data-cartid set that would point to the wrong cart.
+								$('#modalCart').empty().remove(); 
+								$('#mainContentArea_cart').empty().remove();
+
 								//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
 								$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
 									event.preventDefault();
@@ -1169,7 +1179,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 								$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
 									event.preventDefault();
 									//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-									showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
+									showContent('customer',{'show':'invoice','uriParams':{'cartid':previousCartid,'orderid':orderID}});
 									});
 								}
 		
@@ -1867,25 +1877,25 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.ext.store_crm.u.showAddressAddModal({'addressType':addressType},function(rd,serializedForm){
 //by here, the new address has been created.
 //set appropriate address panel to loading.
-					_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+						_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
 //update cart and set shortcut as address.
-					var updateObj = {'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid')}
-					updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
-					_app.ext.cco.calls.cartSet.init(updateObj,{},'immutable');
-
+						var updateObj = {'_cartid':$ele.closest("[data-app-role='checkout']").data('cartid')}
+						updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
+						_app.ext.cco.calls.cartSet.init(updateObj,{},'immutable');
+	
 //update DOM/input for shortcut w/ new shortcut value.
-					$("[name='"+addressType+"/shortcut']",$checkoutForm);
-
+						$("[name='"+addressType+"/shortcut']",$checkoutForm);
+	
 //get the updated address list and update the address panel.
-					_app.model.destroy('buyerAddressList');
-					_app.calls.buyerAddressList.init({'callback':function(rd){
-						_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
-						}},'immutable');
-
+						_app.model.destroy('buyerAddressList');
+						_app.calls.buyerAddressList.init({'callback':function(rd){
+							_app.ext.order_create.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic']);
+							}},'immutable');
+	
 //update appropriate address panel plus big three.
-					_app.ext.order_create.u.handleCommonPanels($checkoutForm);
-					_app.model.dispatchThis('immutable');
-					});
+						_app.ext.order_create.u.handleCommonPanels($checkoutForm);
+						_app.model.dispatchThis('immutable');
+						});
 					}
 				return false;
 				}, //showBuyerAddressAdd
@@ -2356,6 +2366,9 @@ _app.model.dispatchThis('passive');
 					}
 				$tag.html(o);
 				} //paymethodsasradiobuttons
+			
+
+			
 			} //renderFormats
 
 		
