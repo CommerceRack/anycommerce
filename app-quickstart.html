@@ -851,8 +851,7 @@ if you change these, you should move them above this comment so that when you (o
 	<div class="sideline">
 	<nav id="customerNav">
 	<ul class="listStyleNone noPadOrMargin">
-<!-- before restoring this, test cuz news form on left was causing some conflicts
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
+		<li><a href='#!customer/subscriberLists'>Newsletter Subscription</a></li>
 		<li><a href="#!customer/myaccount">My Account</a></li>
 		<li><a href="#!customer/changepassword">Change Password</a></li>
 		<li><a href="#!customer/orders">Order History</a></li>
@@ -876,13 +875,7 @@ subscribeListsArticle is used for authenticated buyers
 
 		<div id="subscriberListsArticle" class="displayNone textContentArea">
 			<h1>Manage your Subscriptions</h1>
-<!-- save onchange -->
-<form action="#" name="subscribeFrm">
-
-<fieldset data-tlc="bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
-
-</form>
-
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
 		</div>
 
 		<div id="myaccountArticle" class="displayNone textContentArea">
@@ -1277,21 +1270,21 @@ used for store_crm.js
 
 
 <div id="subscribeFormTemplate">
-<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit">
+<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit" class='alignedForm'>
 
-<fieldset class="userInfo borderNone">
-<div>
-<input placeholder="email address" maxlength="50" size="30" required name="login" value="" type="email">
-</div>
+	<fieldset class="userInfo borderNone">
+		<label>
+		<input placeholder="email address" maxlength="50" size="30" required name="login" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
+		</label>
+	
+		<label>
+		<input placeholder="full name" maxlength="50" size="30" required name="fullname" value="" type="text" data-tlc="bind $var '.bill.fullname'; if(is $var --notblank;) {{apply --select=$var;}};">
+		</label>
+	</fieldset>
+	
+	<fieldset data-tlc="apply --empty; bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
 
-<div>
-<input placeholder="full name" maxlength="50" size="30" required name="fullname" value="" type="text">
-</div>
-</fieldset>
-
-<fieldset data-tlc="bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
-
-<input class="applyButton" value="Subscribe" type="submit">
+	<input class="applyButton" value="Subscribe" type="submit">
 
 </form>
 </div>

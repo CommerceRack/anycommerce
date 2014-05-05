@@ -2339,9 +2339,11 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					}
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
-					$('#newsletterArticle').hide(); //hide the default.
+
 					var $article = $('#'+infoObj.show+'Article',$customer)
 					$article.show(); //only show content if page doesn't require authentication.
+
+//					dump(" -> $article.data('isTranslated'): "+$article.data('isTranslated')); dump($article.data());
 
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
 					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
@@ -2350,25 +2352,22 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
 								break;
+
+							case 'subscriberLists':
+								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
+								//executes same code as newsletter.
 						
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
 									callback : 'tlc',
+									extendByDatapointers : ["buyerNewsletters","cartDetail|"+_app.model.fetchCartID()], //including the cart allows name and email address to be populated.
+									verb : 'translate',
 									jqObj : $article
 									}},'mutable');
 								_app.model.dispatchThis('mutable');
-								break;
-							
-							case 'subscriberLists':
-								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
-								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
-									"datapointer" : "appNewsletterList",
-									callback : 'tlc',
-									jqObj : $article
-									}},'mutable');
-								_app.model.dispatchThis('mutable');
+								$article.data('isTranslated',true);
 								break;	
 							case 'invoice':
 							
@@ -2811,9 +2810,9 @@ else	{
 				var total = 0;
 				if(_app.data[tagObj.datapointer] && _app.data[tagObj.datapointer].sum)	{
 					r = true;
-					var itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
-					var subtotal = _app.data[tagObj.datapointer].sum.items_total;
-					var total = _app.data[tagObj.datapointer].sum.order_total;
+					itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
+					subtotal = _app.data[tagObj.datapointer].sum.items_total;
+					total = _app.data[tagObj.datapointer].sum.order_total;
 					}
 				else	{
 					//cart not in memory yet. use defaults.
