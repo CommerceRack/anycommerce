@@ -103,20 +103,6 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				}
 			}, //buyerOrderGet
 
-		setNewsletters : {
-			init : function(obj,tagObj)	{
-				_app.u.dump("BEGIN store_crm.calls.setNewsletters.init");
-				var r = 1;
-				this.dispatch(obj,tagObj);
-				return r;
-				},
-			dispatch : function(obj,tagObj)	{
-				obj['_tag'] = tagObj;
-				obj['_cmd'] = "setNewsletters";
-				_app.model.addDispatchToQ(obj);	
-				}
-			}, //setNewsletters
-
 		buyerAddressList : {
 			init : function(tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
@@ -254,22 +240,22 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 
 			}, //validate
 
+		tlcFormats : {
+			
+			buyersubscribe : function(data,thisTLC)	{
+				dump(" -> data.globals.id: "+data.globals.binds.id);
+				if(_app.u.thisNestedExists("data.buyerDetail.%info.@TAGS",_app))	{
+					if($.inArray(data.globals.binds.id,_app.data.buyerDetail['%info']['@TAGS']) >= 0)	{
+						dump(" -> MATCH!");
+						data.globals.binds[data.globals.focusBind] = 'checked';
+						}
+					}
+				return true;
+				}
+			},
+
 
 		renderFormats : {
-//Displays a list of the merchants newsletters.
-			subscribecheckboxes : function($tag,data)	{
-//				_app.u.dump('BEGIN _app.ext.store_prodlist.renderFormats.mpPagesAsListItems');
-//				_app.u.dump(data);
-				var o = "";
-				for(var index in data.value)	{
-					o += "<div class='subscribeListItem'><label title='"+data.value[index].EXEC_SUMMARY+"'>";
-					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' \/>";
-					o += data.value[index].NAME+"<\/label><\/div>";
-					}
-				$tag.append(o);
-
-				},
-
 			
 			ordertrackinglinks : function($tag,data)	{
 //				_app.u.dump("BEGIN quickstart.renderFormats.ordertrackinglinks");
@@ -615,6 +601,32 @@ This is used to get add an array of skus, most likely for a product list.
 		
 		
 		e : {
+			//generic event, inteded to support more than tags through the use of the data-update-verb=
+			buyerUpdate : function($ele,p)	{
+				p.preventDefault();
+				if(_app.u.validateForm($ele))	{
+					var cmdObj = {
+						"_cmd":"buyerUpdate",
+						"@updates" : [],
+						"cartid" : _app.model.fetchCartID(),
+						"_tag":{
+							"datapointer":"",
+							"callback":function(rd){}
+							}
+						}
+					
+					$("[data-update-verb='tags']",$ele).find(":checkbox").each(function(){
+						var $cb = $(this);
+						cmdObj['@updates'].push(($cb.is(':checked') ? 'TAG-ADD' : 'TAG-CLEAR')+"?TAG="+$cb.attr('name'));
+						});
+					
+					
+					_app.model.addDispatchToQ(cmdObj,"mutable");
+					_app.model.dispatchThis("mutable");
+					}
+				else	{} //validateForm handles error display.
+				return false;
+				},
 			
 			contactFormSubmit : function($ele,p)	{
 				p.preventDefault();
