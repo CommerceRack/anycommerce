@@ -981,7 +981,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
-						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
+						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
 							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
 							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
 								infoObj.performJumpToTop = false;
@@ -2354,7 +2354,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								break;
 
 							case 'subscriberLists':
-								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
+// this doesn't get the list, it's for a set.
+//								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
 								//executes same code as newsletter.
 						
 							case 'newsletter':
@@ -2449,6 +2450,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				switch(infoObj.show)	{
 					case 'myaccount':
 					case 'changepassword':
+					case 'subscriberLists':
 					case 'lists':
 					case 'orders':
 						r = true;
