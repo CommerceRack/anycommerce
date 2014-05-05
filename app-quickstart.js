@@ -2311,7 +2311,9 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				infoObj.templateID = 'customerTemplate';
 				var $customer = $('#'+infoObj.parentID);
 //only create instance once.
-				if($customer.length)	{}
+				if($customer.length)	{
+					dump(" -> customer page already rendered. just show.");
+					}
 				else	{
 //					$customer = _app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID);
 					var $tmp = $("<div>").tlc({templateid:infoObj.templateID,'verb':'template'});
@@ -2345,7 +2347,9 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //					dump(" -> $article.data('isTranslated'): "+$article.data('isTranslated')); dump($article.data());
 
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
-					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
+					if($article.data('isTranslated') && infoObj.show != 'orders')	{
+						dump(" -> article is already translated.");
+						}
 					else	{
 						switch(infoObj.show)	{
 							case 'help':
@@ -2420,7 +2424,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							case 'myaccount':
 	//							dump(" -> myaccount article loaded. now show addresses...");
 								_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
-								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$customer,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
+								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$article,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
 								break;
 							
 							case 'logout':
