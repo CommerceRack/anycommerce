@@ -84,7 +84,6 @@ $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblo
 $('#cartTemplate').on('complete.updateMinicart',function(state,$ele,infoObj)	{
 	var cartid = infoObj.cartid || myApp.model.fetchCartID();
 	var $appView = $('#appView'), cart = myApp.data['cartDetail|'+cartid], itemCount = 0, subtotal = 0, total = 0;
-	dump(" -> cart "+cartid+": "); dump(cart);
 	if(!$.isEmptyObject(cart['@ITEMS']))	{
 		itemCount = cart.sum.items_count || 0;
 		subtotal = cart.sum.items_total;
@@ -107,6 +106,14 @@ $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
 	execCycle();
 	});
 
+
+//  now add some template functions.
+$("#productTemplate").on('depart.youtubeReset',function(state,$ele,infoObj){
+	var $iframe = $("[data-app-role='videoContainer']:first",$ele).find('iframe:first');
+	var video = $iframe.attr('src');
+	$iframe.attr('src',''); //this stops the video.
+	$iframe.attr('src',$iframe.src); //set the src so if the page is visited again, the video is present. 
+	});
 
 //don't need to check if cycle is already running because it's turned off in a 'depart'.
 $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
