@@ -2,7 +2,7 @@
 
 <div id='productPowerToolTemplate'>
 
-<form action='#' onSubmit="return false" class='labelsAsBreaks' id='productPowerToolForm' novalidate="novalidate">
+<form action='#' onSubmit="return false" class='labelsAsBreaks' id='productPowerToolForm' novalidate>
 <input type="hidden" value="0" name="JOBID" />
 
 
@@ -794,7 +794,7 @@ has to be within the fieldset to for data-table to work right.
 		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-click='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
 		<!--
 		started, but not done yet. -->
-		<form><label><span>Site Debug</span><span class='toolTip' title="A variety of site debuggging tools (shipping, tax, promotions, etc)">?</span></label><button class='marginLeft' onClick='adminApp.ext.admin_tools.a.siteDebugger(); return false;'>Go</button></form>
+		<form><label><span>Site Debug</span><span class='toolTip' title="A variety of site debuggging tools (shipping, tax, promotions, etc)">?</span></label><button class='marginLeft' data-app-click='admin_tools|siteDebugDialog'>Go</button></form>
 		
 	</section>
 
@@ -953,7 +953,7 @@ has to be within the fieldset to for data-table to work right.
 	<fieldset class='marginBottom labelsAsBreaks'>
 		<label>
 			<span>Service</span>
-			<select name='_cmd' data-input-change="panel-selector" data-panel-selector=".debugCMDSpecifics">
+			<select name='_cmd' data-input-change="panel-selector" data-panel-selector=".debugCMDSpecifics" data-tlc="bind $var '.verb'; apply --select=$var;">
 				<option value=''>please choose</option>
 				<option value='adminDebugProduct' data-show-panel='debugCMDSpecificsProduct'>Product</option>
 				<option value='adminDebugPromotion' data-show-panel='debugCMDSpecificsCommon'>Promotion</option>

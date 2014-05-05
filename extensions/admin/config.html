@@ -657,6 +657,7 @@ keep all inputs within one fieldset for the save function.
 	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
 		<form onsubmit="return false">
 		<div class='ui-widget-header ui-corner-top'>
+			<button data-app-click='admin_tools|siteDebugDialog' data-verb='adminDebugShipping' class='applyButton floatRight marginRight marginTop smallButton'>Debug</button>
 			<h3 class='heading'>Edit:</h3>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
@@ -2826,8 +2827,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</label>
 	</fieldset>
 
-	<div class='buttonset smallPadding alignRight'>
-	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Rule to Tax Table</button>
+	<div class='buttonset smallPadding'>
+	<button data-app-click='admin_tools|siteDebugDialog' data-verb='adminDebugTaxes' class='applyButton'>Debug</button>
+	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton floatRight'>Apply Rule to Tax Table</button>
 	</div>
 	
 	</form>

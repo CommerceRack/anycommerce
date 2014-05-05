@@ -525,6 +525,7 @@ var admin_config = function(_app) {
 					'header' : 'Coupon Manager', //left off because the interface is in a tab.
 					'className' : 'couponManager',
 					'buttons' : [
+						"<button data-app-click='admin_tools|siteDebugDialog' data-verb='adminDebugPromotion' class='applyButton'>Debug</button>",
 						"<button data-app-click='admin_batchjob|adminBatchJobExec' data-type='EXPORT/RULES' data-element data-export='coupon' data-whitelist='export' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download Coupon Rules<\/button>",
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh Coupon List<\/button>",
 						"<button data-app-click='admin_config|couponCreateShow' data-text='true' data-icon-primary='ui-icon-plus' class='applyButton'>Add Coupon<\/button>"

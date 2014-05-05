@@ -67,20 +67,13 @@ var admin_tools = function(_app) {
 //				$("input",$picker).each(function(){});
 				},
 			
-			siteDebugger : function()	{
-				var $SD = $('#siteDebugger');
-				if($SD.length)	{
-					$SD.dialog('open');
-					}
-				else	{
-					$SD = $("<div \/>").attr({'id':'siteDebugger','title':'Site Debug Tools'}).anycontent({'templateID':'siteDebugTemplate','showLoading':false}).dialog({
-						width : '50%'
-						});
-					_app.u.handleButtons($SD);
-					_app.u.handleCommonPlugins($SD);
-					_app.u.addEventDelegation($SD);
-					$SD.anyform();
-					}
+			siteDebugger : function($target,P)	{
+				P = P || {};
+				$target.tlc({'templateid':'siteDebugTemplate','dataset':P})
+				_app.u.handleButtons($target);
+				_app.u.handleCommonPlugins($target);
+				_app.u.addEventDelegation($target);
+				$target.anyform();
 				},
 
 			showManageFlexedit : function($target)	{
@@ -869,6 +862,19 @@ var admin_tools = function(_app) {
 			//for forcing a product into the product task list
 			forcePIDIntoPTL : function($ele,p)	{
 				_app.ext.admin_prodedit.u.addProductAsTask({'pid':$ele.closest('form').find("[name='pid']").val(),'tab':'product','mode':'add'});
+				},
+			
+			siteDebugDialog : function($ele,p)	{
+				var $SD = $('#siteDebugger');
+				if($SD.length)	{
+					$SD.empty().dialog('open');
+					}
+				else	{
+					$SD = $("<div \/>").attr({'id':'siteDebugger','title':'Site Debug Tools'}).dialog({
+						width : '50%'
+						});
+					}
+				adminApp.ext.admin_tools.a.siteDebugger($SD,{'verb':$ele.data('verb')});
 				}
 				
 			} //e [app Events]
