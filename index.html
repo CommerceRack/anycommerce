@@ -725,11 +725,12 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 </div>
 
-<div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage noBG">
+<div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage positionRelative noBG">
 	<span class="displayNone" data-tlc="bind $var '.seo_title'; if(is $var --notblank;){{apply --attrib='data-seo-title';}};"></span>
 	<span class="displayNone" data-tlc="bind $var '.seo_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
 	
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
+		<span class="displayNone_1280 displayNone_960 displayNone_640 displayNone_480 closeButton floatRight" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).removeClass('active');"></span>
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
 			<legend>My Teams [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">edit</span>]:</legend>
 			<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='';"></div>
@@ -784,7 +785,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 	</form>
 	<div class="filterResultsContainer">
-		<h2 class="highlightBG_1 white" data-tlc="bind $var '.title'; apply --append;"></h2>
+		<h2 class="highlightBG_1 white" data-tlc="bind $var '.title'; apply --prepend;"><span class="displayNone_1280 displayNone_ 960 displayNone_640 displayNone_480 floatRight pointer" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).addClass('active');">Filters...</span></h2>
 		<ul class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
 	</div>
 </div>

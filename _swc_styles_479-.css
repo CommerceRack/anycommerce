@@ -6,8 +6,10 @@
 }
 #header {height:30px;}
 #appView {padding-top: 32px;padding-bottom:40px;}
+#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;overflow-y:auto;}
+#mainContentArea > div {height:100%;}
 #appView.showFooter {padding-bottom: 402px;}
-#appView #footer {bottom:-381px; font-size:16px;}
+#appView #footer {bottom:-400px; font-size:16px;}
 
 #contact{font-size:11px;}
 #mininav{font-size:12px;}
@@ -20,8 +22,8 @@
 #footer #copyright {position:static; margin-top:5px;}
 .homepageBanner {height:322px;}
 #homeSlideshow {max-width: 100%;}
-.blockLink, li.blockLink {width: 32%; margin: .4%;}
-.productListItem .prodInfo {font-size: .9em;}
+.blockLink, li.blockLink {width: 48%; margin: .8%;}
+.productListItem .prodInfo {font-size: 1.4em;}
 .productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
 
 .categoryTemplate .catName {padding: .5em 0em;}
@@ -66,3 +68,13 @@
 #myTeamChooser .teamlist{height: auto;}
 #myTeamChooser .teamlist .teamTemplate {height:55px; font-size:1.2em; vertical-align:middle; line-height: 55px;}
 #myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}
+
+.filterResultsContainer {
+    float: none;
+    width: 100%;
+}
+.filterList {float: none; position: absolute; left: -110%; transition: .4s all; width: 100%; z-index: 101; font-size: 1.4em;}
+.filterList.active {left: 0px;}
+ul.filterResults{overflow-y:auto; position:absolute; bottom:0px; right:0px; left:0px; top:23px;}
+.filterResultsContainer{position:absolute; bottom:0px; right:0px; left:0px; top:0px;}
+.filterCheckboxList {max-height: none;}

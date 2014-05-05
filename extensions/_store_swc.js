@@ -149,6 +149,7 @@ var store_swc = function(_app) {
 					_app.ext.store_swc.u.showHomepageSlideshow();
 					});
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
+					$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 					$('form.filterList', $context).trigger('submit');
 					});
 				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
