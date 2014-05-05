@@ -7,7 +7,7 @@ a:hover	{color:#000;}
 
 menu, section, header, footer	{display:block; margin:0; padding:0;}
 
-form {margin:0; padding:0;}
+form {margin:0; padding:0;} /* chrome adds a margin */
 
 h1	{font-size:1.3em; color:#333; margin:.3em 0;}
 h2	{font-size:1.2em; color:#666; margin:.2em 0;}
