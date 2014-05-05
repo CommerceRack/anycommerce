@@ -71,7 +71,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0501a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0505a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -484,7 +484,7 @@ The images get .slide only if populated. the category complete event counts the 
 <ul>
 <li id="categoryListTemplate" class='catListItem'>
 	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href'; bind $name '.pretty'; apply --attrib='title';">
-	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=93 --height=93 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="">
+	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="">
 	<div class='categoryListPretty' data-tlc="bind $var '.pretty'; apply --append;"></div>
 	</a>
 </li>

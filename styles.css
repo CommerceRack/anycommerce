@@ -278,7 +278,7 @@ hr.subtle	{margin:.1em 0;
 
 /* category page styles */
 .breadcrumb	{font-size:.85em}
-.zCatList li.catListItem	{float:left; margin:.2em; width:93px; height:93px; overflow:hidden;}
+.zCatList li.catListItem	{float:left; margin:.2em; width:120px; height:120px; overflow:hidden;}
 .zCatList li.catListItem a	{text-decoration:none;}
 .categoryListPretty	{background:#000000; color:#ffffff; padding:.2em; text-align:center;}
 
