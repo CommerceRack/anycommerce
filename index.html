@@ -706,6 +706,7 @@ this will likely become more flexible in the future. ###
 	<section class='clearfix marginBottom'>
 	
 		<div class='floatRight shortReviewSummary alignCenter pointer' data-app-click='store_zephyrapp|jump2' data-jump2='productReviews'>
+			<div class='displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --blank;) {{apply --show;}}; bind $var '.pid'; apply --attrib='data-pid';" ><a href="#" data-app-click="store_crm|productReviewShow">Write Review</a></div>
 			<div data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite">
 			<span class='hint' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></span>
 			</div>
@@ -1495,7 +1496,11 @@ used for store_crm.js
 
 <div id="reviewFrmTemplate" class='alignedForm'>
 
-<form name="reviewFrm" action="#" data-app-submit="store_crm|productReviewSubmit">
+<div class='hideIfLoggedIn'>
+	<p>Please <a href='#!customer/myaccount'>Click here</a> to log in or create an account to write a review.</p>
+</div>
+
+<form name="reviewFrm" action="#" data-app-submit="store_crm|productReviewSubmit" class='hideIfLoggedOut'>
 <input data-tlc="bind $var '.pid'; apply --select=$var; if (is $var --notblank;) {{apply --append;}};" name="pid" id="reviewsPid" value="" type="hidden">
 
 
