@@ -699,13 +699,13 @@ fallback is to just output the value.
 
 			banner : function($tag, data)	{
 				if(data.value)	{
-//					dump("begin quickstart.renderFormats.banner"); dump(data.value);
+//				dump("begin quickstart.renderFormats.banner");
 					var obj = _app.u.kvp2Array(data.value), //returns an object LINK, ALT and IMG
 					hash, //used to store the href value in hash syntax. ex: #company?show=return
 					pageInfo = {};
 					
-//if value starts with a #!, then most likely the hash syntax is being used.
-					if(obj.LINK && obj.LINK.indexOf('#!') == 0)	{
+	//if value starts with a #, then most likely the hash syntax is being used.
+					if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
 						hash = obj.LINK;
 						pageInfo = _app.ext.quickstart.u.getPageInfoFromHash(hash);
 						}
@@ -713,7 +713,6 @@ fallback is to just output the value.
 	//  && data.value.indexOf('/') == -1 || data.value.indexOf('http') == -1 || data.value.indexOf('www') > -1
 					else if(obj.LINK)	{
 						pageInfo = _app.ext.quickstart.u.detectRelevantInfoToPage(obj.LINK);
-//						dump(" -> pageInfo: "); dump(pageInfo);
 						if(pageInfo.pageType)	{
 							hash = _app.ext.quickstart.u.getHashFromPageInfo(pageInfo);
 							}
@@ -747,7 +746,6 @@ fallback is to just output the value.
 
 //could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
 			legacyurltoria : function($tag,data)	{
-//				dump("BEGIN quickstart.renderFormats.legacyurltoria"); dump(" -> data: "); dump(data);
 				if(data.value == '#')	{
 					$tag.removeClass('pointer');
 					}
@@ -1010,7 +1008,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.templateID = 'checkoutTemplate'
 						infoObj.state = 'init'; //needed for handleTemplateEvents.
 						var $checkoutContainer = $("#checkoutContainer");
-						$new = $checkoutContainer;
 						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
 
 //for local, don't jump to secure. ### this may have to change for a native _app. what's the protocol? is there one?
@@ -1034,7 +1031,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
-
+// **201403 moved this to the bottom so $new gets the right pointer. -mc  
+						$new = $checkoutContainer;
 						break;
 	
 					case 'company':
@@ -1141,6 +1139,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 							var obj = _app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
 							if(obj)	{
 								_app.ext.cco.calls.cartItemAppend.init(obj,{});
+
 								}
 							});
 						_app.calls.refreshCart.init({},'immutable');
@@ -1536,6 +1535,7 @@ $target.tlc({
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
+				infoObj.dateObj = new Date(); //date object -> deprecated. use the ts. ## FUTURE -> remove this in 201406.
 				infoObj.ts = Math.round(+new Date()/1000); //milliseconds timestamp
 				_app.ext.quickstart.vars.sotw = infoObj;
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
@@ -1946,24 +1946,29 @@ effects the display of the nav buttons only. should be run just after the handle
 // ** 201403 -> appNav is now toggled on/off as well, using a class, so that in a responsive design, appnav height can be easily adjusted w/out impact when it's hidden.
 */
 			handleAppNavDisplay : function(infoObj)	{
-//				dump("BEGIN quickstart.u.handleNavButtonsForDetailPage");
+				dump("BEGIN quickstart.u.handleNavButtonsForDetailPage");
 //				dump(" -> history of the world: "); dump(_app.ext.quickstart.vars.hotw[1]);
 
 				var r = false, //what is returned. true if buttons are visible. false if not.
 				$nav = $('#appNav'),
 				$nextBtn = $("[data-app-role='prodDetailNextItemButton']",$nav),
 				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']",$nav);
-				
+
 //				dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
 				
 //The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
 				if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{
 // * 201403 -> only show the buttons if more than 1 product is in the list.
-					if(_app.u.thisNestedExists("data."+$prevBtn.data('datapointer')+".@products",_app) && _app.data[$prevBtn.data('datapointer')]['@products'].length > 1)	{
+// do not use doesNestedExist cuz the datapointer has periods in it.
+					if(_app.data[$prevBtn.data('datapointer')] && _app.data[$prevBtn.data('datapointer')]['@products'] && _app.data[$prevBtn.data('datapointer')]['@products'].length > 1)	{
+						dump(" -> have category data and @products contains more than 1 item");
 						$nav.removeClass('displayNone');
 						$nextBtn.show();
 						$prevBtn.show();
 						r = true;
+						}
+					else	{
+						dump(" -> category data is not in memory OR there is only 1 product in the referring @products");
 						}
 					}
 				else	{
@@ -2278,6 +2283,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
 								$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
 								});
+
 							});
 						$modal.dialog({modal: true,width:'80%'});  //browser doesn't like percentage for height
 						}
@@ -2335,9 +2341,11 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					}
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
-					$('#newsletterArticle').hide(); //hide the default.
+
 					var $article = $('#'+infoObj.show+'Article',$customer)
 					$article.show(); //only show content if page doesn't require authentication.
+
+//					dump(" -> $article.data('isTranslated'): "+$article.data('isTranslated')); dump($article.data());
 
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
 					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
@@ -2346,25 +2354,22 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
 								break;
+
+							case 'subscriberLists':
+								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
+								//executes same code as newsletter.
 						
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
 									callback : 'tlc',
+									extendByDatapointers : ["buyerNewsletters","cartDetail|"+_app.model.fetchCartID()], //including the cart allows name and email address to be populated.
+									verb : 'translate',
 									jqObj : $article
 									}},'mutable');
 								_app.model.dispatchThis('mutable');
-								break;
-							
-							case 'subscriberLists':
-								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
-								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
-									"datapointer" : "appNewsletterList",
-									callback : 'tlc',
-									jqObj : $article
-									}},'mutable');
-								_app.model.dispatchThis('mutable');
+								$article.data('isTranslated',true);
 								break;	
 							case 'invoice':
 							
@@ -2807,9 +2812,9 @@ else	{
 				var total = 0;
 				if(_app.data[tagObj.datapointer] && _app.data[tagObj.datapointer].sum)	{
 					r = true;
-					var itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
-					var subtotal = _app.data[tagObj.datapointer].sum.items_total;
-					var total = _app.data[tagObj.datapointer].sum.order_total;
+					itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
+					subtotal = _app.data[tagObj.datapointer].sum.items_total;
+					total = _app.data[tagObj.datapointer].sum.order_total;
 					}
 				else	{
 					//cart not in memory yet. use defaults.

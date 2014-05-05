@@ -1143,8 +1143,7 @@ Saturday: 8:00 - 5:00
 	<div class="sideline">
 	<nav id="customerNav">
 	<ul class="listStyleNone noPadOrMargin">
-<!-- before restoring this, test cuz news form on left was causing some conflicts
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
+		<li><a href='#!customer/subscriberLists'>Newsletter Subscription</a></li>
 		<li><a href="#!customer/myaccount">My Account</a></li>
 		<li><a href="#!customer/changepassword">Change Password</a></li>
 		<li><a href="#!customer/orders">Order History</a></li>
@@ -1155,8 +1154,6 @@ Saturday: 8:00 - 5:00
 	</div>
 
 	<div class="mainColumn">
-<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
-
 <!--
 newsletterArticle is used for buyers who are not logged in or do not have an account.
 subscribeListsArticle is used for authenticated buyers
@@ -1168,13 +1165,7 @@ subscribeListsArticle is used for authenticated buyers
 
 		<div id="subscriberListsArticle" class="displayNone textContentArea">
 			<h1>Manage your Subscriptions</h1>
-<!-- save onchange -->
-<form action="#" name="subscribeFrm">
-
-<fieldset data-tlc="bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
-
-</form>
-
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
 		</div>
 
 		<div id="myaccountArticle" class="displayNone textContentArea">
@@ -1182,21 +1173,21 @@ subscribeListsArticle is used for authenticated buyers
 
 			<section>
 
-<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
-		<h2>Billing Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
-</div>
-
-<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
-		<h2>Shipping Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="shipAddresses"></div>
-</div>
+				<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
+					<div class="marginBottom">
+						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
+						<h2>Billing Address(es)</h2>
+					</div>
+					<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
+				</div>
+				
+				<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
+					<div class="marginBottom">
+						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
+						<h2>Shipping Address(es)</h2>
+					</div>
+					<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="shipAddresses"></div>
+				</div>
 
 
 			</section>
