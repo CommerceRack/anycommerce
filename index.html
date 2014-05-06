@@ -344,7 +344,7 @@ $(window).load(function(){
 	<h2 class="highlightBG_1">My Team Chooser <span class="closeButton floatRight" data-app-click="store_swc|hideMyTeamChooser"></span></h2>
 	
 	<div class="contentContainer" class="positionRelative">
-		<div id="sportChooser" class="alignCenter">
+		<div id="sportChooser" class="alignCenter displayNone_1280">
 			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb">
 				<h2 class="highlightBG_1_alpha white">MLB</h2>
 				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
@@ -363,54 +363,54 @@ $(window).load(function(){
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_mlb">
-			<div>
+			<div class="displayNone_1280">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My MLB Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
-				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<h4 class="highlightBG_2 white">My MLB Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
 			</div>
 			<div class="moreteams teamlist">
-				<h4>Add More:</h4>
+				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nfl">
-			<div>
+			<div class="displayNone_1280">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NFL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
-				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<h4 class="highlightBG_2 white">My NFL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nfl'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
 			</div>
 			<div class="moreteams teamlist">
-				<h4>Add More:</h4>
+				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nba">
-			<div>
+			<div class="displayNone_1280">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NBA Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
-				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<h4 class="highlightBG_2 white">My NBA Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nba'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
 			</div>
 			<div class="moreteams teamlist">
-				<h4>Add More:</h4>
+				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nhl">
-			<div>
+			<div class="displayNone_1280">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NHL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
-				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
+				<h4 class="highlightBG_2 white">My NHL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nhl'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
 			</div>
 			<div class="moreteams teamlist">
-				<h4>Add More:</h4>
+				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
 		</div>
