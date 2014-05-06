@@ -49,7 +49,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 */
 		appPublicProductSearch : {
 			init : function(P,tagObj,Q)	{
-//				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
+				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
+				if(_app.vars.debug == 'search')	{
+					dump(JSON.stringify(P));
+					}
 				this.dispatch(P,tagObj,Q)
 				return 1;
 				},
@@ -66,6 +69,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
+				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
+				if(_app.vars.debug == 'search')	{
+					dump(JSON.stringify(obj));
+					}
 				this.dispatch(obj,tagObj,Q)
 				return 1;
 				},

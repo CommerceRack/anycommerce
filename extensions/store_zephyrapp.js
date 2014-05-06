@@ -473,9 +473,7 @@ var store_zephyrapp = function(_app) {
 							}
 						else	{} //text block is shorter than container. that's okay too.
 						}
-					
 					handleHeight(0);
-					
 					});
 				},
 			//this is a function because it's called as part of the productTemplate onComplete as well as in prodThumb2Primary

@@ -50,7 +50,6 @@ var quickstart = function(_app) {
 			'productReviewsTemplateDetail',
 			'imageViewerTemplate',
 			'reviewFrmTemplate',
-			'subscribeFormTemplate',
 			'orderLineItemTemplate',
 			'invoiceTemplate',
 			'buyerListTemplate',
@@ -2139,7 +2138,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				
 				
 			showSearch : function(infoObj)	{
-				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
+//				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
 				infoObj.templateID = 'searchTemplate';
 				infoObj.parentID = 'mainContentArea_search';
 				infoObj.state = 'init';
@@ -2178,8 +2177,8 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
-							 {"query":{"query_string":{"query":infoObj.KEYWORDS}}},
-							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":100}}}}} //only return item w/ inventory
+							 {"query":{"query_string":{"query": decodeURIComponent(infoObj.KEYWORDS), default_operator: "AND", "fields":["prod_name^5","pid","prod_desc"]}}},
+							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
 						  }});
 					}
@@ -2354,15 +2353,15 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								break;
 
 							case 'subscriberLists':
-								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
+								_app.model.addDispatchToQ({"_cmd":"buyerDetail",'cartid':_app.model.fetchCartID(),"_tag":{"datapointer":"buyerDetail"}},"mutable");
 								//executes same code as newsletter.
-						
+
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
 									callback : 'tlc',
-									extendByDatapointers : ["buyerNewsletters","cartDetail|"+_app.model.fetchCartID()], //including the cart allows name and email address to be populated.
+									extendByDatapointers : ["buyerDetail","cartDetail|"+_app.model.fetchCartID()], //including the cart allows name and email address to be populated.
 									verb : 'translate',
 									jqObj : $article
 									}},'mutable');
@@ -2370,7 +2369,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 								$article.data('isTranslated',true);
 								break;	
 							case 'invoice':
-							
+
 								var orderID = infoObj.uriParams.orderid;
 								var cartID = infoObj.uriParams.cartid;
 								if(cartID && orderID)	{
@@ -3033,7 +3032,6 @@ else	{
 					_app.model.dispatchThis('immutable');
 					
 					}
-
 				else	{} //do nothing, the validation handles displaying the errors.
 				return false;
 				},
@@ -3057,7 +3055,7 @@ else	{
 
 			subscribeSubmit : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.store_crm.u.handleSubscribe($ele.attr('id'));
+				_app.ext.store_crm.u.handleSubscribe($ele);
 				return false;
 				},
 
