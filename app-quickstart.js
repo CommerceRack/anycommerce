@@ -2168,8 +2168,8 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
-							 {"term":{"tags":infoObj.tag}},
-							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":100}}}}} //only return item w/ inventory
+							 {"term":{"tags":decodeURIComponent(infoObj.tag)}},
+							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
 						  }});
 					}
@@ -2177,7 +2177,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
-							 {"query":{"query_string":{"query":infoObj.KEYWORDS, "fields":["prod_name^5","pid","prod_desc"]}}},
+							 {"query":{"query_string":{"query":decodeURIComponent(infoObj.KEYWORDS), "fields":["prod_name^5","pid","prod_desc"]}}},
 							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
 						  }});
