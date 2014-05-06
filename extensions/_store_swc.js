@@ -716,6 +716,48 @@ var store_swc = function(_app) {
 				else {
 					$('#myTeamChooser').removeAttr('data-swc-sport');
 					}
+				},
+			showPhoneOrderForm : function($ele, p){
+				p.preventDefault();
+				var pid = $ele.attr('data-pid');
+				$('#phone-order-form').dialog({'modal':true, 'title':'Contact to purchase '+pid});
+				$('#phone-order-form input[name=pid]').val(pid);
+				},
+			submitPhoneOrderForm : function($ele, p){
+				p.preventDefault();
+				var form = $ele.serializeJSON();
+
+				if(form.name && form.email && form.pid){
+					var obj = {};
+					obj.sender = form.email;
+					obj.subject = "Phone order message for pid: "+form.pid
+					obj.body = 
+							"Name: "+form.name+"\n"
+						+	"Email: "+form.email+"\n";
+					if(form.phone){
+						obj.body += "Phone: "+form.phone+"\n";
+						}
+					obj.body += "Product: "+form.pid+"\n";
+					if(form.message){
+						obj.body += "Message:\n"+form.message+"\n";
+						}
+					
+					obj._tag = {
+						"callback" : function(){
+							$('#phone-order-form').dialog('close');
+							_app.u.throwMessage(_app.u.successMsgObject("Thank you, your request has been submitted"));
+							}
+						}
+					obj._cmd = "appSendMessage"
+					obj.msgtype = "feedback"
+					
+					_app.model.addDispatchToQ(obj, 'mutable');
+					_app.model.dispatchThis('mutable');
+					}
+				else {
+					app.u.dump(form);
+					$form.anymessage(app.u.errMsgObject("You must provide a name and email!"));
+					}
 				}
 			}, //e [app Events]
 		filterData : {
