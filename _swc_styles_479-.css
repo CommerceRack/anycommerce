@@ -10,7 +10,7 @@
 #mainContentArea > div {height:100%;}
 #appView.showFooter {padding-bottom: 402px;}
 #appView.peekFooter.showFooter {padding-bottom: 402px;}
-#appView #footer {bottom:-380px; font-size:16px;}
+#appView #footer {height: 360px; bottom:-380px; font-size:16px;}
 #appView.peekFooter #footer {bottom:-360px;}
 
 #contact{font-size:11px;}

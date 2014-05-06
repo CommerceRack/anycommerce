@@ -770,6 +770,10 @@ var store_swc = function(_app) {
 					app.u.dump(form);
 					$form.anymessage(app.u.errMsgObject("You must provide a name and email!"));
 					}
+				},
+			toggleFooter : function($ele, p){
+				p.preventDefault();
+				$('#appView').toggleClass('showFooter');
 				}
 			}, //e [app Events]
 		filterData : {

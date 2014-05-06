@@ -112,18 +112,21 @@ a.redText{color:#7e0000}
 	z-index:100;
 }
 #toggleFooterBtn{
-	height: 40px;
-	width: 40px;
+	border-bottom: none;
+	border-right: none;
+	border-left: none;
+	height: 20px;
 	position:absolute;
+	left:0px;
 	right:0px;
-	top:-40px;
-	border-left: 1px solid white;
-	border-top: 1px solid white;
-	box-shadow: -2px -2px 6px rgba(64,64,64,.5);
-	background-image:url(images/wrapper/menu_icon.png);
-	background-position:center center;
-	background-repeat:no-repeat;
+	top:0px;
 }
+
+#appView #toggleFooterBtn .hideFooter{display:none;}
+#appView.showFooter #toggleFooterBtn .hideFooter{display:inline-block;}
+#appView #toggleFooterBtn .showFooter{display:inline-block;}
+#appView.showFooter #toggleFooterBtn .showFooter{display:none;}
+
 #footer{transition: bottom 1s;}
 #appView.peekFooter.showFooter #footer,
 #appView.showFooter #footer {bottom:0px;}
