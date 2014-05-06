@@ -37,8 +37,17 @@
 }
 
 #myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:100px;}
+#myTeamChooser .sportContainer{width: 24.2%; padding: 0px .1%;}
+#myTeamChooser .teamlist  {width: 90%; padding: 0% 5%;}
+#myTeamChooser .teamlist{height: auto;}
+#myTeamChooser .sportContainer{position: static; display:inline-block; overflow: auto; height: 90%;}
+#myTeamChooser .sportContainer h4{font-size: 1em;}
+#myTeamChooser .teamlist .teamTemplate {font-size:.9em}
+#myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}
+/*
 #myTeamChooser .myteams {width: 30%;}
 #myTeamChooser .moreteams {width: 60%;}
 #myTeamChooser .moreteams ul {text-align: center;}
 #myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
 #myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;font-size:1.0em}
+*/
