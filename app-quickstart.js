@@ -344,7 +344,6 @@ document.write = function(v){
 			onSuccess : function(tagObj)	{
 //				dump(" BEGIN quickstart.callbacks.onSuccess.showPageContent");
 //when translating a template, only 1 dataset can be passed in, so detail and page are merged and passed in together.
-
 //cat page handling.
 				if(tagObj.navcat)	{
 //					dump("BEGIN quickstart.callbacks.showPageContent ["+tagObj.navcat+"]");

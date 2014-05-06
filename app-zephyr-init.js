@@ -184,6 +184,13 @@ $("#productTemplate, #productTemplateQuickView").on('complete.dynimaging',functi
 		});
 	});
 
+//when a productDetail page loads, the anytabs code 'could' be triggered prior to animation finishing, which means the li 'may' not register as visible.
+//this is here to ensure a tab is open.
+$("#productTemplate").on('complete.anytabs',function(state,$ele,infoObj){
+	setTimeout(function(){
+		$('.applyAnytabs',$ele).find('.ui-tabs-nav li:visible:first').trigger('click');
+		},1000);
+	});
 
 $("#productTemplate").on('complete.relatedItems',function(state,$ele,infoObj){
 	var $prodlist = $('.isRelatedItemsList',$ele);
