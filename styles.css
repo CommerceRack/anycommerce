@@ -62,7 +62,7 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c84ec', endColorstr='#104a7b',GradientType=0 ); /* IE6-9 */
 	}
 #mastHead .bottombg, footer .footHead	{
-	height:28px;
+	height:32px;
 	background: #707070; /* Old browsers */
 	background: -moz-linear-gradient(top, #707070 0%, #282828 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#707070), color-stop(100%,#282828)); /* Chrome,Safari4+ */
@@ -97,7 +97,7 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 
 #shopNowLink	{
-	position:absolute; bottom:0; left:0; height:32px; line-height:26px; cursor:pointer; text-align:center; padding:0 1.3em 0 .5em;
+	position:absolute; bottom:0; left:0; height:36px; line-height:26px; cursor:pointer; text-align:center; padding:0 1.3em 0 .5em;
 	color:#fff;
 	-webkit-border-radius: 0 .6em .6em 0;
 	border-radius: 0 .6em .6em 0;
@@ -125,7 +125,7 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 
 
 #mastHeadSearchFrm	{position:absolute; bottom:5px; right:.5em; left:100px;}
-.productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:.9em; z-index:9; width:100%;}
+.productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:1.1em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.3em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;} /* largish right margin for chrome/safari 'voice' button */
 
 #tier1catContainer	{
@@ -407,7 +407,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 @media only screen and (min-width: 768px) {
 	body	{background:url(images/zs10_body_bg-2000x16.gif) repeat-y; margin:0em; padding:.7em; font-weight:100;}
 	
-	#mastHead	{height:137px;}
+	#mastHead	{height:141px;}
 	.mobileNav	{display:none;}
 	#mastHead .logo	{position:absolute; top:3px; left:.5em; width:270px; height:75px; display:block; background-position: -222px -4px;}
 	
@@ -457,7 +457,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#headerDecal2 .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
 
 	#tier1catContainer	{
-		top:137px; width:60%;
+		top:139px; width:60%;
 		} /* these are revealed onclick */
 
 	#menuNav	{position:absolute; top:14px; right:.3em; display:block; color:#27a8e0;} /* .3 instead of .5 is to compensate for the link margin */
@@ -472,7 +472,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#headerPhoneNumber	{display:block; position:absolute; top:0px; margin-top:-10px; right:.5em; font-size:.8em; color:#fff;}
 	
 	#mastHead .socialIcons	{display:block; position:absolute; right:.5em; bottom:5px; font-size:.5em; line-height:.3em;}
-	#mastHead .minicart	{bottom:33px; font-size:.8em; display:block; right:.5em; position:absolute; color:#fff; padding-left:32px;}
+	#mastHead .minicart	{bottom:37px; font-size:.8em; display:block; right:.5em; position:absolute; color:#fff; padding-left:32px;}
 	#mastHead .minicart .cart	{background-position:-125px -67px; display:block; width:26px; height:25px; float:left; margin-right:.2em; position:absolute; left:0; top:-2px;}
 	.minicart a	{color:#fff; text-decoration:none;}
 
@@ -519,8 +519,11 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 
 
 
-
-@media only screen and (min-width: 1024px) {
+/*
+1040, not 1024, so that pad aspect ratio change doesn't show left col.
+if this changes, some JS needs to be written to handle making sure the cats are visible. otherwise, in vertical the cats could be 'closed' and then on aspect change, they wouldn't show up.
+*/
+@media only screen and (min-width: 1040px) {
 	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
@@ -528,11 +531,10 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#mainContentArea	{
 		margin-left:195px; min-height:500px;
 		}
-	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50;}
+	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50; top:143px;}
 	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
 	#tier1categories li	{width:100%; margin:.1em 0;}
 	#shopNowLink	{display:none;}
-	
 	
 	.zProductList li.plLineItem	{width:32%;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
