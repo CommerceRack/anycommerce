@@ -11,6 +11,30 @@ Put this high in the doc as a reminder to occassionally re-check if it can be re
     position: fixed;
 	}
 
+
+/*
+#mainContentArea .isPageTemplate {
+	position:absolute;
+	left: -150%;
+	transition: left 1.6s;
+	width: 100%;
+	}
+#mainContentArea .isPageTemplate.active {left:0%; position:relative;}
+#mainContentArea .isPageTemplate.active.post {left:150%; position:absolute;}
+
+ css for handling page transitions
+#mainContentArea > div {
+	position:absolute;
+	left: -150%;
+	transition: left .6s;
+	width: 100%;
+	}
+#mainContentArea > div.active {left:0%; position:relative;}
+#mainContentArea > div.active.post {left:150%;}
+ */
+
+
+
 a	{color:#0f4d82;}
 a:hover	{color:#000;}
 

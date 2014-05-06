@@ -288,7 +288,15 @@ myApp.u.appInitComplete = function()	{
 	
 	dump(" -> HEY! just a head's up, the default pageTransition was just overwritten from app-zephyr-init.js");
 	myApp.ext.quickstart.pageTransition = function($o,$n,infoObj){
-
+		dump(" -> pageTransition is being executed");
+		//$o may not always be set, such as at init.
+//		if($o instanceof jQuery)	{
+//			$o.addClass('post');
+//			}
+//		else	{
+//			dump(" ------> $o is not an instanceOf jquery");
+//			}
+//		$n.addClass('isPageTemplate').removeClass('post').addClass('active'); /* this needs to be on every 'page' level template for the css transition */
 		function transitionThePage()	{
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 //$o MAY be a jquery instance but have no length, so check both.

@@ -2056,7 +2056,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						$tmp.tlc({templateid:infoObj.templateID,'verb':'template'});
 						$product = $tmp.children();
 						$product.attr('id',infoObj.parentID).data('pid',pid);
-						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
+						$product.appendTo($('#mainContentArea')); //hidden by default for page transitions
 						_app.u.handleCommonPlugins($product);
 						var nd = 0; //Number of Dispatches.
 
@@ -2669,7 +2669,7 @@ buyer to 'take with them' as they move between  pages.
 //otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
 						if(infoObj.dialogID)	{$('#'+infoObj.dialogID).append($parent)}
 						else	{
-							$parent.addClass('displayNone'); //hidden by default for page transitions.
+//							$parent.addClass('displayNone'); //hidden by default for page transitions.
 							$('#mainContentArea').append($parent);
 							}
 						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$parent});
