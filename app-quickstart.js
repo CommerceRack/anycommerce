@@ -2419,7 +2419,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							case 'myaccount':
 	//							dump(" -> myaccount article loaded. now show addresses...");
 								_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
-								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$customer,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
+								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$article,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
 								break;
 							
 							case 'logout':
