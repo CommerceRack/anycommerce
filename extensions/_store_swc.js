@@ -49,7 +49,14 @@ var store_swc = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				
+				$(window).on('mousemove.swc', function(e){
+					if(e.clientY > .8*$(this).outerHeight()){
+						$('#appView').addClass('peekFooter');
+						}
+					else {
+						$('#appView').removeClass('peekFooter');
+						}
+					});
 				_app.ext.store_swc.u.loadBanners();
 				
 				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'immutable');

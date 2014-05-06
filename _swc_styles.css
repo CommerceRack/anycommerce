@@ -125,6 +125,7 @@ a.redText{color:#7e0000}
 	background-repeat:no-repeat;
 }
 #footer{transition: bottom 1s;}
+#appView.peekFooter.showFooter #footer,
 #appView.showFooter #footer {bottom:0px;}
 
 #footer a {color:white; text-decoration: none;}

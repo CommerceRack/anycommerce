@@ -9,7 +9,9 @@
 	padding-top: 78px;
 	padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 210px;}
-#appView #footer {bottom:-150px;}
+#appView.peekFooter.showFooter {padding-bottom: 210px;}
+#appView #footer {bottom:-140px;}
+#appView.peekFooter #footer {bottom:-120px;}
 #footer{padding: 10px 0px;}
 
 #livechat {margin-left: 42px;}

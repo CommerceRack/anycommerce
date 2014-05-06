@@ -9,7 +9,9 @@
 #mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;overflow-y:auto;}
 #mainContentArea > div {height:100%;}
 #appView.showFooter {padding-bottom: 402px;}
-#appView #footer {bottom:-400px; font-size:16px;}
+#appView.peekFooter.showFooter {padding-bottom: 402px;}
+#appView #footer {bottom:-380px; font-size:16px;}
+#appView.peekFooter #footer {bottom:-360px;}
 
 #contact{font-size:11px;}
 #mininav{font-size:12px;}
