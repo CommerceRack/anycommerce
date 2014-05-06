@@ -232,7 +232,16 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 .basePrice	{color:#ff4000;}
 .lineThrough	{text-decoration:line-through;}
-.textBlockMaxHeight	{max-height:180px; overflow:hidden; position:relative;} /* applied to a container around the text. text must have data-textblock-role='content' on it */
+.textBlockMaxHeight	{
+	max-height:180px; overflow:hidden; position:relative;
+	} /* applied to a container around the text. text must have data-textblock-role='content' on it */
+
+.textBlockMaxHeight, .textBlockMaxHeight [data-textblock-role='content']	{
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;	
+	}
+
 /* added to a p which is appended to textBlockMaxHeight and will have the read more/less button in it */
 .textFadeOut	{
 	position: absolute; 
