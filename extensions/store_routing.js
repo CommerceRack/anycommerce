@@ -47,6 +47,7 @@ var store_routing = function(_app) {
 						}
 					showContent('category',	routeObj.params);
 					});
+
 				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
 				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
 				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});

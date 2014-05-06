@@ -49,7 +49,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 */
 		appPublicProductSearch : {
 			init : function(P,tagObj,Q)	{
-				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
+//				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
 				if(_app.vars.debug == 'search')	{
 					dump(JSON.stringify(P));
 					}
@@ -69,7 +69,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
-				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
+//				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
 				if(_app.vars.debug == 'search')	{
 					dump(JSON.stringify(obj));
 					}
@@ -291,8 +291,8 @@ _app.u.dump(" -> pageInFocus: "+pageInFocus);
 //					_app.u.dump(" -> newPage: " + newPage);
 					if(EQ)	{
 						var query = EQ;
-						_app.u.dump("EQ:");
-						_app.u.dump(EQ);
+//						_app.u.dump("EQ:");
+//						_app.u.dump(EQ);
 						//query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						_app.ext.store_search.u.updateDataOnListElement($list,query,newPage);
@@ -482,7 +482,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				es.size = 250;
 				es.sort = [{'prod_name.raw':'asc'}] //here for testing. prod_name is tokenized, so the .raw field must be used for sorting.
 				return es;
-			},
+				},
 			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
 			buildElasticSimpleQuery : function(obj)	{
