@@ -2176,6 +2176,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
+						  // * zephyr -> modified default query to provide more targeted results.
 							 {"query":{"query_string":{"query": decodeURIComponent(infoObj.KEYWORDS), default_operator: "AND", "fields":["prod_name^5","pid","prod_desc"]}}},
 							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
