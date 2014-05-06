@@ -1050,8 +1050,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'company':
-						$new = $('#mainContentArea_company');
 						_app.ext.quickstart.u.showCompany(infoObj);
+						$new = $('#mainContentArea_company');
 						break;
 	
 					case 'cart':
