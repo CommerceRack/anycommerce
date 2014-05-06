@@ -805,6 +805,20 @@ var store_swc = function(_app) {
 					"user:app_brands"
 					]
 				},
+			'blackhawks' : {
+				title : "Chicago Blackhawks",
+				noteams : true,
+				baseFilter : {
+					"term" : {"app_nhl":"chicago_blackhawks"}
+					},
+				optionList : [
+					"user:app_department",
+					"user:app_sub_department",
+					"user:app_t_shirts",
+					"user:app_souvenirs",
+					"user:app_brands"
+					]
+				},
 			'shirts' : {
 				title : "Shirts",
 				baseFilter : {
