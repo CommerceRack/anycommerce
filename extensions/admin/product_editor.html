@@ -54,11 +54,11 @@
 
 
 <!-- navtabs template -->
-<div id='productEditorNavtabsTemplate' class='clearfix smallPadding' data-app-role='productEditorNavtab'>
+<div id='productEditorNavtabsTemplate' class='clearfix smallPadding alignLeft' data-app-role='productEditorNavtab'>
 	
 	<button data-app-click='admin_prodedit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
-	<form class='floatLeft marginLeft' action='#' onSubmit='return false'>
-		search <input type='search' name='KEYWORDS' x-webkit-speech="x-webkit-speech" />
+	<form class='marginLeft' action='#' onSubmit='return false'>
+		search <input type='search' name='KEYWORDS' class='productSearchInput' x-webkit-speech="x-webkit-speech" />
 		<button data-app-click='admin_prodedit|productSearchExec' class='applyButton'>go</button>
 		<button data-app-click='admin_prodedit|productFiltersShow' class='applyButton' data-icon-primary='ui-icon-triangle-1-s' data-text='true'>Filter</button>
 	</form>

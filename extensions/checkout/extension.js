@@ -56,7 +56,7 @@ var order_create = function(_app) {
 			onSuccess : function()	{
 //				_app.u.dump('BEGIN _app.ext.order_create.init.onSuccess');
 
-				//_app.u.loadCSSFile(_app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
+				_app.u.loadCSSFile(_app.vars.baseURL+"extensions/checkout/styles.css","checkoutCSS");
 				if(_app.vars._clientid == '1pc')	{
 					_app.u.loadCSSFile(_app.vars.baseURL+"extensions/checkout/opc_styles.css","opcCheckoutCSS"); //loaded after checkoutCSS so that overrides can be set, if need be.
 					}
@@ -436,7 +436,11 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 				}, //chkoutPayOptionsFieldset
 
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid');
+				var valid = 0,  cartID = $fieldset.closest("[data-app-role='checkout']").data('cartid'), CID;
+				
+				if(_app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0)	{
+					CID = _app.data['cartDetail|'+cartID].customer.cid;
+					}
 				if($fieldset && formObj)	{
 // *** 201338 -> some paypal orders not passing validation due to address wonkyness returned from paypal.
 //paypal address gets returned with as much as paypal needs/wants. trust what we already have (which may not be enough for OUR validation)
@@ -450,8 +454,8 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
 							}
 						}
-//in an admin session w/ an existing user, make sure the address has been selected.
-					else if(_app.u.thisIsAnAdminSession() && _app.u.thisNestedExists("data.cartDetail|"+cartID+".customer.cid",_app) && _app.data['cartDetail|'+cartID].customer.cid > 0) {
+//in an admin session w/ an existing user, make sure the address has been selected IF the buyer has pre-defined addresses.
+					else if(_app.u.thisIsAnAdminSession() && CID  && _app.u.thisNestedExists("data.adminCustomerDetail|"+CID+".@BILL",_app) && _app.data['adminCustomerDetail|'+CID]['@BILL'].length ) {
 						if(formObj['bill/shortcut'])	{valid = 1}
 						else	{
 							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
@@ -1161,8 +1165,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							
 								}
 							else	{
-								_app.u.dump("Not 1PC.");
-								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+//								_app.u.dump("Not 1PC.");
+//								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+								
+								//MUST destroy the cart. it has data-cartid set that would point to the wrong cart.
+								$('#modalCart').empty().remove(); 
+								$('#mainContentArea_cart').empty().remove();
+
 								//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
 								$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
 									event.preventDefault();

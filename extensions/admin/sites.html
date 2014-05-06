@@ -130,6 +130,7 @@
 	<td data-tlc="bind $var '.PRT'; apply --append;" class="isSearchable"></td>
 	<td></td>
 	<td class="alignRight">
+	<button data-app-click="admin_sites|adminDomainRemoveConfirm" class="applyButton" data-text="false" data-icon-primary="ui-icon-trash">Remove Domain</button>
 	<button data-app-click="admin_batchjob|adminBatchJobExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-refresh" data-type="UTILITY/SITEMAP" data-whitelist="DOMAINNAME,PRT">Update Sitemap</button>
 	<button data-app-click="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check" title="Use this domain">Use Domain</button>
 	<button data-app-click="admin_sites|adminDomainDetailShow" class="applyButton" data-text="false" data-icon-primary="ui-icon-pencil" title="Edit this domain">Details</button>
@@ -208,7 +209,8 @@
 
 
 <div id='domainCreateTemplate'>
-<form action='#' onSubmit='return false' data-app-submit='admin|submitForm'>
+<!-- no validate is turned on because there are input flagged as 'required' that are conditionally required. validateForm handles these -->
+<form action='#' onSubmit='return false' data-app-submit='admin|submitForm' novalidate='novalidate'>
 
 <input type='hidden' name='_macrobuilder' value='admin_sites|adminDomainMacroCreate' />
 <input type='hidden' name='_tag/callback' value='showMessaging' />
@@ -222,23 +224,29 @@
 	<label>
 		<span>Type</span>
 		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
-			<option value='DOMAIN-DELEGATE' data-show-panel='domainCreateDomaintypeDelegate'>Delegate domain</option>
-			<option value='DOMAIN-RESERVE'>Reserve test domain</option>
+			<option value='DOMAIN-CREATE' data-show-panel='domainCreateDomaintypeCreate'>I have a domain</option>
+			<option value='DOMAIN-RESERVE' data-show-panel='domainCreateDomaintypeReserve'>Create a temporary domain</option>
 		</select>
 	</label>
 
-	<div data-panel-id='domainCreateDomaintypeDelegate' class='displayNone domainCreateDomaintype'>
+	<div data-panel-id='domainCreateDomaintypeCreate' class='displayNone domainCreateDomaintype'>
 	<label>
 		<span>Domain</span>
 		<input type='text' required data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
 	</label>
 	</div>
+	<div data-panel-id='domainCreateDomaintypeReserve' class='displayNone hint domainCreateDomaintype'>
+	If you do not already have a domain or are evaluating the platform, this is a good place to start.<br />
+	A temporary domain will be created and will expire after 90 days.
+	</div>
+
+
 	
 	
 </fieldset>
 
 <div class='buttonset alignRight'>
-	<button class='applyButton'>Save Domain</button>
+	<button class='applyButton'>Add Domain</button>
 </div>
 
 </form>

@@ -110,7 +110,7 @@
 							pageType : "product",
 							pid : pageInfo.id
 						},
-						include : ($.inArray(pageInfo.id, prodBlacklist) < 0) && !pageInfo.noindex
+						include : ($.inArray(pageInfo.id, prodBlacklist) < 0) && !pageInfo['seo:noindex']
 					}
 					break;
 				case "navcat" : 
@@ -120,7 +120,7 @@
 							pageType : "category",
 							navcat : pageInfo.id
 						},
-						include : ($.inArray(pageInfo.id, navcatBlacklist) < 0) && !pageInfo.noindex
+						include : ($.inArray(pageInfo.id, navcatBlacklist) < 0) && !pageInfo['seo:noindex']
 					}
 					break;
 				case "list" : 

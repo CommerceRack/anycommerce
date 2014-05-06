@@ -161,7 +161,6 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // parentID, templateID (template used on each item in the results) and datapointer.
 		handleElasticResults : {
 			onSuccess : function(_rtag)	{
-				dump(" >>>> BEGIN handleElasticResults <<<<<<<<<<<<<");
 				var L = _app.data[_rtag.datapointer]['_count'];
 				
 				var $list = _rtag.list;
@@ -333,8 +332,8 @@ _app.u.dump(" -> pageInFocus: "+pageInFocus);
 //					_app.u.dump(" -> newPage: " + newPage);
 					if(EQ)	{
 						var query = EQ;
-						_app.u.dump("EQ:");
-						_app.u.dump(EQ);
+//						_app.u.dump("EQ:");
+//						_app.u.dump(EQ);
 						//query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						_app.ext.store_search.u.updateDataOnListElement($list,query,newPage);

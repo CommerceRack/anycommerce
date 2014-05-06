@@ -425,14 +425,7 @@ _app.u.addEventDelegation($target);
 							$tbody.sortable({
 								connectWith: '.sortGroup',
 								stop : function(event,ui){
-									var $tr = $(ui.item);
-									if($tr.closest('table').data('app-role') == "storeVariationsOptionsContainer")	{} //same parent. do nothing.
-									else	{
-										//moved to new parent.
-										$('button',$tr).show();
-										$("[data-app-click='admin_prodedit|variationsOptionToggle']",$tr).hide();
-										_app.u.handleButtons($tr);
-										}
+									_app.ext.admin_prodedit.u.handleOptionsSortableStop($(ui.item));
 									//optionsEditorRowTemplate
 									}
 								});
@@ -646,6 +639,19 @@ _app.u.addEventDelegation($target);
 	
 		u : {
 
+			handleOptionsSortableStop : function($tr)	{
+				dump(" ----------> GOT HERE!!!");
+				if($tr.closest('table').data('app-role') == "storeVariationsOptionsContainer")	{} //same parent. do nothing.
+				else	{
+					//moved to new parent.
+					$('button',$tr).show();
+					$("[data-app-click='admin_prodedit|variationsOptionToggle']",$tr).hide();
+					$tr.addClass('edited');
+					$tr.closest('.anyformEnabled').anyform('updateChangeCounts');
+					_app.u.handleButtons($tr);
+					}
+				},
+
 //will go through the list of sogs that are enabled and disable the sog in the 'store variations' list.
 			handleApply2ProdButton : function($container)	{
 				var $storeOptions = $("[data-app-role='productVariationManagerStoreContainer']",$container);
@@ -663,14 +669,17 @@ _app.u.addEventDelegation($target);
 //product must be in memory with sku:1 passed for this to work.
 			thisPIDHasInventorableVariations : function(pid)	{
 				var r = false;
-				if(pid && _app.data['adminProductDetail|'+pid] && _app.data['adminProductDetail|'+pid]['@skus'] && _app.data['adminProductDetail|'+pid]['@skus'].length)	{
+				if(pid && _app.data['adminProductDetail|'+pid] && _app.data['adminProductDetail|'+pid]['@variations'])	{
+					for(var i = 0, L = _app.data['adminProductDetail|'+pid]['@variations'].length; i < L; i+=1)	{
+						if(_app.data['adminProductDetail|'+pid]['@variations'][i].inv >= 1)	{r = true; break;} //once a single inventory-able variation is found, no reason to continue.
+						}
 //					_app.u.dump(" -> sku: "+_app.data['adminProductDetail|'+pid]['@skus'][0].sku);
-					if(_app.data['adminProductDetail|'+pid]['@skus'][0].sku.indexOf(':') > 0 )	{r = true}
 					}
 				else	{
 					//missing something we need.
 					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof _app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
 					}
+				dump(" -> pid has inventory-able variations: "+r);
 				return r;
 				},
 
@@ -3840,14 +3849,12 @@ function type2class(type)	{
 				var $tr = $ele.closest('tr');
 				var $editor = $ele.closest("[data-app-role='variationOptionEditorContainer']"); //used for context.
 				if($ele.closest("[data-app-role='variationsOptionsTbody']").length)	{
-//					if($ele.is('button')){$ele.button({icons: {primary: "ui-icon-arrowthick-1-w"},text: false});}
 					$("[data-app-role='storeVariationsOptionsTbody']",$editor).append($tr);
 					}
 				else	{
-//					if($ele.is('button')){$ele.button({icons: {primary: "ui-icon-arrowthick-1-e"},text: false});}
 					$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
 					}
-				_app.u.handleButtons($tr);
+				_app.ext.admin_prodedit.u.handleOptionsSortableStop($tr);
 				} //variationsOptionToggle
 
 			} //Events

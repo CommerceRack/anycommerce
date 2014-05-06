@@ -2052,7 +2052,7 @@ used for store_crm.js
 	<span data-tlc="bind $var '.TOPIC_TITLE'; if (is $var --notblank;) {{apply --append;}};"></span>
 	</div>
 
-	<div data-tlc="bind $var '.TOPIC_ID'; apply --attrib='id'; if (is $var --notblank;) {{apply --append;}};" class="ui-accordion-content ui-helper-reset ui-widget-content displayNone"></div>
+	<div data-tlc="bind $var '.TOPIC_ID'; format --prepend='faqDetails4Topic_'; apply --attrib='id';" class="ui-accordion-content ui-helper-reset ui-widget-content displayNone"></div>
 
 </section>
 

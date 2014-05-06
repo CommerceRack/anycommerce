@@ -140,24 +140,25 @@ _app.templates holds a copy of each of the templates declared in an extension bu
 		//in case localstorage is disabled.
 		else if(!$.support.localStorage)	{
 			_app.vars._session = _app.model.readCookie('_session');
+			dump("check cookie for _session: "+_app.vars._session);
 			}
 		else	{
 			_app.vars._session = _app.model.dpsGet('controller','_session');
-			dump("check localstorage for _session: "+_app.vars._session);
-			if(_app.vars._session)	{
-				_app.u.dump(" -> session found in DPS: "+_app.vars._session);
-				//use the local session id.
-				}
-			else	{
-				//create a new session id.
-				_app.vars._session = _app.u.guidGenerator();
-				_app.u.dump(" -> generated new session: "+_app.vars._session);
-				_app.model.dpsSet('controller','_session',_app.vars._session);
-				if(!$.support.localStorage)	{
-					_app.model.writeCookie('_session',_app.vars._session); //for browsers w/ localstorage disabled.
-					}
+			dump(" -> check localstorage for _session: "+_app.vars._session);
+			}
+
+		// *** 201403 -> moved this code from the else above to outside it so a session would ALWAYS be generated.
+		// this solved an obscure case where localStorage was supported but 'full' (unable to be written to).
+		if(!_app.vars._session)	{
+			//create a new session id.
+			_app.vars._session = _app.u.guidGenerator();
+			_app.u.dump(" -> generated new session: "+_app.vars._session);
+			_app.model.dpsSet('controller','_session',_app.vars._session);
+			if(!$.support.localStorage)	{
+				_app.model.writeCookie('_session',_app.vars._session); //for browsers w/ localstorage disabled.
 				}
 			}
+
 		}, //handleSession
 
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
@@ -1929,7 +1930,7 @@ VALIDATION
 // ## FUTURE -> if the field is required and no value is set and type != radio, add required to span and exit early. cuts out a big block of code for something fairly obvious. (need to take skipIfHidden into account)
 //				errors for each input should be an array. format-rules should return a string and not get passed span for an error.
 		validateForm : function($form)	{
-//			_app.u.dump("BEGIN admin.u.validateForm");
+			_app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
 
 				
@@ -1953,6 +1954,7 @@ VALIDATION
 
 //					_app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
+						dump(" -> skipIfHidden is enabled");
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						//indexOf instead of == means validation-rules (notice the plural) can be a space seperated list
 						}
@@ -2964,7 +2966,7 @@ return $r;
 					$ele.anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, infoObj.state not set.','gMessage':true});
 					}
 				else	{
-					$ele.anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In _app.templateFunctions.handleTemplateEvents, $ele is not a valid jQuery instance','gMessage':true});
 					}
 				} //handleTemplateEvents 
 

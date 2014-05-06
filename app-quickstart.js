@@ -744,7 +744,7 @@ fallback is to just output the value.
 					//link is formatted correctly. do nothing.
 					}
 				else if(data.value)	{
-					$tag.attrib('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
+					$tag.attr('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(data.value)));
 					}
 				else	{
 					//data.value is not set. do nothing.
@@ -995,7 +995,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
-						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
+						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
 							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
 							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
 								infoObj.performJumpToTop = false;
@@ -1045,7 +1045,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							}
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
-
+// **201403 moved this to the bottom so $new gets the right pointer. -mc  
 						$new = $checkoutContainer;
 						break;
 	
@@ -1443,7 +1443,7 @@ setTimeout(function(){
 
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
-				dump("BEGIN showFAQbyTopic ["+topicID+"]");
+//				dump("BEGIN showFAQbyTopic ["+topicID+"]");
 				var templateID = 'faqQnATemplate'
 				
 				if(!topicID)	{
@@ -1458,13 +1458,13 @@ setTimeout(function(){
 					if($target.children().length)	{} //if children are present, this faq topic has been opened before or is empty. no need to re-render content.
 					else	{
 						var L = _app.data['appFAQs']['@detail'].length;
-						dump(" -> total #faq: "+L);
+//						dump(" -> total #faq: "+L);
 						for(var i = 0; i < L; i += 1)	{
 							if(_app.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
-								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
+//								dump(" -> faqid matches topic: "+_app.data['appFAQs']['@detail'][i]['ID']);
 //								$target.append(_app.renderFunctions.transmogrify({'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},templateID,_app.data['appFAQs']['@detail'][i]))
 $target.tlc({
-	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
+//	dataAttribs : {'id':topicID+'_'+_app.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+_app.data['appFAQs']['@detail'][i]['ID']},
 	templateid : templateID,
 	dataset : _app.data['appFAQs']['@detail'][i]
 	})
@@ -1553,7 +1553,8 @@ $target.tlc({
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
-				infoObj.dateObj = new Date(); //milliseconds timestamp
+				infoObj.dateObj = new Date(); //date object -> deprecated. use the ts. ## FUTURE -> remove this in 201406.
+				infoObj.ts = Math.round(+new Date()/1000); //milliseconds timestamp
 				_app.ext.quickstart.vars.sotw = infoObj;
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
 				_app.ext.quickstart.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
@@ -1963,24 +1964,29 @@ effects the display of the nav buttons only. should be run just after the handle
 // ** 201403 -> appNav is now toggled on/off as well, using a class, so that in a responsive design, appnav height can be easily adjusted w/out impact when it's hidden.
 */
 			handleAppNavDisplay : function(infoObj)	{
-//				dump("BEGIN quickstart.u.handleNavButtonsForDetailPage");
+				dump("BEGIN quickstart.u.handleNavButtonsForDetailPage");
 //				dump(" -> history of the world: "); dump(_app.ext.quickstart.vars.hotw[1]);
 
 				var r = false, //what is returned. true if buttons are visible. false if not.
 				$nav = $('#appNav'),
 				$nextBtn = $("[data-app-role='prodDetailNextItemButton']",$nav),
 				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']",$nav);
-				
+
 //				dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
 				
 //The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
 				if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{
 // * 201403 -> only show the buttons if more than 1 product is in the list.
-					if(_app.u.thisNestedExists("data."+$prevBtn.data('datapointer')+".@products",_app) && _app.data[$prevBtn.data('datapointer')]['@products'].length > 1)	{
+// do not use doesNestedExist cuz the datapointer has periods in it.
+					if(_app.data[$prevBtn.data('datapointer')] && _app.data[$prevBtn.data('datapointer')]['@products'] && _app.data[$prevBtn.data('datapointer')]['@products'].length > 1)	{
+						dump(" -> have category data and @products contains more than 1 item");
 						$nav.removeClass('displayNone');
 						$nextBtn.show();
 						$prevBtn.show();
 						r = true;
+						}
+					else	{
+						dump(" -> category data is not in memory OR there is only 1 product in the referring @products");
 						}
 					}
 				else	{
@@ -2152,7 +2158,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				
 				
 			showSearch : function(infoObj)	{
-				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
+//				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
 				infoObj.templateID = 'searchTemplate';
 				infoObj.parentID = 'mainContentArea_search';
 				infoObj.state = 'init';
@@ -2325,7 +2331,9 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				infoObj.templateID = 'customerTemplate';
 				var $customer = $('#'+infoObj.parentID);
 //only create instance once.
-				if($customer.length)	{}
+				if($customer.length)	{
+					dump(" -> customer page already rendered. just show.");
+					}
 				else	{
 //					$customer = _app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID);
 					var $tmp = $("<div>").tlc({templateid:infoObj.templateID,'verb':'template'});
@@ -2352,39 +2360,40 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					}
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
-					$('#newsletterArticle').hide(); //hide the default.
+
 					var $article = $('#'+infoObj.show+'Article',$customer)
 					$article.show(); //only show content if page doesn't require authentication.
 
+//					dump(" -> $article.data('isTranslated'): "+$article.data('isTranslated')); dump($article.data());
+
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
-					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
+					if($article.data('isTranslated') && infoObj.show != 'orders')	{
+						dump(" -> article is already translated.");
+						}
 					else	{
 						switch(infoObj.show)	{
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
 								break;
-						
+
+							case 'subscriberLists':
+								_app.model.addDispatchToQ({"_cmd":"buyerDetail",'cartid':_app.model.fetchCartID(),"_tag":{"datapointer":"buyerDetail"}},"mutable");
+								//executes same code as newsletter.
+
 							case 'newsletter':
 								$article.showLoading({'message':'Fetching newsletter list'});
 								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
 									"datapointer" : "appNewsletterList",
 									callback : 'tlc',
+									extendByDatapointers : ["buyerDetail","cartDetail|"+_app.model.fetchCartID()], //including the cart allows name and email address to be populated.
+									verb : 'translate',
 									jqObj : $article
 									}},'mutable');
 								_app.model.dispatchThis('mutable');
-								break;
-							
-							case 'subscriberLists':
-								_app.model.addDispatchToQ({"_cmd":"buyerNewsletters","_tag":{"datapointer":"buyerNewsletters"}},"mutable");
-								_app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : {
-									"datapointer" : "appNewsletterList",
-									callback : 'tlc',
-									jqObj : $article
-									}},'mutable');
-								_app.model.dispatchThis('mutable');
+								$article.data('isTranslated',true);
 								break;	
 							case 'invoice':
-							
+
 								var orderID = infoObj.uriParams.orderid;
 								var cartID = infoObj.uriParams.cartid;
 								if(cartID && orderID)	{
@@ -2435,7 +2444,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							case 'myaccount':
 	//							dump(" -> myaccount article loaded. now show addresses...");
 								_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
-								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$customer,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
+								_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$article,'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
 								break;
 							
 							case 'logout':
@@ -2463,6 +2472,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				switch(infoObj.show)	{
 					case 'myaccount':
 					case 'changepassword':
+					case 'subscriberLists':
 					case 'lists':
 					case 'orders':
 						r = true;
@@ -2825,9 +2835,9 @@ else	{
 				var total = 0;
 				if(_app.data[tagObj.datapointer] && _app.data[tagObj.datapointer].sum)	{
 					r = true;
-					var itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
-					var subtotal = _app.data[tagObj.datapointer].sum.items_total;
-					var total = _app.data[tagObj.datapointer].sum.order_total;
+					itemCount = _app.u.isSet(_app.data[tagObj.datapointer].sum.items_count) || 0;
+					subtotal = _app.data[tagObj.datapointer].sum.items_total;
+					total = _app.data[tagObj.datapointer].sum.order_total;
 					}
 				else	{
 					//cart not in memory yet. use defaults.
@@ -3070,7 +3080,7 @@ else	{
 
 			subscribeSubmit : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.store_crm.u.handleSubscribe($ele.attr('id'));
+				_app.ext.store_crm.u.handleSubscribe($ele);
 				return false;
 				},
 

@@ -657,6 +657,7 @@ keep all inputs within one fieldset for the save function.
 	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
 		<form onsubmit="return false">
 		<div class='ui-widget-header ui-corner-top'>
+			<button data-app-click='admin_tools|siteDebugDialog' data-verb='adminDebugShipping' class='applyButton floatRight marginRight marginTop smallButton'>Debug</button>
 			<h3 class='heading'>Edit:</h3>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
@@ -2826,8 +2827,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	</label>
 	</fieldset>
 
-	<div class='buttonset smallPadding alignRight'>
-	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Rule to Tax Table</button>
+	<div class='buttonset smallPadding'>
+	<button data-app-click='admin_tools|siteDebugDialog' data-verb='adminDebugTaxes' class='applyButton'>Debug</button>
+	<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton floatRight'>Apply Rule to Tax Table</button>
 	</div>
 	
 	</form>
@@ -3252,12 +3254,12 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
-<!--
-		<h4>Infrastructure</h4>
+<!--	
+		<h4>Analytics</h4>
 		<ul>
-			<li>Coming soon</li>
+			<li data-plugin="analytics.google.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
-		
+	
 		<h4>Native Platforms</h4>
 		<ul>
 			<li>Coming soon</li>
@@ -3336,6 +3338,23 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 
 
 
+
+<fieldset id="pluginTemplate_analytics.google.com">
+	<input name="plugin" value="analytics.google.com" type="hidden">
+	<input name="global" value="1" type="hidden">
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable Google Analytics
+	</label>
+	
+	<label>
+		<span class='prompt'>Tracking ID</span>
+		<input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text">
+	</label>
+	<p class='hint'>The google tracking id will start with UA- followed by a series of numbers. ex: UA-12345678-1</p>
+</fieldset>
+
+
 <fieldset id="pluginTemplate_shipworks.com">
 	<input name="plugin" value="shipworks.com" type="hidden">
 	<input name="global" value="1" type="hidden">
@@ -3352,7 +3371,7 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugin/shipstation.xml'; apply --append;}};"></div>
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
