@@ -462,8 +462,8 @@ This is used to get add an array of skus, most likely for a product list.
 														$form.anymessage({'message':rd});
 														}
 													else if(typeof onSuccessCallback === 'function')	{
-														onSuccessCallback(rd,sfo);
 														$editor.dialog('close');
+														onSuccessCallback(rd,sfo);
 														}
 													else	{
 														//no callback defined 
@@ -680,6 +680,7 @@ This is used to get add an array of skus, most likely for a product list.
 			//add this as submit action on the form.
 			productReviewSubmit : function($ele,p)	{
 				p.preventDefault();
+				var $form = $ele.closest('form'); //this way, $ele can be a button within the form or a onSubmit action on the form itself.
 				if(_app.u.validateForm($ele))	{
 					var sfo = $form.serializeJSON();
 					if(sfo.pid)	{
