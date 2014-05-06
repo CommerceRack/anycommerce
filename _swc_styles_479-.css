@@ -6,8 +6,8 @@
 }
 #header {height:30px;}
 #appView {padding-top: 32px;padding-bottom:40px;}
-#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;overflow-y:auto;}
-#mainContentArea > div {height:100%;}
+#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;}
+#mainContentArea > div {height:100%; overflow: auto;}
 #appView.showFooter {padding-bottom: 402px;}
 #appView.peekFooter.showFooter {padding-bottom: 402px;}
 #appView #footer {height: 360px; bottom:-380px; font-size:16px;}
