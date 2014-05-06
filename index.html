@@ -1139,7 +1139,7 @@ this will likely become more flexible in the future. ###
 		<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{ format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="latency marginBottom"></div>
 		<div data-app-role="timeInTransit" class="displayNone"></div>
 		-->
-		<form data-tlc="bind $phone '.%attribs.user:prod_phoneorder_only'; if(is $phone --notblank;){{ apply --hide --tag;}}; bind $cn '.%attribs.is:user3'; if (is $cn --notblank){{set $cn 'true'; apply --attrib='data-swc-custom-notice';}}; bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="inline">
+		<form data-tlc="bind $phone '.%attribs.user:prod_phoneorder_only'; if(is $phone --gt='0';){{ apply --hide --tag;}}; bind $cn '.%attribs.is:user3'; if (is $cn --notblank){{set $cn 'true'; apply --attrib='data-swc-custom-notice';}}; bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="inline">
 			<div class="productInfoSection marginBottom">
 				<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 				<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone"><label class="label_select">Qty: </label></fieldset>
@@ -1149,7 +1149,7 @@ this will likely become more flexible in the future. ###
 				<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="" class="applyButton addtocartbutton displayNone" type="submit">
 			</div>
 		</form>
-		<div class="displayNone productInfoSection marginBottom" data-tlc="bind $phone '.%attribs.user:prod_phoneorder_only'; if(is $phone --notblank;){{ apply --show --tag;}};">
+		<div class="displayNone productInfoSection marginBottom" data-tlc="bind $phone '.%attribs.user:prod_phoneorder_only'; if(is $phone --gt='0';){{ apply --show --tag;}};">
 			Due to NFL restrictions, this item is <strong class="redText">available by phone order only</strong>. 
 			Call 888-428-2967 or 
 				<span class="pointer redText underline" data-app-click="store_swc|showPhoneOrderForm" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';">click here</span> 
