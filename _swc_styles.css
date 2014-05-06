@@ -208,10 +208,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .sliderValContainer {text-decoration: none;}
 .ui-slider-handle {text-decoration: none;}
 
-.sportWidget button {width: 20px; font-weight:bold;}
-.sportWidget {width: 25%; float: left;}
-.sportWidget .myteams ul { height: 200px; overflow-y:auto;}
-.sportWidget .moreteams ul { height: 300px; overflow-y:auto;}
+.myteams h4 > span { padding-left: 10px;}
 
 .prodListTagsContainer {
 	height: 26px;

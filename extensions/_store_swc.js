@@ -645,6 +645,11 @@ var store_swc = function(_app) {
 				_app.model.dispatchThis();
 				
 				},
+			clearTeams : function($btn, p){
+				p.preventDefault();
+				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
+				_app.ext.store_swc.u.setUserTeams(sport, []);
+				},
 			addteam : function($btn, p){
 				p.preventDefault();
 				var team = JSON.parse($btn.closest('[data-swc-team]').attr('data-swc-team'));

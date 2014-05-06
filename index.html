@@ -367,7 +367,7 @@ $(window).load(function(){
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My MLB Teams</h4>
+				<h4>My MLB Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
@@ -380,7 +380,7 @@ $(window).load(function(){
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NFL Teams</h4>
+				<h4>My NFL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
@@ -393,7 +393,7 @@ $(window).load(function(){
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NBA Teams</h4>
+				<h4>My NBA Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
@@ -406,7 +406,7 @@ $(window).load(function(){
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
 			<div class="myteams teamlist">
-				<h4>My NHL Teams</h4>
+				<h4>My NHL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
 			</div>
 			<div class="moreteams teamlist">
@@ -418,7 +418,22 @@ $(window).load(function(){
 </div>
 
 
-
+<ul>
+	<li id="myteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';" data-app-click="store_swc|removeteam">
+		<!--
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
+		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
+		-->
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';" >
+		<button class="ui-state-highlight ui-button" >-</button>
+		<span data-tlc="bind $name '.p'; apply --append;"></span>
+	</li>
+	<li id="validteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';" data-app-click="store_swc|addteam">
+		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';">
+		<button class="ui-state-highlight ui-button" >+</button>
+		<span data-tlc="bind $name '.p'; apply --append;"></span>
+	</li>
+</ul>
 
 
 
@@ -1547,66 +1562,6 @@ if you change these, you should move them above this comment so that when you (o
 	</div>
 
 </div><!-- /companyTemplate -->
-
-<div id="myteamsArticleTemplate">
-	<div class="sportWidget" data-swc-sport="app_mlb">
-		<div class="myteams">
-			<h4>My MLB Teams</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_mlb'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
-		</div>
-		<div class="moreteams">
-			<h4>Add More:</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-		</div>
-	</div>
-	<div class="sportWidget" data-swc-sport="app_nfl">
-		<div class="myteams">
-			<h4>My NFL Teams</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nfl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
-		</div>
-		<div class="moreteams">
-			<h4>Add More:</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-		</div>
-	</div>
-	<div class="sportWidget" data-swc-sport="app_nba">
-		<div class="myteams">
-			<h4>My NBA Teams</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nba'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
-		</div>
-		<div class="moreteams">
-			<h4>Add More:</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-		</div>
-	</div>
-	<div class="sportWidget" data-swc-sport="app_nhl">
-		<div class="myteams">
-			<h4>My NHL Teams</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.userTeams.app_nhl'; controller#loop --templateid='myteamTemplate'; apply --append;"></ul>
-		</div>
-		<div class="moreteams">
-			<h4>Add More:</h4>
-			<ul class="listStyleNone" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-		</div>
-	</div>
-</div>
-
-<ul>
-	<li id="myteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';" data-app-click="store_swc|removeteam">
-		<!--
-		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
-		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
-		-->
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';" >
-		<button class="ui-state-highlight ui-button" >-</button>
-		<span data-tlc="bind $name '.p'; apply --append;"></span>
-	</li>
-	<li id="validteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';" data-app-click="store_swc|addteam">
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='100' --h='100' --b='ffffff'; apply --attrib='src';">
-		<button class="ui-state-highlight ui-button" >+</button>
-		<span data-tlc="bind $name '.p'; apply --append;"></span>
-	</li>
-</ul>
 
 <div id="customerTemplate" class="clearfix smallButton">
 
