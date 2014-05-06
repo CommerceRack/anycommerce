@@ -769,7 +769,7 @@ fallback is to just output the value.
 				else if(_app.u.buyerIsAuthenticated())	{
 					$tag.show().button({icons: {primary: "ui-icon-heart"},text: false});
 					$tag.off('click.moveToWishlist').on('click.moveToWishList',function(){
-						_app.ext.quickstart.a.moveItemFromCartToWishlist(data.value);
+						_app.ext.quickstart.a.moveItemFromCartToWishlist(data.value,$tag.closest("[data-template-role='cart']"));
 						});
 					}
 				else	{$tag.hide();}
@@ -1153,29 +1153,29 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 				},
 
 //each item in the cart has a UUID. The UUID is used (not the stid) to modify the cart
-			moveItemFromCartToWishlist : function(obj)	{
+			moveItemFromCartToWishlist : function(obj,$cart)	{
 				if(obj && obj.uuid && obj.stid)	{
 					//adds item to wishlist. cart removal ONLY occurs if this is successful.
-					$('#modalCartContents').showLoading({'message':'Moving item '+obj.stid+' from your cart to your wishlist'});
+					$cart.showLoading({'message':'Moving item '+obj.stid+' from your cart to your wishlist'});
 					_app.calls.buyerProductListAppendTo.init({sku:obj.stid,'listid':'wishlist'},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
-							$('#modalCartContents').hideLoading(); //only close on error. otherwise leave for removal in subsequent call.
-							$('#cartMessaging').anymessage({'message':rd});
+							$cart.hideLoading(); //only close on error. otherwise leave for removal in subsequent call.
+							$cart.anymessage({'message':rd});
 							}
 						else	{
 							//by now, item has been added to wishlist. So remove it from the cart.
-							
-							_app.ext.cco.calls.cartItemUpdate.init({'stid':obj.stid,'quantity':0},{callback:function(rd){
-								$('#modalCartContents').hideLoading();
+							_app.ext.cco.calls.cartItemUpdate.init({'stid':obj.stid,'quantity':0,'_cartid':$cart.data('cartid')},{callback:function(rd){
+								$cart.hideLoading();
 								if(_app.model.responseHasErrors(rd)){
-									$('#cartMessaging').anymessage({'message':rd});
+									$cart.anymessage({'message':rd});
 									}
 								else	{
 									//item successfully removed from the cart.
-									$('#cartMessaging').anymessage({'message':'Thank you. '+obj.stid+' has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
+									$cart.anymessage({'message':'Thank you. '+obj.stid+' has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
 									}
 								}});
-							_app.calls.refreshCart.init({'callback':'handleCart','templateID':'cartTemplate','extension':'quickstart','parentID':'modalCartContents'},'immutable');
+							$cart.trigger('fetch',{'Q':'immutable'});
+//							_app.calls.refreshCart.init({'callback':'handleCart','templateID':'cartTemplate','extension':'quickstart','parentID':'modalCartContents'},'immutable');
 							_app.model.dispatchThis('immutable');
 							}
 						}},'immutable'); 
