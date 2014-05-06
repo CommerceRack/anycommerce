@@ -886,11 +886,12 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			else	{
 				switch(responseData['_rcmd'])	{
 					case 'appProductGet':
+					case 'adminProductDetail':
 	//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
 						if(!responseData['%attribs'] || !responseData['%attribs']['db:id']) {
 							r = true;
 							responseData['errid'] = "MVC-M-100";
-							responseData['errtype'] = "apperr"; 
+							responseData['errtype'] = "missing"; 
 							responseData['errmsg'] = "could not find product "+responseData.pid+". Product may no longer exist. ";
 							} //db:id will not be set if invalid sku was passed.
 						break;

@@ -576,7 +576,12 @@ _app.u.throwMessage(responseData); is the default error handler.
 //jqObj is required and should be a jquery object.
 		anycontent : {
 			onMissing : function(rd)	{
+				dump(" -----------> rd: "); dump(rd);
 				rd._rtag.jqObj.anymessage(rd);
+				rd._rtag.jqObj.hideLoading();
+				if(typeof rd._rtag.onMissing === 'function')	{
+					rd._rtag.onMissing(rd);
+					}
 				},
 			onSuccess : function(_rtag)	{
 				_app.u.dump("BEGIN callbacks.anycontent"); // _app.u.dump(_rtag);
