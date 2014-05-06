@@ -1456,7 +1456,8 @@ the cb itself is then hidden.
 						self._handleDisable();
 						}
 					else	{
-						$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
+						//do NOT removeProp('checked').  chrome doesn't like it. once removed, could not re-apply 'checked'.
+						$cb.is(':checked') ? $cb.prop('checked','') : $cb.prop('checked','checked');
 						$cb.trigger('change');
 						}
 					});
