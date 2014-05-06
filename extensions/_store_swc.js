@@ -522,6 +522,7 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				$(window).off('scroll.infiniteScroll');
 				$form = $form.closest('form');
 				p.preventDefault();
 				var $resultsContainer = $form.closest('[data-filter-page=parent]').find('.filterResults');
