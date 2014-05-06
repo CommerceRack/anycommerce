@@ -283,6 +283,10 @@ a.blockLink, li.blockLink {display: inline-block;}
 #myTeamChooser[data-swc-sport=app_nba] .sportContainer[data-swc-sport=app_nba]{left: 0px;}
 #myTeamChooser[data-swc-sport=app_nhl] .sportContainer[data-swc-sport=app_nhl]{left: 0px;}
 
+.sideline .indent {
+	text-indent: 25px;
+}
+
 #rma-form {
 	font-size: .8em;
 	padding: 20px;
