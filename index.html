@@ -1387,9 +1387,9 @@ Cart template
 <section class="marginBottom clearfix">
 
 	<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-	<span class="continueShoppingSpan cartButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogClose">Continue Shopping</button></span>
+	<span class="continueShoppingSpan cartButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogCloseExec">Continue Shopping</button></span>
 
-	<span id="inStoreCheckoutButton" class='cartButton' title="proceed to secure checkout">
+	<span id="inStoreCheckoutButton" class='cartButton' title="proceed to secure checkout"  data-tlc="bind $count '.sum.items_count'; if(is $count --lt='1';) {{apply --hide;}};">
 		<a class='checkoutButton ui-widget-header cartCheckoutButton' href="#!checkout"><!-- ui-widget-header is for white icons -->
 			<span class='ui-icon ui-icon-locked floatLeft cartIconTuning'></span>
 			<span class='ui-icon ui-icon-triangle-1-e floatRight cartIconTuning'></span>
@@ -1398,7 +1398,7 @@ Cart template
 		<a href="#!checkout" class='checkoutButtonText'>Fast and Safe In-Store Checkout</a>
 	</span>
 
-	<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="cartButton"></span>
+	<span data-tlc="bind $count '.sum.items_count'; if(is $count --lt='1';) {{apply --hide;}}; bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="cartButton"></span>
 </section>
 <!-- this will output a table with some shipping estimates -->
 <section data-tlc="store_zephyrapp#shiptimestable;"></section>
@@ -1511,7 +1511,7 @@ used for store_crm.js
 <div id="reviewFrmTemplate" class='alignedForm'>
 
 <div class='hideIfLoggedIn'>
-	<p>Please <a href='#!customer/myaccount'>Click here</a> to log in or create an account to write a review.</p>
+	<p>Please <a href='#!customer/myaccount' data-app-click='store_zephyrapp|authWithNoRedir'>Click here</a> to log in or create an account to write a review.</p>
 </div>
 
 <form name="reviewFrm" action="#" data-app-submit="store_crm|productReviewSubmit" class='hideIfLoggedOut'>
