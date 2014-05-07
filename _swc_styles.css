@@ -75,7 +75,7 @@ a.redText{color:#7e0000}
 }
 #mainContentArea {position:relative;}
 #mainContentArea > div {
-	position:absolute;
+	position:relative;
 	left: -150%;
 	transition: left .6s;
 	width: 100%;
