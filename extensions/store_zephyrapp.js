@@ -621,6 +621,7 @@ var store_zephyrapp = function(_app) {
 						});
 					$primaryImageHref.trigger('zoom.destroy'); // remove zoom
 					myApp.ext.store_zephyrapp.u.applyZoom($('img',$primaryImageHref));
+					handleSrcSetUpdate($primaryImageHref.parent()); //trigger srcset to load the correct size image.
 					}
 				else	{
 					dump("In zephyr_storeapp.e.prodThumb2Primary, unable to local primary image href. zoom will not work.","warn");

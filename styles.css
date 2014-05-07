@@ -345,6 +345,7 @@ li.plLineItem	{display:block; margin:0 0 .5em 0; font-weight:300; padding:0; fon
 
 /***** Review Section CSS Start *****/
 .reviewSprite	{background: url(images/zephyr_reviewsprite.png) no-repeat; width:86px; height:18px; line-height:14px;}
+.shortReviewSummary .reviewSprite	{width:110px;} /* in this instance, the # of reviews shows up too */
 .reviewSprite .hint	{padding-left:70px;}
 .review_1 	{background-position: 0px 0px;}
 .review_2	{background-position: 0px 0px;}
@@ -538,7 +539,10 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		box-sizing: border-box;
 		height:130px;
 		}
+	/* product template */
 	
+	.vidsAndPics	{float:left; margin-right:2%;}
+	.zoomToolZoomContainer	{width:250px; height:250px; top: 0px; left:350px;}
 	}
 
 

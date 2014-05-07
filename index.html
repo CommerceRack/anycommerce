@@ -708,87 +708,89 @@ this will likely become more flexible in the future. ###
 		<div class='floatRight shortReviewSummary alignCenter pointer' data-app-click='store_zephyrapp|jump2' data-jump2='productReviews'>
 			<div class='displayNone' data-tlc="bind $var '.reviews.@reviews.length'; if (is $var --blank;) {{apply --show;}}; bind $var '.pid'; apply --attrib='data-pid';" ><a href="#" data-app-click="store_crm|productReviewShow">Write Review</a></div>
 			<div data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite">
-			<span class='hint' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></span>
+			<span class='hint marginLeft' data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></span>
 			</div>
 		</div>
 	
 		<div class='displayNone' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{apply --show;}};">Mfg: <a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></div>
 	</section>
 	
-	<section class='vidsAndPics' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --add --class='applyAnytabs';}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --add --class='applyAnytabs';}};">
-	<ul data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --show;}};" class='displayNone'>
-		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}};"><a href="#viewer360">360 Viewer</a></li>
-		<li><a href="#images">Images</a></li>
-		<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};"><a href="#videos">Videos</a></li>
-	</ul>
-
-	<div data-anytab-content='viewer360' class='prodVideoTab displayNone' data-app-role='viewer360TabContent'>
-		<div class='videoContainer' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank;){{controller#youtubevideo --legacy;}};"></div>
-	</div>
-
-	<!-- video tab will be shown automagically if video1 is populated (anytab triggers the show) -->
-	<div data-anytab-content='videos' class='prodVideoTab displayNone' data-app-role='videoTabContent'>
-		<div class="videoContainer" data-app-role='videoContainer' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}};"></div>
-		<div data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show;}};" class='buttonset smallButton  marginTop displayNone'>
-			<!-- button() adds a inline-block style to the button, which overrides displayNone. so the applyButton class is only added if the field is populated -->
-			<button class='applyButton' data-app-click='store_zephyrapp|youtubeSwapExec' disabled data-tlc="bind $var '.%attribs.youtube:videoid'; apply --attrib='data-videoid';">Video 1</button>
-			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 2</button>
-			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid3'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 3</button>
-			<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid4'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton'; apply --attrib='data-videoid';}};">Video 4</button>
-		</div>
-	</div>
-
-	<div data-anytab-content='images' class='clearfix'>
-		<div class='productPrimaryImage'>
-			<a href='#' class='zoomTool' data-gallery="gallery" data-tlc="bind $name '.%attribs.zoovy:prod_name'; apply --attrib='title'; bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
-			<!-- $var is rewritten as a fully qualified URL, which is not what srcset wants, so a second bind is used to get srcset a clean copy of the media -->
-			<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --imageurl --media=$var --width=250 --height=250 --bgcolor='#ffffff' --attrib='src'; }}; bind $image '.%attribs.zoovy:prod_image1'; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=400w,h=350&w=350&dpi=1x&vp=1100w,h=500&w=500&dpi=1x&vp=1800w'; apply --attrib='srcset';" src="blank.gif" alt="" />
-			<!-- goes in tlc srcset views ,h=1000&w=1000&dpi=2x&vp=1024w  -->
-			</a>
-		</div>
+	<!-- contains images, video, add to cart and some general product info -->
+	<div class='clearfix marginBottom'>
 		
-		<div class='productDetailThumbnails' data-app-role='productThumbnailsContainer' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;"></div>
-		<div class='zoomToolZoomContainer'></div><!-- used in conjuction with zoom as a container for the zoom itself -->
-	</div>
-
+		<section class='vidsAndPics' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --add --class='applyAnytabs';}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --add --class='applyAnytabs';}};">
+			<ul data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}}; bind $you '.%attribs.youtube:videoid'; if(is $you --notblank){{apply --show;}};" class='displayNone'>
+				<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank){{apply --show;}};"><a href="#viewer360">360 Viewer</a></li>
+				<li><a href="#images">Images</a></li>
+				<li class='displayNone' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank){{apply --show;}};"><a href="#videos">Videos</a></li>
+			</ul>
+		
+			<div data-anytab-content='viewer360' class='prodVideoTab displayNone' data-app-role='viewer360TabContent'>
+				<div class='videoContainer' data-tlc="bind $var '.%attribs.youtube:360'; if(is $var --notblank;){{controller#youtubevideo --legacy;}};"></div>
+			</div>
+		
+			<!-- video tab will be shown automagically if video1 is populated (anytab triggers the show) -->
+			<div data-anytab-content='videos' class='prodVideoTab displayNone' data-app-role='videoTabContent'>
+				<div class="videoContainer" data-app-role='videoContainer' data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank;){{apply --show; controller#youtubevideo --legacy;}};"></div>
+				<div data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show;}};" class='buttonset smallButton  marginTop displayNone'>
+					<!-- button() adds a inline-block style to the button, which overrides displayNone. so the applyButton class is only added if the field is populated -->
+					<button class='applyButton' data-app-click='store_zephyrapp|youtubeSwapExec' disabled data-tlc="bind $var '.%attribs.youtube:videoid'; apply --attrib='data-videoid';">Video 1</button>
+					<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid2'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 2</button>
+					<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid3'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton';  apply --attrib='data-videoid';}};">Video 3</button>
+					<button class='displayNone' data-app-click='store_zephyrapp|youtubeSwapExec' data-tlc="bind $var '.%attribs.youtube:videoid4'; if(is $var --notblank;){{apply --show; apply --add --class='applyButton'; apply --attrib='data-videoid';}};">Video 4</button>
+				</div>
+			</div>
+		
+			<div data-anytab-content='images' class='clearfix'>
+				<div class='productPrimaryImage'>
+					<a href='#' class='zoomTool' data-gallery="gallery" data-tlc="bind $name '.%attribs.zoovy:prod_name'; apply --attrib='title'; bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
+					<!-- $var is rewritten as a fully qualified URL, which is not what srcset wants, so a second bind is used to get srcset a clean copy of the media -->
+					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --imageurl --media=$var --width=250 --height=250 --bgcolor='#ffffff' --attrib='src'; }}; bind $image '.%attribs.zoovy:prod_image1'; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=400w,h=350&w=350&dpi=1x&vp=1100w,h=500&w=500&dpi=1x&vp=1800w'; apply --attrib='srcset';" src="blank.gif" alt="" />
+					<!-- goes in tlc srcset views ,h=1000&w=1000&dpi=2x&vp=1024w  -->
+					</a>
+				</div>
+				
+				<div class='productDetailThumbnails' data-app-role='productThumbnailsContainer' data-tlc="bind $var '.%attribs'; store_zephyrapp#proddetailthumbs; apply --append;"></div>
+				<div class='zoomToolZoomContainer'></div><!-- used in conjuction with zoom as a container for the zoom itself -->
+			</div>
+		</section>
 	
-
-	</section>
-
-	<section class='marginBottom'>
-		<h4 data-tlc=" bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show;}};" class="floatLeft marginRight displayNone">
-			<span >MSRP: </span>
-			<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></span>
-		</h4>
-		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
-	</section>
-
-
-	<form class="marginBottom fullWidth gridTable displayNone" data-app-role='childrenSiblingsContainer' data-tlc="bind $var '.%attribs.zoovy:grp_type'; if (is $var --notblank;) {{apply --show;}}; " >
-		<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
-			<option value='' data-tlc="bind $var '.%attribs.zephyrsports:prod_children_title'; if (is $var --notblank;) {{apply --empty; apply --append;}}; ">Please choose</option>
-		</select>
-	</form>
-
-	<!-- if this is a parent, the 'children' list will detail what's available and each will have an add to cart button. -->
-	<section class='marginBottom addToCartContainer' data-tlc="bind $children '.%attribs.zoovy:grp_children'; if (is $children --notblank;) {{apply --hide;}}; ">
-		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix marginBottom" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
-			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone prodPageQtyInputFieldset"></fieldset>
-			<div class='marginBottom'><input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="prodPageAdd2CartButton displayNone" type="submit"></div>
+		<section class='marginBottom'>
+			<h4 data-tlc=" bind $price '.%attribs.zoovy:base_price'; bind $msrp '.%attribs.zoovy:prod_msrp'; if (is $msrp --gt=$price;) {{apply --show;}};" class="floatLeft marginRight displayNone">
+				<span >MSRP: </span>
+				<span class='lineThrough' data-tlc="bind $var '.%attribs.zoovy:prod_msrp'; if (is $var --notblank;) {{format --currency='USD'; apply --append;}};"></span>
+			</h4>
+			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
+		</section>
+	
+	
+		<form class="marginBottom fullWidth gridTable displayNone" data-app-role='childrenSiblingsContainer' data-tlc="bind $var '.%attribs.zoovy:grp_type'; if (is $var --notblank;) {{apply --show;}}; " >
+			<select data-app-role='childrenSiblingsProdlist' data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;" data-app-change='store_zephyrapp|changePageByOptionValue'>
+				<option value='' data-tlc="bind $var '.%attribs.zephyrsports:prod_children_title'; if (is $var --notblank;) {{apply --empty; apply --append;}}; ">Please choose</option>
+			</select>
 		</form>
-	</section>
-
-	<section class='marginBottom textBlockMaxHeight'>
-		<h4>Description</h4>
-		<div data-textblock-role='content' data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='marginBottom wikiContainer'></div>
-	</section>
-
-
-	<section class='marginBottom'>
-		<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></div>
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></div>
-	</section>
+	
+		<!-- if this is a parent, the 'children' list will detail what's available and each will have an add to cart button. -->
+		<section class='marginBottom addToCartContainer' data-tlc="bind $children '.%attribs.zoovy:grp_children'; if (is $children --notblank;) {{apply --hide;}}; ">
+			<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm marginBottom" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
+				<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
+				<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone prodPageQtyInputFieldset"></fieldset>
+				<div class='marginBottom'><input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="prodPageAdd2CartButton displayNone" type="submit"></div>
+			</form>
+		</section>
+	
+		<section class='marginBottom textBlockMaxHeight'>
+			<h4>Description</h4>
+			<div data-textblock-role='content' data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='marginBottom wikiContainer'></div>
+		</section>
+	
+	
+		<section class='marginBottom'>
+			<div data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></div>
+			<div data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></div>
+		</section>
+	
+	</div>
 
 	<section class='marginBottom relatedItemsContainer' data-tlc="bind $var '.%attribs.zoovy:related_products'; if (is $var --notblank;) {{apply --show;}};">
 		<h4>Related Product</h4>
