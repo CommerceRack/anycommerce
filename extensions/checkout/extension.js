@@ -2205,41 +2205,24 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				if(typeof window.scriptCallback == 'function')	{}
 				else	{
 					window.scriptCallback = _app.ext.order_create.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
-					_app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
+//					_app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
-
-	var L = arr.length;
-	for(var i = 0; i < L; i++)	{
-//adding to iframe gives us an isolation layer
-//data-script-id added so the iframe can be removed easily later.
-		arr[i].id = 'iframe_3ps_'+i
-		$("<iframe \/>",{'id':arr[i].id}).attr({'data-script-id':arr[i].owner,'height':1,'width':1}).css({'display':'none'}).appendTo('body'); // -> commented out for testing !!!
+					for(var i = 0,  L = arr.length; i < L; i++)	{
 /*
 the timeout is added for multiple reasons.
 1.  jquery needed a moment between adding the iframe to the DOM and accessing it's contents.
 2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
 */
-  		setTimeout(function(thisArr){
-			var $iframe = $('#'+thisArr.id).contents().find("html");
-			$iframe.append(thisArr.script);
-/// hhhmmm... some potential problems with this. non-script based output. sequence needs to be preserved for includes and inline.
-
-/*			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
-			var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
-			$div.find('script').each(function(){
-				var $s = $(this);
-				if($s.attr('src'))	{
-					console.log(" -> attempting to add "+$s.attr('src'));
-					$iframe.append($s);
-					}
-				else	{
-					scripts += $s.text()+"\n\n";
-					}
-				});
-			$iframe.append("<script>try{"+scripts+"\n window.parent.scriptCallback('"+arr.owner+"','success');} catch(err){window.parent.scriptCallback('"+arr.owner+"','error: '+err);}<\/script>");
-*/			},(100 * (i + 1)),arr[i])
-		} 
+						setTimeout(function(thisArr){
+							try	{
+								$(document.body).append(thisArr.script);
+								}
+							catch(e)	{
+								scriptCallback(thisArr.owner,e)
+								}
+							},(200 * (i + 1)),arr[i]);
+						} 
 					}
 				else	{
 					//didn't get anything or what we got wasn't an array.
