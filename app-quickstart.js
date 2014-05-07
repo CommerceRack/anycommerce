@@ -174,7 +174,7 @@ document.write = function(v){
 					_app.u.dump(" -> existing cart is valid. add to cart manager"); 
 					dump(" -> _rtag:"); dump(_rtag);
 					cartID = _rtag.cartid;
-					_app.model.addCart2Session(cartID); //this function updates _app.vars.carts
+					dump(" -> added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
 					if($('#cartMessenger').length)	{
 						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);

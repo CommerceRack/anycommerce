@@ -1097,7 +1097,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				}
 			carts.unshift(cartID); //new carts get put on top. that way [0] is always the latest cart.
 			_app.vars.carts = carts;
-			this.dpsSet('app','carts',carts); //update localStorage.
+			return this.dpsSet('app','carts',carts); //update localStorage.
 			},
 
 //always use this to remove a cart from a session. That way all the storage containers are empty
@@ -1781,6 +1781,7 @@ A note about cookies:
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext and namespace (ns) are required. reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
+				var r = false; //what is returned.
 				if(ext && ns && (varObj || varObj == 0))	{
 					var DPS = this.readLocal('dps','local') || {}; //readLocal returns false if no data local.
 					if(typeof DPS[ext] === 'object'){
@@ -1791,11 +1792,12 @@ A note about cookies:
 						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-					this.writeLocal('dps',DPS,'local');
+					r = this.writeLocal('dps',DPS,'local');
 					}
 				else	{
 					_app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
+				return r;
 				},
 
 			getGrammar : function(url)	{
