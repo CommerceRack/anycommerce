@@ -1,0 +1,2 @@
+~path	/category/([^/]*)/?	/#!category/$1
+~path	/product/([^/]*)/?(.*)	/#!product/$1
