@@ -346,7 +346,10 @@ can't be added to a 'complete' because the complete callback gets executed after
 		});
 
 	_app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
+//		_app.u.dump(" ------------------------ ");
 		_app.u.dump("UH OH! got into ajaxRequest.error. either call was aborted or something went wrong.");
+//		_app.u.dump(j); _app.u.dump("textStatus: "+textStatus); _app.u.dump(errorThrown);
+//		_app.u.dump(" ------------------------ ");
 		if(textStatus == 'abort')	{
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			for(var index in Q) {
@@ -1100,7 +1103,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				}
 			carts.unshift(cartID); //new carts get put on top. that way [0] is always the latest cart.
 			_app.vars.carts = carts;
-			this.dpsSet('app','carts',carts); //update localStorage.
+			return this.dpsSet('app','carts',carts); //update localStorage.
 			},
 
 //always use this to remove a cart from a session. That way all the storage containers are empty
@@ -1784,6 +1787,7 @@ A note about cookies:
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext and namespace (ns) are required. reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
+				var r = false; //what is returned.
 				if(ext && ns && (varObj || varObj == 0))	{
 					var DPS = this.readLocal('dps','local') || {}; //readLocal returns false if no data local.
 					if(typeof DPS[ext] === 'object'){
@@ -1794,11 +1798,12 @@ A note about cookies:
 						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-					this.writeLocal('dps',DPS,'local');
+					r = this.writeLocal('dps',DPS,'local');
 					}
 				else	{
 					_app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
+				return r;
 				},
 
 			getGrammar : function(url)	{
