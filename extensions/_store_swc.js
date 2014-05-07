@@ -89,6 +89,9 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
 					showContent('static',{'templateID':'affiliatesTemplate'})
 					}});
+				_app.router.appendHash({'type':'exact','route':'careers/','callback':function(routeObj){
+					showContent('category',{'navcat':'.careers','templateID':'categoryTemplateHTML'})
+					}});
 				_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
 					showContent('static',{'templateID':'inquiryTemplate'})
 					}});
