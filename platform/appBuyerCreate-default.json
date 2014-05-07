@@ -1,0 +1,12 @@
+{
+	"_version":"201403",
+	"_start":"createBuyer",
+	"_inputs":[
+		{ "required":1,"var":"email","type":"text","label":"Email" }
+	],
+	 
+
+	"createBuyer": [
+		"SET?newsletter-1=1"
+	]
+}
