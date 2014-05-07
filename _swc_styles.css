@@ -147,6 +147,8 @@ a.redText{color:#7e0000}
 #footerMiddle .displayTableCell {width:33.33%;}
 
 #footer #copyright {
+	margin: 0px auto;
+	max-width:260px;
 	position:absolute; bottom: -6px; font-size: .7em;
 	left: 0px;
 	right: 0px;
