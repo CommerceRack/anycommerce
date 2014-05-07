@@ -541,7 +541,8 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		}
 	/* product template */
 	
-	.vidsAndPics	{float:left; margin-right:2%;}
+	.vidsAndPics	{float:left; margin-right:2%; width:400px}
+	.productDetailThumbnails a	{float:left;}
 	.zoomToolZoomContainer	{width:250px; height:250px; top: 0px; left:350px;}
 	}
 
@@ -567,6 +568,7 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	
 	.zProductList li.plLineItem	{width:24%; height:230px;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
+	.vidsAndPics	{width:550px}
 	}
 
 
