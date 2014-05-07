@@ -59,8 +59,8 @@ var store_swc = function(_app) {
 					});
 				_app.ext.store_swc.u.loadBanners();
 				
-				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'immutable');
-				_app.model.dispatchThis('immutable');
+				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
+				_app.model.dispatchThis('mutable');
 				
 				var userTeams = false;
 				if(userTeams = _app.model.readLocal('swcUserTeams')){
@@ -821,6 +821,24 @@ var store_swc = function(_app) {
 				else	{} //validateForm will handle the error display.
 				return false;
 				},
+			newsletterSignup : function($ele, p){
+				p.preventDefault();
+				var sfo = $ele.serializeJSON();
+				sfo._cmd = "appBuyerCreate";
+				sfo._tag = {
+					datapointer :"appBuyerCreate",
+					callback : function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							$ele.anymessage({message:rd});
+							}
+						else {
+							$ele.anymessage(_app.u.successMsgObject("Thank you, you are now subscribed"));
+							}
+						}
+					}
+				_app.model.addDispatchToQ(sfo, 'immutable');
+				_app.model.dispatchThis('immutable');
+				}
 			}, //e [app Events]
 		filterData : {
 			'100_years_of_wrigley_field' : {
