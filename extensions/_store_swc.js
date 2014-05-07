@@ -98,8 +98,8 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
 					showContent('category',{'navcat':'.rewards_program','templateID':'rewardsTemplate'})
 					}});
-				_app.router.appendHash({'type':'exact','route':'contest/','callback':function(routeObj){
-					showContent('static',{'templateID':'contestTemplate'})
+				_app.router.appendHash({'type':'exact','route':'group_sales/','callback':function(routeObj){
+					showContent('category',{'navcat':'.group_sales','templateID':'groupSalesTemplate'})
 					}});
 				_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
 					showContent('search',{'elasticsearch':{"query" : {"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}}}});
@@ -838,6 +838,30 @@ var store_swc = function(_app) {
 					}
 				_app.model.addDispatchToQ(sfo, 'immutable');
 				_app.model.dispatchThis('immutable');
+				},
+			sendGroupRequest : function($form, p){
+				var formJSON = $form.serializeJSON();
+				
+				obj = {
+					'sender' : formJSON.sender,
+					'subject' : formJSON.subject,
+					'body' : 'Name: '+formJSON.fullname+"\n"
+							+'Event Date: '+formJSON.eventdate+"\n"
+							+'Message:\n'+formJSON.body
+					};
+				obj._tag = {
+					"callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							}
+						else {
+							_app.u.throwMessage(_app.u.successMsgObject("Thank you, your request has been submitted!"));
+							}
+						}
+					};
+				obj._cmd = "appSendMessage";
+				obj.msgtype = "feedback"
+				_app.model.addDispatchToQ(obj, 'mutable');
+				_app.model.dispatchThis('mutable');
 				}
 			}, //e [app Events]
 		filterData : {

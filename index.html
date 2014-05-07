@@ -724,9 +724,90 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<div data-tlc="bind $var '.%page.description3'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="description"></div>
 </div>
 
-<div id="contestTemplate">
+<div id="groupSalesTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
+
+	<div class="floatRight">
+		<img data-apptimize="embed" src="images/sportsworldpages/groupsales/cubs_group_events.jpg" border="0" height="210" width="125">
+	</div>
+	<div>
+		<img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groupsales_header-566x47.gif" height="47" width="566">
+	</div>
+	<div class="marginTop">
+		<img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groupsales_enjoysavings-331x31.gif" height="31" width="331">
+	</div>
+	<div data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{apply --append;}};" class="description"></div>
+		
+	<div class="clear marginTop">
+		<table border="0" cellpadding="0" cellspacing="0" width="100%">
+			<tbody>
+				<!-- <tr>
+					<td rowspan="2" valign="top"><img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groups_left-12x160.gif" height="160" width="12"></td>
+					<td style="background:url(images/sportsworldpages/groupsales/cw09_c_groupsales_header_bg-1x47.gif) repeat-x; height:30px;" colspan="3" align="center" valign="top" width="99%"><div style="z-index:20;"><img alt="" src="img/categoryPages/groupsales/cw09_c_groups_header-462x34.gif" height="34" width="462"></div></td>
+					<td rowspan="2" valign="top"><img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groups_right-12x160.gif" height="160" width="12"></td>
+				</tr> -->
+				<tr>
+					<td class="ztable_row" valign="top" width="50%">
+						<div data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="description"></div>
+					</td>
+				
+
+					<!-- <td valign="top" width="1%">
+						<div style="margin-top:-4px; position:relative; z-index:10;">
+							<img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groups_bg-20x130.gif" height="130" width="20">
+						</div>
+					</td> -->
+				
+					<td width="50%">
+						<form data-app-submit="store_swc|sendGroupRequest" onSubmit="return false;" name="contact_form">
+						<input value="Group Sales Contact Form" name="subject" type="hidden">
+
+						<div class="zwarn appMessaging"></div>
+
+						<table align="center" cellpadding="0" cellspacing="3">
+						<tbody><tr>
+							<td class="ztable_row"><label for="fullname">Full Name:</label></td>
+							<td colspan="2"><input required="required" style="width:266px;" class="zform_textbox" name="fullname" value="" type="text"></td>
+						</tr>
+
+						<tr>
+							<td class="ztable_row"><label for="sender">Email:</label></td>
+							<td colspan="2"><input required="required" style="width:266px;" class="zform_textbox" name="sender" value="" type="text"></td>
+						</tr>
+
+						<tr>
+							<td class="ztable_row"><label for="eventdate">Date of Event:</label></td>
+							<td colspan="2"><input required="required" style="width:266px;" class="zform_textbox" name="eventdate" value="" type="text"></td>
+						</tr>
+
+						<tr>
+							<td class="ztable_row" valign="top"><label for="message">Message:</label></td>
+							<td><textarea style="height:62px; width:200px;" class="zform_textarea" name="body" value=""></textarea></td>
+							<td valign="bottom"><input required="required" src="images/sportsworldpages/groupsales/cw09_c_groups_btn_send-63x62.gif" type="image"></td>
+						</tr>
+
+						</tbody></table>
+
+						</form>
+				</td>
+
+			</tr>
+			</tbody></table>
+	</div>
+	
+	<!-- <div class="marginTop">
+		<div class="floatLeft halfScreen ztxt description" data-bind="var:category(%page.description3); format:wiki; wikiFormats:myRIA;"></div>
+		<div class="floatRight halfScreen alignCenter">
+			<div class='slideshow'>
+				<img data-apptimize="embed" src="images/sportsworldpages/groupsales/wrigleyville_roof_party_2.jpg" width="375" height="375"/>
+				<img data-apptimize="embed" src="images/sportsworldpages/groupsales/cub_world_about_us_pic.jpg" width="375" height="375" />
+				<img data-apptimize="embed" src="images/sportsworldpages/groupsales/wrigleyville_rooftop_pic_3.jpg" width="375" height="375" />
+				<img data-apptimize="embed" src="images/sportsworldpages/groupsales/wrigleyville_rooftop_pic_4.jpg" width="375" height="375" />
+				<img data-apptimize="embed" src="images/sportsworldpages/groupsales/rooftop_pic.jpg" width="375" height="375" />
+			</div>
+		</div>
+	</div> -->
 </div>
 
 <div id="categoryTemplateHTML">
@@ -742,7 +823,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<span class="displayNone" data-seo-desc=""></span>
 	<h1 class="highlightBG_1 white">Shop By Player</h1>
 	<p class="emph">
-		<strong>Looking for a Player Not on this Team.  <a href="#" class="redText" data-app-click="store_swc|showMyTeamChooser">Click Here</a> to Select the Team Your Player is on.</strong>
+		Select the Team you'd like to browse below.  To edit your teams, <strong><a href="#" class="redText" data-app-click="store_swc|showMyTeamChooser">click here</a></strong>
 	</p>
 	<ul class="listStyleNone alignCenter clearfix noPadOrMargin" data-tlc="bind $var '.app_mlb'; controller#loop --templateid='userTeamTemplate'; apply --append;"></ul>
 </div>
