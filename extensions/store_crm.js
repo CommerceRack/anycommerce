@@ -399,18 +399,23 @@ This is used to get add an array of skus, most likely for a product list.
 //				_app.u.dump("BEGIN store_crm.u.handleSubscribe");
 				if($form)	{
 //					_app.u.dump(" -> $form is set.");
-					frmObj = $form.serializeJSON();
+					var sfo = $form.serializeJSON();
 					if(_app.u.validateForm($form))	{
 //						_app.u.dump(" -> $form validated.");
-						_app.ext.store_crm.calls.setNewsletters.init(frmObj,{'callback':function(rd){
-							if(_app.model.responseHasErrors(rd)){
-								$form.anymessage({'message':rd});
+						sfo._cmd = 'appBuyerCreate';
+						sfo._tag = {
+							"datapointer":"appBuyerCreate",
+							"callback":function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									$form.anymessage(_app.u.successMsgObject("Thank you, you are now subscribed."));
+									}
 								}
-							else	{
-								$form.anymessage(_app.u.successMsgObject("Thank you, you are now subscribed."));
-								}
-							}});
-						_app.model.dispatchThis();
+							};
+						_app.model.addDispatchToQ(sfo,"immutable");
+						_app.model.dispatchThis('immutable');
 						}
 					else	{}
 					}
