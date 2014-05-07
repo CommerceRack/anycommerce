@@ -171,10 +171,10 @@ document.write = function(v){
 				var cartID = false;
 //				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
 				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
-					_app.u.dump(" -> existing cart is valid. add to cart manager"); 
-					dump(" -> _rtag:"); dump(_rtag);
+//					_app.u.dump(" -> existing cart is valid. add to cart manager"); 
+//					dump(" -> _rtag:"); dump(_rtag);
 					cartID = _rtag.cartid;
-					dump(" -> added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
+					dump(" -> cart id is valid. added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
 					if($('#cartMessenger').length)	{
 						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);

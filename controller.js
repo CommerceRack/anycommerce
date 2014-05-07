@@ -171,7 +171,6 @@ _app.templates holds a copy of each of the templates declared in an extension bu
 //		_app.u.dump(" -> localVars: "); _app.u.dump(localVars);
 		
 		function setVars(id){
-//			_app.u.dump("GOT HERE!");
 //			_app.u.dump("-> "+id+": "+_app.u.getParameterByName(id));
 			if(_app.vars[id])	{} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
