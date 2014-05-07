@@ -96,7 +96,7 @@ var store_swc = function(_app) {
 					showContent('category',{'navcat':'.help_desk.player-inquiry','templateID':'inquiryTemplate'})
 					}});
 				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
-					showContent('static',{'templateID':'rewardsTemplate'})
+					showContent('category',{'navcat':'.rewards_program','templateID':'rewardsTemplate'})
 					}});
 				_app.router.appendHash({'type':'exact','route':'contest/','callback':function(routeObj){
 					showContent('static',{'templateID':'contestTemplate'})
@@ -806,7 +806,22 @@ var store_swc = function(_app) {
 			toggleFooter : function($ele, p){
 				p.preventDefault();
 				$('#appView').toggleClass('showFooter');
-				}
+				},
+			accountLoginSubmit : function($ele,p)	{
+				p.preventDefault();
+				if(_app.u.validateForm($ele))	{
+					var sfo = $ele.serializeJSON();
+					_app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":_app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
+					sfo._cmd = "appBuyerLogin";
+					sfo.method = 'unsecure';
+					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart', jqMsgContainer:$ele}
+					_app.model.addDispatchToQ(sfo,"immutable");
+					_app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
+					_app.model.dispatchThis('immutable');
+					}
+				else	{} //validateForm will handle the error display.
+				return false;
+				},
 			}, //e [app Events]
 		filterData : {
 			'100_years_of_wrigley_field' : {

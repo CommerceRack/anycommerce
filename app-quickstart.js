@@ -445,10 +445,15 @@ document.write = function(v){
 		authenticateBuyer : {
 			onSuccess : function(tagObj)	{
 				_app.vars.cid = _app.data[tagObj.datapointer].cid; //save to a quickly referencable location.
-				$('#loginSuccessContainer').show(); //contains 'continue' button.
-				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
-				$('#loginFormContainer').hide(); //contains actual form.
-				$('#recoverPasswordContainer').hide(); //contains password recovery form.
+				if(tagObj.jqMsgContainer){
+					tagObj.jqMsgContainer.anymessage(_app.u.successMsgObject("Thank you, you are now logged in."));
+					}
+				else {
+					$('#loginSuccessContainer').show(); //contains 'continue' button.
+					$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
+					$('#loginFormContainer').hide(); //contains actual form.
+					$('#recoverPasswordContainer').hide(); //contains password recovery form.
+					}
 				_app.ext.quickstart.u.handleLoginActions();
 				}
 			} //authenticateBuyer

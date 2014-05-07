@@ -701,6 +701,28 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="rewardsTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
+	
+	<img alt="" data-apptimise="embed" src="images/sportsworldpages/rewards/cw_c_rewardshead-320x49.png" border="0" height="49" width="320">
+	<form class="floatRight" action="#" data-app-submit="store_swc|accountLoginSubmit" onSubmit="return false;">
+		<div class="alignCenter">
+			<img alt="" data-apptimise="embed" src="images/sportsworldpages/rewards/moneybag.png" border="0" height="176" width="125">
+		</div>
+		<fieldset>
+			<legend>Account Login:</legend>
+			<div>Sign in here to check your reward points</div>
+			<div class="marginTop">
+				<input name="login" placeholder="login" type="email">
+			</div>
+			<div class="marginTop">
+				<input name="password" placeholder="password" type="password">
+			</div>
+			<div class="alignRight marginTop">
+				<input value="Login" class="ui-button ui-button-text ui-corner-all ui-state-default" type="submit">
+			</div>
+		</fieldset>
+	</form>
+	<div data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="description"></div>
+	<div data-tlc="bind $var '.%page.description3'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="description"></div>
 </div>
 
 <div id="contestTemplate">
