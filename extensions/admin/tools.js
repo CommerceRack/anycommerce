@@ -865,6 +865,7 @@ var admin_tools = function(_app) {
 				},
 			
 			siteDebugDialog : function($ele,p)	{
+				p.preventDefault();
 				var $SD = $('#siteDebugger');
 				if($SD.length)	{
 					$SD.empty().dialog('open');
@@ -875,6 +876,7 @@ var admin_tools = function(_app) {
 						});
 					}
 				adminApp.ext.admin_tools.a.siteDebugger($SD,{'verb':$ele.data('verb')});
+				return false;
 				}
 				
 			} //e [app Events]
