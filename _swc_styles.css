@@ -11,6 +11,7 @@ a.redText{color:#7e0000}
 .blockLink, .blockLink a {text-decoration:none;}
 .bold {font-weight:bold;}
 .white{color:white;}
+.emph{font-size:1.2em;}
 
 #mainContentArea > div {background:rgba(256,256,256,.8);}
 #mainContentArea > div.noBG {background:none;}
