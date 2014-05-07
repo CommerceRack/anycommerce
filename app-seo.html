@@ -250,22 +250,14 @@
 				}
 			
 			var doc = $('#appContainer').get(0).contentWindow.document
-			$(doc.getElementsByTagName('script')).each(function(){$(this).remove()});
+			$(doc.getElementsByTagName('script')).each(function(){$(this).remove();});
+			$('.seoStrip', $(doc)).each(function(){$(this).remove();});
 			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'/#!'+iframeHash+'" />');
 			console.log(doc.getElementsByTagName('script'));
 			console.log(doc.getElementsByTagName('script').length);
 			
 			var doctype = "<!DOCTYPE html>";
 			var dochtml = doc.documentElement.outerHTML;
-			
-			var body = /<body[^>]*>((.*\n*\r*\u2028*\u2029*)*)<\/body>/;
-			var removeHtml = body.exec(dochtml)[1];
-			var $tmp = $('<div>'+removeHtml+'</div>');
-			$('.seoStrip, script', $tmp).each(function(){
-				$(this).empty().remove();
-			});
-			dochtml = dochtml.replace(removeHtml, $tmp.html());
-			$tmp.remove();
 			
 			var html = doctype + dochtml;
 			
