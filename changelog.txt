@@ -6,6 +6,17 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
 
+201404
+
+ADMIN
+	enhancement - new FAQ manager
+
+
+QUICKSTART
+	bug fix - paypal button (on empty cart) now errors appropriately
+	enhancement - some tlc on checkout/paypal buttons to hide if cart is empty
+
+
 
 201403
 
