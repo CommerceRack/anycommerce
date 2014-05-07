@@ -134,7 +134,7 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 	_app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
 	if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order)	{
 		var order = _app.data[P.datapointer].order;
-		if(_app.data[P.datapointer].payment_status && _app.data[P.datapointer].payment_status.charAt(0) == 1)	{
+		if(_app.data[P.datapointer].payment_status && _app.data[P.datapointer].payment_status.charAt(0) == 0)	{
 
 			_gaq.push(['_addTrans',
 				  P.orderID,           // order ID - required
