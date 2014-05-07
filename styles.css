@@ -552,9 +552,10 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
 	#mastHeadSearchFrm	{left:.5em; width:50%;}
-	#mainContentArea	{
-		margin-left:195px; min-height:500px;
+	#mainContentArea, #globalMessaging, #appNav	{
+		margin-left:195px; 
 		}
+	#mainContentArea	{min-height:500px;}
 	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50; top:143px;}
 	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
 	#tier1categories li	{width:100%; margin:.1em 0;}
