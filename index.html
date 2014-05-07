@@ -759,8 +759,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<h2 data-tlc="bind $var '.%page.page_title'; if (is $var --notblank;) {{apply --append;}};"></h2>
 
-	<p data-tlc="bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-
+	<p class="displayNone" data-tlc="bind $name '.%page.player_name';if(is $name --null;){{apply --show --tag;}}; bind $team '.%page.team_name'; if(is $team --null;){{apply --show --tag;}}; bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
+	<p data-tlc="bind $name '.%page.player_name'; if(is $name --null;){{apply --hide --tag;}}; bind $team '.%page.team_name'; if(is $team --null;){{apply --hide --tag;}};">
+		Browse below for your authentic <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jersey. 
+		Select from home, road, or any of our other <span data-tlc="bind $team '.%page.team_name'; apply --append;"></span> jersey styles. 
+		We also have a wide selection of <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> Shirt options, for when you need to slip into something a little more comfortable. 
+		All of our <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jerseys, shirts and other apparel is officially licensed MLB gear! 
+	</p>
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
 
 	<ul data-tlc="bind $var '.@products'; prodlist_infinite#infiniteproductlist  --withReviews='1' --withInventory='1' --withVariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs the product list -->
