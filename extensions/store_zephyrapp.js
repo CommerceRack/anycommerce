@@ -693,6 +693,17 @@ var store_zephyrapp = function(_app) {
 				return false;
 				},
 			
+			authWithNoRedir : function($ele,p)	{
+				p.preventDefault();
+				_app.ext.quickstart.u.showLoginModal();
+				$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
+//this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
+				$('<button>').attr('id','modalLoginContinueButton').text('Continue').button().click(function(){
+					$('#loginFormForModal').dialog('close');
+					}).appendTo($('#loginSuccessContainer'));
+				return false;
+				},
+			
 			youtubeSwapExec : function($ele,p)	{
 				p.preventDefault();
 				if($ele.data('videoid'))	{
