@@ -254,7 +254,6 @@ myApp.u.showProgress = function(progress)	{
 		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
 			//All pass zero resources have loaded.
 			//the app will handle hiding the loading screen.
-			myApp.router.init();//instantiates the router.
 			myApp.u.appInitComplete();
 			}
 		else if(attempt > 150)	{
@@ -359,6 +358,7 @@ myApp.u.appInitComplete = function()	{
 //it'll also handle the old 'meta' uri params.
 //this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
 //it'll also handle the old 'meta' uri params.
+
 myApp.router.appendInit({
 	'type':'function',
 	'route': function(v){
@@ -382,7 +382,6 @@ myApp.router.appendInit({
 			}
 		}
 	});
-
 
 
 
