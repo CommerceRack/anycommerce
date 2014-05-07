@@ -1604,7 +1604,7 @@ function handleAnimation()	{
 								if(!handleAnimation())	{$li.show();}
 								$("button[data-taskmode='close']",$li).hide();
 								$("button[data-taskmode='edit']",$li).show();
-	
+
 								$li.showLoading({'message':'Fetching Product Detail'});
 								_app.model.addDispatchToQ({
 									'_cmd':'adminProductDetail',

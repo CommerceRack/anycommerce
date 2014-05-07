@@ -134,31 +134,40 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 	_app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
 	if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order)	{
 		var order = _app.data[P.datapointer].order;
-		_gaq.push(['_addTrans',
-			  P.orderID,           // order ID - required
-			  '', // affiliation or store name
-			  order.sum.order_total,          // total - required
-			  order.sum.tax_total,           // tax
-			  order.sum.ship_total,          // shipping
-			  order.sum.city,       // city
-			  order.sum.region,     // state or province
-			  order.sum.countrycode             // country
-		   ]);
-	
-		var L = order['@ITEMS'].length;
-		_app.u.dump(" -> "+L+" items in @ITEMS");
-	
-		for(var i = 0; i < L; i += 1)	{
-			_gaq.push(['_addItem',
-				P.orderID,         // order ID - necessary to associate item with transaction
-				order['@ITEMS'][i].product,         // SKU/code - required
-				order['@ITEMS'][i].prod_name,      // product name - necessary to associate revenue with product
-				order['@ITEMS'][i].stid, // category or variation
-				order['@ITEMS'][i].base_price,        // unit price - required
-				order['@ITEMS'][i].qty             // quantity - required
-				]);
+		if(_app.data[P.datapointer].payment_status && _app.data[P.datapointer].payment_status.charAt(0) == 1)	{
+
+			_gaq.push(['_addTrans',
+				  P.orderID,           // order ID - required
+				  '', // affiliation or store name
+				  order.sum.order_total,          // total - required
+				  order.sum.tax_total,           // tax
+				  order.sum.ship_total,          // shipping
+				  order.sum.city,       // city
+				  order.sum.region,     // state or province
+				  order.sum.countrycode             // country
+			   ]);
+		
+			var L = order['@ITEMS'].length;
+			_app.u.dump(" -> "+L+" items in @ITEMS");
+		
+			for(var i = 0; i < L; i += 1)	{
+				_gaq.push(['_addItem',
+					P.orderID,         // order ID - necessary to associate item with transaction
+					order['@ITEMS'][i].product,         // SKU/code - required
+					order['@ITEMS'][i].prod_name,      // product name - necessary to associate revenue with product
+					order['@ITEMS'][i].stid, // category or variation
+					order['@ITEMS'][i].base_price,        // unit price - required
+					order['@ITEMS'][i].qty             // quantity - required
+					]);
+				}
+			_gaq.push(['_trackTrans']);
+
+
 			}
-		_gaq.push(['_trackTrans']);
+		else	{
+			//payment was declined or some kind of error occured. Do not track as conversion.
+			
+			}
 		}
 	else	{
 		//unable to determine order contents.
