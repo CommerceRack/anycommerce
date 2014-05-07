@@ -2179,7 +2179,10 @@ effects the display of the nav buttons only. should be run just after the handle
 					   "filter":{
 						  "and" : [
 						  // * zephyr -> modified default query to provide more targeted results.
-							 {"query":{"query_string":{"query": decodeURIComponent(infoObj.KEYWORDS), default_operator: "AND", "fields":["prod_name^5","pid","prod_desc"]}}},
+							 {"query":{"query_string":{"query": decodeURIComponent(infoObj.KEYWORDS), default_operator: "AND", "fields":[
+							 	"prod_name^10","pid","prod_desc",
+								"keywords","user_keywords", "prod_upc", "prod_mfgid", "user:prod_class2", "prod_class3", "prod_color", "prod_voltage"
+								]}}},
 							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
 						  }});
