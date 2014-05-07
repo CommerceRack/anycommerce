@@ -1120,7 +1120,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 									if(_app.model.responseHasErrors(rd)){
 										_app.u.throwMessage(rd);
 										}
-									else if(_app.data[rd.datapointer]._cartid) {
+									else if(_app.data[rd.datapointer] && _app.data[rd.datapointer]._cartid) {
 										_app.calls.cartDetail.init(_app.data[rd.datapointer]._cartid,{},'immutable');
 										_app.model.dispatchThis('immutable');
 										}
