@@ -98,6 +98,9 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'exact','route':'contest/','callback':function(routeObj){
 					showContent('static',{'templateID':'contestTemplate'})
 					}});
+				_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
+					showContent('search',{'elasticsearch':{"query" : {"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}}}});
+					}});
 				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 					if(_app.ext.store_swc.filterData[routeObj.params.id]){
 						routeObj.params.templateID = "filteredSearchTemplate";

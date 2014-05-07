@@ -1100,12 +1100,12 @@ this will likely become more flexible in the future. ###
 	<div class="productInfo clearRight marginBottom no_underline">
 		<div class="productInfoSection marginBottom">
 			<div class="floatRight mfgLogoContainer">
-				<a data-tlc="bind $href '.%attribs.zoovy:prod_mfg'; if(is $href --notblank;){{ format --prepend='#!search/keywords/'; apply --attrib='href';}};">
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_mfg'; if(is $href --notblank;){{format --uriencode; format --prepend='#!search/manufacturer/'; apply --attrib='href';}};">
 					<img data-tlc="bind $var '.%attribs.zoovy:prod_image99'; if (is $var --notblank){{store_swc#imageurl --name=$var --b='ffffff'; apply --attrib='src';}};"/>
 				</a>
 			</div>
 			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
-			<h5><a data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{format --prepend='More Products By: '; apply --append; bind $href '.%attribs.zoovy:prod_mfg'; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></h5>
+			<h5><a data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --notblank;) {{format --prepend='More Products By: '; apply --append; bind $href '.%attribs.zoovy:prod_mfg'; format --uriencode; format --prepend='#!search/manufacturer/'; apply --attrib='href';}};"></a></h5>
 			<div class="clear"></div>
 		</div>
 	
