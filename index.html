@@ -677,7 +677,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="inquiryTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	<form class="floatRight" action="#" onSubmit="return false;">
+	<form class="floatRight" action="#" onSubmit="return false;" data-app-submit="store_swc|sendInquiry">
 		<fieldset class="marginTop">
 			<legend>Contact Us for a Player Specific Product</legend>
 			<div class="appMessaging"></div>
@@ -688,12 +688,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			
 			
 			<div class='alignRight'>
-				<button onClick="app.ext.cubworld.a.sendInquiry($(this).closest('form'));" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
+				<button onClick="$(this).closest('form').trigger('submit'); return false;" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
 					<span class="ui-button-text">Send Message</span>
 				</button>
 			</div>
 		</fieldset>
 	</form>
+	<div data-tlc="store_swc#dump;"></div>
+	<div class="description" data-tlc="bind $var '.%page.description';store_swc#dump; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></div>
 </div>
 
 <div id="rewardsTemplate">

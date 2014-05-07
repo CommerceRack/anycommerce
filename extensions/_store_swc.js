@@ -93,7 +93,7 @@ var store_swc = function(_app) {
 					showContent('category',{'navcat':'.careers','templateID':'categoryTemplateHTML'})
 					}});
 				_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
-					showContent('static',{'templateID':'inquiryTemplate'})
+					showContent('category',{'navcat':'.help_desk.player-inquiry','templateID':'inquiryTemplate'})
 					}});
 				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
 					showContent('static',{'templateID':'rewardsTemplate'})
@@ -774,9 +774,34 @@ var store_swc = function(_app) {
 					_app.model.dispatchThis('mutable');
 					}
 				else {
-					app.u.dump(form);
-					$form.anymessage(app.u.errMsgObject("You must provide a name and email!"));
+					_app.u.dump(form);
+					$form.anymessage(_app.u.errMsgObject("You must provide a name and email!"));
 					}
+				},
+			sendInquiry : function($form, p){
+				p.preventDefault();
+				var formJSON = $form.serializeJSON();
+				
+				obj = {
+					'sender' : formJSON.sender,
+					'subject' : 'Player Inquiry Form Submission',
+					'body' : 'Player: '+formJSON.playername+"\n"
+							+'Team: '+formJSON.team+"\n"
+							+'Message:\n'+formJSON.body
+					};
+				obj._tag = {
+					"callback":function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							}
+						else {
+							_app.u.throwMessage(_app.u.successMsgObject("Thank you, your request has been submitted!"));
+							}
+						}
+					};
+				obj._cmd = "appSendMessage";
+				obj.msgtype = "feedback";
+				_app.model.addDispatchToQ(obj,'mutable');
+				_app.model.dispatchThis('mutable');
 				},
 			toggleFooter : function($ele, p){
 				p.preventDefault();
