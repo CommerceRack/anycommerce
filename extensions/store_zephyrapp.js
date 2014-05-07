@@ -55,10 +55,19 @@ var store_zephyrapp = function(_app) {
 		});
 
 	$(window).bind('resizeEnd', function(P) {
-		//resize the logo to maximum available space.
+		//resize all the images in the visible content area based on srcset and new browser dimensions.
 		if(typeof handleSrcSetUpdate == 'function')	{
 //			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length+" and ID: "+$("#mainContentArea :visible:first").attr('id'));
 			handleSrcSetUpdate($("#mainContentArea :visible:first"))
+			}
+		
+		//css will handle the category list show/hide to some degree.
+		//however, if the browser was smaller than 1040 and the cats were toggled, an inline 'hide' would be present and cats wouldn't show up. over 1040, cats are always visible.
+		if($(window).width() >= 1040)	{
+			$('#tier1catContainer').show(); 
+			}
+		else	{
+			$('#tier1catContainer').hide(); //may not need this. here in case width > 1040 and then scaled down. Cats would go into 'open' position. felt unnatural.
 			}
 		}).trigger('resizeEnd');
 

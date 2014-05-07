@@ -81,6 +81,7 @@ $("#productTemplate, #homepageTemplate, #categoryTemplate").on('complete.textblo
 	myApp.ext.store_zephyrapp.u.revealation($ele);
 	});
 
+//triggers an update of the minicart when quantities in cart get adjusted.
 $('#cartTemplate').on('complete.updateMinicart',function(state,$ele,infoObj)	{
 	var cartid = infoObj.cartid || myApp.model.fetchCartID();
 	var $appView = $('#appView'), cart = myApp.data['cartDetail|'+cartid], itemCount = 0, subtotal = 0, total = 0;
@@ -107,8 +108,8 @@ $("#homepageTemplate").on('complete.cycle',function(state,$ele,infoObj){
 	});
 
 
-//  now add some template functions.
-$("#productTemplate").on('depart.youtubeReset',function(state,$ele,infoObj){
+//  stops the playing of video content when leaving product detail page.
+$("#productTemplate, #productTemplateQuickView").on('depart.youtubeReset',function(state,$ele,infoObj){
 	var $iframe = $("[data-app-role='videoContainer']:first",$ele).find('iframe:first');
 	var video = $iframe.attr('src');
 	$iframe.attr('src',''); //this stops the video.
@@ -117,18 +118,17 @@ $("#productTemplate").on('depart.youtubeReset',function(state,$ele,infoObj){
 
 //don't need to check if cycle is already running because it's turned off in a 'depart'.
 $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
-	dump(" -> executing categoryComplete for slideshows");
 	function execCycle()	{
 		if(myApp.u.carouselIsReady())	{
 			var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele);
 			//the 'trio' uses the old legacy banner format (2 elements, one for href and one for img) so .slide is added to the image, if it is set instead of using a, which is always present.
 			if($('.slide',$trio).length > 1 && $(document.body).width() < 760)	{
-				$trio.data('isCycle',true).cycle(); //isCycle is what the depart event uses to determine if a destroy should be run.
+				$trio.show().data('isCycle',true).cycle(); //isCycle is what the depart event uses to determine if a destroy should be run.
 				}
 			var $big = $("[data-app-role='catBigSlideshowContainer']",$ele);
 			//the big banners use the newer legacy banner syntax (1 banner element) so the 'a' will only be present if the banner is populated.
 			if($('a',$big).length > 1)	{
-				$big.cycle();
+				$big.show().cycle();
 				}
 
 			}
