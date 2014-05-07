@@ -1887,7 +1887,6 @@ _app.model.dispatchThis('immutable');
 				_app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //adminCustomerUpdateShow
 
-
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
 					var
@@ -1944,7 +1943,6 @@ _app.model.dispatchThis('immutable');
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				_app.model.dispatchThis();
 				}, //showOrgChooser
-			
 
 			adminCustomerWalletPeekShow : function($ele,P)	{
 				P.preventDefault();
@@ -1993,7 +1991,7 @@ _app.model.dispatchThis('immutable');
 					$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 					}
 				}, //orderCustomerEdit
-			
+
 			faqTopicAddNewShow : function($ele,P)	{
 				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
@@ -2007,7 +2005,7 @@ _app.model.dispatchThis('immutable');
 				$D.anyform();
 				$("<button \/>").text('save').button().on('click',function(event){
 					event.preventDefault();
-					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE"+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE="+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
@@ -2017,7 +2015,9 @@ _app.model.dispatchThis('immutable');
 							$D.dialog('close');
 							}
 						}}},"mutable");
+					_app.model.addDispatchToQ({"_cmd":"adminFAQList","_tag":{"datapointer":"adminFAQList"}},"mutable"); //update this in memory so that panels show appropriate content.
 					_app.model.dispatchThis("mutable");
+					
 					}).appendTo($('form',$D));
 				$D.dialog('option','width',250);
 				$D.dialog('open');
@@ -2045,7 +2045,6 @@ _app.model.dispatchThis('immutable');
 						}
 					});
 				},
-
 
 			faqQuestionUpdateShow : function($ele,P)	{
 				var faqid = $ele.closest('tr').data('faq_id');
