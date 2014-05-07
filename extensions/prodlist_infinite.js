@@ -276,7 +276,7 @@ else	{
 					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
 					}
 				else	{
-					$(window).on('scroll.infiniteScroll',function(){
+					$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll',function(){
 						//will load data when two rows from bottom.
 						if( $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
 							$(window).off('scroll.infiniteScroll');
