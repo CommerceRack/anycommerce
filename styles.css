@@ -538,6 +538,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.sbb6	{background-position:0 -600px;}
 	.sbb7	{background-position:0 -720px;}
 	.sbb8	{background-position:0 -840px;}
+	.sbb9	{background-position:0 -960px;}
+	.sbb10	{background-position:0 -1080px;}
+	.sbb11	{background-position:0 -1200px;}
 
 	.textBlockMaxHeight	{max-height:400px;}
 	
