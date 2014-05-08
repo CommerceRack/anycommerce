@@ -309,7 +309,8 @@ var store_zephyrapp = function(_app) {
 			dwiwempty : function(data,thisTLC)	{
 				var r = true;
 				//needs to be first or the blanket data.value will b hit and return true.
-				if(data.value == 'ALT=&IMG=&LINK=')	{r = false;} //this is what a blank banner attribute will be set to
+				if(data.value === null)	{r = false}
+				else if(data.value == 'ALT=&IMG=&LINK=')	{r = false;} //this is what a blank banner attribute will be set to
 				else if(data.value === 0)	{}
 				else if(data.value)	{}
 				else	{

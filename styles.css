@@ -69,6 +69,8 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 .sprite	{background:url(images/sprites.png);}
 .shipsFree	{background-position:0 -105px; width:90px; height:15px}
 
+
+
 /* header */
 
 #mastHead	{position:relative;}
@@ -161,7 +163,6 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	-webkit-border-radius: 0 .6em .6em .6em;
 	border-radius: 0 .6em .6em .6em;
 	} /* these are revealed onclick */
-
 #tier1catContainer button	{
 	position:absolute; top:0; right:0;
 	-webkit-border-radius: 0 .6em .0em .6em;
@@ -185,6 +186,19 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	}
 #tier1categories img	{float:left; margin-right:.5em;}
 #tier1categories li a	{text-decoration:none;}
+
+
+
+
+/* mfg logos -> use w/ sprite */
+#shopByBrandContainer	{margin:.3em auto; text-align:center;}
+.viewAllBrandsHref	{display:none;}
+#shopByBrandContainer .mfg	{display:none;}
+.eclipse	{background-position: -415px -360px; width:80px; height:37px; }
+.spyder		{background-position: -415px -414px; width:80px; height:37px; }
+.valken		{background-position: -415px -335px; width:80px; height:12px; }
+.empire		{background-position: -415px -456px; width:80px; height:12px; }
+
 
 
 .checkoutButton, .ui-widget-content .checkoutButton	{
@@ -521,8 +535,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.sbb3	{background-position:0 -240px;}
 	.sbb4	{background-position:0 -360px;}
 	.sbb5	{background-position:0 -480px;}
-	.sbb6	{background-position:0 -500px;}
-	.sbb7	{background-position:0 -620px;}
+	.sbb6	{background-position:0 -600px;}
+	.sbb7	{background-position:0 -720px;}
+	.sbb8	{background-position:0 -840px;}
 
 	.textBlockMaxHeight	{max-height:400px;}
 	
@@ -563,8 +578,24 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#mainContentArea	{min-height:500px;}
 	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50; top:143px;}
 	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
+	
+	#tier1categories	{clear:both; margin-bottom:.3em; dislay:block;}
+/* a clearfix, but only at this size, to cause separation between cats and brands */
+	#tier1categories:after {
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+		}
+	
 	#tier1categories li	{width:100%; margin:.1em 0;}
 	#shopNowLink	{display:none;}
+
+	.viewAllBrandsHref	{display:block;}
+	.shopByBrandHref	{display:none;}
+	#shopByBrandContainer	{border:1px solid #cccccc; padding:.3em; margin:.5em 0;}
+	#shopByBrandContainer .mfg	{display:block; float:left; margin:.3em .1em;}
 	
 	.zProductList li.plLineItem	{width:24%; height:230px;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}

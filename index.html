@@ -176,8 +176,13 @@ $(document).ready(function(){
 		<div id='tier1catContainer'>
 			<button title='close'>X</button>
 			<nav id='tier1categories' class='mastHeadMenu'></nav>
-			<div class='clearfix'>
-			<a href='#!category/.shop_by_brand'>Shop By Brand</a>
+			<div class='clearfix' id='shopByBrandContainer'>
+				<a class='sprite mfg eclipse' href='#!category/shop_by_brand.eclipse_paintball' title='eclipse'></a>
+				<a class='sprite mfg spyder' href='#!category/shop_by_brand.spyder' title='spyder'></a>
+				<a class='sprite mfg valken' href='#!category/shop_by_brand.valken' title='valken'></a>
+				<a class='sprite mfg empire' href='#!category/shop_by_brand.empire' title='empire'></a>
+				<a href='#!category/shop_by_brand' class='viewAllBrandsHref'>View All Brands</a>
+				<a href='#!category/shop_by_brand' class='shopByBrandHref'>Shop By Brand</a>
 			</div>
 		</div>
 		<form name='headerSearchFrm' id='mastHeadSearchFrm' action='#' class='productSearchForm' method="get"  data-app-submit='quickstart|searchFormSubmit'>
@@ -431,23 +436,31 @@ don't modify the 'data-templateid' unless you are changing template names and up
 The images get .slide only if populated. the category complete event counts the instances of slide within the app-role and if > 1, will generate a slideshow.
  -->
  	<h3 class='reversedHeader displayNone' data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show; apply --append;"></h3>
-	
+
 	<section data-app-role="catTrioSlideshowContainer" class="clearfix marginBottom catTrioSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="carousel" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-allow-wrap="false" data-cycle-pause-on-hover="true" data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show;">
 		
-		<a href='#' data-tlc="bind $var '.%page.ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
 		<img data-tlc="bind $var '.%page.ad1'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 		
-		<a href='#' data-tlc="bind $var '.%page.ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
 		<img data-tlc="bind $var '.%page.ad2'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 		
-		<a href='#' data-tlc="bind $var '.%page.ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}};">
+		<a href='#' data-tlc="bind $var '.%page.ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --remove --tag='$tag';}};">
 		<img data-tlc="bind $var '.%page.ad3'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
 		</a>
 
 	</section>
 
+
+	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_html_focus'; store_zephyrapp#dwiwempty; apply --show;">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html_focus'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+	</section>
+
+	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_html'; store_zephyrapp#dwiwempty; apply --show;">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+	</section>
 
 	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description'; store_zephyrapp#dwiwempty; apply --show;">
 		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
