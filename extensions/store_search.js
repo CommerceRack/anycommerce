@@ -92,7 +92,6 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
 				var universalFilters = $.extend(true, [], _app.ext.store_search.vars.universalFilters);
-				dump(universalFilters);
 				if(universalFilters.length){
 					if(obj.filter){
 						var tmp = obj.filter;

@@ -120,8 +120,6 @@ var store_swc = function(_app) {
 								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
 								}
 							}
-						dump("HERE");
-						dump(routeObj.params.dataset);
 						routeObj.params.dataset.userTeams = _app.ext.store_swc.vars.userTeams;
 						showContent('static',routeObj.params)
 						}
