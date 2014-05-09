@@ -3117,10 +3117,10 @@ $tag.append($tmp.html());
 $tmp.empty().remove();
 			},
 		
-		truncText : function($tag,data){
+		trunctext : function($tag,data){
 			var o = _app.u.truncate(data.value,data.bindData.numCharacters);
 			$tag.text(o);
-			}, //truncText
+			}, //trunctext
 
 //used in a cart or invoice spec to display which options were selected for a stid.
 		selectedoptionsdisplay : function($tag,data)	{
