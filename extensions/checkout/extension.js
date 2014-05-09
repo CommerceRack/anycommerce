@@ -1375,14 +1375,14 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$container = $ele.closest("[data-app-role='customShipMethodContainer']"),
 					cartid = $ele.closest(":data(cartid)").data('cartid'),
 					sfo = $container.serializeJSON();
-					
+					dump(" ----------------------------------------------------------- ");
 				$('.ui-state.error',$container).removeClass('ui-state-error'); //remove any previous errors.
 				if(sfo['sum/shp_carrier'] && sfo['sum/shp_method'] && sfo['sum/shp_total'])	{
 					_app.model.addDispatchToQ({
 						'_cmd':'adminCartMacro',
 						'_cartid' : cartid,
 						'_tag' : {},
-						"@updates" : ["SETSHIPPING?"+$.param(sfo)]
+						"@updates" : ["SETSHIPPING?"+_app.u.hash2kvp(sfo)]
 						},'immutable');
 					_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 					_app.model.dispatchThis('immutable');
