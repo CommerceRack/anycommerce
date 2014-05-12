@@ -1814,7 +1814,7 @@ A note about cookies:
 						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
 						},
 					'success' : function(file){
-						var success;
+						var success, errors;
 						try{
 							var pegParserSource = PEG.buildParser(file);
 							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
@@ -1822,13 +1822,14 @@ A note about cookies:
 							}
 						catch(e)	{
 							_app.u.dump("Could not build pegParser.","warn");
-//							_app.u.dump(buildErrorMessage(e),"error");
+							errors = buildErrorMessage(e)
+							_app.u.dump(errors,"error");
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");
 							}
 						else	{
-							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file. errors:<br>'+errors});
 							}
 						}
 					})
