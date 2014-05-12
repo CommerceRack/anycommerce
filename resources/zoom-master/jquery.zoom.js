@@ -3,6 +3,10 @@
 	Enlarge images on click or mouseover.
 	(c) 2014 Jack Moore - http://www.jacklmoore.com/zoom
 	license: http://www.opensource.org/licenses/mit-license.php
+	
+	
+	// -> USE THE JT VERSION. It has a touch end event.
+	
 */
 (function ($) {
 	var defaults = {
