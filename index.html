@@ -887,7 +887,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		
 		<div class="filterGroup countHideImmune" data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};">
 			<legend>Price:</legend>
-			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; store_swc#filterrange --index='base_price';"></div>
+			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
 		</div>
 		
 		<div data-tlc="bind $var '.options.user:app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
