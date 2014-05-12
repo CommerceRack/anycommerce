@@ -189,7 +189,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 //this gets run whether there are results or not. It is the events responsibility to make sure results were returned. 
 // That way, it can handle a no-results action.
-				$list.trigger('listcomplete');
+				$list.trigger('listcomplete',_rtag);
 				}
 			}
 		}, //callbacks

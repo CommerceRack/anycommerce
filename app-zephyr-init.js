@@ -150,6 +150,24 @@ $("#categoryTemplate").on('depart.cycle',function(state,$ele,infoObj){
 		}
 	});
 
+
+//track the 'zero results found' queries for searches.
+$('#resultsProductListContainer').on('listcomplete',function(e,rd){
+	if(!$('#resultsProductListContainer').children().length)	{
+		if(rd.KEYWORDS)	{
+			_gaq.push(['_trackEvent','Search','No results - keyword',rd.KEYWORDS]);
+			}
+		else if(rd.TAG)	{
+			_gaq.push(['_trackEvent','Search','No results - tag',rd.TAG]);
+			}
+		else	{
+			_gaq.push(['_trackEvent','Search','No results']);
+			}
+		
+		}
+	});
+
+
 //After the children are added to the select list, check for inventory availability and disable if not purchaseable.
 //also, set the option of the pid in focus to selected.
 $("select[data-app-role='childrenSiblingsProdlist']",'#productTemplate').on('listcomplete',function(){
@@ -183,6 +201,9 @@ $("#productTemplate, #productTemplateQuickView").on('complete.dynimaging',functi
 		slideshow: false
 		});
 	});
+
+
+
 
 //when a productDetail page loads, the anytabs code 'could' be triggered prior to animation finishing, which means the li 'may' not register as visible.
 //this is here to ensure a tab is open.
