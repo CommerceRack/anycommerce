@@ -527,9 +527,13 @@ var store_zephyrapp = function(_app) {
 					onZoomIn : function(){
 						//for small screens, slide content so the primary image is at the top of the viewport, ensuring the 'zoom' is visible.
 						if($(document.body).width() < 500)	{
-							$('html, body').animate({scrollTop : ($(this).closest(".vidsAndPics").position().top + $('#mastHead').outerHeight())},500);
+							var $picsContainer = $(this).closest(".vidsAndPics");
+							if($picsContainer.length)	{
+								var tabHeight = $('ul:first',$picsContainer).outerHeight() || 0;
+								$('html, body').animate({scrollTop : ($picsContainer.position().top + tabHeight + $('#mastHead').outerHeight() + 10)},500);
+								dump(" --------------> from top: "+($picsContainer.position().top + tabHeight + $('#mastHead').outerHeight()));
+								}
 							}
-						dump(" --------------> from top: "+$(this).closest(".vidsAndPics").position().top);
 						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show();
 						},
 					onZoomOut : function(){
