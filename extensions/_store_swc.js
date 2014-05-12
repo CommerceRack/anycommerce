@@ -606,36 +606,37 @@ var store_swc = function(_app) {
 						}
 					else {
 						_app.ext.prodlist_infinite.callbacks.handleInfiniteElasticResults.onSuccess(rd);
-						var facets = _app.data[rd.datapointer].facets;
-						$('[data-filter-type=checkboxList]',rd.filterList).each(function(){
-							$('input', $(this)).each(function(){
-								var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
-								var val = $(this).attr('name');
-								
-								var $fg = $(this).closest('.filterGroup')
-								var $ic = $(this).closest('[data-filter=inputContainer]');
-								
-								var summary = $.grep(facets[index].terms, function(e, i){
-									return e.term === val;
-									})[0];
-								if(summary){
-									$fg.show();
-									$ic.show();
-									$('[data-filter=count]', $ic).text("("+summary.count+")");
-									}
-								else {
-									if($fg.hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
+						if(_app.data[rd.datapointer].facets){
+							$('[data-filter-type=checkboxList]',rd.filterList).each(function(){
+								$('input', $(this)).each(function(){
+									var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
+									var val = $(this).attr('name');
+									
+									var $fg = $(this).closest('.filterGroup')
+									var $ic = $(this).closest('[data-filter=inputContainer]');
+									
+									var summary = $.grep(_app.data[rd.datapointer].facets[index].terms, function(e, i){
+										return e.term === val;
+										})[0];
+									if(summary){
+										$fg.show();
+										$ic.show();
+										$('[data-filter=count]', $ic).text("("+summary.count+")");
+										}
 									else {
-										$ic.hide();
-										$(this).prop('checked',false);
-										if($('[data-filter=inputContainer]:visible',$fg).length < 1){
-											$fg.hide();
+										if($fg.hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
+										else {
+											$ic.hide();
+											$(this).prop('checked',false);
+											if($('[data-filter=inputContainer]:visible',$fg).length < 1){
+												$fg.hide();
+												}
 											}
 										}
-									}
+									});
+								
 								});
-							
-							});
+							}
 						}
 					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form});
 				_app.model.dispatchThis();
