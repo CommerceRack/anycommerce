@@ -519,11 +519,11 @@ var store_zephyrapp = function(_app) {
 				},
 			//this is a function because it's called as part of the productTemplate onComplete as well as in prodThumb2Primary
 			applyZoom : function($primaryImage)	{
-				dump(" -> $primaryImage.length: "+$primaryImage.length);
+//				dump(" -> $primaryImage.length: "+$primaryImage.length);
 				//the zoom plugin needs to be executed on the parent element of the image because it needs to add children.
 				$primaryImage.parent().zoom({
 					'url' : $primaryImage.parent().attr('href'),
-			//		'touch' : true,
+					'touch' : true,
 					onZoomIn : function(){
 						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show()
 						},
