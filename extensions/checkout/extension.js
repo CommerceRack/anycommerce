@@ -1375,7 +1375,6 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$container = $ele.closest("[data-app-role='customShipMethodContainer']"),
 					cartid = $ele.closest(":data(cartid)").data('cartid'),
 					sfo = $container.serializeJSON();
-					dump(" ----------------------------------------------------------- ");
 				$('.ui-state.error',$container).removeClass('ui-state-error'); //remove any previous errors.
 				if(sfo['sum/shp_carrier'] && sfo['sum/shp_method'] && sfo['sum/shp_total'])	{
 					_app.model.addDispatchToQ({
