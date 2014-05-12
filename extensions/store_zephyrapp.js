@@ -319,6 +319,23 @@ var store_zephyrapp = function(_app) {
 				dump(" -> r: "+r);
 				return r;
 				},
+
+			//if the value is blank, null, empty, undefined , return false (stops tlc processing on this statement)
+			dwiwemptybanner : function(data,thisTLC)	{
+				var r = true;
+				//needs to be first or the blanket data.value will b hit and return true.
+				if(data.value == 'ALT=&IMG=&LINK=')	{r = false;} //this is what a blank banner attribute will be set to
+				else if(!data.value)	{r = false;}
+				//banner element type w/ content populated.
+				else if(data.value.indexOf('IMG=') >=0 && data.value.indexOf('LINK=') >= 0)	{
+					var obj = _app.u.kvp2Array(data.value);
+					if(obj && !obj.IMG)	{r = false;}
+					}
+				else	{
+					r = false;
+					}
+				return r;
+				},
 			
 //Generate a list of thumbnails, adding srcset along the way.
 //the image size for 768 and 1024 should be the same, specifically for magic zoom. That way the click to put an alternate image into the primary spot uses a consistent size.
