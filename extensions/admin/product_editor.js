@@ -640,7 +640,6 @@ _app.u.addEventDelegation($target);
 		u : {
 
 			handleOptionsSortableStop : function($tr)	{
-				dump(" ----------> GOT HERE!!!");
 				if($tr.closest('table').data('app-role') == "storeVariationsOptionsContainer")	{} //same parent. do nothing.
 				else	{
 					//moved to new parent.
@@ -3287,8 +3286,8 @@ function type2class(type)	{
 			
 			variationSearchByIDExec : function($ele,p)	{
 				var varID = $ele.closest('tr').data('id');
+				navigateTo('#!tab/product');
 				_app.ext.admin_prodedit.u.prepContentArea4Results($('#productContent'));
-
 				$("[data-app-role='productManagerSearchResults']",$('#productContent')).showLoading({'message':'Performing search...'});
 
 				_app.model.addDispatchToQ({
@@ -3305,7 +3304,6 @@ function type2class(type)	{
 						},
 					"type":"product"
 					},"mutable");
-				navigateTo('#:product');
 				_app.model.dispatchThis("mutable");
 				}, //variationSearchByIDExec
 
@@ -3837,8 +3835,6 @@ function type2class(type)	{
 						$ele.closest('form').anymessage({"message":"In admin_prodedit.e.variationCreateExec, either variationmode ["+mode+"] was unable to be determined or was an invalid value (only store and product are supported) or mode was set to product and PID ["+pid+"] was unable to be determined. ","gMessage":true});
 						}
 
-
-
 					}
 				else if(!sfo.type)	{
 					$form.anymessage({'message':'Please select a type'});
@@ -3850,6 +3846,7 @@ function type2class(type)	{
 
 //a button for toggling was added for two reasons: people may not like/have drag and drop and if no options were enabled, hard to get placement exactly right.
 			variationsOptionToggle : function($ele,p)	{
+				p.preventDefault();
 				var $tr = $ele.closest('tr');
 				var $editor = $ele.closest("[data-app-role='variationOptionEditorContainer']"); //used for context.
 				if($ele.closest("[data-app-role='variationsOptionsTbody']").length)	{
@@ -3859,6 +3856,7 @@ function type2class(type)	{
 					$("[data-app-role='variationsOptionsTbody']",$editor).append($tr);
 					}
 				_app.ext.admin_prodedit.u.handleOptionsSortableStop($tr);
+				return false;
 				} //variationsOptionToggle
 
 			} //Events

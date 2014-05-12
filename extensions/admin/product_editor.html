@@ -2499,23 +2499,26 @@ Snacks|Doughnuts<br />
 	<td class='threeColumn valignTop'>
 	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group.
 	databind on tbody added w/ js later so that it isn't translated prematurely (wrong data was getting set) -->
-
-	<table data-app-role='storeVariationsOptionsContainer' class='displayNone gridTable'>
-	<thead>
-	<tr>
-		<th></th>
-		<th></th>
-		<th>Prompt</th>
-		<th>Price</th>
-		<th>Weight</th>
-		<th>Assembly</th>
-		<th>ID/Value</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
-	</table>
-
+	<div data-tablefilter-role='container'>
+		<div>
+		<input name='tableSearchQuery' type='search' placeholder='filter options' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+		</div>
+		<table data-app-role='storeVariationsOptionsContainer' class='displayNone gridTable' data-tablefilter-role='table' data-tablefilter-selector='tr'>
+		<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Prompt</th>
+			<th>Price</th>
+			<th>Weight</th>
+			<th>Assembly</th>
+			<th>ID/Value</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
+		</table>
+	</div>
 
 		<div class='buttonset alignRight'>
 			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodedit|variationOptionAddShow'>Add New Option</button>
@@ -2589,11 +2592,11 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 <tr id='optionsEditorRowTemplate' class='pointer'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
 	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
-	<td data-bind="var:option(prompt); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(prompt); format:text;"></td>
 	<td data-bind="var:option(p); format:text;"></td>
 	<td data-bind="var:option(w); format:text;"></td>
-	<td data-bind="var:option(asm); format:text;"></td>
-	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
+	<td class='isSearchable' data-bind="var:option(asm); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 	<div data-app-click='admin_prodedit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
 	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-circle-close' data-text='false'>Delete</button>
