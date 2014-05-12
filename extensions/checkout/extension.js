@@ -1692,7 +1692,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							$fieldset.anymessage({'message':rd});
 							}
 						else	{
-							window.location = _app.data[rd.datapointer].URL
+							window.location = _app.data[rd.datapointer].URL+'&useraction=commit';
 							}
 						},"extension":"order_create",'parentID': $ele.closest("[data-app-role='checkout']").attr('id')},'immutable');
 					_app.model.dispatchThis('immutable');

@@ -1245,7 +1245,7 @@ in a reorder, that data needs to be converted to the variations format required 
 									}
 								else	{
 									if(_app.data[rd.datapointer] && _app.data[rd.datapointer].URL)	{
-										document.location = _app.data[rd.datapointer].URL;
+										document.location = _app.data[rd.datapointer].URL+'&useraction=commit';
 										}
 									else	{
 										$('#globalMessaging').anymessage({"message":"In paypalecbutton render format, dispatch to obtain paypal URL was successful, but no URL in the response.","gMessage":true});
