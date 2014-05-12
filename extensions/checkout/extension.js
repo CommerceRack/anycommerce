@@ -1685,7 +1685,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
 //***201402 Must pass cartid parameter on the call itself -mc
 					var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid},{'callback':function(rd){
+					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid,'useMobile':($(document.body).width() < 500 ? 1 : 0)},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('body').hideLoading();
 							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
