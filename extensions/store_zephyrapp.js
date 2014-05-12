@@ -525,10 +525,15 @@ var store_zephyrapp = function(_app) {
 					'url' : $primaryImage.parent().attr('href'),
 					'touch' : true,
 					onZoomIn : function(){
-						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show()
+						//for small screens, slide content so the primary image is at the top of the viewport, ensuring the 'zoom' is visible.
+						if($(document.body).width() < 500)	{
+							$('html, body').animate({scrollTop : ($(this).closest(".vidsAndPics").position().top + $('#mastHead').outerHeight())},500);
+							}
+						dump(" --------------> from top: "+$(this).closest(".vidsAndPics").position().top);
+						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').show();
 						},
 					onZoomOut : function(){
-						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').hide()
+						$(this).closest(".vidsAndPics").find('.zoomToolZoomContainer').hide();
 						},
 					'target' : $primaryImage.closest(".vidsAndPics").find('.zoomToolZoomContainer')
 					});				
