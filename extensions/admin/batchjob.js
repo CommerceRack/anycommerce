@@ -224,7 +224,7 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 						'_cmd':'adminBatchJobStatus',
 						'jobid':jobid,
 						'_tag':	{
-							'callback':'anycontent',
+							'callback':'tlc',
 							'datapointer':'adminBatchJobStatus|'+jobid,
 							'jqObj':$target,
 							'mode' : 'dialog',
@@ -414,7 +414,7 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 
 			adminBatchJobExec : function($ele,p)	{
 				var data = $ele.closest("[data-element]").data();
-				dump(" -> data: "); dump(data);
+//				dump(" -> data: "); dump(data);
 				if(data && $ele.data('whitelist') && $ele.data('type'))	{
 					var whitelist = $ele.data('whitelist').split(',');
 					var vars = _app.u.getWhitelistedObject(data,whitelist) || {};

@@ -1,27 +1,37 @@
 
 
-<section class='ui-widget marginBottom' id='batchJobStatusTemplate'>
-	<div class='floatRight batchTimer' data-app-role='batchJobTimer'></div>
-	<hgroup class='marginBottom'>
-		<h3><span data-bind="var: batchjob(jobid); format:text; pretext:Job ID: ;"></span></h3>
-		<h5 data-bind="var: batchjob(status); format:text; pretext:Status: ;"></h5>
+<section class="ui-widget marginBottom" id="batchJobStatusTemplate">
+	<div class="floatRight batchTimer" data-app-role="batchJobTimer"></div>
+	<hgroup class="marginBottom">
+		<h3><span data-tlc="bind $var '.jobid'; if (is $var --notblank;) {{format --prepend='Job ID: '; apply --append;}};"></span></h3>
+		<h5 data-tlc="bind $var '.status'; if (is $var --notblank;) {{format --prepend='Status: '; apply --append;}};"></h5>
 	</hgroup>
 
-	<div data-bind="var: batchjob(started); format:epoch2mdy; showtime:1; pretext:Started: ;"></div>
+	<div data-tlc="bind $var '.started'; datetime --out='mdy'; if (is $var --notblank;) {{format --prepend='Started: '; apply --append;}};"></div>
 	<div>
-		<span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span>
-		<span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span>
-		<div data-bind="var: batchjob(records_warn); format:text; pretext:Warnings: ; hideZero:false;"></div>
-		<div data-bind="var: batchjob(records_error); format:text; pretext:Errors: ; hideZero:false;"></div>
+		<span data-tlc="bind $var '.records_done'; if (is $var --notblank;) {{format --prepend='Records done/total: '; apply --append;}};"></span>
+		<span data-tlc="bind $var '.records_total'; if (is $var --notblank;) {{format --prepend='/'; apply --append;}};"></span>
+		<div data-tlc="bind $var '.records_warn'; if (is $var --notblank;) {{format --prepend='Warnings: '; apply --append;}};"></div>
+		<div data-tlc="bind $var '.records_error'; if (is $var --notblank;) {{format --prepend='Errors: '; apply --append;}};"></div>
 	</div>
 
-	<p class='marginBottom' data-bind="var: batchjob(status_msg); format:text;"></p>
+	<p data-tlc="bind $var '.status_msg'; if (is $var --notblank;) {{apply --append;}};" class="marginBottom"></p>
 
 
-	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
-	<button data-app-click="admin_batchjob|adminBatchJobCleanupExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-trash'>Cancel/Remove Job</button>
+	<p data-tlc="bind $var '.notes'; if (is $var --notblank;) {{apply --append;}};" class="marginBottom"></p>
+	<button data-app-click="admin_batchjob|adminBatchJobCleanupExec" class="applyButton" data-text="true" data-icon-primary="ui-icon-trash"  data-tlc="bind $var '.status';  format --truncate='3'; apply --append; if(is $var --eq='END';) {{apply --hide;}};">Cancel/Remove Job</button>
 
-	<p>This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="#" onClick="navigateTo('#!ext/admin_batchjob/showBatchJobManager'); if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')}; return false">Batch Job Manager can be found here.</a></p>
+	<p data-tlc="bind $var '.status';  format --truncate='3'; apply --append; if(is $var --eq='END';) {{apply --hide;}};">This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="#!ext/admin_batchjob/showBatchJobManager" onclick="if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')};">Batch Job Manager can be found here.</a></p>
+
+<!--
+	<div class='buttonset'>
+
+		<button data-app-click="admin_batchjob|showReport" class='displayNone applyButton' data-text='true' data-icon-primary='ui-icon-image' data-tlc="bind $var '.batch_exec'; " data-bind="useParentData:true; format:handleButtonDisplay; extension:admin_batchjob; exec:REPORT;">View Report</button>
+		
+		<button data-app-click="admin_batchjob|showDownload" class='displayNone applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-s' data-bind="useParentData:true; format:handleButtonDisplay; extension:admin_batchjob; exec:EXPORT;">Download Report</button>
+
+	</div>
+-->
 
 </section>
 
