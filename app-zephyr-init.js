@@ -58,7 +58,7 @@ myApp.u.loadScript(myApp.vars.baseURL+'resources/jquery.cycle2.min.js',function(
 //a polyfill for sourceset. allows srcset to be set on an image tag to load images based on the size of the screen.
 //there's an 'activator' for this in the 'complete' for product, home and category pages.
 myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/srcset-polyfill-1.1.1-jt.js']); //a srcset polyfill. used for a lot of imagery.
-myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.min.js']); //used for mouseover zoom on product detail page.
+myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/zoom-master/jquery.zoom.jt.js']); //used for mouseover zoom on product detail page.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/imagesloaded-3.1.4.js']); //used to determine if images within selector are all loaded. used with mzp on product layout.
 //myApp.rq.push(['script',0,myApp.vars.baseURL+'resources/magiczoomplus/magiczoomplus.js']); //dynamic imaging used on product layout.
 
