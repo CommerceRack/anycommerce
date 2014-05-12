@@ -27,9 +27,19 @@ The text is also hard coded in the homepage.  This block uses revealation.
 
 Category Template
 
-In order for the app to serve the category pages at the optimal speed and to also support dynamic content, the app will load the content for a file called 'pages.json'. For more information on how to update/generate this file, please go here:
+In order for the app to serve the category pages at the optimal speed and to also support dynamic content, the app will load the content for a file called 'pages.json'.  The pages.json file is used by the API to fetch content for an individual category page.  Using this file instead of accessing the website builder directly is done for a few reasons, including; faster, allows mass-updates to occur at once and/or allows programmatic changes of the pages.json file.
 
-[[ADD LINK TO WIKI]]
+To export:
+Go into the domain configuration edito
+Click edit for the domain you wish to export from.
+Click dropdown menu for the host that is set as apptimizer or vstore/app and choose the export pages.json option.
+This will trigger a batch process which opens a progress dialog.
+When the job is done, go to the batch manager (there is a link in the dialog or go to the utilities tab).
+Within the row for the export/pages job, there will be a download button. Push the button and save the file into the platform directory of your app.
+Now commit/sync your app.
+
+
+
 
 Within the category template, there are several sections. Each section may include a few banners, a header, a product list or a combination of a few of these things.  Most of the sections key off of one field to determine whether or not the entire section is visible.
 
