@@ -533,7 +533,8 @@ var store_swc = function(_app) {
 				var elasticsearch = {
 					"filter" : {
 						"and" : [filterBase]
-						}
+						},
+					"facets" : {}
 					}
 				var countFilters = [];
 				$('[data-filter-type=sort]', $form).each(function(){
@@ -560,34 +561,31 @@ var store_swc = function(_app) {
 					});
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
-					//var cf = [];
 					$('[data-filter=count]', $(this)).empty();
 					$('input', $(this)).each(function(){
 						var f = {"term" : {}};
-						f.term[$(this).closest('[data-filter-index]').attr('data-filter-index')] = $(this).attr('name');
+						var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
+						f.term[index] = $(this).attr('name');
+						if(!elasticsearch.facets[index]){
+							elasticsearch.facets[index] = {"terms" : {"field":index}}
+							}
 						if($(this).is(":checked")){
-							//dump(f);
-							//dump('checked')
-							//countFilters.push({"query":f, "$input":$(this)});
 							filter.or.push(f);
 							}
-						countFilters.push({"query":f, "$input":$(this)});
-						//cf.push({"query":f, "$input":$(this)});
 						});
 					if(filter.or.length > 0){
 						elasticsearch.filter.and.push(filter);
 						}
 					else {
-						//countFilters = countFilters.concat(cf);
 						}
 					});
-				//dump(countFilters);
 				var es;
 				if(!elasticsearch.sort){
 					var tmp = {
 						"query" :{
-							"function_score" : elasticsearch
-							}
+							"function_score" : {"filter":elasticsearch.filter}
+							},
+						"facets" : elasticsearch.facets
 						}
 					tmp.query.function_score.boost_mode = "sum";
 					tmp.query.function_score.script_score = {"script":"doc['boost'].value"};
@@ -598,54 +596,48 @@ var store_swc = function(_app) {
 					}
 				es.size = 30;
 				$resultsContainer.empty();
-				for(var i in countFilters){
-					var q = {
-						"query":{
-							"filtered":{
-								"query":countFilters[i].query,
-								"filter":elasticsearch.filter
-								}
-							}
-						}
-					var $input = countFilters[i].$input;
-					
-					var countES = _app.ext.store_search.u.buildElasticRaw(q);
-					countES.mode = 'elastic-count';
-					delete countES.size;
-					var _tag = {
-						'callback':function(rd){
-							//dump(rd);
-							if(_app.data[rd.datapointer].count){
-								rd.$input.closest('.filterGroup').show();
-								rd.$input.closest('[data-filter=inputContainer]').show();
-								}
-							else {
-								var $inputContainer = rd.$input.closest('[data-filter=inputContainer]');
-								
-								if($inputContainer.closest('.filterGroup').hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
-								else {
-									$inputContainer.hide();
-									rd.$input.prop('checked',false);
-									}
-								
-								if($('[data-filter=inputContainer]:visible', rd.$input.closest('.filterGroup')).length < 1){
-									
-									rd.$input.closest('.filterGroup').hide();
-									}
-								}
-							$('[data-filter=count]', rd.$input.closest('[data-filter=inputContainer]')).text("("+_app.data[rd.datapointer].count+")");
-							_app.model.destroy(rd.datapointer);
-							},
-						'datapointer':'appFilteredCount|'+i, 
-						"$input":$input
-						};
-					_app.ext.store_search.calls.appPublicSearch.init(countES, _tag);
 				
-					}
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,es,1);
 				//dump(es);
 				_app.model.dispatchThis();
-				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':'handleInfiniteElasticResults', 'datapointer':'appFilteredSearch','extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$resultsContainer});
+				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						_app.u.throwMessage(rd);
+						}
+					else {
+						_app.ext.prodlist_infinite.callbacks.handleInfiniteElasticResults.onSuccess(rd);
+						var facets = _app.data[rd.datapointer].facets;
+						$('[data-filter-type=checkboxList]',rd.filterList).each(function(){
+							$('input', $(this)).each(function(){
+								var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
+								var val = $(this).attr('name');
+								
+								var $fg = $(this).closest('.filterGroup')
+								var $ic = $(this).closest('[data-filter=inputContainer]');
+								
+								var summary = $.grep(facets[index].terms, function(e, i){
+									return e.term === val;
+									})[0];
+								if(summary){
+									$fg.show();
+									$ic.show();
+									$('[data-filter=count]', $ic).text("("+summary.count+")");
+									}
+								else {
+									if($fg.hasClass('countHideImmune')){/*Don't hide it if it's immune*/}
+									else {
+										$ic.hide();
+										$(this).prop('checked',false);
+										if($('[data-filter=inputContainer]:visible',$fg).length < 1){
+											$fg.hide();
+											}
+										}
+									}
+								});
+							
+							});
+						}
+					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form});
 				_app.model.dispatchThis();
 				
 				},
