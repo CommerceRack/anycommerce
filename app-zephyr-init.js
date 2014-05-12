@@ -118,15 +118,12 @@ $("#productTemplate, #productTemplateQuickView").on('depart.youtubeReset',functi
 
 //don't need to check if cycle is already running because it's turned off in a 'depart'.
 $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
-	var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele);
-	// at > 600, all three banners will display in a row, so no slideshow necessary.
-	if($trio.children().length > 1 && $(document.body).width() < 600)	{
-		execCycle();
-		}
 	function execCycle()	{
 		if(myApp.u.carouselIsReady())	{
+			var $trio = $("[data-app-role='catTrioSlideshowContainer']",$ele);
 			//the 'trio' uses the old legacy banner format (2 elements, one for href and one for img) so .slide is added to the image, if it is set instead of using a, which is always present.
-			if($('.slide',$trio).length > 1 && $(document.body).width() < 760)	{
+			// at > 600, all three banners will display in a row, so no slideshow necessary.
+			if($('.slide',$trio).length > 1 && $(document.body).width() < 600)	{
 				$trio.show().data('isCycle',true).cycle(); //isCycle is what the depart event uses to determine if a destroy should be run.
 				}
 			var $big = $("[data-app-role='catBigSlideshowContainer']",$ele);
@@ -137,6 +134,7 @@ $("#categoryTemplate").on('complete.cycle',function(state,$ele,infoObj){
 			}
 		else {setTimeout(execCycle,500);}
 		}
+	execCycle();
 	});
 
 //Don't keep the slideshows continually running when the page is no longer visible. destroy will return them to their original state and the 'complete' action will trigger them on again if necessary.
