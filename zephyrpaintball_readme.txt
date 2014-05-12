@@ -54,6 +54,11 @@ Sections:
 
 	3 small banners -> these are set to appear within a slideshow for small screens. For larger screens, as many banners as can fit within the horizontal space avaiable will be shown. If the associated 'title' is not populated, the banners will not show up. (.page:ad1_link and .page:ad1 [1-3] and the title is .%page.3widead_title)
 
+	
+
+	1 text block -> will be formatted as html. Is it's own key. (.%page.top_html_focus)**
+	1 text block -> will be formatted as html. Is it's own key. (.%page.top_html)**
+	
 	1 text block -> will be formatted as wiki. Is it's own key. (.%page.top_description)*
 
 	1 text block -> will be formatted as wiki. Is it's own key.	(.%page.top_description2)*
@@ -68,7 +73,7 @@ Sections:
 	1 html block -> will be formatted as html. Is it's own key.	(.%page.htmllinks)**
 	
 * This text block uses revealation.
-** Be sure to validate your html, one mismatched tag could have disasterous results.
+** Be sure to validate your html, one mismatched tag could have disasterous results. These HTML inputs also have code to convert legacy links to app-friendly links.
 
 
 

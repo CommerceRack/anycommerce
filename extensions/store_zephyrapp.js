@@ -305,6 +305,20 @@ var store_zephyrapp = function(_app) {
 				return true; //continue processing tlc
 				},
 
+			converthtmllinks : function(data,thisTLC)	{
+				var $content = $(data.globals.binds[data.globals.focusBind]);
+				$('a',$content).each(function(){
+					var href = $(this).attr('href');
+					if(!href)	{} //no href? odd, but do nothing.
+					else if(href.charAt(0) == '#')	{} //link is formatted correctly or an anchor. do nothing.
+					else	{
+						$(this).attr('href',_app.ext.quickstart.u.getHashFromPageInfo(_app.ext.quickstart.u.detectRelevantInfoToPage(href)));
+						}
+					});
+				data.globals.binds[data.globals.focusBind] = $content.html();
+				return true;
+				},
+
 			//if the value is blank, null, empty, undefined , return false (stops tlc processing on this statement)
 			dwiwempty : function(data,thisTLC)	{
 				var r = true;

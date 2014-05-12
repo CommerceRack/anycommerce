@@ -71,7 +71,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0512a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0512b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -454,12 +454,12 @@ The images get .slide only if populated. the category complete event counts the 
 	</section>
 
 
-	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_html_focus'; store_zephyrapp#dwiwempty; apply --show;">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html_focus'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+	<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html_focus'; store_zephyrapp#dwiwempty; apply --show;">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html_focus'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
 	</section>
 
-	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_html'; store_zephyrapp#dwiwempty; apply --show;">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+	<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html'; store_zephyrapp#dwiwempty; apply --show;">
+		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
 	</section>
 
 	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description'; store_zephyrapp#dwiwempty; apply --show;">
@@ -486,7 +486,7 @@ The images get .slide only if populated. the category complete event counts the 
 
 
 	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; store_zephyrapp#dwiwempty; apply --show; apply --append;" ></section>
-	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.htmllinks'; store_zephyrapp#dwiwempty; apply --show; apply --append;" ></section>
+	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.htmllinks'; store_zephyrapp#dwiwempty; store_zephyrapp#converthtmllinks; apply --show; apply --append;" ></section>
 
 </div>
 
