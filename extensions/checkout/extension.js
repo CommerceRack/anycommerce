@@ -1682,14 +1682,18 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
 //***201402 Must pass cartid parameter on the call itself -mc
 					var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid},{'callback':function(rd){
+					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({
+						'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, 
+						'_cartid':cartid,
+						'useMobile':($(document.body).width() < 500 ? 1 : 0)
+						},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('body').hideLoading();
 							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
 							$fieldset.anymessage({'message':rd});
 							}
 						else	{
-							window.location = _app.data[rd.datapointer].URL
+							window.location = _app.data[rd.datapointer].URL+'&useraction=commit'; //commit returns user to website for order confirmation. otherwise they stay on paypal.
 							}
 						},"extension":"order_create",'parentID': $ele.closest("[data-app-role='checkout']").attr('id')},'immutable');
 					_app.model.dispatchThis('immutable');
