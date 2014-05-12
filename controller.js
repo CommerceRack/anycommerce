@@ -2257,8 +2257,12 @@ _app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","ta
 				url += "media\/img\/"+_app.vars.username+"\/";
 				}
 			else	{
-				//url = location.protocol === 'https:' ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
-				url = (location.protocol === 'https:' ? 'https:' : 'http:') +"//"+_app.vars.mediaCDN;
+				if(_app.vars.mediaCDN){
+					url = (location.protocol === 'https:' ? 'https:' : 'http:') +"//"+_app.vars.mediaCDN;
+					}
+				else {
+					url = location.protocol === 'https:' ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
+					}
 				url += "media\/img\/"+_app.vars.username+"\/";
 				}
 				
