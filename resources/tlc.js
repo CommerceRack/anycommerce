@@ -610,11 +610,14 @@ This one block should get called for both img and imageurl but obviously, imageu
 			a = argObj.bind ? globals.binds[argObj.bind] : globals.binds[globals.focusBind];
 
 		if(!isNaN(a))	{
+			var isNegative = (a < 0) ? true : false;
 			a = Number(a);
+			a = isNegative ? (a * -1) : a;
 			var 
 				b = a.toFixed(decimalPlace),  //get 12345678.90
 				r;
 			a = parseInt(a); // get 12345678
+			dump(" -> a: "+a);
 			b = (b-a).toPrecision(decimalPlace); //get 0.90
 			b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
 			a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
@@ -629,9 +632,10 @@ This one block should get called for both img and imageurl but obviously, imageu
 			if(r.split('.')[0] == 0){
 				r = '.'+r.split('.')[1]
 				}
-			r = '$'+r;
+			r = (isNegative ? '-' : '')+'$'+r;
 			}
 		else	{
+			dump(" -> a ("+a+") is not a number!!!!!");
 			r = a;
 			}
 		return r;
