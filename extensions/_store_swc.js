@@ -876,6 +876,38 @@ var store_swc = function(_app) {
 				obj.msgtype = "feedback"
 				_app.model.addDispatchToQ(obj, 'mutable');
 				_app.model.dispatchThis('mutable');
+				},
+			wholesalesignup : function($form, p){
+				p.preventDefault();
+				var obj = $form.serializeJSON();
+				obj._script = "wholesale";
+				
+				obj.todonote  = obj.firstname+" "+obj.lastname+"\n";
+				obj.todonote += obj.email+"\n";
+				obj.todonote += obj.address1+"\n";
+				if(obj.address2 && obj.address2 !== ""){
+					obj.todonote += obj.address2+"\n";
+					}
+				obj.todonote += obj.city+","+obj.region+" "+obj.postal+"\n";
+				obj.todonote += "Referred By (or Rooftop): "+obj.referred_by+"\n";
+				obj.todonote += "Date Created: "+(new Date()).toDateString();
+				
+				obj._tag = {
+					'callback':function(rd){
+						if(_app.model.responseHasErrors(rd)){
+							_app.u.throwMessage(rd);
+							}
+						else {
+							//showContent('customer',{'show':'accountCreateConfirmation'});
+							_app.u.throwMessage(_app.u.successMsgObject("Your account has been created and is pending approval!"));
+							}
+						},
+					'datapointer' : "appBuyerCreate"
+					}
+				obj._cmd = "appBuyerCreate";
+				dump(obj);
+				_app.model.addDispatchToQ(obj, 'immutable');
+				_app.model.dispatchThis('immutable');
 				}
 			}, //e [app Events]
 		filterData : {

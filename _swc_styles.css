@@ -347,3 +347,8 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .affliate_banner{ max-width: 100%;}
 .affiliate_category .text_desc, .affiliate_category .box_desc { padding: 5px;}
+
+#wholesale_signupArticle label {
+	display:inline-block;
+	width: 200px;
+}
