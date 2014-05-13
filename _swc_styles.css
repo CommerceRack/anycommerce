@@ -16,6 +16,11 @@ a.redText{color:#7e0000}
 #mainContentArea > div {background:rgba(256,256,256,.8);}
 #mainContentArea > div.noBG {background:none;}
 
+.preview img {
+	margin-top: 30px;
+	background:rgba(256,256,256,.8);
+}
+
 .textDecNone{text-decoration:none;}
 .alignBottom {vertical-align:bottom;}
 .alignJustify {text-align:justify;}
