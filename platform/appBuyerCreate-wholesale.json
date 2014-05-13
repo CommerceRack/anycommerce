@@ -11,7 +11,7 @@
 		{ "required":1,"var":"city","type":"text","label":"Company City" },
 		{ "required":1,"var":"region","type":"text","label":"Company State" },
 		{ "required":1,"var":"postal","type":"text","label":"Company Zip" },
-		{ "required":0,"var":"referred_by","type":"text","label":"Referred By or Rooftop" }
+		{ "required":0,"var":"referred_by","type":"text","label":"Referred By or Rooftop" },
 		{ "required":1,"var":"todonote","type":"text","label":"To Do Note" }
 	],
 	 
