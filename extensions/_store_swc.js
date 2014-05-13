@@ -920,6 +920,7 @@ var store_swc = function(_app) {
 				optionList : [
 					"user:app_department",
 					"user:app_sub_department",
+					"user:app_prod_demographic",
 					"user:app_t_shirts",
 					"user:app_souvenirs",
 					"user:app_jerseys",
