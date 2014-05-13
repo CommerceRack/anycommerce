@@ -65,7 +65,9 @@ var store_swc = function(_app) {
 				var userTeams = false;
 				if(userTeams = _app.model.readLocal('swcUserTeams')){
 					for(var i in _app.ext.store_swc.vars.userTeams){
-						_app.ext.store_swc.u.setUserTeams(i, userTeams[i]);
+						if(userTeams[i].length){
+							_app.ext.store_swc.u.setUserTeams(i, userTeams[i]);
+							}
 						}
 					}
 				else {
@@ -388,10 +390,12 @@ var store_swc = function(_app) {
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
-					_app.ext.store_swc.u.renderMyTeams();
-					if($('#myTeamChooser').hasClass('active')){
-						_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
-						}
+					setTimeout(function(){
+						_app.ext.store_swc.u.renderMyTeams();
+						if($('#myTeamChooser').hasClass('active')){
+							_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
+							}
+						}, 3000);
 					}
 				},
 			saveUserTeams : function(){
@@ -408,6 +412,7 @@ var store_swc = function(_app) {
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
 			renderMyTeams : function(){
+				//console.log("rendering My Teams");
 				var $teams = $('#myTeamChooser');
 				var data = {
 					userTeams : _app.ext.store_swc.vars.userTeams,
@@ -424,7 +429,9 @@ var store_swc = function(_app) {
 						return false;
 						});
 					}
+				//var now = new Date().getTime();
 				$teams.intervaledEmpty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
+				//dump("TLC took: "+(new Date().getTime() - now));
 				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
 				},
