@@ -427,12 +427,12 @@ $(window).load(function(){
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
 		-->
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='src';" >
+		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';" >
 		<button class="ui-state-highlight ui-button" >-</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 	<li id="validteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.'; stringify; apply --attrib='data-swc-team';" data-app-click="store_swc|addteam">
-		<img data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='src';">
+		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<button class="ui-state-highlight ui-button" >+</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>

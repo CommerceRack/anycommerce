@@ -376,15 +376,21 @@ var store_swc = function(_app) {
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':Math.min($(window).innerWidth() - 20, 800), height:Math.min($(window).innerHeight()-20, 550)});
 				},
+			lazyload : function($tag){
+				var $img = $($('img[data-src]', $tag).get(0));
+				$img.attr('src', $img.attr('data-src'));
+				$img.removeAttr('data-src');
+				setTimeout(function(){
+					_app.ext.store_swc.u.lazyload($tag);
+					}, 0);
+				},
 			setUserTeams : function(sport, teamsArr){
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
 					this.saveUserTeams();
+					_app.ext.store_swc.u.renderMyTeams();
 					if($('#myTeamChooser').hasClass('active')){
-						_app.ext.store_swc.u.renderMyTeams();
-						}
-					else{
-						setTimeout(_app.ext.store_swc.u.renderMyTeams, 5000);
+						_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
 						}
 					}
 				},
@@ -717,6 +723,7 @@ var store_swc = function(_app) {
 				p.preventDefault();
 				this.selectSport($ele,p);
 				$('#myTeamChooser').addClass('active');
+				_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
 				},
 			hideMyTeamChooser : function($ele,p){
 				p.preventDefault();
