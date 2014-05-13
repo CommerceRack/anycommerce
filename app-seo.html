@@ -90,7 +90,7 @@
 						}
 					}
 					for(var i in pages){
-						var paramBase = "?v="+new Date().getTime()+"&seoRequest=1&quiet=1";
+						var paramBase = "?v="+new Date().getTime()+"&quiet=1";
 					
 						var p = pages[i];
 						if(typeof p === "string"){
@@ -100,6 +100,8 @@
 								include : true
 							}
 							p = pages[i];
+						} else {
+							paramBase += "&seoRequest=1";
 						}
 						
 						var paramStr = paramBase;
