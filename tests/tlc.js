@@ -55,6 +55,7 @@ function runTests()	{
 		'price' : 24.95,
 		'decimal' : 18.9,
 		'negative' : -3,
+		'negative-string' : '-5.23',
 		'cents' : .71,
 		'boolean-true' : true,
 		'boolean-false' : false,

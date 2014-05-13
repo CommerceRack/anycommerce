@@ -102,6 +102,7 @@
 		<div data-testtype='output-compare' data-output='$10.00' data-tlc="bind $var '.number'; format --currency='USD'; apply --append;" data-testname="currency (no decimal in original #)" ></div>
 		<div data-testtype='output-compare' data-output='$.71' data-tlc="bind $var '.cents'; format --currency='USD'; apply --append;" data-testname="currency (cents)" ></div>
 		<div data-testtype='output-compare' data-output='$18.90' data-tlc="bind $var '.decimal'; format --currency='USD'; apply --append;" data-testname="currency (one # after the decimal)" ></div>
+		<div data-testtype='output-compare' data-output='-$5.23' data-tlc="bind $var '.negative-string'; format --currency='USD'; apply --append;" data-testname="currency (negative #)" ></div>
 		
 		<div data-testtype='output-compare' data-output='4' data-tlc="bind $var '.small-array'; format --length; apply --append;" data-testname="length (array)" ></div>
 		<div data-testtype='output-compare' data-output='3' data-tlc="bind $var '.name'; format --length; apply --append;" data-testname="length (string)" ></div>
