@@ -2034,7 +2034,7 @@ _app.model.dispatchThis('immutable');
 					anycontent : false, //the dialogCreate params are passed into anycontent
 					handleAppEvents : false //defaults to true
 					});
-				$('form',$D).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='verb' value='FAQ-ADD' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$('form',$D).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='verb' value='FAQ-CREATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				$D.dialog('open');
 				$D.tlc({'verb':'translate','dataset':_app.data['adminFAQList']});
 				
