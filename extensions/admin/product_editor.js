@@ -418,6 +418,7 @@ _app.u.addEventDelegation($target);
 //in 'select' based varations editors and in product edit mode, need to show the list of options available in the sog
 						if(mode == 'product' && ((varObj.isnew && varObj.ispog) || (varObj.id && varObj.id.indexOf('#') == -1)))	{
 							var $tbody = $("[data-app-role='storeVariationsOptionsContainer'] tbody",$r);
+							$("[data-app-role='productOptionsFilterInput']",$r).show(); //this is only displayed in the product editor. in store variations edit, the list is empty.
 							$tbody.attr("data-bind","var: sog(@options); format:processList;loadsTemplate:optionsEditorRowTemplate;");
 							$tbody.parent().show().anycontent({'data':_app.data.adminSOGComplete['%SOGS'][varObj.id]});
 							$("[data-app-click='admin_prodedit|variationsOptionToggle']",$tbody).show(); //toggle button only shows up when in right side list.
@@ -3599,9 +3600,12 @@ function type2class(type)	{
 						}));
 					}
 				else if($ele.data('variationmode') == 'product')	{
-					var data, variationID = $ele.closest('tr').data('id'), pid = $ele.closest("[data-pid]").data('pid');
+					var 
+						data, 
+						variationID = $ele.closest('tr').data('id'), 
+						pid = $ele.closest("[data-app-role='taskItemContainer']").data('pid'); // a sog 'could' have a data-pid w/ the wrong pid. Get the right pid from the container.
 					dump(" -> pid: "+pid);
-					if(pid)	{
+					if(pid && _app.data['adminProductDetail|'+pid])	{
 
 						var L = _app.data['adminProductDetail|'+pid]['@variations'].length;
 // if isnew is true, that means this is a sog or pog that was just added to the product.
@@ -3636,7 +3640,7 @@ function type2class(type)	{
 						$D.dialog('open');
 						}
 					else	{
-						$ele.closest('form').anymessage({"message":"In admin_prodedit.e.variationUpdateShow, unable to ascertain pid.","gMessage":true});
+						$ele.closest('form').anymessage({"message":"In admin_prodedit.e.variationUpdateShow, unable to ascertain pid ["+pid+"] or product is not in memory ["+(typeof _app.data['adminProductDetail|'+pid])+"].","gMessage":true});
 						}
 					}
 				else	{

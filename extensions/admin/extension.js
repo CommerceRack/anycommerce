@@ -4225,7 +4225,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 //						dump(" -> tableFilter is searching: "+$table.data('isSearching'));
 						if($table.data('isSearching'))	{$table.data('killSearch',true)} //tells any search in progress to stop.
 //only rows that are not already hidden are impacted. In some cases, some other operation may have hidden the row and we don't want our 'unhide' later to show them.
-//the 'not' is to target only the first level of table contents, no nested data (used in domains, for example).
+//the 'not' is to target only the first level of table contents, no nested data (used in domains, for example) is not inadvertantly impacted.
 						$(($table.data('tablefilterSelector') ? $table.data('tablefilterSelector')+":visible" : 'tbody tr:visible'),$table).not('tbody tbody',$table).hide().data('hidden4Search',true);
 						var filter = $ele.val().toLowerCase();
 						$table.data('isSearching',true);
