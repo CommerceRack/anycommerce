@@ -163,7 +163,7 @@
 			
 			var $filterDiv = $('<div>Filter: <input name="pageFilter" type="text"/> <button name="checkAll">Check All</button> <button name="uncheckAll">Uncheck All</button></div>');
 			var $pageTable = $('<div class="tableContainer"><table><tbody></tbody></table></div>');
-			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input id="maxTimeout" name="maxTimeout" type="text" value="8"/></div>');
+			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input id="maxTimeout" name="maxTimeout" type="text" value="10"/></div>');
 			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('#maxTimeout', $controls).val());});
 			
 			$('input', $filterDiv).on('keyup',function(){
@@ -211,47 +211,53 @@
 				pages[i].include = $('#page_'+i+' input[type=checkbox]').is(":checked");
 			}
 			console.log('Beginning indexing');
-			indexNextPage(maxTimeout);
+			$('iframe', $('#appContainer')).each(function(){
+				indexNextPage(this, maxTimeout);
+			});
 		}
 		
 		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
-		function indexNextPage(maxTimeout){
+		function indexNextPage(iframe, maxTimeout){
 			if(pages.length){
 				var currPage = pages.splice(0,1)[0];
 				if(currPage.include){
 					console.log('pages.length: '+pages.length);
 					rLog("Indexing "+currPage.path);
-					$('#appContainer').get(0).src = currPage.path;
+					iframe.src = currPage.path;
 					
-					window.timeoutID = setTimeout(function(){
+					currPage.timeoutID = setTimeout(function(){
 						rLog('Page finished '+currPage.path);
-						finishPage(currPage);
-						indexNextPage(maxTimeout);
+						finishPage(iframe, currPage);
+						indexNextPage(iframe, maxTimeout);
 					}, parseInt(maxTimeout)*1000);
 				} else {
-					setTimeout(function(){indexNextPage(maxTimeout)},1);
+					setTimeout(function(){indexNextPage(iframe, maxTimeout)},1);
 				}
 			} else {
 				console.log("no more pages")
-				 $('#appContainer').get(0).remove();
-				//Temporarily bypassing this until we have a domain on 201401 to test
-				finishSEO();
-				window.lock = false;
+				 $(iframe).remove();
+				if($('iframe',$('#appContainer')).length){
+					//Keep on keeping on
+				}
+				else {
+					finishSEO();
+					window.lock = false;
+				}
 			}
 		}
 		
 		
-		function finishPage(page){
-			clearTimeout(window.timeoutID);
+		function finishPage(iframe, page){
+			clearTimeout(page.timeoutID);
 			
-			var iframe = $('#appContainer').get(0);
+			//var iframe = $('#appContainer').get(0);
 			
 			var iframeHash = iframe.contentWindow.location.hash;
 			if(iframeHash.indexOf('#!') == 0){
 				iframeHash = iframeHash.substr(2);
 				}
 			
-			var doc = $('#appContainer').get(0).contentWindow.document
+			var doc = iframe.contentWindow.document
 			$(doc.getElementsByTagName('script')).each(function(){$(this).remove();});
 			$('.seoStrip', $(doc)).each(function(){$(this).remove();});
 			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'/#!'+iframeHash+'" />');
@@ -301,7 +307,38 @@
 		</div>
 		<button onClick="fetchSEO($('input[name=seoToken]',$(this).parent()).val()); return false;">Submit Token</input>
 	</div>
-	<iframe id="appContainer" style="width:100%; height:400px;"></iframe>
+	<div id="appContainer" style="height: 400px; overflow: auto;">
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+		<iframe style="width:100%; height:400px;"></iframe>
+	</div>
 	<div id="pageTableContainer">
 		
 		
