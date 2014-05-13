@@ -17,7 +17,7 @@
 	 
 
 	"createBuyer": [
-		"SET?firstname=$firstname&lastname=$lastname",
+		"SET?firstname=$firstname&lastname=$lastname&is_locked=1",
 		"PASSWORDRESET?password=$password",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=BILL&firstname=$firstname&lastname=$lastname&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal",
 		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=SHIP&firstname=$firstname&lastname=$lastname&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal",
