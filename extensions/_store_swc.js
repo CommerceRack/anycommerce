@@ -912,6 +912,7 @@ var store_swc = function(_app) {
 			}, //e [app Events]
 		filterData : {
 			'100_years_of_wrigley_field' : {
+				noteams : true,
 				title : "100 Years of Wrigley Field",
 				baseFilter : {
 					"term" : {"app_promo":"wrigley100"}
