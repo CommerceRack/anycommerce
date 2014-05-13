@@ -360,7 +360,7 @@ document.write = function(v){
 					delete tagObj.datapointer; //delete this so tlc doesn't do an unnecessary extend (data is already merged)
 					tagObj.verb = 'translate';
 //					dump(" -> tagObj: "); dump(tagObj);
-
+					_app.ext.quickstart.u.updateDOMTitle((tagObj.navcat == '.' ? 'Home' : tagObj.dataset.pretty));
 					if(tagObj.lists && tagObj.lists.length)	{
 						var L = tagObj.lists.length;
 						for(var i = 0; i < L; i += 1)	{
@@ -377,6 +377,7 @@ document.write = function(v){
 // the bulk of the product translation has already occured by now (attribs, reviews and session) via callbacks.showProd.
 // product lists are being handled through 'buildProductList'.
 					var pData = _app.data['appProductGet|'+tagObj.pid] //shortcut.
+					_app.ext.quickstart.u.updateDOMTitle(pData['%attribs']['zoovy:prod_seo_title'] || pData['%attribs']['zoovy:prod_name']);
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && _app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
@@ -1482,7 +1483,10 @@ $target.tlc({
 					}
 				},
 
-
+			updateDOMTitle : function(title)	{
+				title = (typeof title === "string") ? title : ""; //better blank than 'undefined' or 'object'.
+				document.title = title;
+				},
 
 //used in checkout to populate username: so either login or bill/email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
@@ -2099,6 +2103,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				infoObj.templateID = 'companyTemplate';
 				infoObj.state = 'init';
 				infoObj.parentID = 'mainContentArea_company';
+				_app.ext.quickstart.u.updateDOMTitle("Company - "+infoObj.show);
 				var $mcac = $('#mainContentArea_company');
 				
 				if($mcac.length)	{
@@ -2159,9 +2164,11 @@ effects the display of the nav buttons only. should be run just after the handle
 					
 //If raw elastic has been provided, use that.  Otherwise build a query.
 				if(infoObj.elasticsearch){
+					_app.ext.quickstart.u.updateDOMTitle("Search - advanced");
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 					}
 				else if(infoObj.tag)	{
+					_app.ext.quickstart.u.updateDOMTitle("Search - tag: "+infoObj.tag);
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
@@ -2171,6 +2178,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						  }});
 					}
 				else if (infoObj.KEYWORDS) {
+					_app.ext.quickstart.u.updateDOMTitle("Search - keywords: "+infoObj.KEYWORDS);
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
@@ -2180,7 +2188,7 @@ effects the display of the nav buttons only. should be run just after the handle
 						  }});
 					}
 				else	{
-					
+					_app.ext.quickstart.u.updateDOMTitle("Search - error!");
 					}
 //				dump(elasticsearch);
 /*
@@ -2307,6 +2315,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				infoObj.state = 'init';
 				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
 				infoObj.templateID = 'customerTemplate';
+				_app.ext.quickstart.u.updateDOMTitle("Customer - "+infoObj.show);
 				var $customer = $('#'+infoObj.parentID);
 //only create instance once.
 				if($customer.length)	{

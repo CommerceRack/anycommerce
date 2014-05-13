@@ -37,6 +37,7 @@ span.wait	{display:inline-block;}
 /* global styles - added for cross-browser uniformity or usability */
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+a:focus { outline: none; } /* disable the outline around links. it's unattactive */
 
 button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
 /* for small buttons */
