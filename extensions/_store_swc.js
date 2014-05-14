@@ -294,23 +294,30 @@ var store_swc = function(_app) {
 					}
 				},
 			relatedproducts : function(data,thisTLC){
-				var pid = data.globals.binds[data.globals.focusBind];
-				var reqObj = {
-					"_cmd":"appPublicSearch",
-					"mode":"elastic-mlt",
-					"type":"product",
-					"min_doc_freq":1,
-					"id":pid,
-					"search_size":3,
-					"_tag" : {
-						"callback":"handleElasticResults",
-						"datapointer":"relatedProducts|"+pid,
-						"extension":"store_search",
-						"list":data.globals.tags[data.globals.focusTag],
-						"templateID":"productListTemplateResults"
+				var lt = data.value['%attribs']['zoovy:prod_name'];
+				lt += " "+data.value['%attribs']['zoovy:keywords'];
+				lt += " "+data.value['%attribs']['zoovy:prod_desc'];
+				
+				
+				var search = {
+					"query" : {
+						"more_like_this" : {
+							"fields" : ["prod_name", "keywords", "description"],
+							"like_text" : lt
+							}
 						}
 					}
-				_app.model.addDispatchToQ(reqObj, 'immutable');
+				var _tag = {
+					"callback":"handleElasticResults",
+					"datapointer":"relatedProducts|"+data.value.pid,
+					"extension":"store_search",
+					"list":data.globals.tags[data.globals.focusTag],
+					"templateID":"productListTemplateResults"
+					}
+				es = _app.ext.store_search.u.buildElasticRaw(search);
+				es.size = 3;
+				_app.ext.store_search.calls.appPublicSearch.init(es, _tag, 'immutable');
+				//_app.model.addDispatchToQ(reqObj, 'immutable');
 				_app.model.dispatchThis('immutable');
 				},
 			dump : function(data,thisTLC){
