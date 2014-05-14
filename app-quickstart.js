@@ -1110,7 +1110,8 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
  -> while it's possible to automatically send a lot of info to the merchant, please keep in mind buyer privacy.
 */
 			showBuyerCMUI : function()	{
-				var $ui = $('#cartMessenger').data('cartid',_app.model.fetchCartID());
+				//the cart id needs to be a data- attrib because cartSetAttrib 'looks' for it.
+				var $ui = $('#cartMessenger').attr('data-cartid',_app.model.fetchCartID());
 				if($ui.hasClass('ui-dialog-content'))	{
 					//the help interface has been opened once already.
 					}
@@ -1121,7 +1122,6 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 					// SANITY -> do not run a destroyCartMessenger on dialog close.  It will kill the polling.
 					_app.u.handleButtons($ui);
 					_app.u.handleCommonPlugins($ui);
-					_app.u.addEventDelegation($ui);
 					}
 				$ui.find('.show4ActiveChat').hide(); //hidden by default. will be activated once a chat starts.
 				//the information below is added to the dialog each time it's opened. that way it's up to date.
