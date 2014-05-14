@@ -163,8 +163,8 @@
 			
 			var $filterDiv = $('<div>Filter: <input name="pageFilter" type="text"/> <button name="checkAll">Check All</button> <button name="uncheckAll">Uncheck All</button></div>');
 			var $pageTable = $('<div class="tableContainer"><table><tbody></tbody></table></div>');
-			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input id="maxTimeout" name="maxTimeout" type="text" value="10"/></div>');
-			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('#maxTimeout', $controls).val());});
+			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input id="maxTimeout" name="maxTimeout" type="text" value="10"/> Number of Frames: <input id="numFrames" name="numFrames" type="text" value="10"/></div>');
+			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('#maxTimeout', $controls).val(), $('#numFrames',$controls).val());});
 			
 			$('input', $filterDiv).on('keyup',function(){
 				var filter = $(this).val();
@@ -205,8 +205,11 @@
 			
 		}
 		
-		function generateSEO(maxTimeout){
+		function generateSEO(maxTimeout, numFrames){
 			console.log(maxTimeout);
+			for(var i = 0; i < numFrames; i++){
+				$('#appContainer').append('<iframe style="width:100%; height:400px;"></iframe>');
+				}
 			for(var i in pages){
 				pages[i].include = $('#page_'+i+' input[type=checkbox]').is(":checked");
 			}
@@ -308,26 +311,6 @@
 		<button onClick="fetchSEO($('input[name=seoToken]',$(this).parent()).val()); return false;">Submit Token</input>
 	</div>
 	<div id="appContainer" style="height: 400px; overflow: auto;">
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
-		<iframe style="width:100%; height:400px;"></iframe>
 		<iframe style="width:100%; height:400px;"></iframe>
 		<iframe style="width:100%; height:400px;"></iframe>
 		<iframe style="width:100%; height:400px;"></iframe>
