@@ -287,6 +287,7 @@ some defaults are present, but they can be overwritten by the app easily enough.
 					if(cartID)	{
 						var $UI = $("<div \/>");
 						$UI.attr({'title':'CM: '+cartID,'id':'CM_'+cartID,'data-cartid':cartID});
+						$UI.addClass('isCartMessengerDialog');
 						$UI.anycontent({'templateID':'adminCartMessageTemplate'}).showLoading({'message':'Fetching cart detail'});
 						_app.ext.cart_message.u.initCartMessenger(cartID,$("[data-app-role='cartMessenger']",$UI)); //starts the cart message polling. needs to be after the anycontent.
 						$UI.dialog({
@@ -429,6 +430,12 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			adminCartInteract : function($ele,p)	{
+				//only 1 cart messenger instance can be open at a time.
+				$('.isCartMessengerDialog').each(function(){
+					$(this).dialog('close').dialog('destroy').intervaledEmpty();
+					cartMessagePush($(this).data('cartid'),'chat.exit');
+					});
+
 				var cartid = $ele.closest("[data-cartid]").data('cartid');
 				cartMessagePush(cartid,'chat.join');
 				_app.ext.cart_message.a.showAdminCMUI(cartid);
