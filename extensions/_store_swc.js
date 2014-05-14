@@ -111,6 +111,9 @@ var store_swc = function(_app) {
 						routeObj.params.templateID = "filteredSearchTemplate";
 						//dump(routeObj);
 						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
+						if(routeObj.params.dataset.onEnter){
+							routeObj.params.dataset.onEnter();
+							}
 						var optStrs = routeObj.params.dataset.optionList;
 						routeObj.params.dataset.options = routeObj.params.dataset.options || {};
 						for(var i in optStrs){
@@ -944,6 +947,22 @@ var store_swc = function(_app) {
 				},
 			'blackhawks' : {
 				title : "Chicago Blackhawks",
+				onEnter : function(){
+					var team;
+					for(var i in _app.ext.store_swc.validTeams.app_nhl){
+						var t = _app.ext.store_swc.validTeams.app_nhl[i];
+						if(t.v == "chicago_blackhawks"){
+							t.checked = "checked";
+							team = t;
+							break;
+							}
+						}
+					if($.inArray(_app.ext.store_swc.vars.userTeams.app_nhl, team) < 0){
+						_app.ext.store_swc.vars.userTeams.app_nhl.push(team);
+						_app.ext.store_swc.u.setUserTeams('app_nhl', _app.ext.store_swc.vars.userTeams.app_nhl);
+						_app.u.throwMessage(_app.u.successMsgObject('Due to your interest in the Stanley Cup, the Chicago Blackhawks have been added to your teams!  To edit your teams, <a href="#" onClick="return false;" data-app-click="store_swc|showMyTeamChooser">click here</a>.'));
+						}
+					},
 				noteams : true,
 				baseFilter : {
 					"term" : {"app_nhl":"chicago_blackhawks"}
