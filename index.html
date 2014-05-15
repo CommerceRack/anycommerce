@@ -184,6 +184,13 @@ $(document).ready(function(){
 				<a href='#!category/shop_by_brand' class='viewAllBrandsHref'>View All Brands</a>
 				<a href='#!category/shop_by_brand' class='shopByBrandHref'>Shop By Brand</a>
 			</div>
+			
+			
+		
+		<a class='sbbSprite sbb6' href='#!category/shop_by_brand.dye'></a>
+		<a class='sbbSprite sbb7' href='#!category/shop_by_brand.d3fy_paintball'></a>	
+			
+			
 		</div>
 		<form name='headerSearchFrm' id='mastHeadSearchFrm' action='#' class='productSearchForm' method="get"  data-app-submit='quickstart|searchFormSubmit'>
 			<input type='search' name='KEYWORDS' placeholder='search' class="productSearchKeyword handleDefault" x-webkit-speech="x-webkit-speech" id='mastHeadKeywordsInput' />
@@ -384,10 +391,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<!-- will only appear if 768px+ -->
 	<section class='pageContentSidebar'>
-		<a class='sbbSprite sbb1'></a>
-		<a class='sbbSprite sbb2'></a>
-		<a class='sbbSprite sbb3'></a>
-		<a class='sbbSprite sbb4'></a>
+		<a class='sbbSprite sbb1' href='#!search/keywords/pricedrop'></a>
+		<a class='sbbSprite sbb2' href='#!search/keywords/spire+hoppers'></a>
+		<a class='sbbSprite sbb3' href='#!search/keywords/e-tacs'></a>
+		<a class='sbbSprite sbb4' href='#!category/zephyr_ltd'></a>
 	</section>
 
 	<!-- will only appear if 1024+ -->
@@ -415,78 +422,88 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
 
+	<div class='pageContentMainColumn'>
 
-
-	<section data-app-role="catBigSlideshowContainer" class="clearfix marginBottom catBigSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>" data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; store_zephyrapp#dwiwemptybanner; apply --show;">
-		<nav class="cycle-pager"></nav>
-		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
-		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide2'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
-		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide3'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
-		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide4'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
-		<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide5'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
-	</section>
-
-
-
-	<a href="#" class='displayNone' data-tlc="bind $img '.%page.zoovy:banner01'; store_zephyrapp#dwiwempty; apply --show; bind $var '.%page.banner01_link'; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner01'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
-
-	<a href="#" class='displayNone' data-tlc="bind $img '.%page.zoovy:banner02'; store_zephyrapp#dwiwempty; apply --show; bind $var '.%page.banner02_link'; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner02'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
-
-<!--
-The images get .slide only if populated. the category complete event counts the instances of slide within the app-role and if > 1, will generate a slideshow.
- -->
- 	<h3 class='reversedHeader displayNone' data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show; apply --append;"></h3>
-
-	<section data-app-role="catTrioSlideshowContainer" class="clearfix marginBottom catTrioSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="carousel" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-allow-wrap="false" data-cycle-pause-on-hover="true" data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show;">
-		
-		<a href='#' data-tlc="bind $var '.%page.ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
-		<img data-tlc="bind $var '.%page.ad1'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
-		</a>
-		
-		<a href='#' data-tlc="bind $var '.%page.ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
-		<img data-tlc="bind $var '.%page.ad2'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
-		</a>
-		
-		<a href='#' data-tlc="bind $var '.%page.ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --remove --tag='$tag';}};">
-		<img data-tlc="bind $var '.%page.ad3'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
-		</a>
-
-	</section>
-
-
-	<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html_focus'; store_zephyrapp#dwiwempty; apply --show;">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html_focus'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
-	</section>
-
-	<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html'; store_zephyrapp#dwiwempty; apply --show;">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
-	</section>
-
-	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description'; store_zephyrapp#dwiwempty; apply --show;">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
-	</section>
-
-	<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description2'; store_zephyrapp#dwiwempty; apply --show; ">
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description2'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
-	</section>
-
-	<section data-tlc="bind $var '.@subcategoryDetail'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
-		<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone zCatList clearfix noPadOrMargin"></ul>
-	</section>
-
-	<section  data-tlc="bind $var '.@products'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
-		<h3 class='reversedHeader'>Featured Items</h3>
-		<ul data-tlc="bind $var '.@products'; prodlist_infinite#infiniteproductlist  --withReviews='1' --withInventory='1' --withVariations='1' --templateid='productListTemplate'  --legacy;" class="zProductList clearfix"></ul>
-	</section>	
+		<section data-app-role="catBigSlideshowContainer" class="clearfix marginBottom catBigSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="scrollHorz" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-pause-on-hover="true" data-cycle-pager-template="<span>{{slideNum}}</span>" data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; store_zephyrapp#dwiwemptybanner; apply --show;">
+			<nav class="cycle-pager"></nav>
+			<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide1'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
+			<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide2'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
+			<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide3'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
+			<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide4'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
+			<img data-tlc="bind $var '.%page.zs11_banner_wslideshow_slide5'; if (is $var --notblank;) {{apply --add --class='slide';}}; quickstart#banner  --height='265' --width='750' --legacy;" src="images/blank.gif" alt="" />
+		</section>
 	
+	
+	
+		<a href="#" class='displayNone' data-tlc="bind $img '.%page.zoovy:banner01'; store_zephyrapp#dwiwempty; apply --show; bind $var '.%page.banner01_link'; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner01'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
+	
+		<a href="#" class='displayNone' data-tlc="bind $img '.%page.zoovy:banner02'; store_zephyrapp#dwiwempty; apply --show; bind $var '.%page.banner02_link'; quickstart#legacyurltoria --legacy;"><img data-tlc="bind $var '.%page.zoovy:banner02'; if (is $var --notnull;) {{apply --show;}}; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="" class='marginBottom displayNone' /></a>
+	
+	<!--
+	The images get .slide only if populated. the category complete event counts the instances of slide within the app-role and if > 1, will generate a slideshow.
+	 -->
+		<h3 class='reversedHeader displayNone' data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show; apply --append;"></h3>
+	
+		<section data-app-role="catTrioSlideshowContainer" class="clearfix marginBottom catTrioSlideshowContainer displayNone" data-cycle-log="false" data-cycle-fx="carousel" data-cycle-timeout="5000" data-cycle-speed="1000" data-cycle-slides="a" data-cycle-swipe="true" data-allow-wrap="false" data-cycle-pause-on-hover="true" data-tlc="bind $var '.%page.3widead_title'; store_zephyrapp#dwiwempty; apply --show;">
+			
+			<a href='#' data-tlc="bind $var '.%page.ad1_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
+			<img data-tlc="bind $var '.%page.ad1'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
+			</a>
+			
+			<a href='#' data-tlc="bind $var '.%page.ad2_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --tag --remove;}};">
+			<img data-tlc="bind $var '.%page.ad2'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
+			</a>
+			
+			<a href='#' data-tlc="bind $var '.%page.ad3_link'; if(is $var --notblank;) {{quickstart#legacyurltoria --legacy;}}; if(is $var --null;){{apply --remove --tag='$tag';}};">
+			<img data-tlc="bind $var '.%page.ad3'; if (is $var --notblank;) {{ apply --img --media=$var --width=183 --height=120 --bgcolor='#ffffff' --replace; apply --add --class='slide';}};" src="blank.gif" alt="">
+			</a>
+	
+		</section>
+	
+	
+		<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html_focus'; store_zephyrapp#dwiwempty; apply --show;">
+			<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html_focus'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+		</section>
+	
+		<section class='marginBottom displayNone'  data-tlc="bind $var '.%page.top_html'; store_zephyrapp#dwiwempty; apply --show;">
+			<div data-textblock-role='content' data-tlc="bind $var '.%page.top_html'; if (is $var --notblank;) {{ store_zephyrapp#converthtmllinks; render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+		</section>
+	
+		<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description'; store_zephyrapp#dwiwempty; apply --show;">
+			<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+		</section>
+	
+		<section class='marginBottom textBlockMaxHeight displayNone'  data-tlc="bind $var '.%page.top_description2'; store_zephyrapp#dwiwempty; apply --show; ">
+			<div data-textblock-role='content' data-tlc="bind $var '.%page.top_description2'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class='wikiContainer'></div>
+		</section>
+	
+		<section data-tlc="bind $var '.@subcategoryDetail'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
+			<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone zCatList clearfix noPadOrMargin"></ul>
+		</section>
+	
+		<section  data-tlc="bind $var '.@products'; if(is $var --notblank;) {{ apply --show; }}; " class="displayNone marginBottom">
+			<h3 class='reversedHeader'>Featured Items</h3>
+			<ul data-tlc="bind $var '.@products'; prodlist_infinite#infiniteproductlist  --withReviews='1' --withInventory='1' --withVariations='1' --templateid='productListTemplate'  --legacy;" class="zProductList clearfix"></ul>
+		</section>	
+		
+	
+		<section class='marginBottom textBlockMaxHeight'>
+			<div data-textblock-role='content' data-tlc="bind $var '.%page.description'; store_zephyrapp#dwiwempty; apply --show;" class='wikiContainer'></div>
+		</section>
+	
+	
+		<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; store_zephyrapp#dwiwempty; apply --show; apply --append;" ></section>
+		<section class='displayNone marginBottom' data-tlc="bind $var '.%page.htmllinks'; store_zephyrapp#dwiwempty; store_zephyrapp#converthtmllinks; apply --show; apply --append;" ></section>
 
-	<section class='marginBottom textBlockMaxHeight'>
-		<div data-textblock-role='content' data-tlc="bind $var '.%page.description'; store_zephyrapp#dwiwempty; apply --show;" class='wikiContainer'></div>
+	</div>
+
+	<!-- will only appear if 768px+ -->
+	<section class='pageContentSidebar'>
+		<a class='sbbSprite sbb1' href='#!search/keywords/pricedrop'></a>
+		<a class='sbbSprite sbb2' href='#!search/keywords/spire+hoppers'></a>
+		<a class='sbbSprite sbb3' href='#!search/keywords/e-tacs'></a>
+		<a class='sbbSprite sbb4' href='#!category/zephyr_ltd'></a>
 	</section>
-
-
-	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.bot_description'; store_zephyrapp#dwiwempty; apply --show; apply --append;" ></section>
-	<section class='displayNone marginBottom' data-tlc="bind $var '.%page.htmllinks'; store_zephyrapp#dwiwempty; store_zephyrapp#converthtmllinks; apply --show; apply --append;" ></section>
 
 </div>
 

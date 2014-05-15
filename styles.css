@@ -495,6 +495,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#headerDecal2 .primaryText	{font-weight:900; font-size:1em; margin-right:.4em; padding-right:.4em; border-right:1px solid #faba8e; text-shadow: 1px 1px 1px #000;}
 	#headerDecal2 .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
 
+	#tier1catContainer .sbbSprite	{display:none;} /* disable banners in left col, it's still collapsed */
 	#tier1catContainer	{
 		top:139px; width:60%;
 		} /* these are revealed onclick */
@@ -525,7 +526,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.wordpress	{background-position:-174px -15px;}
 
 	.pageContentMainColumn	{
-		margin-right:195px; overflow:hidden;
+		margin-right:195px; overflow:hidden; 
 		}
 
 	.pageContentSidebar	{display:block; position:absolute; top:0; right:0; width:183px;}
@@ -578,10 +579,10 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#mainContentArea, #globalMessaging, #appNav	{
 		margin-left:195px; 
 		}
-	#mainContentArea	{min-height:500px;}
-	#tier1catContainer	{display:block; width:180px; left:0; border:0; background:#fff; z-index:50; top:143px;}
+	#mainContentArea	{min-height:800px;} /* so left col doesn't go into footer */
+	#tier1catContainer	{display:block; width:183px; left:0; border:0; background:#fff; z-index:50; top:143px;}
 	#tier1catContainer button, #tier1categories .rootCatThumb	{display:none;}
-	
+	#tier1catContainer .sbbSprite	{display:block;} /* left col no longer collapsed, show banners */
 	#tier1categories	{clear:both; margin-bottom:.3em; dislay:block;}
 /* a clearfix, but only at this size, to cause separation between cats and brands */
 	#tier1categories:after {
