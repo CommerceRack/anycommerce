@@ -62,7 +62,7 @@ h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
     visibility: hidden;
 	}
 .alignedForm .prompt	{text-align:right; float:left; width:35%; display:block; margin-right:2%;}
-.alignedForm .alignInput	{width:60%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
+.alignedForm .alignInput	{width:55%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
