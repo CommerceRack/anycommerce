@@ -365,7 +365,7 @@ var store_zephyrapp = function(_app) {
 					else	{} //use default.
 					for(var i = 1; i <= 20; i += 1)	{
 						if(data.value['zoovy:prod_image'+i])	{
-							$("<a \/>",{'data-app-click':'store_zephyrapp|prodThumb2Primary','href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).append($("<img \/>",{
+							$("<a \/>",{'data-app-click':'store_zephyrapp|prodThumb2Primary','href':thisTLC.makeImageURL({'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'})}).addClass('noioscontextmenu').append($("<img \/>",{
 								'src':thisTLC.makeImageURL({'width':50,'height':50,'data-media':data.value['zoovy:prod_image'+i],'data-bgcolor':'FFFFFF'}),
 								'data-media' : data.value['zoovy:prod_image'+i],
 								//the first srcset value should match the default height and width, then grow from there.
