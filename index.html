@@ -71,7 +71,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0515d",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0515f",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -1230,18 +1230,21 @@ subscribeListsArticle is used for authenticated buyers.
 
 				<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
 					<div class="marginBottom">
-						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
 						<h2>Billing Address(es)</h2>
 					</div>
 					<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="billAddresses"></div>
+					
+					<button class="applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>	
+					
 				</div>
 				
 				<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
 					<div class="marginBottom">
-						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
 						<h2>Shipping Address(es)</h2>
 					</div>
 					<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="shipAddresses"></div>
+					
+					<button class="applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
 				</div>
 
 

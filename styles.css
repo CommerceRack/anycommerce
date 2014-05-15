@@ -449,7 +449,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 
 /* customer account pages */
 
-#loginFormContainer	{max-height:200px;}
+#loginFormContainer	{max-height:200px;} /* having a max-height here helps an iOS related scrolling issue */
 
 
 
@@ -573,6 +573,9 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	.vidsAndPics	{float:left; margin-right:2%; width:400px}
 	.productDetailThumbnails a	{float:left;}
 	.zoomToolZoomContainer	{width:250px; height:250px; top: 0px; left:350px;}
+	
+	
+	#loginFormContainer	{max-height: auto;} /* undo the 200px max-height for mobile devices */
 	}
 
 
