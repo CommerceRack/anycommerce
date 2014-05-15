@@ -2,11 +2,16 @@
 	"_version":"201403",
 	"_start":"createBuyer",
 	"_inputs":[
-		{ "required":1,"var":"email","type":"text","label":"Email" }
+		{ "required":1,"var":"email","type":"text","label":"Email" },
+		{ "required":0,"var":"firstname","type":"text","label":"First name" },
+		{ "required":0,"var":"lastname","type":"text","label":"Last name" },
+		{ "required":0,"var":"password","type":"password","label":"Password" }
 	],
 	 
 
 	"createBuyer": [
+		"SET?firstname=$firstname&lastname=$lastname",
+		"PASSWORDRESET?password=$password",
 		"SET?newsletter-1=1"
 	]
 }

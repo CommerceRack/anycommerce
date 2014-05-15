@@ -410,7 +410,7 @@ This is used to get add an array of skus, most likely for a product list.
 									$form.anymessage({'message':rd});
 									}
 								else	{
-									$form.anymessage(_app.u.successMsgObject("Thank you, you are now subscribed."));
+									$form.anymessage(_app.u.successMsgObject(sfo.message || "Thank you, you are now subscribed."));
 									}
 								}
 							};

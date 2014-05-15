@@ -1195,7 +1195,7 @@ subscribeListsArticle is used for authenticated buyers
 			<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit" class='alignedForm'>
 				<fieldset class="userInfo borderNone">
 					<label>
-					<input placeholder="email address" maxlength="50" size="30" required name="login" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
+					<input placeholder="email address" maxlength="50" size="30" required name="email" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
 					</label>
 				
 					<label>
@@ -1209,6 +1209,51 @@ subscribeListsArticle is used for authenticated buyers
 			
 			</form>
 		</div>
+
+
+
+		<div id="accountCreateArticle" class="displayNone textContentArea">
+			<h1>Create an Account!</h1>
+			<div class='floatRight signUpAdvantages'>
+				<hgroup class='marginBottom'>
+					<h2>Not Resistered Yet?</h2>
+					<h3>Here are a few reasons to join:</h3>
+				</hgroup>
+				<div class='marginBottom'>
+					<h4>Easy Checkout</h4>
+					<p>Save information like billing/shipping address to expedite the checkout process.</p>
+				</div>
+				<div class='marginBottom'>
+					<h4>Order Tracking and History</h4>
+					<p>View and track your orders online, easily.</p>
+				</div>
+				<div class='marginBottom'>
+					<h4>Sign up for exclusive offers</h4>
+					<p>Join our newsletters to gain access to limited time offers, exclusives and sales!</p>
+				</div>
+			</div>
+			<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit" class='alignedForm'>
+				<input type='hidden' name='message' value="Thank you, your account has been created.">
+				<fieldset class="userInfo borderNone">
+					<label>
+					<input placeholder="email address" maxlength="50" size="30" required name="email" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
+					</label>
+				
+					<label>
+					<input placeholder="full name" maxlength="50" size="30" required name="fullname" value="" type="text" data-tlc="bind $var '.bill.fullname'; if(is $var --notblank;) {{apply --select=$var;}};">
+					</label>
+				
+					<label>
+					<input placeholder="password" maxlength="50" size="30" required name="password" value="" type="password">
+					</label>
+				</fieldset>
+				
+				<fieldset data-tlc="apply --empty; bind $var '.@lists'; controller#loop --templateid='subscriberListItemTemplate'; apply --append;" class="borderNone subscriberLists"></fieldset>
+				<input class="applyButton" value="Join Now" type="submit">
+			</form>
+		</div>
+
+
 <!--
 subscribeListsArticle is used for authenticated buyers.
 -->
@@ -1804,7 +1849,7 @@ The 'data-action' attribute is used to assign an onclick.
 		</div><!-- /recoverPasswordContainer -->
 
 		<div>
-		<a class='applyButton' href='#!customer/newsletter'>Create Account</a>
+		<a href='#!customer/accountCreate'>Create Account</a>
 		</div>
 	</div>
 

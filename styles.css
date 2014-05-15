@@ -450,6 +450,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 /* customer account pages */
 
 #loginFormContainer	{max-height:200px;} /* having a max-height here helps an iOS related scrolling issue */
+.signUpAdvantages	{display:none;}
 
 
 
@@ -576,6 +577,8 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	
 	
 	#loginFormContainer	{max-height: auto;} /* undo the 200px max-height for mobile devices */
+	.signUpAdvantages	{display:block; width:50%; margin-left:2em;}
+	.signUpAdvantages h4, .signUpAdvantages h3, .signUpAdvantages h2, .signUpAdvantages p	{margin:0; padding:0;}
 	}
 
 
