@@ -346,7 +346,10 @@ can't be added to a 'complete' because the complete callback gets executed after
 		});
 
 	_app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
+//		_app.u.dump(" ------------------------ ");
 		_app.u.dump("UH OH! got into ajaxRequest.error. either call was aborted or something went wrong.");
+//		_app.u.dump(j); _app.u.dump("textStatus: "+textStatus); _app.u.dump(errorThrown);
+//		_app.u.dump(" ------------------------ ");
 		if(textStatus == 'abort')	{
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			for(var index in Q) {
@@ -358,7 +361,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			_app.model.handleCancellations(Q,QID);
 			if(typeof jQuery().hideLoading == 'function'){
-				$(".loading-indicator-overlay").parent().hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
+//				$(".loading-indicator-overlay").parent().hideLoading(); 
+// ** 201403 -> rather than targeting a child and then going up the dom, we'll target the element that had showLoading applied to it directly.
+				$(".ui-showloading").hideLoading(); //kill all 'loading' gfx. otherwise, UI could become unusable.
 				}
 //			setTimeout("_app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 			}
@@ -884,11 +889,12 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			else	{
 				switch(responseData['_rcmd'])	{
 					case 'appProductGet':
+					case 'adminProductDetail':
 	//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
 						if(!responseData['%attribs'] || !responseData['%attribs']['db:id']) {
 							r = true;
 							responseData['errid'] = "MVC-M-100";
-							responseData['errtype'] = "apperr"; 
+							responseData['errtype'] = "missing"; 
 							responseData['errmsg'] = "could not find product "+responseData.pid+". Product may no longer exist. ";
 							} //db:id will not be set if invalid sku was passed.
 						break;
@@ -1808,21 +1814,27 @@ A note about cookies:
 						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
 						},
 					'success' : function(file){
-						var success;
+						var success, errors;
+/*
+SANITY -> if the eval is giving trouble in IE, save the contents of the eval into a file and test against that. You'll get more detailed errors.
+ -> also, first step would be to check for any orphaned commas on object literals. They kill old IE.
+*/
+
 						try{
 							var pegParserSource = PEG.buildParser(file);
 							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
 							success = true;
 							}
 						catch(e)	{
-							_app.u.dump("Could not build pegParser.","warn");
-//							_app.u.dump(buildErrorMessage(e),"error");
+							_app.u.dump("Could not build pegParser. errors follow: ","error");
+							errors = (e.line !== undefined && e.column !== undefined) ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
+							_app.u.dump(e);
 							}
 						if(success)	{
 							_app.u.dump(" -> successfully built pegParser");
 							}
 						else	{
-							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file. errors:<br>'+errors});
 							}
 						}
 					})

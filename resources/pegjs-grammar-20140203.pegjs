@@ -65,7 +65,7 @@ WhileLoopStatement
       return ({
         type: "WHILE",
         While: condition,
-        Loop: whileStatement,
+        Loop: whileStatement
       });
    }
 
@@ -77,7 +77,7 @@ ForeachLoopStatement
         type: "FOREACH",
         Set: set,
         Members: members,
-        Loop: loop,
+        Loop: loop
       });
    }
 

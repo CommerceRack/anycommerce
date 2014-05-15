@@ -1115,8 +1115,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							_app.calls.appCartCreate.init({
 								"datapointer" : "appCartCreate",
 								"callback" : function(rd){
-									dump(" -----------> rd: "); dump(rd);
-									
+//									dump(" -----------> rd: "); dump(rd);
 									if(_app.model.responseHasErrors(rd)){
 										_app.u.throwMessage(rd);
 										}
@@ -1125,65 +1124,70 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 										_app.model.dispatchThis('immutable');
 										}
 									else	{
-										dump("Something went wrong with the appCartCreate call. either not in memory OR no cartid in response.",'error');
-										dump(" -> rd: "); dump(rd);
 										//something went wrong.  no cart id in the appcartcreate.
 										}
 									}
 								}); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid.
+							
+							} //ends the not admin/1pc if.
 		
-							if(typeof _gaq != 'undefined')	{
-								_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-								_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
-								}
+						if(typeof _gaq != 'undefined')	{
+							_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
+							_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
+							}
+	
 		
-			
-							if(_app.ext.order_create.checkoutCompletes)	{
-								var L = _app.ext.order_create.checkoutCompletes.length;
-								for(var i = 0; i < L; i += 1)	{
-									_app.ext.order_create.checkoutCompletes[i]({'cartID':previousCartid,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
-									}
+						if(_app.ext.order_create.checkoutCompletes)	{
+							var L = _app.ext.order_create.checkoutCompletes.length;
+							for(var i = 0; i < L; i += 1)	{
+								_app.ext.order_create.checkoutCompletes[i]({'cartID':previousCartid,'orderID':orderID,'datapointer':_rtag.datapointer},$checkout);
 								}
-//This will handle the @trackers code.			
+							}
+
+//This will handle the @trackers code. Doesn't get run in admin.
+						if(!_app.u.thisIsAnAdminSession())	{
 							_app.ext.order_create.u.scripts2iframe(checkoutData['@TRACKERS']);
+							}
 
 // ### TODO -> move this out of here. move it into the appropriate app init.
-							if(_app.vars._clientid == '1pc')	{
-							//GTS for apps is handled in google extension
-								if(typeof window.GoogleTrustedStore)	{
-									delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
-							//running this will reload the script. the 'span' will be added as part of html:roi
-							//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-									(function() {
-										var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-										var gts = document.createElement("script");
-										gts.type = "text/javascript";
-										gts.async = true;
-										gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-										var s = document.getElementsByTagName("script")[0];
-										s.parentNode.insertBefore(gts, s);
-										})();
-									}
-							
+						if(_app.vars._clientid == '1pc')	{
+						//GTS for apps is handled in google extension
+							if(typeof window.GoogleTrustedStore)	{
+								delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+						//running this will reload the script. the 'span' will be added as part of html:roi
+						//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
+								(function() {
+									var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+									var gts = document.createElement("script");
+									gts.type = "text/javascript";
+									gts.async = true;
+									gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+									var s = document.getElementsByTagName("script")[0];
+									s.parentNode.insertBefore(gts, s);
+									})();
 								}
-							else	{
+							}
+						else if(_app.u.thisIsAnAdminSession())	{
+							//no special handling here.
+							}
+						else	{
+							//this is an 'app'.
 //								_app.u.dump("Not 1PC.");
 //								_app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
-								
-								//MUST destroy the cart. it has data-cartid set that would point to the wrong cart.
-								$('#modalCart').empty().remove(); 
-								$('#mainContentArea_cart').empty().remove();
+							
+							//MUST destroy the cart. it has data-cartid set that would point to the wrong cart.
+							$('#modalCart').empty().remove(); 
+							$('#mainContentArea_cart').empty().remove();
 
-								//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
-								$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
-									event.preventDefault();
-									});
-								$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
-									event.preventDefault();
-									//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-									showContent('customer',{'show':'invoice','uriParams':{'cartid':previousCartid,'orderid':orderID}});
-									});
-								}
+							//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
+							$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
+								event.preventDefault();
+								});
+							$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
+								event.preventDefault();
+								//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
+								showContent('customer',{'show':'invoice','uriParams':{'cartid':previousCartid,'orderid':orderID}});
+								});
 		
 							}
 						//outside the if/else above so that cartMessagesPush and cartCreate can share the same pipe.
@@ -1377,14 +1381,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$container = $ele.closest("[data-app-role='customShipMethodContainer']"),
 					cartid = $ele.closest(":data(cartid)").data('cartid'),
 					sfo = $container.serializeJSON();
-					
 				$('.ui-state.error',$container).removeClass('ui-state-error'); //remove any previous errors.
 				if(sfo['sum/shp_carrier'] && sfo['sum/shp_method'] && sfo['sum/shp_total'])	{
 					_app.model.addDispatchToQ({
 						'_cmd':'adminCartMacro',
 						'_cartid' : cartid,
 						'_tag' : {},
-						"@updates" : ["SETSHIPPING?"+$.param(sfo)]
+						"@updates" : ["SETSHIPPING?"+_app.u.hash2kvp(sfo)]
 						},'immutable');
 					_app.ext.order_create.u.handleCommonPanels($ele.closest('form'));
 					_app.model.dispatchThis('immutable');
@@ -1685,14 +1688,18 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
 //***201402 Must pass cartid parameter on the call itself -mc
 					var cartid = $ele.closest("[data-app-role='checkout']").data('cartid');
-					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, '_cartid':cartid,'useMobile':($(document.body).width() < 500 ? 1 : 0)},{'callback':function(rd){
+					_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({
+						'getBuyerAddress': (_app.u.buyerIsAuthenticated()) ? 0 : 1, 
+						'_cartid':cartid,
+						'useMobile':($(document.body).width() < 500 ? 1 : 0)
+						},{'callback':function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('body').hideLoading();
 							$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
 							$fieldset.anymessage({'message':rd});
 							}
 						else	{
-							window.location = _app.data[rd.datapointer].URL+'&useraction=commit';
+							window.location = _app.data[rd.datapointer].URL+'&useraction=commit'; //commit returns user to website for order confirmation. otherwise they stay on paypal.
 							}
 						},"extension":"order_create",'parentID': $ele.closest("[data-app-role='checkout']").attr('id')},'immutable');
 					_app.model.dispatchThis('immutable');
@@ -2207,25 +2214,60 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				if(typeof window.scriptCallback == 'function')	{}
 				else	{
 					window.scriptCallback = _app.ext.order_create.u.scriptCallback; //assigned global scope to reduce likely hood of any errors resulting in callback.
-//					_app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
+					_app.u.dump(" -> typeof window.scriptCallback: "+typeof window.scriptCallback);
 					}
 				if(typeof arr == 'object' && !$.isEmptyObject(arr))	{
-					for(var i = 0,  L = arr.length; i < L; i++)	{
+
 /*
 the timeout is added for multiple reasons.
 1.  jquery needed a moment between adding the iframe to the DOM and accessing it's contents.
-2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
+2.  by adding some time between each interation (100 * 1), if there's an exception in the tracker, the next code will still run.
 */
-						setTimeout(function(thisArr){
-							try	{
-								$(document.body).append(thisArr.script);
-								}
-							catch(e)	{
-								scriptCallback(thisArr.owner,e)
-								}
-							},(200 * (i + 1)),arr[i]);
-						} 
+						for(var i = 0,  L = arr.length; i < L; i++)	{
+							setTimeout(function(thisArr){
+								try	{
+									$(document.body).append(thisArr.script);
+									}
+								catch(e)	{
+									scriptCallback(thisArr.owner,e)
+									}
+								},(200 * (i + 1)),arr[i]);
+							}
+
+/*
+left here in case we want to come back to this. It'll work IF each tracker can run in an isolated environment.
+unfortunately, too many of the tracker codes rely on scripts being loaded onLoad in the parent window and are not functioning
+ properly when isolated in an iframe.
+	var L = arr.length;
+	for(var i = 0; i < L; i++)	{
+adding to iframe gives us an isolation layer
+data-script-id added so the iframe can be removed easily later.
+		arr[i].id = 'iframe_3ps_'+i
+		$("<iframe \/>",{'id':arr[i].id}).attr({'data-script-id':arr[i].owner,'height':1,'width':1}).css({'display':'none'}).appendTo('body'); // -> commented out for testing !!!
+the timeout is added for multiple reasons.
+1.  jquery needed a moment between adding the iframe to the DOM and accessing it's contents.
+2.  by adding some time between each interation (100 * 1), if there's a catastrophic error, the next code will still run.
+ 		setTimeout(function(thisArr){
+			var $iframe = $('#'+thisArr.id).contents().find("html");
+			$iframe.append(thisArr.script);
+// hhhmmm... some potential problems with this. non-script based output. sequence needs to be preserved for includes and inline.
+
+			var $div = $("<div \/>").append(thisArr.script); //may contain multiple scripts.
+			var scripts = ""; //all the non 'src' based script contents, in one giant lump. it's put into a 'try' to track code errors.
+			$div.find('script').each(function(){
+				var $s = $(this);
+				if($s.attr('src'))	{
+					console.log(" -> attempting to add "+$s.attr('src'));
+					$iframe.append($s);
 					}
+				else	{
+					scripts += $s.text()+"\n\n";
+					}
+				});
+			$iframe.append("<script>try{"+scripts+"\n window.parent.scriptCallback('"+arr.owner+"','success');} catch(err){window.parent.scriptCallback('"+arr.owner+"','error: '+err);}<\/script>");
+			},(100 * (i + 1)),arr[i])
+		} 
+*/					}
 				else	{
 					//didn't get anything or what we got wasn't an array.
 					}

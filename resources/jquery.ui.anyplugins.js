@@ -675,6 +675,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anytabs() then $t is bob)
+
 			if($t.attr('data-widget-anytabs'))	{
 //				dump("data-widget-anytabs -> already enabled.");
 				} //element has already been set as tabs.
@@ -691,7 +692,6 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				self._addEvent2Tabs();
 //make a tab visible/active.
 				self._handleDefaultTab();
-
 				}
 			}, //_init
 
@@ -778,7 +778,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			},
 
 		reveal : function($tab)	{
-//			dump(" ----> $tab.length: "+$tab.length);
+			dump(" ----> $tab.length: "+$tab.length);
 			var $tab2show = false;
 			//method accepts string or jquery object as the trigger.
 			if(typeof $tab == 'string')	{
@@ -1456,7 +1456,8 @@ the cb itself is then hidden.
 						self._handleDisable();
 						}
 					else	{
-						$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
+						//do NOT removeProp('checked').  chrome doesn't like it. once removed, could not re-apply 'checked'.
+						$cb.is(':checked') ? $cb.prop('checked','') : $cb.prop('checked','checked');
 						$cb.trigger('change');
 						}
 					});

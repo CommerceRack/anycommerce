@@ -154,6 +154,7 @@ var tlc = function()	{
 		return r;
 		}
 
+//This is used for a '<template>' which is INSIDE of an element that is being translated.
 	this.handleTemplates = function($target)	{
 		$("template",$target).each(function(index){
 			//for a <template>, the content makes up the template itself. adding <template> back onto the DOM wouldn't accomplish much.
@@ -547,14 +548,15 @@ This one block should get called for both img and imageurl but obviously, imageu
 				if(Number(p1) === Number(p2)){ r = true;} break;
 			case "intne":
 				if(Number(p1) != Number(p2)){ r = true;} break;
+// for gt, gte, lt and lte, undefined == 0.
 			case "gt":
-				if(Number(p1) > Number(p2)){r = true;} break;
+				if(Number(p1 || 0) > Number(p2)){r = true;} break;
 			case "gte":
-				if(Number(p1) >= Number(p2)){r = true;} break;
+				if(Number(p1 || 0) >= Number(p2)){r = true;} break;
 			case "lt":
-				if(Number(p1) < Number(p2)){r = true;} break;
+				if(Number(p1 || 0) < Number(p2)){r = true;} break;
 			case "lte":
-				if(Number(p1) <= Number(p2)){r = true;} break;
+				if(Number(p1 || 0) <= Number(p2)){r = true;} break;
 			case "true":
 				if(p1){r = true}; break;
 			case "false":
@@ -608,11 +610,14 @@ This one block should get called for both img and imageurl but obviously, imageu
 			a = argObj.bind ? globals.binds[argObj.bind] : globals.binds[globals.focusBind];
 
 		if(!isNaN(a))	{
+			var isNegative = (a < 0) ? true : false;
 			a = Number(a);
+			a = isNegative ? (a * -1) : a;
 			var 
 				b = a.toFixed(decimalPlace),  //get 12345678.90
 				r;
 			a = parseInt(a); // get 12345678
+			dump(" -> a: "+a);
 			b = (b-a).toPrecision(decimalPlace); //get 0.90
 			b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
 			a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
@@ -627,16 +632,17 @@ This one block should get called for both img and imageurl but obviously, imageu
 			if(r.split('.')[0] == 0){
 				r = '.'+r.split('.')[1]
 				}
-			r = '$'+r;
+			r = (isNegative ? '-' : '')+'$'+r;
 			}
 		else	{
+			dump(" -> a ("+a+") is not a number!!!!!");
 			r = a;
 			}
 		return r;
 		} //currency
 
 	this.format_prepend = function(argObj,globals,arg)	{
-		var r = (arg.type == 'longopt' ? arg.value.value : arg.value)+globals.binds[argObj.bind]
+		var r = (arg.type == 'longopt' ? arg.value.value : arg.value)+globals.binds[argObj.bind];
 		return r;
 		} //prepend
 
@@ -644,6 +650,16 @@ This one block should get called for both img and imageurl but obviously, imageu
 		var r = globals.binds[argObj.bind]+(arg.type == 'longopt' ? arg.value.value : arg.value);
 		return r;
 		} //append
+
+	this.format_lowercase = function(argObj,globals,arg)	{
+		globals.binds[argObj.bind] = globals.binds[argObj.bind].toLowerCase();
+		return globals.binds[argObj.bind];
+		} //lowercase
+
+	this.format_uppercase = function(argObj,globals,arg)	{
+		globals.binds[argObj.bind] = globals.binds[argObj.bind].toUpperCase();
+		return globals.binds[argObj.bind];
+		} //lowercase
 
 	this.format_default = function(argObj,globals,arg)	{
 		var r = (arg.type == 'longopt' ? arg.value.value : arg.value);
