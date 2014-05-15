@@ -403,6 +403,7 @@ left them be to provide guidance later.
 						_app.ext.cco.calls.cartItemsInventoryVerify.init(cartid,{'callback':function(rd){
 // This code is for an inventory check when the cart is updated. It will make sure that the # of items in the cart reflect the inventory available in the store.
 // this check is performed again at checkout.
+// *** zephyr -> this cart does an inventory check to make sure what's in the cart is actually available.
 if(_app.model.responseHasErrors(rd)){
 	$c.anymessage({'message':rd});
 	$c.hideLoading();
@@ -410,6 +411,7 @@ if(_app.model.responseHasErrors(rd)){
 else	{
 	var adjustments;
 	if(_app.data[rd.datapointer] && !$.isEmptyObject(_app.data[rd.datapointer]['%changes']))	{
+		P.Q = 'immutable'; //cartItemUpdate is an immutable call. this will ensure any subsequent calls, like the cartDetail, and the dispatch itself are all the same Q.
 		adjustments = "<ol>";
 		for(var key in _app.data[rd.datapointer]['%changes']) {
 			adjustments += "<li>sku: "+key+" was set to "+_app.data[rd.datapointer]['%changes'][key]+" due to availability<\/li>";
@@ -541,14 +543,14 @@ else	{
 			verifyAddressIsComplete : function(addrObj,addressType)	{
 				var r = true;
 				if(typeof addrObj === 'object')	{
-					if(!addrObj[addressType+'/address1'])	{r = false; dump('address1 did not validate');}
-					else if(!addrObj[addressType+'/city'])	{r = false; dump('city did not validate');}
-					else if(!addrObj[addressType+'/countrycode'])	{r = false; dump('country did not validate');}
+					if(!addrObj[addressType+'/address1'])	{r = false}
+					else if(!addrObj[addressType+'/city'])	{r = false}
+					else if(!addrObj[addressType+'/countrycode'])	{r = false}
 					else	{}
 	//we're returning boolean, so if we already a false, no need to verify further. if true, make sure postal and region are set for US
 					if(r == true && addrObj[addressType+'/countrycode'] == 'US')	{
-						if(!addrObj[addressType+'/postal'])	{r = false; dump('postal did not validate');}
-						else if(!addrObj[addressType+'/region'])	{r = false; dump('region did not validate');}
+						if(!addrObj[addressType+'/postal'])	{r = false}
+						else if(!addrObj[addressType+'/region'])	{r = false}
 						else	{}
 						}
 					}
@@ -1183,6 +1185,7 @@ in a reorder, that data needs to be converted to the variations format required 
 // pass in parent data object (entire cart). need to get both the cart ID and the country that has already been selected.
 			countriesasoptions : function($tag,data)	{
 				var r = '', cartid;
+				
 				if(data.value.cart && data.value.cart.cartid){
 					cartid = data.value.cart.cartid;
 					}
@@ -1245,7 +1248,7 @@ in a reorder, that data needs to be converted to the variations format required 
 									}
 								else	{
 									if(_app.data[rd.datapointer] && _app.data[rd.datapointer].URL)	{
-										document.location = _app.data[rd.datapointer].URL+'&useraction=commit';
+										document.location = _app.data[rd.datapointer].URL+'&useraction=commit'; //commit returns user to website for order confirmation. otherwise they stay on paypal.
 										}
 									else	{
 										$('#globalMessaging').anymessage({"message":"In paypalecbutton render format, dispatch to obtain paypal URL was successful, but no URL in the response.","gMessage":true});
