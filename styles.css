@@ -12,6 +12,10 @@ Put this high in the doc as a reminder to occassionally re-check if it can be re
 	}
 
 
+/* disable the contextual menu on images */
+img { -webkit-touch-callout: none !important; }
+img { -webkit-user-select: none !important; }
+
 /*
 #mainContentArea .isPageTemplate {
 	position:absolute;
