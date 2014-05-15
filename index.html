@@ -71,7 +71,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0515b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0515c",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -166,7 +166,7 @@ $(document).ready(function(){
 		
 		<nav class='mobileNav'>
 		<a href='#!company/contact' class='sprite contact'></a>
-		<a href='#!customer/account' class='sprite account'></a>
+		<a href='#!customer/myaccount' class='sprite account'></a>
 		<a href='#!cart' class='sprite cart'>
 			<span class='cartItemCount'>0</span>
 		</a>
@@ -773,7 +773,7 @@ this will likely become more flexible in the future. ###
 		
 			<div data-anytab-content='images' class='clearfix'>
 				<div class='productPrimaryImage'>
-					<a href='#' class='zoomTool' data-gallery="gallery" data-tlc="bind $name '.%attribs.zoovy:prod_name'; apply --attrib='title'; bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
+					<a href='#' class='zoomTool noioscontextmenu' data-gallery="gallery" data-tlc="bind $name '.%attribs.zoovy:prod_name'; apply --attrib='title'; bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --imageurl --media=$var --bgcolor='#ffffff' --attrib='href';}};" data-app-role='primaryImageHref'>
 					<!-- $var is rewritten as a fully qualified URL, which is not what srcset wants, so a second bind is used to get srcset a clean copy of the media -->
 					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank;){{apply --imageurl --media=$var --width=250 --height=250 --bgcolor='#ffffff' --attrib='src'; }}; bind $image '.%attribs.zoovy:prod_image1'; store_zephyrapp#srcset --views='h=250&w=250&dpi=1x&vp=400w,h=350&w=350&dpi=1x&vp=1100w,h=500&w=500&dpi=1x&vp=1800w'; apply --attrib='srcset';" src="blank.gif" alt="" />
 					<!-- goes in tlc srcset views ,h=1000&w=1000&dpi=2x&vp=1024w  -->

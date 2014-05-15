@@ -69,6 +69,12 @@ var store_zephyrapp = function(_app) {
 		else	{
 			$('#tier1catContainer').hide(); //may not need this. here in case width > 1040 and then scaled down. Cats would go into 'open' position. felt unnatural.
 			}
+		
+		//if a dialog is open, reposition it to the center of the screen.
+		$('.ui-dialog-content:visible').each(function(){
+			$(this).dialog("option", "position", "center");
+			})
+		
 		}).trigger('resizeEnd');
 
 

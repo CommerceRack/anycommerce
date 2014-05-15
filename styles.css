@@ -13,8 +13,8 @@ Put this high in the doc as a reminder to occassionally re-check if it can be re
 
 
 /* disable the contextual menu on images */
-img, .noioscontextmenu { -webkit-touch-callout: none !important; }
-img, .noioscontextmenu { -webkit-user-select: none !important; }
+.noioscontextmenu { -webkit-touch-callout: none !important; }
+.noioscontextmenu { -webkit-user-select: none !important; }
 
 /*
 #mainContentArea .isPageTemplate {
@@ -444,6 +444,12 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 .cartItemProdlist	{margin:0; padding:0; list-style:none; font-size:.9em;}
 .cartLineItem	{margin:0 0 .3em 0; padding: 0 0 .3em 0; border-bottom:1px solid #efefef;}
 .removeButton	{margin:0;}
+
+
+
+/* customer account pages */
+
+#loginFormContainer	{max-height:200px;}
 
 
 
