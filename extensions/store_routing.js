@@ -95,7 +95,58 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 			},
 		attachEventHandlers : {
 			onSuccess : function(){
-				_app.templates.homepageTemplate.on('complete.routing', function(event, $context, infoObj){_app.ext.store_routing.u.setHash("#!/");});
+				var callback = function(event, $context, infoObj){
+					dump('--> store_seo complete event'); 
+					event.stopPropagation(); 
+					if(infoObj){
+						var hash = "";
+						var $routeEle = $('[data-routing-hash]',$context);
+						if($routeEle.length){
+							hash = $routeEle.attr('data-routing-hash');
+							}
+						else {
+							switch(infoObj.pageType){
+								case 'homepage':
+									hash = "#!/";
+									break;
+								case 'product':
+									hash = "#!/product/"+infoObj.pid+"/";
+									break;
+								case 'category':
+									hash = "#!/category/"+infoObj.pid+"/";
+									break;
+								case 'static':
+									hash = window.location.hash;
+									break;
+								case 'search':
+									hash = window.location.hash;
+									break;
+								case 'company':
+									hash = "#!company/"+infoObj.show+"/";
+									break;
+								case 'customer':
+									hash = "#!customer/"+infoObj.show+"/";
+									break;
+								case 'cart':
+									hash = "#!cart/";
+									break;
+								case 'checkout':
+									hash = "#!checkout/";
+									break;
+								}
+							}
+						_app.ext.store_routing.u.setHash(hash);
+						}
+					}
+				
+				for(var i in _app.templates){
+					_app.templates[i].on('complete.routing', callback);
+					}
+				$('#appTemplates').children().each(function(){
+					$(this).on('complete.routing', callback);
+					});
+				
+				_app.templates.homepageTemplate.on('complete.routing', function(event, $context, infoObj){dump('homepage sethash');_app.ext.store_routing.u.setHash("#!/");});
 				
 				_app.templates.categoryTemplate.on('complete.routing', function(event, $context, infoObj){
 					var hash = "";
@@ -233,8 +284,10 @@ optional params:
 
 		u : {
 			setHash : function(hash){
+				dump('setting hash to: '+hash);
 				var $canonical = $('link[rel=canonical]')
 				if(!$canonical.length){
+					dump('NO CANONICAL IN THE DOCUMENT');
 					$canonical = $('<link rel="canonical" href="" />');
 					$('head').append($canonical);
 					}

@@ -12,7 +12,7 @@ myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.t
 myApp.rq.push(['extension',0,'order_create','']);
 myApp.rq.push(['extension',0,'cco','']);
 
-myApp.rq.push(['extension',0,'store_routing','']);
+myApp.rq.push(['extension',0,'store_routing','', 'attachEventHandlers']);
 myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js', 'attachHandlers']);
 
 myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
