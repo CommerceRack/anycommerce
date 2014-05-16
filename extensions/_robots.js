@@ -20,7 +20,7 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var _robots = function(_app) {
+var seo_robots = function(_app) {
 	var r = {
 
 	vars : {
@@ -45,14 +45,14 @@ var _robots = function(_app) {
 				request._tag = {
 					'datapointer' : 'appSEOFetch',
 					'callback' : function(rd){
-						$.extend(_app.ext._robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
+						$.extend(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
 						}
 					};
 				_app.model.addDispatchToQ(request, 'immutable');
 				_app.model.dispatchThis('immutable');
 				//Replace the _robots.next default functionality with some real stuff
 				_robots.next = function(){
-					var p = _app.ext._robots.vars.pages.splice(0,1)[0];
+					var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
 					var status = 100;
 					var hasRun = false;
 					return function(){
@@ -66,7 +66,7 @@ var _robots = function(_app) {
 							}
 						else {
 							if(typeof p == 'undefined'){
-								if(!_app.ext._robots.vars.pages.length){
+								if(!_app.ext.seo_robots.vars.pages.length){
 									status = 100; // block until the array has values in it
 									}
 								else {
