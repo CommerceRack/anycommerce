@@ -19,6 +19,7 @@ myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
 myApp.rq.push(['extension',0,'jerseypreview','', 'attachHandlers']);
 //myApp.rq.push(['css',0,'lightbox/css/lightbox.css', 'lightboxCSS']); 
 myApp.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']); 
+myApp.rq.push(['extension',0,'_robots','']);
 
 myApp.rq.push(['extension',0,'store_prodlist','']);
 myApp.rq.push(['extension',0,'prodlist_infinite','']);

@@ -233,6 +233,12 @@ optional params:
 
 		u : {
 			setHash : function(hash){
+				var $canonical = $('link[rel=canonical]')
+				if(!$canonical.length){
+					$canonical = $('<link rel="canonical" href="" />');
+					$('head').append($canonical);
+					}
+				$canonical.attr('href', hash);
 				if(_app.vars.showContentHashChange){
 					dump('forcing a hash change');
 					window.location.href = window.location.href.split("#")[0]+hash;

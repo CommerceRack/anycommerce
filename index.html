@@ -17,6 +17,32 @@
 
 <meta name="description" content="">
 
+<script data-apptimize="minify" type="text/javascript">
+var _robots = {
+	hello : function(botStr){
+		console.log("Bot saying hello: "+botStr);
+		return("1.0");
+		},
+	next : function(){
+		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
+		return function(){
+			if(typeof myApp !== 'undefined' && 
+				typeof myApp.ext !== 'undefined' && 
+				typeof myApp.ext.quickstart !== 'undefined' && 
+				typeof myApp.ext.quickstart.vars !== 'undefined' &&
+				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
+				return 204;
+				}
+			else{
+				return 100;
+				}
+			}
+		},
+	goodbye : function(){
+		console.log("Bot saying goodbye: "+botStr);
+		}
+	}
+</script>
 
 <script data-apptimize="minify" type="text/javascript">
 var _gaq = _gaq || [];
@@ -65,6 +91,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <script data-apptimize="embed" type="text/javascript" src="model.js"></script>
 
 <!-- EXTENSIONS -->
+<script data-apptimize="embed" type="text/javascript" src="extensions/_robots.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="extensions/_store_swc.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="extensions/checkout/extension.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="extensions/cart_checkout_order.js"></script>
@@ -99,7 +126,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <script data-apptimize="minify" type="text/javascript">
-$(window).load(function(){
+$(document).ready(function(){
 
 	window.myApp = new initApp({
 		"release":"20140513102900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
