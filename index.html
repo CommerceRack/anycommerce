@@ -18,33 +18,6 @@
 <meta name="description" content="">
 
 <script data-apptimize="minify" type="text/javascript">
-var _robots = {
-	hello : function(botStr){
-		console.log("Bot saying hello: "+botStr);
-		return("1.0");
-		},
-	next : function(){
-		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
-		return function(){
-			if(typeof myApp !== 'undefined' && 
-				typeof myApp.ext !== 'undefined' && 
-				typeof myApp.ext.quickstart !== 'undefined' && 
-				typeof myApp.ext.quickstart.vars !== 'undefined' &&
-				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
-				return 204;
-				}
-			else{
-				return 100;
-				}
-			}
-		},
-	goodbye : function(){
-		console.log("Bot saying goodbye: "+botStr);
-		}
-	}
-</script>
-
-<script data-apptimize="minify" type="text/javascript">
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount','UA-370308-1']);
 _gaq.push(['_trackPageview']);
@@ -129,6 +102,7 @@ css files should be included before any .js file to ensure they are downloaded i
 $(document).ready(function(){
 
 	window.myApp = new initApp({
+		"_robotHasGreeted" : false,
 		"release":"20140513102900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
@@ -152,6 +126,35 @@ $(document).ready(function(){
 	myCreole = new Parse.Simple.Creole();
 	});
 </script>
+
+<script data-apptimize="minify" type="text/javascript">
+var _robots = {
+	hello : function(botStr){
+		myApp.vars._robotGreeting = botStr;
+		console.log("Bot saying hello: "+botStr);
+		return "1.0";
+		},
+	next : function(){
+		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
+		return function(){
+			if(typeof myApp !== 'undefined' && 
+				typeof myApp.ext !== 'undefined' && 
+				typeof myApp.ext.quickstart !== 'undefined' && 
+				typeof myApp.ext.quickstart.vars !== 'undefined' &&
+				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
+				return 204;
+				}
+			else{
+				return 100;
+				}
+			}
+		},
+	goodbye : function(){
+		console.log("Bot saying goodbye: "+botStr);
+		}
+	}
+</script>
+
 <script data-apptimize="embed" type="text/javascript" src="app-quickstart-init.js"></script>
 
 </head>

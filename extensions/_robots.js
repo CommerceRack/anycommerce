@@ -25,8 +25,7 @@ var seo_robots = function(_app) {
 
 	vars : {
 		pages : [],
-		pageLock : false,
-		pageStatus : 100
+		pagesLoaded : false
 		},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -39,76 +38,81 @@ var seo_robots = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				var request = {
-					"_cmd" : "appSEOFetch"
-					};
-				request._tag = {
-					'datapointer' : 'appSEOFetch',
-					'callback' : function(rd){
-						$.extend(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
-						}
-					};
-				_app.model.addDispatchToQ(request, 'immutable');
-				_app.model.dispatchThis('immutable');
+				
+				if(_app.vars._robotGreeting){
+					_app.ext.seo_robots.u.welcomeRobot(_app.vars._robotGreeting);
+					}
+				else {
+					_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
+					}
 				//Replace the _robots.next default functionality with some real stuff
+				
+				
 				_robots.next = function(){
-					var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
-					var status = 100;
-					var hasRun = false;
-					return function(){
-						if(hasRun){
-							if(_app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
-								status = 200;
-								}
-							else {
-								status = 100;
-								}
+					if(_app.ext.seo_robots.vars.pagesLoaded){
+						var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
+						if(typeof p == 'undefined'){
+							return null;
 							}
-						else {
-							if(typeof p == 'undefined'){
-								if(!_app.ext.seo_robots.vars.pages.length){
-									status = 100; // block until the array has values in it
+						var status = 100;
+						var hasRun = false;
+						return function(){
+							if(hasRun){
+								if(_app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
+									status = 200;
 									}
 								else {
-									status = 204;
+									status = 100;
 									}
-								}
-							else if(typeof p == 'string' && p.indexOf('#!') == 0){
-								_app.ext.quickstart.vars.showContentFinished = false;
-								_app.ext.quickstart.vars.showContentCompleteFired = false;
-								window.location.hash = p;
-								}
-							else if(typeof p == 'object'){ //p is an object
-								var infoObj = {};
-								switch(p.type){
-									case "pid":
-										infoObj = {
-											pageType : "product",
-											pid : p.id
-											};
-										break;
-									case "navcat" : 
-										infoObj = {
-											pageType : "category",
-											navcat : p.id
-											};
-										break;
-									case "list" : 
-										dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
-										break;
-									default :
-										dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
-										dump(p);
-										break;	
-									}
-								showContent('',infoObj);
 								}
 							else {
-								status = 404;
+								if(typeof p == 'string' && p.indexOf('#!') == 0){
+									_app.ext.quickstart.vars.showContentFinished = false;
+									_app.ext.quickstart.vars.showContentCompleteFired = false;
+									window.location.hash = p;
+									}
+								else if(typeof p == 'object'){ //p is an object
+									var infoObj = {};
+									switch(p.type){
+										case "pid":
+											infoObj = {
+												pageType : "product",
+												pid : p.id
+												};
+											break;
+										case "navcat" : 
+											infoObj = {
+												pageType : "category",
+												navcat : p.id
+												};
+											break;
+										case "list" : 
+											dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
+											break;
+										default :
+											dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
+											dump(p);
+											break;	
+										}
+									showContent('',infoObj);
+									}
+								else {
+									status = 404;
+									}
+								hasRun = true;
 								}
-							hasRun = true;
+							return status;
 							}
-						return status;
+						}
+					else {
+						return function(){
+							if(_app.ext.seo_robots.vars.pagesLoaded){
+								return 204;
+								}
+							else {
+								return 100;
+								}
+							}
 						}
 					}
 				
@@ -148,6 +152,44 @@ var seo_robots = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			welcomeRobot : function(botStr){
+				var request = {
+					"_cmd" : "appSEOFetch"
+					};
+				request._tag = {
+					'datapointer' : 'appSEOFetch',
+					'callback' : function(rd){
+						$.extend(_app.ext.seo_robots.vars.pages, [
+							"#!company/about/",
+							"#!company/contact/",
+							"#!company/faq/",
+							"#!company/shipping/",
+							"#!company/privacy/",
+							"#!shop-by-player/",
+							"#!fieldcam/",
+							"#!affiliates/",
+							"#!careers/",
+							"#!rewards/",
+							"#!inquiry/",
+							"#!filter/100_years_of_wrigley_field/",
+							"#!filter/chicago/",
+							"#!filter/blackhawks/",
+							"#!filter/shirts/",
+							"#!filter/jerseys/",
+							"#!filter/personalized_jerseys/",
+							"#!filter/sweatshirts/",
+							"#!filter/hats/",
+							"#!filter/souvenirs/"
+							]);
+						//$.extend(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
+						_app.ext.seo_robots.vars.pagesLoaded = true;
+						}
+					};
+				_app.model.addDispatchToQ(request, 'immutable');
+				_app.model.dispatchThis('immutable');
+				
+				return "1.0";
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
