@@ -38,6 +38,7 @@ span.wait	{display:inline-block;}
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
 a:focus { outline: none; } /* disable the outline around links. it's unattactive */
+a.blockLink	{text-decoration:none; cursor:pointer;} /* used for #! anchors. IE needs the cursor defined or it shows as an arrow instead of a hand. */
 
 button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
 /* for small buttons */
