@@ -174,7 +174,7 @@ var seo_robots = function(_app) {
 							"#!inquiry/",
 							"#!filter/100_years_of_wrigley_field/",
 							"#!filter/chicago/",
-							"#!filter/blackhawks/",
+							//"#!filter/blackhawks/",
 							"#!filter/shirts/",
 							"#!filter/jerseys/",
 							"#!filter/personalized_jerseys/",
