@@ -160,29 +160,7 @@ var seo_robots = function(_app) {
 				request._tag = {
 					'datapointer' : 'appSEOFetch',
 					'callback' : function(rd){
-						$.extend(_app.ext.seo_robots.vars.pages, [
-							"#!company/about/",
-							"#!company/contact/",
-							"#!company/faq/",
-							"#!company/shipping/",
-							"#!company/privacy/",
-							"#!shop-by-player/",
-							"#!fieldcam/",
-							"#!affiliates/",
-							"#!careers/",
-							"#!rewards/",
-							"#!inquiry/",
-							"#!filter/100_years_of_wrigley_field/",
-							"#!filter/chicago/",
-							//"#!filter/blackhawks/",
-							"#!filter/shirts/",
-							"#!filter/jerseys/",
-							"#!filter/personalized_jerseys/",
-							"#!filter/sweatshirts/",
-							"#!filter/hats/",
-							"#!filter/souvenirs/"
-							]);
-						//$.extend(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
+						$.extend(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
 						_app.ext.seo_robots.vars.pagesLoaded = true;
 						}
 					};
