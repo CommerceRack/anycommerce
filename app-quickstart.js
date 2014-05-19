@@ -513,10 +513,9 @@ need to be customized on a per-ria basis.
 *** 201403 -> move the scroll to top into the page transition for 2 reasons:
 1. allows the animations to be performed sequentially, which will be less jittery than running two at the same time
 2. Puts control of this into custom page transitions.
-** 201404 -> chrome uses 'html' and ff uses 'body' for the scrolltop > 0 check. using html,body as the selector didn't work in chrome.
 */
 
-				if(infoObj.performJumpToTop && ($('body').scrollTop() + $('html').scrollTop()) > 0)	{ // >0 scrolltop check should be just body, not html, body or chrome scroll to the top.
+				if(infoObj.performJumpToTop && $(window).scrollTop() > 0)	{ // >0 scrolltop check should be on window, it'll work in ff AND chrome (body or html won't).
 					//new page content loading. scroll to top.
 					$('html, body').animate({scrollTop : 0},'fast',function(){
 						$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
@@ -3118,6 +3117,16 @@ else	{
 					$('#globalMessaging').anymessage({"message":"In quickstart.e.quickviewShow, unable to ascertain PID ["+PID+"] or no data-loadstemplate set on trigger element.","gMessage":true});
 					}
 				return false;
+				},
+// use this on inputs where 'enter' should NOT submit the form but can/should trigger an onblur.
+			triggerBlurOnEnter : function($ele,p)	{
+				var r = true;
+				if (p.keyCode == 13)	{
+					p.preventDefault();
+					$ele.trigger('blur')
+					r = false;
+					}
+				return r;
 				}
 
 			}, // e/events
