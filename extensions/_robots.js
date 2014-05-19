@@ -52,11 +52,12 @@ var seo_robots = function(_app) {
 					if(_app.ext.seo_robots.vars.pagesLoaded){
 						var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
 						if(typeof p == 'undefined'){
-							return null;
+							_robots.status = function(){ return -1; }
+							return false;
 							}
 						var status = 100;
 						var hasRun = false;
-						return function(){
+						_robots.status = function(){
 							if(hasRun){
 								if(_app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
 									status = 200;
@@ -105,7 +106,7 @@ var seo_robots = function(_app) {
 							}
 						}
 					else {
-						return function(){
+						_robots.status = function(){
 							if(_app.ext.seo_robots.vars.pagesLoaded){
 								return 204;
 								}

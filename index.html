@@ -100,30 +100,33 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script data-apptimize="minify" type="text/javascript">
 $(document).ready(function(){
-
-	window.myApp = new initApp({
-		"_robotHasGreeted" : false,
-		"release":"20140513102900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
-		"baseURL":baseURL, //used in non-local mode.
-		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://beta.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
-		"addjQueryPointer" : true,
-		//"mediaCDN" : "d14sqwhkvv2eag.cloudfront.net/",
-		"initComplete" : function(){
-			configureApp();
-			var progress = myApp.u.loadResources();
-			myApp.u.showProgress(progress);
-//			dump(" -> init is complete");
-//			myApp.u.loadScript('app-quickstart-init.js',function(){
-//				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-//				myApp.u.showProgress(progress);
-//				});
-			$('#appversion').text(myApp.vars.release);
-			}
-		});
-	myApp.vars.initComplete();
-	myCreole = new Parse.Simple.Creole();
+	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
+	console.log(paramStr);
+	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
+		window.myApp = new initApp({
+			"_robotHasGreeted" : false,
+			"release":"20140513102900",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
+			"baseURL":baseURL, //used in non-local mode.
+			"checkoutAuthMode" : "active",//can be passive, active or required
+			"testURL":"http://beta.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
+			"addjQueryPointer" : true,
+			//"mediaCDN" : "d14sqwhkvv2eag.cloudfront.net/",
+			"initComplete" : function(){
+				configureApp();
+				var progress = myApp.u.loadResources();
+				myApp.u.showProgress(progress);
+	//			dump(" -> init is complete");
+	//			myApp.u.loadScript('app-quickstart-init.js',function(){
+	//				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+	//				myApp.u.showProgress(progress);
+	//				});
+				$('#appversion').text(myApp.vars.release);
+				}
+			});
+		myApp.vars.initComplete();
+		myCreole = new Parse.Simple.Creole();
+		}
 	});
 </script>
 
@@ -136,7 +139,7 @@ var _robots = {
 		},
 	next : function(){
 		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
-		return function(){
+		_robots.status = function(){
 			if(typeof myApp !== 'undefined' && 
 				typeof myApp.ext !== 'undefined' && 
 				typeof myApp.ext.quickstart !== 'undefined' && 
