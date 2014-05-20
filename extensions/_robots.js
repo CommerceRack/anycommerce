@@ -160,7 +160,7 @@ var seo_robots = function(_app) {
 				request._tag = {
 					'datapointer' : 'appSEOFetch',
 					'callback' : function(rd){
-						$.extend(_app.ext.seo_robots.vars.pages, _app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
+						$.merge(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
 						_app.ext.seo_robots.vars.pagesLoaded = true;
 						}
 					};
