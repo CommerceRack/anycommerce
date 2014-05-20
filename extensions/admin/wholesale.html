@@ -137,13 +137,16 @@
 	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-click='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
 	<td data-bind="var:supplier(FORMAT); format:text;"></td>
-	<td data-bind="var:supplier(MODE); format:text;" class='hideInMinimalMode'></td>
 	<td class='alignRight'>
-	<button class='marginRight hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierRemoveExec' data-text='false' data-icon-primary='ui-icon-trash'>Remove this Supplier</button>
-	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</button>
-	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierInventoryAddShow' data-icon-primary='ui-icon-plus' data-text='true'>Add Inventory</button>
-	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Orders</button>
-	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
+	<button class='hideInMinimalMode applyButton' data-app-click='admin_wholesale|adminSupplierRemoveExec' data-text='false' data-icon-primary='ui-icon-trash'>Remove this Supplier</button>
+	<button class='marginLeft hideInMinimalMode applyButton' data-app-click='admin|showMenu' data-text='false' data-icon-primary='ui-icon-wrench' data-icon-secondary='ui-icon-triangle-1-s'>Tools</button>
+	<menu class='displayNone' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
+		<li><a href='#' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</a></li>
+		<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</a></li>
+		<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</a></li>
+		<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</a></li>
+		<li><a href='#' data-app-click='admin_wholesale|adminSupplierInventoryAddShow' data-icon-primary='ui-icon-plus' data-text='true'>Add Inventory</a></li>
+	</menu>
 	<button class='marginLeft applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-app-click='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	</td>
 </tr>
@@ -381,11 +384,18 @@
 
 
 
-	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
+	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		<button class='floatRight marginLeft applyButton' data-app-click='admin|submitForm' data-app-role='saveButton' disabled="disabled">Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight marginRight marginLeft applyButton' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</button>
-		<button class='floatRight marginLeft applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</button>
-		<button class='floatRight applyButton' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</button>
+		
+		<button class='floatRight marginLeft applyButton' data-app-click='admin|showMenu' data-text='true' data-icon-primary='ui-icon-wrench' data-icon-secondary='ui-icon-triangle-1-s'>Tools</button>
+		<menu class='displayNone' data-bind='var:order(CODE);format:assignAttribute; attribute:data-code;'>
+			<li><a href='#' data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='vendor'>Unordered Items</a></li>
+			<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='order'>Order List</a></li>
+			<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Product List</a></li>
+			<li><a href='#' data-app-click='admin_wholesale|adminSupplierProdOrderListShow' data-mode='product'>Inventory</a></li>
+			<li><a href='#' data-app-click='admin_wholesale|adminSupplierInventoryAddShow' data-icon-primary='ui-icon-plus' data-text='true'>Add Inventory</a></li>
+		</menu>
+
 	
 		<h2 class='floatLeft ui-widget-header-padding'>
 		Supplier: <span data-bind="var:supplier(CODE); format:text;"></span>
