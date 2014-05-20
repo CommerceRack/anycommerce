@@ -398,7 +398,7 @@ setTimeout(function(){
 // the delete below is a fairly benign delete. report errors, but no need updated the entire files list again, just remove the line from the dom.
 // errors will get reported and, if the file doesn't delete, it'll always be here next time for deletion.
 				for(var i = 0; i < L; i += 1)	{
-					$ul.append($("<li>").html("[ <a href='#' onClick=\"_app.ext.admin_medialib.calls.adminPublicFileDelete.init('"+data[i].file+"',{},'passive');  $(this).parent().empty().remove(); _app.model.destroy('adminPublicFileList'); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
+					$ul.append($("<li>").html("[ <a href='#' onClick=\"adminApp.ext.admin_medialib.calls.adminPublicFileDelete.init('"+data[i].file+"',{},'passive'); adminApp.model.dispatchThis('passive');  $(this).parent().empty().remove(); adminApp.model.destroy('adminPublicFileList'); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
 					}
 				 $('#publicFilesList').empty().removeClass('loadingBG').append($ul.children());
 				},
@@ -950,10 +950,16 @@ if(selector && mode)	{
 			_app.model.dispatchThis('immutable');
 			}, 
 		'publicFileUpload' : function(data,textStatus)	{
-//			dump("Got to csvUploadToBatch success.");
-//* 201320 -> the adminPublicFileList is slow, so on upload, we do not reload content. The destroy below will remove the data from localStorage so a merchant can exit publick files and return to see their updated list.
+			dump("Got to publicFileUpload success."); dump(data);
 			_app.model.destroy('adminPublicFileList');
-			_app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
+			_app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':function(rd){
+				if(_app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+					//success is handled in the else if(mode == 'publicFileUpload') so that it is only run once.
+					}
+				}},'immutable');
 			_app.model.dispatchThis('immutable');
 			},
 		'adminTicketFileAttach' : function(data,textStatus)	{
@@ -1093,6 +1099,12 @@ if(selector && mode)	{
 	if(mode == 'mediaLibrary')	{
 //		dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',mediafileuploadstopped); //do not double-bind the event. remove then re-add.
+		}
+	else if(mode == 'publicFileUpload')	{
+		//do not double-bind the event. remove then re-add.
+		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',function(){
+			navigateTo('#!ext/admin_medialib/publicFiles');
+			}); 
 		}
 	else if(mode == 'adminTicketFileAttach')	{
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',function(a){
