@@ -229,12 +229,16 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 							'jqObj':$target,
 							'mode' : 'dialog',
 							'templateID':'batchJobStatusTemplate',
+							'before' : function(rd)	{
+								_app.data[rd.datapointer].jobid = jobid;
+								},
 							'onComplete' : function(rd)	{
 								_app.ext.admin_batchjob.u.initBatchTimer(rd);
 								},
 							'dataAttribs': {'jobid':jobid}}
 						},'mutable');
 					_app.model.dispatchThis('mutable');
+					_app.u.addEventDelegation($target);
 					}
 				else	{
 					_app.u.throwMessage("No jobid specified in admin_batchjob.a.showBatchJobStatus");
@@ -446,22 +450,24 @@ _rtag.jqObj.hideLoading(); //this is after drawTable, which may take a moment.
 //NOTE -> the batch_exec will = REPORT for reports.
 			showReport : function($ele,p)	{
 				var $table = $ele.closest('table');
-				$table.stickytab({'tabtext':'batch jobs','tabID':'batchJobsStickyTab'});
-				$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
-				$('button',$table).removeClass('ui-state-highlight');
-				$ele.addClass('ui-state-highlight');
-				_app.ext.admin_batchjob.a.showReport($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),$ele.closest('tr').data());
+				if($table.length)	{
+					$table.stickytab({'tabtext':'batch jobs','tabID':'batchJobsStickyTab'});
+					$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+					$('button',$table).removeClass('ui-state-highlight');
+					$ele.addClass('ui-state-highlight');
 //make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
-				$table.off('close.stickytab').on('click.closeStickytab','button, a',function(){
-					$(this).closest('table').stickytab('close');
-					})
+					$table.off('close.stickytab').on('click.closeStickytab','button, a',function(){
+						$(this).closest('table').stickytab('close');
+						})
+					}
+				_app.ext.admin_batchjob.a.showReport($(_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")),{'guid':$ele.closest('[data-guid]').data('guid')});
 				return false;
 				}, //showReport
 
 			showDownload : function($ele,p)	{
 				_app.model.addDispatchToQ({
 					'_cmd':'adminBatchJobDownload',
-					'guid':$ele.closest('tr').data('guid'),
+					'guid':$ele.closest('[data-guid]').data('guid'),
 					'base64' : '1',
 					'_tag':	{
 						'datapointer' : 'adminBatchJobDownload', //big dataset returned. only keep on in memory.
