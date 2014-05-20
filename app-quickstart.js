@@ -2188,7 +2188,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
-						  // zephyrpaintball -> this is updated to provide an additional boost to prod_name and search additional attributes.
+// ### zephyrpaintball -> this is updated to provide an additional boost to prod_name and search additional attributes.
 							 {"query":{"query_string":{"query":decodeURIComponent(infoObj.KEYWORDS), "fields":["prod_name^10","pid","prod_desc","keywords","user_keywords", "prod_upc", "prod_mfgid", "user:prod_class2", "prod_class3", "prod_color", "prod_voltage"]}}},
 							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]

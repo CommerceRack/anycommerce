@@ -129,7 +129,8 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 		}
 	});
 /*
-** zephyr -> currently disabled because GA is executed through @trackers
+// ### zephyrpaintball -> currently disabled because GA is executed through @trackers
+
 _app.ext.order_create.checkoutCompletes.push(function(P){
 	_app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
 	if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order)	{

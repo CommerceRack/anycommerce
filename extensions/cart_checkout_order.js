@@ -403,7 +403,7 @@ left them be to provide guidance later.
 						_app.ext.cco.calls.cartItemsInventoryVerify.init(cartid,{'callback':function(rd){
 // This code is for an inventory check when the cart is updated. It will make sure that the # of items in the cart reflect the inventory available in the store.
 // this check is performed again at checkout.
-// *** zephyr -> this cart does an inventory check to make sure what's in the cart is actually available.
+// // ### zephyrpaintball ->  this cart does an inventory check to make sure what's in the cart is actually available.
 if(_app.model.responseHasErrors(rd)){
 	$c.anymessage({'message':rd});
 	$c.hideLoading();

@@ -410,6 +410,7 @@ This is used to get add an array of skus, most likely for a product list.
 									$form.anymessage({'message':rd});
 									}
 								else	{
+//* 201404 -> to customize the 'success' message, add a hidden input w/ name of 'message' and set the value to what you want displayed.
 									$form.anymessage(_app.u.successMsgObject(sfo.message || "Thank you, you are now subscribed."));
 									}
 								}
