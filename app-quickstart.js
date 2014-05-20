@@ -1110,6 +1110,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					// }
 				// else 
 				if(infoObj.performTransition == false)	{
+					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
 					var callback = function(){
