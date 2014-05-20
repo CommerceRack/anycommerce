@@ -174,7 +174,7 @@ var store_swc = function(_app) {
 					});
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
 				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tag":"IS_DISCONTINUED"}}});
-				$.extend(_app.ext.seo_robots.vars.pages, [
+				$.extend(_app.ext.seo_robots.vars.pages, _app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
 					"#!company/contact/",
 					"#!company/faq/",
