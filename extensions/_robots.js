@@ -154,6 +154,7 @@ var seo_robots = function(_app) {
 //any functions that are recycled should be here.
 		u : {
 			welcomeRobot : function(botStr){
+				_app.ext.quickstart.vars.cachedPageCount = 0;
 				var request = {
 					"_cmd" : "appSEOFetch"
 					};

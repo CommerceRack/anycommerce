@@ -63,6 +63,7 @@ var quickstart = function(_app) {
 		"hotw" : new Array(15), //history of the world. contains 15 most recent sotw objects.
 		"showContentFinished" : false,
 		"showContentCompleteFired" : false,
+		"cachedPageCount" : 20,
 		"session" : {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
@@ -510,7 +511,7 @@ need to be customized on a per-ria basis.
 			}, //wiki
 
 // * 201403 -> infoObj now passed into pageTransition.
-		pageTransition : function($o,$n, infoObj)	{
+		pageTransition : function($o,$n, infoObj, callback)	{
 			$n.removeClass('displayNone').show();
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 			
@@ -521,10 +522,12 @@ need to be customized on a per-ria basis.
 			if($o.length)	{
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
-				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide();}, 600); //fade out old, fade in new.
+				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 600);}, 600); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
+				callback();
+				setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 600);
 				}
 			}, //pageTransition
 
@@ -1109,21 +1112,31 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				if(infoObj.performTransition == false)	{
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
-					_app.ext.quickstart.pageTransition($old,$new,infoObj);
+					var callback = function(){
+						var $hiddenpages = $("#mainContentArea > :hidden");
+						var L = $hiddenpages.length;
+						dump(L);
+						dump(L - _app.ext.quickstart.vars.cachedPageCount);
+						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
+							$($hiddenpages.get(i)).intervaledEmpty().remove();
+							}
+						}
+					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
 					}
 				else if($new instanceof jQuery)	{
 //no page transition specified. hide old content, show new. fancy schmancy.
 					$("#mainContentArea :visible:first").hide();
 					$new.show();
+					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else	{
 					dump("WARNING! in showContent and no parentID is set for the element being translated.");
+					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 
 //NOT POSTING THIS MESSAGE AS ASYNC BEHAVIOR IS NOT CURRENTLY QUANTIFIABLE					
 				//Used by the SEO generation utility to signal that a page has finished loading. 
 				//parent.postMessage("renderFinished","*");
-				_app.ext.quickstart.vars.showContentFinished = true;
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
