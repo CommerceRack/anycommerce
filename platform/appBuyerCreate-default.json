@@ -11,7 +11,7 @@
 
 	"createBuyer": [
 		"SET?firstname=$firstname&lastname=$lastname",
-		"PASSWORDRESET?password=$password",
+		"PASSWORD-SET?password=$password",
 		"SET?newsletter-1=1"
 	]
 }
