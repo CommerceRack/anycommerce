@@ -113,7 +113,7 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 									hash = "#!/product/"+infoObj.pid+"/";
 									break;
 								case 'category':
-									hash = "#!/category/"+infoObj.pid+"/";
+									hash = "#!/category/"+infoObj.navcat+"/";
 									break;
 								case 'static':
 									hash = window.location.hash;
@@ -209,7 +209,9 @@ optional params:
 					
 					case 'category':
 						r = true;
-						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.categoryAnchor(data.value.path, (args.seo ? data.value.pretty : ''));
+						dump(args);
+						var seo = args.seo || data.value.pretty;
+						data.globals.binds[data.globals.focusBind] = _app.ext.store_routing.u.categoryAnchor(data.value.path, seo);
 						break;
 					
 					default:
@@ -257,7 +259,7 @@ optional params:
 				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
+				return "#!category/"+path+"/"+((seo) ? encodeURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;

@@ -175,27 +175,27 @@ var store_swc = function(_app) {
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
 				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tag":"IS_DISCONTINUED"}}});
 				$.extend(_app.ext.seo_robots.vars.pages, [
-							"#!company/about/",
-							"#!company/contact/",
-							"#!company/faq/",
-							"#!company/shipping/",
-							"#!company/privacy/",
-							"#!shop-by-player/",
-							"#!fieldcam/",
-							"#!affiliates/",
-							"#!careers/",
-							"#!rewards/",
-							"#!inquiry/",
-							"#!filter/100_years_of_wrigley_field/",
-							"#!filter/chicago/",
-							"#!filter/blackhawks/",
-							"#!filter/shirts/",
-							"#!filter/jerseys/",
-							"#!filter/personalized_jerseys/",
-							"#!filter/sweatshirts/",
-							"#!filter/hats/",
-							"#!filter/souvenirs/"
-							]);
+					"#!company/about/",
+					"#!company/contact/",
+					"#!company/faq/",
+					"#!company/shipping/",
+					"#!company/privacy/",
+					"#!shop-by-player/",
+					"#!fieldcam/",
+					"#!affiliates/",
+					"#!careers/",
+					"#!rewards/",
+					"#!inquiry/",
+					"#!filter/100_years_of_wrigley_field/",
+					"#!filter/chicago/",
+					"#!filter/blackhawks/",
+					"#!filter/shirts/",
+					"#!filter/jerseys/",
+					"#!filter/personalized_jerseys/",
+					"#!filter/sweatshirts/",
+					"#!filter/hats/",
+					"#!filter/souvenirs/"
+					]);
 				},
 			onError : function(){}
 			},
