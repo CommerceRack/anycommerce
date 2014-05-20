@@ -11,6 +11,12 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 ADMIN
 	enhancement - new FAQ manager
 	enhancement - added variations filter (inline search) for options
+	enhancement - some cleanup in the supplier interface
+	bug fix - adding a domain will refresh list of domains.
+	public files
+		bug fix - delete now working.
+		bug fix - file list will refresh after upload.
+
 
 
 QUICKSTART
@@ -19,6 +25,8 @@ QUICKSTART
 	enhancement - DOM title updated w/ page change.
 	bug fix - breadcrumb li's were getting an id assigned and no data-catsafeid
 
+TLC
+	bug fix - negative amounts now working with currency format.
 
 
 201403
