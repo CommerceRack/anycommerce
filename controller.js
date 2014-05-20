@@ -932,7 +932,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
 				if (window.addEventListener) {
-					console.log(" -> addEventListener is supported and added for hash change.");
+					dump(" -> addEventListener is supported and added for hash change.");
 					window.addEventListener("hashchange", _app.router.handleHashChange, false);
 					$(document.body).data('isRouted',true);
 					}
@@ -1361,7 +1361,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 //What was the plugin was split into two pieces, the app-event based delegation is here.  The form based is in anyForm
 			addEventDelegation : function($t,vars)	{
 				vars = vars || {};
-				var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
+				var supportedEvents = new Array("click","change","focus","blur","submit","keyup","keypress");
 
 				function destroyEvents($ele)	{
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
