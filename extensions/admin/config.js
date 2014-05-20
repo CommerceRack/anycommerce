@@ -1688,7 +1688,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$form.anymessage({"message":"In admin_config.e.buildGUID, either data-input-name ["+$ele.attr('data-input-name')+"] not set on trigger element or no input matching that name found within parent form."});
 					}
 				},
-			
+
 			billingHandleTabContents : function($ele,p)	{
 				var tab = $ele.closest('.ui-tabs-nav').find('.ui-state-active').data('anytabsTab');
 				var $tabContent = $ele.closest("[data-app-role='billingHistory']").find("[data-anytab-content='"+tab+"']:first");
@@ -1704,6 +1704,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					else	{} //unrecognized tab.
 					
 					if(cmd)	{
+						$('tbody',$tabContent).empty();
 						$tabContent.showLoading({'message':'Fetching details'});
 						_app.model.addDispatchToQ({
 							'_cmd':cmd,
