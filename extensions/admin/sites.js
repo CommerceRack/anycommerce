@@ -470,6 +470,54 @@ used, but not pre-loaded.
 					}
 				},
 
+			adminDomainCreateExec : function($ele,p)	{
+				
+				var $form = $ele.closest('form');
+				if(_app.u.validateForm($form))	{
+					$form.showLoading({'message' : 'Adding Domain'});
+					var sfo = $form.serializeJSON();
+					sfo['@updates'] = new Array();
+					
+					if(sfo.domaintype == 'DOMAIN-CREATE')	{
+						sfo.DOMAINNAME = sfo.DOMAINNAME;
+						sfo['@updates'].push("DOMAIN-CREATE");
+						sfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
+						}
+					else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
+						sfo['@updates'].push("DOMAIN-RESERVE");
+						sfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
+						}
+					else	{
+						
+						}
+					
+					if(sfo['@updates'].length)	{
+						sfo._cmd = 'adminDomainMacro';
+						sfo._tag = {
+							callback : function(rd)	{
+								$form.hideLoading();
+								if(_app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									//sample action. success would go here.
+									$('#globalMessaging').anymessage(_app.u.successMsgObject('Your domain has been added.'));
+									navigateTo("#!ext/admin_sites/showDomainConfig");
+									$form.closest('.ui-dialog-content').dialog('close');
+									}
+								}
+							}
+						_app.model.addDispatchToQ(sfo,"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In adminDomainCreateExec, unrecognized domain type set in form.','gMessage':true});
+						}
+					}
+				else	{} //validateForm will handle error display.
+				
+				},
+
 			adminDomainCreateShow : function($ele,p)	{
 				var $D = _app.ext.admin.i.dialogCreate({
 					'title':'Add New Domain',
