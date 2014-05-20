@@ -95,6 +95,7 @@ var seo_robots = function(_app) {
 											dump(p);
 											break;	
 										}
+									$('#globalMessaging').intervaledEmpty();
 									showContent('',infoObj);
 									}
 								else {
