@@ -244,7 +244,7 @@ footer .footText	{background: #707070; font-size:.7em; line-height:1.1em; paddin
 
 #mainContentArea	{overflow:hidden;} /* here so animations that 'leave' the element don't cause undesired stretching */
 
-#contentContainer	{padding:.3em; background:#fff;}
+#contentContainer	{padding:.5em; background:#fff;}
 .pageContentSidebar	{display:none;}
 #mainContentArea	{position:relative;} /* important for some of the page transition effects */
 .pageTemplateBG		{background:#fff;} /* added by page transition. puts a solid color behind the content to help aesthetic of animation (page won't be see-thru) */
@@ -454,6 +454,26 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 
 
 
+
+.bannerGradient	{
+	color:#fff;
+	background: rgb(230,116,29); /* Old browsers */
+	background: -moz-linear-gradient(top, rgba(230,116,29,1) 0%, rgba(242,60,31,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,116,29,1)), color-stop(100%,rgba(242,60,31,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6741d', endColorstr='#f23c1f',GradientType=0 ); /* IE6-9 */	
+	}
+
+.bannerGradient .primaryText	{font-weight:900; font-size:1em;  text-shadow: 1px 1px 1px #000;}
+.bannerGradient .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
+
+#solicitFeedback	{padding:.2em .5em; text-align:center;}
+#solicitFeedbackSB	{padding:.2em; border:1px solid #F33; margin-bottom:.5em; text-align:center; font-size:.9em;}
+#solicitFeedbackSB .primaryText	{font-size:1.6em;}
+
 @media only screen and (min-width: 768px) {
 	body	{background:url(images/zs10_body_bg-2000x16.gif) repeat-y; margin:0em; padding:.7em; font-weight:100;}
 	
@@ -494,17 +514,8 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		-webkit-border-radius: .4em;
 		border-radius: .4em;
 		padding:.1em .6em; 
-		background: rgb(230,116,29); /* Old browsers */
-		background: -moz-linear-gradient(top, rgba(230,116,29,1) 0%, rgba(242,60,31,1) 100%); /* FF3.6+ */
-		background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(230,116,29,1)), color-stop(100%,rgba(242,60,31,1))); /* Chrome,Safari4+ */
-		background: -webkit-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Chrome10+,Safari5.1+ */
-		background: -o-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* Opera 11.10+ */
-		background: -ms-linear-gradient(top, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* IE10+ */
-		background: linear-gradient(to bottom, rgba(230,116,29,1) 0%,rgba(242,60,31,1) 100%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e6741d', endColorstr='#f23c1f',GradientType=0 ); /* IE6-9 */
 		}
-	#headerDecal2 .primaryText	{font-weight:900; font-size:1em; margin-right:.4em; padding-right:.4em; border-right:1px solid #faba8e; text-shadow: 1px 1px 1px #000;}
-	#headerDecal2 .secondaryText	{font-size:.7em; letter-spacing:.1em; font-weight:300; float:right; line-height:1.1em;}
+	#headerDecal2 .primaryText	{margin-right:.4em; padding-right:.4em; border-right:1px solid #faba8e;}
 
 	#tier1catContainer .sbbSprite	{display:none;} /* disable banners in left col, it's still collapsed */
 	#tier1catContainer	{
@@ -579,6 +590,11 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	#loginFormContainer	{max-height: auto;} /* undo the 200px max-height for mobile devices */
 	.signUpAdvantages	{display:block; width:50%; margin-left:2em;}
 	.signUpAdvantages h4, .signUpAdvantages h3, .signUpAdvantages h2, .signUpAdvantages p	{margin:0; padding:0;}
+	
+	#solicitFeedback	{display:none;} /*once we get this wide, we'll have the sidebar for this */
+	
+	
+	
 	}
 
 

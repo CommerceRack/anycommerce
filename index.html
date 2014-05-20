@@ -71,10 +71,11 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0519a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0520a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
+		"cmr" : [], //for cart messaging. declare here so 'push' in init file doesn't cause an error.
 		"testURL":"http://app.zephyrpaintball.com/", //used ONLY if protocol is file: (for testing)
 		"addjQueryPointer" : true,
 		"initComplete" : function(t){
@@ -133,7 +134,7 @@ $(document).ready(function(){
 		
 		<div id='headerDecal1'></div><!-- ssl cert -->
 
-		<div id='headerDecal2'>
+		<div id='headerDecal2' class='bannerGradient'>
 			<div class='secondaryText'>
 				<div>on orders</div><div>over $100</div>
 			</div>
@@ -214,6 +215,11 @@ $(document).ready(function(){
 		</div>
 		<div id='globalMessaging' class='appMessaging'></div>
 		<div id='mainContentArea'></div>
+
+		<div id='solicitFeedback' class='pointer bannerGradient' onClick="window.open('https://docs.google.com/forms/d/1h7_oT_H5zxP_RU48iYZYmjzDa2dTQKBjDNZVSMmLOgc/viewform','googleSurvey','width='+($(document.body).width() >740 ? 740 : 300)+', height=250, toolbar=no, menubar=no, location=no, status=no, scrollbars=yes');">
+		<span class='primaryText'>Click here for your chance to win $50.00!</span>
+		</div>
+
 	</div>
 
 	<footer id='mastFoot' class='clearfix'>
@@ -391,6 +397,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<!-- will only appear if 768px+ -->
 	<section class='pageContentSidebar'>
+		<div id='solicitFeedbackSB' class='pointer bannerGradient' onClick="window.open('https://docs.google.com/forms/d/1h7_oT_H5zxP_RU48iYZYmjzDa2dTQKBjDNZVSMmLOgc/viewform','googleSurvey','width='+($(document.body).width() >740 ? 740 : 300)+', height=250, toolbar=no, menubar=no, location=no, status=no, scrollbars=yes');">
+		<div>Click Here for Your Chance to </div>
+		<span class='primaryText'>Win $50.00!</span>
+		</div>
+
 		<a class='sbbSprite sbb1' href='#!search/keywords/pricedrop'></a>
 		<a class='sbbSprite sbb2' href='#!search/keywords/spire+hoppers'></a>
 		<a class='sbbSprite sbb3' href='#!search/keywords/e-tacs'></a>
@@ -1462,7 +1473,7 @@ Cart template
 
 	<div class="cartZipCodeContainer marginBottom">
 		<label>Zip/Postal Code:
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-keypress="quickstart|triggerBlurOnEnter" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
 	</div>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
