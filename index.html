@@ -35,7 +35,15 @@ else	{
 	}
 document.getElementsByTagName('base')[0].href = baseURL;
 </script>
-<!-- some backwards compatibility for <=IE8 -->
+
+
+
+<!-- IE8 does not support media queries, so a special stylesheet is present. -->
+<!--[if lte IE 8]>
+	<link rel="stylesheet" type="text/css" href="styles_ie8.css" />
+<![endif]-->
+
+
 <!--[if lt IE 9]>
    <script>
       document.createElement('header');
@@ -44,6 +52,8 @@ document.getElementsByTagName('base')[0].href = baseURL;
       document.createElement('article');
       document.createElement('aside');
       document.createElement('footer');
+      document.createElement('menu');
+      document.createElement('template');
    </script>
 <![endif]-->
 
@@ -71,7 +81,7 @@ var myApp = {};
 $(document).ready(function(){
 
 	window.myApp = new initApp({
-		"release":"201403.0521b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201403.0521c",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
