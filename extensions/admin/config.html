@@ -3254,12 +3254,12 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
-<!--	
+	
 		<h4>Analytics</h4>
 		<ul>
-			<li data-plugin="analytics.google.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
+			<li data-plugin="analytics.google.com" data-app-click="admin_config|pluginUpdateShow" data-plugin-host-specific='yes' class="lookLikeLink">Google</li>
 		</ul>
-	
+<!--	
 		<h4>Native Platforms</h4>
 		<ul>
 			<li>Coming soon</li>
@@ -3272,13 +3272,19 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->
 	</section>
 
+<!--
+SANITY -> as you move from plugin to plugin, only the info within slimLeftContainer is emptied and re-rendered. 
+The header and buttons don't get reset, so the tlc must take this into account (hence the empty or hide at the beginning of the statements
+-->
 	<section class="slimLeftContentSection ui-widget" data-app-role="slimLeftContentSection">
 		<form onsubmit="return false">
 		<div class="ui-widget-header ui-corner-top">
-			<h3 class="heading">Edit:</h3>
+			<h3 class="heading" data-tlc="apply --empty; bind $var '.plugin'; apply --append;">Edit: </h3>
 		</div>
 		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
 			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
+				
+				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.pluginHostSpecific'; if(is $var --true;) {{apply --show;}};">Enable Hosts</button>
 				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
@@ -3341,11 +3347,12 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 
 <fieldset id="pluginTemplate_analytics.google.com">
 	<input name="plugin" value="analytics.google.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<!--
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable Google Analytics
 	</label>
+	-->
 	
 	<label>
 		<span class='prompt'>Tracking ID</span>

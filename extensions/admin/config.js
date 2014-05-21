@@ -183,7 +183,7 @@ var admin_config = function(_app) {
 				_app.model.dispatchThis('mutable');
 				},
 		
-			showPluginManager : function($target)	{
+			showPluginManager : function($target,p)	{
 				$target.showLoading({'message':'Fetching Your Integration Data'});
 				_app.u.addEventDelegation($target);
 				_app.model.addDispatchToQ({
@@ -193,7 +193,12 @@ var admin_config = function(_app) {
 						'callback': 'tlc',
 						'templateID' : 'pluginManagerPageTemplate',
 						'jqObj' : $target,
-						'onComplete' : function()	{$("[data-app-role='slimLeftNav']",$target).accordion();},
+						'onComplete' : function()	{
+							$("[data-app-role='slimLeftNav']",$target).accordion();
+							if(p.plugin)	{
+								$("li[data-plugin='"+p.plugin+"']:first").trigger('click');
+								}
+							},
 						'datapointer':'adminConfigDetail|plugins'
 					}
 				},'mutable');
@@ -203,10 +208,11 @@ var admin_config = function(_app) {
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
 				if($target instanceof jQuery && vars.plugin)	{
-					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'dataset':$.extend({},_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin))});
+					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'verb':'template'});
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
-					$target.parent().find('.buttonset').show();
+					//need to translate the plugin container so that the 'edit' and button tlc is translated.
+					$target.closest("[data-app-role='slimLeftContentSection']").tlc({'verb':'translate','dataset':$.extend({},vars,_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin))}).find('.buttonset').show();
 					$target.closest('form').anyform({'trackEdits':true});
 					}
 				else	{
@@ -1633,8 +1639,56 @@ when an event type is changed, all the event types are dropped, then re-added.
 				else	{} //validate form will handle the error display.
 				},
 
+			pluginHostChooserShow : function($ele,p)	{
+				var plugin = $ele.closest('form').find("input[name='plugin']").val();
+				if(plugin)	{
+					adminApp.ext.admin_sites.u.hostChooser({
+						saveAction : function($chooser)	{
+							
+							
+if($( ".ui-selected", $chooser ).length)	{
+	$chooser.showLoading({'message':'Saving hosts to '+plugin});
+	var updates = new Array();
+	$( ".ui-selected", $chooser ).each(function() {
+		updates.push("PLUGIN/SET?plugin="+plugin+"&"+encodeURIComponent($(this).data('hostname'))+'.'+encodeURIComponent($(this).closest("[data-domainname]").data('domainname')));
+		});
+	
+	_app.model.addDispatchToQ({
+		'_cmd':'adminConfigMacro',
+		'@updates' : updates,
+		'_tag':	{
+			'callback':function(rd){
+				$chooser.hideLoading();
+				if(_app.model.responseHasErrors(rd)){
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+					//sample action. success would go here.
+					$chooser.closest('.ui-dialog-content').dialog('close');
+					navigateTo('#!ext/admin_config/showPluginManager?plugin='+plugin)
+					}
+				}
+			}
+		},'immutable');
+	_app.model.dispatchThis('immutable');
+	}
+else	{
+	$chooser.anymessage({"message":"Please select at least one host."});
+	}
+
+
+							} //saveAction
+						});
+					}
+				else	{
+					$("#globalMessaging").anymessage({"message":"In admin_config.e.pluginHostChooserShow, unable to ascertain plugin (plugin hidden input probably missing).","gMessage":true});
+					}
+				
+				
+				},
+
 			pluginUpdateShow : function($ele,p)	{
-				_app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin':$ele.data('plugin')})
+				_app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),$ele.data())
 				},
 
 //delegated events
