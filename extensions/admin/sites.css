@@ -10,3 +10,12 @@
 .domainList th, .domainList tf	{padding:2px 12px 2px 2px; vertical-align:top;}
 
 td.domainDetailRow	{border-bottom:1px solid #efefef;}
+
+
+.hostChooser	{max-height:200px; overflow:auto;}
+.hostChooserHostList	{margin:.2 0 .5em .2em; padding:0; list-style:none;}
+.hostChooserHostListItem	{margin-bottom:.1em; padding:.2em .5em; cursor:pointer;}
+
+@media only screen and (min-height: 500px) {
+	.hostChooser	{max-height:450px;}
+	}

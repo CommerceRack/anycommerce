@@ -308,6 +308,51 @@ used, but not pre-loaded.
 //any functions that are recycled should be here.
 		u : {
 
+			hostChooser : function(opts)	{
+				opts = opts || {};
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Choose Host(s)",
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$D.dialog('open');
+				$D.showLoading({'message':'Fetching updated list of domains and hosts.'});
+				_app.model.addDispatchToQ({
+					'_cmd':'adminDomainList',
+					'hosts' : true,
+					'_tag':	{
+						'datapointer' : 'adminDomainList',
+						'callback':function(rd)	{
+							$D.hideLoading();
+							if(_app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd});
+								}
+							else	{
+								$D.tlc({'templateid':'hostChooserDomainListTemplate','datapointer':rd.datapointer});
+								if(typeof opts.beforeSelectable === 'function')	{
+									opts.before($D);
+									}
+								
+								$D.selectable({'filter' : 'li'});
+								
+								if(typeof opts.afterSelectable === 'function')	{
+									opts.before($D);
+									}
+								
+								if(typeof opts.saveAction === 'function')	{
+									$("<button>").text('Save Hosts').button().on('click',function(){
+										opts.saveAction($D);
+										}).appendTo($D);
+									}
+								}
+							}
+						}
+					},'mutable');
+					_app.model.dispatchThis('mutable');
+
+
+				},
+
 //mode is required and can be create or update.
 //form is pretty self-explanatory.
 //$domainEditor is the PARENT context of the original button clicked to open the host editor. ex: the anypanel. technically, this isn't required but will provide a better UX.

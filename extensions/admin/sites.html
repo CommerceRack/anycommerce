@@ -658,3 +658,18 @@ That's also why the template does not contain a form
 </form>
 
 </div>
+
+
+
+<!-- HOST CHOOSER -->
+
+<div id='hostChooserDomainListTemplate' data-tlc="bind $domains '.@DOMAINS'; controller#loop --templateid='hostChooserDomainTemplate'; apply --append;" class='hostChooser'></div>
+<div id='hostChooserDomainTemplate'>
+	<h5 data-tlc="bind $domain '.DOMAINNAME'; apply --append;"></h5>
+	<ul data-tlc="bind $hosts '.@HOSTS'; controller#loop --templateid='hostChooserHostTemplate'; apply --append;" class='hostChooserHostList'></ul>
+</div>
+
+<ul>
+	<li id='hostChooserHostTemplate'  class='hostChooserHostListItem' data-tlc="bind $hostname '.HOSTNAME'; apply --append; bind $chkout '.CHKOUT'; if(is $chkout --notblank;) {{format --prepend=' - '; apply --append; }}; "></li>
+</ul>
+
