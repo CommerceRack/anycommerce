@@ -656,6 +656,7 @@ var store_swc = function(_app) {
 					else {
 						}
 					});
+				var playerFilters = {"or" : []}
 				$('input[data-filter=playerFilterCheckbox]', $form).each(function(){
 					if($(this).is(":checked")){
 						var f = {
@@ -666,9 +667,12 @@ var store_swc = function(_app) {
 									}
 								}
 							};
-						elasticsearch.filter.and.push(f);
+						playerFilters.or.push(f);
 						}
 					});
+				if(playerFilters.or.length){
+					elasticsearch.filter.and.push(playerFilters);
+					}
 				var es;
 				if(!elasticsearch.sort){
 					var tmp = {
