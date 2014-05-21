@@ -215,6 +215,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .filterResultsContainer {float:right; width: 80%;}
 .filterCheckboxList {max-height: 120px; overflow:auto;}
 .filterGroup {margin-bottom: 10px;}
+.playerFilterList {text-indent: 1em;}
 
 .sliderValContainer {text-decoration: none;}
 .ui-slider-handle {text-decoration: none;}

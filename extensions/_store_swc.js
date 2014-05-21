@@ -302,11 +302,32 @@ var store_swc = function(_app) {
 					for(var i in list){
 						var o = list[i];
 						var $t = $('<div data-filter="inputContainer"></div>');
-						$t.append('<label><input type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />'+o.p+' <span data-filter="count"></span></label>');
+						$t.append('<label><input data-filter="filterCheckbox" type="checkbox" name="'+o.v+'" '+(o.checked ? 'checked="checked"' : '')+' />'+o.p+' <span data-filter="count"></span></label>');
 						$('input', $t).on('change', function(event){
 							_app.ext.store_swc.e.execFilteredSearch($(this), event);
 							});
 						if(o.hidden){$t.addClass('displayNone');}
+						if(args.withPlayers){
+							var $p = $('<div class="playerFilterList"></div>');
+							if(o.players){
+								for(var i in o.players){
+									var p = o.players[i];
+									$p.append('<div><label><input data-filter="playerFilterCheckbox" type="checkbox" name="'+p+'" />'+p+'</label></div>');
+									}
+								$('input', $p).on('change', function(event){
+									_app.ext.store_swc.e.execFilteredSearch($(this), event);
+									});
+								if(o.catlink){
+									$p.append('<div><a href="'+o.catlink+'">more players</div>');
+									}
+								}
+							else {
+								if(o.catlink){
+									$p.append('<div><a href="'+o.catlink+'">browse by player</div>');
+									}
+								}
+							$t.append($p);
+							}
 						$tag.append($t);
 						}
 					return true;
@@ -617,21 +638,35 @@ var store_swc = function(_app) {
 				$('[data-filter-type=checkboxList]', $form).each(function(){
 					var filter = {"or" : []};
 					$('[data-filter=count]', $(this)).empty();
-					$('input', $(this)).each(function(){
-						var f = {"term" : {}};
+					$('input[data-filter=filterCheckbox]', $(this)).each(function(){
 						var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
-						f.term[index] = $(this).attr('name');
 						if(!elasticsearch.facets[index]){
 							elasticsearch.facets[index] = {"terms" : {"field":index}}
 							}
 						if($(this).is(":checked")){
+							var f = {"term" : {}};
+							f.term[index] = $(this).attr('name');
 							filter.or.push(f);
 							}
 						});
+					
 					if(filter.or.length > 0){
 						elasticsearch.filter.and.push(filter);
 						}
 					else {
+						}
+					});
+				$('input[data-filter=playerFilterCheckbox]', $form).each(function(){
+					if($(this).is(":checked")){
+						var f = {
+							"query" : {
+								"query_string" : {
+									"query" : '"'+$(this).attr('name')+'"',
+									"fields" : ["prod_name"]
+									}
+								}
+							};
+						elasticsearch.filter.and.push(f);
 						}
 					});
 				var es;
@@ -1138,8 +1173,8 @@ var store_swc = function(_app) {
 			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks"},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves"},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles"},
-						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox"},
-						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs"},
+						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", "players" : ["David Ortiz","Dustin Pedroia"]},
+						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo"]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox"},
 						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds"},
 						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians"},
