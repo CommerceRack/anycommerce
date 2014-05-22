@@ -316,12 +316,12 @@ var store_swc = function(_app) {
 									_app.ext.store_swc.e.execFilteredSearch($(this), event);
 									});
 								if(o.catlink){
-									$p.append('<div><a href="'+o.catlink+'">more players</div>');
+									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">more players</div>');
 									}
 								}
 							else {
 								if(o.catlink){
-									$p.append('<div><a href="'+o.catlink+'">browse by player</div>');
+									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">browse by player</div>');
 									}
 								}
 							$t.append($p);
