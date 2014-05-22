@@ -132,5 +132,7 @@ tbody.variationGroupOptions	{
 */
 
 
-
+.skuFinder .variation	{margin-bottom:.3em;}
+.skuFinder label	{margin-right:.2em;}
+.skuFinder .ghint_qmark_container	{margin-left:.2em;}
 

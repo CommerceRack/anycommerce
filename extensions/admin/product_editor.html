@@ -652,9 +652,9 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<div class='marginBottom displayNone' data-app-role='skuSchedulesContainer'>
 
 		<div data-skufinder-role='container' data-skufinder-templateid='skuSchedulesTbodyTemplate' class='marginBottom'>
-			<div data-skufinder-role='finderContainer'>
-				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
-				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
 			</div>
 	
 			<table class='gridTable' data-skufinder-role='target' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
@@ -726,10 +726,10 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<legend>Sku Specifics</legend>
 
 			<div data-skufinder-role='container' data-skufinder-templateid='skuTableRowTemplate' class='marginBottom'>
-				<div data-skufinder-role='finderContainer'>
-					SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
-					<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
-				</div>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
 
 
 				<table class='fullWidth gridTable'>
@@ -959,9 +959,9 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	<fieldset class='marginBottom' data-app-role='buySkus'>
 
 		<div data-skufinder-role='container' data-skufinder-templateid='buycomSkuRowTemplate' class='marginBottom'>
-			<div data-skufinder-role='finderContainer'>
-				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
-				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
 			</div>
 		
 			<table class='gridTable'>
@@ -1220,12 +1220,13 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	
 	<div data-app-role='competitionSkuInputs'>
 		<div data-skufinder-role='container' data-skufinder-templateid='competitionSkuRowTemplate' class='marginBottom'>
-			<div data-skufinder-role='finderContainer'>
-				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
-				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
 			</div>
 			
-			<table class='gridTable'>
+			<table class='gridTable fullWidth'>
 			<thead>
 			<tr>
 				<th>SKU</th>
