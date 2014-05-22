@@ -121,7 +121,6 @@ var store_swc = function(_app) {
 						routeObj.params.dataset.userTeams = {};
 						for(var sport in _app.ext.store_swc.validTeams){
 							routeObj.params.dataset.userTeams[sport] = $.grep(_app.ext.store_swc.validTeams[sport], function(e, i){ return $.inArray(e.v, _app.ext.store_swc.vars.userTeams[sport]) >= 0});
-							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
 							}
 						showContent('static',routeObj.params)
 						}
@@ -316,12 +315,12 @@ var store_swc = function(_app) {
 									_app.ext.store_swc.e.execFilteredSearch($(this), event);
 									});
 								if(o.catlink){
-									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">more players</div>');
+									$p.append('<div><a href="'+o.catlink+'">more players</div>');
 									}
 								}
 							else {
 								if(o.catlink){
-									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">browse by player</div>');
+									$p.append('<div><a href="'+o.catlink+'">browse by player</div>');
 									}
 								}
 							$t.append($p);
@@ -1157,36 +1156,36 @@ var store_swc = function(_app) {
 						{"p": "Toronto Raptors","v": "toronto_raptors", "img":"nbahats/toronto_raptors_hat.jpg"},
 						{"p": "Utah Jazz","v": "utah_jazz", "img":"nbahats/utah_jazz_hat.jpg"},
 						{"p": "Washington Wizards","v": "washington_wizards", "img":"nbahats/washington_wizards_hat.jpg"}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks"},
-						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves"},
-						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles"},
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["A.J. Pollock","Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt","Wade Miley"]},
+						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Andrelton Simmons","B.J. Upton","Brandon Beachy","Craig Kimbrel","Freddie Freeman","Jason Heyward","Justin Upton"]},
+						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Chris Davis","Chris Tillman","Manny Machado","Nick Markakis","Steve Lombardozzi"]},
 						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", "players" : ["David Ortiz","Dustin Pedroia","Jonny Gomes","Koji Uehara","Shane Victorino","Stephen Drew","Xander Bogaerts"]},
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Darwin Barney","Jeff Samardzija","Mike Olt","Starlin Castro"]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Adam Dunn","Adam Eaton","Chris Sale","Jose Abreu","Paul Konerko"]},
-						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds"},
-						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians"},
-						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies"},
-						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers"},
-						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros"},
-						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals"},
-						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim"},
-						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.jpg", "catlink":"#!category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers"},
-						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.miami_marlins/Miami%20Marlins"},
-						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"#!category/.mlb.milwaukee_brewers/Milwaukee%20Brewers"},
-						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.minnesota_twins/Minnesota%20Twins"},
-						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_mets/New%20York%20Mets"},
-						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_yankees/New%20York%20Yankees"},
-						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.oakland_athletics/Oakland%20Athletics"},
-						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.philadelphia_phillies/Philadelphia%20Phillies"},
-						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates"},
-						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_diego_padres/San%20Diego%20Padres"},
-						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_francisco_giants/San%20Francisco%20Giants"},
-						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.seattle_mariners/Seattle%20Mariners"},
-						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"#!category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals"},
-						{"p":"Tampa Bay Rays","v":"tampa_bay_Rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays"},
-						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers"},
-						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays"},
-						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals"}],
+						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Homer Bailey","Joey Votto","Mike Leake","Ryan Ludwick","Zack Cozart"]},
+						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians", "players" : ["Carlos Santana","Jason Kipnis","Michael Bourn","Nick Swisher","Terry Francona"]},
+						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies", "players" : ["Boone Logan","Charlie Blackmon","Drew Stubbs","Michael Cuddyer","Todd Helton","Troy Tulowitzki"]},
+						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Alex Avila","Anibal Sanchez","Ian Kinsler","Justin Verlander","Max Scherzer","Miguel Cabrera"]},
+						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"]},
+						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Aaron Crow","Alcides Escobar","Alex Gordon","Billy Butler","Eric Hosmer","Lorenzo Cain","Mike Moustakas"]},
+						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","David Freese","Josh Hamilton","Matt Shoemaker","Mike Trout"]},
+						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.jpg", "catlink":"#!category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers", "players" : ["Adrian Gonzalez","Andre Ethier","Clayton Kershaw","Hanley Ramirez","Matt Kemp","Yasiel Puig","Yasiel Puig"]},
+						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Giancarlo Stanton","J. Saltalamacchia","Justin Ruggiano","Ty Wigginton"]},
+						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"#!category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Kyle Lohse","Matt Garza","Rickie Weeks","Ryan Braun","Zack Duke""]},
+						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Alex Presley","Brian Dozier","Eduardo Escobar","Jason Kubel","Joe Mauer","Josh Willingham","Vance Worley"]},
+						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_mets/New%20York%20Mets", "players" : ["Chris Young","Curtis Granderson","Daniel Murphy","David Wright","Jose Valverde","Lucas Duda"]},
+						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Alex Rodriguez","DAlfonso Soriano","Brian McCann","Derek Jeter","Ichiro Ichiro","Jacoby Ellsbury","Masahiro Tanaka"]},
+						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.oakland_athletics/Oakland%20Athletics", "players" : ["Brandon Moss","Eric Sogard","Jed Lowrie","Josh Donaldson","Yoenis Cespedes"]},
+						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Antonio Bastardo","Cliff Lee","Cole Hamels","Jimmy Rollins","Ryan Howard","Ryne Sandberg"]},
+						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates", "players" : ["Andrew McCutchen","Gerrit Cole","eff Karstens","Jeff Locke"]},
+						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_diego_padres/San%20Diego%20Padres", "players" : ["Cameron Maybin","Cory Luebke","Everth Cabrera","Trevor Hoffman"]},
+						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Brandon Belt","Brandon Crawford","Buster Posey","George Kontos","Hunter Pence","Madison Bumgarner","Marco Scutaro"]},
+						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.seattle_mariners/Seattle%20Mariners", "players" : ["Dustin Ackley","Eric Thames","Fernando Rodney","Justin Smoak","Kyle Seager","Michael Saunders","Robinson Cano"]},
+						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"#!category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter","Jason Motte","Pete Kozma"]},
+						{"p":"Tampa Bay Rays","v":"tampa_bay_Rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","Brandon Gomes","David Price","Evan Longoria","Joe Maddon"]},
+						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers", "players" : ["Adrian Beltre","Colby Lewis","Derek Holland","J.P. Arencibia","Michael Young","Mitch Moreland","Prince Fielder"]},
+						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays", "players" : ["Brett Cecil","Brett Lawrie","Colby Rasmus","Jose Bautista","Kyle Drabek","Mark Buehrle","Roy Halladay"]},
+						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper","Chris Snyder","Ian Desmond","Jayson Werth","Jordan Zimmermann","Tyler Clippard"]}],
 			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg"},
 						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg"},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg"},
