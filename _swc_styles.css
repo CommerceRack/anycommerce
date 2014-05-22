@@ -212,6 +212,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .filteredSearchPage form {color:white;}
 .filterList { width: 16%; padding: 15px 2%;}
+.filterList legend {font-weight: bold; margin-bottom: 6px;}
 .filterResultsContainer {float:right; width: 80%;}
 .filterCheckboxList {max-height: 120px; overflow:auto;}
 .myTeamList .filterCheckboxList {max-height: none;}
