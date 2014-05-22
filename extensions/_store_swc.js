@@ -121,6 +121,7 @@ var store_swc = function(_app) {
 						routeObj.params.dataset.userTeams = {};
 						for(var sport in _app.ext.store_swc.validTeams){
 							routeObj.params.dataset.userTeams[sport] = $.grep(_app.ext.store_swc.validTeams[sport], function(e, i){ return $.inArray(e.v, _app.ext.store_swc.vars.userTeams[sport]) >= 0});
+							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
 							}
 						showContent('static',routeObj.params)
 						}
