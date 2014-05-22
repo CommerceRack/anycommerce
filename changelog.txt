@@ -16,6 +16,10 @@ ADMIN
 	public files
 		bug fix - delete now working.
 		bug fix - file list will refresh after upload.
+	Integrations
+		enhancement - added GA Universal (not supported in checkout yet)
+		enhancemnet - ability to add a custom integration
+	enhancement - product editor 'sku finder' for product with a large # of skus*
 
 
 
@@ -27,6 +31,10 @@ QUICKSTART
 
 TLC
 	bug fix - negative amounts now working with currency format.
+
+
+* There was an issue where a PID with a large # of skus could crash the browser. The sku-finder will now show up if a product has more than 100 skus. This impacts the following tabs: attributes, variations, buy.com and competition.
+
 
 
 201403
