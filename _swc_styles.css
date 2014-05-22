@@ -214,6 +214,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .filterList { width: 16%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 80%;}
 .filterCheckboxList {max-height: 120px; overflow:auto;}
+.myTeamList .filterCheckboxList {max-height: none;}
 .filterGroup {margin-bottom: 10px;}
 .playerFilterList {text-indent: 1em;}
 
