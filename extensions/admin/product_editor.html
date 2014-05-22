@@ -632,6 +632,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 -->
 	<form action='#' onSubmit='return false'>
 	
+	<!-- this will appear for product with no inventory-able variations -->
 	<div class='marginBottom displayNone' data-app-role='pidSchedulesContainer'>
 	<table class='gridTable'>
 	<thead>
@@ -647,15 +648,25 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	</table>
 	</div>	
 	
+	<!-- this will appear for product with inventory-able variations -->
 	<div class='marginBottom displayNone' data-app-role='skuSchedulesContainer'>
-	<table class='gridTable' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
-	<thead>
-	<tr>
-		<th>Schedule</th>
-		<th>Price</th>
-	</tr>
-	</thead>
-	</table>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='skuSchedulesTbodyTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer'>
+				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			</div>
+	
+			<table class='gridTable' data-skufinder-role='target' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
+			<thead>
+			<tr>
+				<th>Schedule</th>
+				<th>Price</th>
+			</tr>
+			</thead>
+			</table>
+		</div>
+	
 	</div>
 	
 	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
@@ -713,29 +724,37 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 		
 		<fieldset>
 			<legend>Sku Specifics</legend>
-	
-			<table class='fullWidth gridTable'>
-			<colgroup>
-				<col span='2' data-app-role='properties' />
-				<col data-app-role='assembly' />
-				<col span='7' data-app-role='attributes' />
-			</colgroup>
-			<thead>
-			<tr>
-				<th>SKU</th>
-				<th>Desc</th>
-				<th class='width20'>Assembly</th>
-				<th class='width20'>Mfg ID</th>
-				<th class='width20'>UPC</th>
-				<th class='width20'>ASIN</th>
-<!--				<th>Condition</th>-->
-				<th>Price</th>
-				<th title="Base Cost - your cost for the sku">Cost</th>
-				<th>Weight</th>
-			</tr>
-			</thead>
-			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
-			</table>
+
+			<div data-skufinder-role='container' data-skufinder-templateid='skuTableRowTemplate' class='marginBottom'>
+				<div data-skufinder-role='finderContainer'>
+					SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
+					<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+				</div>
+
+
+				<table class='fullWidth gridTable'>
+				<colgroup>
+					<col span='2' data-app-role='properties' />
+					<col data-app-role='assembly' />
+					<col span='7' data-app-role='attributes' />
+				</colgroup>
+				<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Desc</th>
+					<th class='width20'>Assembly</th>
+					<th class='width20'>Mfg ID</th>
+					<th class='width20'>UPC</th>
+					<th class='width20'>ASIN</th>
+			<!--				<th>Condition</th>-->
+					<th>Price</th>
+					<th title="Base Cost - your cost for the sku">Cost</th>
+					<th>Weight</th>
+				</tr>
+				</thead>
+				<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+				</table>
+			</div>
 		</fieldset>
 	</div>
 
@@ -938,16 +957,23 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 	
 	<fieldset class='marginBottom' data-app-role='buySkus'>
-	
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>SKU</th>
-		<th>Buy.com SKU/UPC</th>
-	</tr>
-	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;'></tbody>
-	</table>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='buycomSkuRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer'>
+				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			</div>
+		
+			<table class='gridTable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Buy.com SKU/UPC</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
 	</fieldset>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
@@ -1193,20 +1219,27 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 	
 	<div data-app-role='competitionSkuInputs'>
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>SKU</th>
-		<th>Floor Price</th>
-		<th>Ceiling Price</th>
-		<th>Standard</th>
-		<th>Expedited</th>
-		<th>Second Day</th>
-		<th>Next Day</th>
-	</tr>
-	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
-	</table>
+		<div data-skufinder-role='container' data-skufinder-templateid='competitionSkuRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer'>
+				SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span>:
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="borderNone" data-skufinder-role='variations'></div>
+			</div>
+			
+			<table class='gridTable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Floor Price</th>
+				<th>Ceiling Price</th>
+				<th>Standard</th>
+				<th>Expedited</th>
+				<th>Second Day</th>
+				<th>Next Day</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
 	</div>
 <!--
 ### TODO ###
