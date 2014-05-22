@@ -328,7 +328,17 @@ used, but not pre-loaded.
 								$D.anymessage({'message':rd});
 								}
 							else	{
-								$D.tlc({'templateid':'hostChooserDomainListTemplate','datapointer':rd.datapointer});
+								var dataset, templateid;
+								if(opts.filter)	{
+									dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@DOMAINS'],opts.filter.by,opts.filter.for);
+									templateid = 'hostChooserDomainTemplate';
+									}
+								else	{
+									dataset = _app.data[rd.datapointer];
+									templateid = 'hostChooserDomainListTemplate';
+									}
+								
+								$D.tlc({'templateid':templateid,'dataset':dataset});
 								if(typeof opts.beforeSelectable === 'function')	{
 									opts.before($D);
 									}
