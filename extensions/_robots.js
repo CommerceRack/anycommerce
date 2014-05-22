@@ -50,11 +50,40 @@ var seo_robots = function(_app) {
 				
 				_robots.next = function(){
 					if(_app.ext.seo_robots.vars.pagesLoaded){
-						var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
-						if(typeof p == 'undefined'){
-							_robots.status = function(){ return -1; }
-							return false;
+						var infoObj = null;
+						do {
+							var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
+							
+							if(typeof p == 'undefined'){
+								_robots.status = function(){ return -1; }
+								return false;
+								}
+							else {
+								switch(p.type){
+									case "pid":
+										infoObj = {
+											pageType : "product",
+											pid : p.id
+											};
+										break;
+									case "navcat" : 
+										infoObj = {
+											pageType : "category",
+											navcat : p.id
+											};
+										break;
+									case "list" : 
+										dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
+										break;
+									default :
+										dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
+										dump(p);
+										break;	
+									}
+								}
 							}
+						while(typeof infoObj == null);
+						
 						var status = 100;
 						var hasRun = false;
 						_robots.status = function(){
@@ -163,6 +192,14 @@ var seo_robots = function(_app) {
 					'datapointer' : 'appSEOFetch',
 					'callback' : function(rd){
 						$.merge(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
+						_app.ext.seo_robots.vars.pages = $.grep(_app.ext.seo_robots.vars.pages, function(e,i){
+							if(typeof e == 'object' && e.type == 'pid'){
+								return true;
+								}
+							else {
+								return false;
+								}
+							});
 						_app.ext.seo_robots.vars.pagesLoaded = true;
 						}
 					};
