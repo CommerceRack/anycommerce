@@ -280,7 +280,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 						this.dispatch(obj,_tag,Q);
 						}
 //if the product record is in memory BUT the inventory is zero, go get updated record in case it's back in stock.
-					else if(_app.ext.store_product && (_app.ext.store_product.u.getProductInventory(obj.pid) === 0))	{
+					else if(_app.ext.store_product && (_app.ext.store_product.u.getProductInventory(_app.data[_tag.datapointer]) === 0))	{
 						r = 1;
 						this.dispatch(obj,_tag,Q);
 						}
