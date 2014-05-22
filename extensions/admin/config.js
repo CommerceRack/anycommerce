@@ -193,10 +193,20 @@ var admin_config = function(_app) {
 						'callback': 'tlc',
 						'templateID' : 'pluginManagerPageTemplate',
 						'jqObj' : $target,
-						'onComplete' : function()	{
-							$("[data-app-role='slimLeftNav']",$target).accordion();
+						'onComplete' : function(rd)	{
+							var plugs = _app.data[rd.datapointer]['@PLUGINS'];
+							var $nav = $("[data-app-role='slimLeftNav']",$target); //used to get narrow context.
+							var $tmp = $("<ul>");
+							for(var i = 0, L = plugs.length; i < L; i += 1)	{
+								if($("li[data-plugin='"+plugs[i].plugin+"']",$nav).length)	{}
+								else	{
+									$tmp.append("<li data-plugin='"+plugs[i].plugin+"' data-app-click='admin_config|pluginUpdateShow' class='lookLikeLink'>"+plugs[i].plugin+"</li>");
+									}
+								}
+							if($tmp.children().length)	{$("[data-app-role='pluginOtherList']",$nav).append($tmp.children())}
+							$("[data-app-role='slimLeftNav']",$target).accordion({heightStyle: "content"});
 							if(p.plugin)	{
-								$("li[data-plugin='"+p.plugin+"']:first").trigger('click');
+								$("li[data-plugin='"+p.plugin+"']:first").trigger('click').closest('ul').prev().trigger('click');
 								}
 							},
 						'datapointer':'adminConfigDetail|plugins'
@@ -207,13 +217,34 @@ var admin_config = function(_app) {
 			
 			showPlugin : function($target,vars)	{
 				vars = vars || {};
-				if($target instanceof jQuery && vars.plugin)	{
-					$target.empty().tlc({'templateid':'pluginTemplate_'+vars.plugin,'verb':'template'});
+				if($target instanceof jQuery && (vars.plugin || vars.verb == 'create'))	{
+					var dataset, $template;
+					vars.scope='PRT'
+					
+					if(vars.verb == 'create')	{
+						dataset = {};
+						$template = new tlc().getTemplateInstance('pluginTemplate_generic');
+						}
+					else	{
+						//we get a template here for two reasons. 1 is to see if it exists. 2 is because if it does exist, it may have attributes we need for 'settings'
+						$template = new tlc().getTemplateInstance('pluginTemplate_'+vars.plugin);
+						//verify whether or not a specific template exists for this partner. if so, use it. otherwise, defualt to the generic one.
+						if($template instanceof jQuery)	{
+							vars.scope = $template.attr('data-plugin-scope') || 'PRT';
+							}
+						else	{
+							$template = new tlc().getTemplateInstance('pluginTemplate_generic');
+							}
+						dataset = $.extend({},vars,_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin));
+						}
+
+					$target.empty().append($template);
+					//need to translate the plugin container so that the 'edit' and button tlc is translated.
+					$target.closest("[data-app-role='slimLeftContentSection']").tlc({'verb':'translate','dataset':dataset}).find('.buttonset').show();
+					$target.closest('form').anyform({'trackEdits':true}).data({'verb':vars.verb,'scope':vars.scope.toUpperCase()});
+
 					_app.u.handleCommonPlugins($target);
 					_app.u.handleButtons($target);
-					//need to translate the plugin container so that the 'edit' and button tlc is translated.
-					$target.closest("[data-app-role='slimLeftContentSection']").tlc({'verb':'translate','dataset':$.extend({},vars,_app.vars,_app.ext.admin_config.u.getPluginData(vars.plugin))}).find('.buttonset').show();
-					$target.closest('form').anyform({'trackEdits':true});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_config.a.showPlugin, $target was not set or is not an instance of jQuery or vars.plugin ["+vars.plugin+"] no set.","gMessage":true});
@@ -740,17 +771,28 @@ var admin_config = function(_app) {
 		u : {
 
 			getPluginData : function(plugin)	{
-//				_app.u.dump("BEGIN admin_config.u.getPluginData");
-				var r = {}; //what is returned.
+				_app.u.dump("BEGIN admin_config.u.getPluginData");
+				var r = false; //what is returned.
 				if(plugin)	{
 //					_app.u.dump(" -> plugin: "+plugin);
 					if(_app.data['adminConfigDetail|plugins'] && _app.data['adminConfigDetail|plugins']['@PLUGINS'])	{
-						var L = _app.data['adminConfigDetail|plugins']['@PLUGINS'].length;
-						for(var i = 0; i < L; i += 1)	{
+						var matches = new Array(); //matches for plugin
+						for(var i = 0,L = _app.data['adminConfigDetail|plugins']['@PLUGINS'].length; i < L; i += 1)	{
 							if(_app.data['adminConfigDetail|plugins']['@PLUGINS'][i].plugin == plugin)	{
-								r = _app.data['adminConfigDetail|plugins']['@PLUGINS'][i];
-								break; //match! exit early.
+								matches.push(_app.data['adminConfigDetail|plugins']['@PLUGINS'][i]);
 								}
+							}
+						if(matches.length == 1)	{
+							r = matches[0];
+							}
+						else if(matches.length > 1)	{
+							r = {
+								'plugin' : plugin,
+								'@hosts' : matches
+								};
+							}
+						else	{
+							r = false;
 							}
 						}
 					else	{
@@ -1624,11 +1666,31 @@ when an event type is changed, all the event types are dropped, then re-added.
 				var $form = $ele.closest('form');
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Saving Changes'});
+					var sfo = $form.serializeJSON({'cb':true}), updates = new Array();
+					if($form.data('scope') == 'HOST')	{
+						$("[data-app-role='pluginHostsList']",$form).find('tr').each(function(){
+							var $tr = $(this);
+							if($tr.hasClass('rowTaggedForRemove'))	{
+								updates.push("PLUGIN/REMOVE-HOST?host="+$tr.data('host')+'&plugin='+$tr.data('plugin'));
+								$tr.intervaledEmpty();
+								}
+							else if($('.edited',$tr).length)	{
+								updates.push("PLUGIN/SET-HOST?"+_app.u.hash2kvp($tr.serializeJSON({'cb':true})));
+								}
+							else	{}
+							});
+						}
+					else	{
+						updates.push("PLUGIN/SET-"+($form.data('scope') || 'PRT')+"?"+_app.u.hash2kvp(sfo));
+						}
+
 					_app.model.addDispatchToQ({
 						'_cmd':'adminConfigMacro',
-						'@updates' : ["PLUGIN/SET?"+$.param($form.serializeJSON({'cb':true}))],
+						'@updates' : updates,
 						'_tag':	{
-							'callback':'showMessaging',
+							'callback':($form.data('verb')) == 'create' ? 'navigateTo' : 'showMessaging',
+							'path' : '#!ext/admin_config/showPluginManager?plugin='+sfo.plugin, //used when new plugins are added.
+							//the following are used w/ showMessaging.
 							'restoreInputsFromTrackingState' : true,
 							'message' : "Your changes have been saved.",
 							'jqObj' : $form
@@ -1642,39 +1704,46 @@ when an event type is changed, all the event types are dropped, then re-added.
 			pluginHostChooserShow : function($ele,p)	{
 				var plugin = $ele.closest('form').find("input[name='plugin']").val();
 				if(plugin)	{
+					//to switch from a domain specific chooser to ALL hosts, remove the filter.
+					//Could also change DOMAINNAME to PRT for partition specific filtering.
 					adminApp.ext.admin_sites.u.hostChooser({
+						filter : {
+							'by' : 'DOMAINNAME',
+							'for' : _app.vars.domain
+							},
 						saveAction : function($chooser)	{
 							
 							
-if($( ".ui-selected", $chooser ).length)	{
-	$chooser.showLoading({'message':'Saving hosts to '+plugin});
-	var updates = new Array();
-	$( ".ui-selected", $chooser ).each(function() {
-		updates.push("PLUGIN/SET?plugin="+plugin+"&"+encodeURIComponent($(this).data('hostname'))+'.'+encodeURIComponent($(this).closest("[data-domainname]").data('domainname')));
-		});
-	
-	_app.model.addDispatchToQ({
-		'_cmd':'adminConfigMacro',
-		'@updates' : updates,
-		'_tag':	{
-			'callback':function(rd){
-				$chooser.hideLoading();
-				if(_app.model.responseHasErrors(rd)){
-					$('#globalMessaging').anymessage({'message':rd});
-					}
-				else	{
-					//sample action. success would go here.
-					$chooser.closest('.ui-dialog-content').dialog('close');
-					navigateTo('#!ext/admin_config/showPluginManager?plugin='+plugin)
-					}
-				}
-			}
-		},'immutable');
-	_app.model.dispatchThis('immutable');
-	}
-else	{
-	$chooser.anymessage({"message":"Please select at least one host."});
-	}
+							if($( ".ui-selected", $chooser ).length)	{
+								$chooser.showLoading({'message':'Saving hosts to '+plugin});
+								var updates = new Array();
+								$( ".ui-selected", $chooser ).each(function() {
+									//if this changes from a domain specific chooser to all domains, change _app.vars.domain to $(this).closest("[data-domainname]").data('domainname')
+									updates.push("PLUGIN/SET-HOST?plugin="+plugin+"&host="+encodeURIComponent($(this).data('hostname').toLowerCase())+'.'+encodeURIComponent(_app.vars.domain));
+									});
+								
+								_app.model.addDispatchToQ({
+									'_cmd':'adminConfigMacro',
+									'@updates' : updates,
+									'_tag':	{
+										'callback':function(rd){
+											$chooser.hideLoading();
+											if(_app.model.responseHasErrors(rd)){
+												$('#globalMessaging').anymessage({'message':rd});
+												}
+											else	{
+												//sample action. success would go here.
+												$chooser.closest('.ui-dialog-content').dialog('close');
+												navigateTo('#!ext/admin_config/showPluginManager?plugin='+plugin)
+												}
+											}
+										}
+									},'immutable');
+								_app.model.dispatchThis('immutable');
+								}
+							else	{
+								$chooser.anymessage({"message":"Please select at least one host."});
+								}
 
 
 							} //saveAction
@@ -1687,8 +1756,13 @@ else	{
 				
 				},
 
+			pluginAddShow : function($ele,p)	{
+				var $target = $ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first");
+				_app.ext.admin_config.a.showPlugin($target,{'verb':'create'});
+				},
+
 			pluginUpdateShow : function($ele,p)	{
-				_app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),$ele.data())
+				_app.ext.admin_config.a.showPlugin($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']:first"),{'plugin' : $ele.data('plugin')});
 				},
 
 //delegated events

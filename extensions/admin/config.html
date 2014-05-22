@@ -3228,11 +3228,15 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	
 
 	<section class="slimLeftNav" data-app-role="slimLeftNav">
+		<h4>General</h4>
+		<ul>
+			<li data-app-click="admin_config|pluginAddShow" class="lookLikeLink">Add Plugin</li>
+		</ul>
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin="auth_facebook" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
-			<li data-plugin="auth_google" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
+			<li data-plugin="auth.facebook.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
+			<li data-plugin="auth.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3241,35 +3245,29 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin="esp_awsses" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
-			<li data-plugin="platform_android" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
-			<li data-plugin="platform_appleios" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
+			<li data-plugin="ses.aws.amazon.com" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
+			<li data-plugin="android.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
+			<li data-plugin="ios.apple.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
 		</ul>
 
 
 		<h4>Shipping</h4>
 		<ul>
-			<li data-plugin="shipstation.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
-			<li data-plugin="shipworks.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
-			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
+			<li data-plugin="shipstation.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
+			<li data-plugin="shipworks.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
+			<li data-plugin="desktop.zoovy.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
 	
 		<h4>Analytics</h4>
 		<ul>
-			<li data-plugin="analytics.google.com" data-app-click="admin_config|pluginUpdateShow" data-plugin-host-specific='yes' class="lookLikeLink">Google</li>
+			<li data-plugin="analytics.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
-<!--	
-		<h4>Native Platforms</h4>
-		<ul>
-			<li>Coming soon</li>
+	
+		<h4>Other</h4>
+		<ul data-app-role='pluginOtherList'>
+			<!-- contents are generated dynamically in showPluginManager -->
 		</ul>
-		
-		<h4>Payments</h4>
-		<ul>
-			<li>Coming soon</li>
-		</ul>
--->
 	</section>
 
 <!--
@@ -3284,7 +3282,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
 			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
 				
-				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.pluginHostSpecific'; if(is $var --true;) {{apply --show;}};">Enable Hosts</button>
+				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.scope'; if(is $var --eq='host';) {{apply --show;}};">Enable Hosts</button>
 				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
@@ -3297,8 +3295,49 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </div>
 
 
-<fieldset id="pluginTemplate_esp_awsses">
-	<input name="plugin" value="esp_awsses" type="hidden">
+<fieldset id='pluginTemplate_generic'>
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<button data-app-click='admin_support|showHelpDocInDialog' data-title='Plugin_Integrations' class='applyButton floatRight' data-text='true' data-icon-primary='ui-icon-key'>Help</button>
+	<label>
+		<span class='prompt'>Domain</span>
+		<input name="plugin" value="" type="text" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+	</label>
+
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable
+	</label>
+	
+	<div class="label smallButton">
+		<span>Secret Key</span>
+		<input data-tlc="bind $var '.~private'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~private" type="text" />
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~private">Generate Password</button>
+	</div>
+
+	<label>
+		<span class='prompt'>Public Key</span>
+		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Password</button>
+	</label>
+		
+	<label>
+		<span class='prompt'>Allowed Roles</span>
+		<input name="~roles" value="" type="text" data-tlc="bind $var '.~roles'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+	</label>
+		
+</fieldset>
+
+
+
+
+
+
+
+
+
+<fieldset id="pluginTemplate_ses.aws.amazon.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="ses.aws.amazon.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3345,7 +3384,8 @@ The header and buttons don't get reset, so the tlc must take this into account (
 
 
 
-<fieldset id="pluginTemplate_analytics.google.com">
+<fieldset id="pluginTemplate_analytics.google.com" data-plugin-scope='HOST'>
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="analytics.google.com" type="hidden">
 	<!--
 	<label>
@@ -3354,15 +3394,41 @@ The header and buttons don't get reset, so the tlc must take this into account (
 	</label>
 	-->
 	
-	<label>
-		<span class='prompt'>Tracking ID</span>
-		<input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text">
-	</label>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Host</th>
+		<th>Enable</th>
+		<th>Tracking #</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-tlc="bind $var '.@hosts'; controller#loop --templateid='pluginHostTemplate_analytics.google.com'; apply --append;" data-app-role='pluginHostsList'></tbody>
+	</table>
+
 	<p class='hint'>The google tracking id will start with UA- followed by a series of numbers. ex: UA-12345678-1</p>
 </fieldset>
 
 
+<table>
+<tr id='pluginHostTemplate_analytics.google.com'>
+	<td data-tlc="bind $var '.host'; apply --append;"></td>
+	<td>
+	<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox" />
+	<input data-tlc="bind $var '.host'; if(is $var --notblank;) {{apply --select=$var;}}; " name="host" type="hidden" />
+	<input data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; " name="plugin" type="hidden" />
+	</td>
+	<td><input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text" /></td>
+	<td>
+		<button data-icon-primary='ui-icon-circle-close' data-app-click="admin|tagRow4Remove" class='applyButton' data-text='true' >Delete Settings</button>
+	</td>
+</tr>
+</table>
+
+
+
 <fieldset id="pluginTemplate_shipworks.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipworks.com" type="hidden">
 	<input name="global" value="1" type="hidden">
 	<input name="username" value="shipworks" type="hidden">
@@ -3382,6 +3448,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipstation.com" type="hidden">
 	<input name="global" value="1" type="hidden">
 	<p class="hint">ShipStation is a global setting, it is not partition specific</p>
@@ -3403,6 +3470,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </fieldset>
 
 <fieldset id="pluginTemplate_desktop.zoovy.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="desktop.zoovy.com" type="hidden">
 	<input name="global" value="1" type="hidden">
 	<p class="hint">Zoovy Integrate Desktop is a global setting, it is not partition specific</p>
@@ -3425,8 +3493,9 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </fieldset>
 
 
-<fieldset id="pluginTemplate_auth_google">
-	<input name="plugin" value="auth_google" type="hidden">
+<fieldset id="pluginTemplate_auth.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="auth.google.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3444,8 +3513,9 @@ The header and buttons don't get reset, so the tlc must take this into account (
 	
 </fieldset>
 
-<fieldset id="pluginTemplate_auth_facebook">
-	<input name="plugin" value="auth_facebook" type="hidden">
+<fieldset id="pluginTemplate_auth.facebook.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="auth.facebook.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3464,10 +3534,9 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </fieldset>
 
 
-
-
-<fieldset id="pluginTemplate_platform_android">
-	<input name="plugin" value="platform_android" type="hidden">
+<fieldset id="pluginTemplate_android.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="android.google.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3486,8 +3555,9 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </fieldset>
 
 
-<fieldset id="pluginTemplate_platform_appleios" class="alignedInputs alignedLabels">
-	<input name="plugin" value="platform_appleios" type="hidden">
+<fieldset id="pluginTemplate_ios.apple.com" class="alignedInputs alignedLabels">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="ios.apple.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
