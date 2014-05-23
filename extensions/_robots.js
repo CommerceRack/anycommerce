@@ -112,7 +112,7 @@ var seo_robots = function(_app) {
 							}
 						}
 					};
-				
+				_robots.ready = function(){return _app.ext.seo_robots.vars.pagesLoaded};
 				_robots.pop = function(){
 					var page = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
 					if(typeof page == 'object'){
