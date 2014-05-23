@@ -118,6 +118,7 @@ var seo_robots = function(_app) {
 					if(typeof page == 'object'){
 						page = JSON.stringify(page);
 						}
+					if(typeof page == 'undefined'){ page = '#';}
 					return page;
 					};
 				
