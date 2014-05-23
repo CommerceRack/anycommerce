@@ -48,89 +48,40 @@ var seo_robots = function(_app) {
 				//Replace the _robots.next default functionality with some real stuff
 				
 				
-				_robots.next = function(){
-					if(_app.ext.seo_robots.vars.pagesLoaded){
-						var infoObj = null;
-						do {
-							var p = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
-							
-							if(typeof p == 'undefined'){
-								_robots.status = function(){ return -1; }
-								return false;
+				_robots.next = function(page){
+					if(typeof page !== 'undefined' || _app.ext.seo_robots.vars.pagesLoaded){
+						if(typeof page !== 'undefined'){
+							try{
+								page = JSON.parse(page);
 								}
-							else {
-								switch(p.type){
-									case "pid":
-										infoObj = {
-											pageType : "product",
-											pid : p.id
-											};
-										break;
-									case "navcat" : 
-										infoObj = {
-											pageType : "category",
-											navcat : p.id
-											};
-										break;
-									case "list" : 
-										dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
-										break;
-									default :
-										dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
-										dump(p);
-										break;	
-									}
+							catch(e){
+								dump("Could not parse page, let's assume it's to be used as a string");
 								}
 							}
-						while(typeof infoObj == null);
+						else if(_app.ext.seo_robots.vars.pages.length){
+							page = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
+							}
+						else{
+							_robots.status = function(){return -1};
+							return false;
+							}
 						
 						var status = 100;
-						var hasRun = false;
+						if(typeof page == 'string' && page.indexOf('#!') == 0){
+							_app.ext.quickstart.vars.showContentFinished = false;
+							_app.ext.quickstart.vars.showContentCompleteFired = false;
+							window.location.hash = page;
+							}
+						else if(typeof page == 'object'){ 
+							$('#globalMessaging').intervaledEmpty();
+							showContent('',page);
+							}
+						else{
+							status = 404;
+							}
 						_robots.status = function(){
-							if(hasRun){
-								if(_app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
-									status = 200;
-									}
-								else {
-									status = 100;
-									}
-								}
-							else {
-								if(typeof p == 'string' && p.indexOf('#!') == 0){
-									_app.ext.quickstart.vars.showContentFinished = false;
-									_app.ext.quickstart.vars.showContentCompleteFired = false;
-									window.location.hash = p;
-									}
-								else if(typeof p == 'object'){ //p is an object
-									var infoObj = {};
-									switch(p.type){
-										case "pid":
-											infoObj = {
-												pageType : "product",
-												pid : p.id
-												};
-											break;
-										case "navcat" : 
-											infoObj = {
-												pageType : "category",
-												navcat : p.id
-												};
-											break;
-										case "list" : 
-											dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
-											break;
-										default :
-											dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
-											dump(p);
-											break;	
-										}
-									$('#globalMessaging').intervaledEmpty();
-									showContent('',infoObj);
-									}
-								else {
-									status = 404;
-									}
-								hasRun = true;
+							if(status == 100 && _app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
+								status = 200;
 								}
 							return status;
 							}
@@ -145,7 +96,15 @@ var seo_robots = function(_app) {
 								}
 							}
 						}
-					}
+					};
+				
+				_robots.pop = function(){
+					var page = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
+					if(typeof page == 'object'){
+						page = JSON.stringify(page);
+						}
+					return page;
+					};
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -191,15 +150,31 @@ var seo_robots = function(_app) {
 				request._tag = {
 					'datapointer' : 'appSEOFetch',
 					'callback' : function(rd){
-						$.merge(_app.ext.seo_robots.vars.pages, _app.data[rd.datapointer]['@OBJECTS']);
-						_app.ext.seo_robots.vars.pages = $.grep(_app.ext.seo_robots.vars.pages, function(e,i){
-							if(typeof e == 'object' && e.type == 'pid'){
-								return true;
+						for(var i in _app.data[rd.datapointer]['@OBJECTS']){
+							var p = _app.data[rd.datapointer]['@OBJECTS'][i];
+							
+							switch(p.type){
+								case "pid":
+									_app.ext.seo_robots.vars.pages.push({
+										pageType : "product",
+										pid : p.id
+										});
+									break;
+								case "navcat" : 
+									_app.ext.seo_robots.vars.pages.push({
+										pageType : "category",
+										navcat : p.id
+										});
+									break;
+								case "list" : 
+									dump("LIST "+p.id+" SKIPPED IN PAGE BUILDING");
+									break;
+								default :
+									dump("Unrecognized pageInfo type: "+p.type+" full obj follows:");
+									dump(p);
+									break;	
 								}
-							else {
-								return false;
-								}
-							});
+							}
 						_app.ext.seo_robots.vars.pagesLoaded = true;
 						}
 					};
