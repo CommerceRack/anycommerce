@@ -113,13 +113,19 @@ var seo_robots = function(_app) {
 						}
 					};
 				_robots.ready = function(){return _app.ext.seo_robots.vars.pagesLoaded};
-				_robots.pop = function(){
-					var page = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
-					if(typeof page == 'object'){
-						page = JSON.stringify(page);
+				_robots.pop = function(amt){
+					amt = amt || 1;
+					if(amt < 0){amt = 1;}
+					var pageArr = _app.ext.seo_robots.vars.pages.splice(0,amt);
+					var r = '';
+					for(var i = 0; i < pageArr.length; i++){
+						var page = pageArr[i];
+						if(typeof page == 'object'){
+							page = JSON.stringify(page);
+							}
+						r += page + '\n';
 						}
-					if(typeof page == 'undefined'){ page = '#';}
-					return page;
+					return r;
 					};
 				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
