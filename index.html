@@ -133,7 +133,7 @@ $(document).ready(function(){
 <script data-apptimize="minify" type="text/javascript">
 var _robots = {
 	hello : function(botStr){
-		myApp.vars._robotGreeting = botStr;
+		_robots._robotGreeting = botStr || true;
 		console.log("Bot saying hello: "+botStr);
 		return "1.0";
 		},
@@ -159,6 +159,7 @@ var _robots = {
 		console.log("Bot saying goodbye: "+botStr);
 		}
 	}
+	_robots.hello();
 </script>
 
 <script data-apptimize="embed" type="text/javascript" src="app-quickstart-init.js"></script>

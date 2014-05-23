@@ -25,7 +25,9 @@ var seo_robots = function(_app) {
 
 	vars : {
 		pages : [],
-		pagesLoaded : false
+		pagesLoaded : false,
+		counter : 0,
+		counterReset : 50
 		},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -39,8 +41,9 @@ var seo_robots = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
 				
-				if(_app.vars._robotGreeting){
-					_app.ext.seo_robots.u.welcomeRobot(_app.vars._robotGreeting);
+					dump(_robots);
+				if(_robots._robotGreeting){
+					_app.ext.seo_robots.u.welcomeRobot(_robots._robotGreeting);
 					}
 				else {
 					_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
@@ -66,6 +69,18 @@ var seo_robots = function(_app) {
 							return false;
 							}
 						
+						//Let's clean up some memory, shall we?
+						_app.ext.store_swc.vars.counter++;
+						if(_app.ext.store_swc.vars.counter >= _app.ext.store_swc.vars.counterReset){
+							_app.ext.store_swc.vars.counter -= _app.ext.store_swc.vars.counterReset;
+							for(var datapointer in _app.data){
+								if(datapointer.indexOf('appProductGet|') == 0 ||
+										datapointer.indexOf('relatedProducts|') == 0 ||
+										datapointer.indexOf('appFilteredSearch') == 0){
+									_app.model.destroy(datapointer);
+									}
+								}
+							}
 						var status = 100;
 						if(typeof page == 'string' && page.indexOf('#!') == 0){
 							_app.ext.quickstart.vars.showContentFinished = false;
@@ -143,6 +158,7 @@ var seo_robots = function(_app) {
 //any functions that are recycled should be here.
 		u : {
 			welcomeRobot : function(botStr){
+				dump("WELCOMING ROBOT");
 				_app.ext.quickstart.vars.cachedPageCount = 0;
 				var request = {
 					"_cmd" : "appSEOFetch"
