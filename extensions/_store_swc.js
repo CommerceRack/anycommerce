@@ -611,7 +611,7 @@ var store_swc = function(_app) {
 					"filter" : {
 						"and" : [filterBase]
 						},
-					"aggregations" : {}
+					"facets" : {}
 					}
 				var countFilters = [];
 				$('[data-filter-type=sort]', $form).each(function(){
@@ -641,8 +641,8 @@ var store_swc = function(_app) {
 					$('[data-filter=count]', $(this)).empty();
 					$('input[data-filter=filterCheckbox]', $(this)).each(function(){
 						var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
-						if(!elasticsearch.aggregations[index]){
-							elasticsearch.aggregations[index] = {"terms" : {"field":index}}
+						if(!elasticsearch.facets[index]){
+							elasticsearch.facets[index] = {"terms" : {"field":index}}
 							}
 						if($(this).is(":checked")){
 							var f = {"term" : {}};
@@ -680,7 +680,7 @@ var store_swc = function(_app) {
 						"query" :{
 							"function_score" : {"filter":elasticsearch.filter}
 							},
-						"aggregations" : elasticsearch.aggregations
+						"facets" : elasticsearch.facets
 						}
 					tmp.query.function_score.boost_mode = "sum";
 					tmp.query.function_score.script_score = {"script":"doc['boost'].value"};
@@ -692,7 +692,7 @@ var store_swc = function(_app) {
 				es.size = 30;
 				$resultsContainer.empty();
 				
-				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,_app.u.getBlacklistedObject(es, ["aggregations"]),1);
+				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,_app.u.getBlacklistedObject(es, ["facets"]),1);
 				//dump(es);
 				_app.model.dispatchThis();
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':function(rd){
@@ -701,7 +701,7 @@ var store_swc = function(_app) {
 						}
 					else {
 						_app.ext.prodlist_infinite.callbacks.handleInfiniteElasticResults.onSuccess(rd);
-						if(_app.data[rd.datapointer].aggregations){
+						if(_app.data[rd.datapointer].facets){
 							$('[data-filter-type=checkboxList]',rd.filterList).each(function(){
 								$('input', $(this)).each(function(){
 									var index = $(this).closest('[data-filter-index]').attr('data-filter-index');
@@ -710,7 +710,7 @@ var store_swc = function(_app) {
 									var $fg = $(this).closest('.filterGroup')
 									var $ic = $(this).closest('[data-filter=inputContainer]');
 									
-									var summary = $.grep(_app.data[rd.datapointer].aggregations[index].terms, function(e, i){
+									var summary = $.grep(_app.data[rd.datapointer].facets[index].terms, function(e, i){
 										return e.term === val;
 										})[0];
 									if(summary){
