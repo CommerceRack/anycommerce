@@ -921,6 +921,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</select>
 		</div>
 		
+		<div class="filterGroup countHideImmune" data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};">
+			<legend class="highlightBG_2">Price:</legend>
+			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
+		</div>
+		
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
 			<legend class="highlightBG_2">My Teams [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">edit</span>]:</legend>
 			<div class="myTeamList">
@@ -929,11 +934,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='' --withPlayers;"></div>
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='' --withPlayers;"></div>
 			</div>
-		</div>
-		
-		<div class="filterGroup countHideImmune" data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};">
-			<legend class="highlightBG_2">Price:</legend>
-			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
 		</div>
 		
 		<div data-tlc="bind $var '.options.user:app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
