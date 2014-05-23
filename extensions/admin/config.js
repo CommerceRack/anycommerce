@@ -1689,6 +1689,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						'@updates' : updates,
 						'_tag':	{
 							'callback':($form.data('verb')) == 'create' ? 'navigateTo' : 'showMessaging',
+							'extension':($form.data('verb')) == 'create' ? 'admin' : '',
 							'path' : '#!ext/admin_config/showPluginManager?plugin='+sfo.plugin, //used when new plugins are added.
 							//the following are used w/ showMessaging.
 							'restoreInputsFromTrackingState' : true,

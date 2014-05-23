@@ -3282,7 +3282,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
 			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
 				
-				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.scope'; if(is $var --eq='host';) {{apply --show;}};">Enable Hosts</button>
+				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.scope'; if(is $var --eq='HOST';) {{apply --show;}};">Enable Hosts</button>
 				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
@@ -3298,33 +3298,62 @@ The header and buttons don't get reset, so the tlc must take this into account (
 <fieldset id='pluginTemplate_generic'>
 	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<button data-app-click='admin_support|showHelpDocInDialog' data-title='Plugin_Integrations' class='applyButton floatRight' data-text='true' data-icon-primary='ui-icon-key'>Help</button>
-	<label>
-		<span class='prompt'>Domain</span>
-		<input name="plugin" value="" type="text" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
-	</label>
+
 
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
 	</label>
 	
-	<div class="label smallButton">
-		<span>Secret Key</span>
+	<label>
+		<span class='prompt'>Domain</span>
+		<input name="plugin" value="" type="text" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+	</label>
+	
+	<label>
+		<span class='prompt'>Secret Key</span>
 		<input data-tlc="bind $var '.~private'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~private" type="text" />
-		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~private">Generate Password</button>
-	</div>
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="~private">Generate Secret</button>
+	</label>
 
 	<label>
 		<span class='prompt'>Public Key</span>
-		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; ">
-		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Password</button>
+		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40">
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Public</button>
 	</label>
 		
 	<label>
 		<span class='prompt'>Allowed Roles</span>
 		<input name="~roles" value="" type="text" data-tlc="bind $var '.~roles'; if(is $var --notblank;) {{apply --select=$var;}}; ">
 	</label>
-		
+
+<div>
+	<h4>Roles</h4>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Title</th><th>ID</th>
+	</tr>
+	</thead>
+	<tbody>
+		<tr><td>Supervisor</td><td>SUPER</td></tr>
+		<tr><td>App/Web Developer</td><td>AD1</td></tr>
+		<tr><td>Owner/Operator</td><td>BOSS</td></tr>
+		<tr><td>Customer Service: Call Center</td><td>CC1</td></tr>
+		<tr><td>Customer Service: Trusted</td><td>CS1</td></tr>
+		<tr><td>Retail Lead</td><td>RL1</td></tr>
+		<tr><td>Retail Operator</td><td>RO1</td></tr>
+		<tr><td>Vendor/Contractor (Read Only)</td><td>TS1</td></tr>
+		<tr><td>Warehouse Inventory</td><td>WI1</td></tr>
+		<tr><td>Warehouse Returns</td><td>WR1</td></tr>
+		<tr><td>Warehouse Shipper</td><td>WS1</td></tr>
+		<tr><td>Catalog Manager</td><td>XXX</td></tr>
+		<tr><td>Marketplace Manager</td><td>XYZ</td></tr>
+	</tbody>
+	</table>
+</div>
+
+
 </fieldset>
 
 
