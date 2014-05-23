@@ -982,6 +982,14 @@ var store_swc = function(_app) {
 				dump(obj);
 				_app.model.addDispatchToQ(obj, 'immutable');
 				_app.model.dispatchThis('immutable');
+				},
+			expandNav : function($ele, e){
+				e.preventDefault();
+				$('#nav').addClass('expand');
+				},
+			dismissNav : function($ele, e){
+				e.preventDefault();
+				$('#nav').removeClass('expand');
 				}
 			}, //e [app Events]
 		filterData : {

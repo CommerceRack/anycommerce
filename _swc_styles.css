@@ -94,14 +94,23 @@ a.redText{color:#7e0000}
 	left:0px;
 	right:0px;
 	top:0px;
-	z-index: 100;
+	z-index: 101;
 }
 
 #nav {padding:3px 0px; position:absolute; left:0px; right:0px; bottom:0px;}
-#nav a {
+#nav .fullNav {
+	display:none;
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+}
+#nav  a {
 	text-decoration:none;
 	font-weight:bold;
 	color: white;
+}
+#nav .tableNav a {
 	border-left:1px solid white;
 	border-right:1px solid white;
 }

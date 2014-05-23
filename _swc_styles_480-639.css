@@ -18,6 +18,7 @@
 #contact{font-size:.7em;}
 #search input{ height:13px;}
 #nav {font-size: .6em; padding: 5px 0px;}
+#nav.expand .fullNav { display:block; }
 #footer{font-size:.8em}
 #footer > div{position:relative; height:130px;}
 .footerColumn {

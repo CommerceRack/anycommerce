@@ -4,9 +4,9 @@
 	max-width:640px;
 	margin: auto;
 }
-#header {height:74px;}
+#header {height:76px;}
 #appView {
-	padding-top: 78px;
+	padding-top: 80px;
 	padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 210px;}
 #appView.peekFooter.showFooter {padding-bottom: 210px;}
@@ -19,6 +19,7 @@
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}
+#nav.expand .fullNav { display:block; }
 
 #footer > div{position:relative; height:130px;}
 .footerColumn {

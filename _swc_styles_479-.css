@@ -7,6 +7,9 @@
 #header {height:30px;}
 #appView {padding-top: 32px;padding-bottom:40px;}
 #mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;}
+#globalMessaging {position:relative; z-index: 101;}
+#nav {padding: 0px;}
+#nav.expand .fullNav { display:block; }
 #mainContentArea > div {height:100%; overflow: auto;}
 #appView.showFooter {padding-bottom: 402px;}
 #appView.peekFooter.showFooter {padding-bottom: 402px;}

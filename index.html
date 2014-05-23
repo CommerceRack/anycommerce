@@ -197,7 +197,7 @@ var _robots = {
 				-->
 			</div>
 			
-			<div id="mininav" class="floatRight redText ">
+			<div id="mininav" class="floatRight redText displayNone_320">
 				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> |
 				<span class="displayNone_320"><a href="#!company/contact/" class="textDecNone">Contact</a> |</span>
 				<a href="#!customer/myaccount/" class="textDecNone">My Account</a> |
@@ -205,8 +205,12 @@ var _robots = {
 				<a href="#!cart/" class="redText textDecNone">Cart</a>
 			</div>
 			
-			<div id="contact" class="floatRight clearRight  ">
+			<div id="contact" class="floatRight clearRight displayNone_320">
 				Questions? <a class="redText textDecNone" href="tel:8444624422">Call 844-GO-CHICAGO</a>
+			</div>
+			
+			<div id="expandNav" class="floatRight displayNone_1280 displayNone_960 displayNone_640 displayNone_480">
+				<a href="#" class="alignCenter" data-app-click="store_swc|expandNav">+MORE</a>
 			</div>
 			
 			<form id="search" class="floatRight noPadOrMargin clearRight displayNone_320" onSubmi="return false;" data-app-submit="quickstart|searchFormSubmit">
@@ -219,18 +223,48 @@ var _robots = {
 		</div>
 	</div>
 	<div class="clear"></div>
-	<div id="nav" class="highlightBG_1 dosis displayNone_320">
-		<div class="fixedContainer displayTable fillWidth">
-			<a href="#!filter/100_years_of_wrigley_field/" class="navLink displayTableCell alignCenter">WRIGLEY 100 YEARS</a>
-			<a href="#!filter/shirts/" class="navLink displayTableCell alignCenter">SHIRTS</a>
-			<a href="#!filter/jerseys/" class="navLink displayTableCell alignCenter">JERSEYS</a>
-			<a href="#!filter/sweatshirts/" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
-			<a href="#!filter/hats/" class="navLink displayTableCell alignCenter">HATS</a>
-			<a href="#!filter/souvenirs/" class="navLink displayTableCell alignCenter">SOUVENIRS</a>
-			<!-- <a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink displayTableCell alignCenter">MY TEAMS</a> -->
-			<a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink displayTableCell alignCenter">LEAGUE SHOP</a>
-			<a href="#!filter/chicago/" class="navLink displayTableCell alignCenter">CHICAGO</a>
-		
+	<div id="nav" class="highlightBG_1 dosis">
+		<div class="tableNav fixedContainer displayTable fillWidth displayNone_320">
+			<div class="displayTableRow">
+				<a href="#!filter/100_years_of_wrigley_field/" class="navLink displayTableCell alignCenter">WRIGLEY 100 YEARS</a>
+				<a href="#!filter/shirts/" class="navLink displayTableCell alignCenter">SHIRTS</a>
+				<a href="#!filter/jerseys/" class="navLink displayTableCell alignCenter">JERSEYS</a>
+				<a href="#!filter/sweatshirts/" class="navLink displayTableCell alignCenter">SWEATSHIRTS</a>
+				<a href="#!filter/hats/" class="navLink displayTableCell alignCenter">HATS</a>
+				<a href="#!filter/souvenirs/" class="navLink displayTableCell alignCenter displayNone_640">SOUVENIRS</a>
+				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink displayTableCell alignCenter displayNone_640 displayNone_480">LEAGUE SHOP</a>
+				<a href="#!filter/chicago/" class="navLink displayTableCell alignCenter displayNone_640 displayNone_480">CHICAGO</a>
+				<a href="#" class="navLink displayTableCell alignCenter displayNone_1280 displayNone_960" data-app-click="store_swc|expandNav">+MORE</a>
+			</div>
+		</div>
+		<div class="fixedContainer fillWidth fullNav highlightBG_1">
+			<div class="floatRight">
+				<a href="#" class="alignCenter" data-app-click="store_swc|dismissNav">-LESS</a>
+			</div>
+			<div>
+				<a href="#!filter/100_years_of_wrigley_field/" class="navLink">WRIGLEY 100 YEARS</a>
+			</div>
+			<div>
+				<a href="#!filter/shirts/" class="navLink">SHIRTS</a>
+			</div>
+			<div>
+				<a href="#!filter/jerseys/" class="navLink">JERSEYS</a>
+			</div>
+			<div>
+				<a href="#!filter/sweatshirts/" class="navLink">SWEATSHIRTS</a>
+			</div>
+			<div>
+				<a href="#!filter/hats/" class="navLink">HATS</a>
+			</div>
+			<div>
+				<a href="#!filter/souvenirs/" class="navLink">SOUVENIRS</a>
+			</div>
+			<div>
+				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink">LEAGUE SHOP</a>
+			</div>
+			<div>
+				<a href="#!filter/chicago/" class="navLink displayTableCell alignCenter">CHICAGO</a>
+			</div>
 		</div>
 	</div>
 </div>
