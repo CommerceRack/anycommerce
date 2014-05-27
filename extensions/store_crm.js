@@ -521,7 +521,7 @@ This is used to get add an array of skus, most likely for a product list.
 // ** 201403 -> need to pass in a blank dataset so translation occurs. required for country dropdown.
 					$editor.tlc({'templateid':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','dataset':{}});
 //the address id should be at the bottom of the form, not the top. isn't that important or required.
-					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
+					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/> <span class='hint'>A shortcut to identify this address (ex: office, myhome, etc)");
 					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 
 //if the placeholder attribute on an input is not supported (thx IE8), then add labels.
