@@ -25,6 +25,8 @@ ADMIN
 		enhancement - options for select based inputs will now validate JSON.
 		enhancement - attribute id and index will now disallow most special characters and convert to lowercase.
 	enhancement - sales tax rules can now be enabled/disabled.
+	bug fix - schedule prices saving again.
+	enhancement - price input for variation options (inventory-able or not) will show. Used for display purposes only.
 
 
 
