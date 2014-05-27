@@ -20,6 +20,11 @@ ADMIN
 		enhancement - added GA Universal (not supported in checkout yet)
 		enhancemnet - ability to add a custom integration
 	enhancement - product editor 'sku finder' for product with a large # of skus*
+	enhancement - batch job status dialog will now show view/download button when finished (for report or file job types)
+	flexedit manager
+		enhancement - options for select based inputs will now validate JSON.
+		enhancement - attribute id and index will now disallow most special characters and convert to lowercase.
+	enhancement - sales tax rules can now be enabled/disabled.
 
 
 
