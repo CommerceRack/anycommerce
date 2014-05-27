@@ -251,7 +251,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 <div id="chkoutMethodsShipTemplate">
 	<ul data-tlc="bind $var '.'; order_create#shipmethodsasradiobuttons  --legacy;" data-legacy-useparentdata="true" class="noPadOrMargin listStyleNone"></ul>
 	<hr />
-	<p>Use the form below to set a new shipping amount. Selected method above will be ignored.</p>
+	<p>Use the form below to set a new shipping amount.</p>
 	<div data-app-role='customShipMethodContainer'>
 	<!-- ### TODO -> this needs an 'undo' feature because selecting a new method doesn't save over this -->
 	<select data-tlc="bind $var '.sum.shp_carrier'; if(is $var --notblank;) {{apply --select=$var;}}; " name="sum/shp_carrier" class='skipTrack'>
