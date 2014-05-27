@@ -2870,7 +2870,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 <tr id='taxConfigRuleRowTemplate'>
 	<td data-bind="var:taxes(group); format:text;"></td>
 	<td data-bind="var:taxes(rate); format:text; posttext:%;"></td>
-	<td data-bind="var:taxes(enable); format:text;"></td>
+	<td>
+	<input type='checkbox' data-bind="var: product(enable); format:popVal;"  name="enable" class="applyAnycb" />
+	</td>
 	<td data-bind="var:taxes(zone); format:text;"></td>
 	<td data-bind="var:taxes(match); format:text;"></td>
 	<td data-bind="var:taxes(type); format:text;"></td>

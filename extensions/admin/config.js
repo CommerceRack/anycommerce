@@ -388,6 +388,7 @@ var admin_config = function(_app) {
 					'showLoadingMessage' : 'Fetching tax details'
 					}).anyform();
 				_app.u.addEventDelegation($target);
+				$("[data-app-role='taxTableExecForm']",$target).anyform({'trackEdits':true});
 				$("[name='expires']",$target).datepicker({
 					changeMonth: true,
 					changeYear: true,
@@ -1491,17 +1492,17 @@ when an event type is changed, all the event types are dropped, then re-added.
 
 //build an array of the form input names for a whitelist.
 //need a whitelist because the tr.data() may have a lot of extra kvp in it
-				var whitelist = new Array('type','enable','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
+//201404 -> enable is intentionally NOT in the whitelist. It's added to the update through a checkbox.
+				var whitelist = new Array('type','state','citys','city','zipstart','zipend','zip4','country','ipcountry','ipstate','izcountry','izzip','rate','shipping','handling','insurance','special','zone','expires','group','guid');
 
 				$ele.closest('form').find('tbody tr').each(function(index){ //tbody needs to be in the selector so that tr in thead isn't included.
 					var $tr = $(this);
 					if($tr.hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
 					else	{
 						if(!$tr.data('guid'))	{$tr.data('guid',index)} //a newly added rule
-						macros.push("TAXRULES/INSERT?"+$.param(_app.u.getWhitelistedObject($tr.data(),whitelist)));
+						macros.push("TAXRULES/INSERT?enable="+($("input[name='enable']",$tr).is(':checked') ? 1 : 0)+"&"+$.param(_app.u.getWhitelistedObject($tr.data(),whitelist)));
 						}
 					});
-
 				_app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','message':'Your rules have been saved.','removeFromDOMItemsTaggedForDelete':true,'restoreInputsFromTrackingState':true,'jqObj':$container},'immutable');
 				_app.model.dispatchThis('immutable');
 
