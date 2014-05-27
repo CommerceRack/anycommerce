@@ -145,6 +145,10 @@ additionally, will apply some conditional form logic.
 				if($CT.data('input-format').indexOf('uppercase') > -1)	{
 					$CT.val($CT.val().toUpperCase());
 					}
+
+				if($CT.data('input-format').indexOf('lowercase') > -1)	{
+					$CT.val($CT.val().toLowerCase());
+					}
 				
 				if($CT.data('input-format').indexOf('alphanumeric') > -1)	{
 					$CT.val($CT.val().toString().replace(/\W+/g,""));
@@ -155,6 +159,9 @@ additionally, will apply some conditional form logic.
 					}							
 				else if($CT.data('input-format').indexOf('decimal') > -1)	{
 					$CT.val($CT.val().replace(/[^0-9\.]+/g, ''));
+					}							
+				else if($CT.data('input-format').indexOf('flex') > -1)	{
+					$CT.val($CT.val().replace(/[^\w\:_]+/, '','g'));
 					}							
 				else if($CT.data('input-format').indexOf('pid') > -1)	{
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
