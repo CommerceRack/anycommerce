@@ -1880,7 +1880,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				var
 					$checkoutForm = $ele.closest('form'), //used in some callbacks later.
 					$checkoutAddrFieldset = $ele.closest('fieldset'),
-					addressType = $ele.data('app-addresstype').toLowerCase();
+					addressType = $ele.attr('data-app-addresstype').toLowerCase();
 				if(_app.u.thisIsAnAdminSession())	{
 					var $D = _app.ext.admin_customer.a.createUpdateAddressShow({'mode':'create','show':'dialog','type':addressType});
 					}

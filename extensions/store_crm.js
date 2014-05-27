@@ -562,9 +562,9 @@ This is used to get add an array of skus, most likely for a product list.
 								
 								if(_app.u.validateForm($form))	{
 									$form.showLoading('Adding Address');
-									var serializedForm = $form.serializeJSON();
+									var sfo = $form.serializeJSON();
 //save and then refresh the page to show updated info.
-									_app.model.addDispatchToQ({
+									_app.model.addDispatchToQ($.extend({},sfo,{
 										'_cmd':'buyerAddressAddUpdate',
 										'_tag':	{
 											'callback':function(rd){
@@ -573,7 +573,7 @@ This is used to get add an array of skus, most likely for a product list.
 													$form.anymessage({'message':rd});
 													}
 												else if(typeof onSuccessCallback === 'function')	{
-													onSuccessCallback(rd,serializedForm);
+													onSuccessCallback(rd,sfo);
 													$editor.dialog('close');
 													}
 												else	{
@@ -582,7 +582,7 @@ This is used to get add an array of skus, most likely for a product list.
 													}
 												}
 											}
-										},'mutable');
+										}),'mutable');
 									_app.model.dispatchThis('mutable');
 //dump data in memory and local storage. get new copy up updated address list for display.
 									_app.model.destroy('buyerAddressList');
