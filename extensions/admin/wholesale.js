@@ -171,6 +171,7 @@ var admin_wholesale = function(_app) {
 			showOrganizationManager : function($target,vars)	{
 //				_app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
 				_app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for add and edit.
+				dump(" -> vars: "); dump(vars);
 				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Organization Manager',
 					'handleAppEvents' : false,
@@ -181,8 +182,11 @@ var admin_wholesale = function(_app) {
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin_wholesale|showOrganizationCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Organization</button>"],	
 					'controls' : _app.templates.orgManagerControls,
+					data : vars,
 					'cmdVars' : {
 						'_cmd' : 'adminCustomerOrganizationSearch',
+						searchby : vars.searchby,
+						keywords : vars.keywords,
 						'PHONE' : '', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
