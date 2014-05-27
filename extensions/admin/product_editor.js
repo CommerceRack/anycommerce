@@ -2021,7 +2021,7 @@ function handleAnimation()	{
 					$("[data-app-role='pidSchedulesContainer'] tbody",$form).children().each(function(){
 						var $tr = $(this);
 						if($('.edited',$tr).length)	{
-							cmdObj['@updates'].push("SET-SCHEDULE-PROPERTIES?schedule="+$tr.data('schedule')+"&"+$.param($tr.serializeJSON()))
+							cmdObj['@updates'].push("SET-SCHEDULE-PROPERTIES?schedule="+$tr.data('schedule')+"&"+_app.u.hash2kvp($tr.serializeJSON()));
 							}
 						//if any input for the record has been updated, update qty and loc.
 						else {
