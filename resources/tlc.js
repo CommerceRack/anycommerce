@@ -617,7 +617,7 @@ This one block should get called for both img and imageurl but obviously, imageu
 				b = a.toFixed(decimalPlace),  //get 12345678.90
 				r;
 			a = parseInt(a); // get 12345678
-			dump(" -> a: "+a);
+//			dump(" -> a: "+a);
 			b = (b-a).toPrecision(decimalPlace); //get 0.90
 			b = parseFloat(b).toFixed(decimalPlace); //in case we get 0.0, we pad it out to 0.00
 			a = a.toLocaleString();//put in commas - IE also puts in .00, so we'll get 12,345,678.00
