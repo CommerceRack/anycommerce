@@ -3430,9 +3430,9 @@ vars:
 							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
 
 						for(var i = 0; i < L; i += 1)	{
-//							_app.u.dump(i+") "+vars.thead[i]);
+//							_app.u.dump(i+") "+vars.thead[i]); dump($("td:nth-child("+ ( i + 1 )+")",$tmp));
 //looks at corresponding td in loadsTemplate (if set) and applies hide class (
-							$('<th \/>').addClass(($tmp && $("td:nth-child("+i+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
+							$('<th \/>').addClass(($tmp && $("td:nth-child("+( i + 1 )+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
 							}
 
 						}// thead loop
