@@ -427,6 +427,10 @@ _app.u.addEventDelegation($target);
 					
 					_app.u.handleButtons($r);
 					$('.toolTip',$r).tooltip();
+					if(varObj.inv >= 1)	{
+						$r.addClass('isInventoryable');
+						}
+					
 	
 	//for 'select' based variations, need to add some additional UI functionality.
 					if(_app.ext.admin_prodedit.u.variationTypeIsSelectBased(varObj.type))	{
@@ -1600,6 +1604,7 @@ _app.model.dispatchThis('immutable');
 	//				_app.u.dump(" -> type is image based. show image inputs.");
 					$('.imgOnly',$target).removeClass('displayNone');
 					}
+				$('.toolTip',$target).tooltip();
 				}, //handleOptionEditorInputs
 
 /*
