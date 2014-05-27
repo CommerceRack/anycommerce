@@ -478,7 +478,7 @@ do NOT change the input name or id or checkout will likely break.
 	<div class="floatRight hide4Print">
 	<button class="applyButton" data-app-click="order_create|execInvoicePrint">Print Invoice</button>
 	</div>
-	
+	<h2 data-tlc="bind $var '.order.our.orderid'; if (is $var --notblank;) {{apply --append;}};"></h2>
 	<h3 data-tlc="bind $var '.order.data.pool'; if (is $var --notblank;) {{format --prepend='Order Status: '; apply --append;}};"></h3>
 	
 		</td>

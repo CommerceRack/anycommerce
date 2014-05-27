@@ -1315,6 +1315,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					_app.model.dispatchThis('immutable');
 					}});
 				_app.model.dispatchThis('immutable');
+				$('body').removeClass('buyerLoggedIn'); //allows for css changes to occur based on authentication
 				return false;
 				},
 
@@ -1630,6 +1631,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						if(_app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 						else	{
 							_app.u.dump(" -> no errors. user is logged in.");
+							$('body').addClass('buyerLoggedIn'); //allows for css changes based on auth.
 							var $form = $fieldset.closest('form'),
 							$fieldsets = $('fieldset',$form);
 //set all panels to loading.
@@ -1878,7 +1880,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				var
 					$checkoutForm = $ele.closest('form'), //used in some callbacks later.
 					$checkoutAddrFieldset = $ele.closest('fieldset'),
-					addressType = $ele.data('app-addresstype').toLowerCase();
+					addressType = $ele.attr('data-app-addresstype').toLowerCase();
 				if(_app.u.thisIsAnAdminSession())	{
 					var $D = _app.ext.admin_customer.a.createUpdateAddressShow({'mode':'create','show':'dialog','type':addressType});
 					}

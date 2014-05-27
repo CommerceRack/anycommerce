@@ -795,7 +795,7 @@ fallback is to just output the value.
 				
 				var className, price, buttonState, buttonText = 'Add to Cart',
 				pid = data.value.pid, //...pid set in both elastic and appProductGet
-				inv = _app.ext.store_product.u.getProductInventory(pid),
+				inv = _app.ext.store_product.u.getProductInventory(_app.data['appProductGet|'+pid]),
 				$form = $tag.closest('form');
 				
 //				dump(" -> $form.length: "+$form.length);
@@ -989,7 +989,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
-						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
+//						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
+//201404 -> change in logic so that secure or file always hit before checking if authentication is required. reduces overhead.
+						if('https:' == document.location.protocol || 'file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
 							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
 							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
 								infoObj.performJumpToTop = false;
