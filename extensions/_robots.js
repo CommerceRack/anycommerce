@@ -69,9 +69,9 @@ var seo_robots = function(_app) {
 							}
 						
 						//Let's clean up some memory, shall we?
-						_app.ext.store_swc.vars.counter++;
-						if(_app.ext.store_swc.vars.counter >= _app.ext.store_swc.vars.counterReset){
-							_app.ext.store_swc.vars.counter -= _app.ext.store_swc.vars.counterReset;
+						_app.ext.seo_robots.vars.counter++;
+						if(_app.ext.seo_robots.vars.counter >= _app.ext.seo_robots.vars.counterReset){
+							_app.ext.seo_robots.vars.counter -= _app.ext.seo_robots.vars.counterReset;
 							for(var datapointer in _app.data){
 								if(datapointer.indexOf('appProductGet|') == 0 ||
 										datapointer.indexOf('relatedProducts|') == 0 ||

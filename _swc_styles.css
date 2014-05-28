@@ -5,8 +5,8 @@ body{background:url(images/ivy2.jpg) repeat fixed center top;}
 .highlightBG_1 {background: #233628;}
 .highlightBG_1_alpha {background:rgba(35,54,40,.75);}
 .highlightBG_2 {background: #5c6a60;}
-.redText{color:#7e0000}
-a.redText{color:#7e0000}
+.redText{color:#7e0000;}
+a.redText{color:#7e0000;}
 .underline {text-decoration:underline;}
 .blockLink, .blockLink a {text-decoration:none;}
 .bold {font-weight:bold;}
@@ -97,19 +97,25 @@ a.redText{color:#7e0000}
 	z-index: 101;
 }
 
+#expandNav a {display:block; width: 30px; height: 30px; line-height:30px}
+#expandNav a img{vertical-align:middle;}
 #nav {padding:3px 0px; position:absolute; left:0px; right:0px; bottom:0px;}
 #nav .fullNav {
-	display:none;
 	position:absolute;
 	top:0px;
-	left:0px;
-	right:0px;
+	width: 100%;
+	left: -150%;
+	transition: all .4s;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box; 
 }
 #nav  a {
 	text-decoration:none;
 	font-weight:bold;
 	color: white;
 }
+
 #nav .tableNav a {
 	border-left:1px solid white;
 	border-right:1px solid white;
@@ -126,7 +132,22 @@ a.redText{color:#7e0000}
 	right:0px;
 	z-index:100;
 }
+
 #toggleFooterBtn{
+	height:40px;
+	width: 40px;
+	position:absolute;
+	right:0px;
+	top:-40px;
+	border-left:1px solid white;
+	border-top: 1px solid white;
+	box-shadow: -2px -2px 6px rgba(64,64,64,.5);
+	background-image:url(images/wrapper/menu_icon.png);
+	background-position:center center;
+	background-repeat: no-repeat;
+}
+
+#toggleFooterBar{
 	border-bottom: none;
 	border-right: none;
 	border-left: none;
@@ -137,12 +158,12 @@ a.redText{color:#7e0000}
 	top:0px;
 }
 
-#appView #toggleFooterBtn .hideFooter{display:none;}
-#appView.showFooter #toggleFooterBtn .hideFooter{display:inline-block;}
-#appView #toggleFooterBtn .showFooter{display:inline-block;}
-#appView.showFooter #toggleFooterBtn .showFooter{display:none;}
+#appView #toggleFooterBar .hideFooter{display:none;}
+#appView.showFooter #toggleFooterBar .hideFooter{display:inline-block;}
+#appView #toggleFooterBar .showFooter{display:inline-block;}
+#appView.showFooter #toggleFooterBar .showFooter{display:none;}
 
-#footer{transition: bottom 1s;}
+#footer{transition: bottom .6s;}
 #appView.peekFooter.showFooter #footer,
 #appView.showFooter #footer {bottom:0px;}
 

@@ -982,6 +982,10 @@ var store_swc = function(_app) {
 				_app.model.addDispatchToQ(obj, 'immutable');
 				_app.model.dispatchThis('immutable');
 				},
+			toggleNav : function($ele, e){
+				e.preventDefault();
+				$('#nav').toggleClass('expand');
+				},
 			expandNav : function($ele, e){
 				e.preventDefault();
 				$('#nav').addClass('expand');

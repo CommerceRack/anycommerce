@@ -110,13 +110,10 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 									hash = "#!/";
 									break;
 								case 'product':
-									hash = "#!/product/"+infoObj.pid+"/";
+									hash = "#!product/"+infoObj.pid+"/";
 									break;
 								case 'category':
-									hash = "#!/category/"+infoObj.navcat+"/";
-									break;
-								case 'static':
-									hash = window.location.hash;
+									hash = "#!category/"+infoObj.navcat+"/";
 									break;
 								case 'search':
 									hash = window.location.hash;

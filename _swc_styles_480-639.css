@@ -9,16 +9,17 @@
 	padding-top: 75px;
 	padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 210px;}
-#appView.peekFooter.showFooter {padding-bottom: 210px;}
-#appView #footer {bottom:-150px;}
-#appView.peekFooter #footer {bottom:-130px;}
+/* #appView.peekFooter.showFooter {padding-bottom: 210px;} */
+#appView #footer {bottom:-170px;}
+/* #appView.peekFooter #footer {bottom:-130px;} */
 #footer{padding: 20px 0px;}
 
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}
 #nav {font-size: .6em; padding: 5px 0px;}
-#nav.expand .fullNav { display:block; }
+#nav.expand .fullNav { left:50%;}
+#nav .fullNav {margin-left:-240px; padding: 12px; font-size:1.4em;}
 #footer{font-size:.8em}
 #footer > div{position:relative; height:130px;}
 .footerColumn {

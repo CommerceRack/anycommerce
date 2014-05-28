@@ -198,11 +198,11 @@ var _robots = {
 				-->
 			</div>
 			
-			<div id="mininav" class="floatRight redText displayNone_320">
+			<div id="mininav" class="floatRight displayNone_320">
 				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> |
-				<span class="displayNone_320"><a href="#!company/contact/" class="textDecNone">Contact</a> |</span>
+				<a href="#!company/contact/" class="textDecNone">Contact</a> |
 				<a href="#!customer/myaccount/" class="textDecNone">My Account</a> |
-				<span class="displayNone_320"><a href="#!company/faq/" class="textDecNone">Help</a> |</span>
+				<a href="#!company/faq/" class="textDecNone">Help</a> |
 				<a href="#!cart/" class="redText textDecNone">Cart</a>
 			</div>
 			
@@ -210,11 +210,11 @@ var _robots = {
 				Questions? <a class="redText textDecNone" href="tel:8444624422">Call 844-GO-CHICAGO</a>
 			</div>
 			
-			<div id="expandNav" class="floatRight displayNone_1280 displayNone_960 displayNone_640 displayNone_480">
-				<a href="#" class="alignCenter" data-app-click="store_swc|expandNav">+MORE</a>
+			<div id="expandNav" class="floatRight alignCenter displayNone_1280 displayNone_960 displayNone_640 displayNone_480">
+				<a href="#" class="alignCenter" data-app-click="store_swc|toggleNav"><img src="images/wrapper/menu_icon_dark.png"/></a>
 			</div>
 			
-			<form id="search" class="floatRight noPadOrMargin clearRight displayNone_320" onSubmi="return false;" data-app-submit="quickstart|searchFormSubmit">
+			<form id="search" class="floatRight noPadOrMargin clearRight displayNone_320" onSubmit="return false;" data-app-submit="quickstart|searchFormSubmit">
 				<input type="text" name="KEYWORDS"/>
 				<span class="searchBtn" onClick="$(this).parent().trigger('submit');">
 					<img data-apptimize="embed" src="images/wrapper/searchbutton_62x25.png" class="displayNone_640 displayNone_480 alignBottom"/>
@@ -238,10 +238,33 @@ var _robots = {
 				<a href="#" class="navLink displayTableCell alignCenter displayNone_1280 displayNone_960" data-app-click="store_swc|expandNav">+MORE</a>
 			</div>
 		</div>
-		<div class="fixedContainer fillWidth fullNav highlightBG_1">
-			<div class="floatRight">
+		<div class="white fixedContainer fillWidth fullNav highlightBG_1">
+			
+			<div class="floatRight displayNone_320">
 				<a href="#" class="alignCenter" data-app-click="store_swc|dismissNav">-LESS</a>
 			</div>
+			
+			<div class="displayNone_640 displayNone_480 alignCenter marginBottom">
+				<div>
+					<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> |
+					<a href="#!company/contact/" class="textDecNone">Contact</a> |
+					<a href="#!customer/myaccount/" class="textDecNone">My Account</a> |
+					<a href="#!company/faq/" class="textDecNone">Help</a> |
+					<a href="#!cart/" class="textDecNone">Cart</a>
+				</div>
+				
+				<div>
+					Questions? <a class="textDecNone" href="tel:8444624422">Call 844-GO-CHICAGO</a>
+				</div>
+				
+				<form class="noPadOrMargin" onSubmit="return false;" data-app-submit="quickstart|searchFormSubmit">
+					<input type="text" name="KEYWORDS"/>
+					<span class="searchBtn" onClick="$(this).parent().trigger('submit');">
+						<img data-apptimize="embed" src="images/wrapper/searchbutton_62x25.png" class="alignBottom"/>
+					</span>
+				</form>
+			</div>
+			
 			<div>
 				<a href="#!filter/100_years_of_wrigley_field/" class="navLink">WRIGLEY 100 YEARS</a>
 			</div>
@@ -264,7 +287,7 @@ var _robots = {
 				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="navLink">LEAGUE SHOP</a>
 			</div>
 			<div>
-				<a href="#!filter/chicago/" class="navLink displayTableCell alignCenter">CHICAGO</a>
+				<a href="#!filter/chicago/" class="navLink">CHICAGO</a>
 			</div>
 		</div>
 	</div>
@@ -284,7 +307,11 @@ var _robots = {
 <div class="clear"></div>
 <div id="footer" class="highlightBG_1">
 	
-	<span id="toggleFooterBtn" class="pointer highlightBG_1 alignCenter ui-state-default" data-app-click="store_swc|toggleFooter">
+	<span id="toggleFooterBtn" class="pointer highlightBG_1 displayNone_1280 displayNone_960" data-app-click="store_swc|toggleFooter">
+		
+	</span>
+	
+	<span id="toggleFooterBar" class="pointer highlightBG_1 alignCenter ui-state-default displayNone_640 displayNone_480 displayNone_320" data-app-click="store_swc|toggleFooter">
 		<span class="showFooter ui-icon ui-icon-carat-1-n"></span>
 		<span class="hideFooter ui-icon ui-icon-carat-1-s"></span>
 	</span>

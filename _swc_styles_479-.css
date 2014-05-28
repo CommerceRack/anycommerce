@@ -9,12 +9,14 @@
 #mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;}
 #globalMessaging {position:relative; z-index: 101;}
 #nav {padding: 0px;}
-#nav.expand .fullNav { display:block; }
+#nav.expand .fullNav { left:50%;}
+#nav .fullNav {margin-left:-160px; padding: 12px; text-align:center; font-size:16px;}
+#nav .fullNav input{width:225px; }
 #mainContentArea > div {height:100%; overflow: auto;}
 #appView.showFooter {padding-bottom: 402px;}
-#appView.peekFooter.showFooter {padding-bottom: 402px;}
-#appView #footer {height: 360px; bottom:-380px; font-size:16px;}
-#appView.peekFooter #footer {bottom:-360px;}
+/* #appView.peekFooter.showFooter {padding-bottom: 402px;} */
+#appView #footer {height: 360px; bottom:-400px; font-size:16px;}
+/* #appView.peekFooter #footer {bottom:-360px;} */
 
 #contact{font-size:11px;}
 #mininav{font-size:12px;}
