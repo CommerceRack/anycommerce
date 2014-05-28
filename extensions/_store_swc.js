@@ -193,6 +193,8 @@ var store_swc = function(_app) {
 					"#!filter/hats/",
 					"#!filter/souvenirs/"
 					]);
+				
+				setTimeout(function(){_app.ext.store_swc.e.toggleFooter(null, {preventDefault : function(){}});}, 1200);
 				},
 			onError : function(){}
 			},
