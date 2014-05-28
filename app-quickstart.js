@@ -142,6 +142,12 @@ var quickstart = function(_app) {
 
 _app.u.addEventDelegation($(document.body)); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
 
+
+var hotw = _app.model.dpsGet('quickstart','hotw');
+if(!$.isEmptyObject(hotw))	{
+	_app.ext.quickstart.vars.hotw = hotw;
+	}
+
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(_app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+_app.model.version+" and release: "+_app.vars.release+"</div>");
@@ -1552,6 +1558,8 @@ $target.tlc({
 				_app.ext.quickstart.vars.sotw = infoObj;
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
 				_app.ext.quickstart.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
+//* 201405 -> save history of the world to localstorage for refresh/next visit.
+				_app.model.dpsSet('quickstart','hotw',_app.ext.quickstart.vars.hotw);
 				},
 
 			showtransition : function(infoObj,$old)	{
