@@ -5,6 +5,15 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201405
+
+1PC
+	bug fix - social media links after checkout now working again.
+
+QUICKSTART
+	enhancement - history of the world is now persistent between sessions.
+
+
 
 201404
 
