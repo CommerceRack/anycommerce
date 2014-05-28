@@ -2218,11 +2218,21 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 				else if (infoObj.KEYWORDS) {
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
-					   "filter":{
-						  "and" : [
-							 {"query":{"query_string":{"query":infoObj.KEYWORDS}}},
-							 ]
-						  }});
+						"query":{
+							"function_score" : {										
+								"query" : {
+									"query_string":{"query":infoObj.KEYWORDS}	
+									},
+								"functions" : [
+									{
+										"filter" : {"query" : {"query_string":{"query":'"'+infoObj.KEYWORDS+'"'}}},
+										"script_score" : {"script":"10"}
+										}
+									],
+								"boost_mode" : "sum",
+								}
+							}
+						});
 					}
 				else	{
 					
@@ -2244,7 +2254,9 @@ elasticsearch.size = 50;
 				
 				_app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
 //				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,infoObj);
-				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleInfiniteElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')}));
+				var $list = $('#resultsProductListContainer');
+				$list.intervaledEmpty().text('');
+				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleInfiniteElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$list}));
 				_app.model.dispatchThis();
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
 				_app.renderFunctions.handleTemplateEvents($page,infoObj);
