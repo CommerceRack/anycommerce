@@ -151,6 +151,9 @@ myApp.router.appendInit({
 		if(g.uriParams.seoRequest){
 			showContent(g.uriParams.pageType, g.uriParams);
 			}
+		else if (g.uriParams.marketplace){
+			showContent("product",{"pid":g.uriParams.product});
+			}
 		else if(document.location.hash)	{	
 			myApp.u.dump('triggering handleHash');
 			myApp.router.handleHashChange();
