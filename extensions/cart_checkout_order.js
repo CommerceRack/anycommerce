@@ -551,11 +551,13 @@ left them be to provide guidance later.
 				var r = false;
 				if(!$.isEmptyObject(cartObj))	{
 					var items = cartObj['@ITEMS'] || [], L = items.length;
+					//generally, we want to direct traffic to the non-secure domain first. That option will also be better for a native app which has no document.domain
+					var domain = (_app.vars.domain) ? 'http://'+_app.vars.domain : document.location.protocol+'//'+document.domain
 					if(L)	{r = ''}; //set to blank so += doesn't start with undefined. 
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
 						if(items[i].sku.charAt(0) != '%')	{
-							r +=  (_app.vars._clientid == '1pc') ? "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n" : "http://"+_app.vars.sdomain+"#!product/"+items[i].sku+"/\n";
+							r +=  (_app.vars._clientid == '1pc') ? domain+"/product/"+items[i].sku+"/\n" : domain+"#!product/"+items[i].sku+"/\n";
 							}
 						}
 					}
