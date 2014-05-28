@@ -332,11 +332,19 @@ If this isn't done, attempts to see if an immutable or other request is in proce
 must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
 can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
 */
-
-
+	var extra = "";
+	for(var i = 0; i < Q.length; i++){
+		var req = Q[i];
+		extra += req["_cmd"];
+		if(i < Q.length-1){
+			extra += ".";
+			}
+		}
+	var url = _app.vars.jqurl+"v-"+_app.model.version+"/"+extra
+	dump(url);
 	_app.globalAjax.requests[QID][pipeUUID] = $.ajax({
 		type: "POST",
-		url: _app.vars.jqurl,
+		url: url,
 //		context : app,
 		async: true,
 		contentType : "text/json",
