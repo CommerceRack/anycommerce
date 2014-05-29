@@ -1559,7 +1559,8 @@ $target.tlc({
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
 				_app.ext.quickstart.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
 //* 201405 -> save history of the world to localstorage for refresh/next visit.
-				_app.model.dpsSet('quickstart','hotw',_app.ext.quickstart.vars.hotw);
+// chrome didn't like copying hotw directly in. circular reference exception.
+				_app.model.dpsSet('quickstart','hotw',$.extend(_app.ext.quickstart.vars.hotw));
 				},
 
 			showtransition : function(infoObj,$old)	{
