@@ -912,6 +912,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
 					if(formObj['want/payby'])	{
+						alert("want/payby IS set");
 						var
 							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
 							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
@@ -921,6 +922,9 @@ an existing user gets a list of previous addresses they've used and an option to
 							_app.u.dump(" -> payment method ["+formObj['want/payby']+"] HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
+						}
+					else	{
+						alert("want/payby is NOT set");
 						}
 
 					}
@@ -2329,7 +2333,6 @@ _app.model.dispatchThis('passive');
 									}
 								$label.appendTo($div); //keep cc text short. use icons
 								}
-							
 							$div.appendTo($r);
 							}
 						}
