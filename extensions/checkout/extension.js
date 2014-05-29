@@ -856,7 +856,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 				}, //chkoutCartSummary
 
-			chkoutMethodsPay : function(formObj,$fieldset)	{
+			chkoutMethodsPay : function(formObj,$fieldset,cartData)	{
 //the renderformat will handle the checked=checked. however some additional payment inputs may need to be added. that happens here.
 				var
 					checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
@@ -911,20 +911,23 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
-					if(formObj['want/payby'])	{
-						alert("want/payby IS set");
+//* 201405 -> issue w/ IE8 not recognizing want/payby being set after selecting/changing payment methods.
+					var payby = formObj['want/payby'];
+					if(!payby && _app.u.thisNestedExists("want.payby",cartData))	{
+						payby = cartData.want.payby;
+						}
+					if(payby)	{
+						alert("payby IS set");
 						var
-							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
+							$radio = $("input[value='"+payby+"']",$fieldset),
 							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
-//* 201405 -> radio button is checked as part of buildPaymentOptionsAsRadios
-//						$radio.attr('checked','checked');
 						if($supplemental)	{
-							_app.u.dump(" -> payment method ["+formObj['want/payby']+"] HAS supplemental inputs");
+							_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
 						}
 					else	{
-						alert("want/payby is NOT set");
+						alert("payby is NOT set");
 						}
 
 					}
@@ -2072,7 +2075,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					ao.empty = function(formObj, $fieldset){$(".panelContent",$fieldset).empty()},
 					ao.handleDisplayLogic = function(formObj, $fieldset){
 						if(typeof _app.ext.order_create.panelDisplayLogic[role] === 'function')	{
-							_app.ext.order_create.panelDisplayLogic[role](formObj,$fieldset);
+							_app.ext.order_create.panelDisplayLogic[role](formObj,$fieldset,_app.data['cartDetail|'+cartID]);
 							}
 						else	{
 							$fieldset.anymessage({'message':'In order_create.u.handlePanel, panelDisplayLogic['+role+'] not a function','gMessage':true});
