@@ -1,2 +1,3 @@
+~path	/category/wrigley_field_cam/?	/#!fieldcam/
 ~path	/category/([^/]*)/?	/#!category/$1
 ~path	/product/([^/]*)/?(.*)	/#!product/$1
