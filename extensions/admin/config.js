@@ -278,13 +278,14 @@ var admin_config = function(_app) {
 				$target.showLoading({'message':'Fetching your payment method settings'});
 				_app.model.destroy('adminConfigDetail|payment|'+_app.vars.partition);
 				_app.u.addEventDelegation($target);
-				$target.anyform({'trackEdits':true});
 				_app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
 					'callback' : 'anycontent',
 					'datapointer' : 'adminConfigDetail|payment|'+_app.vars.partition,
 					'templateID' : 'paymentManagerPageTemplate',
 					'onComplete' : function(){
 						$("li[data-tender='CC']",$target).trigger('click');
+						_app.u.handleCommonPlugins($target);
+						$target.anyform({'trackEdits':true});
 						},
 					jqObj : $target
 					},'mutable');
