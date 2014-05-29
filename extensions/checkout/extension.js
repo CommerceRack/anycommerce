@@ -915,8 +915,8 @@ an existing user gets a list of previous addresses they've used and an option to
 						var
 							$radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
 							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
-						
-						$radio.attr('checked','checked');
+//* 201405 -> radio button is checked as part of buildPaymentOptionsAsRadios
+//						$radio.attr('checked','checked');
 						if($supplemental)	{
 							_app.u.dump(" -> payment method ["+formObj['want/payby']+"] HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
@@ -2319,7 +2319,8 @@ _app.model.dispatchThis('passive');
 								}
 							else	{
 								//onClick event is added through an app-event. allows for app-specific events.
-								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' />");
+								// ** 201405 -> the 'checked=checked' needs to occur here for IE8.
+								$label.append("<input type='radio' name='want/payby' value='"+pMethods[i].id+"' "+(pMethods[i].id == payby ? "checked='checked'" : "")+" />");
 								$label.append((pMethods[i].id == 'CREDIT' ? 'Credit Card' : pMethods[i].pretty));
 								if(pMethods[i].icons)	{
 									$.each(pMethods[i].icons.split(' '),function(){
