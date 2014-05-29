@@ -884,7 +884,7 @@ returning a 'false' here will exit the statement loop.
 	this.handleType_IF = function(cmd,globals,dataset)	{
 //		dump("BEGIN handleIF"); console.debug(globals);
 		var p1; //first param for comparison.
-		var args = cmd.When.args;
+		var args = cmd.When.args || [];
 		var action = 'IsTrue'; //will be set to false on first false (which exits loop);
 		//NOTE -> change '2' to args.length to support multiple args. ex: if (is $var --lt='100' --gt='5') {{ apply --append; }};
 
