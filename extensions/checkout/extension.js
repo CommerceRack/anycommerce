@@ -924,6 +924,11 @@ an existing user gets a list of previous addresses they've used and an option to
 							_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
+						//the 'loop' renderformat for wallet display only accepts one piece of data. in this case, the walley payment method.
+						//so the 'cart' isn't available to load payby. crappy. a better long term solution would be a tlcFormat 
+						if(payby.indexOf('WALLET') >= 0)	{
+							$radio.prop('checked','checked')
+							}
 						}
 					else	{
 //no payment method selected yet.
@@ -1158,19 +1163,26 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 // ### TODO -> move this out of here. move it into the appropriate app init.
 						if(_app.vars._clientid == '1pc')	{
 						//GTS for apps is handled in google extension
-							if(typeof window.GoogleTrustedStore)	{
-								delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+// * 201405 -> IE8 didn't like this delete. changed how the check occurs and the delete itself.
+							if('GoogleTrustedStore' in window)	{
+								try	{
+									delete GoogleTrustedStore; //delete existing object or gts conversion won't load right.
 						//running this will reload the script. the 'span' will be added as part of html:roi
 						//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
-								(function() {
-									var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
-									var gts = document.createElement("script");
-									gts.type = "text/javascript";
-									gts.async = true;
-									gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
-									var s = document.getElementsByTagName("script")[0];
-									s.parentNode.insertBefore(gts, s);
-									})();
+									(function() {
+										var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+										var gts = document.createElement("script");
+										gts.type = "text/javascript";
+										gts.async = true;
+										gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+										var s = document.getElementsByTagName("script")[0];
+										s.parentNode.insertBefore(gts, s);
+										})();
+									}
+								catch(e)	{
+									dump("Was unable to delete GoogleTrustedStore from window. conversion may not track properly. error: ",'warn'); dump(e);
+									}
+
 								}
 							}
 						else if(_app.u.thisIsAnAdminSession())	{
@@ -2237,7 +2249,7 @@ the timeout is added for multiple reasons.
 									$(document.body).append(thisArr.script);
 									}
 								catch(e)	{
-									scriptCallback(thisArr.owner,e)
+									window.scriptCallback(thisArr.owner,e);
 									}
 								},(200 * (i + 1)),arr[i]);
 							}
@@ -2347,7 +2359,7 @@ _app.model.dispatchThis('passive');
 							}
 						}
 					if(payby)	{
-						$("input[value='"+payby+"']",$r).prop('checked','checked').closest('label').addClass('selected ui-state-active')
+						$("input[value='"+payby+"']",$r).closest('label').addClass('selected ui-state-active')
 						}	
 				return $r.children();
 				}
