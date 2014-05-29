@@ -1199,7 +1199,7 @@ var store_swc = function(_app) {
 						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","David Price","Evan Longoria"]},
 						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers", "players" : ["Adrian Beltre","Michael Young","Prince Fielder"]},
 						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays", "players" : ["Jose Bautista","Mark Buehrle","Roy Halladay"]},
-						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper",Tyler Clippard"]}],
+						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper","Tyler Clippard"]}],
 			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg"},
 						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg"},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg"},
