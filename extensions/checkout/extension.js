@@ -917,7 +917,6 @@ an existing user gets a list of previous addresses they've used and an option to
 						payby = cartData.want.payby;
 						}
 					if(payby)	{
-						alert("payby IS set");
 						var
 							$radio = $("input[value='"+payby+"']",$fieldset),
 							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
@@ -927,7 +926,7 @@ an existing user gets a list of previous addresses they've used and an option to
 							}
 						}
 					else	{
-						alert("payby is NOT set");
+//no payment method selected yet.
 						}
 
 					}
