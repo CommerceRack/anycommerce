@@ -53,3 +53,8 @@
 #myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
 #myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;}
 */
+
+.fieldCamPage{padding: 5px;}
+
+.fieldCamPage .cam1 {float:left;}
+.fieldCamPage .cam2 {float:right;}
