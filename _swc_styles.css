@@ -289,7 +289,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 /*
 #myTeamChooser.hidden {z-index:-1000;}
 */
-#myTeamChooser .ui-button{width:1em;}
+#myTeamChooser .closeButton{width:1em;}
 #myTeamChooser .chooser {position:absolute; background: white; padding: 5px; box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);overflow:hidden;}
 #myTeamChooser .chooser h2{color:white; padding: 5px; height:30px;}
 #myTeamChooser .contentContainer{position:absolute; top:45px; bottom: 5px; left:5px; right:5px;}
@@ -326,6 +326,23 @@ a.blockLink, li.blockLink {display: inline-block;}
 #myTeamChooser[data-swc-sport=app_nfl] .sportContainer[data-swc-sport=app_nfl]{left: 0px;}
 #myTeamChooser[data-swc-sport=app_nba] .sportContainer[data-swc-sport=app_nba]{left: 0px;}
 #myTeamChooser[data-swc-sport=app_nhl] .sportContainer[data-swc-sport=app_nhl]{left: 0px;}
+
+#myTeamChooser .myTeamPopupContainer {
+	display: none;
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	
+	background: rgba(64,64,64,.5);
+}
+#myTeamChooser.popup .myTeamPopupContainer {display:block;}
+
+#myTeamChooser .myTeamPopupContainer form .checkbox{position:absolute; bottom: 20px; left: 20px;}
+#myTeamChooser .myTeamPopupContainer form .button{position:absolute; bottom: 20px; right: 20px;}
+
+#myTeamChooser .myTeamPopupContainer form{background:white; padding: 20px;}
 
 .sideline .indent {
 	text-indent: 25px;

@@ -51,3 +51,13 @@
 #myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
 #myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;font-size:1.0em}
 */
+#myTeamChooser .myTeamPopupContainer form{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -260px;
+	margin-top: -90px;
+	width:480px;
+	height: 140px;
+}

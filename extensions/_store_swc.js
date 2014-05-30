@@ -494,6 +494,7 @@ var store_swc = function(_app) {
 				$teams.intervaledEmpty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
 				//dump("TLC took: "+(new Date().getTime() - now));
 				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+				$('.myTeamPopupContainer form button').button({"text":"OK"});
 				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
 				},
 			showRMAForm : function(){
@@ -810,6 +811,17 @@ var store_swc = function(_app) {
 				this.selectSport($ele,p);
 				$('#myTeamChooser').addClass('active');
 				_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
+				if(!_app.ext.store_swc.vars.hasOpenedMyTeams && !_app.model.readLocal('myTeamPermaDismiss')){
+					_app.ext.store_swc.vars.hasOpenedMyTeams = true;
+					$('#myTeamChooser').addClass('popup');
+					}
+				},
+			dismissMyTeamsPopup : function($ele,p){
+				var permaDismiss = $ele.serializeJSON().permaDismiss;
+				if(permaDismiss){
+					_app.model.writeLocal('myTeamPermaDismiss', "1");
+					}
+				$('#myTeamChooser').removeClass('popup');
 				},
 			hideMyTeamChooser : function($ele,p){
 				p.preventDefault();
