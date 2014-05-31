@@ -361,8 +361,18 @@ var store_swc = function(_app) {
 				_app.ext.store_search.calls.appPublicSearch.init(es, _tag, 'immutable');
 				//_app.model.addDispatchToQ(reqObj, 'immutable');
 				_app.model.dispatchThis('immutable');
+				return true;
+				},
+			morefromteamlink : function(data,thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				var team = $.grep(_app.ext.store_swc.validTeams[args.sport], function(e,i){
+					return e.v == args.team;
+					})[0];
+				data.globals.binds[data.globals.focusBind] = team.catlink;
+				return true;
 				},
 			dump : function(data,thisTLC){
+				dump("store_swc#dump");
 				dump(data);
 				return true;
 				}

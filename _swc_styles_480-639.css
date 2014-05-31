@@ -47,7 +47,7 @@
 }
 .productTabs{float:none; clear:both; width: 100%;}
 .productTitle, .productInfo {width: 50%;}
-.productImages {width: 46%;}
+.productImages {width: 46%;  padding-left: 5px;}
 
 .filterList { width: 26%; padding: 15px 2%;}
 .filterResultsContainer {float:right; width: 70%;}

@@ -216,8 +216,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .productImages {float:left; width: 60%;}
 .productImages a {text-decoration:none;}
-.productImages .prodThumb { width: 30%; padding: 1.6%;}
+.productImages .prodThumb { width: 30%;}
 .productImages .prodThumb img{max-width:100%; max-height: 550px;}
+.productImages .morefromteamlink img {max-width:100%;}
 .productImages .prodThumb .imgContainer{display:inline-block; max-width: 100%;}
 .productImages .prodThumbs .prodThumb img{width:100%;}
 
