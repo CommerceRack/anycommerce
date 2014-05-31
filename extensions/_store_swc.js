@@ -194,6 +194,17 @@ var store_swc = function(_app) {
 					"#!filter/souvenirs/"
 					]);
 				
+				
+				var dismissNav = function(){
+					_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
+					}
+				for(var i in _app.templates){
+					_app.templates[i].on('complete.swc', dismissNav);
+					}
+				$('#appTemplates').children().each(function(){
+					$(this).on('complete.swc', dismissNav);
+					});
+				
 				setTimeout(function(){_app.ext.store_swc.e.toggleFooter(null, {preventDefault : function(){}});}, 1200);
 				},
 			onError : function(){}
@@ -616,6 +627,7 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				$('.filterList',$form.closest('.filteredSearchPage')).removeClass('active');
 				$form = $form.closest('form');
 				p.preventDefault();
 				var $resultsContainer = $form.closest('[data-filter-page=parent]').find('.filterResults');
