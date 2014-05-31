@@ -1,4 +1,10 @@
 [
+		{
+		"src":"banners/2014/blackhawks_transparent_banner.png",
+		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"href":"#!filter/blackhawks/"
+	},
 	{
 		"src":"banners/wrigley_centennial_banner.png",
 		"alt":"100 Years of Wrigley Field",
@@ -18,10 +24,22 @@
 		"href":"#!search/manufacturer/nike/"
 	},
 	{
+		"src":"banners/2014/blackhawks_transparent_banner.png",
+		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"href":"#!filter/blackhawks/"
+	},
+	{
 		"src":"banners/chicago_cubs_authentic_jersey_homepage_banner.png",
 		"alt":"Authentic Jerseys at SportsWorldChicago.com",
 		"title":"Authentic Jerseys at SportsWorldChicago.com",
 		"href":"#!filter/jerseys/"
+	},
+	{
+		"src":"banners/2014/blackhawks_transparent_banner.png",
+		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"href":"#!filter/blackhawks/"
 	},
 	{
 		"src":"banners/chicago_cubs_hats_banner_homepage.png",
