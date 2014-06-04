@@ -199,7 +199,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem .catName, .productListItem .prodInfo {position:absolute; bottom:0px; right:0px; left:0px; color: white; padding: .8em 0em; font-weight:bold;}
 .productListItem .prodInfo {height: 12%;}
 .productListItem .prodInfo .prodName {padding: 0px 10px;}
-.productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.33em;}
+.productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.2em;}
 .productListItem .price > span {color:white; font-size.75em;}
 
 .productListItem.blockLink { padding-bottom: 66px;}
