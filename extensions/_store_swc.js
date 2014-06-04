@@ -1113,6 +1113,7 @@ var store_swc = function(_app) {
 				optionList : [
 					"user:app_prod_demographic",
 					"user:app_jerseys",
+					"user:app_jerseys_style",
 					"user:app_jerseys_kind",
 					"user:app_brands"
 					]
