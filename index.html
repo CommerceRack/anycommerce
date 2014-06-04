@@ -18,22 +18,10 @@
 <meta name="description" content="">
 
 <script data-apptimize="minify" type="text/javascript">
-//var _gaq = _gaq || [];
-//_gaq.push(['_setAccount','UA-370308-1']);
-//_gaq.push(['_trackPageview']);
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount','UA-370308-1']);
+_gaq.push(['_trackPageview']);
 
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-ga('create', 'UA-370308-1', 'auto');
-ga('set', {
-	'appName' : 'SportsWorldChicago',
-	'appID' : 'ZMVC',
-	'appVersion' : '201404'
-	});
-ga('send', 'screenview', {'screenName' : window.location.hash} );
 var myCreole, baseURL;
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -90,7 +78,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <script data-apptimize="embed" type="text/javascript" src="extensions/cart_message/extension.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="extensions/store_crm.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="app-quickstart.js"></script>
-<!-- <script data-apptimize="embed" type="text/javascript" src="extensions/partner_google_analytics.js"></script> -->
+<script data-apptimize="embed" type="text/javascript" src="extensions/partner_google_analytics.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="extensions/partner_addthis.js"></script>
 
 <!-- SCRIPTS -->
@@ -123,7 +111,6 @@ $(document).ready(function(){
 			"checkoutAuthMode" : "active",//can be passive, active or required
 			"testURL":"http://beta.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
 			"addjQueryPointer" : true,
-			"analyticsPointer" : "ga",
 			//"mediaCDN" : "d14sqwhkvv2eag.cloudfront.net/",
 			"initComplete" : function(){
 				configureApp();
