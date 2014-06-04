@@ -48,7 +48,6 @@ function initApp(params) {
 	}
 
 
-
 function controller(_app)	{
 	
 	return {
@@ -957,11 +956,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 // *** 201403 use .href.split instead of .hash for routing- Firefox automatically decodes the hash string, which breaks any URIComponent encoded characters, like "%2F" -> "/" -mc
 // http://stackoverflow.com/questions/4835784/firefox-automatically-decoding-encoded-parameter-in-url-does-not-happen-in-ie
 				var routeObj = _app.router._getRouteObj(location.href.split('#!')[1],'hash'); //if we decide to strip trailing slash, use .replace(/\/$/, "")
-				//dump(routeObj);
 				if(routeObj)	{
 					routeObj.hash = location.hash;
 					routeObj.hashParams = (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(location.hash.split("?")[1]) : {});
-					window[_app.vars.analyticsPointer]('send', 'screenview', {'screenName' : routeObj.hash} );
 					_app.router._executeCallback(routeObj);
 					}
 				else	{
@@ -1416,19 +1413,6 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 						if(_app.ext[AEF[0]] && _app.ext[AEF[0]].e[AEF[1]] && typeof _app.ext[AEF[0]].e[AEF[1]] === 'function')	{
 							//execute the app event.
 							r = _app.ext[AEF[0]].e[AEF[1]]($CT,ep);
-							//Track event execution
-							var eventObj = {
-								'hitType' : 		'event',
-								'eventCategory' :	AEF[0],
-								'eventAction' :		AEF[1],
-								};
-							if($CT.attr('data-ga-label')){
-								eventObj.eventLabel = $CT.attr('data-ga-label');
-								}
-							if(Number($CT.attr('data-ga-value'))){
-								eventObj.eventValue = Number($CT.attr('data-ga-label'));
-								}
-							window[_app.vars.analyticsPointer]('send', eventObj);
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':"In _app.u._executeEvent, extension ["+AEF[0]+"] and function["+AEF[1]+"] both passed, but the function does not exist within that extension.",'gMessage':true})

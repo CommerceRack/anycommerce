@@ -506,7 +506,6 @@ need to be customized on a per-ria basis.
 				},
 
 			":popup" : function(suffix,phrase)	{
-				dump('WARNING: the :popup wiki translation contains broken analytics code');
 				return "<a href=\""+suffix+"\" target='popup' onClick=\"_gaq.push(['_trackEvent', 'outgoing_links', "+suffix.replace(/^http:\/\//i, '')+"]);\">"+phrase+"</a>";
 				}
 			}, //wiki
@@ -1242,12 +1241,12 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 				if(pageType && infoObj && infoObj.templateID)	{
 					if(pageType == 'product' && infoObj.pid)	{
 						_app.ext.store_product.u.prodDataInModal(infoObj);
-						window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','product '+infoObj.pid);
+						_gaq.push(['_trackEvent','Quickview','User Event','product',infoObj.pid]);
 						}
 						
 					else if(pageType == 'category' && infoObj.navcat)	{
 						_app.ext.quickstart.u.showPageInDialog (infoObj)
-						window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','category '+infoObj.navcat);
+						_gaq.push(['_trackEvent','Quickview','User Event','category',infoObj.navcat]);
 						}
 						
 					else	{
@@ -1461,7 +1460,7 @@ setTimeout(function(){
 					_app.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
 					_app.calls.buyerProductListDetail.init(P.listid,{},'immutable')
 					_app.model.dispatchThis('immutable');
-					window[_app.vars.analyticsPointer]('send','event','Manage buyer list','User Event','item added '+P.sku);
+					_gaq.push(['_trackEvent','Manage buyer list','User Event','item added',P.sku]);
 					}
 				},
 
@@ -3259,10 +3258,10 @@ later, it will handle other third party plugins as well.
 
 //								dump(" -> user.gender = "+user.gender);
 
-// if(_gaq.push(['_setCustomVar',1,'gender',user.gender,1]))
-	// dump(" -> fired a custom GA var for gender.");
-// else
-	// dump(" -> ARGH! GA custom var NOT fired. WHY!!!");
+if(_gaq.push(['_setCustomVar',1,'gender',user.gender,1]))
+	dump(" -> fired a custom GA var for gender.");
+else
+	dump(" -> ARGH! GA custom var NOT fired. WHY!!!");
 
 
 								}
