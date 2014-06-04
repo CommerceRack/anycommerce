@@ -506,8 +506,7 @@ need to be customized on a per-ria basis.
 				},
 
 			":popup" : function(suffix,phrase)	{
-				dump('WARNING: the :popup wiki translation contains broken analytics code');
-				return "<a href=\""+suffix+"\" target='popup' onClick=\"_gaq.push(['_trackEvent', 'outgoing_links', "+suffix.replace(/^http:\/\//i, '')+"]);\">"+phrase+"</a>";
+				return "<a href=\""+suffix+"\" target='popup' data-app-click='quickstart|popup'>"+phrase+"</a>";
 				}
 			}, //wiki
 
@@ -1025,7 +1024,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							$('body').showLoading({'message':'Transferring to secure login'});							
 							var SSLlocation = _app.vars.secureURL+"?cartID="+_app.model.fetchCartID();
 							SSLlocation += "#!customer/"+infoObj.show
-							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							//_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation);
 							document.location = SSLlocation; //redir to secure url.
 							}
 						break;
@@ -1046,7 +1046,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
 							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+_app.model.fetchCartID()+"&_session="+_app.vars._session+"#!checkout";
-							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							//_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation);
 							document.location = SSLlocation;
 							}
 						else	{
@@ -2950,7 +2951,9 @@ else	{
 				else	{} //validateForm will handle the error display.
 				return false;
 				},
-
+			popup : function($ele, p){
+				//Does nothing, but allows google analytics to track this event
+				},
 			accountPasswordRecoverSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
