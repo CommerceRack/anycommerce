@@ -574,6 +574,7 @@ var _robots = {
 </div>
 
 <div id="myTeamSelectedTemplate">
+	<button class="closeSelectedTeamButton floatRight" data-app-click="store_swc|dismissSelectedTeamMsg"></button>
 	<h3>You have selected the <span class="redText" data-tlc="bind $var '.p'; apply --append;"></span>, check out the links below to get started finding great gear for your team!</h3>
 	<ul class="listStyleNone alignCenter clearfix noPadOrMargin" data-tlc="bind $links '.filters'; controller#loop --templateid='filterLink'; apply --append;"></ul>
 </div>
@@ -581,7 +582,10 @@ var _robots = {
 
 <ul>
 	<li id="filterLink">
-		<a id="filterLink" data-app-click="store_swc|hideMyTeamChooser" data-tlc="store_swc#filterlink; apply --attrib='href';"><span data-tlc="store_swc#filtertitle; apply --append;"></span></a>
+		<a id="filterLink" class="positionRelative" data-app-click="store_swc|hideMyTeamChooser" data-tlc="bind $var '.id'; store_swc#filterlink; apply --attrib='href';">
+			<img data-tlc="bind $img '.img'; store_swc#imageurl --name=$img --b='ffffff' --w='100' --h='100'; apply --attrib='src'"/>
+			<h4 class="highlightBG_1_alpha white title alignCenter" data-tlc="bind $var '.id'; store_swc#filtertitle; apply --append;"></h4>
+		</a>
 	</li>
 	<li id="myteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|removeteam">
 		<!--

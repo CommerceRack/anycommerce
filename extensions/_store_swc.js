@@ -914,7 +914,12 @@ var store_swc = function(_app) {
 				_app.ext.store_swc.u.setUserTeam({sport:sport, team:team});
 				var $selectedContainer = $('#myTeamChooser .myTeamSelectedContainer');
 				$selectedContainer.tlc({verb:'transmogrify', dataset:_app.ext.store_swc.vars.userTeam, templateid:$selectedContainer.attr('data-templateid')});
+				$('.closeSelectedTeamButton', $selectedContainer).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 				$('#myTeamChooser').addClass('selected');
+				},
+			dismissSelectedTeamMsg : function($ele, p){
+				p.preventDefault();
+				$('#myTeamChooser').removeClass('selected');
 				},
 			productAdd2Cart : function($form, p){
 				p.preventDefault();
@@ -1316,7 +1321,20 @@ var store_swc = function(_app) {
 			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"]},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"]},
-						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", "players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"], "filters" : ["shirts","jerseys","sweatshirts","hats","souvenirs"]},
+						{
+							"p":"Boston Red Sox",
+							"v":"boston_red_sox", 
+							"img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", 
+							"catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", 
+							"players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"], 
+							"filters" : [
+								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
+								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+							]
+						},
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jeff Samardzija","Starlin Castro"]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"]},
 						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"]},

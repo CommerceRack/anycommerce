@@ -349,7 +349,9 @@ a.blockLink, li.blockLink {display: inline-block;}
 #myTeamChooser .myTeamSelectedContainer > div{background:white; padding: 20px;}
 
 #myTeamChooser .myTeamSelectedContainer li{display: inline-block; padding: 12px;}
-#myTeamChooser .myTeamSelectedContainer li a{color:#233628; font-weight:bold;}
+#myTeamChooser .myTeamSelectedContainer li .title{font-weight:bold; position:absolute; bottom:0px; right:0px; left:0px;}
+#myTeamChooser .myTeamSelectedContainer li a{text-decoration:none;display:block;}
+#myTeamChooser .myTeamSelectedContainer li img{display:block;}
 
 .sideline .indent {
 	text-indent: 25px;

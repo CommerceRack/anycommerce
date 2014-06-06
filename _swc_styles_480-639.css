@@ -86,8 +86,7 @@
 
 #myTeamChooser .myTeamPopupContainer form h3{font-size:1em;}
 #myTeamChooser .myTeamSelectedContainer > div h3{font-size:1em;}
-#myTeamChooser .myTeamPopupContainer form,
-#myTeamChooser .myTeamSelectedContainer > div{
+#myTeamChooser .myTeamPopupContainer form{
 	background:white;
 	position:absolute;
 	left:50%;
@@ -96,4 +95,15 @@
 	margin-top: -90px;
 	width:360px;
 	height: 140px;
+}
+#myTeamChooser .myTeamSelectedContainer > div{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -190px;
+	margin-top: -140px;
+	width:340px;
+	height: 240px;
+	overflow-y: auto;
 }
