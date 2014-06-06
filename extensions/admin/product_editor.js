@@ -200,7 +200,7 @@ var admin_prodedit = function(_app) {
 					
 					
 					//check to see if item has inventoryable variations.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
 						//this product has inventoryable options.
 						$("[data-app-role='showProductWithVariations']",_rtag.jqObj).show();
 						$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).hide();
@@ -723,7 +723,7 @@ _app.u.addEventDelegation($target);
 
 
 //product must be in memory with sku:1 passed for this to work.
-			thisPIDHasInventorableVariations : function(pid)	{
+			thisPIDHasInventoriableVariations : function(pid)	{
 				var r = false;
 				if(pid && _app.data['adminProductDetail|'+pid] && _app.data['adminProductDetail|'+pid]['@variations'])	{
 					for(var i = 0, L = _app.data['adminProductDetail|'+pid]['@variations'].length; i < L; i+=1)	{
@@ -733,7 +733,7 @@ _app.u.addEventDelegation($target);
 					}
 				else	{
 					//missing something we need.
-					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof _app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventoriableVariations, either pid ["+pid+"] not set or product record ["+typeof _app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
 					}
 				dump(" -> pid has inventory-able variations: "+r);
 				return r;
@@ -2011,7 +2011,7 @@ function handleAnimation()	{
 						}
 					}
 
-				if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
+				if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
 					$("[data-app-role='skuSchedulesContainer']",$form).find('input.edited').each(function(){
 						cmdObj['@updates'].push("SET-SCHEDULE-PRICE?SKU="+$(this).closest("[data-sku]").attr('data-sku')+"&schedule="+$(this).closest("[data-schedule]").attr('data-schedule')+"&price="+$(this).val());
 						});				
@@ -2570,7 +2570,7 @@ function type2class(type)	{
 					pid = $PE.data('pid');
 				
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
 //item has inventory-able variations
 						}
 					else	{
@@ -2587,7 +2587,7 @@ function type2class(type)	{
 					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
 
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
 						var $scheduleContainer = $("[data-app-role='skuSchedulesContainer']",$PE).show();
 //build the table headers for the schedules.
 						if(_app.data['adminProductDetail|'+pid]['@skus'][0] && _app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && _app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
