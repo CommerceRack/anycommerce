@@ -601,7 +601,7 @@ var _robots = {
 		<button class="ui-state-highlight ui-button" >+</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
-	<li id="teamListing" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|selectUserTeam">
+	<li id="teamListing" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team'; bind $pretty '.p'; apply --attrib='data-ga-label';" data-app-click="store_swc|selectUserTeam">
 		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
