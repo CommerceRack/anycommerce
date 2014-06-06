@@ -2604,6 +2604,8 @@ function type2class(type)	{
 						}
 					else	{
 						$("[data-app-role='pidSchedulesContainer']",$PE).show();
+                  // remove skuSchedulesContainer so it doesn't trigger validation
+                  $("[data-app-role='skuSchedulesContainer']",$PE).remove();
 						}
 
 
