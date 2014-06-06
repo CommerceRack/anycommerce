@@ -117,7 +117,6 @@ var store_swc = function(_app) {
 				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 					if(_app.ext.store_swc.filterData[routeObj.params.id]){
 						routeObj.params.templateID = "filteredSearchTemplate";
-						//dump(routeObj);
 						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
 						if(routeObj.params.dataset.onEnter){
 							routeObj.params.dataset.onEnter();
@@ -127,7 +126,16 @@ var store_swc = function(_app) {
 						for(var i in optStrs){
 							var o = optStrs[i];
 							if(_app.ext.store_swc.vars.elasticFields[o]){
-								routeObj.params.dataset.options[o] = _app.ext.store_swc.vars.elasticFields[o];
+								routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_swc.vars.elasticFields[o]);
+								if(routeObj.hashParams[o]){
+									var values = routeObj.hashParams[o].split('|');
+									for(var i in routeObj.params.dataset.options[o].options){
+										var option = routeObj.params.dataset.options[o].options[i];
+										if($.inArray(option.v, values) >= 0){
+											option.checked = "checked";
+											}
+										}
+									}
 								}
 							else {
 								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
