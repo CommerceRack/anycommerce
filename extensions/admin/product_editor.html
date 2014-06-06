@@ -1057,7 +1057,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 						<label>
 							<span>Duration</span>
 							<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-								<option value="">-- use profile --</option>
+								<option value="">-- not set --</option>
 								<option value="3">3 Day</option>
 								<option value="5">5 Day</option>
 								<option value="7">7 Day</option>
@@ -1150,7 +1150,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
 				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;" data-validation-rules='skipIfHidden'>
-					<option value="">-- use profile --</option>
+					<option value="">-- not set --</option>
 					<option value="3">3 Day</option>
 					<option value="5">5 Day</option>
 					<option value="7">7 Day</option>
