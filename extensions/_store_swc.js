@@ -21,7 +21,6 @@
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
 var store_swc = function(_app) {
-	var theseTemplates = new Array('');
 	var r = {
 	pages : {
 		".aa" : "ticketsTemplate"
@@ -33,12 +32,15 @@ var store_swc = function(_app) {
 			],
 		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
 		elasticFields : {},
+		/*
 		userTeams : {
 			app_nba : [],
 			app_mlb : [],
 			app_nfl : [],
 			app_nhl : []
 			}
+		*/
+		userTeam : {}
 		},
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -62,6 +64,7 @@ var store_swc = function(_app) {
 				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
 				_app.model.dispatchThis('mutable');
 				
+				/*
 				var userTeams = false;
 				if(userTeams = _app.model.readLocal('swcUserTeams')){
 					for(var i in _app.ext.store_swc.vars.userTeams){
@@ -75,9 +78,21 @@ var store_swc = function(_app) {
 					//_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
+				*/
+				var userTeam = _app.model.readLocal('swcUserTeam');
+				if(userTeam){
+					_app.ext.store_swc.u.setUserTeam(userTeam);
+					}
+				else {
+					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
+					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
+					}
+				
+				/*
 				_app.router.appendHash({'type':'exact','route':'shop-by-player/','callback':function(routeObj){
 					showContent('static',{dataset:_app.ext.store_swc.vars.userTeams, 'templateID':'shopByPlayerTemplate'});
 					}});
+				*/
 				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
 					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
 					}});
@@ -118,11 +133,14 @@ var store_swc = function(_app) {
 								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
 								}
 							}
+						/*
 						routeObj.params.dataset.userTeams = {};
 						for(var sport in _app.ext.store_swc.validTeams){
 							routeObj.params.dataset.userTeams[sport] = $.grep(_app.ext.store_swc.validTeams[sport], function(e, i){ return $.inArray(e.v, _app.ext.store_swc.vars.userTeams[sport]) >= 0});
 							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
 							}
+						*/
+						routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
 						showContent('static',routeObj.params)
 						}
 					else {
@@ -177,7 +195,7 @@ var store_swc = function(_app) {
 					"#!company/faq/",
 					"#!company/shipping/",
 					"#!company/privacy/",
-					"#!shop-by-player/",
+					//"#!shop-by-player/",
 					"#!fieldcam/",
 					"#!affiliates/",
 					"#!careers/",
@@ -206,6 +224,7 @@ var store_swc = function(_app) {
 					});
 				
 				setTimeout(function(){_app.ext.store_swc.e.toggleFooter(null, {preventDefault : function(){}});}, 1200);
+				_app.ext.store_swc.u.renderMyTeams();
 				},
 			onError : function(){}
 			},
@@ -317,27 +336,6 @@ var store_swc = function(_app) {
 							_app.ext.store_swc.e.execFilteredSearch($(this), event);
 							});
 						if(o.hidden){$t.addClass('displayNone');}
-						if(args.withPlayers){
-							var $p = $('<div class="playerFilterList"></div>');
-							if(o.players){
-								for(var i in o.players){
-									var p = o.players[i];
-									$p.append('<div><label><input data-filter="playerFilterCheckbox" type="checkbox" name="'+p+'" />'+p+'</label></div>');
-									}
-								$('input', $p).on('change', function(event){
-									_app.ext.store_swc.e.execFilteredSearch($(this), event);
-									});
-								if(o.catlink){
-									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">more players</div>');
-									}
-								}
-							else {
-								if(o.catlink){
-									$p.append('<div class="alignRight"><a class="white" href="'+o.catlink+'">browse by player</div>');
-									}
-								}
-							$t.append($p);
-							}
 						$tag.append($t);
 						}
 					return true;
@@ -345,6 +343,58 @@ var store_swc = function(_app) {
 				else {
 					return false;
 					}
+				},
+			myteamcheckbox : function(data, thisTLC){
+				var args = thisTLC.args2obj(data.command.args, data.globals);
+				if(args.index){
+					var team = data.globals.binds[data.globals.focusBind];
+					var $tag = data.globals.tags[data.globals.focusTag];
+					dump(team);
+					$tag.attr('data-filter-index',args.index);
+					
+					var $t = $('<div data-filter="inputContainer"></div>');
+					$t.append('<label><input data-filter="filterCheckbox" type="checkbox" name="'+team.v+'" '+(team.checked ? 'checked="checked"' : '')+' />'+team.p+' <span data-filter="count"></span></label>');
+					$('input', $t).on('change', function(event){
+						_app.ext.store_swc.e.execFilteredSearch($(this), event);
+						});
+					if(team.hidden){$t.addClass('displayNone');}
+					
+					var $p = $('<div class="playerFilterList"></div>');
+					if(team.players){
+						for(var i in team.players){
+							var p = team.players[i];
+							$p.append('<div><label><input data-filter="playerFilterCheckbox" type="checkbox" name="'+p+'" />'+p+'</label></div>');
+							}
+						$('input', $p).on('change', function(event){
+							_app.ext.store_swc.e.execFilteredSearch($(this), event);
+							});
+						if(team.catlink){
+							$p.append('<div class="alignRight"><a class="white" href="'+team.catlink+'">more players</div>');
+							}
+						}
+					else {
+						if(team.catlink){
+							$p.append('<div class="alignRight"><a class="white" href="'+team.catlink+'">browse by player</div>');
+							}
+						}
+					$t.append($p);
+					
+					$tag.append($t);
+					return true;
+					} 
+				else {
+					return false;
+					}
+				},
+			filterlink : function(data,thisTLC){
+				var id = data.value;
+				data.globals.binds[data.globals.focusBind] = "#!filter/"+id+"/"
+				return true;
+				},
+			filtertitle : function(data,thisTLC){
+				var id = data.value;
+				data.globals.binds[data.globals.focusBind] = _app.ext.store_swc.filterData[id].title;
+				return true;
 				},
 			relatedproducts : function(data,thisTLC){
 				var lt = data.value['%attribs']['zoovy:prod_name'];
@@ -460,6 +510,7 @@ var store_swc = function(_app) {
 					_app.ext.store_swc.u.lazyload($tag);
 					}, 0);
 				},
+			/*
 			setUserTeams : function(sport, teamsArr){
 				if(typeof _app.ext.store_swc.vars.userTeams[sport] !== "undefined"){
 					_app.ext.store_swc.vars.userTeams[sport] = teamsArr;
@@ -476,6 +527,19 @@ var store_swc = function(_app) {
 						}
 					}
 				},
+			*/
+			setUserTeam : function(team){
+				dump(team);
+				var fullTeamObj = $.grep(_app.ext.store_swc.validTeams[team.sport], function(e, i){ return e.v == team.team})[0];
+				if(fullTeamObj){
+					_app.ext.store_swc.vars.userTeam = $.extend(true, {"checked":"checked", "sport":team.sport}, fullTeamObj);
+					this.saveUserTeam(team);
+					}
+				else {
+					_app.u.throwMessage(_app.u.errorMsgObject("An error has occured- could not set user team to: "+team.team));
+					}
+				},
+			/*
 			saveUserTeams : function(){
 				$('#appView .myTeamsFilter').each(function(){
 					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
@@ -489,6 +553,21 @@ var store_swc = function(_app) {
 					}
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
+			*/
+			saveUserTeam : function(team){
+				$('#appView .myTeamsFilter').each(function(){
+					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
+					});
+				$('#appView .filteredSearchPage').each(function(){
+					$(this).intervaledEmpty().remove();
+					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
+				$('#appView #shopByPlayerTemplate_').intervaledEmpty().remove();
+				if($('#appView #mainContentArea :visible').length < 1){
+					window.location = "#!";
+					}
+				_app.model.writeLocal('swcUserTeam', team);
+				},
+			/*
 			renderMyTeams : function(){
 				//console.log("rendering My Teams");
 				var $teams = $('#myTeamChooser');
@@ -514,6 +593,15 @@ var store_swc = function(_app) {
 				//var now = new Date().getTime();
 				$teams.intervaledEmpty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
 				//dump("TLC took: "+(new Date().getTime() - now));
+				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+				$('.myTeamPopupContainer form button').button({"text":"OK"});
+				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
+				},
+			*/
+			renderMyTeams : function(){
+				var $teams = $('#myTeamChooser');
+				var data = _app.ext.store_swc.validTeams;
+				$teams.intervaledEmpty().tlc({dataset:data, templateid:$teams.attr('data-templateid')});
 				$('.closeButton', $teams).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 				$('.myTeamPopupContainer form button').button({"text":"OK"});
 				$('.backButton', $teams).button({'icons':{"primary":"ui-icon-arrowreturnthick-1-w"}, "text":false});
@@ -762,6 +850,7 @@ var store_swc = function(_app) {
 				_app.model.dispatchThis();
 				
 				},
+			/*
 			clearTeams : function($btn, p){
 				p.preventDefault();
 				var sport = $btn.closest('[data-swc-sport]').attr('data-swc-sport');
@@ -809,6 +898,16 @@ var store_swc = function(_app) {
 					}
 				_app.ext.store_swc.u.setUserTeams(sport, teams);
 				},
+			*/
+			selectUserTeam : function($ele, p){
+				p.preventDefault();
+				var team = $ele.closest('[data-swc-team]').attr('data-swc-team');
+				var sport = $ele.closest('[data-swc-sport]').attr('data-swc-sport');
+				_app.ext.store_swc.u.setUserTeam({sport:sport, team:team});
+				var $selectedContainer = $('#myTeamChooser .myTeamSelectedContainer');
+				$selectedContainer.tlc({verb:'transmogrify', dataset:_app.ext.store_swc.vars.userTeam, templateid:$selectedContainer.attr('data-templateid')});
+				$('#myTeamChooser').addClass('selected');
+				},
 			productAdd2Cart : function($form, p){
 				p.preventDefault();
 				if($form.attr('data-swc-custom-notice')){
@@ -846,7 +945,8 @@ var store_swc = function(_app) {
 				$('#myTeamChooser').removeClass('popup');
 				},
 			hideMyTeamChooser : function($ele,p){
-				p.preventDefault();
+				//p.preventDefault();
+				$('#myTeamChooser').removeClass('selected');
 				$('#myTeamChooser').removeClass('active');
 				},
 			selectSport : function($ele, p){
@@ -1208,7 +1308,7 @@ var store_swc = function(_app) {
 			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"]},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"]},
-						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", "players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"]},
+						{"p":"Boston Red Sox","v":"boston_red_sox", "img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", "players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"], "filters" : ["shirts","jerseys","sweatshirts","hats","souveniers"]},
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jeff Samardzija","Starlin Castro"]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"]},
 						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"]},

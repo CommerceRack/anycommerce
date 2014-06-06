@@ -478,6 +478,7 @@ var _robots = {
 			<div class="displayNone_1280 displayNone_960">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
+			<!-- 
 			<div class="myteams teamlist">
 				<h4 class="highlightBG_2 white">My MLB Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
@@ -485,12 +486,18 @@ var _robots = {
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+			</div> 
+			-->
+			<div class="teamlist">
+				<h4 class="highlightBG_2 white">MLB Teams:</h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.app_mlb'; controller#loop --templateid='teamListing'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nfl">
 			<div class="displayNone_1280 displayNone_960">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
+			<!--
 			<div class="myteams teamlist">
 				<h4 class="highlightBG_2 white">My NFL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nfl'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
@@ -499,11 +506,17 @@ var _robots = {
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nfl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
 			</div>
+			-->
+			<div class="teamlist">
+				<h4 class="highlightBG_2 white">NFL Teams:</h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.app_nfl'; controller#loop --templateid='teamListing'; apply --append;"></ul>
+			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nba">
 			<div class="displayNone_1280 displayNone_960">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
+			<!--
 			<div class="myteams teamlist">
 				<h4 class="highlightBG_2 white">My NBA Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nba'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
@@ -511,12 +524,18 @@ var _robots = {
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+			</div> 
+			-->
+			<div class="teamlist">
+				<h4 class="highlightBG_2 white">NBA Teams:</h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.app_nba'; controller#loop --templateid='teamListing'; apply --append;"></ul>
 			</div>
 		</div>
 		<div class="sportContainer" data-swc-sport="app_nhl">
 			<div class="displayNone_1280 displayNone_960">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
+			<!--
 			<div class="myteams teamlist">
 				<h4 class="highlightBG_2 white">My NHL Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_nhl'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
@@ -524,6 +543,11 @@ var _robots = {
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
+			</div> 
+			-->
+			<div class="teamlist">
+				<h4 class="highlightBG_2 white">NHL Teams:</h4>
+				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.app_nhl'; controller#loop --templateid='teamListing'; apply --append;"></ul>
 			</div>
 		</div>
 	</div>
@@ -531,7 +555,10 @@ var _robots = {
 	<div class="myTeamPopupContainer">
 		<form class="myTeamPopup" onSubmit="return false;" data-app-submit="store_swc|dismissMyTeamsPopup">
 			<h3>
+				<!--
 				Teams you select here will be used to bring you <span class="redText">only the gear you want to see</span>.  Have a look around after you finish customizing your teams for your personalized Sports World experience!
+				-->
+				This site is designed to filter search results to help you find <span class="redText">exactly what you're looking for</span>.  Choose the team you're shopping for here to customize your shopping experience!
 			</h3>
 			
 			<div class="checkbox">
@@ -542,10 +569,20 @@ var _robots = {
 			</div>
 		</form>
 	</div>
+	
+	<div class="myTeamSelectedContainer" data-templateid="myTeamSelectedTemplate"></div>
+</div>
+
+<div id="myTeamSelectedTemplate">
+	<h3>You have selected the <span class="redText" data-tlc="bind $var '.p'; apply --append;"></span>, check out the links below to get started finding great gear for your team!</h3>
+	<ul class="listStyleNone alignCenter clearfix noPadOrMargin" data-tlc="bind $links '.filters'; controller#loop --templateid='filterLink'; apply --append;"></ul>
 </div>
 
 
 <ul>
+	<li id="filterLink">
+		<a id="filterLink" data-app-click="store_swc|hideMyTeamChooser" data-tlc="store_swc#filterlink; apply --attrib='href';"><span data-tlc="store_swc#filtertitle; apply --append;"></span></a>
+	</li>
 	<li id="myteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|removeteam">
 		<!--
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
@@ -558,6 +595,10 @@ var _robots = {
 	<li id="validteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|addteam">
 		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<button class="ui-state-highlight ui-button" >+</button>
+		<span data-tlc="bind $name '.p'; apply --append;"></span>
+	</li>
+	<li id="teamListing" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|selectUserTeam">
+		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 </ul>
@@ -1018,12 +1059,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
-			<legend class="highlightBG_2">My Teams [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">edit</span>]:</legend>
+			<legend class="highlightBG_2">My Team: [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">change</span>]:</legend>
 			<div class="myTeamList">
+				<!--
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_mlb'; store_swc#filtercheckboxlist --index='app_mlb' --filterType='' --withPlayers;"></div>
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nfl'; store_swc#filtercheckboxlist --index='app_nfl' --filterType='' --withPlayers;"></div>
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nba'; store_swc#filtercheckboxlist --index='app_nba' --filterType='' --withPlayers;"></div>
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $cbl '.userTeams.app_nhl'; store_swc#filtercheckboxlist --index='app_nhl' --filterType='' --withPlayers;"></div>
+				-->
+				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $index '.userTeam.sport'; bind $team '.userTeam'; store_swc#myteamcheckbox --index=$index;"></div>
 			</div>
 		</div>
 		

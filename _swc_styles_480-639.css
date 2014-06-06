@@ -84,10 +84,10 @@
 #myTeamChooser .teamlist .teamTemplate {height:45px; font-size:1em; line-height: 45px;}
 #myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}
 
-#myTeamChooser .myTeamPopupContainer form h3{
-	font-size:1em;
-}
-#myTeamChooser .myTeamPopupContainer form{
+#myTeamChooser .myTeamPopupContainer form h3{font-size:1em;}
+#myTeamChooser .myTeamSelectedContainer > div h3{font-size:1em;}
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamSelectedContainer > div{
 	background:white;
 	position:absolute;
 	left:50%;
