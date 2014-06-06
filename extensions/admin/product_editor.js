@@ -200,7 +200,7 @@ var admin_prodedit = function(_app) {
 					
 					
 					//check to see if item has inventoryable variations.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 						//this product has inventoryable options.
 						$("[data-app-role='showProductWithVariations']",_rtag.jqObj).show();
 						$("[data-app-role='showProductWithoutVariations']",_rtag.jqObj).hide();
@@ -576,8 +576,9 @@ _app.u.addEventDelegation($target);
 							$display.append(pogs.renderOption(pog,pid));
 							}
 						}
-					//skipTracks keeps this change from updating the save button.
-					$(':input',$display).addClass('skipTrack').attr('required','required');
+					//skipTracks keeps this change from updating the save button. 
+					// $(':input',$display).addClass('skipTrack').attr('required','required');	 // why was this *required* (breaks when skufinder hidden + non-inventoriable options)																					
+					$(':input',$display).addClass('skipTrack');
 					if(data.bindData.appclick)	{
 						$display.append("<button class='applyButton' data-app-click='"+data.bindData.appclick+"'>load</button>");
 						}
@@ -723,7 +724,7 @@ _app.u.addEventDelegation($target);
 
 
 //product must be in memory with sku:1 passed for this to work.
-			thisPIDHasInventoriableVariations : function(pid)	{
+			thisPIDHasInventorableVariations : function(pid)	{
 				var r = false;
 				if(pid && _app.data['adminProductDetail|'+pid] && _app.data['adminProductDetail|'+pid]['@variations'])	{
 					for(var i = 0, L = _app.data['adminProductDetail|'+pid]['@variations'].length; i < L; i+=1)	{
@@ -733,7 +734,7 @@ _app.u.addEventDelegation($target);
 					}
 				else	{
 					//missing something we need.
-					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventoriableVariations, either pid ["+pid+"] not set or product record ["+typeof _app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"in admin_prodedit.u.thisPIDHasInventorableVariations, either pid ["+pid+"] not set or product record ["+typeof _app.data['adminProductDetail|'+pid]+"](with sku detail) not in memory.","gMessage":true});
 					}
 				dump(" -> pid has inventory-able variations: "+r);
 				return r;
@@ -2011,7 +2012,7 @@ function handleAnimation()	{
 						}
 					}
 
-				if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
+				if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 					$("[data-app-role='skuSchedulesContainer']",$form).find('input.edited').each(function(){
 						cmdObj['@updates'].push("SET-SCHEDULE-PRICE?SKU="+$(this).closest("[data-sku]").attr('data-sku')+"&schedule="+$(this).closest("[data-schedule]").attr('data-schedule')+"&price="+$(this).val());
 						});				
@@ -2570,7 +2571,7 @@ function type2class(type)	{
 					pid = $PE.data('pid');
 				
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 //item has inventory-able variations
 						}
 					else	{
@@ -2587,7 +2588,7 @@ function type2class(type)	{
 					$flexContent = $("[data-app-role='flexeditContainer']",$PE);
 
 //Check to see if inventory-able variations are present.  If so, a different price schedule table should be displayed.
-					if(_app.ext.admin_prodedit.u.thisPIDHasInventoriableVariations(pid))	{
+					if(_app.ext.admin_prodedit.u.thisPIDHasInventorableVariations(pid))	{
 						var $scheduleContainer = $("[data-app-role='skuSchedulesContainer']",$PE).show();
 //build the table headers for the schedules.
 						if(_app.data['adminProductDetail|'+pid]['@skus'][0] && _app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'] && _app.data['adminProductDetail|'+pid]['@skus'][0]['@schedule_prices'].length)	{
@@ -2604,8 +2605,8 @@ function type2class(type)	{
 						}
 					else	{
 						$("[data-app-role='pidSchedulesContainer']",$PE).show();
-                  // remove skuSchedulesContainer so it doesn't trigger validation
-                  $("[data-app-role='skuSchedulesContainer']",$PE).remove();
+						// remove skuSchedulesContainer so it doesn't trigger validation
+						$("[data-app-role='skuSchedulesContainer']",$PE).remove();
 						}
 
 
