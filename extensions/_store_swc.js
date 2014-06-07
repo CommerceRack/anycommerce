@@ -1366,59 +1366,59 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Chicago_White_Sox_Black_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Chicago_White_Sox/Chicago_White_Sox_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Chicago_White_Sox_Black_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/chicago_white_sox_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Chicago_White_Sox_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Cincinnati_Reds_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Cincinnati_Reds/Cincinnati_Reds_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Cincinnati_Reds_Red_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/cincinnati_reds_home_47_franchise_cap5"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Cincinnati_Reds_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians", "players" : ["Jason Kipnis","Michael Bourn","Nick Swisher"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Cleveland_Indians_Navy_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Cleveland_Indians/Cleveland_Indians_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Cleveland_Indians_Navy_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Cleveland_Indians_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies", "players" : ["Boone Logan","Michael Cuddyer","Todd Helton"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Colorado_Rockies_Black_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Colorado_Rockies/Colorado_Rockies_Road_Replica_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Colorado_Rockies_Black_Authentic_Triple_Peak_Cool_Base_Convertible_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/colorado_rockies_game_47_franchise_cap5"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Colorado_Rockies_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Justin Verlander","Max Scherzer","Miguel Cabrera"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Detroit_Tigers_Navy_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Detroit_Tigers/Detroit_Tigers_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Detroit_Tigers_Navy_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/detroit_tigers_home_47_franchise_cap5"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Detroit_Tigers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Houston_Astros_Orange_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Houston_Astros/Houston_Astros_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Houston_Astros_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
 								{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Houston_Astros_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Kansas_City_Royals_Royal_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Kansas_City_Royals/Kansas_City_Royals_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/kansas_city_royals_royal_authentic_triple_peak_cool_base_convertible_gamer_jacke"},
 								{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Kansas_City_Royals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
 							"filters" : [
