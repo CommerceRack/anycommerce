@@ -1328,19 +1328,19 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Atlanta_Braves_Navy_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Atlanta_Braves/Atlanta_Braves_Road_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/atlanta_braves_navy_authentic_triple_peak_cool_base_convertible_gamer_jacket2"},
 								{"id":"hats","img":"mlbhats/atlanta_braves_home_cap"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Atlanta_Braves_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Baltimore_Orioles_Black_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Baltimore_Orioles/Baltimore_Orioles_Alternate_Orange_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Baltimore_Orioles_Black_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Baltimore_Orioles_Mens_All_Pro_Series_Watch"}
 							]},
 						{
 							"p":"Boston Red Sox",
@@ -1359,7 +1359,7 @@ var store_swc = function(_app) {
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jeff Samardzija","Starlin Castro"], 
 							"filters" : [
 								{"id":"shirts","img":"5/chicago_cubs_blue_logo_t_shirt5"},
-								{"id":"jerseys","img":"chicago_cubs/chicago_cubs_authentic_home_jersey_100_year"},
+								{"id":"jerseys","img":"Chicago_Cubs/Chicago_Cubs_Home_Authentic_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Chicago_Cubs_Royal_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
 								{"id":"hats","img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand"},
 								{"id":"souvenirs","img":"C/1984_flag"}
