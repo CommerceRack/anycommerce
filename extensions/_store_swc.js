@@ -1331,7 +1331,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/atlanta_braves_home_cap"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"], 
@@ -1339,7 +1339,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{
@@ -1352,7 +1352,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/boston_red_sox_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]
 						},
@@ -1369,7 +1369,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/chicago_white_sox_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"], 
@@ -1377,7 +1377,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/cincinnati_reds_home_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians", "players" : ["Jason Kipnis","Michael Bourn","Nick Swisher"], 
@@ -1385,7 +1385,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies", "players" : ["Boone Logan","Michael Cuddyer","Todd Helton"], 
@@ -1393,7 +1393,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/colorado_rockies_game_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Justin Verlander","Max Scherzer","Miguel Cabrera"], 
@@ -1401,7 +1401,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/detroit_tigers_home_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"], 
@@ -1409,7 +1409,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
@@ -1417,7 +1417,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
@@ -1425,7 +1425,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.jpg", "catlink":"#!category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers", "players" : ["Adrian Gonzalez","Clayton Kershaw","Yasiel Puig"], 
@@ -1433,7 +1433,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Saltalamacchia","Justin Ruggiano","Ty Wigginton"], 
@@ -1441,7 +1441,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/miami_marlins_game_47_franchise_cap"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"#!category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Matt Garza","Rickie Weeks","Ryan Braun"], 
@@ -1449,7 +1449,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/milwaukee_brewers_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Brian Dozier","Jason Kubel","Joe Mauer"], 
@@ -1457,7 +1457,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_mets/New%20York%20Mets", "players" : ["Curtis Granderson","Daniel Murphy","David Wright"], 
@@ -1465,7 +1465,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/new_york_mets_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Derek Jeter","Ichiro Ichiro","Masahiro Tanaka"], 
@@ -1473,7 +1473,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/new_york_yankees_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.oakland_athletics/Oakland%20Athletics", "players" : ["Eric Sogard","Jed Lowrie","Yoenis Cespedes"], 
@@ -1481,7 +1481,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/oakland_athletics_road_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Cliff Lee","Cole Hamels","Ryan Howard"], 
@@ -1489,7 +1489,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates", "players" : ["Andrew McCutchen","Gerrit Cole","Jeff Locke"], 
@@ -1497,7 +1497,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_diego_padres/San%20Diego%20Padres", "players" : ["Cameron Maybin","Cory Luebke","Everth Cabrera"], 
@@ -1505,7 +1505,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/san_diego_padres_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Brandon Belt","Brandon Crawford","Marco Scutaro"], 
@@ -1513,7 +1513,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/san_francisco_giants_black_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.seattle_mariners/Seattle%20Mariners", "players" : ["Justin Smoak","Kyle Seager","Robinson Cano"], 
@@ -1521,7 +1521,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/seattle_mariners_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"#!category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter","Jason Motte"], 
@@ -1529,7 +1529,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","David Price","Evan Longoria"], 
@@ -1537,7 +1537,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers", "players" : ["Adrian Beltre","Michael Young","Prince Fielder"], 
@@ -1545,7 +1545,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/texas_rangers_adjustable_clean_up_hat5"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays", "players" : ["Jose Bautista","Mark Buehrle","Roy Halladay"], 
@@ -1553,7 +1553,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper","Tyler Clippard"], 
@@ -1561,7 +1561,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/washington_nationals_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]}],
 			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg"},
