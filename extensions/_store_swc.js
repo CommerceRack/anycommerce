@@ -1320,11 +1320,11 @@ var store_swc = function(_app) {
 						{"p": "Washington Wizards","v": "washington_wizards", "img":"nbahats/washington_wizards_hat.jpg"}],
 			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
 							"filters" : [
@@ -1422,7 +1422,7 @@ var store_swc = function(_app) {
 							]},
 						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
+								{"id":"shirts","img":"blanks/Kansas_City_Royals_Royal_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
 								{"id":"hats","img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap"},
