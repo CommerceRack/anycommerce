@@ -1323,7 +1323,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
