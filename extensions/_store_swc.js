@@ -1564,22 +1564,8 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/washington_nationals_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Washington_Nationals_Mens_All_Pro_Series_Watch"}
 							]}],
-			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg", 
-							"filters" : [
-								{"id":"shirts","img":"blanks/Washington_Nationals_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"jerseys","img":"Washington_Nationals/Washington_Nationals_Road_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Washington_Nationals_Navy_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
-								{"id":"hats","img":"mlbhats/washington_nationals_game_47_franchise_cap7"},
-								{"id":"souvenirs","img":"game_time/Washington_Nationals_Mens_All_Pro_Series_Watch"}
-							]},
-						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg"}, 
-							"filters" : [
-								{"id":"shirts","img":"blanks/Washington_Nationals_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"jerseys","img":"Washington_Nationals/Washington_Nationals_Road_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Washington_Nationals_Navy_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
-								{"id":"hats","img":"mlbhats/washington_nationals_game_47_franchise_cap7"},
-								{"id":"souvenirs","img":"game_time/Washington_Nationals_Mens_All_Pro_Series_Watch"}
-							],
+			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg"},
+						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg"},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg"},
 						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg"},
 						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/carolina_panthers_cap.jpg"},
