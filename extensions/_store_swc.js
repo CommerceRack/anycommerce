@@ -1288,8 +1288,22 @@ var store_swc = function(_app) {
 			},
 		validTeams : {
 			//These values taken from flex field setup, and should be adjusted when / if these are expanded
-			'app_nba' : [{"p": "Atlanta Hawks","v": "atlanta_hawks", "img":"nbahats/atlanta_hawks_hat.jpg"},
-						{"p": "Boston Celtics","v": "boston_celtics", "img":"nbahats/boston_celtics_hat.jpg"},
+			'app_nba' : [{"p": "Atlanta Hawks","v": "atlanta_hawks", "img":"nbahats/atlanta_hawks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Boston Celtics","v": "boston_celtics", "img":"nbahats/boston_celtics_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
 						{"p": "Brooklyn Nets","v": "brooklyn_nets", "img":"nbahats/brooklyn_nets_hat1.jpg"},
 						{"p": "Charlotte Bobcats","v": "charlotte_hornets", "img":"nbahats/charlotte_bobcats_hat.jpg"},
 						{"p": "Chicago Bulls","v": "chicago_bulls", "img":"/nbahats/chicago_bulls_hat.jpg"},
