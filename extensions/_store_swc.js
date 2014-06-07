@@ -1358,11 +1358,11 @@ var store_swc = function(_app) {
 						},
 						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jeff Samardzija","Starlin Castro"], 
 							"filters" : [
-								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
-								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Boston_Red_Sox_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"boston_red_sox/boston_red_sox_home_clean_up_adjustable_cap"},
-								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
+								{"id":"shirts","img":"5/chicago_cubs_blue_logo_t_shirt5"},
+								{"id":"jerseys","img":"chicago_cubs/chicago_cubs_authentic_home_jersey_100_year"},
+								{"id":"sweatshirts","img":"majestic/Chicago_Cubs_Royal_Authentic_Triple_Peak_Cool_Base_Gamer_Jacket"},
+								{"id":"hats","img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand"},
+								{"id":"souvenirs","img":"C/1984_flag"}
 							]},
 						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"], 
 							"filters" : [
