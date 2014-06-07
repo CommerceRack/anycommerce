@@ -1304,34 +1304,230 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p": "Brooklyn Nets","v": "brooklyn_nets", "img":"nbahats/brooklyn_nets_hat1.jpg"},
-						{"p": "Charlotte Bobcats","v": "charlotte_hornets", "img":"nbahats/charlotte_bobcats_hat.jpg"},
-						{"p": "Chicago Bulls","v": "chicago_bulls", "img":"/nbahats/chicago_bulls_hat.jpg"},
-						{"p": "Cleveland Cavaliers","v": "cleveland_cavaliers", "img":"nbahats/cleveland_cavaliers_hat.jpg"},
-						{"p": "Dallas Mavericks","v": "dallas_mavericks", "img":"nbahats/dallas_mavericks_hat.jpg"},
-						{"p": "Denver Nuggets","v": "denver_nuggets", "img":"nbahats/denver_nuggets_hat.jpg"},
-						{"p": "Detroit Pistons","v": "detroit_pistons", "img":"nbahats/detroit_pistons_hat.jpg"},
-						{"p": "Golden State Warriors","v": "golden_state_warriors", "img":"nbahats/golden_state_warriors_hat.jpg"},
-						{"p": "Houston Rockets","v": "houston_rockets", "img":"nbahats/houston_rockets_hat.jpg"},
-						{"p": "Indiana Pacers","v": "indiana_pacers", "img":"nbahats/indiana_pacers_hat.jpg"},
-						{"p": "Los Angeles Clippers","v": "los_angeles_clippers", "img":"nbahats/los_angeles_clippers_hat.jpg"},
-						{"p": "Los Angeles Lakers","v": "los_angeles_lakers", "img":"nbahats/los_angeles_lakers_hat.jpg"},
-						{"p": "Memphis Grizzlies","v": "memphis_grizzlies", "img":"nbahats/memphis_grizzlies_hat.jpg"},
-						{"p": "Miami Heat","v": "miami_heat", "img":"nbahats/miami_heat_hat.jpg"},
-						{"p": "Milwaukee Bucks","v": "milwaukee_bucks", "img":"nbahats/milwaukee_bucks_hat.jpg"},
-						{"p": "Minnesota Timberwolves",	"v": "minnesota_timberwolves", "img":"nbahats/minnesota_timberwolves_hat.jpg"},
-						{"p": "New Orleans Pelicans","v": "new_orleans_pelicans", "img":"nbahats/new_orleans_pelicans_hat.jpg"},
-						{"p": "New York Knicks","v": "new_york_knicks", "img":"nbahats/new_york_knicks_hat.jpg"},
-						{"p": "Oklahoma City Thunder",	"v": "oklahoma_city_thunder", "img":"nbahats/oklahoma_city_thunder_hat.jpg"},
-						{"p": "Orlando Magic","v": "orlando_magic", "img":"nbahats/orlando_magic_hat.jpg"},
-						{"p": "Philadelphia 76ers","v": "philadelphia_76ers", "img":"nbahats/philadelphia_76ers_hat.jpg"},
-						{"p": "Phoenix Suns","v": "phoenix_suns", "img":"nbahats/phoenix_suns_hat.jpg"},
-						{"p": "Portland Trailblazers","v": "portland_trailblazers", "img":"nbahats/portland_trailblazers_hat.jpg"},
-						{"p": "Sacramento Kings","v": "sacramento_kings", "img":"nbahats/sacramento_kings_hat.jpg"},
-						{"p": "San Antonio Spurs","v": "san_antonio_spurs", "img":"nbahats/san_antonio_spurs_hat.jpg"},
-						{"p": "Toronto Raptors","v": "toronto_raptors", "img":"nbahats/toronto_raptors_hat.jpg"},
-						{"p": "Utah Jazz","v": "utah_jazz", "img":"nbahats/utah_jazz_hat.jpg"},
-						{"p": "Washington Wizards","v": "washington_wizards", "img":"nbahats/washington_wizards_hat.jpg"}],
+						{"p": "Brooklyn Nets","v": "brooklyn_nets", "img":"nbahats/brooklyn_nets_hat1.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Charlotte Bobcats","v": "charlotte_hornets", "img":"nbahats/charlotte_bobcats_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Chicago Bulls","v": "chicago_bulls", "img":"/nbahats/chicago_bulls_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Cleveland Cavaliers","v": "cleveland_cavaliers", "img":"nbahats/cleveland_cavaliers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Dallas Mavericks","v": "dallas_mavericks", "img":"nbahats/dallas_mavericks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Denver Nuggets","v": "denver_nuggets", "img":"nbahats/denver_nuggets_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Detroit Pistons","v": "detroit_pistons", "img":"nbahats/detroit_pistons_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Golden State Warriors","v": "golden_state_warriors", "img":"nbahats/golden_state_warriors_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Houston Rockets","v": "houston_rockets", "img":"nbahats/houston_rockets_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Indiana Pacers","v": "indiana_pacers", "img":"nbahats/indiana_pacers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Los Angeles Clippers","v": "los_angeles_clippers", "img":"nbahats/los_angeles_clippers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Los Angeles Lakers","v": "los_angeles_lakers", "img":"nbahats/los_angeles_lakers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Memphis Grizzlies","v": "memphis_grizzlies", "img":"nbahats/memphis_grizzlies_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Miami Heat","v": "miami_heat", "img":"nbahats/miami_heat_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Milwaukee Bucks","v": "milwaukee_bucks", "img":"nbahats/milwaukee_bucks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Minnesota Timberwolves",	"v": "minnesota_timberwolves", "img":"nbahats/minnesota_timberwolves_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "New Orleans Pelicans","v": "new_orleans_pelicans", "img":"nbahats/new_orleans_pelicans_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "New York Knicks","v": "new_york_knicks", "img":"nbahats/new_york_knicks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Oklahoma City Thunder",	"v": "oklahoma_city_thunder", "img":"nbahats/oklahoma_city_thunder_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Orlando Magic","v": "orlando_magic", "img":"nbahats/orlando_magic_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Philadelphia 76ers","v": "philadelphia_76ers", "img":"nbahats/philadelphia_76ers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Phoenix Suns","v": "phoenix_suns", "img":"nbahats/phoenix_suns_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Portland Trailblazers","v": "portland_trailblazers", "img":"nbahats/portland_trailblazers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Sacramento Kings","v": "sacramento_kings", "img":"nbahats/sacramento_kings_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "San Antonio Spurs","v": "san_antonio_spurs", "img":"nbahats/san_antonio_spurs_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Toronto Raptors","v": "toronto_raptors", "img":"nbahats/toronto_raptors_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Utah Jazz","v": "utah_jazz", "img":"nbahats/utah_jazz_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p": "Washington Wizards","v": "washington_wizards", "img":"nbahats/washington_wizards_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]}],
 			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
@@ -1578,68 +1774,502 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/washington_nationals_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Washington_Nationals_Mens_All_Pro_Series_Watch"}
 							]}],
-			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg"},
-						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg"},
-						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg"},
-						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg"},
-						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/carolina_panthers_cap.jpg"},
-						{"p":"Chicago Bears","v":"chicago_bears", "img":"nfl/chicago_bears_cap.jpg"},
-						{"p":"Cincinnati Bengals","v":"cincinnati_bengals", "img":"nfl/cincinnati_bengals_cap.jpg"},
-						{"p":"Cleveland Browns","v":"cleveland_browns", "img":"nfl/cleveland_browns_cap.jpg"},
-						{"p":"Dallas Cowboys","v":"dallas_cowboys", "img":"nfl/dallas_cowboys_cap.jpg"},
-						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg"},
-						{"p":"Detroit Lions","v":"detroit_lions", "img":"nfl/detroit_lions_cap.jpg"},
-						{"p":"Green Bay Packers","v":"green_bay_packers", "img":"nfl/green_bay_packers_cap.jpg"},
-						{"p":"Houston Texans","v":"houston_texans", "img":"nfl/houston_texas_cap.jpg"},
-						{"p":"Indianapolis Colts","v":"indianapolis_colts", "img":"nfl/indianapolis_colts_cap.jpg"},
-						{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars", "img":"nfl/jacksonville_jaguars_cap.jpg"},
-						{"p":"Kansas City Chiefs","v":"kansas_city_chiefs", "img":"nfl/kansas_city_chiefs_cap.jpg"},
-						{"p":"Miami Dolphins","v":"miami_dolphins", "img":"nfl/miami_dolphins_cap.jpg"},
-						{"p":"Minnesota Vikings","v":"minnesota_vikings", "img":"nfl/minnesota_vikings_cap.jpg"},
-						{"p":"New England Patriots","v":"new_england_patriots", "img":"nfl/new_england_patriots_cap.jpg"},
-						{"p":"New York Giants","v":"new_york_giants", "img":"nfl/new_york_giants_cap.jpg"},
-						{"p":"New Orleans Saints","v":"new_orleans_saints", "img":"nfl/new_orleans_saints_cap.jpg"},
-						{"p":"New York Jets","v":"new_york_jets", "img":"nfl/new_york_jets_cap.jpg"},
-						{"p":"Oakland Raiders","v":"oakland_raiders", "img":"nfl/oakland_raiders_cap.jpg"},
-						{"p":"Philadelphia Eagles","v":"philadelphia_eagles", "img":"nfl/philadelphia_eagles_cap2.jpg"},
-						{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers", "img":"nfl/pittsburgh_steelers_cap.jpg"},
-						{"p":"San Diego Chargers","v":"san_diego_chargers", "img":"nfl/san_diego_chargers_cap2.jpg"},
-						{"p":"San Francisco 49ers","v":"san_francisco_49ers", "img":"nfl/san_francisco_49ers_cap.jpg"},
-						{"p":"Seattle Seahawks","v":"seattle_seahawks", "img":"nfl/seattle_seahawks_cap.jpg"},
-						{"p":"St. Louis Rams","v":"st_louis_rams", "img":"nfl/st_louis_rams_cap.jpg"},
-						{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers", "img":"nfl/tampa_bay_buccaneers_cap.jpg"},
-						{"p":"Tennessee Titans","v":"tennessee_titans", "img":"nfl/tennessee_titans_cap.jpg"},
-						{"p":"Washington Redskins","v":"washington_redskins", "img":"nfl/washington_redskins_cap.jpg"}],
-			'app_nhl' : [{"p":"Anaheim Ducks","v":"anaheim_ducks", "img":"nhlhats/anaheim_ducks_hat.jpg"},
-						{"p":"Boston Bruins","v":"boston_bruins", "img":"nhlhats/boston_bruins_hat.jpg"},
-						{"p":"Buffalo Sabres","v":"buffalo_sabres", "img":"nhlhats/buffalo_sabres_hat.jpg"},
-						{"p":"Calgary Flames","v":"calgary_flames", "img":"nhlhats/calgary_flames_hat.jpg"},
-						{"p":"Carolina Hurricanes","v":"carolina_hurricanes", "img":"nhlhats/carolina_hurricanes_hat.jpg"},
-						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg"},
-						{"p":"Colorado Avalanche","v":"colorado_alavanche", "img":"nhlhats/colorado_avalanche_hat.jpg"},
-						{"p":"Columbus Blue Jackets","v":"columbus_blue_jackets", "img":"nhlhats/columbus_blue_jackets_hat.jpg"},
-						{"p":"Dallas Stars","v":"dallas_stars", "img":"nhlhats/dallas_stars_hat.jpg"},
-						{"p":"Detroit Red Wings","v":"detroit_red_wings", "img":"nhlhats/detroit_red_wings_hat.jpg"},
-						{"p":"Edmonton Oilers","v":"edmonton_oilers", "img":"nhlhats/edmonton_oilers_hat.jpg"},
-						{"p":"Florida Panthers","v":"florida_panthers", "img":"nhlhats/florida_panthers_hat.jpg"},
-						{"p":"Los Angeles Kings","v":"los_angeles_kings", "img":"nhlhats/los_angeles_kings_hat.jpg"},
-						{"p":"Minnesota Wild","v":"minnesota_wild", "img":"nhlhats/minnesota_wild_hat.jpg"},
-						{"p":"Montreal Canadiens","v":"montreal_canadiens", "img":"nhlhats/montreal_canadiens_hat.jpg"},
-						{"p":"Nashville Predators","v":"nashville_predators", "img":"nhlhats/nashville_predators_hat.jpg"},
-						{"p":"New Jersey Devils","v":"new_jersey_devils", "img":"nhlhats/new_jersey_devils_hat.jpg"},
-						{"p":"New York Islanders","v":"new_york_islanders", "img":"nhlhats/new_york_islanders_hat.jpg"},
-						{"p":"New York Rangers","v":"new_york_rangers", "img":"nhlhats/new_york_rangers_hat1.jpg"},
-						{"p":"Ottawa Senators","v":"ottawa_senators", "img":"nhlhats/ottawa_senators_hat.jpg"},
-						{"p":"Philadelphia Flyers","v":"philadelphia_flyers", "img":"nhlhats/philadelphia_flyers_hat.jpg"},
-						{"p":"Phoenix Coyotes","v":"phoenix_coyotes", "img":"nhlhats/phoenix_coyotes_hat.jpg"},
-						{"p":"Pittsburgh Penguins","v":"pittsburgh_penguins", "img":"nhlhats/pittsburgh_penguins_hat.jpg"},
-						{"p":"San Jose Sharks","v":"san_jose_sharks", "img":"nhlhats/san_jose_sharks_hat.jpg"},
-						{"p":"St. Louis Blues","v":"st_louis_blues", "img":"nhlhats/st__louis_blues_hat.jpg"},
-						{"p":"Tampa Bay Lightning","v":"tampa_bay_lightning", "img":"nhlhats/tampa_bay_lightning_hat.jpg"},
-						{"p":"Toronto Maple Leafs","v":"toronto_maple_leafs", "img":"nhlhats/toronto_maple_leafs_hat.jpg"},
-						{"p":"Vancouver Canucks","v":"vancouver_canucks", "img":"nhlhats/vancouver_canucks_hat.jpg"},
-						{"p":"Washington Capitals","v":"washington_capitals", "img":"nhlhats/washington_capitals_hat.jpg"},
-						{"p":"Winnipeg Jets","v":"winnipeg_jets", "img":"nhlhats/winnipeg_jets_hat.jpg"}],
+			'app_nfl' : [{"p":"Arizona Cardinals","v":"arizona_cardinals", "img":"nfl/arizona_carinals_cap2.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/carolina_panthers_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Chicago Bears","v":"chicago_bears", "img":"nfl/chicago_bears_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Cincinnati Bengals","v":"cincinnati_bengals", "img":"nfl/cincinnati_bengals_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Cleveland Browns","v":"cleveland_browns", "img":"nfl/cleveland_browns_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Dallas Cowboys","v":"dallas_cowboys", "img":"nfl/dallas_cowboys_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Detroit Lions","v":"detroit_lions", "img":"nfl/detroit_lions_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Green Bay Packers","v":"green_bay_packers", "img":"nfl/green_bay_packers_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Houston Texans","v":"houston_texans", "img":"nfl/houston_texas_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Indianapolis Colts","v":"indianapolis_colts", "img":"nfl/indianapolis_colts_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars", "img":"nfl/jacksonville_jaguars_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Kansas City Chiefs","v":"kansas_city_chiefs", "img":"nfl/kansas_city_chiefs_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Miami Dolphins","v":"miami_dolphins", "img":"nfl/miami_dolphins_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Minnesota Vikings","v":"minnesota_vikings", "img":"nfl/minnesota_vikings_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New England Patriots","v":"new_england_patriots", "img":"nfl/new_england_patriots_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New York Giants","v":"new_york_giants", "img":"nfl/new_york_giants_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New Orleans Saints","v":"new_orleans_saints", "img":"nfl/new_orleans_saints_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New York Jets","v":"new_york_jets", "img":"nfl/new_york_jets_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Oakland Raiders","v":"oakland_raiders", "img":"nfl/oakland_raiders_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Philadelphia Eagles","v":"philadelphia_eagles", "img":"nfl/philadelphia_eagles_cap2.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers", "img":"nfl/pittsburgh_steelers_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"San Diego Chargers","v":"san_diego_chargers", "img":"nfl/san_diego_chargers_cap2.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"San Francisco 49ers","v":"san_francisco_49ers", "img":"nfl/san_francisco_49ers_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Seattle Seahawks","v":"seattle_seahawks", "img":"nfl/seattle_seahawks_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"St. Louis Rams","v":"st_louis_rams", "img":"nfl/st_louis_rams_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers", "img":"nfl/tampa_bay_buccaneers_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Tennessee Titans","v":"tennessee_titans", "img":"nfl/tennessee_titans_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Washington Redskins","v":"washington_redskins", "img":"nfl/washington_redskins_cap.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]}],
+			'app_nhl' : [{"p":"Anaheim Ducks","v":"anaheim_ducks", "img":"nhlhats/anaheim_ducks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Boston Bruins","v":"boston_bruins", "img":"nhlhats/boston_bruins_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Buffalo Sabres","v":"buffalo_sabres", "img":"nhlhats/buffalo_sabres_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Calgary Flames","v":"calgary_flames", "img":"nhlhats/calgary_flames_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Carolina Hurricanes","v":"carolina_hurricanes", "img":"nhlhats/carolina_hurricanes_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Colorado Avalanche","v":"colorado_alavanche", "img":"nhlhats/colorado_avalanche_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Columbus Blue Jackets","v":"columbus_blue_jackets", "img":"nhlhats/columbus_blue_jackets_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Dallas Stars","v":"dallas_stars", "img":"nhlhats/dallas_stars_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Detroit Red Wings","v":"detroit_red_wings", "img":"nhlhats/detroit_red_wings_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Edmonton Oilers","v":"edmonton_oilers", "img":"nhlhats/edmonton_oilers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Florida Panthers","v":"florida_panthers", "img":"nhlhats/florida_panthers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Los Angeles Kings","v":"los_angeles_kings", "img":"nhlhats/los_angeles_kings_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Minnesota Wild","v":"minnesota_wild", "img":"nhlhats/minnesota_wild_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Montreal Canadiens","v":"montreal_canadiens", "img":"nhlhats/montreal_canadiens_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Nashville Predators","v":"nashville_predators", "img":"nhlhats/nashville_predators_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New Jersey Devils","v":"new_jersey_devils", "img":"nhlhats/new_jersey_devils_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New York Islanders","v":"new_york_islanders", "img":"nhlhats/new_york_islanders_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"New York Rangers","v":"new_york_rangers", "img":"nhlhats/new_york_rangers_hat1.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Ottawa Senators","v":"ottawa_senators", "img":"nhlhats/ottawa_senators_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Philadelphia Flyers","v":"philadelphia_flyers", "img":"nhlhats/philadelphia_flyers_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Phoenix Coyotes","v":"phoenix_coyotes", "img":"nhlhats/phoenix_coyotes_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Pittsburgh Penguins","v":"pittsburgh_penguins", "img":"nhlhats/pittsburgh_penguins_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"San Jose Sharks","v":"san_jose_sharks", "img":"nhlhats/san_jose_sharks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"St. Louis Blues","v":"st_louis_blues", "img":"nhlhats/st__louis_blues_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Tampa Bay Lightning","v":"tampa_bay_lightning", "img":"nhlhats/tampa_bay_lightning_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Toronto Maple Leafs","v":"toronto_maple_leafs", "img":"nhlhats/toronto_maple_leafs_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Vancouver Canucks","v":"vancouver_canucks", "img":"nhlhats/vancouver_canucks_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Washington Capitals","v":"washington_capitals", "img":"nhlhats/washington_capitals_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]},
+						{"p":"Winnipeg Jets","v":"winnipeg_jets", "img":"nhlhats/winnipeg_jets_hat.jpg", 
+							"filters" : [
+								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
+								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+							]}],
 				},
 
 
