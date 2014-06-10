@@ -1204,9 +1204,9 @@ var store_swc = function(_app) {
 			'blackhawks' : {
 				title : "Chicago Blackhawks",
 				onEnter : function(){
-					var team = "chicago_blackhawks";
-					_app.ext.store_swc.u.setUserTeam({sport:'app_nhl',team:'chicago_blackhawks'});
-					_app.u.throwMessage(_app.u.successMsgObject('Due to your interest in the Stanley Cup, the Chicago Blackhawks have been added to your teams!  To edit your teams, <a href="#" onClick="return false;" data-app-click="store_swc|showMyTeamChooser">click here</a>.'));
+					//var team = "chicago_blackhawks";
+					//_app.ext.store_swc.u.setUserTeam({sport:'app_nhl',team:'chicago_blackhawks'});
+					_app.u.throwMessage(_app.u.successMsgObject('Would you like to change your team to the <span class="redText">Chicago Blackhawks</span>? <span class="pointer" data-app-click="store_swc|promptUserTeam" data-swc-team="chicago_blackhawks" data-swc-sport="app_nhl">Click here!</span>'));
 					},
 				noteams : true,
 				baseFilter : {
