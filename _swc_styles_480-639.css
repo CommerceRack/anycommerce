@@ -86,7 +86,8 @@
 
 #myTeamChooser .myTeamPopupContainer form h3{font-size:1em;}
 #myTeamChooser .myTeamSelectedContainer > div h3{font-size:1em;}
-#myTeamChooser .myTeamPopupContainer form{
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
 	background:white;
 	position:absolute;
 	left:50%;

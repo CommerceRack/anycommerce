@@ -52,7 +52,8 @@
 #myTeamChooser .teamlist  {width: 46%; padding: 0px 1.8%;}
 #myTeamChooser .teamlist .teamTemplate {height:85px; font-size:1em; line-height: 85px;}
 
-#myTeamChooser .myTeamPopupContainer form{
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
 	background:white;
 	position:absolute;
 	left:50%;

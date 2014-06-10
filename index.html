@@ -571,6 +571,7 @@ var _robots = {
 	</div>
 	
 	<div class="myTeamSelectedContainer" data-templateid="myTeamSelectedTemplate"></div>
+	<div class="myTeamPromptContainer" data-templateid="myTeamPromptTemplate"></div>
 </div>
 
 <div id="myTeamSelectedTemplate">
@@ -579,6 +580,11 @@ var _robots = {
 	<ul class="listStyleNone alignCenter clearfix noPadOrMargin" data-tlc="bind $links '.filters'; controller#loop --templateid='filterLink'; apply --append;"></ul>
 </div>
 
+<div id="myTeamPromptTemplate">
+	<h3><span data-tlc="bind $var '.prompt'; apply --append;"></span></h3>
+	<button class="dismiss" data-app-click="store_swc|dismissPrompt">No Thanks</button>
+	<button class="accept" data-app-click="store_swc|selectUserTeam" data-tlc="bind $team '.team'; apply --attrib='data-swc-team'; bind $sport '.sport'; apply --attrib='data-swc-sport';">OK</button>
+</div>
 
 <ul>
 	<li id="filterLink">
@@ -1368,27 +1374,34 @@ this will likely become more flexible in the future. ###
 					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=550 --h=550 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="">
 				</div>
 			</a>
-			<a data-tlc="bind $team '.%attribs.user:app_mlb';
+			<a data-tlc="
+				bind $team '.%attribs.user:app_mlb';
+				apply --attrib='data-swc-team';
 				set $sport 'app_mlb';
+				apply --attrib='data-swc-sport';
 				if(is $team --blank;){{
 					bind $team '.%attribs.user:app_nhl';
+					apply --attrib='data-swc-team';
 					set $sport 'app_nhl';
+					apply --attrib='data-swc-sport';
 					}};
 				if(is $team --blank;){{
 					bind $team '.%attribs.user:app_nba';
+					apply --attrib='data-swc-team';
 					set $sport 'app_nba';
+					apply --attrib='data-swc-sport';
 					}};
 				if(is $team --blank;){{
 					bind $team '.%attribs.user:app_nfl';
+					apply --attrib='data-swc-team';
 					set $sport 'app_nfl';
+					apply --attrib='data-swc-sport';
 					}};
-				bind $var '';
-				store_swc#morefromteamlink --team=$team --sport=$sport;
-				if(is $var --notblank;){{
-					apply --attrib='href';
-					apply --show --tag;
+				if(is $team --blank;){{
+					apply --hide --tag;
 					}};"
-				class="morefromteamlink displayNone">
+				data-app-click="store_swc|promptUserTeam"
+				class="morefromteamlink">
 				<img src="images/prodpages/more_from_this_team.png"/>
 			</a>
 		</div>

@@ -53,7 +53,8 @@
 #myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
 #myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;}
 */
-#myTeamChooser .myTeamPopupContainer form{
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
 	background:white;
 	position:absolute;
 	left:50%;
@@ -63,7 +64,8 @@
 	width:480px;
 	height: 140px;
 }
-#myTeamChooser .myTeamSelectedContainer > div{background:white;
+#myTeamChooser .myTeamSelectedContainer > div{
+	background:white;
 	position:absolute;
 	left:50%;
 	top:50%;
@@ -72,6 +74,7 @@
 	width:480px;
 	height: 290px;
 }
+
 
 .fieldCamPage{padding: 5px;}
 

@@ -329,6 +329,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 #myTeamChooser[data-swc-sport=app_nhl] .sportContainer[data-swc-sport=app_nhl]{left: 0px;}
 
 #myTeamChooser .myTeamPopupContainer,
+#myTeamChooser .myTeamPromptContainer,
 #myTeamChooser .myTeamSelectedContainer {
 	display: none;
 	position:absolute;
@@ -341,12 +342,17 @@ a.blockLink, li.blockLink {display: inline-block;}
 }
 #myTeamChooser.popup .myTeamPopupContainer {display:block;}
 #myTeamChooser.selected .myTeamSelectedContainer {display:block;}
+#myTeamChooser.prompt .myTeamPromptContainer {display:block;}
 
 #myTeamChooser .myTeamPopupContainer form .checkbox{position:absolute; bottom: 20px; left: 20px;}
 #myTeamChooser .myTeamPopupContainer form .button{position:absolute; bottom: 20px; right: 20px;}
 
+#myTeamChooser .myTeamPromptContainer .dismiss{position:absolute; bottom: 20px; left: 20px;}
+#myTeamChooser .myTeamPromptContainer .accept{position:absolute; bottom: 20px; right: 20px;}
+
 #myTeamChooser .myTeamPopupContainer form{background:white; padding: 20px;}
 #myTeamChooser .myTeamSelectedContainer > div{background:white; padding: 20px;}
+#myTeamChooser .myTeamPromptContainer > div{background:white; padding: 20px;}
 
 #myTeamChooser .myTeamSelectedContainer li{display: inline-block; padding: 12px;}
 #myTeamChooser .myTeamSelectedContainer li .title{font-weight:bold; position:absolute; bottom:0px; right:0px; left:0px;}

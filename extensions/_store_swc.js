@@ -547,6 +547,19 @@ var store_swc = function(_app) {
 					_app.u.throwMessage(_app.u.errorMsgObject("An error has occured- could not set user team to: "+team.team));
 					}
 				},
+			promptUserTeam : function(team){
+				var fullTeamObj = $.grep(_app.ext.store_swc.validTeams[team.sport], function(e, i){ return e.v == team.team})[0];
+				team.prompt = team.prompt || 'Do you want to set your team to the <span class="redText">'+fullTeamObj.p+'</span>?';
+				
+				var $promptContainer = $('#myTeamChooser .myTeamPromptContainer');
+				dump(team);
+				$promptContainer.tlc({verb:'transmogrify', dataset:team, templateid:$promptContainer.attr('data-templateid')});
+				$('.dismiss', $promptContainer).button({"text":"No Thanks"});
+				$('.accept', $promptContainer).button({"text":"OK"});
+				$('#myTeamChooser').addClass('active');
+				_app.ext.store_swc.u.lazyload($('#myTeamChooser'));
+				$('#myTeamChooser').addClass('prompt');
+				},
 			/*
 			saveUserTeams : function(){
 				$('#appView .myTeamsFilter').each(function(){
@@ -915,11 +928,24 @@ var store_swc = function(_app) {
 				var $selectedContainer = $('#myTeamChooser .myTeamSelectedContainer');
 				$selectedContainer.tlc({verb:'transmogrify', dataset:_app.ext.store_swc.vars.userTeam, templateid:$selectedContainer.attr('data-templateid')});
 				$('.closeSelectedTeamButton', $selectedContainer).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+				$('#myTeamChooser').removeClass('prompt');
 				$('#myTeamChooser').addClass('selected');
+				},
+			promptUserTeam : function($ele, p){
+				p.preventDefault();
+				var team = {
+					team : $ele.attr('data-swc-team'),
+					sport : $ele.attr('data-swc-sport')
+					};
+				_app.ext.store_swc.u.promptUserTeam(team);
 				},
 			dismissSelectedTeamMsg : function($ele, p){
 				p.preventDefault();
 				$('#myTeamChooser').removeClass('selected');
+				},
+			dismissPrompt : function($ele, p){
+				p.preventDefault();
+				$('#myTeamChooser').removeClass('prompt');
 				},
 			productAdd2Cart : function($form, p){
 				p.preventDefault();
@@ -1179,11 +1205,8 @@ var store_swc = function(_app) {
 				title : "Chicago Blackhawks",
 				onEnter : function(){
 					var team = "chicago_blackhawks";
-					if($.inArray(team, _app.ext.store_swc.vars.userTeams.app_nhl) < 0){
-						_app.ext.store_swc.vars.userTeams.app_nhl.push(team);
-						_app.ext.store_swc.u.setUserTeams('app_nhl', _app.ext.store_swc.vars.userTeams.app_nhl);
-						_app.u.throwMessage(_app.u.successMsgObject('Due to your interest in the Stanley Cup, the Chicago Blackhawks have been added to your teams!  To edit your teams, <a href="#" onClick="return false;" data-app-click="store_swc|showMyTeamChooser">click here</a>.'));
-						}
+					_app.ext.store_swc.u.setUserTeam({sport:'app_nhl',team:'chicago_blackhawks'});
+					_app.u.throwMessage(_app.u.successMsgObject('Due to your interest in the Stanley Cup, the Chicago Blackhawks have been added to your teams!  To edit your teams, <a href="#" onClick="return false;" data-app-click="store_swc|showMyTeamChooser">click here</a>.'));
 					},
 				noteams : true,
 				baseFilter : {
