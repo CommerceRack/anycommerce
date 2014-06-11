@@ -2095,11 +2095,11 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"C/chicago_blackhawks_primary_logo_t_shirt"},
+								{"id":"jerseys","img":"blackhawksshopcom/chicago_blackhawks_youth_premier_home_jersey_by_reebok"},
+								{"id":"sweatshirts","img":"blackhawks2013/chicago_blackhawks_crew3_retro_brand"},
+								{"id":"hats","img":"blackhawks2013/chicago_blackhawks_franchise_fitted_hat2"},
+								{"id":"souvenirs","img":"blackhawks2014/chicago_blackhawks_3x5_flag_v5_1000px"}
 							]},
 						{"p":"Colorado Avalanche","v":"colorado_alavanche", "img":"nhlhats/colorado_avalanche_hat.jpg", 
 							"filters" : [
