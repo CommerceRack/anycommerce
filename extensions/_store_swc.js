@@ -1839,11 +1839,11 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Chicago Bears","v":"chicago_bears", "img":"nfl/chicago_bears_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"B/chicago_bears_youth_primary_logo_t_shirt"},
+								{"id":"jerseys","img":"chicagobears2013/mike_ditka_jersey3"},
+								{"id":"sweatshirts","img":"chicago_bears/chicago_bears_navy_nike_classic_logo_po_hooded_sweatshirt"},
+								{"id":"hats","img":"chicago_bears/chicago_bears_b_on_field_performance_59fifty_fitted_hat"},
+								{"id":"souvenirs","img":"game_time/Chicago_Bears_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Cincinnati Bengals","v":"cincinnati_bengals", "img":"nfl/cincinnati_bengals_cap.jpg", 
 							"filters" : [
