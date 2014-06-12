@@ -1743,30 +1743,35 @@ var store_swc = function(_app) {
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Arizona_Cardinals_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Arizona_Cardinals_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/arizona_carinals_cap2.jpg"},
 								{"id":"souvenirs","img":"game_time/Arizona_Cardinals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Atlanta_Falcons_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Atlanta_Falcons_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/atlanta_falcons_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Atlanta_Falcons_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Baltimore_Ravens_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+								{"id":"hats","img":"nfl/baltimore_orioles_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Baltimore_Ravens_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Buffalo_Bills_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Buffalo_Bills_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/buffalo_bills_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Buffalo_Bills_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/carolina_panthers_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Carolina_Panthers_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Carolina_Panthers_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/carolina_panthers_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Carolina_Panthers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Chicago Bears","v":"chicago_bears", "img":"nfl/chicago_bears_cap.jpg", 
@@ -1781,12 +1786,14 @@ var store_swc = function(_app) {
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Cincinnati_Bengals_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Cincinnati_Bengals_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/cincinnati_bengals_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Cincinnati_Bengals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Cleveland Browns","v":"cleveland_browns", "img":"nfl/cleveland_browns_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Cleveland_Browns_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Cleveland_Browns_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/cleveland_browns_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Cleveland_Browns_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Dallas Cowboys","v":"dallas_cowboys", "img":"nfl/dallas_cowboys_cap.jpg", 
@@ -1796,71 +1803,83 @@ var store_swc = function(_app) {
 						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Denver_Broncos_Mens_All_Time_Great_V_TShrit"},
+								{"id":"hats","img":"nfl/denver_broncos_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Denver_Broncos_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Detroit Lions","v":"detroit_lions", "img":"nfl/detroit_lions_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Detroit_Lions_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Detroit_Lions_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/detroit_lions_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Detroit_Lions_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Green Bay Packers","v":"green_bay_packers", "img":"nfl/green_bay_packers_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Green_Bay_Packers_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Green_Bay_Packers_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/green_bay_packers_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Green_Bay_Packers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Houston Texans","v":"houston_texans", "img":"nfl/houston_texas_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Houston_Texans_Mens_Critical_Victory_VII_TShrit"},
+								{"id":"hats","img":"nfl/houston_texas_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Houston_Texans_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Indianapolis Colts","v":"indianapolis_colts", "img":"nfl/indianapolis_colts_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Indianapolis_Colts_Mens_Critical_Victory_VII_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Indianapolis_Colts_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/indianapolis_colts_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Indianapolis_Colts_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Jacksonville Jaguars","v":"jacksonville_jaguars", "img":"nfl/jacksonville_jaguars_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Jacksonville_Jaguars_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Jacksonville_Jaguars_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/jacksonville_jaguars_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Jacksonville_Jaguars_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Kansas City Chiefs","v":"kansas_city_chiefs", "img":"nfl/kansas_city_chiefs_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Kansas_City_Chiefs_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Kansas_City_Chiefs_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/kansas_city_chiefs_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Kansas_City_Chiefs_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Miami Dolphins","v":"miami_dolphins", "img":"nfl/miami_dolphins_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Miami_Dolphins_Mens_Inside_Line_III_TShirt"},
 								{"id":"sweatshirts","img":"2013nfl/Miami_Dolphins_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/miami_dolphins_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Miami_Dolphins_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Minnesota Vikings","v":"minnesota_vikings", "img":"nfl/minnesota_vikings_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Minnesota_Vikings_Mens_Primary_ReceIVer_IV_Long_Sleeve_TShirt"},
 								{"id":"sweatshirts","img":"2013nfl/Minnesota_Vikings_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/minnesota_vikings_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/Minnesota_Vikings_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"New England Patriots","v":"new_england_patriots", "img":"nfl/new_england_patriots_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/New_England_Patriots_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/New_England_Patriots_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/new_england_patriots_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/New_England_Patriots_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"New York Giants","v":"new_york_giants", "img":"nfl/new_york_giants_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/New_York_Giants_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/New_York_Giants_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/new_york_giants_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/New_York_Giants_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"New Orleans Saints","v":"new_orleans_saints", "img":"nfl/new_orleans_saints_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/New_Orleans_Saints_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/New_Orleans_Saints_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/new_orleans_saints_cap.jpg"},
 								{"id":"souvenirs","img":"game_time/New_Orleans_Saints_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"New York Jets","v":"new_york_jets", "img":"nfl/new_york_jets_cap.jpg", 
