@@ -1879,66 +1879,65 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Philadelphia Eagles","v":"philadelphia_eagles", "img":"nfl/philadelphia_eagles_cap2.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Philadelphia_Eagles_Mens_Heart_And_Soul_II_TShrit"},
+								{"id":"hats","img":"nfl/philadelphia_eagles_cap2.jpg"},
+								{"id":"souvenirs","img":"game_time/Philadelphia_Eagles_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Pittsburgh Steelers","v":"pittsburgh_steelers", "img":"nfl/pittsburgh_steelers_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Pittsburgh_Steelers_Mens_All_Time_Great_V_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Pittsburgh_Steelers_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/pittsburgh_steelers_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/Pittsburgh_Steelers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"San Diego Chargers","v":"san_diego_chargers", "img":"nfl/san_diego_chargers_cap2.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/San_Diego_Chargers_Mens_Critical_Victory_VII_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/San_Diego_Chargers_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/san_diego_chargers_cap2.jpg"},
+								{"id":"souvenirs","img":"game_time/San_Diego_Chargers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"San Francisco 49ers","v":"san_francisco_49ers", "img":"nfl/san_francisco_49ers_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/San_Francisco_49Ers_Mens_All_Time_Great_V_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/San_Francisco_49Ers_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/san_francisco_49ers_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/San_Francisco_49Ers_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Seattle Seahawks","v":"seattle_seahawks", "img":"nfl/seattle_seahawks_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Seattle_Seahawks_Mens_Heart_And_Soul_II_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Seattle_Seahawks_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/seattle_seahawks_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/Seattle_Seahawks_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"St. Louis Rams","v":"st_louis_rams", "img":"nfl/st_louis_rams_cap.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"hats","img":"nfl/st_louis_rams_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/St_Louis_Rams_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Tampa Bay Buccaneers","v":"tampa_bay_buccaneers", "img":"nfl/tampa_bay_buccaneers_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"shirts","img":"2013nfl/Tampa_Bay_Buccaneers_Mens_Primary_ReceIVer_IV_Long_Sleeve_TShirt"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"hats","img":"nfl/tampa_bay_buccaneers_cap.jpg"},
+								{"id":"souvenirs","img":"fanmats/Tampa_Bay_Buccaneers_Football_Rug_22x35"}
 							]},
 						{"p":"Tennessee Titans","v":"tennessee_titans", "img":"nfl/tennessee_titans_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Tennessee_Titans_Mens_All_Time_Great_V_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Tennessee_Titans_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/tennessee_titans_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/Tennessee_Titans_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Washington Redskins","v":"washington_redskins", "img":"nfl/washington_redskins_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+								{"id":"shirts","img":"2013nfl/Washington_Redskins_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"hats","img":"nfl/washington_redskins_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/Washington_Redskins_Mens_All_Pro_Series_Watch"}
 							]}],
 			'app_nhl' : [{"p":"Anaheim Ducks","v":"anaheim_ducks", "img":"nhlhats/anaheim_ducks_hat.jpg", 
 							"filters" : [
