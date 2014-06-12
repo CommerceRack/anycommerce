@@ -1743,25 +1743,25 @@ var store_swc = function(_app) {
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Arizona_Cardinals_Mens_Heart_And_Soul_II_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Arizona_Cardinals_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
-								{"id":"souvenirs","img":"W310-H310-Bffffff/game_time/Arizona_Cardinals_Mens_All_Pro_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Arizona_Cardinals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Atlanta Falcons","v":"atlanta_falcons", "img":"nfl/atlanta_falcons_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"W310-H310-Bffffff/2013nfl/Atlanta_Falcons_Mens_All_Time_Great_V_TShrit"},
-								{"id":"sweatshirts","img":"W310-H310-Bffffff/2013nfl/Atlanta_Falcons_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
-								{"id":"souvenirs","img":"W310-H310-Bffffff/game_time/Atlanta_Falcons_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Atlanta_Falcons_Mens_All_Time_Great_V_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Atlanta_Falcons_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"souvenirs","img":"game_time/Atlanta_Falcons_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Baltimore Ravens","v":"baltimore_ravens", "img":"nfl/baltimore_orioles_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"W310-H310-Bffffff/2013nfl/Baltimore_Ravens_Mens_All_Time_Great_V_TShrit"},
+								{"id":"shirts","img":"2013nfl/Baltimore_Ravens_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"souvenirs","img":"W310-H310-Bffffff/game_time/Baltimore_Ravens_Mens_All_Pro_Series_Watch"}
+								{"id":"souvenirs","img":"Wgame_time/Baltimore_Ravens_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"W310-H310-Bffffff/2013nfl/Buffalo_Bills_Mens_Heart_And_Soul_II_TShrit"},
-								{"id":"sweatshirts","img":"W310-H310-Bffffff/2013nfl/Buffalo_Bills_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
-								{"id":"souvenirs","img":"W310-H310-Bffffff/game_time/Buffalo_Bills_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Buffalo_Bills_Mens_Heart_And_Soul_II_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Buffalo_Bills_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"souvenirs","img":"game_time/Buffalo_Bills_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Carolina Panthers","v":"carolina_panthers", "img":"nfl/carolina_panthers_cap.jpg", 
 							"filters" : [
@@ -1785,7 +1785,7 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Cleveland Browns","v":"cleveland_browns", "img":"nfl/cleveland_browns_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"W310-H310-Bffffff/2013nfl/Cleveland_Browns_Mens_All_Time_Great_V_TShrit"},
+								{"id":"shirts","img":"2013nfl/Cleveland_Browns_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"2013nfl/Cleveland_Browns_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
 								{"id":"souvenirs","img":"game_time/Cleveland_Browns_Mens_All_Pro_Series_Watch"}
 							]},
@@ -1795,8 +1795,8 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"W310-H310-Bffffff/2013nfl/Denver_Broncos_Mens_All_Time_Great_V_TShrit"},
-								{"id":"souvenirs","img":"W310-H310-Bffffff/game_time/Denver_Broncos_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Denver_Broncos_Mens_All_Time_Great_V_TShrit"},
+								{"id":"souvenirs","img":"game_time/Denver_Broncos_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Detroit Lions","v":"detroit_lions", "img":"nfl/detroit_lions_cap.jpg", 
 							"filters" : [
