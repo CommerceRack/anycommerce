@@ -1865,17 +1865,17 @@ var store_swc = function(_app) {
 							]},
 						{"p":"New York Jets","v":"new_york_jets", "img":"nfl/new_york_jets_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/New_York_Jets_Mens_Heart_And_Soul_II_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/New_York_Jets_Mens_Touchback_VI_Fullzip_Hooded_Fleece"},
+								{"id":"hats","img":"nfl/new_york_jets_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/New_York_Jets_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Oakland Raiders","v":"oakland_raiders", "img":"nfl/oakland_raiders_cap.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"2013nfl/Oakland_Raiders_Mens_All_Time_Great_V_TShrit"},
+								{"id":"sweatshirts","img":"2013nfl/Oakland_Raiders_Mens_1St_And_Goal_VI_Hooded_Fleece_Pullover"},
+								{"id":"hats","img":"nfl/oakland_raiders_cap.jpg"},
+								{"id":"souvenirs","img":"game_time/Oakland_Raiders_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Philadelphia Eagles","v":"philadelphia_eagles", "img":"nfl/philadelphia_eagles_cap2.jpg", 
 							"filters" : [
