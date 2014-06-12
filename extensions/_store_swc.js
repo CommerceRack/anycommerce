@@ -1755,7 +1755,7 @@ var store_swc = function(_app) {
 							"filters" : [
 								{"id":"shirts","img":"2013nfl/Baltimore_Ravens_Mens_All_Time_Great_V_TShrit"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"souvenirs","img":"Wgame_time/Baltimore_Ravens_Mens_All_Pro_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Baltimore_Ravens_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Buffalo Bills","v":"buffalo_bills", "img":"nfl/buffalo_bills_cap.jpg", 
 							"filters" : [
@@ -1791,7 +1791,7 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Dallas Cowboys","v":"dallas_cowboys", "img":"nfl/dallas_cowboys_cap.jpg", 
 							"filters" : [
-								{"id":"W310-H310-Bffffff/game_time/Dallas_Cowboys_Mens_All_Pro_Series_Watch"}
+								{"id":"game_time/Dallas_Cowboys_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg", 
 							"filters" : [
