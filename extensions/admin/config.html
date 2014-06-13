@@ -3265,7 +3265,12 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 		<ul>
 			<li data-plugin="analytics.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
-	
+		
+		<h4>Tracking</h4>
+		<ul>
+			<li data-plugin="adwords.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google Adwords</li>
+		</ul>
+		
 		<h4>Other</h4>
 		<ul data-app-role='pluginOtherList'>
 			<!-- contents are generated dynamically in showPluginManager -->
@@ -3456,7 +3461,49 @@ The header and buttons don't get reset, so the tlc must take this into account (
 </tr>
 </table>
 
+<fieldset id="pluginTemplate_adwords.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 
+	<label class="marginBottom">
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable
+	</label>
+	
+	<label class="marginBottom">
+		<span class='prompt'>Domain</span>
+		<input name="plugin" value="adwords.google.com" type="hidden" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+		<span data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --append;}}; "></span>
+	</label>
+	<!--
+	<label>
+		<span class='prompt'>Public Key</span>
+		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40">
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Public</button>
+	</label>
+	-->
+	<label class="marginBottom">
+		<span class='prompt'>Conversion ID (google_conversion_id)</span>
+		<input name="google_conversion_id" value="" type="text" data-tlc="bind $var '.google_conversion_id'; if(is $var --notblank;) {{apply --select=$var;}}; "/>
+	</label>
+	
+	<label class="marginBottom">
+		<div>
+			<span class='prompt'>
+				Conversion Labels (google_conversion_label) <br/>
+				You may use as many conversion labels as you need to track, in a comma separated list.
+			</span>
+			<textarea name="google_conversion_label" value="" type="text" data-tlc="bind $var '.google_conversion_label'; if(is $var --notblank;) {{apply --select=$var;}}; "></textarea>
+		</div>
+		
+	</label>
+	
+	<label class="marginBottom">
+		<input data-tlc="bind $var '.dynamic_value'; if(is $var --notblank;) {{apply --select=$var;}}; " name="dynamic_value" class="applyAnycb" type="checkbox">
+		Use Order total as conversion value?
+	</label>
+	
+	
+</fieldset>
 
 <fieldset id="pluginTemplate_shipworks.com">
 	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
