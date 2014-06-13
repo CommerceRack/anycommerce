@@ -49,7 +49,7 @@ var store_tracking = function(_app) {
 						var plugins = zGlobals.plugins;
 						for(var i in plugins){
 							if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
-								_app.ext.store_tracking.trackers[i](plugins[i]);
+								_app.ext.store_tracking.trackers[i](order, plugins[i]);
 								}
 							}
 						}
@@ -62,7 +62,7 @@ var store_tracking = function(_app) {
 		}, //callbacks
 
 		trackers : {
-			"adwords.google.com" : function(plugin){
+			"adwords.google.com" : function(order, plugin){
 				var labels = plugin.google_conversion_label.split(',');
 				for(var i in labels){
 					var globals = {
@@ -72,6 +72,9 @@ var store_tracking = function(_app) {
 						google_conversion_color : "ffffff",
 						google_conversion_label : labels[i].replace(/^\s+|\s+$/g, ''), //trims label of whitespace
 						google_remarketing_only : "false",
+						}
+					if(plugin.dynamic_value){
+						globals.google_conversion_value = order.sum.order_total;
 						}
 					_app.ext.store_tracking.u.addTrackingScript("//www.googleadservices.com/pagead/conversion.js", globals);
 					}
