@@ -20,12 +20,15 @@ myApp.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 myApp.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 myApp.rq.push(['extension',0,'cart_message','extensions/cart_message/extension.js']);
 myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
+myApp.rq.push(['extension',0,'store_tracking','extensions/store_tracking.js']);
 myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram']);
 
 //myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
 //myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
 
+// 201405 - Deprecated for Universal Analytics
 //myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
 //myApp.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
 //myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
@@ -97,13 +100,14 @@ myApp.u.appInitComplete = function()	{
 		$("[data-app-role='thirdPartyContainer']",$checkout).append("<h2>What next?</h2><div class='ocm ocmFacebookComment pointer zlink marginBottom checkoutSprite  '></div><div class='ocm ocmTwitterComment pointer zlink marginBottom checkoutSprit ' ></div><div class='ocm ocmContinue pointer zlink marginBottom checkoutSprite'></div>");
 		$('.ocmTwitterComment',$checkout).click(function(){
 			window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
-			_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
+			window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','Tweeted about order');
 			});
 		//the fb code only works if an appID is set, so don't show banner if not present.				
 		if(myApp.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
 			$('.ocmFacebookComment',$checkout).click(function(){
 				myApp.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
 				_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+				window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','FB message about order');
 				});
 			}
 		else	{$('.ocmFacebookComment').hide()}
@@ -152,6 +156,9 @@ myApp.router.appendInit({
 		g = g || {};
 		if(g.uriParams.seoRequest){
 			showContent(g.uriParams.pageType, g.uriParams);
+			}
+		else if (g.uriParams.marketplace){
+			showContent("product",{"pid":g.uriParams.product});
 			}
 		else if(document.location.hash)	{	
 			myApp.u.dump('triggering handleHash');

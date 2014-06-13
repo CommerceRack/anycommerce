@@ -64,13 +64,8 @@ var order_create = function(_app) {
 
 				var r = true; //returns false if checkout can't load due to account config conflict.
 
-				if(typeof _gaq === 'undefined' && !_app.vars.thisSessionIsAdmin)	{
-//					_app.u.dump(" -> _gaq is undefined");
-					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
-					r = false;					
-					}
 //messaging for the test harness 'success'.
-				else if(_app.u.getParameterByName('_testharness'))	{
+				if(_app.u.getParameterByName('_testharness'))	{
 					$('#globalMessaging').anymessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'});
 					$('#'+_app.ext.order_create.vars.containerID).append("");
 					r = true;
@@ -1142,11 +1137,9 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							
 							} //ends the not admin/1pc if.
 		
-						if(typeof _gaq != 'undefined')	{
-							_gaq.push(['_trackEvent','Checkout','App Event','Order created']);
-							_gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
-							}
-	
+						window[_app.vars.analyticsPointer]('send','event','Checkout','App Event','Order created');
+						window[_app.vars.analyticsPointer]('send','event','Checkout','User Event','Order created ('+orderID+')');
+							
 		
 						if(_app.ext.order_create.checkoutCompletes)	{
 							var L = _app.ext.order_create.checkoutCompletes.length;
@@ -1829,9 +1822,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
 							_app.model.dispatchThis('passive');
 							}
-						if(typeof _gaq != 'undefined')	{
-							_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added']);
-							}
+						window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','Cart updated - coupon added');
 						}
 					}});
 				
@@ -1877,9 +1868,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Giftcard added','_cartid':cartid},'passive');
 							_app.model.dispatchThis('passive');
 							}
-						if(typeof _gaq != 'undefined')	{
-							_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added']);
-							}
+						window[_app.vars.analyticsPointer]('send','event','Checkout','User Event','Cart updated - giftcard added');
 						}
 					}});
 				_app.ext.order_create.u.handleCommonPanels($input.closest('form'));

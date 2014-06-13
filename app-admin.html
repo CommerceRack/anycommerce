@@ -68,7 +68,9 @@ $(document).ready(function(){
 		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 		"baseURL" : baseURL,
 		"addjQueryPointer" : true,
+		"analyticsPointer" : "ga",
 		"initComplete" : function(){
+			window[adminApp.vars.analyticsPointer] = window[adminApp.vars.analyticsPointer] || function(){};
 			adminApp.u.loadScript('app-admin-init.js',function(){
 				var progress = adminApp.u.loadResources();
 				adminApp.u.showProgress(progress);
