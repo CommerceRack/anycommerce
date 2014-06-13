@@ -3461,7 +3461,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 <fieldset id="pluginTemplate_shipworks.com">
 	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipworks.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<input name="username" value="shipworks" type="hidden">
 	<p class="hint">ShipWorks is a global setting, it is not partition specific</p>
 	<label>
@@ -3481,7 +3481,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 <fieldset id="pluginTemplate_shipstation.com">
 	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipstation.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<p class="hint">ShipStation is a global setting, it is not partition specific</p>
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
@@ -3503,7 +3503,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 <fieldset id="pluginTemplate_desktop.zoovy.com">
 	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="desktop.zoovy.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<p class="hint">Zoovy Integrate Desktop is a global setting, it is not partition specific</p>
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
