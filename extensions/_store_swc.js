@@ -2034,9 +2034,9 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Los Angeles Kings","v":"los_angeles_kings", "img":"nhlhats/los_angeles_kings_hat.jpg", 
 							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+								{"id":"shirts","img":"nhl/Los_Angeles_Kings_Tape_To_Tape_TShirt"},
+								{"id":"hats","img":"bears/los_angeles_kings_2014_stanley_cup_champions_adjustable_cap22"},
+								{"id":"souvenirs","img":"F/f0010646"}
 							]},
 						{"p":"Minnesota Wild","v":"minnesota_wild", "img":"nhlhats/minnesota_wild_hat.jpg", 
 							"filters" : [
