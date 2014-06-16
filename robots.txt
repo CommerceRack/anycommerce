@@ -1,0 +1,11 @@
+User-agent: *
+Robot-version: 2.0.0
+Crawl-delay: 2
+Request-rate: 360/1m
+
+User-agent: 008
+Disallow: /
+
+User-agent: aranhabot
+Crawl-delay: 60
+Disallow: /media/
