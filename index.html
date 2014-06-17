@@ -1192,11 +1192,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.%attribs.zoovy:prod_name'; bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
-			<meta itemprop="name" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --attrib='content';">
+			<!-- <meta itemprop="name" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --attrib='content';"> -->
+			<span class="displayNone" itemprop="name" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></span>
 			<h5 class="alignRight price" data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" itemprop="offers" itemscope itemtype="http://schema.org/Offer" >
 				<span>Our Price: </span>
 				<span data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD'; apply --append;}};" itemprop="price"></span>
-				<meta itemprop="priceCurrency" content="USD">
+				<!-- <meta itemprop="priceCurrency" content="USD"> -->
 			</h5>
 		</div>
 		<!-- 
@@ -1291,11 +1292,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.prod_name'; bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
-			<meta itemprop="name" data-tlc="bind $var '.prod_name'; apply --attrib='content';">
+			<!-- <meta itemprop="name" data-tlc="bind $var '.prod_name'; apply --attrib='content';"> -->
+			<span class="displayNone" itemprop="name" data-tlc="bind $var '.prod_name'; apply --append;"></span>
 			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" itemprop="offers" itemscope itemtype="http://schema.org/Offer" >
 				<span>Our Price: </span>
 				<span data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD'; apply --append;}};" itemprop="price"></span>
-				<meta itemprop="priceCurrency" content="USD">
+				<!-- <meta itemprop="priceCurrency" content="USD"> -->
 			</h5>
 		</div>
 	</a>
@@ -1321,11 +1323,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 		
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.prod_name'; bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
-			<meta itemprop="name" data-tlc="bind $var '.prod_name'; apply --attrib='content';">
+			<!-- <meta itemprop="name" data-tlc="bind $var '.prod_name'; apply --attrib='content';"> -->
+			<span class="displayNone" itemprop="name" data-tlc="bind $var '.prod_name'; apply --append;"></span>
 			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" itemprop="offers" itemscope itemtype="http://schema.org/Offer" >
 				<span>Our Price: </span>
 				<span data-tlc="bind $var '.base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD'; apply --append;}};" itemprop="price"></span>
-				<meta itemprop="priceCurrency" content="USD">
+				<!-- <meta itemprop="priceCurrency" content="USD"> -->
 			</h5>
 		</div>
 	</a>
@@ -1500,7 +1503,7 @@ this will likely become more flexible in the future. ###
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --blank;) {{apply --hide --tag;}};" class="prodPrice">
 				<span class="prefix">Our Price:</span>
 				<span data-tlc="bind $var '.%attribs.zoovy:base_price'; format --currency='USD'; apply --append;" itemprop="price" class="basePrice"></span>
-				<meta itemprop="priceCurrency" content="USD">
+				<!-- <meta itemprop="priceCurrency" content="USD"> -->
 			</h4>
 			<h4 class="prodMSRP">
 				<span class="prefix">MSRP: </span>
@@ -2364,9 +2367,12 @@ used on a product layout. Some product have 'children' which may represent the s
 	<li id="productReviewsTemplateDetail" class="reviewLineItem clearfix" itemprop="review" itemscope itemtype="http://schema.org/Review">
 	<ul class="prodReviewInfo">
 		<li data-tlc="bind $var '.RATING'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite" itemprop="reviewRating">
-			<meta itemprop="bestRating" content="10">
-			<meta itemprop="ratingValue" data-tlc="bind $var '.RATING'; apply --attrib='content';">
-			<meta itemprop="worstRating" content="1">
+			<!-- <meta itemprop="bestRating" content="10"> -->
+			<span class="displayNone" itemprop="bestRating">10</span>
+			<!-- <meta itemprop="ratingValue" data-tlc="bind $var '.RATING'; apply --attrib='content';"> -->
+			<span class="displayNone" itemprop="ratingValue" data-tlc="bind $var '.RATING'; apply --append;"></span>
+			<!-- <meta itemprop="worstRating" content="1"> -->
+			<span class="displayNone" itemprop="worstRating">1</span>
 		</li>
 		<li data-tlc="bind $var '.CUSTOMER_NAME'; if (is $var --notblank;) {{apply --append;}};" itemprop="author"></li>
 		<li data-tlc="bind $var '.LOCATION'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></li>
