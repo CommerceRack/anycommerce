@@ -440,6 +440,17 @@ var store_swc = function(_app) {
 				data.globals.binds[data.globals.focusBind] = team.catlink;
 				return true;
 				},
+			schemaavailability : function(data, thisTLC){
+				dump(_app.ext.store_product.u.productIsPurchaseable(data.globals.binds[data.globals.focusBind]));
+				if(_app.ext.store_product.u.productIsPurchaseable(data.globals.binds[data.globals.focusBind])){
+					data.globals.binds[data.globals.focusBind] ="http://schema.org/InStock";
+					}
+				else {
+					data.globals.binds[data.globals.focusBind] ="http://schema.org/OutOfStock";
+					}
+				dump(data.globals.binds[data.globals.focusBind]);
+				return true;
+				},
 			dump : function(data,thisTLC){
 				dump("store_swc#dump");
 				dump(data);
