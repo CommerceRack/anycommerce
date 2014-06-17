@@ -423,7 +423,7 @@ var store_swc = function(_app) {
 					"datapointer":"relatedProducts|"+data.value.pid,
 					"extension":"store_search",
 					"list":data.globals.tags[data.globals.focusTag],
-					"templateID":"productListTemplateResults"
+					"templateID":"productListTemplateRelatedResults"
 					}
 				es = _app.ext.store_search.u.buildElasticRaw(search);
 				es.size = 3;

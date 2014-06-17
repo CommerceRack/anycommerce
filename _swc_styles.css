@@ -233,8 +233,8 @@ a.blockLink, li.blockLink {display: inline-block;}
 }
 
 .productInfoSection {border-bottom: 1px solid #b3b3b3; padding-bottom: 1em;}
-.basePrice > span, .prodMSRP .prefix { display:inline-block; width: 100px; }
-.basePrice > span{ font-size:.66em; color: #333333;}
+.prodPrice .prefix, .prodMSRP .prefix { display:inline-block; width: 100px; }
+.prodPrice .prefix{ color: #333333;}
 .basePrice {color:#e24b2c; font-size: 1.5em;}
 
 .productPage .addtocartbutton{border:none;}
