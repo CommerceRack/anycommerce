@@ -130,6 +130,9 @@ _app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callbac
 								case 'checkout':
 									hash = "#!checkout/";
 									break;
+								default:
+									hash = window.location.hash;
+									break;
 								}
 							}
 						_app.ext.store_routing.u.setHash(hash);
