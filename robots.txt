@@ -1,4 +1,5 @@
 User-agent: *
+Allow: /
 Robot-version: 2.0.0
 Crawl-delay: 2
 Request-rate: 360/1m
