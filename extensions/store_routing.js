@@ -251,11 +251,17 @@ optional params:
 					window.location.href = window.location.href.split("#")[0]+hash;
 					}
 				},
+			cleanURIComponent : function(str){
+				var component = str.replace(/^\s+|\s+$/g, '');
+				//component = component.replace(' ', '-');
+				component = component.replace(/[^a-zA-Z0-9]+/g, '-');
+				return component;
+				},
 			productAnchor : function(pid, seo){
-				return "#!product/"+pid+"/"+(seo ? encodeURIComponent(seo) : '');
+				return "#!product/"+pid+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "#!category/"+path+"/"+((seo) ? encodeURIComponent(seo) : '');
+				return "#!category/"+path+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
