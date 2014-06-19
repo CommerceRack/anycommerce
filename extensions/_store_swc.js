@@ -1185,6 +1185,8 @@ var store_swc = function(_app) {
 			'100_years_of_wrigley_field' : {
 				noteams : true,
 				title : "100 Years of Wrigley Field",
+				seo_title : "100 Years of Wrigley Field",
+				seo_description : "This year marks the 100th anniversary of Wrigley Field! Satisfy all your Chicago Cubs memorabilia needs!",
 				baseFilter : {
 					"term" : {"app_promo":"wrigley100"}
 					},
