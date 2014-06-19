@@ -67,6 +67,29 @@ var jerseypreview = function(_app) {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
+	vars : {
+		paramsByPID : {
+			
+			},
+		whitelist : [
+			"974",
+			"974CB",
+			"6200-CUBA-EJ-PER",
+			"6200-CUBR-EJ-PER",
+			"6300-CUBA-EJ-PER",
+			"6300-CUBD-EJ-PER",
+			"6300-CUBR-EJ-PER",
+			"6700-CUBD-EJ-PR1",
+			"6700-CUBR-EJ-PR1",
+			"6700-PDRH-DRS-PER",
+			"blank",
+			"CHIC24",
+			"CUBS81",
+			"CUBS598CUST",
+			"CUBSCUSTWRJ",
+			"sample"
+			]
+		},
 
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
@@ -88,7 +111,7 @@ var jerseypreview = function(_app) {
 			onSuccess : function(){
 				_app.templates.productTemplate.on('complete.jerseypreview', function(event, $context, infoObj){
 					var pid = infoObj.pid;
-					if(typeof _app.ext.jerseypreview.vars.paramsByPID[pid] === 'undefined'){
+					if($.inArray(pid, _app.ext.jerseypreview.vars.whitelist) >= 0 && typeof _app.ext.jerseypreview.vars.paramsByPID[pid] === 'undefined'){
 						$.getJSON("extensions/jerseypreview/products/"+pid+".json?_="+(new Date().getTime()))
 							.done(function(data, textStatus, jqXHR){
 								_app.u.dump("Checking font face support");
@@ -251,11 +274,6 @@ var jerseypreview = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			}, //e [app Events]
-		vars : {
-			paramsByPID : {
-				
-				}
-			}
 		} //r object.
 		
 	return r;
