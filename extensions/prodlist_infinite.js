@@ -77,6 +77,7 @@ var prodlist_infinite = function(_app) {
 					$list.removeClass('loadingBG');
 					if(L == 0)	{
 						$list.append("Your query returned zero results.");
+						_app.ext.store_swc.vars.filterLoadingComplete = true;
 						}
 					else	{
 						$list.append(_app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
