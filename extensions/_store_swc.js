@@ -156,6 +156,14 @@ var store_swc = function(_app) {
 							_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
 							}
 						routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
+						
+						if(routeObj.params.dataset.titleBuilder){
+							routeObj.params.dataset.seo_title = routeObj.params.dataset.titleBuilder(routeObj.params.dataset.userTeam.p);
+							}
+							
+						if(routeObj.params.dataset.descriptionBuilder){
+							routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
+							}
 						routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
 						showContent('static',routeObj.params)
 						}
@@ -1268,6 +1276,14 @@ var store_swc = function(_app) {
 				},
 			'shirts' : {
 				title : "Shirts",
+				titleBuilder : function(teamName){
+					var str = teamName+" Shirts";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Find the best shirts of all shapes and sizes for the "+teamName;
+					return str;
+					},
 				baseFilter : {
 					"and" : [
 						{"term":{"app_department":"t_shirt"}}
@@ -1281,6 +1297,14 @@ var store_swc = function(_app) {
 				},
 			'jerseys' : {
 				title : "Jerseys",
+				titleBuilder : function(teamName){
+					var str = teamName+" Jerseys";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Find the best jerseys of all shapes and sizes for the "+teamName;
+					return str;
+					},
 				baseFilter : {
 					"and" : [
 						{"term":{"app_department":"jersey"}}
@@ -1302,6 +1326,14 @@ var store_swc = function(_app) {
 				},
 			'personalized_jerseys' : {
 				title : "Personalized Jerseys",
+				titleBuilder : function(teamName){
+					var str = teamName+" Personalized Jerseys";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Customize your own "+teamName+" jersey today!";
+					return str;
+					},
 				baseFilter : {
 					"and" : [
 						{"term":{"app_department":"jersey"}},
@@ -1323,6 +1355,14 @@ var store_swc = function(_app) {
 				},
 			'sweatshirts' : {
 				title : "Sweatshirts and Jackets",
+				titleBuilder : function(teamName){
+					var str = teamName+" Sweatshirts and Jackets";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Find the best sweatshirts and jackets of all shapes and sizes for the "+teamName;
+					return str;
+					},
 				baseFilter : {
 					"and" : [
 						{"term":{"app_department":"sweatshirt_jacket"}}
@@ -1335,6 +1375,14 @@ var store_swc = function(_app) {
 				},
 			'hats' : {
 				title : "Hats",
+				titleBuilder : function(teamName){
+					var str = teamName+" Hats";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Find the best hats of all shapes and sizes for the "+teamName;
+					return str;
+					},
 				baseFilter : {
 					"term" : {"app_department":"hat"}
 					},
@@ -1346,6 +1394,14 @@ var store_swc = function(_app) {
 				},
 			'souvenirs' : {
 				title : "Souvenirs",
+				titleBuilder : function(teamName){
+					var str = teamName+" Souvenirs";
+					return str;
+					},
+				descriptionBuilder : function(teamName){
+					var str = "Find the best souvenirs of all shapes and sizes for the "+teamName;
+					return str;
+					},
 				baseFilter : {
 					"term" : {"app_department":"souvenir"}
 					},

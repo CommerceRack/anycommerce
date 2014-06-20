@@ -89,8 +89,8 @@ var store_seo = function(_app) {
 					case "category" :
 					case "product" :
 						//Grab from the titles and descriptions on the page
-						var baseTitle = $('[data-seo-title]', $context).attr('data-seo-title');
-						desc = $('[data-seo-desc]', $context).attr('data-seo-desc');
+						baseTitle = $('[data-seo-title]', $context).attr('data-seo-title') || '';
+						desc = $('[data-seo-desc]', $context).attr('data-seo-desc') || '';
 						break;
 					case "company" :
 						break;
@@ -103,6 +103,8 @@ var store_seo = function(_app) {
 					case "search" :
 						break;
 					default :
+						baseTitle = $('[data-seo-title]', $context).attr('data-seo-title') || '';
+						desc = $('[data-seo-desc]', $context).attr('data-seo-desc') || '';
 						break;
 					}
 				if(!baseTitle){
