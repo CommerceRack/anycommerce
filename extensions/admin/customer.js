@@ -326,6 +326,7 @@ var admin_customer = function(_app) {
 					'controls' : "",
 					'buttons' : [
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
+						"<button data-text='true' data-icon-primary='ui-icon-help' class='applyButton' data-app-click='admin_customer|faqQuestionAddNewShow'>New FAQ<\/button>",
 						"<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click='admin_customer|faqTopicAddNewShow'>New Topic<\/button>"],
 					'thead' : ['Topic','Question','Priority',''],
 					'tbodyDatabind' : "var: users(@FAQS); format:processList; loadsTemplate:faqResultsRowTemplate;",
@@ -672,6 +673,7 @@ $D is returned.
 				delete sfo.password;
 				return sfo;
 				},
+
 			'adminFAQMacro' : function(sfo,$form)	{
 				sfo = sfo || {};
 //a new object, which is sanitized and returned.
@@ -680,7 +682,7 @@ $D is returned.
 					'_tag':sfo._tag,
 					'@updates':new Array()
 					};
-				newSfo['@updates'].push("FAQ-UPDATE?"+_app.u.hash2kvp(_app.u.getWhitelistedObject(sfo,['FAQ_ID','QUESTION','ANSWER','TOPIC_ID','PRIORITY','KEYWORDS'])));
+				newSfo['@updates'].push(sfo.verb+"?"+_app.u.hash2kvp(_app.u.getWhitelistedObject(sfo,['FAQ_ID','QUESTION','ANSWER','TOPIC_ID','PRIORITY','KEYWORDS'])));
 				return newSfo;
 				} //adminGiftcardMacro		
 			},
@@ -1887,7 +1889,6 @@ _app.model.dispatchThis('immutable');
 				_app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$ele.closest("[data-cid]").data('cid')});
 				}, //adminCustomerUpdateShow
 
-
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
 					var
@@ -1944,7 +1945,6 @@ _app.model.dispatchThis('immutable');
 				// do not fetch templates at this point. That's a heavy call and they may not be used.
 				_app.model.dispatchThis();
 				}, //showOrgChooser
-			
 
 			adminCustomerWalletPeekShow : function($ele,P)	{
 				P.preventDefault();
@@ -1993,7 +1993,7 @@ _app.model.dispatchThis('immutable');
 					$('#globalMessaging').anymessage({"message": "In admin_customer.e.customerEditorModalShow, data-cid not set on trigger element","gMessage":true});
 					}
 				}, //orderCustomerEdit
-			
+
 			faqTopicAddNewShow : function($ele,P)	{
 				P.preventDefault();
 				var $D = _app.ext.admin.i.dialogCreate({
@@ -2007,7 +2007,7 @@ _app.model.dispatchThis('immutable');
 				$D.anyform();
 				$("<button \/>").text('save').button().on('click',function(event){
 					event.preventDefault();
-					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE"+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
+					_app.model.addDispatchToQ({"_cmd":"adminFAQMacro","@updates":["TOPIC-CREATE?TITLE="+encodeURIComponent($("input[name='TITLE']",$D).val())],"_tag":{"datapointer":"","callback":function(rd){
 						if(_app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd});
 							}
@@ -2017,10 +2017,27 @@ _app.model.dispatchThis('immutable');
 							$D.dialog('close');
 							}
 						}}},"mutable");
+					_app.model.addDispatchToQ({"_cmd":"adminFAQList","_tag":{"datapointer":"adminFAQList"}},"mutable"); //update this in memory so that panels show appropriate content.
 					_app.model.dispatchThis("mutable");
+					
 					}).appendTo($('form',$D));
 				$D.dialog('option','width',250);
 				$D.dialog('open');
+				},
+			
+			faqQuestionAddNewShow : function($ele,P)	{
+				P.preventDefault();
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Create a new FAQ",
+					'templateID' : 'faqAddUpdateTemplate',
+					showLoading : false,
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$('form',$D).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='verb' value='FAQ-CREATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been created.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$D.dialog('open');
+				$D.tlc({'verb':'translate','dataset':_app.data['adminFAQList']});
+				
 				},
 			
 			faqQuestionDeleteConfirm : function($ele,P)	{
@@ -2046,7 +2063,6 @@ _app.model.dispatchThis('immutable');
 					});
 				},
 
-
 			faqQuestionUpdateShow : function($ele,P)	{
 				var faqid = $ele.closest('tr').data('faq_id');
 				var $panel = _app.ext.admin.i.DMIPanelOpen($ele,{
@@ -2057,7 +2073,7 @@ _app.model.dispatchThis('immutable');
 					'data' : {}
 					});
 				$panel.tlc({'verb':'translate','dataset':$.extend({},_app.ext.admin.u.getValueByKeyFromArray(_app.data['adminFAQList']['@FAQS'],'FAQ_ID',faqid),{'@TOPICS':_app.data['adminFAQList']['@TOPICS']})});
-				$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
+				$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_customer|adminFAQMacro' /><input type='hidden' name='verb' value='FAQ-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The faq has been updated.' /><input type='hidden' name='_tag/updateDMIList' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' />");
 				_app.u.handleCommonPlugins($panel);
 				_app.u.handleButtons($panel);
 				$panel.anyform({'trackEdits':true});

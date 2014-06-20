@@ -37,6 +37,8 @@ span.wait	{display:inline-block;}
 /* global styles - added for cross-browser uniformity or usability */
 
 img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+a:focus { outline: none; } /* disable the outline around links. it's unattactive */
+a.blockLink	{text-decoration:none; cursor:pointer;} /* used for #! anchors. IE needs the cursor defined or it shows as an arrow instead of a hand. */
 
 button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
 /* for small buttons */
@@ -61,7 +63,7 @@ h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
 /* some optional form styling
 <label><span class='prompt'>prompt</span><input class='alignInput'></label> w/ alignedForm class around it on form, fieldset, whatever 
  */
-.alignedForm label	{display:block; clear:both; margin-bottom:.2em; vertical-align:top;}
+.alignedForm label	{display:block; clear:both; margin:0 0 .2em 0; padding:0; vertical-align:top;} /* remove padding/margin to ensure cross-browser consistency */
 .alignedForm label:after {
     content: ".";
     display: block;
@@ -70,7 +72,7 @@ h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
     visibility: hidden;
 	}
 .alignedForm .prompt	{text-align:right; float:left; width:35%; display:block; margin-right:2%;}
-.alignedForm .alignInput	{width:60%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
+.alignedForm .alignInput	{width:55%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {

@@ -443,6 +443,7 @@ do NOT change the input name or id or checkout will likely break.
 	<button class="applyButton" data-text="false" data-icon-primary="ui-icon-print" data-app-click="order_create|execInvoicePrint">Print Invoice</button>
 	</div>
 	
+	<h2 data-tlc="bind $var '.order.our.orderid'; if (is $var --notblank;) {{apply --append;}};"></h2>
 	<h3 data-tlc="bind $var '.order.data.pool'; if (is $var --notblank;) {{format --prepend='Order Status: '; apply --append;}};"></h3>
 	
 		</td>
@@ -552,7 +553,7 @@ If this gets recycled, test in order history after making changes.
 	
 <div class="infoContainer">
 
-	<h3 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h3>
+	<b data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></b>
 	<div data-tlc="bind $var '.sku'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --add --class='stid'; apply --append;}};" class="ztable_row_small stid"></div>
 	
 	<div>

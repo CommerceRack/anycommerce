@@ -318,15 +318,15 @@ left them be to provide guidance later.
 					}
 				}
 			},
-
+//  TODO - deprecate google checkout
 		proceedToGoogleCheckout : {
 			onSuccess : function(tagObj)	{
 				_app.u.dump('BEGIN cco.callbacks.proceedToGoogleCheckout.onSuccess');
 //code for tracking the google wallet payment in GA as a conversion.
-				// _gaq.push(function() {
-					// var pageTracker = _gaq._getAsyncTracker();
-					// setUrchinInputCode(pageTracker);
-					// });
+				//_gaq.push(function() {
+				//	var pageTracker = _gaq._getAsyncTracker();
+				//	setUrchinInputCode(pageTracker);
+				//	});
 //getUrchinFieldValue is defined in the ga_post.js file. It's included as part of the google analytics plugin.
 				document.location= _app.data[tagObj.datapointer].URL +"&analyticsdata="+getUrchinFieldValue();
 				},
@@ -551,11 +551,13 @@ left them be to provide guidance later.
 				var r = false;
 				if(!$.isEmptyObject(cartObj))	{
 					var items = cartObj['@ITEMS'] || [], L = items.length;
+					//generally, we want to direct traffic to the non-secure domain first. That option will also be better for a native app which has no document.domain
+					var domain = (_app.vars.domain) ? 'http://'+_app.vars.domain : document.location.protocol+'//'+document.domain
 					if(L)	{r = ''}; //set to blank so += doesn't start with undefined. 
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
 						if(items[i].sku.charAt(0) != '%')	{
-							r +=  (_app.vars._clientid == '1pc') ? "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n" : "http://"+_app.vars.sdomain+"#!product/"+items[i].sku+"/\n";
+							r +=  (_app.vars._clientid == '1pc') ? domain+"/product/"+items[i].sku+"/\n" : domain+"#!product/"+items[i].sku+"/\n";
 							}
 						}
 					}
@@ -1208,22 +1210,19 @@ in a reorder, that data needs to be converted to the variations format required 
 				},
 
 			paypalecbutton : function($tag,data)	{
-	
 				if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
 					var payObj = _app.ext.cco.u.which3PCAreAvailable(data.value);
 					if(payObj.paypalec)	{
 						$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
-//***201402 Must pass cartid parameter on the call itself -mc
-							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1, '_cartid':_app.model.fetchCartID()},{'callback':function(rd){
-								$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
+							$(document.body).showLoading({'message':'Obtaining secure PayPal URL for transfer...'});
+							_app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1, '_cartid':_app.model.fetchCartID(),'useMobile':($(document.body).width() < 500 ? 1 : 0)},{'callback':function(rd){
+								$(document.body).hideLoading();
 								if(_app.model.responseHasErrors(rd)){
-									$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									if(_app.data[rd.datapointer] && _app.data[rd.datapointer].URL)	{
-										$('.ui-loading-message','#loading-indicator-paypalShowLoading').text("Transferring you to PayPal to authorize payment. See you soon!");
-										document.location = _app.data[rd.datapointer].URL;
+										document.location = _app.data[rd.datapointer].URL+'&useraction=commit'; //commit returns user to website for order confirmation. otherwise they stay on paypal.
 										}
 									else	{
 										$('#globalMessaging').anymessage({"message":"In paypalecbutton render format, dispatch to obtain paypal URL was successful, but no URL in the response.","gMessage":true});

@@ -18,8 +18,25 @@
 
 
 <script type="text/javascript">
-var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole, baseURL;
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+// Replace the UA number below with the UA property to send tracking info to.
+ga('create', 'UA-XXXX-Y', 'auto');
+ga('require','linker');
+ga('require','ecommerce', 'ecommerce.js');
+ga('set', {
+	// Replace name below
+	'appName' : 'MyAppName',
+	'appID' : 'ZMVC',
+	'appVersion' : '201405'
+	});
+ga('send','pageview');
+ga('send','screenview');
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
@@ -55,26 +72,30 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script type="text/javascript">
 $(document).ready(function(){
-
-	window.myApp = new initApp({
-		"release":"201403.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
-		"baseURL":baseURL, //used in non-local mode.
-		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
-		"addjQueryPointer" : true,
-		"initComplete" : function(){
-			dump(" -> init is complete");
-			myApp.u.loadScript('app-quickstart-init.js',function(){
-				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-				myApp.u.showProgress(progress);
-				});
-			$('#appversion').text(myApp.vars.release);
-			}
-		});
-	myApp.vars.initComplete();
-	myCreole = new Parse.Simple.Creole();
+	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
+	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
+		window.myApp = new initApp({
+			"release":"201405.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
+			"baseURL":baseURL, //used in non-local mode.
+			"checkoutAuthMode" : "active",//can be passive, active or required
+			"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+			"addjQueryPointer" : true,
+			"analyticsPointer" : "ga",
+			"initComplete" : function(){
+				dump(" -> init is complete");
+				myApp.u.loadScript('app-quickstart-init.js',function(){
+					var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+					myApp.u.showProgress(progress);
+					});
+				$('#appversion').text(myApp.vars.release);
+				}
+			});
+		myApp.vars.initComplete();
+		myCreole = new Parse.Simple.Creole();
+		}
 	});
+
 </script>
 
 
@@ -314,7 +335,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!--
 Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
 the loadingBG class is removed (must be that classname) when the template is translated.
-remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
+remember to NOT put the button inside the href or two events will occur onclick.
 -->
 <li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
 
@@ -408,7 +429,7 @@ container ul should have lineItemProdlist class on it instead of productList
 <!--
 Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
 the loadingBG class is removed (must be that classname) when the template is translated.
-remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
+remember to NOT put the button inside the 'href' container or two events will occur onclick.
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
@@ -872,11 +893,7 @@ newsletterArticle is intended for buyers who are not logged in or do not have an
 			<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit" class='alignedForm'>
 				<fieldset class="userInfo borderNone">
 					<label>
-					<input placeholder="email address" maxlength="50" size="30" required name="login" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
-					</label>
-				
-					<label>
-					<input placeholder="full name" maxlength="50" size="30" required name="fullname" value="" type="text" data-tlc="bind $var '.bill.fullname'; if(is $var --notblank;) {{apply --select=$var;}};">
+					<input placeholder="email address" maxlength="50" size="30" required name="email" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
 					</label>
 				</fieldset>
 				
@@ -1119,7 +1136,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	<div class="cartZipCodeContainer marginBottom">
 		<label>Zip/Postal Code:
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-keypress="quickstart|triggerBlurOnEnter" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
 	</div>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
@@ -1134,7 +1151,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		</div>
 		<div class="ui-state-default cartButtons stdPadding clearfix">
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogClose">Continue Shopping</button></span>
+			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogCloseExec">Continue Shopping</button></span>
 	
 			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
 				<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
@@ -1397,7 +1414,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<button data-app-click="quickstart|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
 		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
 		</div>
-	
+		<h2 data-tlc="bind $var '.order.our.orderid'; if (is $var --notblank;) {{apply --append;}};"></h2>
 		<h3 data-tlc="bind $var '.order.flow.pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
 		<h5 data-tlc="bind $var '.order.sum.order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
 		<h5 data-tlc="bind $var '.order.sum.balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>

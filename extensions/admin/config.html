@@ -456,7 +456,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 <tr id='couponsResultsRowTemplate'>
 	<td data-bind="var:coupon(disabled); format:isDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(coupon); format:text;"></td>
-	<td data-bind="var:coupon(title); format:text;"></td>
+	<td data-bind="var:coupon(title); format:trunctext; numCharacters:75;"></td>
 	<td class='alignCenter'><span data-bind="var:coupon(auto); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
 	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
 	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;" class='hideInDetailMode'></td>
@@ -2582,25 +2582,25 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" name="cc_type_visa" data-bind='var: payment(cc_type_visa); format:popVal;'></td>
+		<td><input type="checkbox" name="cc_type_visa" class='applyAnycb' data-bind='var: payment(cc_type_visa); format:popVal;'></td>
 		<td>Visa</td>
 		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal; hideZero:false;' /></td>
 		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" name="cc_type_mc" data-bind='var: payment(cc_type_mc); format:popVal;'></td>
+		<td><input type="checkbox" name="cc_type_mc" class='applyAnycb'  data-bind='var: payment(cc_type_mc); format:popVal;'></td>
 		<td>Mastercard</td>
 		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal; hideZero:false;' /></td>
 		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" name="cc_type_amex" data-bind='var: payment(cc_type_amex); format:popVal;'></td>
+		<td><input type="checkbox" name="cc_type_amex" class='applyAnycb'  data-bind='var: payment(cc_type_amex); format:popVal;'></td>
 		<td>American Express</td>
 		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal; hideZero:false;' /></td>
 		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal; hideZero:false;' /></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" name="cc_type_novus" data-bind='var: payment(cc_type_novus); format:popVal;'></td>
+		<td><input type="checkbox" name="cc_type_novus" class='applyAnycb'  data-bind='var: payment(cc_type_novus); format:popVal;'></td>
 		<td>Discover/Novus</td>
 		<td class='alignRight'>$<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal; hideZero:false;' /></td>
 		<td class='alignRight'>%<input type='number' class='smallInput' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal; hideZero:false;' /></td>
@@ -2870,7 +2870,9 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 <tr id='taxConfigRuleRowTemplate'>
 	<td data-bind="var:taxes(group); format:text;"></td>
 	<td data-bind="var:taxes(rate); format:text; posttext:%;"></td>
-	<td data-bind="var:taxes(enable); format:text;"></td>
+	<td>
+	<input type='checkbox' data-bind="var: product(enable); format:popVal;"  name="enable" class="applyAnycb" />
+	</td>
 	<td data-bind="var:taxes(zone); format:text;"></td>
 	<td data-bind="var:taxes(match); format:text;"></td>
 	<td data-bind="var:taxes(type); format:text;"></td>
@@ -3228,11 +3230,15 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	
 
 	<section class="slimLeftNav" data-app-role="slimLeftNav">
+		<h4>General</h4>
+		<ul>
+			<li data-app-click="admin_config|pluginAddShow" class="lookLikeLink">Add Plugin</li>
+		</ul>
 		
 		<h4>Authentication</h4>
 		<ul>
-			<li data-plugin="auth_facebook" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
-			<li data-plugin="auth_google" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
+			<li data-plugin="auth.facebook.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Facebook</li>
+			<li data-plugin="auth.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
 <!--	
 		<h4>Cloud Services</h4>
@@ -3241,44 +3247,49 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 -->		
 		<h4>Communication</h4>
 		<ul>
-			<li data-plugin="esp_awsses" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
-			<li data-plugin="platform_android" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
-			<li data-plugin="platform_appleios" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
+			<li data-plugin="ses.aws.amazon.com" data-app-click="admin_config|pluginUpdateShow" title="Amazon Simple Email Services" class="lookLikeLink">Amazon SES</li>
+			<li data-plugin="android.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Android</li>
+			<li data-plugin="ios.apple.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Apple/iOS</li>
 		</ul>
 
 
 		<h4>Shipping</h4>
 		<ul>
-			<li data-plugin="shipstation.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
-			<li data-plugin="shipworks.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
-			<li data-plugin="desktop.zoovy.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
+			<li data-plugin="shipstation.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipStation</li>
+			<li data-plugin="shipworks.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">ShipWorks</li>
+			<li data-plugin="desktop.zoovy.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Zoovy Desktop</li>
 		</ul>
 
-<!--	
+	
 		<h4>Analytics</h4>
 		<ul>
-			<li data-plugin="analytics.google.com" data-plugin-isglobal="true" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
-		</ul>
-	
-		<h4>Native Platforms</h4>
-		<ul>
-			<li>Coming soon</li>
+			<li data-plugin="analytics.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google</li>
 		</ul>
 		
-		<h4>Payments</h4>
+		<h4>Tracking</h4>
 		<ul>
-			<li>Coming soon</li>
+			<li data-plugin="adwords.google.com" data-app-click="admin_config|pluginUpdateShow" class="lookLikeLink">Google Adwords</li>
 		</ul>
--->
+		
+		<h4>Other</h4>
+		<ul data-app-role='pluginOtherList'>
+			<!-- contents are generated dynamically in showPluginManager -->
+		</ul>
 	</section>
 
+<!--
+SANITY -> as you move from plugin to plugin, only the info within slimLeftContainer is emptied and re-rendered. 
+The header and buttons don't get reset, so the tlc must take this into account (hence the empty or hide at the beginning of the statements
+-->
 	<section class="slimLeftContentSection ui-widget" data-app-role="slimLeftContentSection">
 		<form onsubmit="return false">
 		<div class="ui-widget-header ui-corner-top">
-			<h3 class="heading">Edit:</h3>
+			<h3 class="heading" data-tlc="apply --empty; bind $var '.plugin'; apply --append;">Edit: </h3>
 		</div>
 		<div class="ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder">
 			<div class="buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone">
+				
+				<button data-app-click="admin_config|pluginHostChooserShow" class="applyButton displayNone" data-tlc="apply --hide; bind $var '.scope'; if(is $var --eq='HOST';) {{apply --show;}};">Enable Hosts</button>
 				<button data-app-click="admin_config|pluginUpdateExec" disabled="disabled" data-app-role="saveButton" class="applyButton">Save <span class="numChanges"></span> Changes</button>
 			</div>
 		
@@ -3291,8 +3302,78 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </div>
 
 
-<fieldset id="pluginTemplate_esp_awsses">
-	<input name="plugin" value="esp_awsses" type="hidden">
+<fieldset id='pluginTemplate_generic'>
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<button data-app-click='admin_support|showHelpDocInDialog' data-title='Plugin_Integrations' class='applyButton floatRight' data-text='true' data-icon-primary='ui-icon-key'>Help</button>
+
+
+	<label>
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable
+	</label>
+	
+	<label>
+		<span class='prompt'>Domain</span>
+		<input name="plugin" value="" type="text" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+	</label>
+	
+	<label>
+		<span class='prompt'>Secret Key</span>
+		<input data-tlc="bind $var '.~private'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~private" type="text" />
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="~private">Generate Secret</button>
+	</label>
+
+	<label>
+		<span class='prompt'>Public Key</span>
+		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40">
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Public</button>
+	</label>
+		
+	<label>
+		<span class='prompt'>Allowed Roles</span>
+		<input name="~roles" value="" type="text" data-tlc="bind $var '.~roles'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+	</label>
+
+<div>
+	<h4>Roles</h4>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Title</th><th>ID</th>
+	</tr>
+	</thead>
+	<tbody>
+		<tr><td>Supervisor</td><td>SUPER</td></tr>
+		<tr><td>App/Web Developer</td><td>AD1</td></tr>
+		<tr><td>Owner/Operator</td><td>BOSS</td></tr>
+		<tr><td>Customer Service: Call Center</td><td>CC1</td></tr>
+		<tr><td>Customer Service: Trusted</td><td>CS1</td></tr>
+		<tr><td>Retail Lead</td><td>RL1</td></tr>
+		<tr><td>Retail Operator</td><td>RO1</td></tr>
+		<tr><td>Vendor/Contractor (Read Only)</td><td>TS1</td></tr>
+		<tr><td>Warehouse Inventory</td><td>WI1</td></tr>
+		<tr><td>Warehouse Returns</td><td>WR1</td></tr>
+		<tr><td>Warehouse Shipper</td><td>WS1</td></tr>
+		<tr><td>Catalog Manager</td><td>XXX</td></tr>
+		<tr><td>Marketplace Manager</td><td>XYZ</td></tr>
+	</tbody>
+	</table>
+</div>
+
+
+</fieldset>
+
+
+
+
+
+
+
+
+
+<fieldset id="pluginTemplate_ses.aws.amazon.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="ses.aws.amazon.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3339,25 +3420,95 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 
 
 
-<fieldset id="pluginTemplate_analytics.google.com">
+<fieldset id="pluginTemplate_analytics.google.com" data-plugin-scope='HOST'>
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="analytics.google.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<!--
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable Google Analytics
 	</label>
+	-->
 	
-	<label>
-		<span class='prompt'>Tracking ID</span>
-		<input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text">
-	</label>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Host</th>
+		<th>Enable</th>
+		<th>Tracking #</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-tlc="bind $var '.@hosts'; controller#loop --templateid='pluginHostTemplate_analytics.google.com'; apply --append;" data-app-role='pluginHostsList'></tbody>
+	</table>
+
 	<p class='hint'>The google tracking id will start with UA- followed by a series of numbers. ex: UA-12345678-1</p>
 </fieldset>
 
 
+<table>
+<tr id='pluginHostTemplate_analytics.google.com'>
+	<td data-tlc="bind $var '.host'; apply --append;"></td>
+	<td>
+	<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox" />
+	<input data-tlc="bind $var '.host'; if(is $var --notblank;) {{apply --select=$var;}}; " name="host" type="hidden" />
+	<input data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; " name="plugin" type="hidden" />
+	</td>
+	<td><input data-tlc="bind $var '.trackingid'; if(is $var --notblank;) {{apply --select=$var;}}; " size='20' name="trackingid" type="text" /></td>
+	<td>
+		<button data-icon-primary='ui-icon-circle-close' data-app-click="admin|tagRow4Remove" class='applyButton' data-text='true' >Delete Settings</button>
+	</td>
+</tr>
+</table>
+
+<fieldset id="pluginTemplate_adwords.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+
+	<label class="marginBottom">
+		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
+		Enable
+	</label>
+	
+	<label class="marginBottom">
+		<span class='prompt'>Domain</span>
+		<input name="plugin" value="adwords.google.com" type="hidden" data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --select=$var;}}; ">
+		<span data-tlc="bind $var '.plugin'; if(is $var --notblank;) {{apply --append;}}; "></span>
+	</label>
+	<!--
+	<label>
+		<span class='prompt'>Public Key</span>
+		<input name="public" value="" type="text" data-tlc="bind $var '.public'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40">
+		<button class="applyButton smallButton" data-app-click="admin_config|buildGUID" data-input-name="public">Generate Public</button>
+	</label>
+	-->
+	<label class="marginBottom">
+		<span class='prompt'>Conversion ID (google_conversion_id)</span>
+		<input name="google_conversion_id" value="" type="text" data-tlc="bind $var '.google_conversion_id'; if(is $var --notblank;) {{apply --select=$var;}}; "/>
+	</label>
+	
+	<label class="marginBottom">
+		<div>
+			<span class='prompt'>
+				Conversion Labels (google_conversion_label) <br/>
+				You may use as many conversion labels as you need to track, in a comma separated list.
+			</span>
+			<textarea name="google_conversion_label" value="" type="text" data-tlc="bind $var '.google_conversion_label'; if(is $var --notblank;) {{apply --select=$var;}}; "></textarea>
+		</div>
+		
+	</label>
+	
+	<label class="marginBottom">
+		<input data-tlc="bind $var '.dynamic_value'; if(is $var --notblank;) {{apply --select=$var;}}; " name="dynamic_value" class="applyAnycb" type="checkbox">
+		Use Order total as conversion value?
+	</label>
+	
+	
+</fieldset>
+
 <fieldset id="pluginTemplate_shipworks.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipworks.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<input name="username" value="shipworks" type="hidden">
 	<p class="hint">ShipWorks is a global setting, it is not partition specific</p>
 	<label>
@@ -3375,8 +3526,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="shipstation.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<p class="hint">ShipStation is a global setting, it is not partition specific</p>
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
@@ -3396,8 +3548,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </fieldset>
 
 <fieldset id="pluginTemplate_desktop.zoovy.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
 	<input name="plugin" value="desktop.zoovy.com" type="hidden">
-	<input name="global" value="1" type="hidden">
+	<input name="scope" value="GLOBAL" type="hidden">
 	<p class="hint">Zoovy Integrate Desktop is a global setting, it is not partition specific</p>
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
@@ -3418,8 +3571,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </fieldset>
 
 
-<fieldset id="pluginTemplate_auth_google">
-	<input name="plugin" value="auth_google" type="hidden">
+<fieldset id="pluginTemplate_auth.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="auth.google.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3437,8 +3591,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 	
 </fieldset>
 
-<fieldset id="pluginTemplate_auth_facebook">
-	<input name="plugin" value="auth_facebook" type="hidden">
+<fieldset id="pluginTemplate_auth.facebook.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="auth.facebook.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3457,10 +3612,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </fieldset>
 
 
-
-
-<fieldset id="pluginTemplate_platform_android">
-	<input name="plugin" value="platform_android" type="hidden">
+<fieldset id="pluginTemplate_android.google.com">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="android.google.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable
@@ -3479,8 +3633,9 @@ when adding a new plugin, make sure any private fields are saved with a ~ in fro
 </fieldset>
 
 
-<fieldset id="pluginTemplate_platform_appleios" class="alignedInputs alignedLabels">
-	<input name="plugin" value="platform_appleios" type="hidden">
+<fieldset id="pluginTemplate_ios.apple.com" class="alignedInputs alignedLabels">
+	<h6 data-tlc="bind $var '.scope'; format --prepend='Scope: '; apply --append;"></h6>
+	<input name="plugin" value="ios.apple.com" type="hidden">
 	<label>
 		<input data-tlc="bind $var '.enable'; if(is $var --notblank;) {{apply --select=$var;}}; " name="enable" class="applyAnycb" type="checkbox">
 		Enable

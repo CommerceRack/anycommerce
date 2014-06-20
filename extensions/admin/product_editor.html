@@ -632,6 +632,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 -->
 	<form action='#' onSubmit='return false'>
 	
+	<!-- this will appear for product with no inventory-able variations -->
 	<div class='marginBottom displayNone' data-app-role='pidSchedulesContainer'>
 	<table class='gridTable'>
 	<thead>
@@ -647,15 +648,25 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 	</table>
 	</div>	
 	
+	<!-- this will appear for product with inventory-able variations -->
 	<div class='marginBottom displayNone' data-app-role='skuSchedulesContainer'>
-	<table class='gridTable' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
-	<thead>
-	<tr>
-		<th>Schedule</th>
-		<th>Price</th>
-	</tr>
-	</thead>
-	</table>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='skuSchedulesTbodyTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+	
+			<table class='gridTable' data-skufinder-role='target' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
+			<thead>
+			<tr>
+				<th>Schedule</th>
+				<th>Price</th>
+			</tr>
+			</thead>
+			</table>
+		</div>
+	
 	</div>
 	
 	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
@@ -713,29 +724,37 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 		
 		<fieldset>
 			<legend>Sku Specifics</legend>
-	
-			<table class='fullWidth gridTable'>
-			<colgroup>
-				<col span='2' data-app-role='properties' />
-				<col data-app-role='assembly' />
-				<col span='7' data-app-role='attributes' />
-			</colgroup>
-			<thead>
-			<tr>
-				<th>SKU</th>
-				<th>Desc</th>
-				<th class='width20'>Assembly</th>
-				<th class='width20'>Mfg ID</th>
-				<th class='width20'>UPC</th>
-				<th class='width20'>ASIN</th>
-<!--				<th>Condition</th>-->
-				<th>Price</th>
-				<th title="Base Cost - your cost for the sku">Cost</th>
-				<th>Weight</th>
-			</tr>
-			</thead>
-			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
-			</table>
+
+			<div data-skufinder-role='container' data-skufinder-templateid='skuTableRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+
+
+				<table class='fullWidth gridTable'>
+				<colgroup>
+					<col span='2' data-app-role='properties' />
+					<col data-app-role='assembly' />
+					<col span='7' data-app-role='attributes' />
+				</colgroup>
+				<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Desc</th>
+					<th class='width20'>Assembly</th>
+					<th class='width20'>Mfg ID</th>
+					<th class='width20'>UPC</th>
+					<th class='width20'>ASIN</th>
+			<!--				<th>Condition</th>-->
+					<th>Price</th>
+					<th title="Base Cost - your cost for the sku">Cost</th>
+					<th>Weight</th>
+				</tr>
+				</thead>
+				<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+				</table>
+			</div>
 		</fieldset>
 	</div>
 
@@ -938,16 +957,23 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 	
 	<fieldset class='marginBottom' data-app-role='buySkus'>
-	
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>SKU</th>
-		<th>Buy.com SKU/UPC</th>
-	</tr>
-	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;'></tbody>
-	</table>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='buycomSkuRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+		
+			<table class='gridTable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Buy.com SKU/UPC</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
 	</fieldset>
 	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
 		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
@@ -1031,7 +1057,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 						<label>
 							<span>Duration</span>
 							<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
-								<option value="">-- use profile --</option>
+								<option value="">-- not set --</option>
 								<option value="3">3 Day</option>
 								<option value="5">5 Day</option>
 								<option value="7">7 Day</option>
@@ -1124,7 +1150,7 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
 				<span>Duration</span>
 				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;" data-validation-rules='skipIfHidden'>
-					<option value="">-- use profile --</option>
+					<option value="">-- not set --</option>
 					<option value="3">3 Day</option>
 					<option value="5">5 Day</option>
 					<option value="7">7 Day</option>
@@ -1193,20 +1219,28 @@ Once an inventory-able option is enabled for a product, qty pricing is NO LONGER
 
 	
 	<div data-app-role='competitionSkuInputs'>
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>SKU</th>
-		<th>Floor Price</th>
-		<th>Ceiling Price</th>
-		<th>Standard</th>
-		<th>Expedited</th>
-		<th>Second Day</th>
-		<th>Next Day</th>
-	</tr>
-	</thead>
-	<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody'></tbody>
-	</table>
+		<div data-skufinder-role='container' data-skufinder-templateid='competitionSkuRowTemplate' class='marginBottom'>
+			
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+			
+			<table class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Floor Price</th>
+				<th>Ceiling Price</th>
+				<th>Standard</th>
+				<th>Expedited</th>
+				<th>Second Day</th>
+				<th>Next Day</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
 	</div>
 <!--
 ### TODO ###
@@ -2499,23 +2533,26 @@ Snacks|Doughnuts<br />
 	<td class='threeColumn valignTop'>
 	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group.
 	databind on tbody added w/ js later so that it isn't translated prematurely (wrong data was getting set) -->
-
-	<table data-app-role='storeVariationsOptionsContainer' class='displayNone gridTable'>
-	<thead>
-	<tr>
-		<th></th>
-		<th></th>
-		<th>Prompt</th>
-		<th>Price</th>
-		<th>Weight</th>
-		<th>Assembly</th>
-		<th>ID/Value</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
-	</table>
-
+	<div data-tablefilter-role='container'>
+		<div>
+		<input name='tableSearchQuery' type='search' placeholder='filter options' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" data-app-role='productOptionsFilterInput' class='displayNone' />
+		</div>
+		<table data-app-role='storeVariationsOptionsContainer' class='displayNone gridTable' data-tablefilter-role='table'>
+		<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Prompt</th>
+			<th>Price</th>
+			<th>Weight</th>
+			<th>Assembly</th>
+			<th>ID/Value</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
+		</table>
+	</div>
 
 		<div class='buttonset alignRight'>
 			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodedit|variationOptionAddShow'>Add New Option</button>
@@ -2552,15 +2589,14 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
 	</label>
 	-->
-	<p class='invOnly hint'>
-	For inventory-able variations, price is set per product.
-	</p>
-	<label class='displayNone nonInvOnly showForZoovyOnly'>
+	<label class='showForZoovyOnly'>
 		<span>Price modifier</span>
 		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />
-		<span class='toolTip' title='This is a price for display purposes only. Actual price is configured in the product.'>(for display)</span>
 	</label>
-	
+	<div class='hint marginBottom'>
+		<div class='nonInvOnly'>Non-inventoriable price modifier will be applied to sku base price.</div>
+		<div class='invOnly'>Inventoriable price modifiers are display ONLY - and are ignored for price calculations. Please set SKU level pricing for inventoriable variations.</div>
+	</div>
 	<label class='displayNone nonInvOnly'>
 		<span>Assembly</span>
 		<input type="text" name="asm" value="" data-bind="var: variation(asm); format:popVal;" class='skipTrack' />
@@ -2589,11 +2625,11 @@ skipTrack is on the elements so that when this is used in the data-table in the 
 <tr id='optionsEditorRowTemplate' class='pointer'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
 	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
-	<td data-bind="var:option(prompt); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(prompt); format:text;"></td>
 	<td data-bind="var:option(p); format:text;"></td>
 	<td data-bind="var:option(w); format:text;"></td>
-	<td data-bind="var:option(asm); format:text;"></td>
-	<td data-bind="var:option(v); format:text; hideZero:false;"></td>
+	<td class='isSearchable' data-bind="var:option(asm); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(v); format:text; hideZero:false;"></td>
 	<td class='alignRight'>
 	<div data-app-click='admin_prodedit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
 	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-circle-close' data-text='false'>Delete</button>

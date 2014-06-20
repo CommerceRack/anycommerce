@@ -62,7 +62,7 @@ var store_product = function(_app) {
 					this.dispatch(pid,tagObj,Q)
 					}
 //if the product record is in memory BUT the inventory is zero, go get updated record in case it's back in stock.
-				else if(_app.ext.store_product.u.getProductInventory(pid) === 0)	{
+				else if(_app.ext.store_product.u.getProductInventory(_app.data[tagObj.datapointer]) === 0)	{
 					r += 1;
 					this.dispatch(pid,tagObj,Q);
 					}
@@ -449,35 +449,54 @@ it has no inventory AND inventory matters to merchant
 */
 			productIsPurchaseable : function(pid)	{
 //				_app.u.dump("BEGIN store_product.u.productIsPurchaseable");
-				var r = true;  //returns true if purchaseable, false if not or error.
-				if(!pid)	{
-					_app.u.dump("ERROR! pid not passed into store_product.u.productIsPurchaseable");
-					r = false;
-					}
-				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:base_price'] == '')	{
-					_app.u.dump(" -> not purchaseable because base price not set: "+pid);
-					r = false;
-					}
-				else if(_app.data['appProductGet|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
-					_app.u.dump(" -> not purchaseable because product is a parent: "+pid);
-					r = false;
-					}
-//inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
-				else if(typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1)	{
-//if a product has no options, the inventory record looks like this:
-//["appProductGet|PID"]["@inventory"].PID.inv where both instances of PID are subbed with the product id
-// ex: _app.data["appProductGet|"+PID]["@inventory"][PID].inv
-// also avail is ...[PID].res (reserved)
-					if(typeof _app.data['appProductGet|'+pid]['@inventory'] === 'undefined' || typeof _app.data['appProductGet|'+pid]['@variations'] === 'undefined')	{
-						_app.u.dump(" -> not purchaseable because inventory ("+typeof _app.data['appProductGet|'+pid]['@inventory']+") and/or variations ("+typeof _app.data['appProductGet|'+pid]['@variations']+") object(s) not defined.");
-						r = false;
+				var 
+					r = true,  //returns true if purchaseable, false if not or error.
+					prodData;
+				
+				
+				if(pid)	{
+					if(_app.u.thisNestedExists("data.adminProductGet|"+pid,_app))	{
+						prodData = _app.data['adminProductGet|'+pid];
 						}
 					else	{
-						if(_app.ext.store_product.u.getProductInventory(pid) <= 0)	{
-							_app.u.dump(" -> not purchaseable because inventory not available: "+pid);
-							r = false
+						prodData = _app.data['appProductGet|'+pid];
+						}
+
+					if(prodData)	{
+						if(prodData['%attribs']['zoovy:base_price'] == '')	{
+							_app.u.dump(" -> not purchaseable because base price not set: "+pid);
+							r = false;
+							}
+						else if(prodData['%attribs']['zoovy:grp_type'] == 'PARENT')	{
+							_app.u.dump(" -> not purchaseable because product is a parent: "+pid);
+							r = false;
+							}
+		//inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
+						else if(typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1)	{
+		//if a product has no options, the inventory record looks like this:
+		//["appProductGet|PID"]["@inventory"].PID.inv where both instances of PID are subbed with the product id
+		// ex: _app.data["appProductGet|"+PID]["@inventory"][PID].inv
+		// also avail is ...[PID].res (reserved)
+							if(typeof prodData['@inventory'] === 'undefined' || typeof prodData['@variations'] === 'undefined')	{
+								_app.u.dump(" -> not purchaseable because inventory ("+typeof prodData['@inventory']+") and/or variations ("+typeof prodData['@variations']+") object(s) not defined.");
+								r = false;
+								}
+							else	{
+								if(_app.ext.store_product.u.getProductInventory(prodData) <= 0)	{
+									_app.u.dump(" -> not purchaseable because inventory not available: "+pid);
+									r = false
+									}
+								}
 							}
 						}
+					else	{
+						_app.u.dump("ERROR! could not find product data in memory for store_product.u.productIsPurchaseable");
+						r = false;
+						}
+					}
+				else	{
+					_app.u.dump("ERROR! pid not passed into store_product.u.productIsPurchaseable");
+					r = false;
 					}
 				return r;
 				}, //productIsPurchaseable
@@ -541,19 +560,19 @@ it has no inventory AND inventory matters to merchant
 //will return 0 if no inventory is available.
 //otherwise, will return the items inventory or, if variations are present, the sum of all inventoryable variations.
 //basically, a simple check to see if the item has purchaseable inventory.
-			getProductInventory : function(pid)	{
+			getProductInventory : function(prodData)	{
 //				_app.u.dump("BEGIN store_product.u.getProductInventory ["+pid+"]");
 				var inv = false;
 //if variations are NOT present, inventory count is readily available.
-				if(_app.data['appProductGet|'+pid])	{
-					if((_app.data['appProductGet|'+pid]['@variations'] && $.isEmptyObject(_app.data['appProductGet|'+pid]['@variations'])) && !$.isEmptyObject(_app.data['appProductGet|'+pid]['@inventory']))	{
-						inv = Number(_app.data['appProductGet|'+pid]['@inventory'][pid].AVAILABLE);
+				if(!$.isEmptyObject(prodData))	{
+					if((prodData['@variations'] && $.isEmptyObject(prodData['@variations'])) && !$.isEmptyObject(prodData['@inventory']))	{
+						inv = Number(prodData['@inventory'][prodData.pid].AVAILABLE);
 	//					_app.u.dump(" -> item has no variations. inv = "+inv);
 						}
 	//if variations ARE present, inventory must be summed from each inventory-able variation.
 					else	{
-						for(var index in _app.data['appProductGet|'+pid]['@inventory']) {
-							inv += Number(_app.data['appProductGet|'+pid]['@inventory'][index].AVAILABLE)
+						for(var index in prodData['@inventory']) {
+							inv += Number(prodData['@inventory'][index].AVAILABLE)
 							}
 	//					_app.u.dump(" -> item HAS variations. inv = "+inv);
 						}

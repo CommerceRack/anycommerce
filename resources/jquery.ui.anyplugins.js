@@ -145,6 +145,10 @@ additionally, will apply some conditional form logic.
 				if($CT.data('input-format').indexOf('uppercase') > -1)	{
 					$CT.val($CT.val().toUpperCase());
 					}
+
+				if($CT.data('input-format').indexOf('lowercase') > -1)	{
+					$CT.val($CT.val().toLowerCase());
+					}
 				
 				if($CT.data('input-format').indexOf('alphanumeric') > -1)	{
 					$CT.val($CT.val().toString().replace(/\W+/g,""));
@@ -155,6 +159,9 @@ additionally, will apply some conditional form logic.
 					}							
 				else if($CT.data('input-format').indexOf('decimal') > -1)	{
 					$CT.val($CT.val().replace(/[^0-9\.]+/g, ''));
+					}							
+				else if($CT.data('input-format').indexOf('flex') > -1)	{
+					$CT.val($CT.val().replace(/[^\w\:_]+/, '','g'));
 					}							
 				else if($CT.data('input-format').indexOf('pid') > -1)	{
 					$CT.val($CT.val().replace(/[^\w\-_]+/, '','g'));
@@ -1456,7 +1463,8 @@ the cb itself is then hidden.
 						self._handleDisable();
 						}
 					else	{
-						$cb.is(':checked') ? $cb.prop('checked','').removeProp('checked') : $cb.prop('checked','checked');
+						//do NOT removeProp('checked').  chrome doesn't like it. once removed, could not re-apply 'checked'.
+						$cb.is(':checked') ? $cb.prop('checked','') : $cb.prop('checked','checked');
 						$cb.trigger('change');
 						}
 					});

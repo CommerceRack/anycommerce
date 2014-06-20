@@ -255,7 +255,7 @@ templateID - the template id used (from _app.templates)
 								}
 							if(reachedRoot) {
 //								$tag.append(_app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,_app.data['appNavcatDetail|'+s]));
-								$tag.append(new tlc().runTLC({templateid : data.bindData.templateid, dataset : _app.data['appNavcatDetail|'+s]}).attr({'id':'.','catsafeid':s}));
+								$tag.append(new tlc().runTLC({templateid : data.bindData.templateid, dataset : _app.data['appNavcatDetail|'+s]}).attr({'data-catsafeid':s}));
 								}
 							if(i!=0)
 							s += '.';

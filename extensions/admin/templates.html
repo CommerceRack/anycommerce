@@ -5,7 +5,7 @@
 	<h5 data-bind="var:message(origin); format:text;"></h5>
 	<h6 data-bind="var:message(msg); format:text;"></h6>
 	<h6 data-bind="var:message(verb); format:text;"></h6>
-	<p data-bind="var:message(note); format:truncText; numCharacters: 75;"></p>
+	<p data-bind="var:message(note); format:trunctext; numCharacters: 75;"></p>
 	<button data-app-click='admin|messageDetailShow' data-icon-primary="ui-icon-arrowthick-1-e" data-text='true' class='applyButton'>Details</button>
 	</td>
 	<td class='valignTop'>
@@ -234,9 +234,9 @@ LANDING PAGE
 		<div class='recentNewsContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;'></div>
 	</div>  
 	<div class="lpColumn" id="dashboardColumn2">
-		<div class='marginBottom alignCenter'>
+<!--		<div class='marginBottom alignCenter'>
 		<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'></iframe>
-		</div>
+		</div> -->
 	</div>
 </div>
 
@@ -382,10 +382,11 @@ SETUP PAGE TEMPLATE
 			
 			<a href="#" onClick="navigateTo('#!/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a>
 			<div class="helper marginBottom">Customize System Messages used throughout the site.</div>
-			
+			<!--
+			* 201404 -> this interface doesn't exist anymore.
 			<a href="#" onClick="navigateTo('#!/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a>
 			<div class="helper marginBottom">Customize Checkout Messaging used during checkout.</div>
-			
+			-->
 			<a href="#" onClick="navigateTo('#!/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/vstore/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a>
 			<div class="helper marginBottom">Configure which languages and currencies are available.</div>
 
@@ -526,7 +527,7 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('#!ext/admin_customer/showReviewsManager'); return false;">Reviews</a>
 		<div class="helper marginBottom">Approve customer reviews of your products</div>
 		
-		<a href="#" onClick="navigateTo('#!/biz/manage/faqs/index.cgi'); return false;">Frequently Asked Questions</a>
+		<a href="#" onClick="navigateTo('#!ext/admin_customer/faqManager'); return false;">Frequently Asked Questions</a>
 		<div class="helper marginBottom">Help shoppers by answering common questions</div>
 		
 		</div>

@@ -48,7 +48,6 @@ function initApp(params) {
 	}
 
 
-
 function controller(_app)	{
 	
 	return {
@@ -281,7 +280,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 						this.dispatch(obj,_tag,Q);
 						}
 //if the product record is in memory BUT the inventory is zero, go get updated record in case it's back in stock.
-					else if(_app.ext.store_product && (_app.ext.store_product.u.getProductInventory(obj.pid) === 0))	{
+					else if(_app.ext.store_product && (_app.ext.store_product.u.getProductInventory(_app.data[_tag.datapointer]) === 0))	{
 						r = 1;
 						this.dispatch(obj,_tag,Q);
 						}
@@ -577,7 +576,12 @@ _app.u.throwMessage(responseData); is the default error handler.
 //jqObj is required and should be a jquery object.
 		anycontent : {
 			onMissing : function(rd)	{
+				dump(" -----------> rd: "); dump(rd);
 				rd._rtag.jqObj.anymessage(rd);
+				rd._rtag.jqObj.hideLoading();
+				if(typeof rd._rtag.onMissing === 'function')	{
+					rd._rtag.onMissing(rd);
+					}
 				},
 			onSuccess : function(_rtag)	{
 				_app.u.dump("BEGIN callbacks.anycontent"); // _app.u.dump(_rtag);
@@ -928,7 +932,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
 				if (window.addEventListener) {
-					console.log(" -> addEventListener is supported and added for hash change.");
+					dump(" -> addEventListener is supported and added for hash change.");
 					window.addEventListener("hashchange", _app.router.handleHashChange, false);
 					$(document.body).data('isRouted',true);
 					}
@@ -957,7 +961,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 // *** 201403 use .href.split instead of .hash for routing- Firefox automatically decodes the hash string, which breaks any URIComponent encoded characters, like "%2F" -> "/" -mc
 // http://stackoverflow.com/questions/4835784/firefox-automatically-decoding-encoded-parameter-in-url-does-not-happen-in-ie
 				var routeObj = _app.router._getRouteObj(location.href.split('#!')[1],'hash'); //if we decide to strip trailing slash, use .replace(/\/$/, "")
-				//dump(routeObj);
 				if(routeObj)	{
 					routeObj.hash = location.hash;
 					routeObj.hashParams = (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(location.hash.split("?")[1]) : {});
@@ -1364,7 +1367,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 //What was the plugin was split into two pieces, the app-event based delegation is here.  The form based is in anyForm
 			addEventDelegation : function($t,vars)	{
 				vars = vars || {};
-				var supportedEvents = new Array("click","change","focus","blur","submit","keyup");
+				var supportedEvents = new Array("click","change","focus","blur","submit","keyup","keypress");
 
 				function destroyEvents($ele)	{
 					for(var i = 0; i < supportedEvents.length; i += 1)	{
@@ -2273,12 +2276,7 @@ _app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","ta
 				url += "media\/img\/"+_app.vars.username+"\/";
 				}
 			else	{
-				if(_app.vars.mediaCDN){
-					url = (location.protocol === 'https:' ? 'https:' : 'http:') +"//"+_app.vars.mediaCDN;
-					}
-				else {
-					url = location.protocol === 'https:' ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
-					}
+				url = location.protocol === 'https:' ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url;
 				url += "media\/img\/"+_app.vars.username+"\/";
 				}
 				
@@ -3141,10 +3139,10 @@ $tag.append($tmp.html());
 $tmp.empty().remove();
 			},
 		
-		truncText : function($tag,data){
+		trunctext : function($tag,data){
 			var o = _app.u.truncate(data.value,data.bindData.numCharacters);
 			$tag.text(o);
-			}, //truncText
+			}, //trunctext
 
 //used in a cart or invoice spec to display which options were selected for a stid.
 		selectedoptionsdisplay : function($tag,data)	{

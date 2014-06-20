@@ -308,6 +308,61 @@ used, but not pre-loaded.
 //any functions that are recycled should be here.
 		u : {
 
+			hostChooser : function(opts)	{
+				opts = opts || {};
+				var $D = _app.ext.admin.i.dialogCreate({
+					title : "Choose Host(s)",
+					anycontent : false, //the dialogCreate params are passed into anycontent
+					handleAppEvents : false //defaults to true
+					});
+				$D.dialog('open');
+				$D.showLoading({'message':'Fetching updated list of domains and hosts.'});
+				_app.model.addDispatchToQ({
+					'_cmd':'adminDomainList',
+					'hosts' : true,
+					'_tag':	{
+						'datapointer' : 'adminDomainList',
+						'callback':function(rd)	{
+							$D.hideLoading();
+							if(_app.model.responseHasErrors(rd)){
+								$D.anymessage({'message':rd});
+								}
+							else	{
+								var dataset, templateid;
+								if(opts.filter)	{
+									dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data[rd.datapointer]['@DOMAINS'],opts.filter.by,opts.filter.for);
+									templateid = 'hostChooserDomainTemplate';
+									}
+								else	{
+									dataset = _app.data[rd.datapointer];
+									templateid = 'hostChooserDomainListTemplate';
+									}
+								
+								$D.tlc({'templateid':templateid,'dataset':dataset});
+								if(typeof opts.beforeSelectable === 'function')	{
+									opts.before($D);
+									}
+								
+								$D.selectable({'filter' : 'li'});
+								
+								if(typeof opts.afterSelectable === 'function')	{
+									opts.before($D);
+									}
+								
+								if(typeof opts.saveAction === 'function')	{
+									$("<button>").text('Save Hosts').button().on('click',function(){
+										opts.saveAction($D);
+										}).appendTo($D);
+									}
+								}
+							}
+						}
+					},'mutable');
+					_app.model.dispatchThis('mutable');
+
+
+				},
+
 //mode is required and can be create or update.
 //form is pretty self-explanatory.
 //$domainEditor is the PARENT context of the original button clicked to open the host editor. ex: the anypanel. technically, this isn't required but will provide a better UX.
@@ -468,6 +523,54 @@ used, but not pre-loaded.
 				else	{
 					$("#globalMessaging").anymessage({"message":"In admin_sites.e.adminSEOInitExec, unable to determine either the host ["+host+"] and/or the domain ["+domain+"].","gMessage":true});
 					}
+				},
+
+			adminDomainCreateExec : function($ele,p)	{
+				
+				var $form = $ele.closest('form');
+				if(_app.u.validateForm($form))	{
+					$form.showLoading({'message' : 'Adding Domain'});
+					var sfo = $form.serializeJSON();
+					sfo['@updates'] = new Array();
+					
+					if(sfo.domaintype == 'DOMAIN-CREATE')	{
+						sfo.DOMAINNAME = sfo.DOMAINNAME;
+						sfo['@updates'].push("DOMAIN-CREATE");
+						sfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
+						}
+					else if(sfo.domaintype == 'DOMAIN-RESERVE')	{
+						sfo['@updates'].push("DOMAIN-RESERVE");
+						sfo['@updates'].push("HOST-ADD?HOSTNAME=www&HOSTTYPE=APPTIMIZER");
+						}
+					else	{
+						
+						}
+					
+					if(sfo['@updates'].length)	{
+						sfo._cmd = 'adminDomainMacro';
+						sfo._tag = {
+							callback : function(rd)	{
+								$form.hideLoading();
+								if(_app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									//sample action. success would go here.
+									$('#globalMessaging').anymessage(_app.u.successMsgObject('Your domain has been added.'));
+									navigateTo("#!ext/admin_sites/showDomainConfig");
+									$form.closest('.ui-dialog-content').dialog('close');
+									}
+								}
+							}
+						_app.model.addDispatchToQ(sfo,"immutable");
+						_app.model.dispatchThis("immutable");
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In adminDomainCreateExec, unrecognized domain type set in form.','gMessage':true});
+						}
+					}
+				else	{} //validateForm will handle error display.
+				
 				},
 
 			adminDomainCreateShow : function($ele,p)	{

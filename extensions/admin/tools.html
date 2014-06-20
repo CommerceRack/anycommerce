@@ -844,13 +844,13 @@ has to be within the fieldset to for data-table to work right.
 
 <!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
 			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer' data-table-role='inputs'>
-				<label><span>Attribute ID </span><input name='id' value='' type='text' data-bind='var: flexedit(id); format:popVal;' /></label>
+				<label><span>Attribute ID </span><input name='id' value='' type='text' required='required' data-bind='var: flexedit(id); format:popVal;' data-input-keyup="format" data-input-format='lowercase,flex' /></label>
 				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
 				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
-				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
+				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;'  data-input-keyup="format" data-input-format='lowercase,alphanumeric' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
 				<label>
 					<span>Type</span>
-					<select name='type' data-bind='var: flexedit(type); format:popVal;' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
+					<select name='type' data-bind='var: flexedit(type); format:popVal;'  required='required' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
 						<option value='boolean'>Boolean (checkbox)</option>
 						<option value='checkbox'>Checkbox</option>
 						<option value='currency'>Currency</option>
@@ -875,11 +875,11 @@ has to be within the fieldset to for data-table to work right.
 				<div data-panel-id='flexEditOptionsInput' class='displayNone flexEditTypeInputs'>
 				<label>
 					<span>Options</span>
-					<textarea data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
+					<textarea required='required' class='skipIfHidden fullWidth' rows='10' data-format-rules='validateJSON' data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
 				</label>
 				</div>
 				<button data-app-click="admin_tools|flexDataTableAddEditCancel" class='applyButton'>Cancel</button>
-				<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton'>Apply Attribute</button>
+				<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton' data-hide-inputs-onapply='true'>Apply Attribute</button>
 			</div>
 			</fieldset>
 		</form>

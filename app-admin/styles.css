@@ -964,7 +964,7 @@ see shipping panel in product editor for example
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
 /* first of type was a HORRIBLE idea. started adding 'prompt' so that the first-of-type can be ditched */
-.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;}
+.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;display:inline-block;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],

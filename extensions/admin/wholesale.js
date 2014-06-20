@@ -171,6 +171,7 @@ var admin_wholesale = function(_app) {
 			showOrganizationManager : function($target,vars)	{
 //				_app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
 				_app.ext.admin.calls.adminPriceScheduleList.init({},'mutable'); //need this for add and edit.
+				dump(" -> vars: "); dump(vars);
 				var $DMI = _app.ext.admin.i.DMICreate($target,{
 					'header' : 'Organization Manager',
 					'handleAppEvents' : false,
@@ -181,8 +182,11 @@ var admin_wholesale = function(_app) {
 						"<button data-app-click='admin|refreshDMI' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowrefresh-1-s'>Refresh<\/button>",
 						"<button data-app-click='admin_wholesale|showOrganizationCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Organization</button>"],	
 					'controls' : _app.templates.orgManagerControls,
+					data : vars,
 					'cmdVars' : {
 						'_cmd' : 'adminCustomerOrganizationSearch',
+						searchby : vars.searchby,
+						keywords : vars.keywords,
 						'PHONE' : '', //update by changing $([data-app-role="dualModeContainer"]).data('cmdVars').STATUS
 						'limit' : '50', //not supported for every call yet.
 						'_tag' : {
@@ -232,7 +236,7 @@ var admin_wholesale = function(_app) {
 						"<button data-app-click='admin_wholesale|adminSupplierUnorderedItemListShow' data-mode='all' class='applyButton' data-text='true'>Unordered Items</button>",
 						"<button data-app-click='admin_wholesale|adminSupplierCreateShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus'>Add Supplier</button>"
 						],
-					'thead' : ['','Name','ID','Type','Mode',''],
+					'thead' : ['','Name','ID','Type',''],
 					'controls' : "<button data-app-click='admin|checkAllCheckboxesExec' class='applyButton marginRight'>Select All<\/button><span class='applyButtonset smallButton'>Modify Selected:	<button data-app-click='admin_wholesale|supplierBatchExec' data-verb='INVENTORY'>Get Inventory</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='PROCESS' title='Will cause any pending orders to be set to a supplier'>Process Orders</button><button data-app-click='admin_wholesale|supplierBatchExec' data-verb='TRACKING'>Update Tracking</button><\/span>",
 					'tbodyDatabind' : "var: users(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;",
 					'cmdVars' : {
@@ -780,7 +784,7 @@ var admin_wholesale = function(_app) {
 
 			adminSupplierInventoryAddShow : function($ele,P)	{
 				P.preventDefault();
-				var vendor = $ele.closest('tr').data('code');
+				var vendor = $ele.closest("[data-code]").data('code');
 				if(vendor)	{
 					var $D = _app.ext.admin.i.dialogCreate({
 						'title':'Add Inventory for supplier '+vendor,
@@ -794,6 +798,7 @@ var admin_wholesale = function(_app) {
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierInventoryAddShow, unable to ascertain vendor id.","gMessage":true});
 					}
+				return false;
 				},
 
 // There is a function in WHIM that is VERY similar to this.  Once supplier is using delegated events instead of appevents, combine the two ###
@@ -837,14 +842,15 @@ var admin_wholesale = function(_app) {
 					}
 				else	{
 					//form validation 
-					}				
+					}
+				return false;			
 				},
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
 			adminSupplierRemoveExec : function($ele,P)	{
 				P.preventDefault();
 				
-				var VENDORID = $ele.closest('tr').data('code');
+				var VENDORID = $ele.closest("[data-code]").data('code');
 				var $DMI = $ele.closest("[data-app-role='dualModeContainer']");
 				
 				var $D = _app.ext.admin.i.dialogConfirmRemove({
@@ -858,7 +864,7 @@ var admin_wholesale = function(_app) {
 						$modal.dialog('close');
 						}
 					});
-
+				return false;
 				}, //adminSupplierRemoveExec
 
 //applied to 'create user' button. just opens the modal.
@@ -875,6 +881,7 @@ var admin_wholesale = function(_app) {
 				$('form:first',$D).anyform({'trackEdits':true}).append("<input type='hidden' name='DMIID' value='"+$ele.closest("[data-app-role='dualModeContainer']").attr('id')+"' \/>");
 				_app.u.handleButtons($D);
 				_app.u.handleCommonPlugins($D);
+				return false;
 				}, //showSupplierCreate
 
 //applied to 'create user' button. just opens the modal.
@@ -909,6 +916,7 @@ var admin_wholesale = function(_app) {
 
 					}
 				else	{}//validation handles display logic too
+				return false;
 				}, //showSupplierCreate
 
 
@@ -1067,6 +1075,7 @@ var admin_wholesale = function(_app) {
 
 //applied to 'edit user' button and the link in the list (name). opens the editor.
 			showSupplierEditor : function($ele,P)	{
+				P.preventDefault()
 				var $row = $ele.closest('tr');
 				if($row.data('code'))	{
 
@@ -1092,6 +1101,7 @@ var admin_wholesale = function(_app) {
 				else	{
 					$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
 					}
+				return false;
 				}, //showSupplierEditor
 	
 			supplierBatchExec : function($ele,p)	{
@@ -1116,7 +1126,8 @@ var admin_wholesale = function(_app) {
 				},
 	
 			adminSupplierUnorderedItemListShow : function($ele,P)	{
-				var VENDORID = $ele.closest("[data-code]").data('CODE');
+				P.preventDefault();
+				var VENDORID = $ele.closest("[data-code]").data('code');
 				var $D = _app.ext.admin.i.dialogCreate({
 					'templateID': "supplierUnorderedItemsTemplate",
 					'title': $ele.data('mode') == 'vendor' ? "Unordered Items for "+VENDORID : "Unordered Items",
@@ -1159,7 +1170,7 @@ var admin_wholesale = function(_app) {
 					_app.model.addDispatchToQ(cmdObj,'mutable');
 					_app.model.dispatchThis('mutable');
 					}
-
+				return false;
 				},
 
 //This code opens either the supplier specific inventory or order list.
@@ -1211,6 +1222,7 @@ var admin_wholesale = function(_app) {
 							}
 						else {} //should never get here. unrecognized mode.
 					
+						_app.u.addEventDelegation($D);
 						_app.model.addDispatchToQ(cmdObj,'mutable');
 						_app.model.dispatchThis('mutable');
 				
@@ -1222,6 +1234,7 @@ var admin_wholesale = function(_app) {
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminSupplierProdOrderListShow, no data-mode set on trigger element.","gMessage":true})
 					}
+				return false;
 				}, //adminSupplierOrderListShow
 
 
