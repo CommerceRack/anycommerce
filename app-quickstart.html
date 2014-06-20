@@ -28,6 +28,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 // Replace the UA number below with the UA property to send tracking info to.
 ga('create', 'UA-XXXX-Y', 'auto');
 ga('require','linker');
+ga('require','ecommerce', 'ecommerce.js');
 ga('set', {
 	// Replace name below
 	'appName' : 'MyAppName',
@@ -71,27 +72,30 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script type="text/javascript">
 $(document).ready(function(){
-
-	window.myApp = new initApp({
-		"release":"201405.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
-		"baseURL":baseURL, //used in non-local mode.
-		"checkoutAuthMode" : "active",//can be passive, active or required
-		"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
-		"addjQueryPointer" : true,
-		"analyticsPointer" : "ga",
-		"initComplete" : function(){
-			dump(" -> init is complete");
-			myApp.u.loadScript('app-quickstart-init.js',function(){
-				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-				myApp.u.showProgress(progress);
-				});
-			$('#appversion').text(myApp.vars.release);
-			}
-		});
-	myApp.vars.initComplete();
-	myCreole = new Parse.Simple.Creole();
+	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
+	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
+		window.myApp = new initApp({
+			"release":"201405.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
+			"baseURL":baseURL, //used in non-local mode.
+			"checkoutAuthMode" : "active",//can be passive, active or required
+			"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+			"addjQueryPointer" : true,
+			"analyticsPointer" : "ga",
+			"initComplete" : function(){
+				dump(" -> init is complete");
+				myApp.u.loadScript('app-quickstart-init.js',function(){
+					var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
+					myApp.u.showProgress(progress);
+					});
+				$('#appversion').text(myApp.vars.release);
+				}
+			});
+		myApp.vars.initComplete();
+		myCreole = new Parse.Simple.Creole();
+		}
 	});
+
 </script>
 
 

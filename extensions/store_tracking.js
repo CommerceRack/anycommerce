@@ -47,6 +47,26 @@ var store_tracking = function(_app) {
 					if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order){
 						var order = _app.data[P.datapointer].order;
 						var plugins = zGlobals.plugins;
+						
+						//analytics tracking
+						ga('ecommerce:addTransaction', {
+							'id' : order.orderid,
+							'revenue' : order.sum.item_total,
+							'shipping' : order.sum.shp_total,
+							'tax' : order.sum.tax_total
+							});
+						for(var i in order['@ITEMS']){
+							var item = order['@ITEMS'][i];
+							ga('ecommerce:addItem', {
+								'id' : order.orderid,
+								'name' : item.prod_name,
+								'sku' : item.sku,
+								'price' : item.base_price,
+								'qty' : item.qty,
+								})
+							}
+						ga('ecommerce:send');
+						
 						for(var i in plugins){
 							if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
 								_app.ext.store_tracking.trackers[i](order, plugins[i]);
