@@ -1600,7 +1600,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
+								//{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
@@ -1670,7 +1670,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Colorado_Rockies_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Colorado_Rockies/Colorado_Rockies_Road_Replica_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Colorado_Rockies_Black_Authentic_Triple_Peak_Cool_Base_Convertible_Gamer_Jacket"},
-								{"id":"hats","img":"mlbhats/colorado_rockies_game_47_franchise_cap5"},
+								//{"id":"hats","img":"mlbhats/colorado_rockies_game_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Colorado_Rockies_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Justin Verlander","Max Scherzer","Miguel Cabrera"], 
@@ -1686,7 +1686,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Houston_Astros_Orange_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Houston_Astros/Houston_Astros_Road_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Houston_Astros_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
+								//{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Houston_Astros_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
@@ -1694,7 +1694,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Kansas_City_Royals_Royal_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Kansas_City_Royals/Kansas_City_Royals_Road_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/kansas_city_royals_royal_authentic_triple_peak_cool_base_convertible_gamer_jacke"},
-								{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
+								//{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Kansas_City_Royals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
