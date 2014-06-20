@@ -83,6 +83,10 @@ var store_swc = function(_app) {
 				if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam);
 					}
+				else if(document.location.hash.indexOf("#!filter")>=0 && document.location.hash.indexOf("team=") >= 0){
+					dump("the filter will handle setting the team!");
+					//do nothing- filter will handle it
+					}
 				else {
 					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
@@ -148,7 +152,11 @@ var store_swc = function(_app) {
 							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
 							}
 						*/
+						if(routeObj.hashParams.sport && routeObj.hashParams.team){
+							_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
+							}
 						routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
+						routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
 						showContent('static',routeObj.params)
 						}
 					else {
@@ -190,6 +198,7 @@ var store_swc = function(_app) {
 					});
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
 					$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+					$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
 					$('form.filterList', $context).trigger('submit');
 					});
 				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
@@ -197,6 +206,17 @@ var store_swc = function(_app) {
 					});
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
 				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tag":"IS_DISCONTINUED"}}});
+				
+				for(var sport in _app.ext.store_swc.validTeams){
+					for(var teamIndex in _app.ext.store_swc.validTeams[sport]){
+						var team = _app.ext.store_swc.validTeams[sport][teamIndex];
+						for(var filterIndex in team.filters){
+							var hash = "#!filter/"+team.filters[filterIndex].id+"/?team="+team.v+"&sport="+sport;
+							if(sport == "app_mlb")
+							_app.ext.seo_robots.vars.pages.push(hash);
+							}
+						}
+					}
 				$.merge(_app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
 					"#!company/contact/",
@@ -212,14 +232,13 @@ var store_swc = function(_app) {
 					"#!filter/100_years_of_wrigley_field/",
 					"#!filter/chicago/",
 					"#!filter/blackhawks/",
-					"#!filter/shirts/",
-					"#!filter/jerseys/",
-					"#!filter/personalized_jerseys/",
-					"#!filter/sweatshirts/",
-					"#!filter/hats/",
-					"#!filter/souvenirs/"
+					// "#!filter/shirts/",
+					// "#!filter/jerseys/",
+					// "#!filter/personalized_jerseys/",
+					// "#!filter/sweatshirts/",
+					// "#!filter/hats/",
+					// "#!filter/souvenirs/"
 					]);
-				
 				
 				var dismissNav = function(){
 					_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
@@ -547,12 +566,12 @@ var store_swc = function(_app) {
 					}
 				},
 			*/
-			setUserTeam : function(team){
+			setUserTeam : function(team, homepageOverride){
 				dump(team);
 				var fullTeamObj = $.grep(_app.ext.store_swc.validTeams[team.sport], function(e, i){ return e.v == team.team})[0];
 				if(fullTeamObj){
 					_app.ext.store_swc.vars.userTeam = $.extend(true, {"checked":"checked", "sport":team.sport}, fullTeamObj);
-					this.saveUserTeam(team);
+					this.saveUserTeam(team, homepageOverride);
 					}
 				else {
 					_app.u.throwMessage(_app.u.errorMsgObject("An error has occured- could not set user team to: "+team.team));
@@ -586,7 +605,7 @@ var store_swc = function(_app) {
 				_app.model.writeLocal('swcUserTeams', _app.ext.store_swc.vars.userTeams);
 				},
 			*/
-			saveUserTeam : function(team){
+			saveUserTeam : function(team, homepageOverride){
 				$('#appView .myTeamsFilter').each(function(){
 					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
 					});
@@ -594,10 +613,11 @@ var store_swc = function(_app) {
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
 				$('#appView #shopByPlayerTemplate_').intervaledEmpty().remove();
-				if($('#appView #mainContentArea :visible').length < 1){
+				if($('#appView #mainContentArea :visible').length < 1 && !homepageOverride){
 					window.location = "#!";
 					}
 				_app.model.writeLocal('swcUserTeam', team);
+				dump("my team saved");
 				},
 			/*
 			renderMyTeams : function(){
@@ -747,6 +767,13 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				var loadFullList = $form.data('loadFullList');
+				if(loadFullList){
+					_app.ext.store_swc.vars.filterLoadingComplete = false;
+					}
+				else {
+					_app.ext.store_swc.vars.filterLoadingComplete = true;
+					}
 				$('.filterList',$form.closest('.filteredSearchPage')).removeClass('active');
 				$form = $form.closest('form');
 				p.preventDefault();
@@ -878,7 +905,7 @@ var store_swc = function(_app) {
 								});
 							}
 						}
-					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form});
+					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : true});
 				_app.model.dispatchThis();
 				
 				},

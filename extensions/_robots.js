@@ -27,7 +27,8 @@ var seo_robots = function(_app) {
 		pages : [],
 		pagesLoaded : false,
 		counter : 0,
-		counterReset : 50
+		counterReset : 50,
+		robotPresent : false
 		},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -44,9 +45,8 @@ var seo_robots = function(_app) {
 				if(_robots._robotGreeting){
 					_app.ext.seo_robots.u.welcomeRobot(_robots._robotGreeting);
 					}
-				else {
-					_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
-					}
+				_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
+				_robots.goodbye = _app.ext.seo_robots.u.goodbyeRobot;
 				//Replace the _robots.next default functionality with some real stuff
 				
 				
@@ -81,20 +81,31 @@ var seo_robots = function(_app) {
 								}
 							}
 						var status = 100;
+						var isFilter = false;
 						if(typeof page == 'string' && page.indexOf('#!') == 0){
 							_app.ext.quickstart.vars.showContentFinished = false;
 							_app.ext.quickstart.vars.showContentCompleteFired = false;
+							
+							if(page.indexOf('#!filter') >= 0){
+								isFilter = true;
+								}
+								
 							window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
 							$('#globalMessaging').intervaledEmpty();
 							showContent('',page);
+							
+							if(page.pageType == static && _app.ext.store_swc.filterData[page.id]){
+								isFilter = true;
+								}
 							}
 						else{
 							status = 404;
 							}
 						_robots.status = function(){
-							if(status == 100 && _app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired){
+							
+							if(status == 100 && _app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired && (!isFilter || _app.ext.store_swc.vars.filterLoadingComplete)){
 								status = 200;
 								}
 							return status;
@@ -198,12 +209,20 @@ var seo_robots = function(_app) {
 								}
 							}
 						_app.ext.seo_robots.vars.pagesLoaded = true;
+						_app.ext.seo_robots.vars.robotPresent = true;
 						}
 					};
 				_app.model.addDispatchToQ(request, 'immutable');
 				_app.model.dispatchThis('immutable');
 				
 				return "1.0";
+				},
+			goodbyeRobot : function(botStr){
+				dump("Bot saying goodbye: "+botStr);
+				_app.ext.seo_robots.vars.robotPresent = false;
+				},
+			isRobotPresent : function(){
+				return _app.ext.seo_robots.vars.robotPresent;
 				}
 			}, //u [utilities]
 

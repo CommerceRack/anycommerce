@@ -266,27 +266,41 @@ else	{
 
 				},
 			handleElasticScroll : function(_rtag, $tag){
+				dump('handleElasticScroll');
+				dump(_rtag);
 				var EQ = $tag.data('elastic-query');
 				var currPage = $tag.data('page-in-focus');
 				var totalPages = $tag.data('total-page-count');
-				if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();} //do nothing. fewer than 1 page worth of items.
+				
+				var onScroll = function(override){
+					//will load data when two rows from bottom.
+					if(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
+						$(window).off('scroll.infiniteScroll');
+						if($tag.data('isDispatching') == true)	{}
+						else	{
+							var _tag = _app.u.getWhitelistedObject(_rtag, ['datapointer','callback','extension','list','templateID','loadFullList']);
+							_app.ext.store_search.u.changePage($tag, currPage+1, _tag);
+							}
+						}
+					}
+			
+				if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{
+					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					_app.ext.store_swc.vars.filterLoadingComplete = true;
+					} //do nothing. fewer than 1 page worth of items.
 				else if(currPage >= totalPages)	{
 				//reached the last 'page'. disable infinitescroll.
 					$(window).off('scroll.infiniteScroll');
 					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					_app.ext.store_swc.vars.filterLoadingComplete = true;
 					}
 				else	{
-					$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll',function(){
-						//will load data when two rows from bottom.
-						if( $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
-							$(window).off('scroll.infiniteScroll');
-							if($tag.data('isDispatching') == true)	{}
-							else	{
-								var _tag = _app.u.getWhitelistedObject(_rtag, ['datapointer','callback','extension','list','templateID']);
-								_app.ext.store_search.u.changePage($tag, currPage+1, _tag);
-								}
-							}
-						});
+					if(_rtag.loadFullList){
+						onScroll(true);
+						}
+					else {
+						$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll', onScroll);
+						}
 					}
 				}
 
