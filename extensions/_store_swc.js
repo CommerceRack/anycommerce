@@ -861,7 +861,13 @@ var store_swc = function(_app) {
 				else {
 					es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
 					}
-				es.size = 30;
+				if(loadFullList){
+					es.size = 200;
+					es.timeout = 60;
+					}
+				else{
+					es.size = 30;
+					}
 				$resultsContainer.empty();
 				
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,_app.u.getBlacklistedObject(es, ["facets"]),1);
