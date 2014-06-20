@@ -96,7 +96,7 @@ var seo_robots = function(_app) {
 							$('#globalMessaging').intervaledEmpty();
 							showContent('',page);
 							
-							if(page.pageType == static && _app.ext.store_swc.filterData[page.id]){
+							if(page.pageType == "static" && _app.ext.store_swc.filterData[page.id]){
 								isFilter = true;
 								}
 							}
