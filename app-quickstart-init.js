@@ -13,7 +13,7 @@ myApp.rq.push(['extension',0,'order_create','']);
 myApp.rq.push(['extension',0,'cco','']);
 
 myApp.rq.push(['extension',0,'store_routing','', 'attachEventHandlers']);
-myApp.rq.push(['extension',0,'store_tracking','', 'attachEventHandlers']);
+myApp.rq.push(['extension',0,'store_tracking','', 'attachHandlers']);
 myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js', 'attachHandlers']);
 
 myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
