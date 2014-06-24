@@ -2975,10 +2975,14 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 		<div class='accordion marginBottom'>
-
 			<h2>App</h2>
 			<div>
 				<ul data-app-role="notifications_APP" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Enquiry</h2>
+			<div>
+				<ul data-app-role="notifications_ENQUIRY" class='noPadOrMargin listStyleNone'></ul>
 			</div>
 	
 			<h2>Market</h2>
@@ -3522,7 +3526,7 @@ The header and buttons don't get reset, so the tlc must take this into account (
 		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID" data-input-name="~password">Generate Password</button>
 	</div>
-	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugin/shipstation.xml'; apply --append;}};"></div>
+	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.'	--append='/jsonapi/plugin/shipworks.xml'; apply --append;}};"></div>
 </fieldset>
 
 <fieldset id="pluginTemplate_shipstation.com">
@@ -3542,7 +3546,10 @@ The header and buttons don't get reset, so the tlc must take this into account (
 		<input data-tlc="bind $var '.~password'; if(is $var --notblank;) {{apply --select=$var;}}; " size='40'  data-minlength="20" max="40" name="~password" type="text">
 		<button class="applyButton" data-app-click="admin_config|buildGUID"data-input-name="~password">Generate Password</button>
 	</div>
-	
+	<label>
+		<input data-tlc="bind $var '.notify_complete'; if(is $var --notblank;) {{apply --select=$var;}}; " name="notify_complete" class="applyAnycb" type="checkbox">
+		Move Order to COMPLETE when Tracking Notification is received.
+	</label>	
 	<div data-tlc="bind $var '.domain'; if(is $var --notblank;){{format --prepend='https://www.' --append='/jsonapi/plugins/shipstation.xml'; apply --append;}};"></div>
 
 </fieldset>
