@@ -59,12 +59,12 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 $(document).ready(function(){
 	window.adminApp = new initApp({
 		/////////////////////////////////\
-		"release":"201405.f",   ///|> Don't forget to tag the repo when this changes. Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		"release":"201406.a",   ///|> Don't forget to tag the repo when this changes. Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
 		"_clientid":"admin",
-		"jqurl": (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
+		"jqurl": "/jsonapi/", // (document.location.protocol == 'file:') ? "https://www.sporktacular.com:9000/jsonapi/" : "/jsonapi/",
 		"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 		"baseURL" : baseURL,
 		"addjQueryPointer" : true,
@@ -123,7 +123,7 @@ $(document).ready(function(){
 
 <div id='appLogin' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
-	<div class='logo alignCenter marginBottom'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+	<div class='logo alignCenter marginBottom'><a href="/index.html"><img src='app-admin/images/commercerack-logo-206x24.png' width='206 height='24' alt='CommerceRack' /></a></div>
 
 	<div class='appMessaging'></div>
 
@@ -136,17 +136,27 @@ $(document).ready(function(){
 			<div class='clearfix marginBottom'>
 				<input placeholder='login' type='text' name='userid' value='' required='required' class='textbox' />
 				<input placeholder='password' type='password' name='password' value=''  required='required' class='textbox' />
-				<button class='loginbutton' data-app-event="admin|accountLogin">login</button>
+				<button class='loginbutton' data-app-event="admin|accountLogin">login</button>				
+				
+				<div id='loginAdvancedContainer' class='displayNone'>
+					<!-- advanced login -->
+					<input placeholder='jqurl' type='text' name='jqurl' value='' class='textbox' />
+					<input placeholder='authtoken' type='text' name='authtoken' value='' class='textbox' />
+				</div>
 			</div>
 			
+
 			<div class='clearfix'>
 				<label class='floatRight hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
-				<div class="hint">App Release #: <span id="appversion">??</span></div>
+				<div class="hint">AdminUI Release #: <span id="appversion">??</span></div>
 			</div>
 
 			<div class='clearfix marginBottom'>
 				<div class='lookLikeLink hint floatRight' data-app-event="admin|showPasswordRecover">Recover Password</div>
+				<div class='lookLikeLink hint' data-app-event="admin|showLoginAdvanced">Advanced Login</div>
+				<!--
 				<div class="hint"><a href='/201401/app-admin.html'> &#187; Use previous version</a></div>
+				-->
 			</div>
 
 

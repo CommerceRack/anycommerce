@@ -3930,6 +3930,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 			accountLogin : function($btn)	{
 				$btn.button();
 				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
+				
+					if ($btn.closest('form').find('input[name="jqurl"]').val() != '') {
+						//window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+						_app.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+						}
+					else if (document.location.protocol == 'file:') {
+						alert("use advanced login options when running as file://");
+						}
+						
 					event.preventDefault();
 					_app.ext.admin.a.login($btn.closest('form'));
 					});
@@ -3959,6 +3968,12 @@ dataAttribs -> an object that will be set as data- on the panel.
 					})
 				},
 
+			showLoginAdvanced : function($btn)	{
+				$btn.off('click.showLoginAdvanced').on('click.showLoginAdvanced',function(event){
+					$('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+					});
+				},
+				
 			execPasswordRecover : function($btn)	{
 				$btn.button();
 				$btn.off('click.execPasswordRecover').on('click.execPasswordRecover',function(event){
