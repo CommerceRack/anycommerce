@@ -278,13 +278,14 @@ var admin_config = function(_app) {
 				$target.showLoading({'message':'Fetching your payment method settings'});
 				_app.model.destroy('adminConfigDetail|payment|'+_app.vars.partition);
 				_app.u.addEventDelegation($target);
-				$target.anyform({'trackEdits':true});
 				_app.ext.admin.calls.adminConfigDetail.init({'payment':true},{
 					'callback' : 'anycontent',
 					'datapointer' : 'adminConfigDetail|payment|'+_app.vars.partition,
 					'templateID' : 'paymentManagerPageTemplate',
 					'onComplete' : function(){
 						$("li[data-tender='CC']",$target).trigger('click');
+						_app.u.handleCommonPlugins($target);
+						$target.anyform({'trackEdits':true});
 						},
 					jqObj : $target
 					},'mutable');
@@ -1673,7 +1674,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				if(_app.u.validateForm($form))	{
 					$form.showLoading({'message':'Saving Changes'});
 					var sfo = $form.serializeJSON({'cb':true}), updates = new Array();
-					if($form.data('scope') == 'HOST')	{
+					if(sfo.scope == 'HOST')	{
 						$("[data-app-role='pluginHostsList']",$form).find('tr').each(function(){
 							var $tr = $(this);
 							if($tr.hasClass('rowTaggedForRemove'))	{
@@ -1687,7 +1688,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 							});
 						}
 					else	{
-						updates.push("PLUGIN/SET-"+($form.data('scope') || 'PRT')+"?"+_app.u.hash2kvp(sfo));
+						updates.push("PLUGIN/SET-"+(sfo.scope || 'PRT')+"?"+_app.u.hash2kvp(sfo));
 						}
 
 					_app.model.addDispatchToQ({

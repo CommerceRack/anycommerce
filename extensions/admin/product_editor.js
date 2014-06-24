@@ -576,8 +576,9 @@ _app.u.addEventDelegation($target);
 							$display.append(pogs.renderOption(pog,pid));
 							}
 						}
-					//skipTracks keeps this change from updating the save button.
-					$(':input',$display).addClass('skipTrack').attr('required','required');
+					//skipTracks keeps this change from updating the save button. 
+					// $(':input',$display).addClass('skipTrack').attr('required','required');	 // why was this *required* (breaks when skufinder hidden + non-inventoriable options)																					
+					$(':input',$display).addClass('skipTrack');
 					if(data.bindData.appclick)	{
 						$display.append("<button class='applyButton' data-app-click='"+data.bindData.appclick+"'>load</button>");
 						}
@@ -2604,6 +2605,8 @@ function type2class(type)	{
 						}
 					else	{
 						$("[data-app-role='pidSchedulesContainer']",$PE).show();
+						// remove skuSchedulesContainer so it doesn't trigger validation
+						$("[data-app-role='skuSchedulesContainer']",$PE).remove();
 						}
 
 

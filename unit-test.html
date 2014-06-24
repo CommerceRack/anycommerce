@@ -109,7 +109,7 @@
 		<div data-testtype='output-compare' data-output='long string to use for testing.' data-tlc="bind $var '.long-string'; format --chop='10'; apply --append;" data-testname="chop at 11" ></div>
 		<div data-testtype='output-compare' data-output='this is a' data-tlc="bind $var '.long-string'; format --truncate='11'; apply --append;" data-testname="truncate at 11 (gets 9 chars)" ></div>
 		<div data-testtype='output-compare' data-output='unknown' data-tlc="bind $var '.undefined'; format --default='unknown'; apply --append;"  data-testname="set default"></div>
-		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $name '.name'; bind $var '.undefined'; format --default=$name; apply --append;"  data-testname="set default to var"></div>
+<!--		<div data-testtype='output-compare' data-output='bob' data-tlc="bind $name '.name'; bind $var '.undefined'; format --default=$name; apply --append;"  data-testname="set default to var"></div> -->
 		<div data-testtype='output-compare' data-output='this%20is%20a%20long%20string%20to%20use%20for%20testing.' data-tlc="bind $var '.long-string'; format --uriencode; apply --append;" data-testname="uriencode" ></div>
 		
 		

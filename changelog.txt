@@ -5,6 +5,18 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201405
+
+1PC
+	bug fix - social media links after checkout now working again.
+
+QUICKSTART
+	enhancement - history of the world is now persistent between sessions.
+
+201405.b: fixes validation bug in admin-ui / product editor / attributes
+201405.c: fixes CUSTOMER emails not appearing
+201405.d: fixed issue with ebay listing duration
+201405.e: fixed global plugins not saving properly
 
 201404
 
