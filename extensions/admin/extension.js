@@ -673,6 +673,17 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 						$("#appPreView").hide();
 						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 						});
+						
+					if (_app.u.getParameterByName('apidomain')) {
+						$("#appLogin").find('input[name="apidomain"]').val( _app.u.getParameterByName('apidomain') );
+						}
+					if (document.location.protocol == 'file:') {
+						// automatically show the advanced login container
+						$('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+						}
+					
+					
+
 					}
 				if(!$.support['localStorage'])	{
 					$("#globalMessaging").anymessage({"message":"It appears you have localStorage disabled or are using a browser that does not support the feature. Please enable the feature or upgrade your browser","errtype":"youerr","persistent":true});
@@ -3931,14 +3942,15 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$btn.button();
 				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
 				
-					if ($btn.closest('form').find('input[name="jqurl"]').val() != '') {
+					if ($btn.closest('form').find('input[name="apidomain"]').val() != '') {
 						//window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
-						_app.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+						_app.vars.jqurl = "https://"+$btn.closest('form').find('input[name="apidomain"]').val()+":9000/jsonapi/";
 						}
 					else if (document.location.protocol == 'file:') {
 						alert("use advanced login options when running as file://");
 						}
 						
+	
 					event.preventDefault();
 					_app.ext.admin.a.login($btn.closest('form'));
 					});

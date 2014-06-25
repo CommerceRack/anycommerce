@@ -1881,7 +1881,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 			notificationUpdateShow : function($ele,p)	{
 				p.preventDefault();
 				var $target = $ele.closest("[data-app-role='notificationsContainer']").find("[data-app-role='slimLeftContentContainer']");
-				
+												
 				if($ele.data('event') && _app.u.thisNestedExists("data.adminConfigDetail|"+_app.vars.partition+"|notifications.@NOTIFICATIONS",_app))	{
 					var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|'+_app.vars.partition+'|notifications']['@NOTIFICATIONS'],'event',$ele.data('event'));
 					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
@@ -1895,10 +1895,23 @@ when an event type is changed, all the event types are dropped, then re-added.
 				else	{
 					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, adminConfigDetail|"+_app.vars.partition+"|notifications is not in memory.","gMessage":true});
 					}
+
+				$('form',$target).find("input[name='event']").val($ele.data('event'));				
+				return false;
+				},
+
+			notificationAddNew : function($ele,p)	{
+				// the Add new Notification container
+				p.preventDefault();
+				var $target = $ele.closest("[data-app-role='notificationsContainer']").find("[data-app-role='slimLeftContentContainer']");
+				$target.empty().anycontent({"templateID":"notificationAddNewTemplate","data":{}});
+				_app.u.handleButtons($target);
+				$('form',$target).anyform();
+				$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
 				
 				return false;
 				}
-
+				
 
 			} //e [app Events]
 		} //r object.

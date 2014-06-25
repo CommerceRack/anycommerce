@@ -3017,19 +3017,30 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	
 			<h2>API</h2>
 			<div>
-				<ul data-app-role="notifications_API" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_API" class='noPadOrMargin listStyleNone'>
+				</ul>
 			</div>
 	
 			<h2>Error</h2>
 			<div>
-				<ul data-app-role="notifications_ERROR" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_ERROR" class='noPadOrMargin listStyleNone'>
+				</ul>
 			</div>
 	
 			<h2>Alert</h2>
 			<div>
-				<ul data-app-role="notifications_ALERT" class='noPadOrMargin listStyleNone'></ul>
+				<ul data-app-role="notifications_ALERT" class='noPadOrMargin listStyleNone'>
+				</ul>
 			</div>
 
+			
+			<h2>New</h2>
+			<div>
+				<ul class='noPadOrMargin listStyleNone'>
+				<li data-app-click="admin_config|notificationAddNew" class="lookLikeLink" data-event="">New Event</li>
+				</ul>
+			</div>
+			
 		</div>
 
 	</section>
@@ -3045,7 +3056,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 
-<div id='notificationUpdateTemplate'>
+<div id='notificationAddNewTemplate'>
 
 <form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
 	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
@@ -3054,29 +3065,12 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 	<input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
 	<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
 
-
 	<div class='buttonset marginBottom'>
-	<h1>Notifications</h1>
-	<button class='floatRight applyButton' data-app-click='admin|submitForm' data-skipvalidation='true' >Save Changes</button><!-- skip validation cuz we're only using the data-table -->
+	<h1>Create Notifications</h1>
 	</div>
 
 	<fieldset class='borderNone' data-table-role='container'>
-		<section class='floatLeft marginRight'>
-		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
-		<thead>
-		<tr>
-			<th>Event</th>
-			<th>Method</th>
-			<th>More</th>
-			<th></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var:notifications(@VERBS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
 		
-		</tbody>
-		</table>
-		</section>
-			
 		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
 
 <!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
@@ -3150,6 +3144,10 @@ Show only the fieldset that matches the high level event type (customer, product
 <!-- the following inputs will appear for all notification types -->
 			<fieldset>
 			<label>
+				<span>Event</span>
+				<input type="text" value="" name="event">
+			</label>
+			<label>
 				<span>Method</span>
 				<select name='verb' required='required' data-panel-selector=".notificationMethodPanel" data-input-change='show-panel'>
 	<!--				<option>everything</option> -->
@@ -3179,18 +3177,115 @@ Show only the fieldset that matches the high level event type (customer, product
 			</div>
 			</fieldset>
 
-			<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
+			<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Append</button>
 		
+		</section>
+
+		<section class='floatLeft marginRight'>
+		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
+		<thead>
+		<tr>
+			<th>Event</th>
+			<th>Method</th>
+			<th>More</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var:notifications(@VERBS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>		
+		</tbody>
+		</table>
+		<button class='floatRight applyButton' data-app-click='admin|submitForm' data-skipvalidation='true' >Save Events</button><!-- skip validation cuz we're only using the data-table -->
 		</section>
 
 
 </fieldset>
-
-
-	
 </form>
+</div>
 
 
+
+
+
+
+
+
+
+
+<div id='notificationUpdateTemplate'>
+
+<form onSubmit='return false;' action='#' class='labelsAsBreaks alignedLabels clearfix' novalidate='novalidate'>
+	<input type='hidden' name='_macrobuilder' value='admin_config|NOTIFICATION/DATATABLE' />
+	<input type='hidden' name='_cmd' value='adminConfigMacro' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
+	<input type='hidden' name='_tag/removeFromDOMItemsTaggedForDelete' value='1' />
+
+	<div class='buttonset marginBottom'>
+	<h1>Notifications</h1>
+	</div>
+
+	<fieldset class='borderNone' data-table-role='container'>
+		<section class='floatLeft marginRight'>
+		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
+		<thead>
+		<tr>
+			<th>Event</th>
+			<th>Method</th>
+			<th>More</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var:notifications(@VERBS); format:processList; loadsTemplate:notificationsListTemplate;" data-table-role='content'>
+		
+		</tbody>
+		</table>
+		<button class='applyButton' data-app-click='admin|submitForm' data-skipvalidation='true' >Save Changes</button><!-- skip validation cuz we're only using the data-table -->
+		</section>
+			
+		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
+<!-- the list of input names is whitelisted in NOTIFICATION/DATATABLE macrobuilder. If you add another input, add it there -->	
+<!-- the following inputs will appear for all notification types -->
+			<h1>Additional Events</h1>
+			<fieldset>
+			<label>
+				<span>Event:</span>
+				<input type='text' name='event' value=''>
+			</label>
+			<label>
+				<span>Method</span>
+				<select name='verb' required='required' data-panel-selector=".notificationMethodPanel" data-input-change='show-panel'>
+	<!--				<option>everything</option> -->
+					<option data-show-panel='notificationMethodPanelEmail' value='email'>Email</option>
+					<option data-show-panel='notificationMethodPanelURL' value='http'>Http</option>
+					<option value='task'>Task</option>
+					<option data-show-panel='notificationMethodPanelURL' value='awssqs'>AWS SQS</option>
+					<option value='crmticket'>CRM ticket</option>
+					<option value='noop'>Do nothing</option><!-- NO OPeration -->
+		<!--		<option>sms</option> -->
+				</select>
+			</label>
+
+			<div data-panel-id='notificationMethodPanelEmail' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>Email(s)</span>
+					<input type='email' required='required' name='email' data-validation-rules='skipIfHidden' />
+				</label>
+			</div>
+
+			<div data-panel-id='notificationMethodPanelURL' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>URL</span>
+					<input type='url' required='required' name='url'  data-validation-rules='skipIfHidden'  />
+				</label>
+			</div>
+			</fieldset>
+
+			<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton'>Apply</button>
+		
+		</section>
+	
+	</fieldset>
+</form>
 </div>
 
 
