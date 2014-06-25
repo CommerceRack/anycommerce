@@ -3153,7 +3153,7 @@ Show only the fieldset that matches the high level event type (customer, product
 	<!--				<option>everything</option> -->
 					<option data-show-panel='notificationMethodPanelEmail' value='email'>Email</option>
 					<option data-show-panel='notificationMethodPanelURL' value='http'>Http</option>
-					<option value='task'>Task</option>
+					<option data-show-panel='notificationMethodPanelTask' value='task'>Task</option>
 					<option data-show-panel='notificationMethodPanelURL' value='awssqs'>AWS SQS</option>
 					<option value='crmticket'>CRM ticket</option>
 					<option value='noop'>Do nothing</option><!-- NO OPeration -->
@@ -3166,6 +3166,14 @@ Show only the fieldset that matches the high level event type (customer, product
 				<label>
 					<span>Email(s)</span>
 					<input type='email' required='required' name='email' data-validation-rules='skipIfHidden' />
+				</label>
+			</div>
+
+			<div data-panel-id='notificationMethodPanelTask' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>AssignTo</span>
+					<input type='text' name='assignto' data-validation-rules='skipIfHidden' />
+					<span class='toolTip' title="Specify the login for the user the task should be assigned to, leave blank for all users.">?</span>
 				</label>
 			</div>
 
@@ -3256,7 +3264,7 @@ Show only the fieldset that matches the high level event type (customer, product
 	<!--				<option>everything</option> -->
 					<option data-show-panel='notificationMethodPanelEmail' value='email'>Email</option>
 					<option data-show-panel='notificationMethodPanelURL' value='http'>Http</option>
-					<option value='task'>Task</option>
+					<option data-show-panel='notificationMethodPanelTask' value='task'>Task</option>
 					<option data-show-panel='notificationMethodPanelURL' value='awssqs'>AWS SQS</option>
 					<option value='crmticket'>CRM ticket</option>
 					<option value='noop'>Do nothing</option><!-- NO OPeration -->
@@ -3268,6 +3276,14 @@ Show only the fieldset that matches the high level event type (customer, product
 				<label>
 					<span>Email(s)</span>
 					<input type='email' required='required' name='email' data-validation-rules='skipIfHidden' />
+				</label>
+			</div>
+
+			<div data-panel-id='notificationMethodPanelTask' class='displayNone notificationMethodPanel'>
+				<label>
+					<span>AssignTo</span>
+					<input type='text' name='assignto' data-validation-rules='skipIfHidden' />
+					<span class='toolTip' title="Specify the login for the user the task should be assigned to, leave blank for all users.">?</span>
 				</label>
 			</div>
 
