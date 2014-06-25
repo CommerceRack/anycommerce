@@ -3055,7 +3055,7 @@ no 'min'. apparently, a negative tax amount is valid. (used when a X% is blanket
 
 
 <div id="appendNotificationFieldset">
-	<fieldset  class='borderNone' data-table-role='container'>
+	<fieldset  class='borderNone'>
 
 		
 		<section class='floatLeft marginLeft notificationDatatableInputs' data-table-role='inputs'>
@@ -3194,6 +3194,7 @@ Show only the fieldset that matches the high level event type (customer, product
 	<h1>Create Notifications</h1>
 	</div>
 
+	<fieldset data-table-role='container'>
 	<div data-app-role="addNotificationContainer">
 	appendNotificationFieldset goes here
 	</div>
@@ -3214,7 +3215,7 @@ Show only the fieldset that matches the high level event type (customer, product
 		</table>
 		<button class='floatRight applyButton' data-app-click='admin|submitForm' data-skipvalidation='true' >Commit</button><!-- skip validation cuz we're only using the data-table -->
 	</section>
-
+	</fieldset>
 </form>
 </div>
 
@@ -3241,7 +3242,7 @@ Show only the fieldset that matches the high level event type (customer, product
 
 	<fieldset class='borderNone' data-table-role='container'>
 		<section class='floatLeft marginRight'>
-		<table data-app-role='dataTable' data-table='WEIGHT_US' class='gridTable applyAnytable'>
+		<table data-app-role='dataTable' data-table='NOTIFICATIONS' class='gridTable applyAnytable'>
 		<thead>
 		<tr>
 			<th>Event</th>
