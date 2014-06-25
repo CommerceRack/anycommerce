@@ -112,7 +112,7 @@ var admin_config = function(_app) {
 				},
 
 
-			//shows the lists of all blast messages and the means to edit each one individually.
+			//shows the lists of all notifications and the means to edit each one individually.
 			showNotifications : function($target,params)	{
 				$target.showLoading({"message":"Fetching notifications"});
 				$target.tlc({'templateid':'notificationPageTemplate','verb':'template'});
@@ -913,6 +913,11 @@ when an event type is changed, all the event types are dropped, then re-added.
 						}
 					});
 
+				newSfo['_tag'].onComplete = function(){
+					// refresh the data
+					navigateTo('#!ext/admin_config/showNotifications');
+					};
+					
 				return newSfo;
 				},
 			
