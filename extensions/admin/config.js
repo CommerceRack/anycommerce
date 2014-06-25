@@ -899,7 +899,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 								var $updateTR = $(this);
 								if($updateTR.hasClass('rowTaggedForRemove'))	{} //ignore this row, it's being deleted.
 								else	{
-									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(_app.u.getWhitelistedObject($updateTR.data(),['event','verb','url','email'])));
+									newSfo['@updates'].push("NOTIFICATION/DATATABLE-INSERT?"+$.param(_app.u.getWhitelistedObject($updateTR.data(),['event','verb','url','email','assignto'])));
 									}
 								});
 							
@@ -1890,9 +1890,9 @@ when an event type is changed, all the event types are dropped, then re-added.
 				if($ele.data('event') && _app.u.thisNestedExists("data.adminConfigDetail|"+_app.vars.partition+"|notifications.@NOTIFICATIONS",_app))	{
 					var dataset = _app.ext.admin.u.getValueByKeyFromArray(_app.data['adminConfigDetail|'+_app.vars.partition+'|notifications']['@NOTIFICATIONS'],'event',$ele.data('event'));
 					$target.empty().anycontent({"templateID":"notificationUpdateTemplate","data":dataset});
+					$target.find("[data-app-role='addNotificationContainer']").empty().anycontent({"templateID":"appendNotificationFieldset","data":{}});
 					_app.u.handleButtons($target);
 					$('form',$target).anyform();
-					$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
 					}
 				else if(!$ele.data('event'))	{
 					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, data-event not set on trigger element.","gMessage":true});
@@ -1901,6 +1901,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 					$target.anymessage({"message":"In admin_config.e.notificationsUpdateShow, adminConfigDetail|"+_app.vars.partition+"|notifications is not in memory.","gMessage":true});
 					}
 
+			
 				$('form',$target).find("input[name='event']").val($ele.data('event'));				
 				return false;
 				},
@@ -1910,6 +1911,8 @@ when an event type is changed, all the event types are dropped, then re-added.
 				p.preventDefault();
 				var $target = $ele.closest("[data-app-role='notificationsContainer']").find("[data-app-role='slimLeftContentContainer']");
 				$target.empty().anycontent({"templateID":"notificationAddNewTemplate","data":{}});
+				$target.find("[data-app-role='addNotificationContainer']").empty().anycontent({"templateID":"appendNotificationFieldset","data":{}});
+				
 				_app.u.handleButtons($target);
 				$('form',$target).anyform();
 				$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
