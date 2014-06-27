@@ -1057,7 +1057,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage positionRelative noBG">
 	<span class="displayNone" data-tlc="bind $var '.seo_title'; if(is $var --notblank;){{apply --attrib='data-seo-title';}};"></span>
-	<span class="displayNone" data-tlc="bind $var '.seo_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
+	<span class="displayNone" data-tlc="bind $var '.meta_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
 	
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
 		<span class="displayNone_1280 displayNone_960 displayNone_640 displayNone_480 closeButton floatRight" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).removeClass('active');"></span>
@@ -1126,8 +1126,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 	</form>
 	<div class="filterResultsContainer">
-		<h2 class="highlightBG_1 white" data-tlc="bind $var '.title'; apply --prepend;"><span class="displayNone_1280 displayNone_ 960 displayNone_640 displayNone_480 floatRight pointer" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).addClass('active');">Filters...</span></h2>
+		<h2 class="highlightBG_1 white" >
+			<span class="displayNone_320" data-tlc="bind $var '.seo_title'; apply --append;"></span>
+			<span class="isplayNone_1280 displayNone_ 960 displayNone_640 displayNone_480" data-tlc="bind $var '.title'; apply --append;"></span>
+			<span class="displayNone_1280 displayNone_ 960 displayNone_640 displayNone_480 floatRight pointer" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).addClass('active');">Filters...</span>
+		</h2>
 		<ul class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
+		<div class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.seo_description'; apply --append;"></div>
 	</div>
 </div>
 

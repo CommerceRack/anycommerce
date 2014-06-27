@@ -164,6 +164,10 @@ var store_swc = function(_app) {
 						if(routeObj.params.dataset.descriptionBuilder){
 							routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
 							}
+						
+						if(routeObj.params.dataset.metaDescriptionBuilder){
+							routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
+							}
 						routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
 						showContent('static',routeObj.params)
 						}
@@ -1277,11 +1281,20 @@ var store_swc = function(_app) {
 			'shirts' : {
 				title : "Shirts",
 				titleBuilder : function(teamName){
-					var str = teamName+" Shirts";
+					var str = teamName+" T-Shirts - Mens, Womens";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Find the best shirts of all shapes and sizes for the "+teamName;
+					var str = "<h3>"+teamname+" T-Shirts - Mens, Womens & Youth</h3>"
+							+ "<p>"+teamname+" fans come from all walks of life and in all shapes and sizes, so we have an expansive "+teamname+" t-shirts collection to match this diversity. The unifying factor: an unwavering love for the "+teamname+".  Our "+teamname+" t-shirts collection includes long-sleeve shirts, short-sleeve and jersey-style varieties. </p>"
+							+ "<p>While we carry a ton of shirts for women and men, we can`t forget our little budding "+teamname+" fans-browse our kids shirts section for youth or toddler-sized gear. With SportsWorld`s "+teamname+" t-shirt options, you can truly outfit the whole family.</p>"
+							+ "<h3>Ordering Online & Size Questions</h3>"
+							+ "<p>Unsure how to place your order for your "+teamname+" t-shirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1298,11 +1311,20 @@ var store_swc = function(_app) {
 			'jerseys' : {
 				title : "Jerseys",
 				titleBuilder : function(teamName){
-					var str = teamName+" Jerseys";
+					var str = "Shop "+teamName+" Jerseys";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Find the best jerseys of all shapes and sizes for the "+teamName;
+					var str = "<h3>Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys</h3>"
+							+ "<p>If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. </p>"
+							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamname+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamname+", any jersey style, totally your choice. </p>"
+							+ "<h3>Ordering Online & Size Questions</h3>"
+							+ "<p>Unsure how to place your order for your "+teamname+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1327,11 +1349,20 @@ var store_swc = function(_app) {
 			'personalized_jerseys' : {
 				title : "Personalized Jerseys",
 				titleBuilder : function(teamName){
-					var str = teamName+" Personalized Jerseys";
+					var str = "Shop "+teamName+" Personalized Jerseys";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Customize your own "+teamName+" jersey today!";
+					var str = "<h3>Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys</h3>"
+							+ "<p>If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. </p>"
+							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamname+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamname+", any jersey style, totally your choice. </p>"
+							+ "<h3>Ordering Online & Size Questions</h3>"
+							+ "<p>Unsure how to place your order for your "+teamname+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1356,11 +1387,19 @@ var store_swc = function(_app) {
 			'sweatshirts' : {
 				title : "Sweatshirts and Jackets",
 				titleBuilder : function(teamName){
-					var str = teamName+" Sweatshirts and Jackets";
+					var str = teamName+" Sweatshirts & Jackets";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Find the best sweatshirts and jackets of all shapes and sizes for the "+teamName;
+					var str = "<h3>Cozy "+teamname+" Sweatshirts for Women, Men, and Children</h3>"
+							+ "<p>We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamname+" sweatshirts.  Plus, this way you can support the "+teamname+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamname+" sweatshirts and keep on keeping the faith-there`s always next year!</p>"
+							+ "<h3>Ordering Online & Size Questions</h3>"
+							+ "<p>Unsure how to place your order for your "+teamname+" sweatshirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = "Cozy "+teamname+" Sweatshirts for Women, Men, and Children. "
+							+ "We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamname+" sweatshirts.  Plus, this way you can support the "+teamname+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamname+" sweatshirts and keep on keeping the faith-there`s always next year!"
 					return str;
 					},
 				baseFilter : {
@@ -1376,11 +1415,19 @@ var store_swc = function(_app) {
 			'hats' : {
 				title : "Hats",
 				titleBuilder : function(teamName){
-					var str = teamName+" Hats";
+					var str = "Fitted & Adjustable "+teamName+" Caps & Hats";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Find the best hats of all shapes and sizes for the "+teamName;
+					var str = "<h3>"+teamName+" Adjustable and Fitted Baseball Caps for Men, Women & Children.</h3>"
+							+ "<p>Our wide selection of "+teamName+" hats, caps, visors, and winter caps, the cool "+teamName+" headgear options are aplenty. Browse above for "+teamName+" fitted hats, adjustable caps, winter hats, visors, kid and baby hats, and more. So many options, so many games-you might even get a few and never miss an occasion to root your team on in style!  Our caps from New Era, `47 Brand and American Needle are high quality and built to last with solid body construction and features such as moisture wicking. Find the perfect hat that suits your style-at exceptional savings.</p>"
+							+ "<h3>Ordering Online & Size Questions.</h3>"
+							+ "<p>Unsure how to place your order for your "+teamName+" hats?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = teamName+" Adjustable and Fitted Baseball Caps for Men, Women & Children. "
+							+ "Our wide selection of "+teamName+" hats, caps, visors, and winter caps, the cool "+teamName+" headgear options are aplenty. Browse below for "+teamName+" fitted hats, adjustable caps, winter hats, visors, kid and baby hats, and more. So many options, so many games-you might even get a few and never miss an occasion to root your team on in style!  Our caps from New Era, `47 Brand and American Needle are high quality and built to last with solid body construction and features such as moisture wicking. Find the perfect hat that suits your style-at exceptional savings."
 					return str;
 					},
 				baseFilter : {
@@ -1395,11 +1442,19 @@ var store_swc = function(_app) {
 			'souvenirs' : {
 				title : "Souvenirs",
 				titleBuilder : function(teamName){
-					var str = teamName+" Souvenirs";
+					var str = teamName+" Souvenir Shop";
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "Find the best souvenirs of all shapes and sizes for the "+teamName;
+					var str = "<h3>Get Your Next "+teamName+" Souvenir from SportsWorldChicago.com.</h3>"
+							+ "<p>SportsWorldChicago.com carries all the official "+teamName+" souvenirs souvenirs-so you always show your pride even when a trip to a souvenir shop isn`t possible. We have goodies that any diehard fan could want-signs and flags, books, DVDs, games, pet products, jewelry and keychains, home and office products, and even more. If you need a unique idea for that special someone, these also make the perfect "+teamName+" gifts!</p>"
+							+ "<h3>Ordering Online & Size Questions.</h3>"
+							+ "<p>Unsure how to place your order for your "+teamName+" souvenirs?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+					return str;
+					},
+				metaDescriptionBuilder : function(teamName){
+					var str = "Get Your Next "+teamName+" Souvenir from SportsWorldChicago.com. "
+							+ "SportsWorldChicago.com carries all the official "+teamName+" souvenirs souvenirs-so you always show your pride even when a trip to a souvenir shop isn`t possible. We have goodies that any diehard fan could want-signs and flags, books, DVDs, games, pet products, jewelry and keychains, home and office products, and even more. If you need a unique idea for that special someone, these also make the perfect "+teamName+" gifts!"
 					return str;
 					},
 				baseFilter : {
