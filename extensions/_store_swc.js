@@ -614,9 +614,6 @@ var store_swc = function(_app) {
 				},
 			*/
 			saveUserTeam : function(team, homepageOverride){
-				$('#appView .myTeamsFilter').each(function(){
-					$(this).empty().tlc({'verb':'translate','dataset':{userTeams:_app.ext.store_swc.vars.userTeams}});
-					});
 				$('#appView .filteredSearchPage').each(function(){
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
@@ -624,6 +621,9 @@ var store_swc = function(_app) {
 				if($('#appView #mainContentArea :visible').length < 1 && !homepageOverride){
 					window.location = "#!";
 					}
+					
+				$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
+				
 				_app.model.writeLocal('swcUserTeam', team);
 				dump("my team saved");
 				},

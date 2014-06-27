@@ -14,9 +14,14 @@
 /* #appView.peekFooter #footer {bottom:-130px;} */
 #footer{padding: 20px 0px;}
 
+#logo img {width: 194px;}
+
+#headerTeam {margin-left: 12px; width: 120px; font-size: height: 50px; padding: 2px; font-size:.7em;}
+#headerTeam img{height: 46px; width: 46px;}
+
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
-#search input{ height:13px;}
+#search input{ height:13px; width: 94px;}
 #nav {font-size: .6em; padding: 5px 0px;}
 #nav.expand .fullNav { left:50%;}
 #nav .fullNav {margin-left:-240px; padding: 12px; font-size:1.4em;}

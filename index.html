@@ -200,11 +200,11 @@ var _robots = {
 	<div id="headerContent" class="dosis">
 		<div class="fixedContainer">
 			<a href="#!" id="logo" class="floatLeft">
-				<img data-apptimize="embed" src="images/wrapper/logo_364x62.png" class="displayNone_640 displayNone_480"/>
-				<img data-apptimize="embed" src="images/wrapper/logo_243x41.png" class="displayNone_960 displayNone_1280 displayNone_320"/>
+				<img data-apptimize="embed" src="images/wrapper/logo_364x62.png" class="displayNone_640 displayNone_480 displayNone_320"/>
+				<img data-apptimize="embed" src="images/wrapper/logo_243x41.png" class="displayNone_960 displayNone_1280"/>
 			</a>
 			
-			<div id="livechat" class="displayNone_320 displayNone_480 floatLeft">
+			<div id="livechat" class="displayNone_320 displayNone_480 displayNone_640 floatLeft">
 				<div id="ciQYEp" style="z-index:100;position:absolute;"></div><div id="scQYEp" style="display:inline"></div><div id="sdQYEp" style="display:none"></div><script type="text/javascript">var seQYEp=document.createElement("script");seQYEp.type="text/javascript";var seQYEps=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/cubworld/safe-standard.js?ps_h=QYEp&ps_t="+new Date().getTime()+"&online-image=images/wrapper/livechat_172x67.png&offline-image=images/wrapper/livechat_172x67.png";setTimeout("seQYEp.src=seQYEps;document.getElementById('sdQYEp').appendChild(seQYEp)",1)</script>
 				<!--
 				<img data-apptimize="embed" src="images/wrapper/livechat_172x67.png" class="displayNone_640"/>
@@ -212,8 +212,10 @@ var _robots = {
 				-->
 			</div>
 			
+			<a id="headerTeam" href="#" onClick="return false;" data-app-click="store_swc|showMyTeamChooser" class="floatLeft highlightBG_2 white" data-templateid="headerSelectedTeamTemplate"></a>
+			
 			<div id="mininav" class="floatRight displayNone_320">
-				<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> |
+				<!-- <a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> | -->
 				<a href="#!company/contact/" class="textDecNone">Contact</a> |
 				<a href="#!customer/myaccount/" rel="nofollow" class="textDecNone">My Account</a> |
 				<a href="#!company/faq/" class="textDecNone">Help</a> |
@@ -260,7 +262,7 @@ var _robots = {
 			
 			<div class="displayNone_640 displayNone_480 alignCenter marginBottom">
 				<div>
-					<a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> |
+					<!-- <a href="#" data-app-click="store_swc|showMyTeamChooser" class="textDecNone bold">My Teams</a> | -->
 					<a href="#!company/contact/" class="textDecNone">Contact</a> |
 					<a href="#!customer/myaccount/" rel="nofollow" class="textDecNone">My Account</a> |
 					<a href="#!company/faq/" class="textDecNone">Help</a> |
@@ -448,7 +450,11 @@ var _robots = {
 
 <div id='appTemplates' class='displayNone seoStrip'>
 
-
+<div id="headerSelectedTeamTemplate" class="">
+	<img class="floatRight" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='63' --h='63' --b='ffffff'; apply --attrib='src';"/>
+	<h3>My Team:</h3>
+	<h4 data-tlc="bind $name '.p'; apply --append;"></h4>
+</div>
 
 
 

@@ -4,9 +4,9 @@
 	max-width:320px;
 	margin: auto;
 }
-#header {height:30px;}
-#appView {padding-top: 32px;padding-bottom:40px;}
-#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:32px;}
+#header {height:50px;}
+#appView {padding-top: 52px;padding-bottom:40px;}
+#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:52px;}
 #globalMessaging {position:relative; z-index: 101;}
 #nav {padding: 0px;}
 #nav.expand .fullNav { left:50%;}
@@ -18,12 +18,15 @@
 #appView #footer {height: 360px; bottom:-400px; font-size:16px;}
 /* #appView.peekFooter #footer {bottom:-360px;} */
 
+#headerTeam {margin-left: 12px; width: 120px; font-size: height: 50px; padding: 2px;}
+#headerTeam img{height: 46px; width: 46px;}
+#headerTeam h3 {font-size:14px;}
+#headerTeam h4 {font-size:12px;}
+
 #contact{font-size:11px;}
 #mininav{font-size:12px;}
 
-#logo img {
-	height: 30px;
-}
+#logo img {width: 150px;}
 
 .footerColumn {width:320px;}
 #footer #copyright {position:static; margin-top:5px;}

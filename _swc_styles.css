@@ -97,6 +97,8 @@ a.redText{color:#7e0000;}
 	z-index: 101;
 }
 
+#headerTeam {display:block; border:0px; text-decoration:none;}
+
 #expandNav a {display:block; width: 30px; height: 30px; line-height:30px}
 #expandNav a img{vertical-align:middle;}
 #nav {padding:3px 0px; position:absolute; left:0px; right:0px; bottom:0px;}

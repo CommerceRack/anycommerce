@@ -14,8 +14,12 @@
 /* #appView.peekFooter #footer {bottom:-130px;} */
 #footer{padding: 20px 0px;}
 
-#livechat {margin-left: 42px;}
-#livechat img {width:115px; height:42px;}
+/* #livechat {margin-left: 20px;} */
+/* #livechat img {width:115px; height:42px;} */
+
+#headerTeam {margin-left: 36px; width: 140px; font-size: height: 50px; padding: 2px; font-size:.7em;}
+#headerTeam img{height: 46px; width: 46px;}
+
 #mininav{font-size:.7em;}
 #contact{font-size:.7em;}
 #search input{ height:13px;}
