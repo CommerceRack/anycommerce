@@ -388,7 +388,6 @@ var store_swc = function(_app) {
 				if(args.index){
 					var team = data.globals.binds[data.globals.focusBind];
 					var $tag = data.globals.tags[data.globals.focusTag];
-					dump(team);
 					$tag.attr('data-filter-index',args.index);
 					
 					var $t = $('<div data-filter="inputContainer"></div>');
@@ -472,14 +471,14 @@ var store_swc = function(_app) {
 				return true;
 				},
 			schemaavailability : function(data, thisTLC){
-				dump(_app.ext.store_product.u.productIsPurchaseable(data.globals.binds[data.globals.focusBind]));
+				// dump(_app.ext.store_product.u.productIsPurchaseable(data.globals.binds[data.globals.focusBind]));
 				if(_app.ext.store_product.u.productIsPurchaseable(data.globals.binds[data.globals.focusBind])){
 					data.globals.binds[data.globals.focusBind] ="http://schema.org/InStock";
 					}
 				else {
 					data.globals.binds[data.globals.focusBind] ="http://schema.org/OutOfStock";
 					}
-				dump(data.globals.binds[data.globals.focusBind]);
+				// dump(data.globals.binds[data.globals.focusBind]);
 				return true;
 				},
 			dump : function(data,thisTLC){
@@ -579,7 +578,6 @@ var store_swc = function(_app) {
 				},
 			*/
 			setUserTeam : function(team, homepageOverride){
-				dump(team);
 				var fullTeamObj = $.grep(_app.ext.store_swc.validTeams[team.sport], function(e, i){ return e.v == team.team})[0];
 				if(fullTeamObj){
 					_app.ext.store_swc.vars.userTeam = $.extend(true, {"checked":"checked", "sport":team.sport}, fullTeamObj);
@@ -594,7 +592,6 @@ var store_swc = function(_app) {
 				team.prompt = team.prompt || 'Do you want to set your team to the <span class="redText">'+fullTeamObj.p+'</span>?';
 				
 				var $promptContainer = $('#myTeamChooser .myTeamPromptContainer');
-				dump(team);
 				$promptContainer.tlc({verb:'transmogrify', dataset:team, templateid:$promptContainer.attr('data-templateid')});
 				$('.dismiss', $promptContainer).button({"text":"No Thanks"});
 				$('.accept', $promptContainer).button({"text":"OK"});
@@ -629,7 +626,6 @@ var store_swc = function(_app) {
 				$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
 				
 				_app.model.writeLocal('swcUserTeam', team);
-				dump("my team saved");
 				},
 			/*
 			renderMyTeams : function(){
@@ -780,6 +776,7 @@ var store_swc = function(_app) {
 		e : {
 			execFilteredSearch : function($form, p){
 				var loadFullList = $form.data('loadFullList');
+				// dump("Executing Filtered Search");
 				if(loadFullList){
 					_app.ext.store_swc.vars.filterLoadingComplete = false;
 					}
@@ -923,7 +920,7 @@ var store_swc = function(_app) {
 								});
 							}
 						}
-					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : true});
+					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
 				_app.model.dispatchThis();
 				
 				},
@@ -1209,7 +1206,6 @@ var store_swc = function(_app) {
 					'datapointer' : "appBuyerCreate"
 					}
 				obj._cmd = "appBuyerCreate";
-				dump(obj);
 				_app.model.addDispatchToQ(obj, 'immutable');
 				_app.model.dispatchThis('immutable');
 				},
