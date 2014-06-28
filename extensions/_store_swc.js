@@ -1285,16 +1285,16 @@ var store_swc = function(_app) {
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "<h3>"+teamname+" T-Shirts - Mens, Womens & Youth</h3>"
-							+ "<p>"+teamname+" fans come from all walks of life and in all shapes and sizes, so we have an expansive "+teamname+" t-shirts collection to match this diversity. The unifying factor: an unwavering love for the "+teamname+".  Our "+teamname+" t-shirts collection includes long-sleeve shirts, short-sleeve and jersey-style varieties. </p>"
-							+ "<p>While we carry a ton of shirts for women and men, we can`t forget our little budding "+teamname+" fans-browse our kids shirts section for youth or toddler-sized gear. With SportsWorld`s "+teamname+" t-shirt options, you can truly outfit the whole family.</p>"
+					var str = "<h3>"+teamName+" T-Shirts - Mens, Womens & Youth</h3>"
+							+ "<p>"+teamName+" fans come from all walks of life and in all shapes and sizes, so we have an expansive "+teamName+" t-shirts collection to match this diversity. The unifying factor: an unwavering love for the "+teamName+".  Our "+teamName+" t-shirts collection includes long-sleeve shirts, short-sleeve and jersey-style varieties. </p>"
+							+ "<p>While we carry a ton of shirts for women and men, we can`t forget our little budding "+teamName+" fans-browse our kids shirts section for youth or toddler-sized gear. With SportsWorld`s "+teamName+" t-shirt options, you can truly outfit the whole family.</p>"
 							+ "<h3>Ordering Online & Size Questions</h3>"
-							+ "<p>Unsure how to place your order for your "+teamname+" t-shirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+							+ "<p>Unsure how to place your order for your "+teamName+" t-shirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
 					return str;
 					},
 				metaDescriptionBuilder : function(teamName){
-					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
-							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
+					var str = "Authentic "+teamName+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamName+" fan has a complete attire selection without an authentic "+teamName+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamName+" jerseys, as well as some throwback designs that pay homage to the "+teamName+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1315,16 +1315,16 @@ var store_swc = function(_app) {
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "<h3>Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys</h3>"
-							+ "<p>If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. </p>"
-							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamname+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamname+", any jersey style, totally your choice. </p>"
+					var str = "<h3>Authentic "+teamName+" Home, Road, Alternate and Personalized jerseys</h3>"
+							+ "<p>If you ask us, no "+teamName+" fan has a complete attire selection without an authentic "+teamName+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamName+" jerseys, as well as some throwback designs that pay homage to the "+teamName+" of yesteryear. </p>"
+							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamName+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamName+", any jersey style, totally your choice. </p>"
 							+ "<h3>Ordering Online & Size Questions</h3>"
-							+ "<p>Unsure how to place your order for your "+teamname+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+							+ "<p>Unsure how to place your order for your "+teamName+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
 					return str;
 					},
 				metaDescriptionBuilder : function(teamName){
-					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
-							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
+					var str = "Authentic "+teamName+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamName+" fan has a complete attire selection without an authentic "+teamName+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamName+" jerseys, as well as some throwback designs that pay homage to the "+teamName+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1353,16 +1353,16 @@ var store_swc = function(_app) {
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "<h3>Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys</h3>"
-							+ "<p>If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. </p>"
-							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamname+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamname+", any jersey style, totally your choice. </p>"
+					var str = "<h3>Authentic "+teamName+" Home, Road, Alternate and Personalized jerseys</h3>"
+							+ "<p>If you ask us, no "+teamName+" fan has a complete attire selection without an authentic "+teamName+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamName+" jerseys, as well as some throwback designs that pay homage to the "+teamName+" of yesteryear. </p>"
+							+ "<p>At SportsWorldChicago.com, you have the option to personalize a "+teamName+" jersey with your own name or to even customize it with your favorite player's name. You name it...Any "+teamName+", any jersey style, totally your choice. </p>"
 							+ "<h3>Ordering Online & Size Questions</h3>"
-							+ "<p>Unsure how to place your order for your "+teamname+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+							+ "<p>Unsure how to place your order for your "+teamName+" jerseys?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
 					return str;
 					},
 				metaDescriptionBuilder : function(teamName){
-					var str = "Authentic "+teamname+" Home, Road, Alternate and Personalized jerseys. "
-							+ "If you ask us, no "+teamname+" fan has a complete attire selection without an authentic "+teamname+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamname+" jerseys, as well as some throwback designs that pay homage to the "+teamname+" of yesteryear. "
+					var str = "Authentic "+teamName+" Home, Road, Alternate and Personalized jerseys. "
+							+ "If you ask us, no "+teamName+" fan has a complete attire selection without an authentic "+teamName+" jersey.  And SportsWorldChicago.com is the perfect place to pick one up, whether you're looking for an adult, youth jersey or an authentic, home, away or personalized jersey. We carry a wide selection for fans to choose from, with a mix of current "+teamName+" jerseys, as well as some throwback designs that pay homage to the "+teamName+" of yesteryear. "
 					return str;
 					},
 				baseFilter : {
@@ -1391,15 +1391,15 @@ var store_swc = function(_app) {
 					return str;
 					},
 				descriptionBuilder : function(teamName){
-					var str = "<h3>Cozy "+teamname+" Sweatshirts for Women, Men, and Children</h3>"
-							+ "<p>We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamname+" sweatshirts.  Plus, this way you can support the "+teamname+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamname+" sweatshirts and keep on keeping the faith-there`s always next year!</p>"
+					var str = "<h3>Cozy "+teamName+" Sweatshirts for Women, Men, and Children</h3>"
+							+ "<p>We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamName+" sweatshirts.  Plus, this way you can support the "+teamName+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamName+" sweatshirts and keep on keeping the faith-there`s always next year!</p>"
 							+ "<h3>Ordering Online & Size Questions</h3>"
-							+ "<p>Unsure how to place your order for your "+teamname+" sweatshirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
+							+ "<p>Unsure how to place your order for your "+teamName+" sweatshirts?  You`ve got a few easy options!  Just give us a call at 844-462-4422 and one of our friendly staff members will be able answer any questions about our products, shipping costs, return policy, as well as process your order.  You can also make your purchase right here online through our website's shopping cart system.  It's a fast, simple way to send us your order, and any order we receive before 2 pm CST will be shipped the same day.</p>"
 					return str;
 					},
 				metaDescriptionBuilder : function(teamName){
-					var str = "Cozy "+teamname+" Sweatshirts for Women, Men, and Children. "
-							+ "We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamname+" sweatshirts.  Plus, this way you can support the "+teamname+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamname+" sweatshirts and keep on keeping the faith-there`s always next year!"
+					var str = "Cozy "+teamName+" Sweatshirts for Women, Men, and Children. "
+							+ "We`ve all been there: those early season games, still a heavy chill in the air, and wind whipping through the Stadium...Brrr!  But have no fear; you can keep yourself warm and your allegiances known with our huge selection of "+teamName+" sweatshirts.  Plus, this way you can support the "+teamName+" year-round AND they make a great warm and fuzzy holiday gift.  Choose from unique men`s, kids`, or women’s "+teamName+" sweatshirts and keep on keeping the faith-there`s always next year!"
 					return str;
 					},
 				baseFilter : {
