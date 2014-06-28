@@ -1206,7 +1206,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 			<h6 class="prodName" data-tlc="bind $orig '.%attribs.zoovy:prod_name'; bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
 			<h5 class="alignRight price" data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" >
 				<span>Our Price: </span>
-				<span data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ math --div='100' --precision='2'; format --currency='USD'; apply --append;}};" ></span>
+				<span data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD'; apply --append;}};" ></span>
 			</h5>
 		</div>
 		<!-- 
