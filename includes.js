@@ -1,6 +1,5 @@
 //this file merges three formerly separate files: variations.js, json2.js and wiki.js
 
-
 // POLYFILL FOR MAP.  required for peg.
 // *** 201402 -> added to make peg more backwards compatible (run in IE8)
 if (!Array.prototype.map)
@@ -33,8 +32,6 @@ if (!Array.prototype.map)
     return res;
   };
 }
-
-
 
 
 /*

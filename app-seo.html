@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>SEO Generator</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+	<script type="text/javascript">
+		/***************
+		CONFIG
+		***************/
+		var domain = window.location.origin;
+		var pages = [
+			"/my/custom/page.html"
+		];
+		var prodBlacklist = [
+			'WIKITEST'
+			];
+		var navcatBlacklist = [
+			'.michael'
+			];
+		/***************
+		SETUP
+		***************/
+		var apiDomain = domain + "/jsonapi/"
+		var session = new Date().getTime();
+		var requestNum = 0;
+		//readable log, for informing the user without opening the console.  Used to list all the escaped fragment urls indexed.
+		function rLog(msg){
+			$('#output').append(msg+"<br/>");
+		};
+		function request(obj, callback){
+			console.log(apiDomain);
+			$.extend(obj, {
+				"_clientid" : "zmvc",
+				"_uuid" : requestNum,
+				"_version" : "201352",
+				"_session" : session
+				});
+			console.log(obj);
+			var request = $.ajax({
+				type: "POST",
+				url: apiDomain,
+				async: true,
+				contentType : "application/json",
+				dataType:"json",
+				data : JSON.stringify(obj)
+			})
+			if(typeof callback == 'function'){
+				request.success(callback);
+			}
+			requestNum++;
+			
+		};
+		function fetchSEO(token){
+			if(!window.lock){
+				$('#seoTokenForm').hide();
+				window.lock = true;
+				window.token = token;
+				
+				//Temporarily bypassing this until we have a domain on 201401 to test
+				var obj = {
+					"_cmd" : "appSEOFetch",
+					"token" : token
+				}
+				request(obj, function(response){
+					var objects = response['@OBJECTS'];
+					for(var i in objects){
+						var o = objects[i];
+						var p = buildPage(o);
+						//Still use false? Blacklisted stuff comes out as false?
+						if(p){
+							pages.push(p);
+						}
+					}
+					for(var i in pages){
+						var paramBase = "?v="+new Date().getTime()+"&seoRequest=1&quiet=1";
+					
+						var p = pages[i];
+						if(typeof p === "string"){
+							pages[i] = {
+								display : p,
+								path : p,
+								include : true
+							}
+							p = pages[i];
+						}
+						
+						var paramStr = paramBase;
+						if(p.uriParams){
+							for(var i in p.uriParams){
+								paramStr += "&"+i+"="+p.uriParams[i];
+								}
+							}
+						p.path = domain+paramStr+(p.path ? "#!"+p.path : "");
+						//console.log(p.path);
+					}
+					
+					promptPages();
+				});				
+			}
+		};
+		//adds a page object to pages
+		function buildPage(pageInfo){
+			var page = false;
+			switch(pageInfo.type){
+				case "pid":
+					page = {
+						display : "Product["+pageInfo.id+"]",
+						uriParams : {
+							pageType : "product",
+							pid : pageInfo.id
+						},
+						include : ($.inArray(pageInfo.id, prodBlacklist) < 0) && !pageInfo['seo:noindex']
+					}
+					break;
+				case "navcat" : 
+					page = {
+						display : "Category["+pageInfo.id+"]",
+						uriParams : {
+							pageType : "category",
+							navcat : pageInfo.id
+						},
+						include : ($.inArray(pageInfo.id, navcatBlacklist) < 0) && !pageInfo['seo:noindex']
+					}
+					break;
+				case "list" : 
+					console.log("LIST "+pageInfo.id+" SKIPPED IN PAGE BUILDING");
+					break;
+				default : 
+					rLog("Unrecognized pageInfo type: "+pageInfo.type);
+					console.log("Unrecognized pageInfo type: "+pageInfo.type+" full obj follows:");
+					console.dir(pageInfo);
+					break;
+					
+			}
+			return page;
+		}
+		
+		function promptPages(){
+			//TODO: Filter box for results
+			//TODO: Summary of pages (total, etc...)
+			var $pageTableContainer = $('#pageTableContainer');
+			$pageTableContainer.empty();
+			
+			var $filterDiv = $('<div>Filter: <input name="pageFilter" type="text"/> <button name="checkAll">Check All</button> <button name="uncheckAll">Uncheck All</button></div>');
+			var $pageTable = $('<div class="tableContainer"><table><tbody></tbody></table></div>');
+			var $controls = $('<div id="filterControls">Max Page Render Time <span class="hint" title="recommended at least 5 seconds">?</span>: <input id="maxTimeout" name="maxTimeout" type="text" value="8"/></div>');
+			var $generateSEOBtn = $('<button>Generate SEO</button>').on('click',function(){generateSEO($('#maxTimeout', $controls).val());});
+			
+			$('input', $filterDiv).on('keyup',function(){
+				var filter = $(this).val();
+				if(filter.length > 2){
+					$('tr',$pageTable).each(function(){
+						if($(this).attr('data-page').toUpperCase().indexOf(filter.toUpperCase()) < 0){
+							$(this).hide();
+						} else {
+							$(this).show();
+						}
+					})
+				} else {
+					$('tr',$pageTable).show();
+				}
+			});
+			$('button', $filterDiv).on('click',function(){
+				if($(this).attr('name') == "checkAll"){
+					$('input[type=checkbox]', $pageTable).attr('checked', true);
+				} else if($(this).attr('name') == "uncheckAll"){
+					$('input[type=checkbox]', $pageTable).attr('checked', false);
+				} else {
+					//Not sure what button you've clicked, sir.
+				}
+			});
+
+			$pageTableContainer.append($filterDiv);
+			$pageTableContainer.append($pageTable);
+			$pageTableContainer.append($controls);
+			$pageTableContainer.append($generateSEOBtn);
+			
+			var tbodyHTML = "";
+			for(var i in pages){
+				var p = pages[i];
+				tbodyHTML +='<tr id="page_'+i+'"><td>'+(p.display ? p.display : p.path)+'</td><td><input data-page="'+p.path+'" type="checkbox"'+ (p.include ? 'checked="checked"' : '') +'></td></tr>';
+			}
+			//console.log(tbodyHTML);
+			$('tbody',$pageTable).append(tbodyHTML);
+			
+		}
+		
+		function generateSEO(maxTimeout){
+			console.log(maxTimeout);
+			for(var i in pages){
+				pages[i].include = $('#page_'+i+' input[type=checkbox]').is(":checked");
+			}
+			console.log('Beginning indexing');
+			indexNextPage(maxTimeout);
+		}
+		
+		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
+		function indexNextPage(maxTimeout){
+			if(pages.length){
+				var currPage = pages.splice(0,1)[0];
+				if(currPage.include){
+					console.log('pages.length: '+pages.length);
+					rLog("Indexing "+currPage.path);
+					$('#appContainer').get(0).src = currPage.path;
+					
+					window.timeoutID = setTimeout(function(){
+						rLog('Page finished '+currPage.path);
+						finishPage(currPage);
+						indexNextPage(maxTimeout);
+					}, parseInt(maxTimeout)*1000);
+				} else {
+					setTimeout(function(){indexNextPage(maxTimeout)},1);
+				}
+			} else {
+				console.log("no more pages")
+				 $('#appContainer').get(0).remove();
+				//Temporarily bypassing this until we have a domain on 201401 to test
+				finishSEO();
+				window.lock = false;
+			}
+		}
+		
+		
+		function finishPage(page){
+			clearTimeout(window.timeoutID);
+			
+			var iframe = $('#appContainer').get(0);
+			
+			var iframeHash = iframe.contentWindow.location.hash;
+			if(iframeHash.indexOf('#!') == 0){
+				iframeHash = iframeHash.substr(2);
+				}
+			
+			var doc = $('#appContainer').get(0).contentWindow.document
+			$(doc.getElementsByTagName('script')).each(function(){$(this).remove()});
+			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'/#!'+iframeHash+'" />');
+			console.log(doc.getElementsByTagName('script'));
+			console.log(doc.getElementsByTagName('script').length);
+			
+			var doctype = "<!DOCTYPE html>";
+			var dochtml = doc.documentElement.outerHTML;
+			
+			var body = /<body[^>]*>((.*\n*\r*\u2028*\u2029*)*)<\/body>/;
+			var removeHtml = body.exec(dochtml)[1];
+			var $tmp = $('<div>'+removeHtml+'</div>');
+			$('.seoStrip, script', $tmp).each(function(){
+				$(this).empty().remove();
+			});
+			dochtml = dochtml.replace(removeHtml, $tmp.html());
+			$tmp.remove();
+			
+			var html = doctype + dochtml;
+			
+			var obj = {
+				"_cmd" : "appSEOStore",
+				"#!" : iframeHash,
+				"html" : html,
+				"token" : token
+			}
+			setTimeout(function(){request(obj);}, 50);
+		}
+		function finishSEO(){
+			rLog('Requesting SEOFinish for token '+token);
+			var obj = {
+				"_cmd" : "appSEOFinish",
+				"token" : token
+			}
+			request(obj, function(){rLog('SEO finish command sent.  See the js console for details, or refresh to run with a new SEO Token.');});
+		};
+	</script>
+	
+	<style>
+	#pageTableContainer .tableContainer{
+		overflow-y: scroll;
+		height: 400px;
+		outline: 1px solid #AAAAAA;
+	}
+	.hint {text-decoration: underline; color: grey;}
+	</style>
+</head>
+<body>
+	<p>
+		Open this file in a text editor to add custom pages or update the product and/or category blacklists
+	</p>
+	<div id="seoTokenForm">
+		<div>
+			<label>Enter SEO Token</label>
+			<input type="text" required="required" name="seoToken"/>
+		</div>
+		<button onClick="fetchSEO($('input[name=seoToken]',$(this).parent()).val()); return false;">Submit Token</input>
+	</div>
+	<iframe id="appContainer" style="width:100%; height:400px;"></iframe>
+	<div id="pageTableContainer">
+		
+		
+		
+	</div>
+	<code id="output">
+	
+	</code>
+</body>
+</html>

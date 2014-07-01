@@ -1,0 +1,1009 @@
+
+<div class='ui-widget' id='orderManagerTemplate'>
+<table class='orderManagerTable'>
+<tr>
+	<td class='leftCol'>
+	
+<div class='searchAndFilterContainer'>
+
+		<h2>Order Search</h2>
+		<div>
+<form class='labelsAsBreaks' onsubmit="return false" action='#'>
+<fieldset>
+
+	<label>
+	<span>Keyword: <span class='toolTip' title="Enter the orderid or marketplace id into keyword or enable detailed search to query by email, marketplace id (ebay item #), address, payment or shipment">?</span></span>
+	<input type='search' name='keyword' class='fixedWidth' />
+	</label>
+	<label><input type='checkbox' name='isDetailedSearch' />detailed search</label>
+	<label># orders: <input type='number' class='smallInput' max="250" min="1" name='size' value='30' size='3' /></label>
+
+	<button data-app-click="admin_orders|orderSearch" class='applyButton'>Show Results</button>
+
+</fieldset>
+</form>
+		</div>
+
+	
+	
+		<h2>Item Filters</h2>
+		<div data-app-role='admin_orders|orderListFiltersUpdate'>
+			<section class='clearfix'>
+			<ul class='noPadOrMargin listStyleNone filterGroup'>
+				<li data-filtervalue='backorder' data-app-click='admin_orders|itemListFilterUpdate'>Backorder</li>
+				<li data-filtervalue='preorder' data-app-click='admin_orders|itemListFilterUpdate'>Preorder</li>
+				<li data-filtervalue='return' data-app-click='admin_orders|itemListFilterUpdate'>Returns</li>
+				<li data-filtervalue='pick_noroute' data-app-click='admin_orders|itemListFilterUpdate'>Unrouted Picks</li>
+				<li data-filtervalue='pick_unshipped' data-app-click='admin_orders|itemListFilterUpdate'>Unshipped Picks</li>
+			</ul>
+			</section>
+		</div>
+
+
+
+
+		<h2>Order Filters</h2>	
+		<div data-app-role='admin_orders|orderListFiltersUpdate'>
+			<section class='clearfix'>
+			<h4>Order Status:</h4>
+			<ul id='orderListFilterPool' class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
+				<li data-filtervalue='RECENT' data-app-click='admin_orders|orderListFiltersUpdate'>Recent</li>
+				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='PREORDER' data-app-click='admin_orders|orderListFiltersUpdate'>Preorder</li>
+				<li data-filtervalue='BACKORDER' data-app-click='admin_orders|orderListFiltersUpdate'>Backorder</li>
+				<li data-filtervalue='REVIEW' data-app-click='admin_orders|orderListFiltersUpdate'>Review</li>
+				<li data-filtervalue='HOLD' data-app-click='admin_orders|orderListFiltersUpdate'>Hold</li>
+				<li data-filtervalue='APPROVED' data-app-click='admin_orders|orderListFiltersUpdate'>Approved</li><!-- add this to li for auto-submit:  data-app-click='admin_orders|orderListFiltersUpdate' -->
+				<li data-filtervalue='PROCESS' data-app-click='admin_orders|orderListFiltersUpdate'>Process</li>
+				<li data-filtervalue='COMPLETED' data-app-click='admin_orders|orderListFiltersUpdate'>Completed</li>
+				<li data-filtervalue='DELETED' data-app-click='admin_orders|orderListFiltersUpdate'>Cancelled</li>
+			</ul>
+			</section>
+
+
+			<section class='clearfix'>
+			<h4>Payment Status:</h4>
+			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_VERB'>
+				<li data-filtervalue='PAID' data-app-click='admin_orders|orderListFiltersUpdate'>Paid</li>
+				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='DENIED' data-app-click='admin_orders|orderListFiltersUpdate'>Denied</li>
+				<li data-filtervalue='ERROR' data-app-click='admin_orders|orderListFiltersUpdate'>Error</li>
+			</ul>
+			</section>
+			
+			
+			<section class='clearfix'>
+			<h4>Payment Type:</h4>
+			<ul id='orderListFilterPaymentType' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_METHOD'>
+				<li data-filtervalue='PAYPAL' data-app-click='admin_orders|orderListFiltersUpdate'>PayPal</li>
+				<li data-filtervalue='CASH' data-app-click='admin_orders|orderListFiltersUpdate'>Cash</li>
+				<li data-filtervalue='CRED' data-app-click='admin_orders|orderListFiltersUpdate'>Credit</li>
+			</ul>
+			</section>
+			
+			
+			<section class='clearfix'>
+			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
+			<ul id='orderListFilterMarket' class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
+				<li data-filtervalue='AMZ' data-app-click='admin_orders|orderListFiltersUpdate'>Amazon</li>
+				<li data-filtervalue='EBF' data-app-click='admin_orders|orderListFiltersUpdate'>eBay</li>
+				<li data-filtervalue='GOO' data-app-click='admin_orders|orderListFiltersUpdate'>Google</li>
+			</ul>
+			</section>
+
+			<div class='marginBottom marginTop'><label># orders: <input type='number' class='smallInput' max="250" min="1" id='filterLimit' value='30' size='3' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
+	
+		</div>
+
+<!--
+		<h2>Report</h2>
+		<div>Coming Soon!</div>
+-->
+	</div>
+	</td>
+	
+	<td class='mainCol'><!-- ordersView class will change to itemsView when in items mode -->
+	<div id='ordersInterfaceMainColumn' class='orderListMode' data-mode='order'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
+	
+		<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
+	
+			<div class='ui-widget-header ui-corner-tr clearfix' data-app-role='ordersButtonContainer'>
+				<div data-app-role='orderCreateButtonset' class='positionRelative floatRight'>
+				<button class='applyButton' data-app-role='createOrderButton' onClick="navigateTo('#!ext/order_create/appCartCreate');">New Order</button>
+				<button class='applyButton' data-app-click='admin_orders|inProgressOrderEditShowList' data-text='false' data-icon-primary='ui-icon-cart' data-icon-secondary='ui-icon-triangle-1-s'>Edit In Progress Order</button>
+				<ul class='displayNone' data-app-role='inProgressOrderList'></ul>
+				</div>
+				<button class='floatLeft applyButton' data-app-click='admin_orders|orderListUpdateSelectAll'>Select All</button>
+				<button class='floatLeft applyButton' data-app-click='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+		
+				<!-- bulk edit menu for orders -->
+				<div class='floatLeft marginLeft bulkEditMenu hideInItemListMode'>
+				<ul data-app-role='admin_orders|orderUpdateBulkEditMenu'>
+					<li><a href='#'>Action</a>
+					<ul>
+						<li><a href='#'>Change pool to</a>
+						<ul>
+							<li><a href='#POOL|RECENT' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Recent</a></li>
+							<li><a href='#POOL|PENDING' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Pending</a></li>
+							<li><a href='#POOL|PREORDER' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Preorder</a></li>
+							<li><a href='#POOL|BACKORDER' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Backorder</a></li>
+							<li><a href='#POOL|REVIEW' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Review</a></li>
+							<li><a href='#POOL|HOLD' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Hold</a></li>
+							<li><a href='#POOL|APPROVED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Approved</a></li>
+							<li><a href='#POOL|PROCESS' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Process</a></li>
+							<li><a href='#POOL|COMPLETED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Completed</a></li>
+							<li>---------------</li>
+							<li>---------------</li>
+							<li><a href='#POOL|DELETED' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Cancelled</a></li>
+						</ul></li>
+	
+						<li><a href='#'>Print</a>
+						<ul>
+							<li><a href='#PRNT|INVOICE' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Invoices</a></li>
+							<li><a href='#PRNT|PACKSLIP' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Packing slips</a></li>
+						</ul>
+						</li>
+
+						<li><a href='#PMNT|FLAGASPAID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Flag as paid</a></li>
+	
+					</ul>
+					</li>
+				</ul>
+				</div>
+				
+				<!-- bulk menu for items -->
+				<div class='floatLeft marginLeft bulkEditMenu hideInOrderListMode'>
+				<!--<ul data-app-role='admin_orders|itemUpdateBulkEditMenu'>
+				
+					<li><a href='#'>Action</a>
+					<ul>
+						<li class='hideInOrderListMode'><a href='#BTCH|ADDBATCHID' data-app-click='admin_orders|bulkImpactOrderItemListExec'>Do something awesome</a></li>
+					</ul>
+					</li>
+				
+				</ul>-->
+				</div>
+	
+			</div>
+
+			<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
+			
+			<table id="orderListTable" class='gridTable ' data-app-role='orderListTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th></th>
+				<th data-name='ORDERID' title='Order ID'>Order ID</th>
+				<th data-name='ORDER_BILL_NAME' title='Billing full name'>Customer</th>
+				<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='Order total'>Total</th>
+				<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='# Items'>Items</th>
+				<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='Payment method'>Method</th>
+				<th data-name='ORDER_PAYMENT_STATUS' title='Order payment status'>Status</th>
+				<th class='hideInMinimalMode' data-name='CREATED_GMT' title='Date order created'>Created</th>
+				<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='Shipping destination'>Dest.</th>
+				<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='Fraud review status'>Fraud</th>
+				<th data-name='FLAGS' title='Flags'>Flags</th>
+				<th data-name='REVIEW_STATUS' title='Order status'>Pool</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;" data-app-role='orderListTbody'></tbody>
+			</table>
+			</div>
+	
+			<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
+			<table id='itemListTable' class='gridTable fullWidth' data-app-role='itemListTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th></th>
+				<th title='SKU'>SKU</th>
+				<th title='SKU'>Order ID</th>
+				<th class='hideInMinimalMode' title='Batch ID'>Batch ID</th>
+				<th title='Pick order ID'>Pick Order ID</th>
+				<th class='hideInMinimalMode' title='Marketplace reference ID'>Mkt Ref ID</th>
+				<th class='hideInMinimalMode' title='Inventory record base type'>Base Type</th>
+				<th title='Supplier'>Supplier</th>
+				<th title='WMS Geo'>Geo</th>
+				<th title='WMS Zone'>Zone</th>
+				<th title='WMS Position'>Position</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody id="itemListTableBody" data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
+			</table>
+			</div>
+	
+	
+		</div>
+	</div>
+	</td>
+</tr>
+</table>
+</div><!-- /orderManagerTemplate -->
+
+
+
+
+
+
+<!-- used for order lineitem in orderList template -->
+<table>
+<tr id='adminOrdersOrderLineItem' class='adminOrderLineItem' >
+	<td class='statusIcon'></td>
+	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
+	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ITEMS);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
+	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><time data-bind='var:order(CREATED_GMT);format:epoch2mdy;'></time></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(POOL);format:text;'></span></td>
+	<td NOWRAP class='alignRight'>
+
+	<button data-app-click='admin_orders|orderUpdateShowEditor' data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+
+	<button class='hideInMinimalMode applyButton' data-app-click="admin_orders|orderQuickviewShow" data-text='false' data-icon-primary='ui-icon-gear' data-icon-secondary='ui-icon-triangle-1-s' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
+	
+	<menu class='displayNone orderQuickviewMenu' >
+		<h3>Quickview</h3>
+		<!-- if these aren't buttons, the event doesn't bubble up, due to some stop propagation in the selectable. however, to control styling, button() not applied. -->
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="invoice">Invoice</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="orderNotes">Order Notes</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="trackingHistory">Shipping/Tracking</button></li>
+		<li><button class='fullWidth' data-app-click="admin_orders|orderQuickviewExec" data-verb="eventHistory">Event History</button></li>
+	</menu>
+	</td>
+</tr>
+
+
+<tr id='adminOrdersItemLineItem'>
+	<td class='statusIcon'></td>
+	<td><span data-bind='var:order(SKU);format:text;'></span></td>
+	<td><span data-bind='var:order(OUR_ORDERID);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(PICK_BATCHID);format:text;'></span></td>
+	<td><span data-bind='var:order(PICK_ORDERID);format:paystatus;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(MARKET_REFID);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(BASETYPE);format:text;'></span></td>
+	<td><span data-bind='var:order(SUPPLIER);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_GEO);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_ZONE);format:text;'></span></td>
+	<td><span data-bind='var:order(WMS_POSITION);format:text;'></span></td>
+	<td NOWRAP class='alignRight'>
+	<button data-app-click='admin_orders|orderUpdateShowEditor' data-mode='inventoryDetail' data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+WARNING! - In the order view template(s), avoid using any ID's.  
+That'll allow us to easily change the viewer from a modal to a plain dialog to allow multiple order views to be open at one time.
+-->
+
+<div id='orderDetailsTemplate' class='orderDetails '>
+
+<div class='clearfix marginBottom topCol' data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+
+
+	<hgroup class='floatLeft marginRight'>
+		<h1 data-bind="var:order(our/orderid);format:text;"></h1>
+		<h2>Order Pool: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); adminApp.ext.admin_orders.u.updateOrderChangeCount($(this));" data-app-role='orderUpdatePool'></select></h2>
+		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ; hideZero:false;"></h3>
+		<div data-bind="var:order(our/profile);format:text; pretext: profile: ;"></div>
+		<div data-bind="var:order(our/domain);format:text; pretext: domain: ;"></div>
+		<div data-bind="var:order(cart/refer);format:text; pretext: meta: ;"></div>
+		<div data-bind="var:order(cart/ip_address);format:text; pretext: IP Address: ;"></div>
+		<div data-bind="var:order(our/order_ts); format:epoch2mdy; showtime:1;"></div>
+		<div data-bind='var: order(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
+		<div><b data-bind='var: order(sum/balance_due_total); format:orderbalance; hideZero:false; currencySign: $; extension:cco;'></b></div>
+		<h6 data-bind='var: order(want/po_number); format:text; pretext:PO #: ;'></h6>
+	</hgroup>
+
+	<div class='floatRight marginRight marginLeft shipAddressContainer topCol'>
+	<h4>Shipping Address</h4>
+<div data-app-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
+<!--	<button class='smallButton' data-app-event="admin_orders|addressEdit">edit</button> -->
+	</div>
+
+
+	<div class='floatRight marginLeft billAddressContainer topCol'>
+	<h4>Billing Address</h4>
+	<div data-app-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;" class='marginBottom'></div>
+<!-- 	<button class='smallButton' data-app-event="admin_orders|addressEdit">edit</button> -->
+	</div>
+
+</div>
+
+
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton positionRelative"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+<!--	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='TEST'>TEST</button> -->
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='INVOICE'>Print Invoice</button>
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin_orders|orderPrint" data-printable='PACKSLIP'>Packing Slip</button>
+
+	<button class='floatLeft hide4Native applyButton' data-app-click="admin|showMenu">Print Preview</button>
+	<menu class='displayNone'>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Invoice</a></li>
+		<li><a href="#" data-app-click="admin_orders|orderPrint" data-printable='INVOICE' data-mode='preview'>Packing Slip</a></li>
+	</menu>
+	
+
+	<!-- the appearance of the following customer buttons will be shown/hidden based on whether or not a valid customer record is already assigned to the order -->
+	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerEdit' data-app-role='orderEditorCustomerEditButton'>Edit Customer</button>
+	<button class='floatLeft hide4Native displayNone' data-app-event='admin_orders|orderCustomerAssign' data-app-role='orderEditorCustomerAssignButton'>Assign Customer</button>
+	
+	<button class='floatLeft hide4Native' data-app-event="admin_customer|appAdminTicketCreateShow" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Create CRM Ticket</button>
+	<div class='floatLeft hide4Native'>
+	<button data-app-event="admin_orders|orderBlastSend">Send Email</button>
+	</div>
+	<button class='floatRight' data-app-event="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
+	<button class='floatRight' data-app-event="admin_orders|orderUpdateCancel">Back to Order List</button>
+</div>
+
+
+<div class='orderSupplementalInformation'>
+
+
+	<div data-app-role='orderContents'>
+	<h2>Order Contents</h2>
+	
+	<section>
+		<form action='#'>
+		<div class='clearfix marginBottom'>
+			<fieldset class='floatRight marginLeft' data-role='adminOrders|orderSummary'>
+				<legend>Order Summary</legend>
+				<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+				
+				<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+				<!-- tax is NOT editable on marketplace orders -->
+				<div data-bind="var: order(is/origin_marketplace); format:hideIfSet;">
+				<label>State tax rate: <input type='number' class='smallInput' size='4' step='0.01' min='0' name='sum/tax_rate_state' />%</label>
+				<label>Local tax rate: <input type='number' class='smallInput' size='4' step='0.01' min='0' name='sum/tax_rate_zone' />%</label>
+				</div>
+				<div class='orderShipping'>
+				<select name='sum/shp_carrier' data-bind='var:order(sum/shp_carrier);format:popVal;'>
+					<option value='SLOW'>slow</option>
+					<option value='FAST'>fast</option>
+					<option value='CPU'>customer pickup</option>
+					<option value='ELSE'>other</option>
+				</select>
+				<input type='text' name='sum/shp_method' size='15' data-bind='var:order(sum/shp_method);format:popVal;' />
+				<input type='number' class='smallInput' name='sum/shp_total' size='5' data-bind='var: cart(sum/shp_total); format:popVal;' step='0.01' min='0' /><!--
+				<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+				<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>-->
+				</div>
+				<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
+
+				<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+				
+				<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+				<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+				<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+				<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
+				<div>
+					<span data-bind='var: cart(sum/bnd_method); format:text; posttext:: ; '></span>
+					<span data-bind='var: cart(sum/bnd_total); format:money; hideZero:true; currencySign: $;'></span>
+				</div>
+				
+				<div><b data-bind='var: cart(sum/balance_due_total); format:orderbalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+			</fieldset>
+			<div data-bind='var:order(our/orderid); format:assignAttribute; attribute:data-orderid;'>
+			<table class='orderContentsTable' data-app-role='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
+			</div>
+		</div>
+		
+		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
+		<button data-app-event='admin_orders|orderSummarySave' disabled='disabled' title="Save shipping changes" class='floatRight'>Save <span class='numChanges'></span> Summary Changes</button>
+		<h2 class='floatLeft marginLeft'>Add item(s) to order:</h2>
+		<button class='marginLeft' data-app-event="admin_orders|orderItemAddStructured" title="Use the chooser to add an item to the order.">Use Chooser</button>
+		<button data-app-event="admin_orders|orderItemAddBasic" title="Use simple inputs to add an item to the order.">Use Inputs</button>
+		</div>
+	
+	</form>
+	</section>
+	</div>
+
+
+	<div data-app-role='orderNotes'  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+	<h2>Notes</h2>
+	<section class='notes' data-app-role='orderUpdateNotesContainer'>
+	
+	<div class='orderNotesContainer clearfix marginBottom'>
+	
+		<div class='floatLeft marginRight noteContainer'>
+			<h3>Public Order Notes</h3>
+			<div class='editable' data-bind='var:order(want/order_notes);format:text;' data-app-role='admin_orders|SETPUBLICNOTE'></div>
+		</div>
+
+		<div class='floatRight marginLeft noteContainer'>
+			<h3>Private Order Notes:</h3>
+			<div class='editable' data-bind='var:order(flow/private_notes);format:text;' data-app-role='admin_orders|SETPRIVATENOTE'></div>
+		</div>
+	
+	</div>
+
+	<div class='customerNotes' id='customerInformation'>
+		<h3>Customer Notes: </h3>
+		<div class='editable marginBottom'  data-app-role='admin_orders|ADDCUSTOMERNOTE'></div>
+		<table class='gridTable marginTop'>
+		<tbody data-bind='var:order(@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
+		</tbody>
+		</table>
+	</div>
+
+	</section>
+	</div>
+
+
+	<div data-app-role='orderPaymentInfo'>
+	<h2>Payment Information</h2>
+	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-app-role='orderUpdatePaymentMethodsContainer'>
+	
+	<div class='rightCol' data-app-role='orderUpdateAddPaymentContainer'>
+
+<form>
+	<fieldset>
+		<legend>Add Payment</legend>
+		<div data-bind='useParentData:true; format:fetchAndDisplayPayMethods; extension: admin_orders;'></div>
+		<div><label>Amount: <input type='number' class='smallInput' size='7' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
+		<div><label>Note: <input type='text' name='note' /></label></div>
+		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
+	</fieldset>
+</form>
+
+	</div>
+
+	<div class='leftCol'>
+	<h2>Transaction History</h2>
+	<table class='gridTable marginBottom applyAnytable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Action</th>
+		<th>Amt. Paid</th>
+		<th>Tender</th>
+		<th title='Transaction ID'>TID</th>
+		<th>Notes</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@PAYMENTS); loadsTemplate: orderPaymentHistoryTemplate; format:processList; extension: admin;" data-app-role='transactionHistoryContent'></tbody>
+	</table>
+	</div>
+	
+	</section>
+	</div>
+	
+
+	<div data-app-role='orderShippingInfo'>
+	<h2>Shipping/Tracking Information</h2>
+	<section class='trackingInformation clearfix' data-app-role='orderUpdateAddTrackingContainer'>
+
+	<div class='rightCol labelsAsBreaks'>
+		<h3>Add New Package</h3>
+
+		<form>
+		<fieldset class='labelsAsBreaks alignedLabels'>
+			<label><span>Carrier </span> <select  name="carrier">
+				<option value="UPS">UPS</option>
+				<option value="USPS">USPS</option>
+				<option value="FEDX">FEDEX</option>
+				<option value="DHL">DHL</option>
+				<option value="OTHR">Other Carrier</option>
+			</select>
+			</label>
+			
+			<label><span>Tracking # </span> <input name="value" type="text" size='15' /></label>
+			
+			<label><span>Cost </span> <input size="5" name="cost" type='number'  class='smallInput' step='0.01' min='0' /></label>
+			<label><span>Actual Weight </span> <input  size="5" name="actualwt" type="text" class='smallInput' /></label>
+			<label><span>Notes </span> <textarea  class='fullWidth' rows="3" name="notes"></textarea></label>
+		
+			<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
+		
+		</fieldset>
+		</form>
+		
+		<div class='zhint'>HINT: When you use Zoovy's Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
+
+
+	</div>
+
+	<div class='leftCol' data-bind="loadsTemplate:orderTrackingHistoryContainerTemplate; format:loadsTemplate;">
+
+	</div>
+	
+	</section>
+	</div>
+
+	
+	<div data-app-role='orderHistory'>
+	<h2>History</h2>
+	<section class='historyInformation'  data-app-role='orderUpdateHistoryContainer' data-bind="loadsTemplate:orderEventsHistoryContainerTemplate; format:loadsTemplate;"></section>
+	</div>
+
+	
+</div>
+
+</div><!-- /order details template -->
+
+
+
+
+
+
+
+
+
+
+<!--
+
+The following templates are used in the 'order detail' modal/view.
+
+-->
+
+<table>
+<tr id='orderPaymentHistoryTemplate'>
+	<td><time data-bind='var: payment(ts); format:epoch2mdy; showtime:true;'></time></td>
+	<td><div data-bind="format:paymentActions; extension:admin_orders; useParentData:true;"></div></td>
+	<td><span data-bind='var: payment(amt); format:money;'></span></td>
+	<td><span data-bind='var: payment(tender); format:text;'></span></td>
+	<td><span data-bind='var: payment(uuid); format:text;'></span></td>
+	<td>
+	<div data-bind='format:paystatusDetailed; extension:admin_orders; useParentData:true;'></div>
+	<div data-bind='var: payment(note); format:text; pretext:note: ;'></div>
+	<div data-bind='var: payment(luser); format:text; pretext:user: ;'></div>
+	<div data-bind="var: payment(acct); format:transactionAcctInfo; extension:admin_orders;"></div>
+	</td>
+</tr>
+</table>
+
+<table>
+<tr id='orderTrackingHistoryTemplate'>
+	<td><time data-bind='var: shipment(created); format:epoch2mdy; showtime:true;'></time></td>
+	<td><span data-bind='var: shipment(carrier); format:text;'></span></td>
+	<td><span data-bind='var: shipment(cost); format:money;'></span></td>
+	<td><span data-bind='useParentData:true; format:trackingAsLink; extension:admin_orders;'></span></td>
+	<td><span data-bind='var: shipment(actualwt); format:text;'></span></td>
+	<td><span data-bind='var: shipment(notes); format:text;'></span></td>
+</tr>
+</table>
+
+
+<table>
+<tr id='orderEventHistoryTemplate'>
+	<td class='smallTxt'><time data-bind='var: payment(ts); format:epoch2pretty;'></time></td>
+	<td><span data-bind='var: events(luser); format:text;'></span></td>
+	<td data-bind='var: events(etype); format:etypeAsClass; extension:admin_orders;' ><span data-bind='var: events(content); format:text;'></span></td>
+	<td>
+	<div title='app'  data-bind='var: events(app); format:text; pretext: app: ;'></div>
+	</td>
+</tr>
+</table>
+
+
+
+
+<table>
+<tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
+	<td><span data-bind='var: order(sku); format:text; className: stid;'></span></td><!-- stid has mkt data on it. use sku -->
+	<td>
+		<div data-bind='var: order(prod_name); format:text; '></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
+	</td>	
+
+	<td data-bind="format:orderEditQtyInput; extension:admin_orders; useParentData:true;"></td>
+	<td data-bind="format:orderEditPriceInput; extension:admin_orders; useParentData:true;"></td>
+
+	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td>
+		
+		<button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button>
+		<button data-app-event="admin_orders|orderItemRemove">Remove From Order</button>
+		<button data-app-event='admin_orders|routingDialogShow' data-app-role='itemSupplierRoutingButton' class='displayNone'>Route</button>
+		<button data-app-event='admin_orders|inventoryDetailOptionsShow' data-app-role='inventoryDetailOptionsButton'>Update</button>
+		<menu data-app-role='basetypeMenu'>
+			<li><a href="#" data-verb='DONE' data-app-event='admin_orders|inventoryDetailOptionsExec'>Done</a></li>
+			<li><a href="#" data-verb='RESET' data-app-event='admin_orders|inventoryDetailOptionsExec'>Reset</a></li>
+		</menu>
+
+		</td>
+	<td></td>
+</tr>
+
+
+<!-- used in the order editor line item template when 'update routes' is clicked. button is shown conditionally
+<tr id='itemRoutesTemplate'>
+	<td class='alignRight' data-bind="useParentData:true; format:macros2Buttons; extension:admin;"></td>
+</tr>
+. -->
+
+</table>
+
+
+
+
+<table>
+	<tr id='orderStuffItemTemplate' class='orderStuffItemRow'>
+	<td><h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5></td>
+	<td>
+		<div data-bind='var: order(prod_name); format:text; '></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedoptionsdisplay;'></div>
+	</td>
+	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
+	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
+	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td><button data-app-event="admin_orders|orderItemRemove">X</button></td>
+	
+
+
+	</tr>
+</table> <!-- /orderStuffItemTemplate -->
+
+
+
+<table>
+<tr id='buyerNotesTemplate'>
+	<td>
+	<div data-bind='var: note(CREATED_GMT); format:epoch2mdy;'></div>
+	<div data-bind='var: note(LUSER); format:text; pretext:by ;'></div>
+	</td>
+	<td data-bind='var: note(NOTE); format:text;'></td>
+</tr>
+</table>
+
+
+
+
+<div id='qvOrderNotes'>
+	<h6>Public Notes:</h6>
+	<div class='marginBottom' data-bind='var:order(want/order_notes);format:text;'></div>
+	<h6>Private Notes:</h6>
+	<div data-bind='var:order(flow/private_notes);format:text;'></div>
+
+</div>
+
+
+<!--
+ 
+The following templates are used both in the order editor AND in quickview.
+ 
+-->
+<div id='orderEventsHistoryContainerTemplate'>
+
+	<table class='gridTable applyAnytable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>User</th>
+		<th>Message</th>
+		<th>Addl Info</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
+	</table>
+</div>
+
+<div id='orderTrackingHistoryContainerTemplate'>
+	<table class='gridTable applyAnytable' data-app-role='trackingInformation'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Carrier</th>
+		<th>Cost</th>
+		<th>Tracking</th>
+		<th>Weight</th>
+		<th>Notes</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@SHIPMENTS); loadsTemplate: orderTrackingHistoryTemplate; format:processList; extension: admin;"></tbody>
+	</table>
+</div>
+
+
+<!--
+
+Create order template
+used in legacy compat mode (and probably full app mode as well)
+-->
+
+<div id='createOrderTemplate'>
+
+
+</div>
+
+
+
+
+
+
+
+
+<address class='shipAddress editableParent' id='orderAddressTemplate'>
+<div>
+	<span data-bind='var:order(firstname);format:text;' class='editable' title='first name'></span>
+	<span data-bind='var:order(lastname);format:text;' class='editable' title='last name'></span>
+</div>
+<div data-bind='var:order(company);format:text;' class='editable' title='company'></div>
+<div data-bind='var:order(phone);format:text;' class='editable' title='phone'></div>
+<div data-bind='var:order(address1);format:text;' class='editable' title='address'></div>
+<div data-bind='var:order(address2);format:text;' class='editable' title='address 2'></div>
+<div>
+	<span data-bind='var:order(city);format:text;' class='editable' title='city'></span>
+	<span data-bind='var:order(region);format:text;' class='editable' title='state'></span>
+	<span data-bind='var:order(postal);format:text;' class='editable' title='zip'></span>
+</div>
+<div data-bind='var:order(countrycode);format:text;'></div>
+<div class='email'><!-- outside of child so can be hidden w/ css for ship based addresses -->
+	<div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
+</div>
+</address>
+
+
+
+
+
+
+
+
+
+<!--
+//////////////   FOR PRINTING \\\\\\\\\\\\\\\
+-->
+
+
+<table id='invoiceTemplate' class='orderContentsTable'>
+<tr>
+	<td valign='top' width='50%'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL; b:ffffff;' width='300' height='100' />
+	</td>
+
+	<td valign='top' width='50%' style='text-align:right'>
+<h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
+<h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
+<h4 data-bind='var:order(flow/payment_status); format:paymentstatus; extension:cco;'></h4>
+<h4>
+	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
+	<span data-bind="var:order(our/orderid); format:marketplaceorderid; extension:cco;"></span>
+</h4>
+<div data-bind='var: order(our/order_ts); format:epoch2mdy; pretext:Created on: ;'></div>
+<div data-bind='var: order(flow/paid_ts); format:epoch2mdy; pretext:Paid on: ; hideZero:true;'></div>
+	</td>
+</tr>
+<tr>
+
+
+	<td valign='top'>
+	<h3>Bill To</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname);format:text;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(bill/company);format:text;'></h5>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+<div data-bind='var:order(bill/email);format:text;'></div>
+<div data-bind='var:order(bill/phone);format:text;'></div>
+</address>
+	</td>
+
+
+	<td valign='top'>
+	<h3>Destination</h3>
+<address>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(ship/company);format:text;'></h5>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+<div data-bind='var:order(ship/email);format:text;'></div>
+<div data-bind='var:order(ship/phone);format:text;'></div>
+</address>
+
+	</td>
+
+
+
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
+	<br />
+	<h2>Order Contents</h2>
+	<table id='cartStuffList' class='listStyleNone lineItemProdlist' width='100%'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Description</th>
+		<th>Qty</th>
+		<th>Price</th>
+		<th align='right'>Ext</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;">
+	</tbody>
+	</table>
+	<br />
+	</td>
+</tr>
+<tr>
+	<td colspan='2' style='text-align:right'>
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+	<div class='orderShipping'>
+	<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+	<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+	</div>
+	
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+	
+	<div><b data-bind='var: cart(sum/balance_due_total); format:orderbalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></b></div>
+<br />
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+	<div data-bind="var:order(want/order_notes); format:text; before:<h2>Notes</h2>; after:<br>;"></div>
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+<h2 data-bind="var: profile(zoovy:company_name); format:text;"></h2>
+<div data-bind="var: profile(zoovy:address1); format:text;"></div>
+<div data-bind="var: profile(zoovy:address2); format:text;"></div>
+<div>
+	<span data-bind="var: profile(zoovy:city); format:text;"></span> 
+	<span data-bind="var: profile(zoovy:state); format:text; posttext:. ;"></span> 
+	<span data-bind="var: profile(zoovy:zip); format:text;"></span>
+</div>
+<div data-bind="var: profile(zoovy:website_url); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_phone); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_email); format:text;"></div>
+
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+<!--
+Used in 'print invoice' area of management.
+some legacy html tags to make this print friendly.
+-->
+<table>
+	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
+		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
+</td>
+		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	</tr>
+</table>
+
+
+
+
+
+<!--
+
+NOTE
+This should get moved to orders when order is taken over 
+
+-->
+
+<table id='packslipTemplate' class='orderContentsTable' width='650'>
+<tr>
+	<td width='50%' valign='top'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;  b:ffffff;' width='200' height='85' />
+	</td>
+	<td width='50%' valign='middle'>
+	<h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2>
+	<div data-bind='var: order(our/orderid); format:text; pretext:Order: ;' class='barcode'></div>
+	</td>
+</tr>
+<tr>
+	<td valign='top'>
+
+<h3>Billing Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname); format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(bill/company);format:text;'></h5>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+</address>
+
+	</td>
+	<td valign='top'>
+
+<h3>Shipping Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(ship/company);format:text;'></h5>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+</address>
+
+	</td>
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
+	<br /><h3>Contents</h3>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
+	</table>
+	
+	</td>
+</tr>
+</table>
+
+
+
+<table>
+<tr id='productListTemplatePackslip' class='padMargBorderBottom'>
+	
+	<td width='1%' nowrap="nowrap" valign='top'><div class='ztable_row_small stid' data-bind='var: product(sku); format:text;'></div></td>
+	
+	<td valign='top'>
+	<div data-bind='var: product(prod_name); format:text; '></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedoptionsdisplay;'></div>
+	</td>
+
+	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
+
+</tr>
+
+</table>

@@ -128,8 +128,7 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 			}
 		}
 	});
-/*
-// ### zephyrpaintball -> currently disabled because GA is executed through @trackers
+
 
 _app.ext.order_create.checkoutCompletes.push(function(P){
 	_app.u.dump("BEGIN google_analytics code pushed on order_create.checkoutCompletes");
@@ -174,7 +173,7 @@ _app.ext.order_create.checkoutCompletes.push(function(P){
 		//unable to determine order contents.
 		}
 	}); // end .push					
-*/
+
 						}
 					else	{
 						setTimeout(function(){_app.ext.google_analytics.callbacks.startExtension.onSuccess()},250);

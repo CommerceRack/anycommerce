@@ -1,0 +1,109 @@
+
+
+<!--
+reminder: you can't have a template for a tr without a parent table (same for li and it's parent ul/ol) because when rendered, it causes some browser-specific randomness
+-->
+<table>
+<!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
+<tr id='taskListRowTemplate' class='taskRow'>
+	<td class='hideInMinifyMode'><input class='allowBulkCheck' type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
+	<td class='hideInMinifyMode' data-bind="var: task(created_gmt); format:epoch2mdy;"></td>
+	<td data-bind="var: task(completed_gmt); format:addClass; className: lineThrough gmt_; hideZero:true;"><span data-bind="var: task(title); format:text;"></span></td>
+	<td class='hideInMinifyMode' data-bind="var: task(due_gmt); format:epoch2mdy; hideZero:true;"></td>
+	<td class='hideInMinifyMode' data-bind="var: task(priority); format:text;"></td>
+	<td class='hideInMinifyMode lowercase' data-bind="var: task(class); format:text;"></td>
+<!--	<td class='hideInMinifyMode lookLikeLink' onClick="adminApp.u.dump($(this).parent().data()); alert($(this).parent().data('link'))">Do it to it</td> -->
+	<td class='hideInMinifyMode' data-bind="var: task(luser); format:text;"></td>
+	<td >
+<button data-app-click="admin_task|adminTaskUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Task</button>
+	</td>
+</tr>
+
+</table>
+
+
+<!--
+
+The form actions for the two templates below are added in the extension
+
+-->
+
+
+
+
+<div id='taskListEditPanelTemplate' class='ui-widget marginBottom taskEditPanel'>
+	
+	<form action='#' onsubmit="return false;">
+	
+	<input type='hidden' name='_cmd' value='adminTaskUpdate' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+	<input type='hidden' name='_tag/message' value='The changes have been saved.' />
+	<input type='hidden' name='taskid' value='' data-bind="var: task(id); format:popVal;" />
+
+	<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div>
+	
+	<div class='buttonset alignRight'>
+		<button class='applyButton' data-app-role='saveButton' data-app-click='admin|submitForm'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+
+</div>
+
+
+
+
+
+
+
+
+<div id='taskListCreateTemplate'>
+	<form action='#' onsubmit="return false;">
+	<input type='hidden' name='_cmd' value='adminTaskCreate' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+	<input type='hidden' name='_tag/message' value='Your task has been created.' />
+	
+	<input type='hidden' name='class' value='todo' />
+	
+	<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div><!-- loads the create/update form -->
+	
+	<div class='buttonset alignRight'>
+		<button class='applyButton' data-app-click='admin|submitForm'>Create Task</button>
+	</div>
+	</form>
+</div>
+
+
+<!--
+used for both create new and edit. recycling... there's a concept for you.
+the fieldset is what' brought in. The parent template (edit or create) applies the form tag and any necessary buttons. 
+this makes the template more versatile.
+-->
+
+<form>
+<fieldset id='taskListCreateEditTemplate' class='labelsAsBreaks alignedLabels alignedInputs'>
+	<label><span>Title:</span> <input type='text' name='title' maxlength="100" required='required' data-bind="var: task(title); format:popVal;" /></label>
+	<label><span>Priority:</span> <select name='priority' data-bind="var: task(priority); format:popVal;">
+		<option value='1'>1</option>
+		<option value='2'>2</option>
+		<option value='3'>3</option>
+	</select>
+	</label>
+	<label><span>Assigned to:</span> <input type='text' name='luser' maxlength="100" data-bind="var: task(luser); format:popVal;" /></label>
+	<label><span>Link:</span> <input type='text' name='link' maxlength="100" data-bind="var: task(link); format:popVal;" /></label>
+	<label><span>Due date:</span> <input type='text' name='due_gmt' class='datepicker' data-bind="var: task(due_gmt); format:popVal;" /></label>
+	<label><span>Detail</span> <textarea name='detail' data-bind="var: task(detail); format:popVal;" rows='10'></textarea></label>
+</fieldset>
+
+<input type='hidden' name='class' value='TODO' />
+</form>
+
+
+
+
+
+
+
+
+

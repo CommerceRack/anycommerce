@@ -1,0 +1,808 @@
+
+
+<!--
+//////////////////// EBAY LISTINGS \\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='ebayListingsReportPageTemplate' class='ebayListingsReportPage'>
+<form action='#' data-app-submit="admin_reports|ebayReportViewSubmit">
+
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird borderNone'>
+	<legend>eBay Listings CSV Export</legend>
+	<label><input name='query' value="listing-active" type="radio" /> Active Listings</label>
+	<label><input name='query' value="listing-active-fixed" type="radio" /> Active Listings (Fixed Price)</label>
+	<label><input name='query' value="listing-active-store" type="radio" /> Active Listings (Store)</label>
+	<label><input name='query' value="listing-active-auction" type="radio" /> Active Listings (Auction)</label>
+	<label><input name='query' value="listing-all" type="radio" /> All Listings (including ended)</label>
+	<label><input name='query' value="listing-allattempts" type="radio" /> All Listings and Attempts</label>
+</fieldset>
+
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all oneThird borderNone'>
+	<legend>Event CSV Export</legend>
+	<label><input name='query' value="event-all" type="radio" /> All Events</label>
+	<label><input name='query' value="event-pending" type="radio" /> - Pending/Running</label>
+	<label><input name='query' value="event-error" type="radio" /> - Result: ERROR</label>
+	<label><input name='query' value="event-warning" type="radio" /> - Result: SUCCESS w/WARNING</label>
+	<label><input name='query' value="event-success" type="radio" /> - Result: SUCCESS</label>
+	<label><input name='query' value="event-target-powr.auction" type="radio" /> eBay Powerlister</label>
+	<label><input name='query' value="event-target-ebay.fixed" type="radio" /> eBay Fixed Price</label>
+	<label><input name='query' value="event-target-ebay.auction" type="radio" /> eBay Auctions</label>
+	<label>BatchID/Job#: <input name="batchid" size="10" value="" type='number' class='smallInput' /><span class='zhint'>optional</span></label>
+</fieldset>
+<div class='clearfix'></div>
+<fieldset class='marginTop ui-widget ui-widget-content ui-corner-all smallPadding'>
+	<div class='floatRight'><button  class='applyButton'>View</button></div>
+	<label>Time period/since: <input type='number' class='datepicker' name='since_gmt' /></label>
+</fieldset>
+</form>
+
+</div>
+
+
+
+<!--
+//////////////////// KPI \\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+<div id='KPIManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+	
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+
+		<ul class='listStyleNone roundedList noPadOrMargin'  data-app-role='collectionNavList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
+
+	</section>
+
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
+
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button data-app-event="admin_reports|showAdminKPIDBCollectionCreate">Add New Collection</button>
+				<button data-app-event="admin_reports|showChartAdd">Explore Data</button>
+<!--				<button>Save Chart Position</button> -->
+			</div>
+			<h3 class='heading'>KPI</h3>
+		</div>
+		<div class='ui-widget-content ui-corner-bottom slimLeftContent kpiGraphContainer' data-app-role='slimLeftContent'></div>
+
+	</section>
+
+
+</div>
+
+
+
+<ul>
+
+	<li id='KPICollectionListTemplate' class='ui-state-default pointer' data-app-event="admin_reports|addTriggerKPICollectionList">
+	<span data-bind="var:collection(TITLE); format:text;"></span>
+	<button data-app-event="admin_reports|handleCollectionMenu"></button>
+	</li>
+
+</ul>
+
+<!-- this select is just a container for the option template -->
+<select>
+
+	<option id='KPICollectionOptionTemplate' data-bind="useParentData:true; format:collectionAsOptions; extension:admin_reports;"></option>
+
+</select>
+
+
+
+<div id='KPIGraphAddUpdateTemplate' class='KPIGraphAddUpdateContainer' data-app-role='KPIGraphAddUpdate'>
+
+	<div class='appMessaging clearfix'></div><!-- used for error display -->
+
+	<form onsubmit="return false;" class='labelsAsBreaks'>
+	<input type='hidden' name='function' value='sum' /><!-- hard coded for now. may get a chooser later -->
+
+	<section class='clearfix marginBottom'><!-- this keeps the buttons 'below' the form inputs and previews -->
+
+		<figure class='floatRight displayNone' data-app-role='graphTypePreview'>
+			<figcaption class='marginBottom'>Graph Type Preview: <b class='graphType'></b></figcaption>
+			<img src='blank.gif' height='200' alt='' />
+		</figure> 
+
+
+		<div class='floatLeft'>
+	
+		
+			<div class='label'>
+			<select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required' data-bind="var: chart(graph); format:popVal;">
+				<option value='' selected='selected' disabled='disabled'>Choose visualization...</option>
+				<option data-image="extensions/admin/images/sample-chart-dashboard.jpg" value='text'>KPI Dashboard (text - no graph)</option>
+				<option data-image="extensions/admin/images/sample-chart-area.jpg" value='area'>Area</option>
+				<option data-image="extensions/admin/images/sample-chart-areastacked.jpg" value='area.stacked'>Area - Stacked</option>
+				<option data-image="extensions/admin/images/sample-chart-areapercent.jpg" value='area.percent'>Area - Stacked Percentage</option>
+				<option data-image="extensions/admin/images/sample-chart-horizontalbar.jpg" value='bar'>Horizontal Bar Graph</option>
+				<option data-image="extensions/admin/images/sample-chart-horizontalbarstacked.jpg" value='bar.stacked'>Horizontal Bar Graph - Stacked</option>
+				<option data-image="extensions/admin/images/sample-chart-horizontalbarpercent.jpg" value='bar.percent'>Horizontal Bar Graph - Stacked Percentage</option>
+				<option data-image="extensions/admin/images/sample-chart-verticalcolumn.jpg" value='column'>Vertical Column Graph</option>
+				<option data-image="extensions/admin/images/sample-chart-verticalcolumnstacked.jpg" value='column.stacked'>Vertical Column Graph - Stacked</option>
+				<option data-image="extensions/admin/images/sample-chart-verticalcolumnpercent.jpg" value='column.percent'>Vertical Column Graph - Stacked Percentage</option>
+				<option data-image="extensions/admin/images/sample-chart-areaspline.jpg" value='areaspline'>Area Spline</option>
+				<option data-image="extensions/admin/images/sample-chart-line.jpg" value='line'>Line Graph</option>
+				<option data-image="extensions/admin/images/sample-chart-pie.jpg" value='pie'>Pie Chart</option>
+			</select>
+			<span class='toolTip' title="visualizations can be text dashboards which display important numbers, or different types of graphs.">?</span>
+			</div>
+		
+			<div class='marginBottom clearfix'>
+				<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal;">
+						<option selected='selected' disabled='disabled'>Timeframe (period)</option>
+						<optgroup label='daily' >
+							<option value='day.today'>Today</option>
+							<option value='day.yesterday'>Yesterday</option>
+							<option value='days.7'>Last 7 Days</option>
+							<option value='days.10'>Last 10 Days</option>
+							<option value='days.14'>Last 14 Days</option>
+							<option value='days.21'>Last 21 Days</option>
+							<option value='days.28'>Last 28 Days</option>
+							<option value='days.90'>Last 90 Days</option>
+						</optgroup>
+						
+						<optgroup label='weekly' >
+							<option value='week.this'>This Week</option>
+							<option value='week.tly'>This Week Last Year</option>
+							<option value='week.last'>Last Week</option>
+							<option value='weeks.1'>This Week + 1 Prior</option>
+							<option value='weeks.2'>This Week + 2 Prior</option>
+							<option value='weeks.3'>This Week + 3 Prior</option>
+							<option value='weeks.4'>This Week + 4 Prior</option>
+							<option value='weeks.5'>This Week + 5 Prior</option>
+							<option value='weeks.6'>This Week + 6 Prior</option>
+							<option value='weeks.7'>This Week + 7 Prior</option>
+							<option value='weeks.8'>This Week + 8 Prior</option>
+						
+						</optgroup>
+						
+						<optgroup label='monthly' >
+							<option value='month.this'>This Month</option>
+							<option value='month.tly'>This Month Last Year</option>
+							<option value='month.last'>Last Month</option>
+							<option value='months.1'>This Month + 1 Prior</option>
+							<option value='months.2'>This Month + 2 Prior</option>
+							<option value='months.3'>This Month + 3 Prior</option>
+						</optgroup>
+						
+						<optgroup label='quarterly' >
+							<option value='quarter.this'>This Quarter</option>
+							<option value='quarter.tly'>This Quarter Last Year</option>
+							<option value='quarter.last'>Last Quarter</option>
+						</optgroup>
+						
+						<optgroup label='Annual'>
+							<option value='ytd.this'>Year-To-Date</option>
+							<option value='ytd.last'>Last Year</option>
+						</optgroup>
+					</select>
+				<span class='toolTip' title="How long of a time period the graph should encompass. This selection determines which grouping is available.">?</span>
+			</div>
+		
+			<div class='marginBottom clearfix'>
+				<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
+					<option selected='selected' disabled='disabled' value=''>units of time</option>
+					<option value='none'>None (Merge Datasets into a single value)</option>
+					<option value='day'>Date: Day (maximum detail level)</option>
+					<option value='week'>Date: Week (1-52 values per year)</option>
+					<option value='month'>Date: Month (1-12 values per year)</option>
+					<option value='quarter'>Date: Quarter (1-4 values per year)</option>
+					<option value='dow'>Day of Week (Mon - Sun possible values)</option>
+				</select>
+				<span class='toolTip' title="Dependant on the 'period' being selected. Data points will be collated by the time unit selected. The minimum level of granularity is 1 day (since KPI does not record time of events, only days). When using Day of Week be sure to select an appropriate time period (weeks, or anything divisible by 7).">?</span>
+			</div>
+		
+		
+			<div class='marginBottom clearfix'>
+				<div class='label'>Columns:</div>
+		
+				<label>
+					<input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> 
+					User Specified : choose one or more columns individually.
+					<span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span>
+				</label>
+			
+				<label>
+					<input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popVal;" /> 
+					Dynamic List : automatically use all possible columns from preset lists.
+					<span class='toolTip' title="Will automatically update with all possible columns which have data during the time period.">?</span>
+				</label>
+			</div>
+
+				<!-- will be visible once 'columns' is selected. Revealing inputs over time makes the form less intimidating at init -->
+			<div class='floatLeft displayNone' data-app-role='datasetTypeContainer'>
+				<div class='label'>
+					Data Point: 
+					<span class='toolTip' title="KPI stores three possible data points: Gross Sales, # of Orders, # Units are recorded for each column.">?</span>
+				</div>
+				<label><input type='radio' name='column' value='gms' data-bind="var:chart(column); format:popVal;" /> Gross Sales</label>
+				<label><input type='radio' name='column' value='distinct' data-bind="var:chart(column); format:popVal;" /> # Orders</label>
+				<label><input type='radio' name='column' value='total' data-bind="var:chart(column); format:popVal;" /> # Units Sold</label>
+			</div>
+
+
+	
+		<!-- if datacolumns is set to dynamic, show this: -->
+			<div class='label displayNone' data-app-role='dDatasetContainer'>
+			<b>Dynamic Lists</b>
+			<select name='ddataset' data-bind="var:chart(ddataset); format:popVal;">
+				<option selected='selected' disabled="disabled" value=''>Dynamic List</option>
+				<option value='PRTS'>Sales By Partition</option>
+				<option value='SCHEDULES'>Sales By Pricing Schedules</option>
+				<option value='OGMS' >Overall Gross Merchandise Sales</option>
+				<option value='DOMAINS' >By Domains</option>
+				<option value='TAGS'>By Tags</option>
+				<option value='MARKETS'>By Marketplace/Integrations</option>
+			</select>
+			</div>
+		
+		
+			
+			<div data-app-role='fDatasetContainer' class='label displayNone'>
+			<b>User Specified Columns</b>
+			<select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange"  data-bind="var:chart(datasetGrp); format:popVal;">
+				<option value='' disabled='disabled' selected='selected'>choose data column</option>
+				<option value='OVERALL'>All Domains/Partitions</option>
+				<option value='COUPON'>Coupon</option>
+				<option value='DOMAIN'>Domain</option>
+				<option value='MANUFACTURER'>Manufacturer</option>
+				<option value='MARKETPLACE'>Marketplace / Syndication</option>
+				<option value='PARTITION'>Partition</option>
+				<option value='PRODUCT_TAG'>Product Tag</option>
+				<option value='SUPPLIER'>Supplier</option>
+				<option value='OTHER'>Other (affiliate, crm, etc)</option><!-- returns -->
+			</select>
+			<span class='toolTip' title="Determines the list of available axis points. Axis points in a chart can only come from one dataset. Once an axis point is set, this list will disable itself. To change the dataset, remove all selected axis points.">?</span>
+			</div>
+			
+		
+		
+		
+			
+			<div data-app-role='axisChooser' class='label displayNone marginRight'>
+			<table>
+			<tr>
+				<td class='ui-widget-content valignTop ui-corner-left'>
+				<div class='ui-widget-header ui-widget-header-padding  ui-corner-tl'>Available Axis Points:</div>
+				<ul class='kpiSortable' data-app-role='dataSetAxisListAll'>
+				</ul>
+				</td>
+				
+				<td class='ui-widget-content valignTop ui-corner-right'>
+				<div class='ui-widget-header ui-widget-header-padding  ui-corner-tr'>Selected Axis Points/Order:</div>
+				<ul class='kpiSortable' data-app-role='dataSetAxisListSelected'>
+				</ul>
+				</td>
+			</tr>
+			</table>
+			</div>
+			
+		
+		
+			<fieldset class='displayNone marginTop' data-app-role='saveInputsFieldset'>
+				<legend>Graph Name &amp; Location</legend>
+			
+				<div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' data-bind="var: chart(title); format:popVal;" /> <span class='toolTip' title="Will be used in the graph display.">?</span></div>
+				
+				<div class='label'><select name='collection' required='required' ><!-- data-bind to select value won't work because options are not added till later. uses JS in add/update function -->
+					<option selected='selected' disabled='disabled'>collection/graph location</option>
+				<!-- 	<option>launchpad</option>if selected, remove 'size' option. add tile group option -->
+					<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
+					</optgroup>
+					<!-- this is dynamically generated -->
+				</select>
+				<span class='toolTip' title="Determines where the graph will appear.">?</span>
+				</div>
+			
+			</fieldset>
+		</div>
+	</section>
+
+
+	<section class='buttonset marginBottom clearfix'>
+		<button class='floatRight' data-app-event="admin_reports|execAdminKPIDBCollectionUpdate">Save Graph to Collection</button>
+		<button class='floatRight' data-app-event="admin_reports|showKPIGraphPreview">Show Graph</button>
+	</section>
+
+
+
+<!-- leave this inside the form. the form is used for context -->
+	<section class='kpiGraphContainer marginTop'>
+		<div class='displayNone graph' data-app-role='KPIDataGraph'></div>
+	</section>
+
+</form>
+</div>
+
+
+
+<div id='KPICollectionEditorTemplate' data-app-role='collectionEditor'>
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th></th>
+	<th class='alignLeft'>Title</th>
+	<th class='alignLeft'>Graph Type</th>
+	<th class='alignLeft'>Period/Timeframe</th>
+	<th></th>
+</tr>
+</thead>
+<tbody data-bind="var: users(@GRAPHS); format:processList; loadsTemplate:KPICollectionEditorRowTemplate;"></tbody>
+</table>
+</div>
+
+
+<table>
+	<tr id='KPICollectionEditorRowTemplate' data-app-role='datasetContainer'>
+		<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
+		<td data-bind="var: graph(title); format:text;"></td>
+		<td data-bind="var: graph(graph); format:text;"></td>
+		<td data-bind="var: graph(period); format:text;"></td>		
+		<td class='alignRight'>
+			<button data-app-event="admin_reports|showChartRemove">delete</button>
+			<button data-app-event="admin_reports|showChartUpdate">edit</button>
+		</td>
+	</tr>
+</table>
+
+
+
+
+
+
+
+
+
+<!--
+//////////////////// REPORTS \\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+
+
+<div id='reportsPageTemplate'>
+
+	<div data-app-role='reportsTabsContainer' class='applyAnytabs'>
+
+		<ul>
+			<li><a href='#reports'>Reports</a></li>
+			<li><a href='#salesReports'>Sales Reports</a></li>
+			<li><a href='#inventoryReports'>Inventory Reports</a></li>
+			<li><a href='#eBayReports'>eBay and Listings Report</a></li>
+		</ul>
+		
+		
+		<section data-anytab-content='reports' class='clearfix'>
+
+			<div data-app-role='recentReportsList' class='floatRight'>
+			<h2>Recently Run Reports</h2>
+<table class='gridTable fullWidth marginBottom marginTop applyAnytable' >
+<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+<thead>
+<tr>
+	<th class='alignLeft'>Job ID</th>
+	<th class='alignLeft'>Job Name</th>
+	<th data-anytable-nosort='true'></th>
+</tr>
+</thead>
+<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:reportsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+</table>
+			</div>
+
+			<div class='floatLeft'>
+
+<h2>Sales/Order Reporting</h2>
+<p>Find out what products are selling and what's not.</p>
+<ul>
+
+	<li>Order Detail: 
+	
+	<a href='#'	onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALES', '%vars':{'PERIOD':'today','GUID':adminApp.u.guidGenerator()}}); return false;" title="Today's Sales">Today</a> | 
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALES', '%vars':{'PERIOD':'yesterday','GUID':adminApp.u.guidGenerator()}}); return false;" title="Yesterday's Sales">Yesterday</a> | 
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALES', '%vars':{'PERIOD':'thismonth','GUID':adminApp.u.guidGenerator()}}); return false;" title="This Month's Sales">This Month</a>
+	</li>
+	
+	<li>Order Summary: 
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALE_SUMMARY', '%vars':{'PERIOD':'today','GUID':adminApp.u.guidGenerator()}}); return false;" >Today</a> |
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALE_SUMMARY', '%vars':{'PERIOD':'thismonth','GUID':adminApp.u.guidGenerator()}}); return false;">This Month</a>
+	</li>
+	
+	<li>Sales SKU Ranking: 
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALES_SKU_RANK', '%vars':{'PERIOD':'today','GUID':adminApp.u.guidGenerator()}}); return false;">Today</a> |
+	<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SALES_SKU_RANK', '%vars':{'PERIOD':'thismonth','GUID':adminApp.u.guidGenerator()}}); return false;" >This Month</a>
+	</li>
+	
+	<li><b><a href='#' onclick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','salesReports'); return false;">More Options</a></b></li>
+
+</ul>
+
+
+<!--
+<h2>Inventory Reports</h2>
+<p>See how much inventory you have in stock, on-shelf and available, buy supplier, warehouse or everything.</p>
+<ul>
+	<li><a href='#' onclick="$(this).closest('.ui-widget-anytabs').anytabs('reveal','inventory'); return false;">Report Generator</a></b></li>
+</ul>
+-->
+
+<h2>Listing Reports</h2>
+<p>Take a look at how many marketplaces each of your products is currently in.</p>
+<ul>
+	<li><a href='#' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/EBAY_LISTING', '%vars':{'type':'ACTIVE-ALL', 'detail':'NONE'}}); return false;">eBay Active Listing w/Detail</a></li>
+	<li><a href='#' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/PRODUCT_DISPOSITION', '%vars':{}}); return false;">Marketplace Disposition Report</a></li>
+	<li><b><a href='#' onClick="$(this).closest('[data-app-role=\'reportsTabsContainer\']').anytabs('reveal','eBayReports'); return false;">More Options</a></b></li>
+</ul>
+
+
+			</div>
+		
+		</section>
+		
+<!-- sales/order reporting -->
+		<section data-anytab-content='salesReports'>
+<!-- orders/sales reporting -->
+			
+			<form onsubmit="return false">
+			<div class='clearfix'>
+		
+				<fieldset class='twoColumn labelsAsBreaks noPadOrMargin'>
+					<legend>Report Type</legend>
+					
+					<label><input type="radio" value="SALES" name="REPORT" checked="checked" /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
+					
+					<label><input type="radio" value="SALE_SUMMARY" name="REPORT" /> Order Summary <span class='toolTip' title='Displays only one summary row per order.'>?</span></label>
+					
+					<label><input type="radio" value="SALES_SKU_RANK" name="REPORT" /> Sales by SKU Ranking <span class='toolTip' title='Displays a summary grouped by SKU (each variation receives one row)'>?</span></label>
+					
+					<label><input type="radio" value="SALES_PRODUCT_RANK" name="REPORT" /> Sales by Product Ranking <span class='toolTip' title='Displays a summary grouped by PRODUCT (all variations are grouped together)'>?</span></label>
+					
+					<label><input type="radio" value="SALES_SOG_RANK" name="REPORT" /> Sales by Store Option Group Ranking <span class='toolTip' title='Displays one line per store variation (ex: color/red) and group sales by that'>?</span></label>
+					
+					<label><input type="radio" value="SALES_BY_SCHEDULE" name="REPORT" /> Sales by Pricing Schedule <span class='toolTip' title='Displays sales grouped by pricing schedule'>?</span></label>
+					
+				</fieldset>
+				
+				<fieldset class='twoColumn column2 labelsAsBreaks noPadOrMargin'>
+					<legend>Report Options</legend>
+					
+					<label>
+						<span>Report by:</span>
+						<select name="key" required='required'>
+							<option value="CREATED">Created Date</option>
+							<option value="PAID">Paid Date</option>
+							<option value="SHIP">Shipped Date</option>
+						</select>
+					</label>
+		
+					<label><input type="checkbox" name="include_deleted" /> Gross Sales: Include Cancelled Orders</label>
+
+					<label>
+						<span>Dates</span>
+						<select name='PERIOD' data-panel-selector=".formPeriodRange" data-input-change='show-panel' required='required'>
+							<option value=''>please choose</option>
+							<option value="today">Today Only</option><!-- lowercase is rel -->
+							<option value="thismonth">Month to Date</option>
+							<option value="4week">Last 4 Weeks</option>
+							<option value="all">All Orders</option>
+							<option value='BYMONTH' data-show-panel='formPeriodRange-BYMONTH'>by month</option><!-- uppercase is range -->
+							<option value='BYINVOICE' data-show-panel='formPeriodRange-BYINVOICE'>invoice range</option>
+							<option value='BYTIMESTAMP' data-show-panel='formPeriodRange-BYTIMESTAMP'>Date range</option>
+						</select>
+					</label>
+					
+		<div class='formPeriodRange displayNone' data-panel-id='formPeriodRange-BYMONTH'>
+		<select name="month">
+			<option value="1">January</option>
+			<option value="2">February</option>
+			<option value="3">March</option>
+			<option value="4">April</option>
+			<option value="5">May</option>
+			<option value="6">June</option>
+			<option value="7">July</option>
+			<option value="8">August</option>
+			<option value="9">September</option>
+			<option value="10">October</option>
+			<option value="11">November</option>
+			<option value="12">December</option>
+		</select>
+		<select name="year">
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option value="2013">2013</option>
+			<option selected="selected" value="2014">2014</option>
+		</select>
+		</div>
+
+		<div class='formPeriodRange  displayNone'  data-panel-id='formPeriodRange-BYTIMESTAMP'>
+			<label>Begins <input type="text" name="begints" size="20" class='datepicker' ></label>
+			<label>Ends <input type="text" name="endts" size="20" class='datepicker' ></label>
+		</div>
+
+		<div class='formPeriodRange  displayNone' data-panel-id='formPeriodRange-BYINVOICE'>
+			<label>First Invoice: <input type="text" name="startinv" maxlength="15" size="15"> ####-##-####</label>
+			<label>Last Invoice: <input type="text" name="endinv" maxlength="15" size="15"> ####-##-####</label>
+		</div>
+		
+		
+					
+					
+				</fieldset>
+		
+			</div>
+		
+			<div class='buttonset'><button data-app-click="admin_reports|execAdminReportCreate" class='applyButton'>Build Report</button></div>
+		
+			</form>		
+		</section>
+		
+<!-- inventory reporting -->	
+		<section data-anytab-content='inventoryReports' class='clearfix'>
+
+
+<div class='twoColumn'>
+	<h2>
+		SKU Summary Reporting
+		<span class='toolTip' title="SKU level reports include summary fields
+		such as AVAILABLE, ONSHELF, etc. Summary fields are computed based on
+		the Inventory Detail records. Changes in inventory summary values such
+		as AVAILABLE are also responsible for generating notifications such as INV.GOTINSTOCK, and
+		INV.OUTOFSTOCK.  Each inventory summary is the combinatin of one or
+		more inventory detail records with the same SKU.">?</span>
+	</h2>
+	<div class='marginTop'>
+		<h3>Quick Reports</h3>
+		<div class='stdMargin'>
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'PERIOD':'4week','where':'TS,GT,$starts_gmt'}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'ALL':1}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'where':'QTY,LT,1'}}); return false;">Zero available qty</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SKU','%vars':{'GUID':adminApp.u.guidGenerator(),'ALL':1,'headers':'SKU,sku:title,sku:price,sku:weight,inv:available,inv:onhand,inv:markets'}}); return false;">All skus (detailed)</a><br />
+			<!--
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/SKU', 
+				'%vars':{'ALL':1,}}); return false;">All skus (uber detailed)</a><br />
+			-->
+		</div>
+		<h3>Custom Reports</h3>
+		<div class='stdMargin'>
+			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchjob; batch_exec:REPORT/SKU;"></div>
+			<a href='#' data-app-click="admin_reports|showReportBuilderDialog" data-batchexec='SKU'>Add custom report</a>
+		</div>
+	</div>
+</div>
+
+
+<div class='twoColumn column2'>
+	<h2>
+		Inventory Detail Records
+		<span class='toolTip' title="The purpose of an Inventory detail is to
+		track each unique instance of SKU, quantity.  
+		For example if a store had a warehouse with the same SKU (Stock
+		Keeping Unit) at two locations in a warehouse each would have their
+		own Inventory Detail. 
+		
+		Every inventory detail record has a BASETYPE field which indicates the type of inventory detail it
+		contains common BASETYPEs are SIMPLE, SUPPLIER, WMS, PICK, DONE.
+		Each order that is placed creates a PICK reservation, which is
+		ultimately convert into a DONE record when the physical inventory is
+		pulled from the shelf.  (This makes keeping accurate on-shelf
+		quantites possible).  In the case of SIMPLE inventory records which
+		are just +/- counters the quantities are automatically decremented
+		from SIMPLE inventory the moment the order is placed (so no advanced
+		item routing is necessary/possible -- hence the name 'SIMPLE').
+		Inventory detail records are automatically summed to create a SKU summary
+		that is used for decision logic in syndication, and shopping cart checkouts.
+		">?</span>
+	</h2>
+	<div class='marginTop'>
+		<h3>Quick Reports</h3>
+			<div class='stdMargin'>
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'PERIOD':'4week','where':'TS,GT,$starts_gmt','+':'ALL'}}); return false;">Recent changes</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'ALL':1}}); return false;">All skus (brief)</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'BASETYPE':'SIMPLE'}}); return false;">Simple Inventory</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'BASETYPE':'WMS'}}); return false;">WMS Inventory</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'BASETYPE':'SUPPLIER'}}); return false;">Supplier Inventory</a><br />
+			<a href='#' onClick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'REPORT/INVENTORY', 
+				'%vars':{'GUID':adminApp.u.guidGenerator(),'BASETYPE':'PICK'}}); return false;">Pick Inventory</a><br />
+		</div>
+
+		<h3>Custom Reports</h3>
+		<div class='stdMargin'>
+			<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchjob; batch_exec:REPORT/INVENTORY;"></div>
+			<a href='#' data-app-click="admin_reports|showReportBuilderDialog" data-batchexec='INVENTORY'>Add custom report</a>
+		</div>
+		
+	</div>
+</div>
+
+
+		</section>
+
+<!-- the ebay report page is in utilities and in reports, so rather than having two templates, this template loads the other -->		
+		<section data-anytab-content='eBayReports' data-bind="loadsTemplate: ebayListingsReportPageTemplate; format: loadsTemplate;">
+		</section>
+
+
+	</div>
+
+</div>
+
+
+
+
+
+<table>
+<tr id='reportsRowTemplate'>
+	<td data-bind="var: user(ID); format:text;"></td>
+	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
+	<td>
+		<button data-app-click="admin_batchjob|showReport" class='displayNone applyButton' data-text='false' data-icon-primary='ui-icon-image'>View Report</button>
+		<button data-app-click="admin_batchjob|showBatchDetail" class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>Batch Details</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+<div id='reportBuilderTemplate'>
+<form onsubmit='return false'>
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 1: Select Product</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom '>
+			<fieldset data-app-role='pickerContainer'></fieldset>
+		</div>
+	</div>
+
+	</td>
+	
+	<td class="valignTop nwColumnW">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 2: Specify Filters and Formats</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<fieldset class='labelsAsBreaks marginBottom'>
+				<legend>Report</legend>
+				<input type='hidden' name='BATCH_EXEC' value='' data-bind="var: report(BATCH_EXEC); format:popVal;" />	
+				
+				<label>
+					<span>Title</span>
+					<input type='text' name='TITLE' value='' size='40' maxlength="80" />
+				</label>
+				<label>
+					<input type='checkbox' name='PRIVATE' class='applyAnycb' checked='checked' />
+					Private
+					<span class='toolTip' title="If private, this report link will not show up in list of custom reports.">?</span>
+				</label>
+				<label data-bind="var: report(SKU); format:showIfSet;" class='displayNone'>
+					<span>Attributes</span>
+					<select name='headers'>
+						<option value='ALL'>All</option>
+						<option value='ORDER'>Order</option>
+						<option value='ROUTE'>Route</option>
+						<option value='SUPPLIER'>Supplier</option>
+						<option value='WMS'>WMS</option>
+					</select>
+				</label>
+				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeSKU'>
+				<p class='hint'></p>
+				</div>
+				
+				<div class='reportsInventoryTypePanel' data-panel-id='reportsInventoryTypeInventory'>
+				<p class='hint'></p>
+				</div>
+				
+			</fieldset>
+			
+			<fieldset class='marginBottom'>
+				<legend>Filter</legend>
+				<label>
+					<span>By</span>
+				<select name='summary' data-input-change="panel-selector" data-panel-selector=".reportsInventorySummaryPanel">
+					<option value=''>All</option>
+					<option value='AVAILABLE' data-show-panel='reportsInventorySummaryINVStatus'>Available</option>
+					<option value='ONSHELF' data-show-panel='reportsInventorySummaryINVStatus'>On shelf</option>
+					<option value='SUPPLIER' data-show-panel='reportsInventorySummarySupplier'>Supplier</option>
+					<option value='TS' data-show-panel='reportsInventorySummaryTS'>Timestamp</option>
+					<option value='MODIFIED_TS' data-show-panel='reportsInventorySummaryTS'>Modified timestamp</option>
+					<option value='PID' data-show-panel='reportsInventorySummaryPID'>PID</option>
+					<option value='ORDERID' data-show-panel='reportsInventorySummaryOrderID'>Our orderid</option>
+					<option value='PICK_ROUTE' data-show-panel='reportsInventorySummaryPickRoute'>Pick route</option>
+				</select>
+				</label>
+
+				<span data-panel-id='reportsInventorySummaryINVStatus' class='displayNone reportsInventorySummaryPanel'>
+					<label class='marginLeft'>
+					where quantity is 
+					<select name='operand'>
+						<option value='LT'>Less than</option>
+						<option value='EQ'>Equal to</option>
+						<option value='GT'>Greater than</option>
+					</select>
+					</label>
+					
+					<label class='marginLeft'>
+						<span>#</span>
+						<input type='number' name='operand_match' step='1' min='0' size='5' class='smallInput' />
+					</label>
+				</span>
+
+				<span data-panel-id='reportsInventorySummarySupplier' class='displayNone reportsInventorySummaryPanel'>
+					<label class='marginLeft'>
+						<span>Vendor</span>
+						<input type='text' name='SUPPLIER' size='6' class='smallInput' />
+					</label>
+				</span>
+				
+				
+				<span data-panel-id='reportsInventorySummaryTS' class='displayNone reportsInventorySummaryPanel'>
+				<label>Time period/since: <input type='number' class='datepicker' name='TS' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryPID' class='displayNone reportsInventorySummaryPanel'>
+				<label>PID: <input type='text' name='PID' size='20' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryOrderID' class='displayNone reportsInventorySummaryPanel'>
+				<label>Order ID: <input type='text' name='ORDERID' size='20' /></label>
+				</span>
+				
+				<span data-panel-id='reportsInventorySummaryPickRoute' class='displayNone reportsInventorySummaryPanel'>
+				<label>Route: <input type='text' name='PICK_ROUTE' size='20' /></label>
+				</span>
+			</fieldset>
+
+
+		</div>
+	</div>
+	</td>
+	<td class="valignTop nwColumnN">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 3: Make It So</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		<button data-app-event="admin_reports|adminInventoryReportSaveExec">Save as Report</button>
+		</div>
+	</div>
+	</td>
+</tr>
+</tbody>
+</table>
+</form>
+</div>

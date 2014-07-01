@@ -1,0 +1,131 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Administrative Interface Login</title>
+
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"><!-- don't cache this file. -->
+<META NAME="ROBOTS" CONTENT="NONE">
+
+<script type="text/javascript">
+
+var myCreole;
+
+var baseURL = '';
+//in admin, used for loading app-specific files. do NOT set the base href tho.
+if (document.location.protocol  == 'file:') { 
+	baseURL = '';
+	}
+else if (document.location.port == 8888) {
+	// local webserver (node.js?)
+	baseURL = '/';
+	}
+else {
+   baseURL = "";
+   }
+
+var app = {vars:{
+	/////////////////////////////////\
+	"release":"201405.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	//////////////////////////////////
+	"thisSessionIsAdmin": true,
+	"_clientid":"admin",
+	"jqurl": (document.location.protocol == 'file:') ? "https://www.zoovy.com/jsonapi/" : "/jsonapi/",
+//	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
+//	"secureURL" : "https://www.zoovy.com",
+	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
+	"baseURL" : baseURL,
+	},u:{},rq:[]};
+
+</script>
+
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+<link rel="stylesheet" type="text/css" href="app-acreate/styles.css">
+<link rel="stylesheet" type="text/css" href="app-admin/jquery-ui-1.10.3.custom.css" /><!-- tho the jqueryui js lib isn't used for this app, the styles are (for now) -->
+
+<!-- not much is going to run without these two. load em early -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="controller.js"></script>
+<script type="text/javascript" src="model.js"></script>
+<script type="text/javascript" src="includes.js"></script>
+<script type='text/javascript' src='app-acreate/extension.js'></script>
+
+<!-- <script type="text/javascript" src="loadscript.js"></script> -->
+
+<script type="text/javascript">
+//don't execute script till both jquery AND the dom are ready.
+$(document).ready(function(){
+	var tmp = new zController(app);
+//instantiate wiki parser.
+//	myCreole = new Parse.Simple.Creole();
+	_app.model.addExtensions([{'namespace':'acreate','filename':'app-acreate/extension.js','callback':'initExtension'}]);
+	_app.u.addEventDelegation($(document.body));
+	});
+
+
+</script>
+
+
+
+
+
+
+
+</head>
+<body class="control">
+<!-- this div handles getting content to appear below the fixed header -->
+
+<div id='appLookup' class='ui-widget ui-widget-content ui-corner-all'>
+	
+	<div class='logo alignCenter stdMargin'><a href="/index.html"><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
+
+
+	<div>
+		<p>Connect With</p>
+		
+		<div class='alignCenter clearfix marginBottom'>
+		
+			<span class='threePLSprite twitter'></span>
+<!--			<span class='threePLSprite facebook'></span> -->
+			<span class='treatAsthreePLSprite'><fb:login-button show-faces="false" width="200" max-rows="1"></fb:login-button></span>
+			<span class='threePLSprite linkedin'></span>
+			<span class='threePLSprite yahoo'></span>
+<!--			<span class='threePLSprite openid'></span> -->
+			<span class='threePLSprite google' id="authorize-button" style="visibility: hidden"></span>
+		
+		</div>
+	
+	</div>
+
+
+	<div class='hint stdMargin' id='loginFormContainer'>
+	<form action='#'>
+	<fieldset class='authNewAccountCreate labelsAsBreaks alignedLabels alignedInputs'>
+		<legend>Create Account</legend>
+<!--
+we should be able to get this much from whatever service they use.
+		<label><span>First Name: </span><input type='text' name='firstname' required='required' /></label>
+		<label><span>Last Name: </span><input type='text' name='lastname' required='required' /></label>
+		<label><span>Email: </span><input type='email' name='email' required='required' /></label>
+-->		<label><span>Company/DBA: </span><input type='text' name='company' maxlength="30" required='required' /></label>
+		<div class='helper marginBottom'>company name will be your username. 10 char limit</div>
+		<label><span>Domain: </span><input type='url' name='domain' required='required' placeholder='http://' value="" /></label>
+		<label><span>Phone: </span><input type='tel' name='phone' required='required' size='10' /></label>
+		<div class='alignRight'>
+			<button class='applyButton ui-state-highlight'>Create Account</button>
+		</div>
+	</fieldset>
+	</form>
+	</div>
+
+</div>
+
+<div id="fb-root"></div>
+
+</body>
+</html>

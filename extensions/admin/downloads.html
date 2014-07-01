@@ -1,0 +1,139 @@
+
+<div id='downloadsPageTemplate'>
+<!--
+This template gets run through the anypanel plugin.
+ -> the first child of each section will be the panel header.
+ -> the second child (a div) is the content area.  All content should be within that div.
+
+If a new panel is needed, just add a new section w/ an h2 and one other child (a div, for example) for the entire content area.
+-->
+<h1>Downloads</h1>
+
+<section class='showForZoovyOnly'>
+	<h2>Desktop Software</h2><!-- panel header -->
+
+	<div><!-- panel contents -->
+	
+		<p>Zoovy Integrated Desktop contains three applications:</p>
+		
+		<div class='clearfix marginBottom'>
+			<div class='marginBottom'>
+				<h3>Order Manager</h3>
+				<p>Easily manage your orders and customers. The order manager will download any orders placed through your Zoovy store, automatically send customers email, manage tracking numbers, UPS/FedEx/USPS (Endicia) airbill printing, Quickbooks integration, advanced printing support and so much more!</p>
+			</div>
+	
+			<div class='marginBottom'>
+				<h3>Warehouse Manager</h3>
+				<p>Makes the day to day tasks of managing products, images, and categories easier and faster than ever. </p>
+			</div>
+		</div>
+		
+
+<!-- order manager box -->
+		<h4>Release: 2013.42 - (<span class='lookLikeLink' data-docid='51349' data-app-click='admin_support|showHelpDocInDialog' >Release Notes</span>)</h4>				
+		<form action="#" method="GET" target="_blank" data-jqueryoverride="true">
+		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZIDsetup-v201342.msi','',true); return false;" class="button2" type="submit">Download Now</button>
+		</form>	
+
+	</div>
+</section>
+
+
+<section>
+	<h2>Network Database Installation/Deployment</h2>
+	
+	<div>
+	<p>Zoovy supports network database installations for customers who need concurrent user access. Please download and install the following application on your network database server: </p>
+	
+	<div class='marginBottom'>
+		<h3>Zoovy Network Sync Manager</h3>
+		<p class='hint'>A windows service that automatically synchronizes your local databases with Zoovy servers. This is intended for clients running network databases and manages the synchronization process automatically. </p>
+		<button onclick="linkOffSite('http://s3.amazonaws.com/ZID/ZNSMsetup-v201342.msi','',true); return false;" class="applyButton">Download Sync Manager</button>
+	</div>
+	
+	<p>If you do not currently have a supported database installed on your server, you will also need to select a database that fits your network environment. A discussion of network databases, and deployment options along with frequently asked questions is located in:</p>
+	<button data-app-click='admin_support|showHelpDocInDialog' data-docid='51344' class='applyButton'>Webdoc</button>
+	
+	<h3>MySQL 5.1 Community Server</h3>
+	
+	<ul>
+		<li>
+			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/mysql/5.1.html','',true); return false;">MySQL 5.1 Community Edition</a>
+			<span class="hint">A high performance free database, recommended!</span>
+		</li>
+		<li>
+			<a href="#" onClick="linkOffSite('http://dev.mysql.com/downloads/connector/net/5.2.html','',true); return false;">MySQL 5.2 Connector/Net</a>
+			<span class="hint">Necessary for the server, and must be installed on each client as well.</span>
+		</li>
+	</ul>
+
+	<h3>Microsoft SQL Server 2008</h3>
+	<ul>
+		<li>
+			<a href="http://www.microsoft.com/express/sql/default.aspx" target="_blank">Microsoft SQL Server 2008</a>
+			<span class="hint">The free version of SQL Server supports up to 4gb databases and 1gb of memory.</span>
+		</li>
+	</ul>
+
+	
+	</div>
+</section>
+
+
+<section>
+	<h2>First Time Installation Notes</h2>
+	
+	<div>
+	
+		<p>Before installing any of the applications above you should consider the following:</p>
+		
+		<h3>.Net Framework Required</h3>
+		<p class='hint'>
+		All applications require the Windows Installer 3.1, and Microsoft .NET 3.5 sp1 framework to be installed for proper operation.
+		Please use the links to download:</p>
+		<ul class='marginBottom'>
+			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=5A58B56F-60B6-4412-95B9-54D056D6F9F4&amp;displaylang=en" target="_blank">Windows Installer 4.5</a></li>
+			<li><a href="http://www.microsoft.com/downloads/details.aspx?familyid=AB99342F-5D1A-413D-8319-81DA479AB0D7&amp;displaylang=en" target="_blank">Microsoft .Net 3.5 sp1 Download Site</a></li>
+		</ul>
+		
+		<h3>Network Database Installation</h3>
+		<p class='hint'>Installation documentation can be found: 
+		<ul>
+			<li><span class='lookLikeLink' data-docid='50491' data-app-click='admin_support|showHelpDocInDialog'>Webdoc #50491</span>.
+			<div class='hint'>Warning: Network Database installations are difficult multi-step processes with lots of room for mistakes. We encourage companies who do not employ a fulltime database administrator (which is different than a "Tech Guy") to consult with our <a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" target="_blank">Geek Services</a> to deploy your database. In order to speed up the installation appointment, please view our <span class='lookLikeLink' data-docid='51357' data-app-click='admin_support|showHelpDocInDialog'>Webdoc #51357</span> prior to your appointment.</div>
+			</li>
+		</ul>
+		
+		
+		<h3>Multi-Site Considerations</h3>
+		<p class='hint'>
+		Only one database may be active per account. If you have multiple sites
+		or remote users you will need to use a VPN solution to connect them.<br />
+		<a href="#/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" title="/biz/support/index.cgi?VERB=CALENDAR&amp;CLASS=GEEK" target="_blank">Zoovy Geek Services</a> 
+		can assist you with multi-site VPN deployments.
+		</p>
+		
+		
+		<h3>Enterprise Support</h3>
+		<p class='hint'>Zoovy provides an enhanced level of support for our larger clients who are more sensitive to service disruptions.  Enterprise support is also suitable for clients who need specific customizations made to their software version. Enterprise support also offers scheduled upgrades on weekends and off-business hours to minimize potential disruption to business operations. Please contact billing@zoovy.com to determine eligibility for this service.
+		</p>
+		
+		<h3>Supported Operating Systems: </h3>
+		<p class='hint'>
+		Windows Vista sp2, Windows 7, Windows Server 2003 r2, Windows 8; Windows Server 2008, 2013.
+		Requires .NET Framework 3.0. 
+		<br />
+		64 Bit Considerations: Order Manager will run correctly on Vista/Windows 7 64 Bit Operating System.
+		Other applications such as Quickbooks and Endicia will not integrate properly. 
+		In addition various peripherals such as many models of HP Printers are known to have issues
+		and will cause the Order Manager software to become unstable.
+		</p>
+	
+	</div>
+</section>
+
+
+
+</div>
+
+

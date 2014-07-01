@@ -1,0 +1,675 @@
+<div id="pageTemplateSites" class="ui-widget">
+
+	<div data-tlc="bind $var '.*favorites'; if(is $var --notblank;) {{ apply --show; }};">
+		<ul data-tlc="bind $var '.*favorites'; controller#loop --templateid='domainListFavoriteTemplate'; apply --append;" class="marginTop listStyleNone ui-widget noPadOrMargin clearfix" data-app-role="domainListFavorites"></ul>
+	</div>
+	
+	
+	<div class="ui-widget-content ui-corner-all stdPadding">
+	<table data-tlc="bind $var '.@DOMAINS'; controller#loop --templateid='sitesDomainRowTemplate'; apply --append;" class="fullWidth gridTable marginTop" data-app-role="domainListNonFavorites">
+	<thead>
+	<tr>
+		<th colspan="2">Domain</th>
+		<th>Partition</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody></tbody>
+	</table>
+	</div>
+	
+</div>
+
+
+
+<ul>	
+	<li id="domainListFavoriteTemplate" class="ui-widget-content ui-corner-all domainPanel positionRelative smallButton">
+		<div class="alignCenter">
+		<img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="160" width="160">
+		</div>
+		
+		<div data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domain';" class="positionAbsolute positionTop positionRight stdPadding"><!-- stdPadding aligns this button w/ host-buttons -->
+			<button data-app-click="admin_sites|domainPutInFocus" data-text="false" data-icon-primary="ui-icon-check" class="applyButton">Use Domain</button>
+		</div>
+		
+		<h4 class="alignCenter smallPadding">
+			<span data-tlc="bind $var '.DOMAINNAME'; apply --append;"></span>
+			<span data-tlc="bind $var '.PRT'; format --prepend='('; format --append=')'; apply --append;"></span>
+		</h4>
+	</li>
+</ul>
+
+<table>
+<!-- used in 'sites' tab for list of all domains -->
+<tbody>
+<tr id="sitesDomainRowTemplate">
+	<td class="alignCenter width1"><img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" height="40" width="80"></td>
+	<td data-tlc="bind $var '.DOMAINNAME'; apply --append;"></td>
+	<td data-tlc="bind $var '.PRT'; apply --append;"></td>
+	<td class="alignRight">
+		<button data-app-click="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check">Use Domain</button>
+		<button data-app-click="admin_sites|adminDomainToggleFavoriteExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-tag" data-tlc="bind $var '.IS_FAVORITE'; if (is $var --eq=1) {{ apply --add --class='ui-state-highlight'; }};">Tag as Favorite</button>
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+<!--
+////////////   FOR THE DOMAINS AND APP CONFIG PAGE
+-->
+
+
+<div id="domainAndAppConfigTemplate" class="ui-widget smallButton">
+
+
+	<section class="marginBottom" data-app-role="domainsAndHostsContainer" data-tablefilter-role="container">
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		
+		<button class="applyButton floatRight " data-app-click="admin_sites|adminDomainCreateShow" data-text="true" data-icon-primary="ui-icon-circle-plus">Add Domain</button>
+		
+		<span class="marginRight floatRight">
+		<input name="tableSearchQuery" placeholder="filter value" x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" type="search">
+		</span>
+		
+		<h2 class="smallPadding">Domain Configuration</h2>
+	</div>
+	<div class="ui-widget-content ui-corner-bottom stdPadding">
+	<table data-tlc="bind $var '.@DOMAINS'; controller#loop --templateid='domainListTemplate'; apply --append;" class="fullWidth marginTop domainList" data-app-role="domainListNonFavorites" data-tablefilter-role="table" data-tablefilter-selector="tbody">
+	<thead>
+	<tr>
+		<th>Domain</th>
+		<th>Partition</th>
+		<th></th>
+		<th data-anytable-nosort="true"></th>
+	</tr>
+	</thead>
+	</table>
+	</div>
+	</section>
+
+	<section data-app-role="projectsContainer" data-tablefilter-role="container">
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<button class="applyButton floatRight" data-icon-primary="ui-icon-circle-plus" data-app-click="admin_sites|projectCreateShow">Add Project</button>
+		<span class="marginRight floatRight">
+		<input name="tableSearchQuery" placeholder="filter value" x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" type="search">
+		</span>
+		<h2 class="smallPadding">Projects</h2>
+	</div>
+	<div class="ui-widget-content ui-corner-bottom stdPadding">
+	<table data-tlc="bind $var '.@PROJECTS'; controller#loop --templateid='projectsListTemplate'; apply --append;" class="fullWidth gridTable marginTop" data-tablefilter-role="table" data-tablefilter-selector="tbody">
+	<thead>
+	<tr>
+		<th>Title</th>
+		<th>Type</th>
+		<th data-anytable-nosort="true"></th>
+	</tr>
+	</thead>
+	</table>
+	</div>
+	
+	</section>
+
+	
+</div>
+
+
+
+
+
+
+
+<!-- used in domain config for each domain in the list. -->
+<table>
+
+<tbody id="domainListTemplate" data-element="domain">
+<tr>
+	<td data-tlc="bind $var '.DOMAINNAME'; apply --append;" class="isSearchable"></td>
+	<td data-tlc="bind $var '.PRT'; apply --append;" class="isSearchable"></td>
+	<td></td>
+	<td class="alignRight">
+	<button data-app-click="admin_sites|adminDomainRemoveConfirm" class="applyButton" data-text="false" data-icon-primary="ui-icon-trash">Remove Domain</button>
+	<button data-app-click="admin_batchjob|adminBatchJobExec" class="applyButton" data-text="false" data-icon-primary="ui-icon-refresh" data-type="UTILITY/SITEMAP" data-whitelist="DOMAINNAME,PRT">Update Sitemap</button>
+	<button data-app-click="admin_sites|domainPutInFocus" class="applyButton" data-text="false" data-icon-primary="ui-icon-check" title="Use this domain">Use Domain</button>
+	<button data-app-click="admin_sites|adminDomainDetailShow" class="applyButton" data-text="false" data-icon-primary="ui-icon-pencil" title="Edit this domain">Details</button>
+	</td>
+</tr>
+<tr>
+	<td colspan="4" class="domainDetailRow">
+	<div class="displayNone" data-app-role="domainDetailContainer">
+
+	</div>
+	</td>
+</tr>
+</tbody>
+
+
+
+
+
+
+
+
+<!-- used in domain config for each host per domain (in hosts tab) -->
+<tbody><tr id="domainListHostsRowTemplate" data-element="host">
+	<td data-tlc="bind $var '.HOSTNAME'; apply --append;"></td>
+	<td data-tlc="bind $var '.HOSTTYPE'; apply --append;"></td>
+	<td data-tlc="bind $var '.PROJECT'; if(is $var --notblank;){{admin_sites#projectidpretty  --legacy ; apply --append;}};"></td>
+	<td class="alignRight width50">
+	<span data-tlc="admin_sites#apphostbuttons  --useParentData='true' --legacy ; apply --append;" data-bind="useParentData:true; format:appHostButtons; extension:admin_sites;"></span>
+	<button class="applyButton" data-app-click="admin|tagRow4Remove" data-text="false" data-icon-primary="ui-icon-close">Delete this Host</button>
+	<button class="applyButton" data-app-click="admin_sites|adminDomainCreateUpdateHostShow" data-mode="update" data-icon-primary="ui-icon-pencil" data-text="false">Edit Host</button>
+	<button class="applyButton" data-app-click="admin_sites|domainView" data-mode="host" data-text="false" data-icon-primary="ui-icon-newwin">View Site</button><!-- buttons that always show up should be on the right so they don't move -->
+	</td>
+</tr>
+
+
+
+
+
+
+<!-- used in the events tab of domain config -->
+<tr id="domainManagerHistoryRowTemplate">
+	<td data-tlc="bind $var '.DOMAINNAME'; apply --append;"></td>
+	<td data-tlc="bind $var '.TXT'; apply --append;"></td>
+	<td data-tlc="bind $var '.CLASS'; apply --append;"></td>
+	<td data-tlc="bind $var '.CREATED_GMT'; datetime --out='pretty'; apply --append;"></td>
+</tr>
+
+<!-- used in host type VSTORE for rewrite rules -->
+<tr id="domainManagerRewriteRowTemplate">
+	<td data-tlc="bind $var '.PATH'; apply --append;"></td>
+	<td data-tlc="bind $var '.TARGETURL'; apply --append;"></td>
+	<td>
+	<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete Rule</button>
+	</td>
+</tr>
+
+
+<tr id="domainManagerDiagnosticsRowTemplate">
+	<td data-tlc="bind $var '._'; apply --append;"></td>
+	<td data-tlc="bind $var '.+'; apply --append;"></td>
+	<td data-tlc="bind $var '.!'; apply --append;"></td>
+</tr>
+
+
+</tbody></table>
+
+
+
+
+
+
+
+
+
+
+
+
+<div id='domainCreateTemplate'>
+<!-- no validate is turned on because there are input flagged as 'required' that are conditionally required. validateForm handles these -->
+<form action='#' onSubmit='return false' data-app-submit='admin_sites|adminDomainCreateExec' novalidate='novalidate'>
+
+<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<label>
+		<span>Type</span>
+		<select name='domaintype' required='required' data-panel-selector=".domainCreateDomaintype" data-input-change="panel-selector">
+			<option value='DOMAIN-CREATE' data-show-panel='domainCreateDomaintypeCreate'>I have a domain</option>
+			<option value='DOMAIN-RESERVE' data-show-panel='domainCreateDomaintypeReserve'>Create a temporary domain</option>
+		</select>
+	</label>
+
+	<div data-panel-id='domainCreateDomaintypeCreate' class='displayNone domainCreateDomaintype'>
+	<label>
+		<span>Domain</span>
+		<input type='text' required data-validation-rules='skipIfHidden' name='DOMAINNAME' value='' />
+	</label>
+	</div>
+	<div data-panel-id='domainCreateDomaintypeReserve' class='displayNone hint domainCreateDomaintype'>
+	If you do not already have a domain or are evaluating the platform, this is a good place to start.<br />
+	A temporary domain will be created and will expire after 90 days.
+	</div>
+
+
+	
+	
+</fieldset>
+
+<div class='buttonset alignRight'>
+	<button class='applyButton'>Add Domain</button>
+</div>
+
+</form>
+</div>
+
+
+
+<div id='domainAddUpdateHostTemplate'>
+<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+	<input type="hidden" name="DOMAINNAME" data-bind="var:domain(DOMAINNAME); format:popVal;" />
+
+	<fieldset>
+	
+	<label>
+		<span>Host name</span>
+		<input type='text' name='HOSTNAME' data-bind="var: host(HOSTNAME); format:popVal;" required='required'  />
+	</label>
+<!-- the save for this looks for specific host types to generate the macro. don't change these without updating admin_config.u.domainAddUpdateHost -->
+	<label>
+		<span>Host Type</span>
+		<select name='HOSTTYPE' data-input-change="panel-selector" data-panel-selector=".domainNewHostSelectType" required='required' data-bind="var: host(HOSTTYPE); format:popVal;">
+			<option value=''>Please choose</option>
+			<option value='APPTIMIZER' data-show-panel='domainNewHostTypeSITEPTR,domainForceHTTPS'>Apptimizer</option>
+			<option value='REDIR' data-show-panel='domainNewHostTypeREDIR'>Redirect</option>
+			<option value='VSTORE' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly'>V-Store</option>
+			<option value='VSTORE-APP' data-show-panel='domainNewHostTypeVSTORE' class='showForZoovyOnly' style='display:block;'>V-Store/App</option><!-- inline css to override a behavior w/ showforzoovyonly. ### FUTURE -> fix -->
+			<option value='CUSTOM'>Custom</option>
+		</select>
+	</label>
+
+	</fieldset>
+
+
+<!-- these are the 'panels' for the host type select list -->
+	<div data-panel-id='domainNewHostTypeSITEPTR' class='displayNone domainNewHostSelectType'>
+
+
+
+		<label>
+			<span>Project Source: </span>
+			<select name='project_source' data-input-change="panel-selector" data-panel-selector=".domainNewHostProjectSource">
+				<option value='project' data-show-panel='domainNewHostProjectSource_project'>Existing project</option>
+				<option value='template' data-show-panel='domainNewHostProjectSource_template'>New project from Template</option>
+			</select>
+		
+		</label>
+		
+	
+		<label class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_project'>
+			<span>Project Reference</span>
+			<select name='PROJECT' data-bind="var: project(@PROJECTS); format: optionsfromlist; value:UUID; text:TITLE;">
+			<option value=''></option>
+			</select>
+		</label>
+		
+		<label data-app-role='hostTemplateListContainer'  class='domainNewHostProjectSource' data-panel-id='domainNewHostProjectSource_template'>
+			<span>Template List</span>
+			<select name='TEMPLATE' data-bind="var: project(@TEMPLATES); format: optionsfromlist; value:SUBDIR; text:SUBDIR;">
+			<option value=''></option>
+			</select>
+		</label>
+	</div>
+
+	<div data-panel-id='domainForceHTTPS' class='displayNone domainNewHostSelectType'>
+	<label>
+		<input type='checkbox' name='force_https' class='applyAnycb' data-bind="var: host(force_https); format:popVal;" />
+		Force https
+	</label>
+	
+	</div>
+
+	<div data-panel-id='domainNewHostTypeREDIR' class='displayNone domainNewHostSelectType'>
+		<label>
+			<span>Redirect</span>
+			<input type='url' name='REDIR' value='' data-bind="var:host(REDIR); format:popVal;" />
+		</label>
+	</div>
+
+	<!--
+	NOTE: this doesn't work, we'll just have people use CSV for vstore from	now on.
+	
+	<div data-panel-id='domainNewHostTypeVSTORE' class='displayNone domainNewHostSelectType hint' data-table-role='container'>
+	<fieldset class='alignedInputs' data-table-role='inputs'>
+		<legend>Rewrite Rules</legend>
+		<label>
+			<span>Incoming URL</span>
+			<input type='url' required='required' name='PATH' value='' />
+		</label>
+		<label>
+			<span>Rewrite to</span>
+			<input type='url' required='required' name='TARGETURL' value='' />
+		</label>
+		<button data-app-click='admin_config|dataTableAddUpdate' class='applyButton' data-text='true' data-form-skipreset='true'>Apply</button><!-- needs to be within fieldset for taxTableUpdateExec -->
+		<!--
+		<table class='marginTop applyAnytable gridTable fullWidth' data-app-role='dataTable'>
+		<thead>
+		<tr>
+			<td>Incoming URL</td>
+			<td>Destination URL</td>
+			<td></td>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipping(@REWRITES); format:processList; loadsTemplate:domainManagerRewriteRowTemplate;" data-app-role='domainRewriteRulesTbody' data-table-role='content'></tbody>
+		</table>
+
+	</fieldset>
+	</div>
+	-->
+	
+	<fieldset data-app-role='sslInputsContainer' class='alignedInputs'>
+		<legend>SSL Certificate</legend>
+<!--
+There are five components to SSL.
+	IP address (which 'may' no longer be necessary)
+	Private key -> basically a really long password. generated once typically, unless compromised.
+	csr -> generated from private key. given to Certificate Authority (CA) (authorizenet, verisign, etc).
+	certificate -> generated by certificate authority. loaded onto webserver.
+	chained (intermediate) certificate -> links root browser cert to end cert of CA. that way if CA gets comprimised, only intermediate needs to get replaced.
+-->
+		<label>
+			<span>Certificate</span>
+			<textarea data-bind="var: host(CRT); format:popVal;" name='CRT' rows='6'></textarea>
+			
+		</label>
+		<label>
+			<span>Key</span>
+			<textarea data-bind="var: host(KEY); format:popVal;" name='KEY' rows='6'></textarea>
+		</label>
+		<button class='applyButton' data-text='true' data-icon-primary='ui-icon-key' data-app-click='admin_sites|cryptoToolMakeKeyShow'>Make Key</button>
+	</fieldset>
+
+
+
+
+
+
+	<div class='buttonset alignRight'></div><!-- save button added here w/ JS -->
+	
+</form>
+</div>
+
+
+
+
+
+
+<!--
+this is opened in a dialog and appended to the parent fieldset so that cryptToolMakeKeyExec is within context of the parent form.
+That's also why the template does not contain a form
+-->
+<div id="sslMakeKeyTemplate" data-app-role="sslMakeKeyContainer">
+<p class="hint">If you have an existing key set, this action will save over it.</p>
+<label>
+	<span>Length</span>
+	<select name="length">
+		<option value="1024">1024</option>
+		<option value="2048" selected="selected">2048</option>
+		<option value="4096">4096</option>
+	</select>
+</label>
+<button class="applyButton" data-text="true" data-icon-primary="ui-icon-key" data-app-click="admin_sites|cryptoToolMakeKeyExec">Make Key</button>
+</div>
+
+
+
+
+<div id="domainUpdateTemplate">
+
+	<form action="#" onsubmit="return false" class="labelsAsBreaks alignedLabels" data-cb_tf="true">
+	<input name="_macrobuilder" value="admin_sites|adminDomainMacroGeneral" type="hidden">
+	<input name="_tag/callback" value="showMessaging" type="hidden">
+	<input name="_tag/restoreInputsFromTrackingState" value="1" type="hidden">
+	<input name="_tag/removeFromDOMItemsTaggedForDelete" value="1" type="hidden">
+	<input name="_tag/message" value="The domain has been successfully updated." type="hidden">
+	<input data-tlc="bind $var '.DOMAINNAME'; apply --select=$var; apply --append;" name="DOMAINNAME" type="hidden">
+
+	<input data-tlc="bind $var '.LOGO'; apply --select=$var; apply --append;" name="LOGO" value="" type="hidden">
+
+	<div class="domainDetailLogoContainer">
+	
+		<fieldset class="marginBottom labelsAsBreaks">
+
+			<div class="pointer marginBottom"><div class="logoWhiteness"><img data-tlc="admin#companylogo  --useParentData='1' --legacy ; apply --append;" src="blank.gif" class="prodThumb" data-bind="useParentData:1; format:companyLogo; extension:admin;" onclick="mediaLibrary($(this),$(this).closest('form').find('input[name=\'LOGO\']').first(),'');" height="50" width="150"></div></div>
+			
+			<label>
+				<input data-tlc="bind $var '.IS_PRIMARY'; apply --select=$var; apply --append;" class="applyAnycb" name="IS_PRIMARY" type="checkbox">
+				<span>Tag as primary</span>
+				<span class="toolTip" title="Only 1 primary domain per partition.">?</span>
+			</label>
+						
+			<label>
+				<input data-tlc="bind $var '.IS_FAVORITE'; apply --select=$var; apply --append;" class="applyAnycb" name="IS_FAVORITE" type="checkbox">
+				<span>Tag as favorite</span>
+				<span class="toolTip" title="Will show domain at the top of some lists and enable it in the domain chooser.">?</span>
+			</label>		
+	
+			<label>
+				<input data-tlc="bind $var '.IS_SYNDICATION'; apply --select=$var; apply --append;" class="applyAnycb" name="IS_SYNDICATION" type="checkbox">
+				<span>Syndication</span>
+			</label>
+			
+			<label>
+				<span>Partition</span>
+				<select data-tlc="bind $var '.@PRTS'; controller#optionsfromlist --legacy --value='id' --text='id'; apply --append;" name="PRT"></select>
+			</label>
+			
+		</fieldset>
+	
+	</div>
+
+	
+
+
+
+	<div data-app-role="tabContainer" class="applyAnytabs domainDetailTabsContainer">
+	<button data-app-role="saveButton" data-app-click="admin|submitForm" class="floatRight applyButton">Save <span class="numChanges"></span> Changes</button>
+	<ul>
+		<li><a href="#domainHosts">Hosts</a></li>
+		<li><a href="#domainEmail">Email</a></li>
+		<li><a href="#domainEvents">Events</a></li>
+		<li><a data-tlc="bind $var '.DOMAINNAME'; apply --attrib='data-domainname'; apply --append;" href="#domainDiagnostics" data-app-click="admin_sites|adminDomainDiagnosticsShow">Diagnostics </a></li>
+<!--		<li><a href='#domainRewriteRules'>Rewrite Rules</a></li> -->
+	</ul>
+	
+	
+	<section data-anytab-content="domainHosts" class="clearfix">
+		
+		<div class="buttonset alignRight marginBottom">
+			<button class="applyButton" data-app-click="admin_sites|adminDomainCreateUpdateHostShow" data-mode="create" data-icon-primary="ui-icon-circle-plus" data-text="true">Add New Host</button>
+		</div>
+		<table class="gridTable fullWidth applyAnytable">
+		<thead>
+		<tr>
+			<th>Host</th>
+			<th>Type</th>
+			<th>Project</th>
+			<th data-anytable-nosort="true"></th>
+		</tr>
+		</thead>
+		<tbody data-tlc="bind $var '.@HOSTS'; controller#loop --templateid='domainListHostsRowTemplate'; apply --append;" data-app-role="domainsHostsTbody"></tbody>
+		</table>	
+	</section>
+	
+	<section data-anytab-content="domainEmail" class="clearfix">
+	
+		<fieldset data-app-role="emailConfigContainer">
+		
+			<label>
+				<span>Configuration</span>
+				<select data-tlc="bind $var '.%EMAIL.TYPE'; apply --select=$var; apply --append;" name="TYPE" data-input-change="panel-selector" data-panel-selector=".domainEmailConfiguration">
+					<option value="">None</option>
+					<option value="MX" data-show-panel="domainEmailConfigurationMX">MX</option>
+					<option value="GOOGLE">Google</option>
+					<option value="FUSEMAIL">Fusemail</option>
+				</select>
+			</label>
+			
+			<div data-panel-id="domainEmailConfigurationMX" class="displayNone domainEmailConfiguration">
+	
+				<label>
+					<span>MX1</span>
+					<input data-tlc="bind $var '.%EMAIL.MX1'; apply --select=$var; apply --append;" name="MX1" value="" size="25" type="text">
+				</label>
+				<label>
+					<span>MX2</span>
+					<input data-tlc="bind $var '.%EMAIL.MX2'; apply --select=$var; apply --append;" name="MX2" value="" size="25" type="text">
+				</label>
+			</div>
+		</fieldset>
+	</section>
+
+
+
+	<section data-anytab-content="domainDiagnostics" class="clearfix">
+	<table class="applyAnytable gridTable fullWidth">
+	<thead>
+	<tr>
+		<td>Type</td>
+		<td>Message</td>
+		<td></td>
+	</tr>
+	</thead>
+	<tbody data-tlc="bind $var '.@MSGS'; controller#loop --templateid='domainManagerDiagnosticsRowTemplate'; apply --append;" data-app-role="domainDiagnosticsTbody">
+	</tbody>
+	</table>
+	</section>
+
+
+
+	<section data-anytab-content="domainEvents" class="clearfix displayNone">
+	
+	<table class="applyAnytable gridTable fullWidth">
+	<thead>
+	<tr>
+		<td>ID</td>
+		<td>Event</td>
+		<td>Class</td>
+		<td>Time/Date</td>
+	</tr>
+	</thead>
+	<tbody data-tlc="bind $var '.@HISTORY'; controller#loop --templateid='domainManagerHistoryRowTemplate'; apply --append;">
+	</tbody>
+	</table>
+	
+	</section>
+
+	</div>
+	</form>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+//////////////////////////  PROJECTS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+
+<table>
+<tbody id="projectsListTemplate" data-element='project'>
+<tr>
+	<td data-tlc="bind $var '.TITLE'; apply --append;" class="isSearchable"></td>
+	<td data-tlc="bind $var '.TYPE'; apply --append;" class="isSearchable"></td>
+	<td class="alignRight">
+	<span data-tlc="admin_sites#projectbuttons  --useParentData='true' --legacy ; apply --append;" data-bind="useParentData:true; format:projectButtons; extension:admin_sites;"></span>
+	<button class="applyButton" data-app-click="admin_sites|projectDetailShow" data-icon-primary="ui-icon-info" data-text="false">View Details</button>
+	</td>
+</tr>
+
+
+<tr class="displayNone">
+	<td colspan="3">
+	<div class="marginLeft">
+		<div data-tlc="bind $var '.ID'; format --prepend='ID: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UUID'; format --prepend='Project ID: '; apply --append;"></div>
+		<div data-tlc="bind $var '.TYPE'; format --prepend='Type: '; apply --append;"></div>
+		<div data-tlc="bind $var '.CREATED_TS'; format --prepend='Created: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_VERSION'; format --prepend='App version: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_RELEASE'; format --prepend='App release: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_ROOT'; format --prepend='App root: '; apply --append;"></div>
+		<div data-tlc="bind $var '.GITHUB_REPO'; format --prepend='GitHub repository: '; apply --append;"></div>
+		<div data-tlc="bind $var '.GITHUB_BRANCH'; format --prepend='GitHub branch: '; apply --append;"></div>
+		<div data-tlc="bind $var '.APP_EXPIRE'; format --prepend='Expiration: '; apply --append;"></div>
+		<div data-tlc="bind $var '.UPDATED_TS'; format --prepend='Last update: '; apply --append;"></div>
+	</div>
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+<div id="projectCreateTemplate">
+
+<form onsubmit="return false" novalidate>
+<fieldset class="labelsAsBreaks alignedLabels alignedInputs">
+	<label>
+	<span>Project title</span>
+	<input name="title" required type="text">
+	<span class="toolTip" title="ex: domain.com master">?</span>
+	</label>
+
+
+	<label>
+	<span>Project type</span>
+	<select name="type">
+		<option value="APP">Shopping App (index.html)</option>
+<!--		<option value="VSTORE">Legacy vStore Project (beta)</option> -->
+		<option value="ADMIN">Hosted Admin App (beta)</option>
+		<option value="CHECKOUT">Checkout Intercept (beta)</option>
+		<option value="DSS">Decision Support System (beta)</option>
+	</select>
+	</label>
+
+	<label>
+	<span>Project ID</span>
+	<input name="UUID" maxlength="40" data-minlength='10' type="text" required='required' data-input-keyup="format" data-input-format='pid, uppercase'>
+	<span class='toolTip' title="An alpha-numeric (plus dashes and underscores) project id with a minimum of ten characters. Should be informative as this is used for troubleshooting (maybe the domain and/or name of the git repo). The id should be unique.">?</span>
+	</label>
+
+	<label>
+	<span>GitHub repo</span>
+	<input name="repo" maxlength="128" required type="url">
+	</label>
+	<p class="hint">ex: https://github.com/yourname/project.git OR ssh://github.com/yourname/project.git<br>
+	You can find this link on the right side of the repo in a box that says 'https clone url'.</p>
+
+
+
+	<label>
+	<span>GitHub branch</span>
+	<input name="branch" maxlength="20" type="text">
+	</label>
+	
+<!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
+	<div class="buttonset">
+		<button class="applyButton" data-app-click="admin_sites|projectCreateExec">Save</button>
+	</div>
+</fieldset>
+</form>
+
+</div>
+
+
+
+<!-- HOST CHOOSER -->
+
+<div id='hostChooserDomainListTemplate' data-tlc="bind $domains '.@DOMAINS'; controller#loop --templateid='hostChooserDomainTemplate'; apply --append;" class='hostChooser'></div>
+<div id='hostChooserDomainTemplate'>
+	<h5 data-tlc="bind $domain '.DOMAINNAME'; apply --append;"></h5>
+	<ul data-tlc="bind $hosts '.@HOSTS'; controller#loop --templateid='hostChooserHostTemplate'; apply --append;" class='hostChooserHostList'></ul>
+</div>
+
+<ul>
+	<li id='hostChooserHostTemplate'  class='hostChooserHostListItem' data-tlc="bind $hostname '.HOSTNAME'; apply --append; bind $chkout '.CHKOUT'; if(is $chkout --notblank;) {{format --prepend=' - '; apply --append; }}; "></li>
+</ul>
+

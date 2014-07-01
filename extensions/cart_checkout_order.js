@@ -318,15 +318,15 @@ left them be to provide guidance later.
 					}
 				}
 			},
-
+//  TODO - deprecate google checkout
 		proceedToGoogleCheckout : {
 			onSuccess : function(tagObj)	{
 				_app.u.dump('BEGIN cco.callbacks.proceedToGoogleCheckout.onSuccess');
 //code for tracking the google wallet payment in GA as a conversion.
-				_gaq.push(function() {
-					var pageTracker = _gaq._getAsyncTracker();
-					setUrchinInputCode(pageTracker);
-					});
+				//_gaq.push(function() {
+				//	var pageTracker = _gaq._getAsyncTracker();
+				//	setUrchinInputCode(pageTracker);
+				//	});
 //getUrchinFieldValue is defined in the ga_post.js file. It's included as part of the google analytics plugin.
 				document.location= _app.data[tagObj.datapointer].URL +"&analyticsdata="+getUrchinFieldValue();
 				},
@@ -396,49 +396,21 @@ left them be to provide guidance later.
 //will fetch an entirely new copy of the cart from the server.
 //still requires a dispatch be sent OUTSIDE this
 					$cart.on('fetch.cart',function(event,P){
-						var $c = $(this), cartid = $c.data('cartid');
-						P = P || {};
+						var $c = $(this); P = P || {};
 						$c.showLoading({'message':'Updating cart contents'});
 						_app.model.destroy('cartDetail|'+$c.data('cartid'));
-						_app.ext.cco.calls.cartItemsInventoryVerify.init(cartid,{'callback':function(rd){
-// This code is for an inventory check when the cart is updated. It will make sure that the # of items in the cart reflect the inventory available in the store.
-// this check is performed again at checkout.
-// // ### zephyrpaintball ->  this cart does an inventory check to make sure what's in the cart is actually available.
-if(_app.model.responseHasErrors(rd)){
-	$c.anymessage({'message':rd});
-	$c.hideLoading();
-	}
-else	{
-	var adjustments;
-	if(_app.data[rd.datapointer] && !$.isEmptyObject(_app.data[rd.datapointer]['%changes']))	{
-		P.Q = 'immutable'; //cartItemUpdate is an immutable call. this will ensure any subsequent calls, like the cartDetail, and the dispatch itself are all the same Q.
-		adjustments = "<ol>";
-		for(var key in _app.data[rd.datapointer]['%changes']) {
-			adjustments += "<li>sku: "+key+" was set to "+_app.data[rd.datapointer]['%changes'][key]+" due to availability<\/li>";
-			_app.ext.cco.calls.cartItemUpdate.init({'_cartid':cartid,'stid':key,'quantity':_app.data[rd.datapointer]['%changes'][key]});
-			}
-		adjustments += "</ol>";
-		}
-	_app.calls.cartDetail.init($c.data('cartid'),{
-		'callback':'tlc',
-		'before' : function(r)	{
-			r.jqObj.empty();
-			},
-		'onComplete' : function(r){
-			P.state = 'complete';
-			_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
-			if(adjustments)	{
-				r.jqObj.anymessage({"message":"Some inventory adjustments were made based on availability. "+adjustments,"persistent":true});
-				}
-			},
-		'templateID' : $c.data('templateid'),
-		'jqObj' : $c
-		},P.Q);
-	_app.model.dispatchThis(P.Q);
-	}
-
-
-							},'jqObj':$c},P.Q);
+						_app.calls.cartDetail.init($c.data('cartid'),{
+							'callback':'tlc',
+							'before' : function(r)	{
+								r.jqObj.empty();
+								},
+							'onComplete' : function(r){
+								P.state = 'complete';
+								_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
+								},
+							'templateID' : $c.data('templateid'),
+							'jqObj' : $c
+							},P.Q);
 						});
 //will update the cart based on what's in memory.
 					$cart.on('refresh.cart',function(event,P){
@@ -579,11 +551,13 @@ else	{
 				var r = false;
 				if(!$.isEmptyObject(cartObj))	{
 					var items = cartObj['@ITEMS'] || [], L = items.length;
+					//generally, we want to direct traffic to the non-secure domain first. That option will also be better for a native app which has no document.domain
+					var domain = (_app.vars.domain) ? 'http://'+_app.vars.domain : document.location.protocol+'//'+document.domain
 					if(L)	{r = ''}; //set to blank so += doesn't start with undefined. 
 					for(var i = 0; i < L; i += 1)	{
 						//if the first character of a sku is a %, then it's a coupon, not a product.
 						if(items[i].sku.charAt(0) != '%')	{
-							r +=  (_app.vars._clientid == '1pc') ? "http://"+_app.vars.sdomain+"/product/"+items[i].sku+"/\n" : "http://"+_app.vars.sdomain+"#!product/"+items[i].sku+"/\n";
+							r +=  (_app.vars._clientid == '1pc') ? domain+"/product/"+items[i].sku+"/\n" : domain+"#!product/"+items[i].sku+"/\n";
 							}
 						}
 					}

@@ -1,0 +1,138 @@
+
+/* filterList is also used as a selector to make the filters selectable */
+#navTabs .filterList	{
+	padding:0;
+	margin:6px 12px 12px 12px;
+	}
+
+
+/*
+General tab
+*/
+
+
+.peGeneralTabContent fieldset	{margin:0 0 36px 0; padding:0;}
+
+.peGeneralTabContent legend,
+.peGeneralTabContent h4	{margin:0 0 12px 0; padding:0; clear:both;}
+
+.productTabsUL	{font-size:.85em;}
+
+.tagging	{
+	margin-left:0; padding-left:0;
+	text-align:left;
+	-webkit-column-count: 6;
+	-webkit-column-gap: 1%; 
+	-webkit-column-rule: 0px dotted black;
+	-moz-column-count: 6;
+	-moz-column-gap: 1%;  
+	-moz-column-rule: 0px dotted black;
+	column-count: 6;
+	column-gap: 1%; 
+	column-rule: 0px dotted black;	
+	}
+
+
+.productSearchInput	{width:45%; font-size:1.4em; border:0; font-weight:normal; margin:1px 6px; padding:2px 12px;}
+
+/* inventory */
+
+.invDetail__ASM_, .invDetail_PICK, .invDetail_DONE	{display:none;}
+
+
+
+/* for the sku-specific imagery */
+.imagesEditor .skusImagesContainer ul	{display:inline-block; min-height:35px;}
+
+
+.imageIDRef {position:absolute; bottom:0px; left:0px; background:#efefef; padding:1px 3px;} /* the image ID (image32) shown on mouseover */
+
+/* container for the 'product' level imagery */
+.imagesEditor .prodImagesContainer	{
+	float:left;
+	}
+
+/* used on an li at the end of each list of imagery to let users know they can 'drop' a file on here */
+.imagesEditor .dropzone	{
+	font-size:.9em;
+	width:75px;
+	height:75px;
+	}
+
+.imagesEditor .skusImagesContainer .dropzone	{
+	font-size:.65em;
+	width:45px;
+	height:45px;
+	}
+
+
+
+/* applied to the ul's around each list of images */
+.imagesEditor .sortableImagery	{
+	margin:0;
+	padding:0 20px;
+	display: inline-block;
+	}
+
+
+
+.imagesEditor .sortableImagery a	{cursor: default;}
+.imagesEditor .sortableImagery li {
+/*	background: white; - set a bg color and the 'edited' class doesn't show up */
+	display: inline;
+	float: left;
+	margin: 6px;
+	padding: 2px;
+	text-align: center;
+	text-decoration: none;
+	-webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .3);
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,.3);
+	box-shadow: 0 1px 2px rgba(0,0,0,.3);
+	position:relative;
+	-webkit-border-radius: 2px;
+	border-radius: 2px; 
+	}
+.imagesEditor .sortableImagery li.edited	{border-width:1px;}
+
+.imagesEditor .sortableImagery img { 
+	display: block; 
+	width: inherit; 
+	}
+
+
+
+
+
+
+
+
+/*
+Variations
+*/
+
+div.storeVariationsListContainer	{max-height:250px; overflow:auto;}
+
+td.variationEditorSplitter	{border:1px solid #efefef; vertical-align:middle; padding:0; width:2px;}
+td.variationEditorSplitter div	{width:2px; overflow:visible; position:relative;}
+td.variationEditorSplitter button	{position:absolute; top:-12px; left:-12px;}
+
+
+[data-app-role='variationsOptionsTbody'] .toggleByAppRole.globalListOfOptions {display:none;}
+[data-app-role='storeVariationsOptionsContainer'] .toggleByAppRole.optionsEnabledOnProduct {display:none;}
+
+
+
+/* this didn't solve the issue.
+tbody.variationGroupOptions	{
+     height: auto;
+     min-height:100px;
+	 width:100%;
+     display:block	
+	}min-height added so drag and drop would be easier
+*/
+
+
+.skuFinder .variation	{margin-bottom:.3em;}
+.skuFinder label	{margin-right:.2em;}
+.skuFinder .ghint_qmark_container	{margin-left:.2em;}
+

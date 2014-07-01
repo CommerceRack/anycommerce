@@ -142,6 +142,12 @@ var quickstart = function(_app) {
 
 _app.u.addEventDelegation($(document.body)); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
 
+
+var hotw = _app.model.dpsGet('quickstart','hotw');
+if(!$.isEmptyObject(hotw))	{
+	_app.ext.quickstart.vars.hotw = hotw;
+	}
+
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(_app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+_app.model.version+" and release: "+_app.vars.release+"</div>");
@@ -500,7 +506,7 @@ need to be customized on a per-ria basis.
 				},
 
 			":popup" : function(suffix,phrase)	{
-				return "<a href=\""+suffix+"\" target='popup' onClick=\"_gaq.push(['_trackEvent', 'outgoing_links', "+suffix.replace(/^http:\/\//i, '')+"]);\">"+phrase+"</a>";
+				return "<a href=\""+suffix+"\" target='popup' data-app-click='quickstart|popup'>"+phrase+"</a>";
 				}
 			}, //wiki
 
@@ -1007,7 +1013,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							$('body').showLoading({'message':'Transferring to secure login'});							
 							var SSLlocation = _app.vars.secureURL+"?cartID="+_app.model.fetchCartID();
 							SSLlocation += "#!customer/"+infoObj.show
-							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
 							document.location = SSLlocation; //redir to secure url.
 							}
 						break;
@@ -1028,7 +1034,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
 							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+_app.model.fetchCartID()+"&_session="+_app.vars._session+"#!checkout";
-							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
 						else	{
@@ -1208,12 +1214,12 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 				if(pageType && infoObj && infoObj.templateID)	{
 					if(pageType == 'product' && infoObj.pid)	{
 						_app.ext.store_product.u.prodDataInModal(infoObj);
-						_gaq.push(['_trackEvent','Quickview','User Event','product',infoObj.pid]);
+						window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','product '+infoObj.pid);
 						}
 						
 					else if(pageType == 'category' && infoObj.navcat)	{
 						_app.ext.quickstart.u.showPageInDialog (infoObj)
-						_gaq.push(['_trackEvent','Quickview','User Event','category',infoObj.navcat]);
+						window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','category '+infoObj.navcat);
 						}
 						
 					else	{
@@ -1427,7 +1433,7 @@ setTimeout(function(){
 					_app.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
 					_app.calls.buyerProductListDetail.init(P.listid,{},'immutable')
 					_app.model.dispatchThis('immutable');
-					_gaq.push(['_trackEvent','Manage buyer list','User Event','item added',P.sku]);
+					window[_app.vars.analyticsPointer]('send','event','Manage buyer list','User Event','item added '+P.sku);
 					}
 				},
 
@@ -1552,6 +1558,9 @@ $target.tlc({
 				_app.ext.quickstart.vars.sotw = infoObj;
 				_app.ext.quickstart.vars.hotw.unshift(infoObj);
 				_app.ext.quickstart.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
+//* 201405 -> save history of the world to localstorage for refresh/next visit.
+// chrome didn't like copying hotw directly in. circular reference exception.
+				_app.model.dpsSet('quickstart','hotw',$.extend(_app.ext.quickstart.vars.hotw));
 				},
 
 			showtransition : function(infoObj,$old)	{
@@ -2190,16 +2199,8 @@ effects the display of the nav buttons only. should be run just after the handle
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
 					   "filter":{
 						  "and" : [
-// ### zephyrpaintball -> this is updated to provide an additional boost to prod_name and search additional attributes.
-							 {"query":{
-								 "query_string":{
-									 "query":decodeURIComponent(infoObj.KEYWORDS),
-									 "default_operator" : "AND",
-									 "fields":["prod_name^20","pid","prod_desc","keywords","user_keywords", "prod_upc", "prod_mfgid", "user:prod_class2", "prod_class3", "prod_color", "prod_voltage"]
-									}
-								}
-							},
-							{"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
+							 {"query":{"query_string":{"query":decodeURIComponent(infoObj.KEYWORDS), "fields":["prod_name^5","pid","prod_desc"]}}},
+							 {"has_child":{"type":"sku","query": {"range":{"available":{"gte":1}}}}} //only return item w/ inventory
 							 ]
 						  }});
 					}
@@ -2324,6 +2325,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //Customer pages differ from company pages. In this case, special logic is needed to determine whether or not content can be displayed based on authentication.
 // plus, most of the articles require an API request for more data.
 //handleTemplateEvents gets executed in showContent, which should always be used to execute this function.
+//by the time showCustomer is run, we are already on https if it is required.
 			showCustomer : function(infoObj)	{
 //				dump("BEGIN showCustomer. infoObj: "); dump(infoObj);
 				infoObj = infoObj || {};
@@ -2898,6 +2900,9 @@ else	{
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
+			popup : function($ele, p){
+				//Does nothing, but allows google analytics to track this event
+				},
 //add this as a data-app-submit to the login form.
 			accountLoginSubmit : function($ele,p)	{
 				p.preventDefault();
@@ -2914,7 +2919,6 @@ else	{
 				else	{} //validateForm will handle the error display.
 				return false;
 				},
-
 			accountPasswordRecoverSubmit : function($ele,p)	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
@@ -3233,10 +3237,11 @@ later, it will handle other third party plugins as well.
 
 //								dump(" -> user.gender = "+user.gender);
 
-if(_gaq.push(['_setCustomVar',1,'gender',user.gender,1]))
-	dump(" -> fired a custom GA var for gender.");
-else
-	dump(" -> ARGH! GA custom var NOT fired. WHY!!!");
+// 201405 - Deprecated for Universal Analytics
+//if(_gaq.push(['_setCustomVar',1,'gender',user.gender,1]))
+//	dump(" -> fired a custom GA var for gender.");
+//else
+//	dump(" -> ARGH! GA custom var NOT fired. WHY!!!");
 
 
 								}

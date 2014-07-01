@@ -1,0 +1,297 @@
+
+<table id='templateEditorTemplate' class='fullWidth smallButton templateEditor'>
+<tr>
+	<td class='valignTop width75 ui-widget ui-widget-content ui-corner-all'>
+	<div class='stdPadding'>
+
+		<div data-app-role='templateEditorSupplementalContent'></div><!-- used for the template editor to add mode specific content, if necessary. Site uses this. -->
+	
+		<div data-app-role="templateEditorTextareaContainer">
+		<textarea rows='10' data-app-role='templateEditorTextarea'></textarea>
+		</div>
+		
+	</div>
+	</td>
+	<td class='valignTop width20'>
+	<div class='marginLeft'>
+	
+		<div class='buttonset ui-widget-content smallPadding alignRight marginBottom ui-corner-all'>
+			<button data-app-click="admin_template|adminTemplateEditorExit" title="Exit and do NOT save changes" class='applyButton' data-text='true' data-icon-primary='ui-icon-triangle-1-w'>Exit</button>
+			<button data-app-click="admin_template|adminTemplateCampaignTestShow" title="Save changes and send test." class='campaign applyButton' data-text='true' data-icon-primary='ui-icon-mail-closed'>Send Test</button>
+			<button data-app-click='admin_template|adminTemplateSaveExec' title="Save changes" data-app-role='saveButton' class='ui-state-focus applyButton' data-text='true'>Save</button>
+		</div>
+	
+	<section class='ui-widget marginBottom' data-app-role='templateObjectInspectorContainer'>
+		<h4>Object Inspector</h4> <!-- class='smallPadding ui-widget-header ui-corner-top' -->
+		<div class=' labelsAsBreaks small clearfix'><!-- ui-widget-content ui-corner-bottom stdPadding clearfix -->
+			<div data-app-role='templateObjectInspectorContent'></div>
+		</div>
+	</section>
+	
+	
+	
+	<section class='ui-widget marginBottom' data-templateeditor-role='wizardContainer'>
+		<h4 class='smallPadding ui-widget-header ui-corner-top'>Wizard</h4>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	
+	<div data-app-role='wizardMessaging' class='small'></div>
+	
+	<form action='#' onSubmit='return false;' data-templateeditor-role='wizardForm' class='wizardForm'>
+	<button data-app-click='admin_template|startWizardExec' disabled='disabled' data-app-role='startWizardButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-triangle-e'>Start Wizard</button>
+	</form>
+	
+	
+		</div>
+	</section>
+	
+	
+	<!--
+	disabled for now due to tinymce integration
+	<section class='ui-widget marginBottom campaign' data-app-role='templateEditorViewportChooser'>
+		<h4 class='smallPadding ui-widget-header ui-corner-top'>Viewport Size</h4>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	
+		<select name='viewport' class='small' data-app-event='admin_template|templateEditorIframeResizeExec'>
+			<option value='default'>default</option>
+			<optgroup label='Amazon'>
+				<option value='600x1024'>Kindle Fire 600x1024</option>
+				<option value='800x1280'>Fire HD 800x1280</option>
+			</optgroup>
+	
+			<optgroup label='Apple'>
+				<option value='320x480'>iPhone, iPod Touch 320x480</option>
+				<option value='320x568' data-deviceclass='iphone5'>iPhone 5 320x568</option>
+				<option value='768x1024'>iPad/Mini 768x1024</option>
+			</optgroup>
+	
+			<optgroup label='Asus'>
+				<option value='600x1024'>Eee 1000 600x1024</option>
+				<option value='600x960'>Google Nexus 7 600x960</option>
+			</optgroup>
+			
+			<optgroup label='Blackberry'>
+				<option value='480x800'>Torch 480x800</option>
+				<option value='480x640'>Bold Touch 9900 480x640</option>
+				<option value='480x360'>Curve 480x360</option>
+			</optgroup>
+			
+			<optgroup label='HTC'>
+				<option value='320x533'>Desire 320x533</option>
+				<option value='360x640'>One X 360x640</option>
+				<option value='480x640'>Touch Diamond 480x640</option>
+				<option value='480x800'>Touch HD 480x800</option>
+				<option value='540x960'>Sensation 540x960</option>
+			</optgroup>
+			
+			<optgroup label='LG Optimus'>
+				<option value='320x480'>One 320x480</option>
+				<option value='480x800'>3D 480x800</option>
+				<option value='720x1280'>4X HD 720x1280</option>
+			</optgroup>
+			
+			<optgroup label='Motorola'>
+				<option value='320x570'>Mobility Milestone 320x570</option>
+				<option value='360x640'>Mobility RAZR i 360x640</option>
+			</optgroup>
+			
+			<optgroup label='Nokia'>
+				<option value='480x640'>E6 480x640</option>
+				<option value='480x800'>Lumia 480x800</option>
+				<option value='768x1280'>Lumia 920 768x1280</option>
+			</optgroup>
+	
+			<optgroup label='HP'>
+				<option value='768x1024'>HP TouchPad 768x1024</option>
+			</optgroup>
+			
+			<optgroup label='Samsung'>
+				<option value='320x480'>Galaxy Ace 320x480</option>
+				<option value='360x640'>Nexus 360x640</option>
+				<option value='480x800'>Galaxy S 480x800</option>
+				<option value='400x683'>Galaxy Tablet 400x683</option>
+			</optgroup>
+			
+			<optgroup label='Sharp'>
+				<option value='480x854'>SX862 480x854</option>
+				<option value='480x1024'>941SH 480x1024</option>
+				<option value='640x960'>IS03 640x960</option>
+			</optgroup>
+			
+			<optgroup label='Sony Ericsson'>
+				<option value='360x640'>Satio 360x640</option>
+				<option value='480x854'>U 480x854</option>
+				<option value='540x960'>P 540x960</option>
+			</optgroup>
+	
+		</select>
+		
+		<span class='toolTip' title="This feature is available to give you an idea of what your message will look like on a specific device. There may be device-specific display differences. Also, the pixel density on phones is higher than a computer, so the phone around your content is enlarged to reflect this.">?</span>
+		
+		<button data-app-click='admin_template|templateEditorIframeRotateExec' class='applyButton'>Rotate Orientation</button>
+		
+		
+		</div>
+	</section>
+	-->
+	<section class='ui-widget marginBottom' data-app-role='templateEditorSaveAsTemplate'>
+		<h4 class='smallPadding ui-widget-header ui-corner-top'>Save as Template</h4>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+		<p class='hint'>This will make a new template for use on other profiles</p>
+		<input name='template' value='' placeholder='template name' />
+		<button data-app-click="admin_template|adminSaveAsTemplateExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Save As New Template</button>
+		</div>
+	</section>
+
+	</div>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+<!-- for the template chooser interface -->
+
+
+<div id='templateChooserDetailTemplate'>
+	<div class='marginBottom clearfix'>
+		<div class='floatRight alignRight'>
+			<button class='smallButton applyButton' data-app-click='admin_template|templateChooserExec' >Choose</button>
+		</div>
+		<h2 data-bind="var:template(SUBDIR); format:text;"></h2>
+	</div>
+	<div class='clearfix'>
+<img border="0" src="" data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_template;'>
+<p data-bind="var:template(%info.about); format:text;"></p>
+	</div>
+</div>
+
+
+
+<div id='templateChooserTemplate' class='page pageSetup pageSetupAppchooser clearfix' data-app-role='templateChooser'>
+	<h1>Choose a Template</h1>
+	<section class='ui-widget ui-widget-content ui-corner-all stdPadding marginBottom alignCenter'>
+		
+		<ul data-bind="var: ebay(@TEMPLATES); format:processList; loadsTemplate:templateChooserItemTemplate;" class='listStyleNone clearfix'></ul>
+		
+	</section>	
+	
+	<section class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel' data-app-role='appPreviewPanel'>
+
+	</section>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<ul>
+	<li id='templateChooserItemTemplate' class='floatLeft stdMargin small pointer' data-app-click='admin_template|templateChooserPreview'>
+	<img src='blank.gif' height='120' width='120' alt='' data-bind='var: template(@PREVIEWS); format:templateThumb; extension:admin_template;'  />
+	<div data-bind="var: template(SUBDIR); format:text;" class='lookLikeLink'></div>
+	</li>
+</ul>
+
+
+
+
+<div id='nativeAppCampaignSettingsTemplate'>
+<form class='labelsAsBreaks'>
+<fieldset>
+	<legend>App Settings</legend>
+<label>
+	<span>Deck position</span>
+	<select name='QUEUEMODE' data-bind="var:meta(QUEUEMODE); format:popVal;">
+		<option value='FRONT'>Front</option>
+		<option value='BACK'>Back</option>
+		<option value='OVERWRITE'>Overwrite</option>
+	</select>
+	<span class='toolTip' title="Determines where in the messaging queue on the device (phone or pad) this message will appear.">?</span>
+</label>
+
+	<label>
+		<span>Alert sound</span>
+		<select name='ALERTSOUND' data-bind="var:meta(ALERTSOUND); format:popVal;">
+			<option value='none'>None</option>
+			<option value='default'>Default</option>
+			<option value='custom'>Custom</option>
+		</select>
+	</label>
+
+</fieldset>
+
+<fieldset>
+	<legend>Expiration</legend>
+	<label>
+		<span>Date/Time</span>
+		<input type='text' name='EXPIRETIME' class='applyDatetimepicker' data-bind="var: campaign(EXPIRETIME); format:popVal;" />
+	</label>
+	<b>OR</b>
+	<label>
+		# Days
+		<input type='number' class='smallInput' step='1' min='1' size='4' max='365' name='EXPIREDAYS' data-bind="var: campaign(EXPIREDAYS); format:popVal;" />
+		<span class='toolTip' title="The number of days this campaign is valid for.">?</span>
+	</label>
+	<p>Set either date/time OR # days</p>
+</fieldset>
+
+
+
+<fieldset>
+	<legend>Android Specific Settings</legend>
+	
+	<label>
+		<span>Geofencing</span>
+		<textarea rows='6' name='GEOFENCING' data-bind="var:meta(GEOFENCING); format:popVal;"></textarea>
+	</label>
+</fieldset>
+
+</form>
+</div>
+
+
+
+
+
+
+
+<div id='templateFileUploadTemplate'>
+<form id="templateFileUpload" class='clearfix marginBottom'  name="templateFileUpload" action='#' method='post' enctype='multipart/form-data'>
+
+<!-- adds the file upload area, which is in the media library templates  -->
+<p>Upload individual files and/or a zip archive containing an entire template (images, html and all)</p>
+
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;" class='floatRight'></div>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

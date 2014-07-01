@@ -16,14 +16,36 @@
 
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
+<!--
 <script type="text/javascript">
 
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-16474042-11']);
 _gaq.push(['_setDomainName', 'app.zephyrpaintball.com']);
 _gaq.push(['_setAllowLinker', true]);
+</script>
+-->
 
+<script type="text/javascript">
 var myCreole, baseURL;
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+// Replace the UA number below with the UA property to send tracking info to.
+ga('create', 'UA-16474042-11', 'auto');
+ga('require','linker');
+ga('require','ecommerce', 'ecommerce.js');
+ga('set', {
+	// Replace name below
+	'appName' : 'app.zephyrpaintball.com',
+	'appID' : 'ZMVC',
+	'appVersion' : '201405'
+	});
+ga('send','pageview');
+ga('send','screenview');
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
@@ -51,6 +73,10 @@ document.getElementsByTagName('base')[0].href = baseURL;
       document.createElement('template');
    </script>
 <![endif]-->
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
 
 
 <!-- <link rel="stylesheet" type="text/css" href="resources/magiczoomplus/magiczoomplus.css"> -->
@@ -65,6 +91,10 @@ document.getElementsByTagName('base')[0].href = baseURL;
 <![endif]-->
 
 
+<!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
 <script src="jquery-1.10.2.min.js"></script>
 <script src="jquery-ui-1.10.4.custom.min.js"></script>
 
@@ -77,27 +107,30 @@ document.getElementsByTagName('base')[0].href = baseURL;
 
 
 <script type="text/javascript">
-var myApp = {};
 $(document).ready(function(){
+	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
+	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
 
 	window.myApp = new initApp({
-		"release":"201403.0526b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201405.aa",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
-		"cmr" : [], //for cart messaging. declare here so 'push' in init file doesn't cause an error.
 		"testURL":"http://app.zephyrpaintball.com/", //used ONLY if protocol is file: (for testing)
 		"addjQueryPointer" : true,
-		"initComplete" : function(t){
+		"analyticsPointer" : "ga",
+		"initComplete" : function(){
+			dump(" -> init is complete");
 			myApp.u.loadScript('app-zephyr-init.js',function(){
 				var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
 				myApp.u.showProgress(progress);
 				});
+			$('#appversion').text(myApp.vars.release);
 			}
 		});
-	$(document.body).append("version: "+myApp.vars.release);
 	myApp.vars.initComplete();
 	myCreole = new Parse.Simple.Creole();
+	}
 	});
 </script>
 
@@ -1754,7 +1787,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<button data-app-click="quickstart|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
 		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
 		</div>
-	
+		<h2 data-tlc="bind $var '.order.our.orderid'; if (is $var --notblank;) {{apply --append;}};"></h2>
 		<h3 data-tlc="bind $var '.order.flow.pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
 		<h5 data-tlc="bind $var '.order.sum.order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
 		<h5 data-tlc="bind $var '.order.sum.balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>
@@ -1796,7 +1829,7 @@ The 'data-action' attribute is used to assign an onclick.
 	</section>
 
 	<section class="orderContentsProdlistContainer">
-	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
+	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
 	<table class="listStyleNone lineItemProdlist">
 		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
 	</table>
@@ -1820,8 +1853,6 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 </div><!-- /templates -->
-
-
 
 
 

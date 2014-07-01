@@ -1,0 +1,19 @@
+@charset "utf-8";
+/* CSS Document */
+
+.mce-_wizblocks [data-object='PRODUCT'] {border: 1px dashed #666; position:relative;}
+.mce-_wizblocks [data-object='PRODUCT']:before	{content:"product"; position:absolute;top:-1.5em; left:0; font-size:.65em; color:#FFF; background:#666; padding:.2em; font-weight:normal;}
+
+.mce-_wizblocks [data-object='BUYER'] {border: 1px dashed #666; position:relative;}
+.mce-_wizblocks [data-object='BUYER']:before	{content:"buyer"; position:absolute;top:-1.5em; left:0; font-size:.65em; color:#FFF; background:#666; padding:.2em; font-weight:normal;}
+
+.mce-_wizblocks [data-object='KISS'] {border: 1px dashed #666; position:relative;}
+.mce-_wizblocks [data-object='KISS']:before	{content:"KISS"; position:absolute;top:-1.5em; left:0; font-size:.65em; color:#FFF; background:#666; padding:.2em; font-weight:normal;}
+
+
+/* kiss element types */
+.mce-_wizblocks .wizardificated {border: 1px dashed #666; position:relative;}
+.mce-_wizblocks .wizardificated:before	{content:"KISS (edited)"; position:absolute;top:-1.5em; left:0; font-size:.65em; color:#FFF; background:#666; padding:.2em; font-weight:normal;}
+
+.mce-_wizblocks .unwizardificated {border: 1px dashed #666; position:relative;}
+.mce-_wizblocks .unwizardificated:before	{content:"KISS (unedited)"; position:absolute;top:-1.5em; left:0; font-size:.65em; color:#FFF; background:#666; padding:.2em; font-weight:normal;}

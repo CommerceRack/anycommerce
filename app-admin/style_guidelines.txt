@@ -1,0 +1,46 @@
+What follows is the Pirate Code. It's meant as a guideline and there are exceptions, but as a general rule of thumb, these should be obeyed. These apply to the admin app.
+
+
+Avoid using all uppercase. anywhere. always. It looks bad. It's hard to read.
+
+Avoid using ID's.
+	Keep in mind that most pieces of the user inteface have the potential to be opened multiple times at once.
+	ID's will cause inconsistent behavior if you use them.
+
+
+
+Forms
+if you use this format for a form input, you'll maintain consistency:
+
+for inputs that are not checkbox or radio buttons:
+<label>
+	<span>Prompt only has first letter uppercased and no colon</span>
+	<input type='something'>
+	<span class='toolTip' title="This is my tool tip">?</span>
+</label>
+
+for radio and checkboxes
+<label>
+	<input type='something'>
+	Prompt only has first letter uppercased and no colon
+	<span class='toolTip' title="This is my tool tip">?</span>
+</label>
+
+
+If your form is divided into parts, use fieldsets to divide each section. Use a legend within each fieldset to indicate what is to follow.
+Keep your legends fairly short.
+Use tooltips as much as necessary. format as:  <span class='toolTip' title="This is the actual tip.">?</span>
+Keep inline help to a minimum. format as: <span class='hint'>some hint</span>
+
+Add a class 'labelsAsBreaks' on the form to give each label a block status.
+
+
+
+Buttons:
+Upper case the first letter of each word.
+if you have several buttons in a horizontal row and 1 button is delete or remove, always put it on the left.
+in general, if you have a set of buttons and some display conditionally, group the non-conditional together (typically on the right) so they're aligned and not moving around.
+
+
+Titles and Legends:
+Uppercase the first letter of each word.

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Site Analyzer.com</title>
+
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
+
+
+
+
+
+<script type="text/javascript">
+
+localStorage.clear();
+var $tabs, //set globally so tabs can easily be opened via click events
+myCreole;
+
+var app = {vars:{
+	"release":"201405.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"_clientid":"zmvc"
+	},u:{},rq:[]};
+
+//set base url so images, css, js, etc all load from appropriate location once deployed.
+//baseURL as blank lets loadScript function run off local copy when testing locally.
+if(document.location.protocol != 'file:')	{
+	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL;
+	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+	}
+</script>
+
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js"></script>
+<script type="text/javascript" src="loadscript.js"></script>
+
+
+
+<script type="text/javascript">
+app.u.loadScript("app-analyzer-init.js");
+</script>
+
+
+<script type="text/javascript">
+
+
+function getConfig4Domain()	{
+	var domain = $('#domain').val();
+	if(domain)	{
+//***201342 Must add to the testURL in order to get a proper url to send api requests. -mc
+		app.vars.testURL = "http://"+domain+(domain[domain.length-1] == "/" ? "" : "/");
+		console.log('BEGIN getConfig4Domain');
+		console.log(app.vars.testURL);
+		var url = app.vars.testURL+'jquery/config.js';
+		$.getScript(url).success(function(script, textStatus) {
+//instantiate wiki parser.
+			app.u.handleRQ(0);
+			$('#domainFrm').hide(); //hide the domain form. need new cart if domain changes. easier to just reload page (for now).
+			$('#refreshBtn').button().show();
+			$tabs = $( "#tabs" ).show().tabs();
+			}).fail(function(jqxhr, settings, exception) {
+			  alert('An error occured trying to load the config.js');
+			});  
+		}
+	else	{
+		alert('please enter a domain.');
+		$('#domain').focus();
+		}	
+	
+	}
+
+</script>
+
+
+<style type="text/css">
+h1, h2, h3, h4, h5, h6	{margin:1px 0; padding:0;}
+
+#tabs-3 ul, #tabs-3 li	{margin:0; padding:0; list-style:none;}
+
+.catTree img	{float:left; margin-right:12px;}
+.subcats	{border-bottomr:2px dotted #efefef; padding-bottom:12px; margin-bottom:12px; clear:both;}
+#tabs-3 ul.subcats li	{padding-left:24px; padding-bottom:12px;}
+.catTree span	{padding-right:24px;}
+
+ul .prompt	{display:inline-block; width:250px;}
+#tabs-5, #tabs-2, #tabs-1 {font-size:.7em}
+#tabs-5 .odd	{background-color:#efefef;}
+
+.hint	{font-size:.6em}
+
+
+.prodlist, .prodlist li	{margin:0; padding:0; list-style:none;}
+.prodlist li	{float:left; width:150px; height:240px; margin:0 12px 12px 0; display:block;}
+.prodlist h5	{font-size:.7em; font-weight:normal;}
+.prodlist h6, .prodlist a	{font-size:.6em}
+
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+.displayNone	{display:none;}
+
+
+#tagList, #tagList li	{list-style:none; margin:0; padding:0;}
+#tagList, #filterContainer {width:20%; border:1px solid #efefef; padding:2px; float:left;} /* list ul container for the list of tags/prompts */
+#tagList li	{margin-bottom:2px; padding:2px; font-size:.8em; cursor:pointer;}
+#tagProdlist, #elasticResults	{width:70%; float:right;}
+
+#prodDebugThumbs	{width:150px; margin-left:24px;}
+#prodDebugThumbs figure	{margin:0 0 12px 0; padding:0;}
+
+</style>
+
+</head>
+<body class='ui-widget'>
+<div class='clearfix'>
+<button class='floatRight ui-button ui-corner-all ui-state-default displayNone' onClick="app.ext.analyzer.a.changeDomains();" id='refreshBtn'>Change Domains</button>
+
+<form action='#' onSubmit='getConfig4Domain(); return false;' id='domainFrm' name='domainFrm'>
+<label>Domain:</label>
+<input type='text' name='domain' id='domain' />
+<input class='ui-button ui-button-text-only ui-corner-all ui-state-active' type='submit' name='domainSubmit' id='domainSubmit' value='Go' />
+<span class='hint'>note: You must include a host! for example- www.something.com</span>
+</form>
+</div>
+<hr />
+
+<div id='globalMessaging'></div>
+
+<div id="tabs" class='displayNone'>
+	<ul>
+		<li><a href="#tabs-1">zGlobal</a></li>
+		<li><a href="#tabs-2">Profile Info</a></li>
+		<li><a href="#tabs-3">Category Explorer</a></li>
+		<li><a href='#tabs-4'>Tags</a></li>
+		<li><a href='#tabs-5'>Product</a></li>
+		<li><a href='#tabs-6'>Search</a></li>
+	</ul>
+	
+	
+	
+	<div id="tabs-1"></div>
+	
+	
+	
+	<div id="tabs-2">
+		<div id='profileSummary' class='clearfix'></div>
+		<hr>
+		<div id='profileData' class='clearfix'></div>
+	</div>
+	
+	
+	
+	
+	<div id="tabs-3">
+<ul id='categoryTree' class='catTree'></ul>
+	</div>
+	
+	
+	
+	
+	<div id="tabs-4" class='clearfix'>
+
+
+<ul id='tagProdlist'  class='prodlist clearfix'>
+
+</ul>
+
+	</div>
+	
+	
+	
+	<div id="tabs-5" >
+<form action='#' onSubmit="app.ext.analyzer.a.exploreProduct($('#pid').val()); return false;">
+<label for='pid'>Product ID: </label>
+<input type='text' name='pid' id='pid' size='25' />
+<input type='submit' value='go' class='ui-button ui-corner-all ui-state-active' id='prodExplorerBtn' />
+</form>
+
+<div class='floatRight' id='prodDebugThumbs'></div>
+
+<h2>Attribs</h2>
+<div id='attribsDebugData'></div>
+<h2>Variations (options)</h2>
+<div id='variationsDebugData'></div>
+<h2>Inventory</h2>
+<div id='inventoryDebugData'></div>
+
+	</div>
+	
+	
+	
+	
+	<div id="tabs-6" class='clearfix'>
+	
+	
+<div id='keywordContainer'>
+	<label for='simpleKeywordSearch'>keyword</label><input type='text' name='simpleKeywordSearch' id='simpleKeywordSearch' value='' />
+	<button onClick="app.ext.store_search.u.handleElasticSimpleQuery($('#simpleKeywordSearch').val(),{'callback':'handleElasticResults','extension':'analyzer','parentID':'elasticResults','datapointer':'elasticsearch|'+$('#simpleKeywordSearch').val()}); app.model.dispatchThis(); return false;">Go</button>
+	<span class='hint'><a href='#' onClick="$('#keywordContainer, #queryFilterContainer').toggle();">advanced search</a></span>
+</div>
+
+<div id='queryFilterContainer' class='displayNone'>
+<textarea id='advsrch_filterQuery' name='advsrch_filterQuery' cols='40' rows='10'></textarea>
+<!-- <textarea id='advsrch_attributes' name='advsrch_attributes' cols='40' rows='10'></textarea> -->
+<button onClick="app.ext.analyzer.u.handleElasticFilterOrQuery(); return false;">Go</button>
+<span class='hint'><a href='#' onClick="$('#keywordContainer, #queryFilterContainer').toggle();">keyword search</a></span>
+</div>
+
+<hr>
+
+<div class='filterContainer'></div>
+
+<ul id='elasticResults' class='prodlist '></ul>
+
+
+
+	
+	</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div id='myContent'></div>
+
+
+
+
+
+
+
+
+<div id='appTemplates' style='display:none;'>
+
+<!-- a template. will be removed from the dom as templates are loaded into memory -->
+	<div id='profileTemplate'>
+
+<figure class='floatRight'>
+  <img src="blank.gif" alt="Company Logo" width="120" height="120" data-bind='var: profile(zoovy:company_logo); format:imageURL;' />
+  <figcaption data-bind='var: profile(zoovy:company_logo); format:text;'></figcaption>
+</figure>
+
+<h3 data-bind='var: profile(zoovy:company_name); format:text;'></h3>
+<h4 data-bind='var: profile(zoovy:site_rootcat); format:text; pretext: zoovy:site_rootcat = ;'></h4>
+
+<address> 
+<span data-bind="var: profile(zoovy:address); format:text;"></span><br />
+<span data-bind="var: profile(zoovy:city); format:text; posttext:, ;"></span>
+<span data-bind="var: profile(zoovy:state); format:text; posttext:. ;"></span>
+<span data-bind="var: profile(zoovy:country); format:text;"></span>
+<span data-bind="var: profile(zoovy:zip); format:text;"></span>
+</address>
+
+
+
+
+	</div>
+
+
+
+<ul>
+<li id='catInfoTemplate'>
+	<a href='#' onClick="app.ext.analyzer.a.showPageGetDetailsInModal($(this).parent().data('catsafeid'));"><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='45' height='45' alt='' /></a>
+	<div>
+		pretty: <span data-bind='var: category(pretty); format:text;'></span><br />
+		id: <span data-bind='var: category(id); format:text;'></span> 
+		# product: <span data-bind='var: category(@products); format:numProduct; extension:store_navcats; defaultVal:0;'></span>
+		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="app.ext.analyzer.a.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
+	</div>
+	
+	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; valuePretext:categoryTreeSubs_;' class='subcats'></ul>
+</li>
+</ul>
+
+<ul>
+<li id='prodlistProdTemplate'>
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='100' height='100' />
+	<h5 data-bind='var: product(prod_name); format:text;'></h5>
+	<h6 data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></h6>
+	<a href='#top' data-bind='var: product(pid); format:text;pretext: explore ;' onClick="$('#pid').val($(this).parent().attr('data-pid')); $('#prodExplorerBtn').click(); $tabs.tabs('select',4);"></a>
+</li>
+</ul>
+
+</div>
+
+
+</body>
+</html>

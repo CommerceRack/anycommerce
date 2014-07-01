@@ -1,0 +1,277 @@
+
+
+<div id='platformInfoTemplate' data-app-role='platformInfoContainer'>
+	<table>
+	<tr>
+		<td>
+		<div class='marginRight marginBottom floatLeft' data-bind='var:releaseMeta(youtubeVideoID); format:youtubevideo;' data-app-role='platformInfoVideoContainer'></div>
+	<!-- platformInfo will automatically be appended to the bottom of this -->
+		</td>
+		<td>
+		<div data-app-role='platformInfoDetailsContainer' ></div>
+		<table class='fullWidth gridTable'>
+		<thead>
+		<tr>
+			<th><h3>Video History</h3></th>
+			<th><h3>Change log</h3></th>
+		</tr>
+		</thead>
+		<tbody data-bind="useParentData:true; format:processList; loadsTemplate:platformVideoItemTemplate;">
+		
+		</tbody>
+		</table>
+	</tr>
+	</table>
+</div>
+
+<table>
+<tr id='platformVideoItemTemplate'>
+	<td data-app-click='admin_support|platformInfoWatchVideo' data-bind='var:history(branch); format:text;' class='lookLikeLink'></td>
+	<td data-app-click='admin_support|platformInfoViewChangelog' class='lookLikeLink'>Change log</td>
+</tr>
+</table>
+
+
+
+<div id='supportFileUploadTemplate'>
+
+
+<form name="supportFileUploadForTicket" id="supportFileUploadForTicket" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+
+</form>
+
+</div>
+
+<div id='supportManagerControls'>
+<form action='#' onSubmit='return false'>
+Disposition: <select name='disposition'  data-app-change="admin|updateDMICmdVar" data-trigger='refresh'>
+	<option value='open'>Open</option>
+	<option value='waiting'>Waiting</option>
+	<option value='closed'>Closed</option>
+	<option value='all'>All</option>
+</select>
+</form>
+</div>
+
+
+
+
+<table>
+
+	<tr id='supportTicketRowTemplate' data-bind='useParentData:true; format: ticketRowClass; extension: admin_support;'>
+		<td class='hideInDetailMode' data-bind="var: ticket(DISPOSITION); format:text;"></td>
+		<td data-bind="var: ticket(ID); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
+		<td class='hideInDetailMode lookLikeLink' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-click='admin_support|adminTicketLastUpdateShow'></td>
+		<td data-bind="var: ticket(SUBJECT); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(LUSER); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
+		
+		<td class='alignRight'>
+		<button data-app-click="admin_support|adminTicketMacroCloseShow" class='hideInDetailMode applyButton' data-text='false' data-icon-primary='ui-icon-close'>Close Ticket</button>
+		<button data-app-click="admin_support|adminTicketDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Detail/Update</button>
+		</td>
+	</tr>
+
+
+</table>
+
+
+
+
+<div id='supportTicketCreateTemplate' class='labelsAsBreaks  alignedLabels alignedInputs'>
+
+<form action='#'>
+
+<input type='hidden' name='_cmd' value='adminTicketCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='Your ticket has been created.' />
+
+
+
+<fieldset class=' marginBottom'>
+	<label><span>Subject: </span><input type='text' name='subject'  required='required' /></label>
+	<label><span>Topic: </span><select name='topic' required='required' data-panel-selector=".ticketTopic" data-input-change='show-panel'>
+		<option></option>
+		<option value='admin'>Admin/user interface</option>
+		<option value='storefront' data-show-panel='ticketTopicStorefront'>Website</option>
+		<option value='billing'>Billing</option>
+		<option value='DNS' data-show-panel='ticketTopicDNS'>Domain name</option>
+		<option value='other'>Other</option>
+		</select>
+	</label>
+</fieldset>
+
+
+<fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicStorefront'>
+	<legend>Storefront</legend>
+	<label><span>Domain: </span><input type='url' name='storefront_domain' data-bind="var: ticket(domain); format:popVal;" data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
+</fieldset>
+
+
+<fieldset class='displayNone ticketTopic marginBottom' data-panel-id='ticketTopicDNS'>
+	<legend>Domain/DNS</legend>
+	<label><span>Domain: </span><input type='url' name='DNS_domain' data-bind="var: ticket(domain); format:popVal;" data-validation-rules='skipIfHidden' required='required' /></label>
+</fieldset>
+
+<fieldset class='displayNone ticketPriority' data-panel-id='ticketPriorityHigh'>
+	<label><span>Phone: </span><input type='tel' name='phone' data-validation-rules='skipIfHidden' required='required' /></label>
+</fieldset>
+
+<fieldset>
+
+		<label><span>Description of issue: </span><textarea name='description' required='required' row='10'></textarea></label>
+
+		<div class='marginBottom'>
+		Priority:
+		<label><input type='radio' name='priority' value='LOW' checked='checked' data-panel-selector=".ticketPriority" data-input-change='show-panel' /><b>Low:</b> information needed.</label>
+		<label><input type='radio' name='priority' value='MED'  data-panel-selector=".ticketPriority" data-input-change='show-panel' /><b>High:</b> need assistance as soon as possible.</label>
+		<label><input type='radio' name='priority' value='HIGH'  data-panel-selector=".ticketPriority" data-input-change='show-panel' data-show-panel='ticketPriorityHigh' /><b>System Outage:</b> site is down.</label>
+		</div>
+<!--
+		<div class='marginBottom'>
+<label class='clearfix marginBottom'><input type='checkbox' name='private' />Private: hide ticket for other users.</label>
+<label class='clearfix marginBottom'><input type='checkbox' name='callback' />Callback: please have a support technician contact me.</label>
+		</div>
+
+-->
+</fieldset>
+
+<button class='floatRight ui-state-highlight applyButton' data-app-click="admin_support|adminTicketCreateExec" data-text='true' data-icon-primary='ui-icon-circle-plus'>Create Ticket</button>
+<!--<button class='floatRight marginRight applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-app-click="admin_support|fileAttach2TicketShow">Attach Files</button>-->
+<button data-app-click="admin|dialogCloseExec" class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-close'>Cancel</button>
+
+<p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
+<p class='hint'>Once the ticket is created, you'll be able to attach files.</p>
+<p class='hint'>Also, remember that the more details you provide, the more likely we are to be able to reproduce and resolve.</p>
+
+</form>
+
+</div>
+
+
+
+
+
+
+
+<div id='supportTicketDetailTemplate'>
+
+	<h3 data-bind="var: ticket(SUBJECT); format:text; pretext: Subject: ;"></h3>
+	<div>
+		Opened on 
+		<span data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></span>
+		<span data-bind="var: ticket(LUSER); format:text; pretext: by ;"></span>
+	</div>
+	<div data-bind="var: ticket(LAST_FOLLOWUP); format:text; pretext: Last Update: ;"></div>
+	<div><b data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty; pretext: Closed: ;"></b></div>
+	<div data-bind="var: ticket(DISPOSITION); format:text; pretext: Disposition: ;"></div>
+	<h5 class='noPadOrMargin'>Original Message:</h5>
+	<pre class='preformatted marginTop marginBottom' data-bind="var: ticket(NOTES); format:text;"></pre>
+	
+	
+	<table class='fullWidth gridTable marginBottom'>
+		<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;" data-app-role='ticketFollowupList'></tbody>
+	</table>
+	
+	<div class='labelsAsBreaks alignedLabels alignedInputs'>
+		<div data-app-role='supportFileUploadContainer' class='clearfix marginBottom'></div><!-- intentionally outside the form. form is emptied on update -->
+		<table class='gridTable fullWidth marginBottom applyAnytable'>
+		<thead>
+		<tr>
+			<th>Filename</th>
+			<th>Added</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;" data-app-role='ticketAttatchmentList'></tbody>
+		</table>
+
+		<form class='marginTop'>
+		<fieldset>
+			<legend>Provide Additional Information:</legend>
+			<label><span>Message: </span><textarea name='note' required='required'></textarea></label>
+		</fieldset>
+		<button data-app-click='admin_support|adminTicketMacroUpdateExec' class='applyButton' data-icon-secondary='ui-icon-circle-arrow-e'>Add Message To Ticket</button>
+		</form>
+	</div>
+
+
+</div>
+
+
+<table>
+<tr id='supportTicketFollowupTemplate'>
+	<td class='valignTop'>
+	<div data-bind="var: ticket(who); format:text; pretext: from: ;"></div>
+	<div data-bind="var: ticket(when); format:text; pretext: on: ;" class='smallTxt'></div>
+	<img src='blank.gif' width='100' height='100' alt='' data-bind="var: ticket(who-pic); format:assignAttribute; attribute:src;" />
+	</td>
+	<td class='valignTop'>
+	<pre class='marginLeft preformatted' data-bind="var: ticket(txt); format:text;"></pre>
+	</td>
+</tr>
+
+<tr id='supportTicketFilesRowTemplate'>
+	<td data-bind='var: ticket(uploaded); format:text;'></td>
+	<td data-bind='var: ticket(created); format:text;'></td>
+	<td>
+	<button data-app-click="admin_support|adminTicketFileGetExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download File</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+<!--
+
+########################################################
+
+
+WEBDOC
+
+########################################################
+
+
+-->
+
+
+
+
+
+
+
+<!-- onClick="adminApp.ext.admin_support.a.showHelpDocInDialog($(this).data('docid'));" -->
+<table>
+<tr id='helpSearchResultsTemplate' >
+	<td data-bind='var: help(title); format:text;' class='lookLikeLink' data-app-click="admin_support|showHelpDetail"></td>
+	<td class='hideInDetailMode' data-bind='var: help(snippet); format:text;'></td>
+	<td class='alignRight'>
+<!-- showHelpInDialog only displayed when help opened within a tabContent -->
+	<span class='hideInDetailMode'><button data-app-click="admin_support|showHelpDocInDialog" class='showInTabContent applyButton' data-text='false' data-icon-primary='ui-icon-newwin'>Open In Dialog</button></span>
+	<button data-app-click="admin_support|showHelpDetail" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthick-1-e'>View</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+<div id='helpDocumentTemplate' class='helpDetail'>
+	<div data-bind="var: help(parse.text.*); format:text;"></div>
+</div>
+
+
+

@@ -1,0 +1,1373 @@
+<div id='CustomerPageTemplate' class='page pageCustomer smallButtons' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='floatRight smallPadding'>
+			<button class='floatRight marginLeft applyButton' data-app-click="admin_customer|adminCustomerCreateShow" data-text='true' data-icon-primary='ui-icon-plus'>Add Customer</button>
+			</div>
+			
+			<h3 class='heading'>Customer Search</h3>
+		</div>
+
+		<div class='ui-state-default smallPadding alignRight'>
+		<form action='#' data-app-role='customerSearch' onSubmit='return false'>
+		<select name='scope'>
+			<option value='CID'>customer id</option>
+			<option value='EMAIL' selected="selected">email</option>
+			<option value='GIFTCARD'>giftcard</option>
+			<option value='NAME'>name</option>
+			<option value='NOTES'>notes</option>
+			<option value='ORDER'>order</option>
+			<option value='PHONE'>phone</option>
+			<option value='SCHEDULE'>schedule (org)</option>
+			<option value='ACCOUNT_MANAGER'>account manager (org)</option>
+			<option value='ACCOUNT_TYPE'>account type (org)</option>
+		</select>
+		<input type='search' name='searchfor' placeholder='keyword' size='30' required />
+		<button class='applyButton' data-app-role='customerSearchButton' data-app-click='admin_customer|execCustomerSearch' data-text='true' data-icon-primary='ui-icon-search'>Search</button>
+		</form>		
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='dualModeListMessaging marginBottom'>Please use the search above to find the customer(s) you are looking for.</div>
+			<div class='dualModeListContent' data-app-role='dualModeContent'>
+			<table class='gridTable fullWidth displayNone applyAnytable' data-app-role='dualModeResultsTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th class='alignLeft'>CID</th>
+				<th class='alignLeft'>Last Name</th>
+				<th class='alignLeft'>First Name</th>
+				<th class='alignLeft'>Email</th>
+				<th class='alignLeft'>Phone</th>
+				<th class='alignLeft'>PRT</th>
+				<th data-anytable-nosort='true'></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: users(@CUSTOMERS); format:processList; loadsTemplate:customerManagerResultsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+			</table>
+			<div data-app-role='dualModeDetailContainer' class='displayNone'></div>
+			</div>
+
+		</div>
+	</section>
+</div>
+
+
+
+<table>
+<tr id='customerManagerResultsRowTemplate'>
+	<td data-bind='var: customer(CID); format:text;' class='pointer'></td>
+	<td data-bind='var: customer(LASTNAME); format:text;'></td>
+	<td data-bind='var: customer(FIRSTNAME); format:text;'></td>
+	<td data-bind='var: customer(EMAIL); format:text;'></td>
+	<td data-bind='var: customer(PHONE); format:text;'></td>
+	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
+	<td>
+	<button data-app-click="admin_customer|adminCustomerUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' data-app-role='customerEditButton'>Edit Customer</button>
+	</td>
+</tr>
+</table>
+
+
+
+<!--
+data-app-role on the panels is used. ex: in admin_customer.a.showAddAddressModal
+if the data attrib is changed or any changes are made to the values (especially shipping) be sure to update .js
+-->
+
+
+<div id='customerEditorTemplate' class='clearfix customerEditor' data-app-role='customerManager'>
+	<form action='#'  data-app-submit='admin_customer|execCustomerEditorSave'>
+	<div class='buttonBar clearfix marginBottom'>
+		<div class='floatRight smallButtons'>
+			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerEditorSave' disabled='disabled' data-app-role='saveButton' data-text='true'>Save <span class='numChanges'></span> Changes</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|execCustomerRemove' data-text='true' data-icon-primary='ui-icon-trash'>Delete</button>
+			<button class='floatRight applyButton' data-app-click='admin_customer|showBlastTool' data-text='true' data-icon-primary='ui-icon-mail-closed'>Email</button>
+		</div>
+
+		<h2>
+User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
+		</h2>
+	</div>
+
+
+	<div class='twoColumn' data-app-column='1'>
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="general">
+	<h2>General</h2>
+	<div>
+	<fieldset>
+		<div class='label'>Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span></div>
+		<div class='label'>Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:epoch2mdy;"></span>	</div>
+		<label><span>Email:</span><input size='20' type="email" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
+		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
+		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
+<!--		<label><span>Password: </span><input size='20' type='text' name='password' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /> <span class='toolTip' title="Leave this field blank to leave the customer password 'as is'.  If you set a password here, the existing password will be removed in favor of what you entered. This field will always appear blank.">?</span></label> -->
+		<label data-bind="var:customer(INFO.IS_LOCKED); format:addClass;className:ui-state-error;"><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popVal;"> Lock customer account</label>
+	</fieldset>
+	<hr>
+	<h5>Password Utilities</h5>
+	<fieldset data-bind='var:customer(_CID); format:assignAttribute; attribute:data-cid;' class='buttonset' data-app-role='passwordButtonContainer'>
+		<button title="Change the password and, optionally, send the user a message notifying them." class='applyButton' data-app-click='admin_customer|passwordChangeShow' data-text='true' data-icon-primary='ui-icon-pencil'>Change</button>
+		<button title="Generate a temporate password that will last for 3 hours. Handy if you need to log in as the user and do not want to change their password." class='applyButton' data-app-click='admin_customer|passwordCreateTemporaryExec' data-text='true' data-icon-primary='ui-icon-clock'>Get Temporary</button>
+		<button class='applyButton' data-app-click='admin_customer|execHintReset' data-text='true' data-icon-primary='ui-icon-close'>Remove Hint</button>
+	</fieldset>
+	</div>
+</div>
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="giftcards">
+	<h2>Giftcards</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Amount</th>
+		<th class='alignLeft'>Note</th>
+		<th class='alignRight'>Created</th>
+		<th class='alignRight'>Expires</th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;" data-app-role='customerEditorGCtbody'></tbody>
+	</table>
+
+	</div>
+</div>
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="newsletter">
+	<h2>Newsletters</h2>
+	<div data-bind="format:newsletters; extension:admin_customer; useParentData:true;" class='labelsAsBreaks'>
+	</div>
+</div>
+
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="ship">
+	<h2>Shipping Addresses</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@SHIP); format:processList; loadsTemplate:customerEditorAddressListTemplate;" data-address-type="@SHIP">
+	</tbody>
+	</table>
+	</div>
+</div>
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="bill">
+	<h2>Billing Addresses</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@BILL); format:processList; loadsTemplate:customerEditorAddressListTemplate;" data-address-type="@BILL">
+	</tbody>
+	</table>
+	</div>
+</div>
+
+
+	</div><!-- /column 1 -->
+	
+	<div class='twoColumn column2' data-app-column='2'>
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="orders">
+	<h2>Order History</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Order Id</th>
+		<th class='alignRight'># Items</th>
+		<th class='alignRight'>Pay Type</th>
+		<th class='alignRight'>Total</th>
+		<th class='alignRight'>Created</th>
+	</tr>
+	</thead>
+	<tfoot>
+	<tr>
+		<td colspan='4' class='alignRight' data-bind="var:customer(@ORDERS); format:orderHistoryTotal; extension:admin_customer; currencySign:$;"></td>
+		<td></td>
+	</tr>
+	</tfoot>
+	<tbody data-bind="var:customer(@ORDERS); format:processList; loadsTemplate:customerEditorOrderListTemplate;"></tbody>
+	</table>
+	</div>
+</div>
+
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="notes">
+	<h2>Notes</h2>
+	<div>
+	<table class='gridTable fullWidth marginBottom'>
+	<tbody data-bind="var:customer(@NOTES); format:processList; loadsTemplate:customerEditorNoteListTemplate;">
+	</tbody>
+	</table>
+
+	<fieldset class='alignedInputs'>
+		<input type='text' name='noteText' class='skipTrack' placeholder="Enter your note here" />
+		<button data-app-click='admin_customer|execNoteCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Add Note</button>
+	</fieldset>
+	
+	</div>
+</div>
+
+
+<div class='panel' data-app-role="organization">
+	<h2>Organization</h2>
+	<div>
+	<label>
+		<span>Org ID: </span>
+		<input type='number' class='smallInput' step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
+	</label>
+	<button data-app-click="admin_customer|showOrgChooser" class='applyButton' data-text='true' data-icon-primary='ui-icon-search'>Chooser</button>
+	
+	<div data-bind="var: customer(%ORG.company); format:text; pretext: Company: ;"></div>
+	<div data-bind="var: customer(%ORG.SCHEDULE); format:text; pretext: Schedule: ;"></div>
+	<div data-bind="var: customer(%ORG.DOMAIN); format:text; pretext: Domain: ;"></div>
+	
+	</div>
+</div>
+
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="wallets">
+	<h2>Wallets</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Description</th>
+		<th class='alignRight'>Created</th>
+		<th class='alignRight'>Store Until</th>
+		<th class='alignRight'>Actions</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@WALLETS); format:processList; loadsTemplate:customerEditorWalletListTemplate;">
+	
+	</tbody>
+	</table>
+	</div>
+</div>
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="tickets">
+	<h2>Tickets</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Created</th>
+		<th class='alignLeft'>Subject</th>
+		<th class='alignRight'>Ticket</th>
+		<th class='alignRight'>Status</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@TICKETS); format:processList; loadsTemplate:customerEditorTicketListTemplate;">
+	
+	</tbody>
+	</table>
+	</div>
+</div>
+
+	</div><!-- /column 2 -->
+
+	</form>
+</div>
+
+
+
+
+<div id='customerPasswordChangeTemplate'>
+
+<form data-app-submit="admin|submitForm">
+<!-- OR use a macro cmd, usually not both -->
+<input type='hidden' name='_macrobuilder' value='admin_customer|adminCustomerUpdatePassword' />
+<!-- define a callback as so and pass params via _tag/ -->
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='The password has been changed.' />
+<input type='hidden' name='CID' data-tlc="bind $cid '.CID'; apply --select=$cid; " />
+	<fieldset class='labelsAsBreaks'>
+		<label>
+			<span class='prompt'>New password</span>
+			<input type='text' name='password' value='' />
+		</label>
+		<label>
+			<input type='checkbox' name='sendblast' checked />Send message to customer with new password
+		</label>
+	</fieldset>
+	<button class='applyButton'>Save</button>
+</form>
+
+</div>
+
+
+
+
+<table>
+<tr id='customerEditorTicketListTemplate' class='pointer' onClick="navigateTo('#!/biz/crm/index.cgi?VERB=TICKET-VIEW&TKTCODE=96332');"><!-- ### TODO -> fix this -->
+	<td class='alignLeft' data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignLeft' data-bind="var:ticket(SUBJECT); format:text;"></td>
+	<td class='alignRight lookLikeLink' data-bind="var:ticket(TKTCODE); format:text;"></td>
+	<td class='alignRight' data-bind="var:ticket(STATUS); format:text;"></td>
+</tr>
+
+
+<tr id='customerEditorGiftcardListTemplate'>
+	<td class='alignLeft' data-bind="var:giftcart(BALANCE); format:text;"></td>
+	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
+	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight'><button data-app-click="admin_customer|adminGiftcardUpdateShow" data-edit-mode='dialog' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Giftcard</button></td>
+</tr>
+
+<tr id='customerEditorOrderListTemplate' class='pointer' onClick="adminApp.u.dump('click!'); adminApp.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
+	<td data-bind="var:order(ORDERID); format:text;" class='lookLikeLink'></td>
+	<td class='alignRight' data-bind="var:order(ITEMS); format:text;"></td>
+	<td class='alignRight' data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>
+	<td class='alignRight' data-bind="var:order(ORDER_TOTAL); format:money; currencySign:$;"></td>
+	<td class='alignRight' data-bind="var:order(CREATED_GMT); format:epoch2pretty;"></td>
+</tr>
+
+
+<tr id='customerEditorAddressListTemplate'>
+	<td data-bind="var:address(_id); format:text;"></td>
+	<td>
+<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
+<span data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></span>
+<span data-bind="var:address(bill_region); defaultVar: address(ship_region); format:text;"></span>
+	</td>
+	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
+	<td class='alignRight'>
+<button class='applyButton' data-app-click="admin_customer|showAddrUpdate" data-text='false' data-icon-primary='ui-icon-pencil'>Edit this address</button>
+<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this address</button>
+	</td>
+</tr>
+
+<tr id='customerEditorNoteListTemplate'>
+	<td  data-bind="var:note(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var:note(LUSER); format:text;"></td>
+	<td data-bind="var:note(NOTE); format:text;"></td>
+	<td class='alignRight'>
+	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this note</button>
+	</td>
+</tr>
+
+<tr id='customerEditorWalletListTemplate'>
+	<td class='alignLeft' data-bind="var:wallet(TD); format:text;"></td>
+	<td class='alignRight' data-bind="var:wallet(TC); format:text;"></td>
+	<td class='alignRight' data-bind="var:wallet(TE); format:text;"></td>
+	<td class='alignRight'>
+	<button data-app-click="admin_customer|adminCustomerWalletPeekShow" title='View wallet - requires admin access' class='applyButton' data-text='false' data-icon-primary='ui-icon-info'>View this wallet</button>
+	<button class='applyButton' data-app-click="admin|tagRow4Remove" data-text='false' data-icon-primary='ui-icon-close'>Delete this wallet</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+<div id='customerWalletAddTemplate'>
+<form action='#'>
+<fieldset class='labelsAsBreaks'>
+	<label><span>CC</span><input type='number' required='required' size='20' maxlength="16" name='CC' value='' data-format-rules='CC' /></label>
+	<label><span>YY</span><select required='required' name='YY'>
+		<option></option>
+		<option value='14'>2014</option>
+		<option value='15'>2015</option>
+		<option value='16'>2013</option>
+		<option value='17'>2017</option>
+		<option value='18'>2018</option>
+		<option value='19'>2019</option>
+		<option value='20'>2020</option>
+		<option value='21'>2021</option>
+		<option value='22'>2022</option>
+		<option value='23'>2023</option>
+		<option value='24'>2024</option>
+		<option value='25'>2025</option>
+	</select></label>
+	<label><span>MM</span><select required='required' name='MM'>
+		<option></option>
+		<option value='01'>01</option>
+		<option value='02'>02</option>
+		<option value='03'>03</option>
+		<option value='04'>04</option>
+		<option value='05'>05</option>
+		<option value='06'>06</option>
+		<option value='07'>07</option>
+		<option value='08'>08</option>
+		<option value='09'>09</option>
+		<option value='10'>10</option>
+		<option value='11'>11</option>
+		<option value='12'>12</option>
+	</select></label>
+</fieldset>
+
+<!-- save button added w/ js -->
+
+</form>
+</div>
+
+
+
+<!-- used in customer editor for add/update as well as order_create (admin) add/update -->
+<div id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
+<form action='#'>
+<input type='hidden' name='TYPE'  data-bind="var:address(TYPE); format:popVal;"  value='' />
+<input type='hidden' name='CID'  data-bind="var:address(CID); format:popVal;"  value='' />
+
+<fieldset>
+	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' required='required' data-minlength='3' maxlength="8" size='6' data-bind="var:address(_id); format:popVal;" /></label>
+	<label><span>First name</span><input type='text' name='firstname' value='' required='required'  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
+	<label><span>Last name</span><input type='text' name='lastname' value='' required='required'  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
+	<label><span>Company</span><input type='text' name='company' value=''  data-bind="var:address(ship_company); defaultVar: address(bill_company); format:popVal;" /></label>
+	<label><span>Address</span><input type='text' name='address1' value='' required='required'  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
+	<label><span>Address 2</span><input type='text' name='address2' value=''  data-bind="var:address(ship_address2); defaultVar: address(bill_address2); format:popVal;" /></label>
+	<label><span>City</span><input type='text' name='city' value='' required='required'  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
+	<label><span>Region/State</span><input type='text' name='region' value='' required='required'  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
+	<label><span>Postal/Zip</span><input type='text' name='postal' value='' required='required'  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
+	<label><span>Country</span><input type='text' name='countrycode' value='' required='required'  size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
+
+<!--	<label><span>Email</span><input type='email' name='email' value=''  data-bind="var:address(bill_email); format:popVal;" /></label> -->
+	<label><span>Phone</span><input type='phone' name='phone' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>
+</fieldset>
+</form>
+</div>
+
+
+
+<div id='customerCreateTemplate'>
+<form action='#'>
+<fieldset class='labelsAsBreaks alignedLabels'>
+<label>
+	<span>Email address:</span>
+	<input type="email" value="" name="email" required='required' />
+</label>
+
+<label>
+	<span>First name:</span>
+	<input type="text" value="" name="firstname"  />
+</label>
+
+<label>
+	<span>Last name:</span>
+	<input type="text" value="" name="lastname" />
+</label>
+
+<!--
+<label><input type="checkbox" name="NEWS" checked='checked' /> Subscribe to all Default Newsletters</label>
+The checkbox below does not work.
+<label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
+-->
+
+<button data-app-click='admin_customer|execAdminCustomerCreate' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus'>Create Customer</button>
+
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+<table>
+
+
+
+<tr id='organizationManagerChooserRowTemplate'>
+	<td><span data-bind="var: organization(IS_LOCKED); format:showIfSet;" class='displayNone'><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></span></td>
+	<td data-bind="var: organization(ORGID); format:text;"></td>
+	<td data-bind="var: organization(COMPANY); format:text;"></td>
+	<td data-bind="var: organization(DOMAIN); format:text;"></td>
+	<td data-bind="var: organization(EMAIL); format:text;"></td>
+	<td data-bind="var: organization(ACCOUNT_MANAGER); format:text;"></td>
+	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
+	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
+	<td class='alignRight'>
+	<input type='checkbox' data-app-event='admin_customer|saveOrgToField' />
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+////////////////////////////////////     CRM     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='crmManagerControls'>
+	<form action='#' data-app-role='crmFilter' class='floatLeft' onSubmit='return false'>
+		<label>Status 
+		<select name='STATUS' data-app-change="admin|updateDMICmdVar" data-trigger='refresh'>
+			<option value='ALL'>All</option>
+			<option value='NEW' selected="selected">New</option>
+			<option value='OPEN'>Open</option>
+			<option value='WAIT'>Waiting</option>
+		</select>
+		</label>
+	</form>
+
+	<!-- if DMI.listmode is search, it will look for a form with data-app-role='DMISearch' and serialize it.  -->
+	<form action='#' data-app-role='DMISearch' class='floatRight' onSubmit='return false'>
+	<input type='hidden' name='_cmd' value='adminAppTicketSearch' />
+	<select name='scope'>
+		<option value='email' selected="selected">email</option>
+		<option value='orderid'>order #</option>
+		<option value='phone'>phone #</option>
+		<option value='ticket'>ticket #</option>
+	</select>
+	<input type='search' name='searchfor' placeholder='keyword' required='required' size='30'  />
+	<button data-app-click="admin|refreshDMI" data-serializeform='true' class='applyButton'>Search</button>
+	</form>	
+</div>
+
+
+
+
+<table>
+<tr id='crmManagerResultsRowTemplate' class='pointer'>
+	<td><span  data-bind='var: ticket(ESCALATED); format:showIfSet;' class='ui-icon ui-icon-flag displayNone'></span></td>
+	<td data-bind='var: ticket(TKTCODE); format:text;'  data-app-click="admin_customer|crmAdminTicketDetailShow" class='lookLikeLink'></td>
+	<td data-bind='var: ticket(STATUS); format:text;'></td>
+	<td data-bind='var: ticket(SUBJECT); format:text;'></td>
+	<td data-bind='var: ticket(CLASS); format:text;'></td>
+	<td data-bind='var: ticket(CREATED_GMT); format:epoch2pretty;'></td>
+	<td data-bind='var: ticket(UPDATED_GMT); format:epoch2pretty;'></td>
+	<td class='width1 alignRight'>
+	<button data-app-click="admin_customer|crmAdminTicketDetailShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil' >Edit Ticket</button>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='crmManagerTicketDetailTemplate'>
+
+<div class='buttonset marginBottom alignRight'>
+	<button data-app-click="admin_customer|crmAdminTicketClose" class='applyButton' data-icon-primary='ui-icon-close'>Close Ticket</button>
+	<button data-app-click="admin_customer|crmAdminTicketEscalationToggle" class='applyButton' data-icon-primary='ui-icon-flag'>Change Escalation</button>
+</div>
+<section class='marginBottom clearfix'>
+	<hgroup class='floatRight'>
+		<h6 data-bind="var: ticket(CREATED_GMT); format:epoch2pretty; pretext:Created: ;"></h6>
+		<h6 data-bind="var: ticket(UPDATED_GMT); format:epoch2pretty; pretext:Updated: ;"></h6>
+	</hgroup>
+	
+	<hgroup>
+		<h3 data-bind="var: ticket(SUBJECT); format:text; pretext:Subject: ;"></h3>
+		<h4 data-bind="var: ticket(STATUS); format:text; pretext:Status: ;"></h4>
+	</hgroup>
+</section>
+
+<section class='marginBottom clearfix'>
+	<h3 class="marginBottom clearfix">Customer Information</h3>
+	
+	<div class='floatLeft'>
+		<div data-bind="var: ticket(%meta.fullname); format:text;  pretext:Full name: ;"></div>
+		<div data-bind="var: ticket(%meta.email); format:text;  pretext:Email: ;"></div>
+		<div data-bind="var: ticket(%meta.phone); format:text;  pretext:Phone: ;"></div>
+	</div>
+	
+	<div class='floatRight alignRight'>
+<!--		<div data-bind="var: ticket(%meta.schedule); format:text;  pretext:Schedule: ;"></div> -->
+		<div data-bind="var: ticket(%meta.order_count); format:text; pretext:# Orders: ;"></div>
+		<div>Tickets open/total:
+			<span data-bind="var: ticket(%meta.TKT_open); format:text; hideZero:false;"></span> / 
+			<span data-bind="var: ticket(%meta.TKT_total); format:text;"></span>
+		</div>
+		<div data-bind="var: ticket(%meta.customer_since); format:text;  pretext:Customer since: ;"></div>
+	</div>
+</section>
+
+
+<section class='marginBottom clearfix'>
+	<h3 class="clearfix">Original Issue:</h3>
+	<div class="marginBottom marginTop" data-bind="var: ticket(NOTE); format:text;"></div>
+</section>
+
+<section class='marginBottom clearfix'>
+	<h3  class="marginBottom">Update:</h3>
+	<div class="marginBottom">
+	<form action='#' onsubmit="return false;" class='labelsAsBreaks alignedInputs alignedLabels'>
+	<textarea name='note' class='fullWidth' rows='8'></textarea>
+	<label><input type='checkbox' name='private' /> Private note</label>
+	<button data-app-click="admin_customer|crmAdminTicketNoteAdd" class='applyButton'>Update Ticket</button>
+	</form>
+	</div>
+</section>
+
+<section class='marginBottom clearfix'>
+	<h3 class="marginBottom">History:</h3>
+	<div class="marginBottom">
+	<table class='fullWidth gridTable' data-app-role='ticketHistory'>
+	<tbody data-bind="var: ticket(@MSGS); format:processList; loadsTemplate:crmManagerTicketMsgRowTemplate;"></tbody>
+	</table>
+	</div>
+</section>
+
+
+</div>
+
+<table>
+<tr id='crmManagerTicketMsgRowTemplate'>
+	<td class='valignTop'>
+	<div data-bind="var: ticket(AUTHOR); format:text;  pretext:By: ;" class='marginRight'></div>
+	<div data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;  pretext:On: ;" class='marginRight'></div>
+	</td>
+	<td class='valignTop'>
+	<div class='marginLeft'  data-bind="var: ticket(NOTE); format:text;"></div>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='crmManagerTicketCreateTemplate'>
+<form action="#" onSubmit='return false' class='labelsAsBreaks alignedLabels alignedInputs'>
+<input type='hidden' name='_cmd' value='adminAppTicketCreate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+<input type='hidden' name='_tag/message' value='The ticket has been created.' />
+
+<p>All fields are optional, matching will be done automatically based on data provided.</p>
+
+<label>
+	<span>Order #</span>
+	<input type="text" value="" name="orderid" size="12" data-bind="var: ticket(orderid); format:popVal;" /> ####-##-######
+</label>
+
+<label>
+	<span>Phone</span>
+	<input type="tel" value="" name="phone" size="12" data-bind="var: customer(@BILL.0.bill_phone); format:popVal;" /> ###-###-####
+</label>
+
+<label>
+	<span>Email</span>
+	<input type="email" value="" name="email" size="45" data-bind="var: customer(_EMAIL); format:popVal;" />
+</label>
+
+<label class='marginLeft'>
+	<input type="checkbox" class='applyAnycb' name="create" /> Create account if one does not exist.
+</label>
+
+
+<label>
+	<span>Subject</span>
+	<input type="text" value="" name="subject" size="45" />
+</label>
+
+
+<label>
+	<span>Issue</span>
+	<textarea name="body" rows="5" cols="60"></textarea>
+</label>
+
+<label>
+	<span>Class</span>
+	<select name='class'>
+		<option>Not Specified</option>
+		<option value='PRESALE'>Presale</option>
+		<option value='POSTSALE'>Postsale</option>
+		<option value='RETURN'>Return</option>
+		<option value='EXCHANGE'>Exchange</option>
+	</select>
+</label>
+
+<button data-app-click="admin_customer|appAdminTicketCreateExec" class='applyButton' data-app-role='saveButton'>Create Ticket</button>
+</form>
+</div>
+
+
+
+<!-- not used
+<div id='crmSettingsTemplate'>
+<form action='#' onsubmit="return false;">
+<fieldset>
+	<legend>Case Management/Returns:</legend>
+	
+	<label>
+		<span>For use</span>
+		<select name="style" data-bind="var:crm(style); format:popVal;">
+			<option value="0">Internal only</option>
+			<option selected="" value="10">Allow customers to open new tickets</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Ticket ID Format:</span>
+		<select name="sequence" data-bind="var:crm(sequence); format:popVal;">
+			<option value="ALPHA">6 digit Alpha-Numeric</option>
+			<option value="SEQ5">Sequenced #####</option>
+			<option value="DATEYYMM4">Hybrid Date+Sequence YYMM####</option>
+		</select>
+	</label>
+	<label>
+		<span>Ticket Sequence #</span>
+		<input type="text" value="1002" size="5" name="ticket_number"  data-bind="var:crm(ticket_number); format:popVal;" />
+	</label>
+</fieldset>
+</form>
+</div>
+-->
+
+
+
+
+
+<!--
+////////////////////////////////////     GIFTCARDS     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<table>
+<tr id='giftcardResultsRowTemplate'>
+	<td data-bind="var: giftcard(CODE); format:text;"></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(EXPIRES_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(LAST_ORDER); format:text;" class='hideInDetailMode'></td>
+	<td data-bind='var: giftcard(CID); format:assignAttribute; attribute:data-cid;' data-app-click="admin_customer|customerEditorModalShow"><span class='lookLikeLink' data-bind="var: giftcard(CID); format:text;"></span></td>
+	<td data-bind="var: giftcard(BALANCE); format:money;"></td>
+	<td data-bind="var: giftcard(TXNCNT); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(TYPE); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(SERIES); format:text;" class='hideInDetailMode'></td>
+	<td><button data-app-click='admin_customer|adminGiftcardUpdateShow' data-edit-mode='panel' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Details</button></td>
+</tr>
+
+<tr id='giftcardLogRowTemplate'>
+	<td data-bind="var: giftcard(CREATED_GMT); format:text;"></td>
+	<td data-bind="var: giftcard(BALANCE); format:text;"></td>
+	<td data-bind="var: giftcard(NOTE); format:text;"></td>
+	<td data-bind="var: giftcard(LUSER); format:text;"></td>
+	<td data-bind="var: giftcard(TXNCNT); format:text;"></td>
+</tr>
+</table>
+
+
+
+
+
+<div id='giftcardDetailTemplate'>
+<form action='#' onSubmit="return false">
+
+<input type='hidden' name='_macrobuilder' value='admin_customer|adminGiftcardMacro' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+
+<input type="hidden" name="GCID" value="" data-bind="var:giftcard(GCID); format:popVal;" />
+
+<fieldset class='labelsAsBreaks alignedLabels'>
+	
+	<div class='buttonset alignRight ui-corner-all ui-widget-content smallPadding marginBottom'><button data-app-role='saveButton' disabled='disabled' data-app-click='admin|submitForm'>Save <span class='numChanges'></span> </button></div>
+
+	<div class='label' data-bind="var:giftcard(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var:giftcard(SRC_SERIES); format:text; pretext: Series: ;"></div>
+	
+	<label>
+		<span>Balance</span>
+		$<input type='number' class='smallInput' min='0' step='.01' name="balance" value="0.00" size="5" required='required' data-bind="var:giftcard(BALANCE); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Balance change note</span>
+		<input type='text' name='balance_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made. Only saves if balance is updated.">?</span>
+	</label>
+
+	
+
+	<label>
+		<span>Expiration </span>
+		<input type="text" maxlength="10" name="expires" value="" class='applyDatepicker'  data-bind="var:giftcard(EXPIRES_GMT); format:popVal;">
+		<span class='toolTip' title="Leave empty for an expiration of never. Many states require you do not expire gift cards if you sell them for cash value. However, gift cards that you include discounted or free with an order are usually exempt.">?</span>
+		<span data-bind="var:giftcard(EXPIRES_GMT); format:epoch2pretty; pretext: (current: ; posttext:);"></span>
+	</label>
+
+	<label>
+		<span>Expiration change note</span>
+		<input type='text' name='expires_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made.  Only saves if expiration is updated.">?</span>
+	</label>
+
+	<label>
+		<span>Card Type</span>
+		<select name="cardtype" required='required'  data-bind="var:giftcard(CARDTYPE); format:popVal;">
+			<option value="7">Cash Equivalent</option>
+			<option value="3">Promotional</option>
+			<option value="1">Exclusive/One Time Use</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Card type change note</span>
+		<input type='text' name='cardtype_note' />
+		<span class='toolTip' title="An optional note that will appear in the log by this change to indicate for your records why the change was made.  Only saves if card type is updated.">?</span>
+	</label>
+
+
+	<div class='marginTop' data-bind="var:giftcard(COMBINABLE); format:text; pretext: Combinable: ;"></div>
+	<div data-bind="var:giftcard(SYNCED_GMT); format:epoch2pretty; pretext: Synced: ;"></div>
+	<div data-bind="var:giftcard(CREATED_GMT); format:epoch2pretty; pretext: Created: ;"></div>
+	<div data-bind="var:giftcard(MODIFIED_GMT); format:epoch2pretty; pretext: Modified: ;"></div>
+
+
+
+	<div data-bind="var:giftcard(LAST_ORDER); format:text; pretext: Last order: ;"></div>
+	<div data-bind="var:giftcard(NOTE); format:text; pretext: Note: ;"></div>
+	<div data-bind="var:giftcard(TXNCNT); format:text; pretext: Txncnt: ;"></div>
+	<div data-bind="var:giftcard(CREATED_BY); format:text; pretext: Created by: ;"></div>
+
+
+	<div data-bind="var:giftcard(PRT); format:text; pretext: Partition: ;"></div>
+	<div data-bind="var:giftcard(CASHEQUIV); format:text; pretext: Cash equivalent: ;"></div>
+
+	<br />
+	<h4>Log:</h4>
+	<table class='applyAnytable gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Balance</th>
+		<th>Note</th>
+		<th>User</th>
+		<th>Txncnt</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:giftcard(@LOGS); format:processList; loadsTemplate:giftcardLogRowTemplate;">
+	
+	</tbody>
+	</table>
+</fieldset>
+</form>
+</div>
+
+
+
+
+<div id='giftcardAddProductTemplate'>
+
+
+
+
+<form action='#' onsubmit="return false;">
+<p>This will create a product in your store, which when purchased will create a gift card for the customer. The product will be assigned a SKU, but have unlimited inventory.</p>
+
+<input type='hidden' name='_cmd' value='adminGiftcardSetupProduct' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+<input type='hidden' name='_tag/jqObjEmpty' value='true' />
+
+
+<fieldset class='labelsAsBreaks'>
+	<label>
+		<span>SKU</span>
+		<input type="text" name="SKU" required='required' data-input-keyup="format" data-input-format='pid,uppercase' />
+	</label>
+	
+	<label>
+		<span>Amount</span>
+		<input type='number' class='smallInput' min='0' step='.01' name="PRICE" size="5" required='required'  data-input-keyup="format" data-input-format='number' />
+		<span class='toolTip' title='Set an amount of 0 to create an "amount" option that lets the user select an amount.'>?</span>
+	</label>
+
+	<label>
+	<input type="checkbox" name="ALLOW_NOTE" class='applyAnycb' checked="checked" /> Allow buyer to put note on card. <span class='toolTip' title='This will let the user specify a text note that will be sent to the recipient.'>?</span>
+	</label>
+	<p class="hint">
+	
+	</p>	
+
+	<label>
+	<input type="checkbox" name="ALLOW_RECIPIENT" checked="checked" class='applyAnycb' /> Allow buyer to specify electronic recipient <span class='toolTip' title='This will automatically create an account for a recipient.'>?</span>
+	</label>
+
+	<button data-app-click="admin|submitForm" class='applyButton'>Save</button>
+
+</fieldset>
+</form>
+
+</div>
+
+
+
+<!-- admin.a.processForm requireds _cmd to be passed as part of form. added w/ js so that create template could be recycled for update -->
+<div id='giftcardCreateTemplate'>
+<form action='#' onsubmit="return false;">
+<fieldset class='labelsAsBreaks alignedLabels'>
+	<label>
+		<span>Customer Email </span>
+		<input type="email" name="email" value="" data-bind="var: customer(_EMAIL); format:popVal;" />
+		<span class='toolTip' title="Email is optional, but allows your customer to lookup a giftcard online if lost.">?</span>
+	</label>
+	
+	<label>
+		<input type="checkbox" name="sendemail" class='applyAnycb' /> Send Email to Customer
+	</label>
+	
+	<label>
+		<span>Expires </span>
+		<input type="text" maxlength="10" name="expires" value="" class='applyDatepicker'>
+		<span class='toolTip' title="Leave empty for an expiration of never. Many states require you do not expire gift cards if you sell them for cash value. However, gift cards that you include discounted or free with an order are usually exempt.">?</span>
+	</label>
+
+	<label>
+		<span>Note</span>
+		<input type="text" value="" name="note" />
+		<span class='toolTip' title="This field is public and viewable by your customers.">?</span>
+	</label>
+
+	<label>
+		<span>Balance</span>
+		$<input type='number' class='smallInput' min='0' step='.01' name="balance" value="0.00" size="5" required='required' />
+	</label>
+	<label>
+		<span>Card Type</span>
+		<select name="cardtype" required='required'>
+			<option value="7">Cash Equivalent</option>
+			<option value="3">Promotional</option>
+			<option value="1">Exclusive/One Time Use</option>
+		</select>
+	</label>
+	<ul class='hint'>
+		<li>Cash Equivalent the card is a liability until used, equivalent to cash tendered.</li>
+		<li>Promotional cards are not a liability and are treated as a coupon.</li>
+		<li>Exclusive cards are the same as promotional cards, however only one card may be used per order.</li>
+	</ul>
+	<!-- the inputs for quantity and series are hidden in the 'add giftcard' from the customer editor. If the input name changes, update customer editor -->
+	<label>
+		<span>Quantity</span>
+		<input type='number' class='smallInput' min='1' step='1' value="1" name="quantity" size="4" required='required' />
+		<span class='toolTip' title="If you select more than quantity 1, no customer or email will be assigned. You may create up to 9,999 giftcards at one time.  A list of pre-authorized card codes will be generated, these can then be merged into a direct mail or other personalized electronic campaign.">?</span>
+	</label>
+	
+	<p class="hint">
+	REMINDER: Be sure to speak with your accountant regarding gift card liabilities and how those will affect your companies balance sheet (especially non-expiring cash-equivalent gift cards).
+	</p>
+
+	<label>
+	<span>Series Identifier</span>
+	<input type="text" name="series" size="16" maxlength="16" />
+	<span class='toolTip' title="Specify a 16 digit series identifier such as 'GROUPON YYYYMMDD' or 'XYZ TRADESHOW' - this will appear in  various reports and dashboards.  When used - series identifers MUST BE UNIQUE.  If a previous series id is used then cards from the past series will be returned. This can be useful in the case of a large series where a browser could be closed or crash before the output is recorded. Series is not compatible with Quantity 1, or when an individual recipient is specified.  Using SERIES is required when creating more than 50 cards at a time.">?</span>
+	</label>
+
+
+<button data-app-click="admin|submitForm" class='applyButton' data-app-role='saveButton'>Save</button>
+
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+<!--
+////////////////////////////////////     REVIEWS     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<table>
+<tr id='reviewsResultsRowTemplate'>
+	<td><span data-bind="var: giftcard(APPROVED_GMT); format: hideIfSet;"><input type='checkbox' /></span></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(PID); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
+	<td class='alignRight'>
+	<button data-app-click='admin_customer|reviewRemoveConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete Review</button>
+	<button data-app-click='admin_customer|adminProductReviewUpdateShow' class='applyButton' data-edit-mode='panel' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
+	</td>
+</tr>
+
+</table>
+
+
+
+<div id='reviewAddUpdateTemplate'>
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs'>
+<fieldset>
+	<legend>Review Details</legend>
+
+	<label>
+		<span>Subject</span>
+		<input name='SUBJECT' data-bind="var: review(SUBJECT); format:popVal;" type='text' required='required' />
+	</label>
+
+	<label>
+		<span>Rating</span>
+		<select name='RATING' data-bind="var: review(RATING); format:popVal;" >
+			<option value='10'>10</option>
+			<option value='9'>9</option>
+			<option value='8'>8</option>
+			<option value='7'>7</option>
+			<option value='6'>6</option>
+			<option value='5'>5</option>
+			<option value='4'>4</option>
+			<option value='3'>3</option>
+			<option value='2'>2</option>
+			<option value='1'>1</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Message</span>
+		<textarea name='MESSAGE' data-bind="var: review(MESSAGE); format:popVal;" rows='6' required='required'></textarea>
+	</label>
+	
+	<label>
+		<span>Product ID</span>
+		<input name='PID' data-bind="var: review(PID); format:popVal;" type='text' required='required' />
+	</label>
+
+	<label>
+		<input type='checkbox' class='applyAnycb' name='approve' data-bind="var: review(APPROVED_GMT); format:popVal;" />
+		Approved
+	</label>
+</fieldset>
+
+<fieldset>
+	<legend>Customer Details</legend>
+	
+	<label>
+		<span>Customer Name</span>
+		<input name='CUSTOMER_NAME' data-bind="var: review(CUSTOMER_NAME); format:popVal;" type='text' required='required' />
+	</label>
+	
+	<label>
+		<span>Location</span>
+		<input name='LOCATION' data-bind="var: review(LOCATION); format:popVal;" type='text' />
+	</label>
+	
+	<label>
+		<span>Blog URL:</span>
+		<input name='BLOG_URL' data-bind="var: review(BLOG_URL); format:popVal;" type='url' />
+	</label>
+	
+	<label>
+		<span>Customer ID:</span>
+		<input name='CID' data-bind="var: review(CID); format:popVal;" type='number' min='-1' step='1' />
+	</label>
+
+</fieldset>
+
+
+<button data-app-event="admin|processForm">Save</button>
+
+</form>
+
+</div>
+
+
+
+<!-- campaignManager -->
+
+<table>
+<tr id='campaignResultsRowTemplate'>
+	<td>
+	<span data-bind="var: campaign(CAMPAIGNID); format:text;" data-app-click="admin_customer|adminCampaignUpdateShow"></span>
+	</td>
+	<td data-bind="var: campaign(SUBJECT); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(STATUS); format:text;" class='hideInDetailMode'></td>
+	<td class='campaignPlatformIcons'>
+<span class='displayNone' data-bind="var:campaign(SEND_ANDROID); format:showIfSet;"><img src='app-admin/images/platforms/android-23x23.png' width='23' height='23' alt='android' /></span>
+<span class='displayNone' data-bind="var:campaign(SEND_APPLEIOS); format:showIfSet;"><img src='app-admin/images/platforms/ios-23x23.png' width='23' height='23' alt='apple/ios' /></span>
+<span class='displayNone' data-bind="var:campaign(SEND_EMAIL); format:showIfSet;"><img src='app-admin/images/platforms/email-23x23.png' width='23' height='23' alt='email' /></span>
+<span class='displayNone' data-bind="var:campaign(SEND_FACEBOOK); format:showIfSet;"><img src='app-admin/images/platforms/facebook-23x23.png' width='23' height='23' alt='facebook' /></span>
+<span class='displayNone' data-bind="var:campaign(SEND_SMS); format:showIfSet;"><img src='app-admin/images/platforms/sms-23x23.png' width='23' height='23' alt='sms' /></span>
+<span class='displayNone' data-bind="var:campaign(SEND_TWITTER); format:showIfSet;"><img src='app-admin/images/platforms/twitter-23x23.png' width='23' height='23' alt='twitter' /></span>
+	</td>
+	<td data-bind="var: campaign(QUEUE_MODE); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: campaign(EXPIRES_TS); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+		<button data-app-click='admin_customer|adminCampaignRemoveConfirm' class='applyButton hideInDetailMode' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
+		<button data-app-click="admin_customer|adminCampaignUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
+	</td>
+</tr>
+</table>
+
+
+<div id='campaignCreateTemplate' class='campaignEditor'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<input name='GUID' type='hidden' value='' data-bind="var: campaign(GUID); format:popVal;" />
+
+<fieldset>
+
+<label>
+	<span>Campaign ID</span>
+	<input type='text' name='CAMPAIGNID' value='' required='required' data-app-event='admin|alphaNumeric' maxlength='11' data-minlength='6' />
+	<span class='toolTip' title="An 6-18 character alpha-numeric code that represents the campaign (ex: SUMMER13). Used as a reference point in lists and also in the URL's for image reference. This code can not be changed.">?</span>
+</label>
+
+<label>
+	<span>Template</span>
+	<select data-bind="var: mkt(@TEMPLATES);format:optionsfromlist; text:SUBDIR; value:SUBDIR;" name='template_origin'></select>
+</label>
+
+
+</fieldset>
+
+<div class='buttonset alignRight'>
+	<button data-app-event="admin_customer|adminCampaignCreateExec">Create Campaign</button>
+</div>
+
+</form>
+
+</div>
+
+
+
+
+
+
+<div id='caimpaignUpdateTemplate' class='campaignEditor ui-widget ui-widget-content ui-corner-all stdPadding clearfix'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks' data-cb_tf='true'>
+<input name='CAMPAIGNID' type='hidden' value='' data-bind="var: campaign(CAMPAIGNID); format:popVal;" />
+
+
+<div class='marginBottom clearfix'>
+	
+	<button class='floatRight' data-app-event="admin_customer|adminCampaignUpdateExec">Save Campaign</button>
+
+	<h1 data-bind="var:campaign(CAMPAIGNID); format:text; pretext: Edit Campaign ;"></h1>
+</div>
+
+	
+	<fieldset class='floatLeft threeColumn'>
+		<legend>Template</legend>
+
+		<div class='label' data-app-role='campaignTemplateConfigContainer'>
+			<span>Selected</span>
+			<span data-bind='var:campaign(template_origin); format:text;' data-app-role='templateOrigin'  class='marginLeft marginRight'></span>
+		</div>
+		
+		<div class='buttonset ui-widget-content smallPadding ui-corner-all' data-bind='var:profile(CAMPAIGNID); format:assignAttribute; attribute:data-campaignid;'>
+			<button data-app-click='admin_template|templateChooserShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-power' data-mode='Campaign'>Choose</button>
+			<button data-app-click='admin_template|templateEditorShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-wrench' data-mode='Campaign'>Edit</button>
+			<button data-app-click='admin_template|containerZipDownloadExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-s' data-mode='Campaign'>Download Zip</button>
+			<button data-app-click='admin_template|containerFileUploadShow' class='applyButton' data-text='true' data-icon-primary='ui-icon-arrowthickstop-1-n' data-mode='Campaign'>Upload</button>
+		</div>
+	
+	</fieldset>
+	
+
+
+	<fieldset data-app-role='campaignCustomerSelector' class='floatLeft threeColumn'>
+		<legend>Customer Selection</legend>
+		<div data-app-role='pickerContainer' class='marginTop'>
+		
+		</div>
+	
+	</fieldset>
+
+
+	
+	<fieldset data-app-role='campaignSettings' class='floatLeft threeColumn'>
+		<legend>Subject &amp; Delivery Options</legend>
+
+		<label class='marginTop'>
+			<span>Subject</span>
+			<input type='text' name='SUBJECT' size='40' value='' data-bind="var:campaign(SUBJECT); format:popVal;" />
+		</label>
+
+
+<label class='marginTop'>
+	<input type='checkbox' name='SEND_EMAIL' data-bind="var: campaign(SEND_EMAIL); format:popVal;" />Email
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_APPLEIOS' data-bind="var: campaign(SEND_APPLEIOS); format:popVal;" />Apple iOS <span class='hint'>beta</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_ANDROID' data-bind="var: campaign(SEND_ANDROID); format:popVal;" />Android <span class='hint'>beta</span>
+</label>
+<!--
+<label>
+	<input type='checkbox' name='SEND_TWITTER' data-bind="var: campaign(SEND_TWITTER); format:popVal;" />Twitter <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_FACEBOOK' data-bind="var: campaign(SEND_FACEBOOK); format:popVal;" />Facebook <span class='hint'>coming soon</span>
+</label>
+
+<label>
+	<input type='checkbox' name='SEND_SMS' data-bind="var: campaign(SEND_SMS); format:popVal;" />SMS/Text <span class='hint'>coming soon</span>
+</label>
+-->
+<br />
+<label>
+	<span>Start time</span>
+	<input type='text' name='STARTTIME' class='applyDatetimepicker' data-bind="var: campaign(STARTTIME); format:popVal;" />
+</label>
+<div class='marginTop marginBottom'>Or</div>
+<button data-app-event="admin_customer|adminCampaignSendConfirm">Start Now</button>
+
+
+
+
+	</fieldset>
+
+
+</form>
+
+
+</div>
+
+
+
+
+<!-- CUSTOMER PICKER -->
+
+
+
+<div id='customerPickerTemplate'>
+	<div data-app-role='accordionContainer' class='labelsAsBreaks'>
+
+		<h6 data-pickmethod='CUSTOMER_SELECTALL'>All</h6>
+		<div data-contentloaded='true'>
+		<label><input type='checkbox' name='SELECTALL' data-app-event='admin|lockAccordionIfChecked' /> Select all customers</label>
+		<p class='note'>If checked, all other menus will be disabled</p>
+		</div>
+
+		<h6 class='showForZoovyOnly' data-pickmethod='CUSTOMER_SUBSCRIBERLISTS'>From Subscriber List</h6>
+		<div class='showForZoovyOnly' data-bind="var: list(@lists); format: processList; loadsTemplate:pickerSubscriberListsRowTemplate;"></div>
+
+		<h6 data-pickmethod='CUSTOMER_TAG'>From Tags</h6>
+		<div class='labelsAsBreaks' data-contentloaded='true'>
+Coming Soon
+		</div>
+
+
+		<h6 data-pickmethod='CUSTOMER_LOCATION'>By Location</h6>
+		<div class='labelsAsBreaks' data-contentloaded='true'>
+Coming Soon
+		</div>
+	
+		<h6 data-pickmethod='CUSTOMER_EMAIL'>By CSV Upload</h6>
+		<div data-contentloaded='true'>
+<textarea name='csv' rows='10' class='fullWidth'></textarea><!-- passed as EMAILS+ -->
+		</div>
+		
+	</div>
+
+</div>
+
+
+<label id='pickerSubscriberListsRowTemplate' class='displayNone' data-bind="var: list(NAME); format:showIfSet;">
+	<input type='checkbox' name='' data-bind="var:list(ID); format:assignAttribute; attribute:name; valuePretext:SUBLIST+;" /><span data-bind="var: list(NAME); format:text;"></span>
+</label>
+
+
+
+
+
+<div id='customerSearchTemplate'>
+	<div class='ui-state-default smallPadding alignRight'>
+	<form action='#' data-app-role='customerSearch' onSubmit='return false'>
+	<select name='scope' data-bind='var:customer(scope); format:popVal;'>
+		<option value='CID'>customer id</option>
+		<option value='EMAIL'>email</option>
+		<option value='GIFTCARD'>giftcard</option>
+		<option value='NAME'>name</option>
+		<option value='NOTES'>notes</option>
+		<option value='ORDER'>order</option>
+		<option value='PHONE'>phone</option>
+		<option value='SCHEDULE'>schedule (org)</option>
+		<option value='ACCOUNT_MANAGER'>account manager (org)</option>
+		<option value='ACCOUNT_TYPE'>account type (org)</option>
+	</select>
+	<input type='search' name='searchfor' placeholder='keyword' size='30'  data-bind='var:customer(searchfor); format:popVal;' />
+	<button class='applyButton'>Search</button><!-- form action applied w/ js due to how the callback that is passed in is handled. see admin_customer.a.customerSearch -->
+	</form>		
+	</div>
+	<div data-app-role='customerSearchResultsContainer'>
+	<table class='displayNone gridTable applyAnytable fullWidth' data-app-role='customerSearchResultsTable'>
+	<thead>
+	<tr>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th>Email</th>
+		<th>Phone</th>
+		<th>Partition</th>
+	</tr>
+	</thead>
+	<tbody data-app-role='customerSearchTbody' data-bind="var:customer(@CUSTOMERS); format:processList; loadsTemplate:customerSearchResultsTemplate;">
+	
+	</tbody>
+	</table>
+	</div>
+</div>
+
+<table>
+<tr id='customerSearchResultsTemplate'>
+	<td data-bind='var: customer(FIRSTNAME); format:text;'></td>
+	<td data-bind='var: customer(LASTNAME); format:text;'></td>
+	<td data-bind='var: customer(EMAIL); format:text;'></td>
+	<td data-bind='var: customer(PHONE); format:text;'></td>
+	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
+</tr>
+</table>
+
+
+
+
+<!-- FAQ manager -->
+
+<table>
+<tr id='faqResultsRowTemplate'>
+	<td data-bind='var: faq(TOPIC_ID); format:faqTopic; extension:admin_customer;'></td>
+	<td data-bind='var: faq(QUESTION); format:text;'></td>
+	<td data-bind='var: faq(PRIORITY); format:text;'></td>
+	<td class='alignRight'>
+		<button data-app-click="admin_customer|faqQuestionDeleteConfirm" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete FAQ</button>
+		<button data-app-click="admin_customer|faqQuestionUpdateShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit FAQ</button>
+	</td>
+</tr>
+</table>
+
+<div id='faqAddUpdateTemplate'>
+	<form class='labelsAsBreaks alignedLabels' data-app-submit="admin|submitForm">
+	<input type='hidden' name='FAQ_ID' value='' data-tlc="bind $val '.FAQ_ID'; apply --select=$val;" />
+	
+	<label>
+		<select name='TOPIC_ID' data-tlc="bind $val '.TOPIC_ID'; bind $topics '.@TOPICS'; admin_customer#topicloop; apply --append; apply --select=$val;">
+			
+		</select>
+	</label>
+	<label>
+		<textarea placeholder='question' name='QUESTION' class='fullWidth' data-tlc="bind $val '.QUESTION'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<textarea placeholder='answer' name='ANSWER'  class='fullWidth' data-tlc="bind $val '.ANSWER'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<textarea placeholder='keywords' name='KEYWORDS'  class='fullWidth' data-tlc="bind $val '.KEYWORDS'; apply --select=$val;"></textarea>
+	</label>
+	<label>
+		<input type='number' min='0' step='1' placeholder='priority' name='PRIORITY' data-tlc="bind $val '.PRIORITY'; apply --select=$val;" value='0' />
+	</label>
+	<button class='applyButton' data-app-role='saveButton'>Save</button>
+	</form>
+</div>

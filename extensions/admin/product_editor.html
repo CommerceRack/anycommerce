@@ -1,0 +1,2745 @@
+
+
+<div id='productManagerLandingContentTemplate' class='ui-widget' data-app-role='productManager'>
+
+	<!-- do not change this ID. used a lot -->
+	<div data-app-role='productManagerLandingContent'>
+
+<h1>Online Product Manager</h1>
+
+<p>Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data. Here are some of the advantages:</p>
+
+<h2>Page Rendering</h2>
+<p>With our new app based solution, there are no frames to load and reload, it makes better use of your screen and browser capabilities. The app framework stays on the screen and only the information you want to view or manipulate changes. This makes for a smoother workflow and helps to increase productivity.</p>
+
+<h2>Extensible</h2>
+<p>Entering your product data is only the beginning. This interface will allow extensibility by developers so it is possible to create custom data input and management interfaces. From vendor management to drop shipping to complex supply chain strategies, our new Product Manager.</p>
+
+<h2>The World is Changing</h2>
+<p>The app-based structure is the future of technology. By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, we are convinced that this change will let our customers do more in less time. </p>
+
+	</div>
+
+	<div data-app-role='productManagerResultsContent' class='displayNone ui-widget'>
+	
+	<table class='fullWidth gridTable applyAnytable ui-widget-content marginBottom' data-app-role='productManagerResultsTable'>
+	<thead>
+	<tr>
+		<th data-anytable-nosort='true'></th>
+		<th>SKU</th>
+		<th>Name</th>
+		<th>Price</th>
+		<th>Has Variations</th>
+		<th># Children</th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-app-role='productManagerSearchResults'>
+	</tbody>
+	</table>
+
+	</div>
+
+
+	<ul data-app-role='productContentTaskResults' data-loadstemplate="productManagerTaskItemTemplate" class='noPadOrMargin listStyleNone'></ul><!-- session specific set of products w/ some 'task' associated with them -->
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- navtabs template -->
+<div id='productEditorNavtabsTemplate' class='clearfix smallPadding alignLeft' data-app-role='productEditorNavtab'>
+	
+	<button data-app-click='admin_prodedit|adminProductCreateShow' class='applyButton floatRight'>New Product</button>
+	<form class='marginLeft' action='#' onSubmit='return false'>
+		search <input type='search' name='KEYWORDS' class='productSearchInput' x-webkit-speech="x-webkit-speech" />
+		<button data-app-click='admin_prodedit|productSearchExec' class='applyButton'>go</button>
+		<button data-app-click='admin_prodedit|productFiltersShow' class='applyButton' data-icon-primary='ui-icon-triangle-1-s' data-text='true'>Filter</button>
+	</form>
+	
+
+	
+	<div data-app-role='productManagerFilters' class='ui-widget-content ui-corner-bottom displayNone smallPadding marginLeft marginRight'>
+	<form action='#' onSubmit='return false'>
+	<div class='alignRight buttonset'>
+		<button data-app-click='admin_prodedit|productFiltersClear' class='applyButton'>Clear All Filters</button>
+		<button data-app-click='admin_prodedit|productFiltersClose' class='applyButton'>Cancel</button>
+		<button data-app-click='admin_prodedit|productFiltersExec' class='applyButton'>Filter</button>
+	</div>
+	<table class='fullWidth'>
+	<tr>
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='tags'>
+		<legend>Tags: </legend>
+		<ul class='filterList listStyleNone' data-app-role='tagsList'>
+			<li data-elastic-term='IS_BESTSELLER'>Bestseller</li>
+			<li data-elastic-term='IS_CLEARANCE'>Clearance</li>
+			<li data-elastic-term='IS_COLORFUL'>Colorful</li>
+			<li data-elastic-term='IS_CONFIGABLE'>Configurable</li>
+			<li data-elastic-term='IS_DISCONTINUED'>Discontinued</li>
+			<li data-elastic-term='IS_FRESH'>Fresh</li>
+			<li data-elastic-term='IS_HASERRORS'>Has Errors</li>
+			<li data-elastic-term='IS_NEEDREVIEW'>Needs Review</li>
+			<li data-elastic-term='IS_NEWARRIVAL'>New Arrival</li>
+			<li data-elastic-term='IS_OPENBOX'>Open Box</li>
+			<li data-elastic-term='IS_PREORDER'>Preorder</li>
+			<li data-elastic-term='IS_REFURB'>Refurb</li>
+			<li data-elastic-term='IS_SALE'>Sale</li>
+			<li data-elastic-term='IS_SHIPFREE'>Ships Free</li>
+			<li data-elastic-term='IS_SIZEABLE'>Sizeable</li>
+			<li data-elastic-term='IS_SPECIALORDER'>Special Order</li><!--
+			<li>IS_USER1</li>
+			<li>IS_USER2</li>
+			<li>IS_USER3</li>
+			<li>IS_USER4</li>
+			<li>IS_USER5</li>
+			<li>IS_USER6</li>
+			<li>IS_USER7</li>
+			<li>IS_USER8</li>
+			<li>IS_USER9</li>-->
+		</ul>
+		</fieldset>
+		</td>
+<!--
+Management categories don't work right now. Once they're added to elastic, uncomment this section.
+also uncomment the line executing handleManagementCategoryFilters() in u.handleNavTabs
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='mancats'>
+			<legend>Management Categories</legend>
+			<ul data-app-role='managementCategoryList' class='filterList listStyleNone'></ul>
+		</fieldset>
+		</td>	
+-->
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='marketplaces'>
+		<legend>Marketplaces</legend>
+		<ul class='filterList listStyleNone'>
+			<li data-elastic-term="AMZ">Amazon</li>
+			<li data-elastic-term="BST">Best Buy</li>
+			<li data-elastic-term="BUY">Buy.com</li>
+			<li data-elastic-term="CJ">Commission Junction</li>
+<!--			<li data-elastic-term="buysafe">BuySafe</li> -->
+			<li data-elastic-term="HSN">Home Shopping Network</li>
+			<li data-elastic-term="GOO">Google</li>
+			<li data-elastic-term="NXT">NextTag</li>
+			<li data-elastic-term="PGR">PriceGrabber</li>
+<!--			<li data-elastic-term="shopping">Shopping.com</li> -->
+		</ul>
+		</fieldset>
+		</td>
+		
+		<td class='valignTop alignLeft'>
+		<fieldset data-elastic-key='profile'>
+		<legend>Launch Profiles</legend>
+		<ul class='filterList listStyleNone' data-app-role='adminEBAYProfileList'>
+		</ul>
+		</fieldset>
+		<!--
+		uncomment this and buildFilterListByCommand('adminSupplierList') in product_editor.js once elastic search for supplier is working.
+		<fieldset data-elastic-key='prod_supplierid'>
+		<legend>Suppliers</legend>
+		<ul class='filterList listStyleNone' data-app-role='adminSupplierList'>
+		</ul>
+		</fieldset>
+		-->
+		</td>
+	
+		<td class='valignTop alignLeft'>
+	<fieldset data-elastic-key='base_price'>
+		<legend>Price Range <span data-app-role='priceFilterRange'>$0 - $3000</span></legend>
+		<div class="sliderRange marginLeft marginRight"></div>
+	</fieldset>
+	
+	<h3>Results</h3>
+	max # of results <select name='size'>
+		<option>10</option>
+		<option selected='selected'>25</option>
+		<option>50</option>
+		<option>100</option>
+	</select>
+	
+		</td>
+	
+	
+	</tr>
+	</table>
+	</form>
+	</div>
+
+
+
+</div>
+
+
+
+
+<!-- used for the product Queue/task list -->
+<ul>
+<li id='productManagerTaskItemTemplate' class='ui-widget-content ui-corner-all marginBottom smallPadding isProductContainer' data-app-role='taskItemContainer'>
+	<div class='clearfix' data-app-role='taskItemPreview'>
+		<div class='prodThumbContainer floatLeft marginRight marginLeft'>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image0); defaultVar: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='100' height='100' />
+		</div>
+		
+		<div class='floatRight marginLeft'>
+			<button title="Open editor for this product" data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-s"  data-text='false'>Edit</button>
+		
+			<button title="Close editor for this product" data-app-click='admin_prodedit|productEditorShow' data-taskmode='close' class='applyButton floatRight displayNone' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-triangle-n"  data-text='false'>Close</button>
+		
+			<button title="Remove this item from Q" data-app-click='admin_prodedit|productEditorShow' data-taskmode='remove' class='applyButton floatRight' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-circle-close"  data-text='false'>Remove</button>
+	
+		</div>
+		<div class='floatRight marginLeft'>
+			<strong>Inventory </strong>
+			<div data-bind='var: inv(%invsummary.AVAILABLE); format:text; hideZero:false; pretext: available: ;'></div>
+			<div data-bind='var: inv(%invsummary.MARKETS); format:text; hideZero:false; pretext: markets: ;'></div>
+			<div data-bind='var: inv(%invsummary.ONSHELF); format:text; hideZero:false; pretext: on shelf: ;'></div>
+			<div data-bind='var: inv(%invsummary.SALEABLE); format:text; hideZero:false; pretext: saleable: ;'></div>
+		</div>
+			
+		<div data-bind='var: product(zoovy:prod_name); format:text;'></div>
+		<div data-bind='var: product(pid); format:text;'></div>
+		<div data-bind='var: product(zoovy:prod_mfg); format:text; pretext: mfg: ;'></div>
+
+
+		
+	</div>
+	<div data-app-role='productEditorContainer' class='displayNone clearfix marginTop'></div>
+</li>
+</ul>
+
+
+<!-- used in the search results -->
+<table>
+<tr id='prodManagerProductResultsTemplate'>
+	<td>
+	<div class='prodThumbContainer marginRight'>
+ 	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
+ 	</div>
+	</td>
+	<td data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='lookLikeLink' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;">
+		<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span>
+	</td>
+	<td class='hideInMinimalMode'><div data-bind='var: product(prod_name); format:text;'></div></td>
+	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
+	<td class='hideInMinimalMode'>
+	<span class='ui-icon ui-icon-check displayNone'  data-bind='var:product(pogs); format:showIfSet;'></span>
+	</td>
+	<td class='hideInMinimalMode' data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
+	<td align='right'>
+	<button class='applyButton' data-app-click='admin_prodedit|productTaskPidToggle' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	<button data-app-click='admin_prodedit|productEditorShow' data-taskmode='edit' class='applyButton' data-bind="var: product(pid); format:assignAttribute; attribute:data-pid;" data-icon-primary="ui-icon-pencil"  data-text='false'>Edit Now</button>
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+
+
+<div id='ProductCreateNewTemplate'>
+
+	<div id='prodCreateMessaging'></div>
+	
+	<form name="createNewProductForm" action="#" method="POST" onSubmit="return false;">
+		
+	<fieldset class='marginBottom labelsAsBreaks alignedLabels alignedInputs'>
+		<legend>Required Fields</legend>
+	
+		<label><span>Product ID/SKU: </span><input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' data-input-keyup="format" data-input-format='pid,uppercase' /></label>
+		<label ><span>Product Name: </span><INPUT TYPE="text" NAME="zoovy:prod_name"  maxlength="55" VALUE="" required='required' /></label>
+		<label ><span>Sell For Price: </span>$<INPUT type='number' class='smallInput' NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></label>
+				
+	</fieldset>
+	
+	<fieldset class='marginBottom labelsAsBreaks alignedLabels'>
+		<legend>Recommended Data</legend>
+		<label ><span>Your Cost: </span>$<INPUT type='number' class='smallInput' NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></label>
+		<label ><span>Product Description:</span><TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></label>
+		<label ><span>Base Weight:</span><INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</label>
+		<label ><span>Is product taxable?:</span></label> 
+			<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
+			<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
+		
+	</fieldset>		
+			
+	<button class='applyButton' data-app-click='admin_prodedit|productCreateExec' data-app-role='saveButton'>Save Product</button>
+	
+	</form>
+
+</div>
+
+
+
+
+
+
+<div id='productEditorTabbedTemplate'><!-- no app role here. It's on the parent element (data-app-role='productEditorContainer') and  it has data-pid set -->
+	
+	<div class='applyAnytabs'><!-- doesn't use applyAnytabs class because I want the tabs to appear earlier (instead of in callback) -->
+	<button class='floatRight applyButton' data-app-role='masterSaveButton' data-app-click="admin_prodedit|adminProductMacroSaveAllTabsExec">Save All <span class='numChanges'></span> Changes</button>
+
+	<ul class='productTabsUL'>
+		<li title="Common Fields, tagging, shipping and cross selling."><a href='#general' data-app-role='generalTab'>General</a></li><!-- add this: <span data-anyform-changes='numGeneralChanges'><span class='numChanges'></span></span> and set this on the corresponding form:data-changes-container='numGeneralChanges' -->
+		<li><a href='#marketplaces' data-app-role='marketplaceTab'>Marketplaces</a></li>
+		<li><a href='#social' data-app-role='socialTab'>Social</a></li>
+		<li><a href='#attributes' data-app-role='attributesTab' data-app-click="admin_prodedit|handleAttributesTabContent">Attributes</a></li>
+		<li><a href='#inventory' data-app-role='inventoryTab' data-app-click="admin_prodedit|handleInventoryTabContent" >Inventory</a></li>
+		<li><a href='#categorization' data-app-role='categorizationTab' data-app-click="admin_prodedit|handleCategorizationTabContent">Categorization</a></li>
+		<li><a href='#variations' data-app-role='variationsTab' data-app-click="admin_prodedit|handleVariationsTabContent">Variations</a></li>
+<!--		<li><a href='#ci' data-app-role='ciTab'>CI</a></li> -->
+		<li><a href='#amazon' data-app-role='amazonTab' data-app-click="admin_prodedit|handleAmazonTabContent">Amazon</a></li>
+		<li><a href='#buycom' data-app-role='buycomTab'>Buy.com</a></li>
+		<li><a href='#ebay' data-app-role='ebayTab' data-app-click="admin_prodedit|handleEbayTabContent">eBay</a></li>
+		<li><a href='#competition' data-app-role='competitionTab' data-app-click="admin_prodedit|handleCompetitionTabContent">Competition</a></li>
+	</ul>
+	
+	
+	<section data-anytab-content='general' class='clearfix peGeneralTabContent'>
+		<form action='#' onSubmit='return false'>
+
+		<fieldset class='clearfix'>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Cost </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>MSRP </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7'  /></label>
+			<label class='threeColumn displayInlineBlock floatLeft marginBottom'><span>Sale price </span><input type='number' class='smallInput moneyInput' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
+
+			<input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" placeholder="Product name" title="Product name" class='threeColumn floatLeft marginBottom' />
+			
+			<textarea data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" name='zoovy:prod_desc' value='' data-bind="var: product(zoovy:prod_desc); format:popVal;" placeholder="Product description" title="Product description" class='threeColumn floatLeft marginBottom'></textarea>
+			
+			<textarea data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" name='zoovy:prod_detail' value='' data-bind="var: product(zoovy:prod_detail); format:popVal;" placeholder="Product details/specifications" title="Product details/specifications" class='threeColumn floatLeft marginBottom'></textarea>
+
+		</fieldset>
+
+
+		<fieldset class='clearfix' >
+			<legend>Tagging</legend>
+			<ul class='tagging'>
+											<!-- HEY! this list is alphabetical. if you add a new one, put it in the right place! -->
+
+				<li><label><input type='checkbox'  name="is:backorder"  data-bind="var: product(is:backorder); format:popVal;" /> Back-order</label></li>
+				<li><label><input type='checkbox'  name="is:bestseller"  data-bind="var: product(is:bestseller); format:popVal;" /> Best seller</label></li>
+				<li><label><input type='checkbox'  name="is:shipfree"  data-bind="var: product(is:shipfree); format:popVal;" /> Can ship free</label></li>
+				<li><label><input type='checkbox'  name="is:clearance"  data-bind="var: product(is:clearance); format:popVal;" /> Clearance </label></li>
+				<li><label><input type='checkbox'  name="is:colorful"  data-bind="var: product(is:colorful); format:popVal;" /> Colorful </label></li>
+				<li><label><input type='checkbox'  name="is:configurable"  data-bind="var: product(is:configurable); format:popVal;" /> Configurable </label></li>
+				<li><label><input type='checkbox'  name="is:discontinued"  data-bind="var: product(is:discontinued); format:popVal;" /> Discontinued</label></li>
+				<li><label><input type='checkbox'  name='is:fresh' data-bind="var: product(is:fresh); format:popVal;"> Fresh</label></li>
+				<li><label><input type='checkbox'  name='is:needreview' data-bind="var: product(is:needreview); format:popVal;"> Need review</label></li>
+				<li><label><input type='checkbox'  name="is:newarrival"  data-bind="var: product(is:newarrival); format:popVal;" /> New arrival</label></li>
+				<li><label><input type='checkbox'  name="is:openbox"  data-bind="var: product(is:openbox); format:popVal;" /> Open box </label></li>
+				<li><label><input type='checkbox'  name="is:preorder"  data-bind="var: product(is:preorder); format:popVal;" /> Pre-order</label></li>
+				<li><label><input type='checkbox'  name="is:refurb"  data-bind="var: product(is:refurb); format:popVal;" /> Refurb </label></li>
+				<li><label><input type='checkbox'  name="is:sale"  data-bind="var: product(is:sale); format:popVal;" /> Sale item</label></li>
+				<li><label><input type='checkbox'  name="is:specialorder"  data-bind="var: product(is:specialorder); format:popVal;" /> Special order</label></li>
+				<li><label><input type='checkbox'  name="is:sizeable"  data-bind="var: product(is:sizeable); format:popVal;" /> Sizeable </label></li>
+				<li><label><input type='checkbox'  name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popVal;"> Taxable</label></li>
+			</ul>
+		</fieldset>
+		
+
+		<fieldset class='clearfix'>
+			<legend>Shipping</legend>
+
+			<div class='marginBottom clearfix'>
+				<label class='threeColumn displayInlineBlock floatLeft'><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' />oz <span class='toolTip' title="Weight should be entered in ounces or in pounds by using a # symbol.">?</span></label>
+	
+				<label class='threeColumn displayInlineBlock floatLeft'><span>Fixed shipping cost:</span><input type='number' class='smallInput' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> <span class='toolTip' title="Only applies if fixed shipping is enabled">?</span></label>
+				
+				<label class='threeColumn displayInlineBlock floatLeft'><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popVal;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
+			</div>			
+			
+			<div class='marginBottom clearfix'>
+			<h4>Ship dimensions</h4>
+			
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Length:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Height:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
+			<label class='threeColumn displayInlineBlock floatLeft'><span>Width:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
+			
+			</div>
+
+
+			<div class='marginBottom clearfix'>
+				<h4>Ship costs, handling and more</h4>
+
+				<div class='threeColumn floatLeft'>
+				<table class='fullWidth gridTable marginBottom'>
+				<thead>
+				<tr>
+					<th>Destination</th>
+					<th>1st item</th>
+					<th>2nd item</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td>Domestic</td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				<tr>
+					<td>Canadian</td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				<tr>
+					<td>International</td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></td>
+					<td><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></td>
+				</tr>
+				</tbody>
+				</table>
+				
+				<label><span>Product assembly</span> <input type="text" value="" name="pid:assembly" size="40" data-bind='var:product(pid:assembly); format:popVal;' /></label>
+				
+				</div>
+				
+				<div class='threeColumn floatLeft labelsAsBreaks'>
+					<label><span>Marketplace markup:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Insurance amount:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Fixed handling:</span><input type='number' class='smallInput' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
+					
+					<label><span>Promotion class</span><input type="text" value="" name="zoovy:prod_promoclass" size="8" data-bind='var:product(zoovy:prod_promoclass); format:popVal;' /></label>
+					
+				</div>
+				
+				<div class='threeColumn floatLeft labelsAsBreaks'>
+					<h4>Export Declaration [SED]</h4>
+					<label><span>Country of origin [ISO Code]:</span><input type='text' name='zoovy:ship_nmfccode' value='' data-bind="var: product(zoovy:ship_nmfccode); format:popVal;" size='6' /></label>
+					<label><span>ATS/harmonized code:</span><input type='text' name='zoovy:ship_harmoncode' value='' data-bind="var: product(zoovy:ship_harmoncode); format:popVal;" size='6' /></label>
+	
+					<h4>Freight Options</h4>
+					
+					<label><span>NMFC commodity code:</span><input type='text' name='zoovy:ship_mfgcountry' value='' data-bind="var: product(zoovy:ship_mfgcountry); format:popVal;" size='6' /></label>
+					<label><span>Sorting class:</span><input type='text' name='zoovy:ship_sortclass' value='' data-bind="var: product(zoovy:ship_sortclass); format:popVal;" size='6' /></label>
+				</div>
+			</div>
+		</fieldset>
+
+
+		<fieldset data-app-role='productImages' class='clearfix imagesEditor'>
+			<legend>Images</legend>
+			<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+
+			<div class='clearfix marginBottom'>
+				<!-- all the product images -->
+				<ul class='prodImagesContainer paddingNone listStyleNone sortableImagery polaroids' data-bind="useParentData:true; format:prodImages; extension:admin_prodedit;" data-app-role='prodImagesContainer'></ul>
+			</div>		
+		</fieldset>
+	
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes,prodImages">Save <span class='numChanges'></span> Changes</button>
+<!--			<button class='applyButton floatLeft' data-app-click="admin_prodedit|productVariationsTabShow" title="Add/remove/update store or product specific variations.">Product Variations</button> -->
+			<button class='applyButton floatLeft' data-attribute='zoovy:related_products' data-app-click='admin_prodedit|productAttributeFinderShow' title="Similar product that would be purchased instead." >Related Product</button>
+			<button class='applyButton floatLeft' data-attribute='zoovy:accessory_products' data-app-click='admin_prodedit|productAttributeFinderShow' title="Items that can/should be purchased with this product (ex: batteries)">Accessories</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodedit|webPageEditor" title="Edit the layout and layout specific attributes for this product.">Web Page Editor</button>
+			<button class='applyButton floatLeft showForZoovyOnly' data-app-click="admin_prodedit|viewProductOnWebsite" title="Preview this product on the website (will use currently selected domain)">Preview</button><!-- button will only work for vstore or apps that have rewrites for legacy/vstore formatted urls -->
+			<button title="Open a dialog with a variety of useful advanced product tools, including clone, delete and some utilities." class='floatLeft applyButton' data-templateid='productCCDTemplate' data-app-click='admin_prodedit|showProductTemplateInDialog'>Clone/Rename/Delete</button>
+			
+			<button title="Open a dialog with some debug tools." class='floatLeft applyButton' data-verb='debug' data-templateid='productDebuggerTemplate' data-app-click='admin_prodedit|showProductTemplateInDialog'>Debug</button>
+
+		</div>
+
+	</form>
+	</section><!-- /general tab content -->
+
+
+	
+	<section data-anytab-content='marketplaces' class='clearfix'>
+
+	<form action='#' onSubmit='return false'>
+	<div class='marginBottom clearfix'>
+		
+		<label class='floatLeft marginRight marginBottom'><span>Manufacturer: </span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>Manufacturer ID: </span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>UPC: </span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
+		<label class='floatLeft marginRight marginBottom'><span>Condition: </span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
+		
+	</div>
+	<table class='fullWidth gridTable applyAnytable marginBottom'>
+	<thead>
+	<tr>
+		<th>Syndication to</th>
+		<th data-anytable-nosort='true'>Special</th>
+		<th data-anytable-nosort='true'>Note/Reason</th>
+	</tr>
+	</thead>
+	<tbody>
+	
+	<tr>
+		<td><label><input type="checkbox" name="gbase:ts" data-bind="var: product(gbase:ts); format:popVal;"> GoogleBase:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="gbase:note" maxlength="60" size="60" data-bind="var: product(gbase:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="bizrate:ts" data-bind="var: product(bizrate:ts); format:popVal;"> BizRate:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="bizrate:note" maxlength="60" size="60" data-bind="var: product(bizrate:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popVal;"> eBay Syndication:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="ebay:note" maxlength="60" size="60" data-bind="var: product(ebay:note); format:popVal;"></td>
+	</tr>
+	<tr>
+		<td><label><input type="checkbox" name="pricegrabber:ts" data-bind="var: product(pricegrabber:ts); format:popVal;"> PriceGrabber:</label></td>
+		<td>Qty: <input size=4 type="text" name="pricegrabber:quantity" data-bind="var: product(pricegrabber:quantity); format:popVal;"></td>
+		<td><input type="text" value="" name="pricegrabber:note" maxlength="60" size="60" data-bind="var: product(pricegrabber:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="shopping:ts" data-bind="var: product(shopping:ts); format:popVal;"> Shopping.com:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="shopping:note" maxlength="60" size="60" data-bind="var: product(shopping:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="nextag:ts" data-bind="var: product(nextag:ts); format:popVal;"> NextTag:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="nextag:note" maxlength="60" size="60" data-bind="var: product(nextag:note); format:popVal;"></td>
+	</tr>
+	<tr>
+		<td><label><input type="checkbox" name="pronto:ts" data-bind="var: product(pronto:ts); format:popVal;"> Pronto:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="pronto:note" maxlength="60" size="60" data-bind="var: product(pronto:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="thefind:ts" data-bind="var: product(thefind:ts); format:popVal;"> theFind:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="thefind:note" maxlength="60" size="60" data-bind="var: product(thefind:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="become:ts" data-bind="var: product(become:ts); format:popVal;"> Become:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="become:note" maxlength="60" size="60" data-bind="var: product(become:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="smarter:ts" data-bind="var: product(smarter:ts); format:popVal;"> Smarter:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="smarter:note" maxlength="60" size="60" data-bind="var: product(smarter:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="dijipop:ts" data-bind="var: product(dijipop:ts); format:popVal;"> DijiPop:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="dijipop:note" maxlength="60" size="60" data-bind="var: product(dijipop:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="linkshare:ts" data-bind="var: product(linkshare:ts); format:popVal;"> LinkShare:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="linkshare:note" maxlength="60" size="60" data-bind="var: product(linkshare:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="amzpa:ts" data-bind="var: product(amzpa:ts); format:popVal;"> Amazon Product Ads:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="amzpa:note" maxlength="60" size="60" data-bind="var: product(amzpa:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="overstock:ts" data-bind="var: product(overstock:ts); format:popVal;"> OverStock:</label></td>
+		<td><input size=4 type="hidden" name="overstock:quantity" value="1"></td>
+		<td><input type="text" value="" name="overstock:note" maxlength="60" size="60" data-bind="var: product(overstock:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="bing:ts" data-bind="var: product(bing:ts); format:popVal;"> Bing:</label></td>
+		<td>Commission: <input size=4 type='number' class='smallInput' name="bing:commission" data-bind="var: product(bing:commission); format:popVal;" step='0.01' min='0'>%</td>
+		<td><input type="text" value="" name="bing:note" maxlength="60" size="60" data-bind="var: product(bing:note); format:popVal;"></td>
+	</tr>
+	
+	
+	<tr>
+		<td><label><input type="checkbox" name="sears:ts" data-bind="var: product(sears:ts); format:popVal;"> Sears:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="sears:note" maxlength="60" size="60" data-bind="var: product(sears:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="newegg:ts" data-bind="var: product(newegg:ts); format:popVal;"> Newegg:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="newegg:note" maxlength="60" size="60" data-bind="var: product(newegg:note); format:popVal;"></td>
+	</tr>
+	
+	<tr>
+		<td><label><input type="checkbox" name="arp:ts" data-bind="var: product(arp:ts); format:popVal;"> Amazon Repricing:</label></td>
+		<td></td>
+		<td><input type="text" value="" name="arp:note" maxlength="60" size="60" data-bind="var: product(arp:note); format:popVal;"></td>
+	</tr>
+	</tbody>
+	</table>
+	<div class='buttonset alignRight'>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /marketplaces tab content -->
+	
+	
+	
+	<section data-anytab-content='social' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	<fieldset>
+	<legend>SEO &amp; RSS</legend>
+
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn'>
+		<label><span>SEO page title </span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+		<label><span>SEO/RSS keywords <span class='toolTip' title="Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have 'quality over quantity'. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.">?</span></span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		</div>
+
+		<div class='labelsAsBreaks alignedLabels alignedInputs twoColumn column2'>
+		<label><span>RSS feed title </span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100'  /></label>
+		<label><span>RSS/Meta short description </span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur" /></label>
+		</div>
+
+	</fieldset>	
+
+	<table class='gridTable applyAnytable' data-bind="var:variation(pid); format:assignAttribute; attribute:data-pid;">
+		<tbody data-bind='var: users(@REVIEWS); format:processList; loadsTemplate:reviewsTableRowTemplate;'></tbody>
+	</table>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /social tab content -->
+
+
+	
+	<section data-anytab-content='attributes' class='clearfix'>
+<!--
+
+Once an inventory-able option is enabled for a product, qty pricing is NO LONGER AVAILABLE.
+
+-->
+	<form action='#' onSubmit='return false'>
+	
+	<!-- this will appear for product with no inventory-able variations -->
+	<div class='marginBottom displayNone' data-app-role='pidSchedulesContainer'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Schedule</th>
+		<th>Price</th>
+		<th>Qty. Price</th>
+		<th>Minimum Qty</th>
+		<th>Qty. Increment</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: product(@schedules); format:processList; loadsTemplate:schedulesRowTemplate;"></tbody>
+	</table>
+	</div>	
+	
+	<!-- this will appear for product with inventory-able variations -->
+	<div class='marginBottom displayNone' data-app-role='skuSchedulesContainer'>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='skuSchedulesTbodyTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+	
+			<table class='gridTable' data-skufinder-role='target' data-bind="var: product(@skus); format:processList; loadsTemplate:skuSchedulesTbodyTemplate;">
+			<thead>
+			<tr>
+				<th>Schedule</th>
+				<th>Price</th>
+			</tr>
+			</thead>
+			</table>
+		</div>
+	
+	</div>
+	
+	<div class='marginBottom' data-app-role='flexeditContainer'></div><!-- content is loaded when tab is clicked -->
+	
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="flex,schedule">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /attributes tab content -->
+	
+	
+	
+	<section data-anytab-content='inventory' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	
+	
+	<div data-app-role='inventoryContainer'></div>
+	
+		
+	<div class='buttonset alignRight'>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="inventory">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /inventory tab content -->
+
+
+
+	<section data-anytab-content='categorization' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+		<div data-app-role='categoryListContainer'></div><!-- gets it's own container within tab because eventually this tab will have more content -->
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroNavcatClearallExec">Remove from All</button>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="navigation">Save <span class='numChanges'></span> Changes</button>
+		</div>
+	</form>
+	</section><!-- /categorization tab content -->
+
+	
+	
+	<section data-anytab-content='variations' class='clearfix' data-app-role='variationContainer'>
+	
+	<form action='#' onSubmit='return false'>
+	<div data-app-role='productVariations'></div>
+	</form>
+	
+	
+	<form action='#' onSubmit='return false'>
+	<div class='clearfix'>
+		<fieldset class='imagesEditor floatRight marginLeft' data-app-role='prodEditSkuImagesFieldset'><!-- prodImagesContainer container used in both pid and sku based image save -->
+			<input type='hidden' name='throwAway' value='' /><!-- for media lib, which (more or less) requires some input to get set. -->
+			<legend>Sku Images</legend>
+			<!-- sku images will get added into this div (with js) -->
+			<div class='skusImagesContainer' data-app-role='prodEditSkuImagesContainer'></div>
+		</fieldset>
+		
+		<fieldset>
+			<legend>Sku Specifics</legend>
+
+			<div data-skufinder-role='container' data-skufinder-templateid='skuTableRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+
+
+				<table class='fullWidth gridTable'>
+				<colgroup>
+					<col span='2' data-app-role='properties' />
+					<col data-app-role='assembly' />
+					<col span='7' data-app-role='attributes' />
+				</colgroup>
+				<thead>
+				<tr>
+					<th>SKU</th>
+					<th>Desc</th>
+					<th class='width20'>Assembly</th>
+					<th class='width20'>Mfg ID</th>
+					<th class='width20'>UPC</th>
+					<th class='width20'>ASIN</th>
+			<!--				<th>Condition</th>-->
+					<th>Price</th>
+					<th title="Base Cost - your cost for the sku">Cost</th>
+					<th>Weight</th>
+				</tr>
+				</thead>
+				<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:skuTableRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+				</table>
+			</div>
+		</fieldset>
+	</div>
+
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='floatRight applyButton' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="sku,skuImages">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+	
+	
+
+	<section data-anytab-content='amazon' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+
+	<h2>Amazon Seller Central v1.7</h2>
+	
+	<fieldset class='labelsAsBreaks' data-app-role='amazonAttributes'>
+	<label>
+		<input type="checkbox" name="amz:ts" data-bind="var: product(amz:ts); format:popVal;" class='applyAnycb' /> Allow syndication to Amazon
+	</label>
+	
+	<label>
+		<span>Amazon product type</span>
+		<select name='amz:catalog' data-bind="var: product(amz:catalog); format:popVal;">
+			<option value="">-- Not Set --</option>
+			<option value="EXISTING">Existing (use ASIN/UPC/ISBN)</option>
+			<option value="APPAREL">Apparel - Shoes, Handbags, Sunglasses/Eyewear</option>
+			<option value="AUTOPART.AUTOACCESSORYMISC">AutoParts</option>
+			<option value="CAMERA.BAGCASE">Camera Bag Cases</option>
+			<option value="CAMERA.BINOCULAR">Camera Binocular</option>
+			<option value="CAMERA.BLANKMEDIA">Camera Blank Media</option>
+			<option value="CAMERA.CAMCORDER">Camera Camcorders</option>
+			<option value="CAMERA.CLEANER">Camera Cleaners</option>
+			<option value="CAMERA.DARKROOM">Camera Darkroom</option>
+			<option value="CAMERA.DIGITALCAMERA">Digital Cameras</option>
+			<option value="CAMERA.FILM">Camera Film</option>
+			<option value="CAMERA.FILMCAMERA">Film Cameras</option>
+			<option value="CAMERA.FILTER">Camera Filters</option>
+			<option value="CAMERA.FLASH">Camera Flashes</option>
+			<option value="CAMERA.LENS">Camera Lens</option>
+			<option value="CAMERA.LENSACCESSORY">Camera Lens Accessories</option>
+			<option value="CAMERA.LIGHTING">Camera Lighting</option>
+			<option value="CAMERA.LIGHTMETER">Camera Light Meter</option>
+			<option value="CAMERA.MICROSCOPE">Camera Microscope</option>
+			<option value="CAMERA.OTHERACCESSORY">Camera Other Accessories</option>
+			<option value="CAMERA.PHOTOPAPER">Camera Photo Paper</option>
+			<option value="CAMERA.PHOTOSTUDIO">Camera Photo Studio</option>
+			<option value="CAMERA.POWERSUPPLY">Camera Power Supply</option>
+			<option value="CAMERA.PROJECTION">Camera Projection</option>
+			<option value="CAMERA.SURVEILLANCESYSTEM">Camera Surveillance System</option>
+			<option value="CAMERA.TELESCOPE">Camera Telescope</option>
+			<option value="CAMERA.TRIPODSTAND">Camera Tripod Stands</option>
+			<option value="CE.CONSUMERELECTRONICS">Consumer Electronics</option>
+			<option value="CE.PC">Electronix PC</option>
+			<option value="CE.PDA">Electronix PDA</option>
+			<option value="CLOTHING">Clothing and Accessories</option>
+			<option value="EYEWEAR">Eyewear</option>
+			<option value="GOURMET.GOURMETMISC">Food Miscellaneous Gourmet</option>
+			<option value="HANDBAG">Handbags</option>
+			<option value="HEALTH.HEALTHMISC">Miscellaneous Health</option>
+			<option value="HOME.BEDANDBATH">Home Bed and Bath</option>
+			<option value="HOME.FURNITUREANDDECOR">Home Furniture and Decor</option>
+			<option value="HOME.KITCHEN">Home Kitchen</option>
+			<option value="HOME.OUTDOORLIVING">Home Outdoor Living</option>
+			<option value="HOME.SEEDSANDPLANTS">Home Seeds and Plants</option>
+			<option value="JEWELRY.FASHIONEARRING">Jewelry Fashion Earring</option>
+			<option value="JEWELRY.FASHIONNECKLACEBRACELETANKLET">Jewelry Fashion Necklace/Bracelet/Anklet</option>
+			<option value="JEWELRY.FASHIONOTHER">Jewelry Fashion Other</option>
+			<option value="JEWELRY.FASHIONRING">Jewelry Fashion Ring</option>
+			<option value="JEWELRY.FINEEARRING">Jewelry Fine Earring</option>
+			<option value="JEWELRY.FINENECKLACEBRACELETANKLET">Jewelry Fine Necklace/Bracelet/Anklet</option>
+			<option value="JEWELRY.FINEOTHER">Jewelry Fine Other</option>
+			<option value="JEWELRY.FINERING">Jewelry Fine Ring</option>
+			<option value="JEWELRY.WATCH">Jewelry Watch</option>
+			<option value="MISC">Miscellaneous</option>
+			<option value="MUSICINST.BRASSANDWOODWINDINSTRUMENTS">Brass and Woodwind Musical Instruments</option>
+			<option value="MUSICINST.GUITARS">Guitars</option>
+			<option value="MUSICINST.INSTRUMENTPARTSANDACCESSORIES">Musical Instrument Parts and Accessories</option>
+			<option value="MUSICINST.KEYBOARDINSTRUMENTS">Keyboard Musical Instruments</option>
+			<option value="MUSICINST.MISCWORLDINSTRUMENTS">Miscellaneous World Musical Instruments</option>
+			<option value="MUSICINST.PERCUSSIONINSTRUMENTS">Percussion Musical Instruments</option>
+			<option value="MUSICINST.SOUNDANDRECORDINGEQUIPMENT">Sound and Recording Equipment</option>
+			<option value="MUSICINST.STRINGEDINSTRUMENTS">Stringed Musical Instruments</option>
+			<option value="OFFICE.ARTSUPPLIES">Office Art Supplies</option>
+			<option value="OFFICE.EDUCATIONALSUPPLIES">Office Educational Supplies</option>
+			<option value="OFFICE.OFFICEPRODUCTS">Office Products</option>
+			<option value="PETSUPPLY.PETSUPPLIESMISC">Miscellaneous Pet Supplies</option>
+			<option value="SHOEACCESSORY">Shoe Accessories</option>
+			<option value="SHOES">Shoes</option>
+			<option value="SOFTWARE.HANDHELDSOFTWAREDOWNLOADS">Handheld Software Download Video Games</option>
+			<option value="SOFTWARE.SOFTWAREGAMES">Software Video Games</option>
+			<option value="SOFTWARE.VIDEOGAMES">Video Games</option>
+			<option value="SOFTWARE.VIDEOGAMESACCESSORIES">Video Games Accessories</option>
+			<option value="SOFTWARE.VIDEOGAMESHARDWARE">Video Games Hardware</option>
+			<option value="SPORTS">Sports</option>
+			<option value="TOOLS">Tools</option>
+			<option value="TOYSBABY.BABYPRODUCTS">Baby Products</option>
+			<option value="TOYSBABY.TOYSANDGAMES">Toys and Games</option>
+			<option value="WIRELESS.WIRELESSACCESSORIES">Wireless Accessories</option>
+			<option value="WIRELESS.WIRELESSDOWNLOADS">Wireless Downloads</option>
+		</select>
+		<button data-app-click="admin_prodedit|amazonProductDefinitionsShow" class='applyButton'>Edit Specifics</button>
+	</label>
+	
+	<label>
+		<span>Thesaurus profile</span>
+		<select name='amz:thesaurus' data-bind="var: detail(%thesaurus); format:optionsAsList;">
+			<option value=''>none selected</option>
+		</select>
+	</label>
+
+	<label>
+		<span>ASIN</span>
+		<input type="text" size="20" value="" name="amz:asin"  data-bind="var: product(amz:asin); format:popVal;">
+	</label>
+	
+	<div class='label hint'>UPC/MFGID are required, but stored at inventory level - please configure on the variations panel.</div>
+
+	<label>
+		<span>Manufacturer/brand</span>
+		<input type="text" size="50" value="JVC" name="zoovy:prod_mfg"  data-bind="var: product(zoovy:prod_mfg); format:popVal;">
+	</label>
+	<label>
+		<span>Product condition</span>
+		<select name="zoovy:prod_condition"  data-bind="var: product(zoovy:prod_condition); format:popVal;">
+			<option value="New">New</option>
+			<option value="Used">Used</option>
+			<option value="Refurbished">Refurbished</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Condition note</span>
+		<textarea name="zoovy:prod_condition_note" data-maxlength='200' data-bind="var: product(zoovy:prod_condition_note); format:popVal;" data-app-focus="admin|adjustHeightOnFocus" data-app-blur="admin|restoreHeightOnBlur"></textarea>
+	</label>
+
+	<label>
+		<span>Fulfillment latency (in days):</span>
+		<input type='number' class='smallInput' min='0' step='1' size="6" value="" name="zoovy:ship_latency" data-bind="var: product(zoovy:ship_latency); format:popVal;">
+	</label>
+	</fieldset>
+	
+	<fieldset>
+	<legend>Amazon Marketplace Status</legend>
+	<table class='fullWidth gridTable applyAnytable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>PID</th>
+		<th>Status</th>
+		<th>Relationship</th>
+		<th>UUID</th>
+		<th>UUID Type</th>
+		<th>Changed Since Attempt</th>
+		<th data-anytable-nosort='true'>Details</th>
+		<th data-anytable-nosort='true'></th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: amazon(@DETAIL); format:processList; loadsTemplate:amazonDetailRowTemplate;" data-app-role='amazonDetailTbody'>
+	
+	</tbody>
+	</table>
+	</fieldset>
+	
+	<fieldset>
+	<div class='ebayMacroUpdateMessaging'></div>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductAmazonValidateExec' title="Test this product for Amazon errors">Validate</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE" title="Send item to Amazon and clear history log.">Queue Now</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-QUEUE-LATER" title="Send item later (30 hours) to Amazon and clear history log.">Queue Later</button>
+		<button class='floatLeft applyButton toolTip' data-app-click='admin_prodedit|adminProductMacroExec' data-macro-cmd="AMAZON-REMOVE" title="Send a delete command to Amazon. Can take up to 24 hours for Amazon to remove.">Remove</button>
+	</div>
+	</fieldset>
+
+	</form>
+	</section>
+
+	<section data-anytab-content='ci' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	Competitive Intelligence.
+	<div class='buttonset alignRight'>
+		<button data-app-role='saveButton' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+
+
+	<section data-anytab-content='buycom' class='clearfix'>
+	
+	<form action='#' onSubmit='return false'>
+	
+	<fieldset data-app-role='buyAttributes'>
+	<label>
+		<input type="checkbox" name="buy:ts" data-bind="var: product(buy:ts); format:popVal;" class='applyAnycb' /> Allow syndication to Buy.com
+	</label>
+	</fieldset>	
+
+	
+	<fieldset class='marginBottom' data-app-role='buySkus'>
+
+		<div data-skufinder-role='container' data-skufinder-templateid='buycomSkuRowTemplate' class='marginBottom'>
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+		
+			<table class='gridTable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Buy.com SKU/UPC</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:buycomSkuRowTemplate;' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
+	</fieldset>
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="buycom">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+
+
+
+
+
+	<section data-anytab-content='ebay' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	
+		<fieldset class='clearfix marginBottom'>
+			<legend>eBay Categories</legend>
+
+			<div class='clearfix marginBottom'>
+				
+				<div class='floatLeft marginRight labelsAsBreaks smallButton'>
+					<label >
+						<span>eBay category 1</span>
+						<input type="text" size="9" value="" name='ebay:category'  data-bind="var: product(ebay:category); format:popVal;">
+						<button data-categoryselect='primary' data-app-click='admin_prodedit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+					</label>
+		
+					<label class='floatLeft marginRight'>
+						<span>eBay category 2</span>
+						<input type="text" size="9" value="" name='ebay:category2'  data-bind="var: product(ebay:category2); format:popVal;">
+						<button data-categoryselect='secondary' data-app-click='admin_prodedit|ebayCategoryChooserShow' class='applyButton'>Chooser</button>
+						<span data-app-role='ebayCategoryName'></span><!-- populated w/ pretty ebay cat name upon selection -->
+					</label>
+				</div>
+				
+				<div class='floatLeft marginRight labelsAsBreaks' data-app-role='ebayStoreCategoryContainer'>
+					<label>
+						<span>eBay store category</span>
+						<select name='ebay:storecat' data-bind='var: (@STORECATS);format:optionsfromlist; text:catPath; value:catID;'></select>
+					</label>
+					
+					<label>
+						<span>eBay store category 2</span>
+						<select name='ebay:storecat2' data-bind='var: (@STORECATS);format:optionsfromlist; text:catPath; value:catID;'></select>
+					</label>
+				</div>
+				
+				<label class='floatLeft marginRight' >
+					<span>Launch profile</span>
+					<select data-bind="var:product(zoovy:profile); defaultValue:NOT SET;format:ebayLaunchProfiles; extension:admin_prodedit;" name='zoovy:profile'></select>
+					<!-- not set is default value to make sure the options are rendered. Also, this way 'not set' only is an option if it isn't set -->
+				</label>
+			</div>
+
+			<div class='clearfix marginBottom'>
+				<label>
+					<span>eBay title</span>
+					<input type="text" value="" size="80" maxlength="80" name="ebay:title" data-bind="var:product(ebay:title); format:popVal;">
+				</label>
+			</div>
+			<div class='clearfix marginBottom'>
+				<label>
+					<span>eBay subtitle</span>
+					<input type="text" value="" size="80" maxlength="80" name="ebay:subtitle" data-bind="var:product(ebay:subtitle); format:popVal;">
+				</label>
+			</div>
+		</fieldset>
+
+		<div class='zhint displayNone marginBottom marginLeft warn' data-app-role='showProductWithVariations'>
+			<h4 class='orange'>Variations Detected</h4>
+			&#187; Auction functionality is not compatible with variations<br />
+			&#187; Variation level pricing and inventory available will be transmitted to eBay.<br />
+		</div>
+
+		<fieldset class='labelsAsBreaks clearfix marginBottom alignedLabels' data-app-role='showProductWithoutVariations'>
+			<legend>Auction Configuration</legend>
+				<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
+				<div class='clearfix marginBottom'>
+					<div class='threeColumn floatLeft labelsAsBreaks'>
+			
+						<label>
+							<span>Duration</span>
+							<select name="ebay:duration" data-bind="var:product(ebay:duration); format:popVal;">
+								<option value="">-- not set --</option>
+								<option value="3">3 Day</option>
+								<option value="5">5 Day</option>
+								<option value="7">7 Day</option>
+								<option value="10">10 Day</option>
+							</select>
+						</label>
+				
+						<label>
+							<span>Auction qty</span>
+							<input type="text" value="1" name="ebay:qty" size="3"  data-bind="var:product(ebay:qty); format:popVal;">
+						</label>
+			
+						<label>
+							<span>eBay gallery</span>
+							<select name="ebay:use_gallery" data-bind="var:product(ebay:use_gallery); format:popVal;">
+								<option value="">-- use profile --</option>
+								<option value="0">never</option>
+								<option value="1">auctions only</option>
+								<option value="2">fixed price only</option>
+								<option value="3">auction + fixed price</option>
+								<option value="8">store only</option>
+								<option value="11">any type</option>
+							</select>	
+						</label>
+			
+					</div>
+				
+					<div class='threeColumn floatLeft labelsAsBreaks'>
+					
+						<label>
+							<span>Starting bid</span>
+							$<input type='number'  step='.01' min='0' size="6" value="" class='money smallInput' name="ebay:start_price"  data-bind="var:product(ebay:start_price); format:popVal; hideZero:false;">
+						</label>
+						
+						<label>
+							<span>Buy it now</span>
+							$<input type='number' class='smallInput' step='.01' min='0' size="6" value=""  name="ebay:buyitnow_price"  data-bind="var:product(ebay:buyitnow_price); format:popVal; hideZero:false;">
+						</label>
+						<label>
+							<span>Reserve price</span>
+							$<input type='number' class='smallInput' step='.01' min='0' size="6" value=""  name="ebay:reserve_price"  data-bind="var:product(ebay:reserve_price); format:popVal; hideZero:false;">
+							<span class='toolTip' title="Set reserve price and buy it now price to 0 (zero) if you do not wish to have one.">?</span>
+						</label>
+					</div>
+				</div>
+		
+				<div class='buttonset clearfix'>
+					<button data-app-click="admin_template|adminEBAYProfilePreviewShow" class='applyButton' >Preview Auction</button>
+					<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-AUCTION" data-trigger='save'>Test Auction</button>
+					<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-AUCTION" >Create Auction</button>
+				</div>
+		
+			</fieldset>
+	
+	
+		<fieldset class='labelsAsBreaks'>
+			<div data-app-role='showProductWithoutVariations'>
+				<!-- don't show this header when variations are present -->
+				<legend>Fixed Price / Syndication Configuration</legend>
+			</div>
+			
+			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->	
+			<div data-bind="var: product(ebay:ts); format:hideIfSet;" class='red marginBottom'>Syndication is disabled for this product.</div>
+			
+			<div data-app-role='showProductWithoutVariations'>
+			<label>
+				<span>Fixed price </span>
+				$<input type='number' class='smallInput' step='.01' min='-1' size="6" value="" name="ebay:fixed_price" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_price); format:popVal; hideZero:false;">
+				<span class='toolTip' title="The 'BuyItNow' price on eBay">?</span>
+			</label>
+			<label>
+				<span>Offer qty</span>
+				<input type='number' class='smallInput' step='1' min='-1' size="6" value="" name="ebay:fixed_qty" data-validation-rules='skipIfHidden' data-bind="var:product(ebay:fixed_qty); format:popVal; hideZero:false;">
+				<span class='toolTip' title="
+				Set offer quantity to positive integer to restrict the number of units offered on eBay.
+				Regardless of the quantity set the quantity will never exceed available inventory.
+				Use -1 to list all available inventory, or 0 to disable/remove syndicated listings.
+				Offer qty is used to work around the selling limits eBay places on all new accounts.
+				By reducing the number of units offered it reduces the total value of the listing, 
+				allowing sellers to list a larger variety of SKU's. 
+				">?</span>
+			</label>
+			</div>
+
+			<div class="hint marginBottom" data-bind="var: product(ebay:ts); format:showIfSet;">
+			NOTE: Automatic syndication is ENABLED on the Marketplaces tab. 
+			Listing Duration and Quantity is automatically managed. 
+			</div>
+		
+			<label data-bind="var: product(ebay:ts); format:hideIfSet;">
+				<span>Duration</span>
+				<select name="ebay:fixed_duration" data-bind="var:product(ebay:fixed_duration); format:popVal;" data-validation-rules='skipIfHidden'>
+					<option value="">-- not set --</option>
+					<option value="3">3 Day</option>
+					<option value="5">5 Day</option>
+					<option value="7">7 Day</option>
+					<option value="10">10 Day</option>
+					<option value="-1">Good till cancelled</option>
+				</select>
+			</label>
+
+			<div data-bind="var: product(ebay:ts); format:showIfSet;" class='buttonset marginTop marginBottom'>
+				<button class='applyButton' data-app-click="admin_template|adminEBAYProfilePreviewShow" >Preview Syndication</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-SYNDICATION">Test Syndication</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-SYNDICATION">Create Syndication</button>
+				<div class="hint">NOTE: Please allow 15 minutes for syndicated listings to automatically update after saving changes.</div>
+			</div>
+
+	
+			<div class='buttonset' data-bind="var: product(ebay:ts); format:hideIfSet;">
+				<button data-app-click="admin_template|adminEBAYProfilePreviewShow" class='applyButton' >Preview Fixed</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-TEST-FIXED">Test Fixed</button>
+				<button class='applyButton' data-app-click="admin_prodedit|adminProductMacroExec" data-macro-cmd="EBAY-CREATE-FIXED">Create Fixed</button>
+			</div>
+		</fieldset>
+
+
+		<fieldset>
+			<div class='ebayMacroUpdateMessaging'></div><!-- used when a macro is run. -->
+			<div data-app-role='ebayStatusDetails'>
+			<table class='fullWidth gridTable applyAnytable'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>eBay Item #</th>
+				<th>Is GTC</th>
+				<th>Class</th>
+				<th>Category</th>
+				<th>Created</th>
+				<th>Launched</th>
+				<th>DispatchID</th>
+				<th>Profile</th>
+				<th>Start Qty</th>
+				<th>Remaining</th>
+				<th>BIN Price</th>
+				<th data-anytable-nosort='true'></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: ebay(@LISTINGS); format:processList; loadsTemplate:ebayDetailRowTemplate;" data-app-role='ebayStatusTbody'></tbody>
+			</table>
+			</div>
+		</fieldset>
+
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section>
+
+
+
+
+
+	
+	<section data-anytab-content='competition' class='clearfix'>
+	<form action='#' onSubmit='return false'>
+	<fieldset>
+	<legend>Competition</legend>
+
+	
+	<div data-app-role='competitionSkuInputs'>
+		<div data-skufinder-role='container' data-skufinder-templateid='competitionSkuRowTemplate' class='marginBottom'>
+			
+			<div data-skufinder-role='finderContainer' class='marginBottom'>
+				<h4 class='ui-widget-header smallPadding'>SKU Finder <span class='toolTip' title="Product with more than 100 skus can be a bit memory intensive to display, so a chooser is provided instead.">?</span></h4>
+				<div data-bind="useParentData:true; format: skufindervariations; extension:admin_prodedit; appclick: admin_prodedit|skuFinderLoadTemplate;" class="ui-widget-content stdPadding" data-skufinder-role='variations'></div>
+			</div>
+			
+			<table class='gridTable fullWidth'>
+			<thead>
+			<tr>
+				<th>SKU</th>
+				<th>Floor Price</th>
+				<th>Ceiling Price</th>
+				<th>Standard</th>
+				<th>Expedited</th>
+				<th>Second Day</th>
+				<th>Next Day</th>
+			</tr>
+			</thead>
+			<tbody data-bind='var: users(@skus); format:processList; sku:1; loadsTemplate:competitionSkuRowTemplate;' data-app-role='prodEditSkuAttribsTbody' data-skufinder-role='target'></tbody>
+			</table>
+		</div>
+	</div>
+<!--
+### TODO ###
+list of skus.
+ -> actionable buttons per sku.
+ -> a graph or two per sku.
+-->
+
+	</fieldset>
+
+	<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+		<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="pricetags">Save <span class='numChanges'></span> Changes</button>
+	</div>
+	</form>
+	</section><!-- /social tab content -->
+
+
+
+
+
+
+	</div>
+</div>
+</div>
+
+
+
+
+<!--
+used in the inventory panel when 'show detail' is clicked for a specific sku
+OR when the inventory panel for a product WITHOUT inventory-able options shows up.
+-->
+<div id='inventoryDetailTemplate' class='clearfix' data-app-role='inventoryDetailContainer'>
+<table class='gridTable fullWidth marginTop marginBottom'>
+<caption data-bind="var: detail(header); format:text;"></caption>
+<thead>
+<tr>
+	<th></th><!-- drag handle -->
+	<th class='alignLeft'>SKU</th>
+	<th class='alignLeft'>Cost</th>
+	<th class='alignLeft'>Origin</th>
+	<th class='alignLeft'>Qty</th>
+	<th class='alignLeft'>Base Type</th>
+	<th class='alignLeft'>Ref 1</th>
+	<th class='alignLeft'>Ref 2</th>
+	<th class='alignLeft'>Note</th>
+	<th></th>
+	<th class='alignLeft'>Diagnostics</th>
+</tr>
+</thead>
+<tbody data-bind='var: inventory(@DETAIL); format:processList; loadsTemplate:inventoryDetailRowTemplate;'></tbody>
+<tfoot>
+<tr>
+	<th colspan='2' class='positionRelative'>
+	<button class='applyButton displayNone' data-icon-secondary='ui-icon-triangle-1-s' data-text='true' data-app-click='admin_prodedit|invDetailFilterShow'>Show</button>
+	<ul class='displayNone'>
+	<!-- content populated w/ js based on what types of records are present -->
+	</ul>
+	</th>
+	<th colspan='8'>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='CONSTANT' data-app-click='admin_prodedit|addDetailType2SKUShow'>Add Constant</button>
+	<button class='floatRight applyButton' data-icon-primary='ui-icon-circle-plus' data-detail-type='SIMPLE' data-app-click='admin_prodedit|addDetailType2SKUShow'>Add Simple</button>
+	</th>
+	<th></th><!-- intentionally didn't put the buttons here. if diagnostics 'gets long', I want these buttons visible. -->
+</tr>
+</tfoot>
+</table>
+</div>
+
+<!-- used in the inventory panel when inventory-able options are displayed. -->
+<div id='inventorySKUDetailTemplate'>
+	<table class='gridTable fullWidth applyAnytable'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Name</th>
+		<th>QTY</th>
+		<th>Description</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-app-role='inventoryTbody'></tbody><!-- inventory contents must not get rendered w/ the rest of the product. the template is loaded into this container IF the tab is clicked -->
+	</table>
+</div>
+
+
+
+<!--
+!!! these are the inputs for adding a simple or constant or some other 'type' of inventory record.
+1 record per product.
+if it already has a simple, lock the button
+-->
+<div id='addInventoryDetailTemplate'>
+
+<form action='#' onSubmit='return false'>
+
+
+
+<fieldset>
+<label>
+	<span>Quantity</span>
+	<input type='number' class='smallInput' step='1' value='' name='QTY' required='required' />
+</label>
+
+<label>
+	<span>Note</span>
+	<input type='text' name='NOTE' value='' />
+</label>
+</fieldset>
+
+</form>
+
+</div>
+
+
+<!-- templates used for process list inside the product editor template -->
+
+<table>
+
+
+<tr id='inventoryRowTemplate'>
+	<td data-app-click='admin_prodedit|inventoryDetailsToggle' data-bind='var:detail(sku); format:assignAttribute; attribute:data-sku;' class='lookLikeLink'>
+	<span data-bind="var: detail(sku); format:text;"></span>
+	</td>
+	<td data-bind="var: product(zoovy:sku_pogdesc); format:text;"></td>
+	<td><span data-bind="var:detail(%SUMMARY.available); format:popVal; hideZero:false;"></span></td>
+	<td data-bind="var: product(zoovy:sku_pogdetail); format:text;"></td>
+	<td class='alignRight'>
+	<button data-app-click='admin_prodedit|inventoryDetailsToggle' class='applyButton' data-icon-primary='ui-icon-circle-triangle-s' data-text='false'>Show</button>
+	</td>
+</tr>
+
+<tr id='competitionSkuRowTemplate'>
+	<td data-bind="var: detail(sku); format:text;"></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='floor' data-bind="var:product(%pricetags.floor); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='ceiling' data-bind="var:product(%pricetags.ceiling); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='standard' data-bind="var:product(%pricetags.standard); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='expedited' data-bind="var:product(%pricetags.expedited); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='secondday' data-bind="var:product(%pricetags.secondday); format:popVal;" /></td>
+	<td><input type='number' min='0' step='.01' class='numberInput smallInput' size='4' name='nextday' data-bind="var:product(%pricetags.nextday); format:popVal;" /></td>
+</tr>
+
+<tr id='inventoryDetailRowTemplate' data-bind="var: detail(BASETYPE); format: addClass; className:invDetail_;">
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
+	<td class='alignLeft' data-bind="var: detail(SKU); format:text;"></td>
+	<td class='alignLeft' data-bind="var: detail(COST); format:text;"></td>
+	<td class='alignLeft' data-bind="var: detail(ORIGIN); format:text;"></td>
+	<td class='alignLeft' >
+		<input type='number' class='smallInput' data-bind="var: detail(QTY); format:popVal; hideZero:false;" name='QTY' size='6' step='1' /><!-- inv need to support negative amounts -->
+	</td>
+	<td class='alignLeft' data-bind="var: detail(BASETYPE); format:text;"></td>
+
+	<!-- REF 1 column -->
+	<td>
+	<div data-bind="var: detail(WMS_GEO); format:text;"></div>
+	<div data-bind="var: detail(SUPPLIER_ID); format:text;"></div>
+	<div data-bind="var: detail(OUR_ORDERID); format:text;"></div>
+	<div data-bind="var: detail(MARKET_DST); format:text;"></div>
+	<div data-bind="var: detail(GRPASM_REF); format:text;"></div>
+	</td>
+
+	<!-- REF 2 column -->
+	<td class='alignLeft'>
+	<div>
+		<span data-bind="var: detail(PICK_ROUTE); format:showIfSet;">
+			<span data-bind="var: detail(WMS_GEO); format:text; posttext:*;"></span>
+		</span>
+		<span data-bind="var: detail(WMS_ZONE); format:text; posttext:*;"></span><span data-bind="var: detail(WMS_POS); format:text;"></span>
+	</div>
+
+	
+	<div data-bind="var: detail(SUPPLIER_SKU); format:text;"></div>
+
+	<div>
+		<span data-bind="var: detail(VENDOR); format:text; posttext::;"></span>
+		<span data-bind="var: detail(VENDOR_STATUS); format:text; posttext: - ;"></span>
+		<span data-bind="var: detail(VENDOR_ORDER_DBID); format:text; posttext:.;"></span>
+		<span data-bind="var: detail(VENDOR_SKU); format:text;"></span>
+	</div>
+	</td>
+
+
+	<td class='alignLeft'>
+		<input type='text' name='NOTE' data-bind="var: detail(NOTE); format:popVal;" size='25' maxlength="25" />
+	</td>
+	<td class='alignRight'>
+		<button data-app-click='admin|tagRow4Remove' data-icon-primary='ui-icon-circle-close' data-text='false' class='applyButton'>Delete Detail</button>
+	</td>
+	<td>
+	
+	<div>
+	<span data-bind="var: detail(VERIFY_TS); format:text; pretext:lastVerify:;"></span>
+	<span data-bind="var: detail(VERIFY_INC); format:text; pretext:count:;"></span>
+	</div>
+
+
+	</td>
+</tr>
+
+<tr id='schedulesRowTemplate'>
+	<td data-bind="var:schedule(schedule); format:text;"></td>
+	<td><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' class='smallInput' /></td>
+	<td><input name='qtyprice' value='' data-bind="var:schedule(qtyprice); format:popVal;" size='20' type='text' /></td>
+	<td><input name='qtymin' value='' data-bind="var:schedule(qtymin); format:popVal;" size='6' min='0' step='1' type='number' class='smallInput' /></td>
+	<td><input name='qtyinc' value='' data-bind="var:schedule(qtyinc); format:popVal;" size='6' min='0' step='1' type='number' class='smallInput' /></td>
+</tr>
+
+
+<tr id='skuSchedulesTbodyTemplate' data-bind="var:schedule(@schedule_prices); format:processList; loadsTemplate:skuSchedulesRowTemplate;">
+	<td data-bind="var:schedule(sku); format:text;" colspan='2'></td>
+</tr>
+
+
+<tr>
+	<td id='skuSchedulesRowTemplate'><input name='price' value='' data-bind="var:schedule(price); format:popVal;" size='8' type='number' class='smallInput' /></td>
+</tr>
+
+
+
+
+<tr id='ebayDetailRowTemplate' data-bind='var:detail(TITLE); format:assignAttribute; attribute:title;'>
+	<td data-bind="var: detail(PRODUCT); format:text;"></td>
+	<td class='lookLikeLink' data-bind="var: detail(EBAY_ID); format:link2eBayByID; extension:admin_prodedit;"><span data-bind="var: detail(EBAY_ID); format:text;"></span></td>
+	<td data-bind="var: detail(IS_GTC); format:text;"></td>
+	<td data-bind="var: detail(CLASS); format:text;"></td>
+	<td data-bind="var: detail(CATEGORY); format:text;"></td>
+	<td data-bind="var: detail(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: detail(LAUNCHED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: detail(DISPATCHID); format:text;"></td>
+	<td data-bind="var: detail(PROFILE); format:text;"></td>
+	<td data-bind="var: detail(QUANTITY); format:text;"></td>
+	<td data-bind="var: detail(ITEMS_FORSALE); format:text;"></td>
+	<td data-bind="var: detail(BUY_IT_NOW); format:text;"></td>
+	<td data-bind="var: detail(@MACROS); format:macros2Buttons; extension:admin;">
+	</td>
+</tr>
+
+
+
+<!--
+used in the amzon panel for the details.
+AMZ_SYNC -> NOTNEEDED, ERROR, TODO, UNKNOWN, WAIT, DONE
+-->
+<tr id='amazonDetailRowTemplate' data-clone='true'>
+	<td data-app-click='admin_prodedit|productTaskPidToggle' data-bind="var: detail(pid); format:assignAttribute; attribute:data-pid;" class='lookLikeLink'>
+	<span data-bind="var: detail(SKU); format:text;" ></span>
+	</td>
+	<td data-bind="var: detail(PID); format:text;"></td>
+	<td data-bind="var: detail(AMZ_SYNC); format:text;"></td>
+	<td data-bind="var: detail(AMZ_RELATIONSHIP); format:text;"></td>
+	<td data-bind="var: detail(AMZ_UUID); format:text;"></td>
+	<td data-bind="var: detail(AMZ_UUID_TYPE); format:text;"></td>
+	<td data-bind="var: detail(PROD_MODIFIED); format:text;"></td>
+	<td data-bind="useParentData:true; format:amazonIs; extension:admin_prodedit;"></td>
+	<td>
+	<button class='applyButton displayNone' data-app-click='admin_prodedit|amazonLogShow' data-bind="var: detail(@LOG.length); format:showIfSet;" data-icon-primary='ui-icon-alert' data-text='false'>Error and History Report</button>
+	</td>
+	<td>
+	<button class='applyButton' data-app-click='admin_prodedit|productTaskPidToggle' data-app-role='productTaskListButton' data-bind="var: detail(PID); format:assignAttribute; attribute:data-pid;" data-icon-primary='ui-icon-circle-plus' data-text='false'>Add as Product Task</button>
+	</td>
+</tr>
+
+
+
+
+
+<tr id='buycomSkuRowTemplate'>
+	<td data-bind="var: detail(sku); format:text;"></td>
+	<td><input type='text' name='sku:buy_sku' data-bind="var:product(sku:buy_sku); format:popVal;" /></td>
+</tr>
+
+<tr id='reviewsTableRowTemplate'>
+	<td><span data-bind="var: giftcard(APPROVED_GMT); format: hideIfSet;"><input type='checkbox' /></span></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(PID); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
+	<td class='alignRight'>
+	<button data-app-click='admin_customer|reviewRemoveConfirm' data-icon-primary="ui-icon-trash"  data-text='false' class='applyButton'>Delete Review</button>
+	<button data-app-click='admin_customer|adminProductReviewUpdateShow' data-icon-primary="ui-icon-pencil"  data-text='false' data-edit-mode='dialog' class='applyButton'>Edit Review</button><!-- template recycled in product editor. mode reset w/ JS -->
+	</td>
+</tr>
+
+
+
+
+<!-- used for sku-specific attributes -->
+<tr id='skuTableRowTemplate' data-bind='var:sku(%attribs.zoovy:sku_pogdetail); format:assignAttribute; attribute:title;'>
+	<td class='width1' data-bind='var:sku(sku); format:text;'></td>
+	<td data-bind='var:sku(%attribs.zoovy:sku_pogdesc); format:text;'></td>
+	<td><input name='sku:assembly' type='text' value='' data-bind='var:sku(%attribs.sku:assembly); format:popVal;' class='fullWidth' /></td>
+	<td class='width1'><input name="sku:mfgid" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:mfgid); defaultVar:sku(%attribs.zoovy:prod_mfgid); format:popVal;'></td>
+	<td class='width1'><input name="sku:upc" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:upc); defaultVar:sku(%attribs.zoovy:prod_upc); format:popVal;'></td>
+	<td class='width1'><input name="sku:amz_asin" size="4" type="text" class='fullWidth' data-bind='var:sku(%attribs.sku:amz_asin); format:popVal;'></td>
+<!--	<td><select name="sku:condition" data-bind='var:sku(%attribs.sku:condition"); format:popVal;'>
+		<option value="NEW">New</option>
+		<option value="OPEN">Open</option>
+		<option value="REFURB">Refurb</option>
+		<option value="SREFURB">SRefurb</option>
+		<option value="USED">Used</option>
+		<option value="OTHER">Other</option>
+		<option value="DAMAGED">Damaged</option>
+		<option value="UNINSPECTED">Uninspected</option>
+	</select></td>-->
+	<td class='width1'><input name="sku:price" size="4" type='number' class='smallInput' step='.01' data-bind='var:sku(%attribs.sku:price); format:popVal;'></td>
+	<td class='width1'><input name="sku:cost" size="4" type='number'  class='smallInput' min='0' step='.01' data-bind='var:sku(%attribs.sku:cost); defaultVar:sku(%attribs.zoovy:base_cost); format:popVal;'></td>
+	<td class='width1'><input name="sku:weight" size="4" type="text" class='smallInput' data-bind='var:sku(%attribs.sku:weight); format:popVal;'></td>
+
+</tr>
+
+
+
+
+<tr id='prodEditSKUImageTemplate'>
+	<td data-bind="var: product(sku); format:text;"></td>
+	<td>
+	<ul class='listStyleNone sortableImagery skuList' data-app-role='skulist'  data-bind="useParentData:true; format:prodImages; extension:admin_prodedit; h:35; w:35;"></ul>
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+
+
+<!-- used for cases where a flex dialog is opened, such as amazon specifics -->
+	<div id='productEditorFlexTemplate'>
+	<form action='#' onSubmit='return false'>
+		<fieldset data-app-role='flexContainer' class='alignedLabels labelsAsBreaks'></fieldset><!-- gets it's own container within tab because eventually this tab will have more content -->
+		<div class='buttonset marginBottom ui-widget-content smallPadding ui-corner-all clearfix'>
+			<button class='applyButton floatRight' data-app-role='saveButton' disabled='disabled' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="attributes">Save <span class='numChanges'></span> Changes</button>
+		</div>
+	</form>
+	</div><!-- /flex tab content -->
+
+
+
+
+
+
+
+
+<div id='productDebuggerTemplate' class='appMessaging' data-app-role='productDebugger'>
+
+	<form action='#' onsubmit="return false">
+	<label>
+		<span>Debug report</span>
+		<select name='report'>
+			<option value=''>please choose</option>
+			<option value='@AMAZON_DOCUMENT_CONTENTS'>Amazon document contents</option>
+			<option value='@SKU_LOOKUP'>SKU lookup</option>
+			<option value='@DIAGNOSTICS'>Diagnostics</option>
+			<option value='@NAVCATS'>Navcats</option>
+			<option value='@INVENTORY_DETAIL'>Inventory detail</option>
+			<option value='@INVENTORY_TRANSACTIONS'>Inventory transactions</option>
+			<option value='@SYNDICATION_QUEUED_EVENTS'>Syndication queued events</option>
+		</select>
+	</label>
+	<button data-app-click="admin_prodedit|productDebugReportExec" class='applyButton'>View Report</button>
+	</form>
+
+	<div data-app-role='reportsContent'></div>
+	
+</div>
+
+<div id='productCCDTemplate' class='appMessaging'><!-- ccd = clone, change and delete -->
+
+	<p>The buttons below are for advanced users.  There is no undo. Use with caution.</p>
+	<section class='clearfix marginBottom'>
+		
+		<fieldset class='floatRight marginLeft marginBottom labelsAsBreaks'>
+			<legend>Clone/Copy Product</legend>
+			<label>
+				<span>New PID</span>
+				<input type='text' maxlength="20" name='NEWID' />
+			</label>
+			<label><input type="checkbox" name="CLONE_EBAY"> Copy eBay fields</label>
+			<label><input type="checkbox" name="CLONE_OTHER"> Copy Other fields</label>
+			<label><input type="checkbox" name="CLONE_DISABLESYNDICATION"> Disable Syndication(s)</label>
+			<button data-verb='CLONE' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Clone Product</button>
+		</fieldset>
+
+		<fieldset class='marginRight marginBottom labelsAsBreaks'>
+			<legend>Change PID</legend>
+			<label>
+				<span>New PID</span>
+				<input type="textbox" name="NEWID" maxlength="20" />
+			</label>
+			<button  data-verb='RENAME' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Rename Product</button>
+		</fieldset>
+		
+		<fieldset class='marginRight marginBottom labelsAsBreaks'>
+			<legend>Delete Product</legend>
+			<label>
+				<input type="checkbox" name="IMAGES"> Delete Images
+			</label>
+			<button data-verb='NUKE' data-app-click='admin_prodedit|handlePIDCloneChangeRemoveExec' class='applyButton'>Delete Product</button><!-- open confirm prompt before executing delete -->
+		</fieldset>
+	</section>
+</div>
+
+
+
+
+
+
+
+
+<!--
+a template for multipage controls
+after this is generated, actions for going to last and next page will be added by the extension.
+to any element with a class of paging and a data-role of either 'next' or 'previous'
+onclicks are recursive, so only add it to the parent element.
+.mpControlsPagination is used to 'hide' the pagination portion of the header if pagination is disabled.
+-->
+
+<div id='mpControlSpec' class='mpControlContainer'>
+	<div class='mpControls ui-widget ui-state-default ui-corner-top'>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='next' title="next page">
+	<span class="ui-icon ui-icon-circle-triangle-e"></span>
+</span>
+
+<div class='floatRight ddUlMenu mpControlsPagination'>
+<ul>
+	<li>
+
+	<a href='#' onClick='return false;'>
+	<span data-bind='var:prodlistmeta(page_in_focus); format:text; pretext: page ;'></span>
+	<span data-bind='var:prodlistmeta(total_page_count); format:text; pretext: of ;'></span>	</a>
+	<ul data-bind='var:prodlistmeta(total_page_count); format:mpPagesAsListItems; extension:store_prodlist;' class='ui-widget-content ui-corner-bottom'></ul>
+	</li>
+</ul>
+</div>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='previous' title="previous page">
+	<span class="ui-icon ui-icon-circle-triangle-w"></span>
+</span>	
+
+
+<span data-bind='var:prodlistmeta(page_start_point); format:text; pretext:items ;'></span>
+<span data-bind='var:prodlistmeta(page_end_point); format:text; pretext: - ;'></span>
+<span data-bind='var:prodlistmeta(total_product_count); format:text; pretext: of ;'></span>
+
+	</div><!-- /.mpControls -->
+</div><!-- /#mpControlSpec -->
+
+
+
+<!-- 
+**
+** welcome content
+**
+-->
+<div id='productEditorWelcome' class='productEditor'>
+
+<table width="600" height="100%" border="0" cellspacing="0" cellpadding="0"><tr>
+<td valign="top" style="padding-left:20px;">
+<h1>Online Product Manager</h1>
+
+<p>
+Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data.
+Here are some of the advantages:
+</p>
+
+<p>
+<h2>Page Rendering</h2>  
+With our new app based solution, there are no frames to load and reload, it
+makes better use of your screen and browser capabilities. 
+The app framework stays on the screen and only the information you want to
+view or manipulate changes. This makes for a smoother workflow and helps to
+increase productivity.
+</p>
+
+<p>
+<h2>Extensible</h2>
+Entering your product data is only the beginning. 
+This interface will allow extensibility by developers so it is possible to
+create custom data input and management interfaces. 
+From vendor management to drop shipping to complex supply chain strategies, our
+new Product Manager.
+</p>
+
+<p>
+<h2>The World is Changing</h2>
+The app-based structure is the future of technology. 
+By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, 
+we are convinced that this change will let our customers do more in less
+time.
+</p>
+
+</td>
+</tr></table>
+
+</div>
+
+
+
+
+<!--
+201332 -> hhhmm... this template doesn't seem to be called anywhere.
+<div id='variationCreateUpdateTemplate'>
+
+<form action='#' onSubmit="return false;" class='labelsAsBreaks'>
+
+<table>
+<tr>
+	<td class='valignTop'>
+<fieldset>
+	<legend>Settings</legend>
+	
+	<label>
+		<span>Prompt</span>
+		<input type='text' name='PROMPT' data-bind="var: variation(PROMPT); format:popVal;" />
+		<span class='toolTip' title="This is what your users will be displayed e.g. Size, Color, Preference.">?</span>
+	</label>
+
+	<label>
+		<span>Hint</span>
+		<input type='text' name='GHINT' data-bind="var: variation(GHINT); format:popVal;" />
+		<span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span>
+	</label>
+	
+	<label>
+		<span>Amazon keyword</span>
+		<select name="AMZ" data-bind="var: variation(AMZ); format:popVal;">
+<option value="">None</option>
+<option value="APPAREL: Color">APPAREL: Color</option>
+<option value="APPAREL: Size">APPAREL: Size</option>
+<option value="AUTO: Color">AUTO: Color</option>
+<option value="AUTO: Size">AUTO: Size</option>
+<option value="CAMERA: None">CAMERA: None</option>
+<option value="CE: None">CE: None</option>
+<option value="EYEWEAR: Color">EYEWEAR: Color</option>
+<option value="EYEWEAR: ColorName">EYEWEAR: ColorName</option>
+<option value="EYEWEAR: LensColor">EYEWEAR: LensColor</option>
+<option value="EYEWEAR: LensWidth">EYEWEAR: LensWidth</option>
+<option value="EYEWEAR: MagnificationStrength">EYEWEAR: MagnificationStrength</option>
+<option value="EYEWEAR: Size">EYEWEAR: Size</option>
+<option value="FOOD: Flavor">FOOD: Flavor</option>
+<option value="FOOD: Size">FOOD: Size</option>
+<option value="HANDBAG: Color">HANDBAG: Color</option>
+<option value="HEALTH: Color">HEALTH: Color</option>
+<option value="HEALTH: Count">HEALTH: Count</option>
+<option value="HEALTH: Flavor">HEALTH: Flavor</option>
+<option value="HEALTH: Size">HEALTH: Size</option>
+<option value="HOME: Color">HOME: Color</option>
+<option value="HOME: ItemPackageQuantity">HOME: ItemPackageQuantity</option>
+<option value="HOME: Material">HOME: Material</option>
+<option value="HOME: Scent">HOME: Scent</option>
+<option value="HOME: Size">HOME: Size</option>
+<option value="JEWELRY: Length">JEWELRY: Length</option>
+<option value="JEWELRY: MetalType">JEWELRY: MetalType</option>
+<option value="JEWELRY: RingSize">JEWELRY: RingSize</option>
+<option value="JEWELRY: SizePerPearl">JEWELRY: SizePerPearl</option>
+<option value="JEWELRY: TotalDiamondWeight">JEWELRY: TotalDiamondWeight</option>
+<option value="MUSIC: Color">MUSIC: Color</option>
+<option value="OFFICE: None">OFFICE: None</option>
+<option value="SHOEACCESSORY: Color">SHOEACCESSORY: Color</option>
+<option value="SHOEACCESSORY: Size">SHOEACCESSORY: Size</option>
+<option value="SHOES: Color">SHOES: Color</option>
+<option value="SHOES: Size">SHOES: Size</option>
+<option value="SOFTWARE: None">SOFTWARE: None</option>
+<option value="SPORTS: Color">SPORTS: Color</option>
+<option value="SPORTS: GolfFlex">SPORTS: GolfFlex</option>
+<option value="SPORTS: GolfLoft">SPORTS: GolfLoft</option>
+<option value="SPORTS: GripSize">SPORTS: GripSize</option>
+<option value="SPORTS: GripType">SPORTS: GripType</option>
+<option value="SPORTS: Hand">SPORTS: Hand</option>
+<option value="SPORTS: Length">SPORTS: Length</option>
+<option value="SPORTS: LensColor">SPORTS: LensColor</option>
+<option value="SPORTS: ShaftMaterial">SPORTS: ShaftMaterial</option>
+<option value="SPORTS: ShaftType">SPORTS: ShaftType</option>
+<option value="SPORTS: Size">SPORTS: Size</option>
+<option value="SPORTS: Style">SPORTS: Style</option>
+<option value="SPORTS: TensionLevel">SPORTS: TensionLevel</option>
+<option value="SPORTS: Weight">SPORTS: Weight</option>
+<option value="SPORTS: WeightSupported">SPORTS: WeightSupported</option>
+<option value="SPORTS: Width">SPORTS: Width</option>
+<option value="TOOLS: None">TOOLS: None</option>
+<option value="TOYSBABY: None">TOYSBABY: None</option>
+<option value="WIRELESS: None">WIRELESS: None</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Google keyword</span>
+		<select name="GOO" data-bind="var: variation(GOO); format:popVal;">
+			<option value="">None</option>
+			<option value="Color">Color</option>
+			<option value="Size">Size</option>
+			<option value="Material">Material</option>
+			<option value="Pattern">Pattern</option>
+		</select>
+	</label>
+
+	<label>
+		<span>eBay specifics name</span>
+		<input type='text' name='EBAY' data-bind="var: variation(EBAY); format:popVal;" />
+		<span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span>
+	</label>
+
+	<label>
+		<input type="checkbox" name="optional" class='applyAnycb' />
+		Optional <span class='toolTip' title="If enabled, the variation will not display in cart/order if it is not selected.">?</span>
+	</label>
+</fieldset>
+	</td>
+	<td class='valignTop'></td>
+</tr>
+</table>
+
+</form>
+
+
+</div>
+-->
+
+
+
+
+
+
+<!--
+///////////////////////// VARIATIONS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='variationsManagerTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding' data-app-role='variationManager'>
+	<div class='clearfix marginBottom'>
+		<button class='floatRight applyButton' data-text='true' data-icon-primary='ui-icon-circle-plus' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="store">Add New</button>
+		<h1>Store Variations</h1>
+	</div>
+<table class='fullWidth gridTable applyAnytable'>
+<thead>
+<tr>
+	<th>ID</th>
+	<th>Name</th>
+	<th># options</th>
+	<th>Inv.</th>
+	<th>Global</th>
+	<th>Type</th>
+	<th></th>
+</tr>
+</thead>
+<tbody data-bind="var:variations(%SOGS); format:processList; loadsTemplate:variationsManagerRowTemplate;">
+	
+</tbody>
+</table>
+
+</div>
+
+<table>
+<tr id='variationsManagerRowTemplate'>
+	<td data-bind="var:variation(id); format:text;"></td>
+	<td data-bind="var:variation(prompt); format:text;"></td>
+	<td data-bind="var:variation(@options.length); format:text;"></td>
+	<td><span data-bind="var:variation(inv); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
+	<td><span data-bind="var:variation(global); format:showIfSet;" class='displayNone ui-icon ui-icon-check'></span></td>
+	<td data-bind="var:variation(type); format:text;"></td>
+	<td class='alignRight'>
+	
+		<button data-app-click='admin_prodedit|adminSOGDeleteConfirm' class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Delete</button>
+		<button data-app-click="admin_prodedit|variationSearchByIDExec" data-text='false' data-icon-primary='ui-icon-search' class='applyButton' title="Do a search for all product that use this variation.">find</button><!-- Do a search for all product that use this variation -->
+		<button data-variationmode="store" data-app-click='admin_prodedit|variationUpdateShow' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+<div id='variationsManagerCreateTemplate'>
+
+<form action='#' onSubmit='return false' class='labelsAsBreaks' >
+
+<fieldset>
+	<label>
+		<span>Prompt</span>
+		<input type='text' name='prompt' value='' required='required' />
+		<span class='toolTip' title="The prompt is displayed the customers so they know what they are choosing. E.g. 'Size', 'Color'.  You can edit/change the prompt later if you want to.">?</span>
+	</label>
+</fieldset>
+
+<fieldset class='clearfix'>
+	<legend>Type <span class='toolTip' title="Type impacts how the variation appears on the storefront as well as whether or not it can be inventory-able.">?</span></legend>
+
+<div class='threeColumn floatLeft'>
+
+	<label>
+	<input type="radio" value="select" name='type' required='required' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Select box (drop down)*
+	<span class='toolTip' title="A select list is also commonly known as a drop down list. A select list should be used when the number of options exceeds 5 or more. As a rule when designing options you should never use more than 25 options in a select list since it will make it difficult for the user to see all the choices and arrive at a decision.">?</span>
+	</label>
+
+
+	<label>
+	<input type="radio" value="radio" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Radio buttons*
+	<span class='toolTip' title="Used to display all the options available with a circle next to each option. The user chooses the appropriate option and the circle becomes filled in. Unlike select lists a radio button		always displays all options to the customer. Radio buttons should typically be used with 10 or less options since they consume a lot of screen space and make the customer need to scroll.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="cb" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Checkbox*
+	<span class='toolTip' title="Have only two possible states, either ON or OFF. Checkboxes should be used whenever the user has only two possible choices. ">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="hidden" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Hidden Attributes
+	<span class='toolTip' title="A hidden attribute allows you to specify additional text which will appear in the product description. Such as a disclaimer or any text which you want to be printed in the product description to the customer and which is NOT editable by the customer.">?</span>
+	</label>
+
+
+	<label>
+	<input type="radio" value="assembly" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Base Assembly 
+	<span class='toolTip' title="A hidden attribute uses the option subsystem to set/store properties of an item (usually this is done through a custom javascript module).">?</span>
+	</label>
+
+</div>
+
+
+<div class='threeColumn floatLeft'>
+	<label>
+	<input type="radio" value="text" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Free-Form text
+	<span class='toolTip' title="This is the simpliest form of customer input. A text input should be used for limited text entry. 	If you need multiple lines consider using a text area. 	You can assses additional fees per character or per line. Fees are additive and will be summed together to present a total.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="number" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Free-Form Number
+	<span class='toolTip' title="Allows a customer to input a number. This is NOT the same as quantity, and should not be used for any sort of inventory control. You can restrict the number to a specific minimum and maximu value.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="textarea" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Multi-Line Text Area
+	<span class='toolTip' title="Large format text box in which users can enter a block of text. You can also restrict the number of characters. Like a text you can assess fees per character (excluding spaces and punctuation), and per word.  The textarea also allows you assess fees per line. Fees are additive and can be used together.">?</span>
+	</label>
+
+	<label>
+	<input type="radio" value="readonly" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Readonly Instructions	
+	<span class='toolTip' title="Displays contents to buyer but allows no interaction or input.">?</span>
+	</label>
+</div>
+
+<div class='threeColumn floatLeft'>
+
+
+	<label>
+	<input type="radio" value="biglist" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Dynamic "BIG" List
+	<span class='toolTip' title="Biglist lets you create a multi-stage select (drop down) list. When the first option is chosen, then the customer must make a second selection in another box which appears. The boxes may only go two deep. Use this when you have options which are tiered to reduce the number of decisions a customer needs to make. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="imgselect" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Image Select List*
+	<span class='toolTip' title="When a customer chooses an option an image (if available) will be displayed adjacent to it. Image select lists are ideally suited for situations where there are 10 or more options and it is likely the customer will NOT want to look at all the pictures before making a choice. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="imggrid" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Image Grid*
+	<span class='toolTip' title="Unlike an image select list which the user must manually choose each option in order to see the image associated with it - instead all images are displayed in a grid with a radio button below each option. The advantage of an image grid is it displays ALL the possible choices and their respective images to the customer, which is also it's disadvantage if you have a product with a lot of pictures it can consume a vast amount of real-estate and increase page load times. ">?</span>
+	</label>
+	
+
+	<label>
+	<input type="radio" value="calendar" name='type' data-app-change='admin_prodedit|variationHandleTypeSelect' />
+	Calendar
+	<span class='toolTip' title="Allows the user to easily choose a date. The date is stored in a text field in YYYY/MM/DD format. The calendar has the ability to apply a rush fee if the date is within a certain number of days of today. This allows you to create additional revenue for speciality things like 'Rush Fees'. ">?</span>
+	</label>
+
+</div>
+
+</fieldset>
+<p class='hint'>* is inventory-able</p>
+
+<fieldset data-app-role='variationInventorySettings' class='displayNone'>
+	<legend>Inventory</legend>
+	<label>
+		<input type='checkbox' name='inv' class='applyAnycb' data-app-click="admin_prodedit|variationHandleInventoryChange" />
+		This option affects inventory.
+		<span class='toolTip' title="If you want to have price and/or weight modifiers or track inventory per variation, enable this.">?</span>
+	</label>
+
+</fieldset>
+
+<fieldset data-app-role='variationInventorySupplementals' class='displayNone' data-bind="useParentData:true; forceRender:true; format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate; "></fieldset>
+
+<fieldset>
+	<legend>Variation Behavior</legend>
+
+	<label>
+	<input type="radio" value="0" name="global" checked="checked" />
+	Manual: Select options and customize modifiers on a product by product basis.
+	</label>
+	
+	<label>
+	<input type="radio" value="1" name="global" />
+	Automatic: Changes should automatically affect all products using this group.
+	</label>
+	
+</fieldset>
+<p class='hint'>Before saving please take a moment to review your choices as most of the settings on this page cannot be edited once the option group is saved.</p>
+
+<button data-app-click="admin_prodedit|variationCreateExec" data-app-role='saveButton' class='applyButton'>Save Variation</button>
+</form>
+
+</div>
+
+
+
+
+
+<div id='variationsDSTInputsTemplate'>
+
+
+	<label>
+	<span>Amazon Variation Keyword:</span>
+	<select name="amz" data-bind="var: variation(amz); format:popVal;">
+	<option value="">None</option>
+	<option value="APPAREL: Color">APPAREL: Color</option>
+	<option value="APPAREL: Size">APPAREL: Size</option>
+	<option value="AUTO: Color">AUTO: Color</option>
+	<option value="AUTO: Size">AUTO: Size</option>
+	<option value="CAMERA: None">CAMERA: None</option>
+	<option value="CE: None">CE: None</option>
+	<option value="EYEWEAR: Color">EYEWEAR: Color</option>
+	<option value="EYEWEAR: ColorName">EYEWEAR: ColorName</option>
+	<option value="EYEWEAR: LensColor">EYEWEAR: LensColor</option>
+	<option value="EYEWEAR: LensWidth">EYEWEAR: LensWidth</option>
+	<option value="EYEWEAR: MagnificationStrength">EYEWEAR: MagnificationStrength</option>
+	<option value="EYEWEAR: Size">EYEWEAR: Size</option>
+	<option value="FOOD: Flavor">FOOD: Flavor</option>
+	<option value="FOOD: Size">FOOD: Size</option>
+	<option value="HANDBAG: Color">HANDBAG: Color</option>
+	<option value="HEALTH: Color">HEALTH: Color</option>
+	<option value="HEALTH: Count">HEALTH: Count</option>
+	<option value="HEALTH: Flavor">HEALTH: Flavor</option>
+	<option value="HEALTH: Size">HEALTH: Size</option>
+	<option value="HOME: Color">HOME: Color</option>
+	<option value="HOME: ItemPackageQuantity">HOME: ItemPackageQuantity</option>
+	<option value="HOME: Material">HOME: Material</option>
+	<option value="HOME: Scent">HOME: Scent</option>
+	<option value="HOME: Size">HOME: Size</option>
+	<option value="JEWELRY: Length">JEWELRY: Length</option>
+	<option value="JEWELRY: MetalType">JEWELRY: MetalType</option>
+	<option value="JEWELRY: RingSize">JEWELRY: RingSize</option>
+	<option value="JEWELRY: SizePerPearl">JEWELRY: SizePerPearl</option>
+	<option value="JEWELRY: TotalDiamondWeight">JEWELRY: TotalDiamondWeight</option>
+	<option value="MUSIC: Color">MUSIC: Color</option>
+	<option value="OFFICE: None">OFFICE: None</option>
+	<option value="SHOEACCESSORY: Color">SHOEACCESSORY: Color</option>
+	<option value="SHOEACCESSORY: Size">SHOEACCESSORY: Size</option>
+	<option value="SHOES: Color">SHOES: Color</option>
+	<option value="SHOES: Size">SHOES: Size</option>
+	<option value="SOFTWARE: None">SOFTWARE: None</option>
+	<option value="SPORTS: Color">SPORTS: Color</option>
+	<option value="SPORTS: GolfFlex">SPORTS: GolfFlex</option>
+	<option value="SPORTS: GolfLoft">SPORTS: GolfLoft</option>
+	<option value="SPORTS: GripSize">SPORTS: GripSize</option>
+	<option value="SPORTS: GripType">SPORTS: GripType</option>
+	<option value="SPORTS: Hand">SPORTS: Hand</option>
+	<option value="SPORTS: Length">SPORTS: Length</option>
+	<option value="SPORTS: LensColor">SPORTS: LensColor</option>
+	<option value="SPORTS: ShaftMaterial">SPORTS: ShaftMaterial</option>
+	<option value="SPORTS: ShaftType">SPORTS: ShaftType</option>
+	<option value="SPORTS: Size">SPORTS: Size</option>
+	<option value="SPORTS: Style">SPORTS: Style</option>
+	<option value="SPORTS: TensionLevel">SPORTS: TensionLevel</option>
+	<option value="SPORTS: Weight">SPORTS: Weight</option>
+	<option value="SPORTS: WeightSupported">SPORTS: WeightSupported</option>
+	<option value="SPORTS: Width">SPORTS: Width</option>
+	<option value="TOOLS: None">TOOLS: None</option>
+	<option value="TOYSBABY: None">TOYSBABY: None</option>
+	<option value="WIRELESS: None">WIRELESS: None</option>
+	</select>
+	</label>
+
+	<label>
+	<span>Google Variation Keyword</span>
+	<select name="goo" data-bind="var: variation(goo); format:popVal;">
+		<option value="">None</option>
+		<option value="Color">Color</option>
+		<option value="Size">Size</option>
+		<option value="Material">Material</option>
+		<option value="Pattern">Pattern</option>
+	</select>
+	</label>
+
+	<label>
+	<span>eBay Variation Specifics Name: </span>
+	<input type="text" name="ebay" data-bind="var: variation(ebay); format:popVal;" />
+	</label>
+
+</div>
+
+
+
+
+
+
+<div id='variationEditorTemplate' class='ui-widget'>
+	<form action="#" onSubmit='return false' class='labelsAsBreaks'>
+	
+	<hgroup class='ui-widget-header stdPadding ui-corner-top' data-app-role='variationsHeaderContainer'>
+		<h4 class='floatRight' data-bind="var:variation(pid); format:text; pretext:Product ID: ;"></h4>
+		<h3 data-bind="var:variation(id); format:text; pretext:Variation ID: ;"></h3>
+	</hgroup>
+	<section class='ui-widget-content ui-corner-bottom'>
+	
+<table class='fullWidth stdMargin'>
+<tbody>
+<tr>
+	<td class='column3 valignTop' data-app-role='variationSettingsContainer'>
+<!-- high level settings -->
+	<fieldset class='stdPadding'>
+<!-- * 201336 -> added  hideZero:true; to id for variations w/ 00 as id -->
+		<input type='hidden' name='id' value='' data-bind="var: variation(id); format:popVal; hideZero:false;" />
+		<input type='hidden' name='type' value='' data-bind="var: variation(type); format:popVal;" />
+		<input type='hidden' name='inv' value='0' data-bind="var: variation(inv); format:popVal;" />
+	
+		<legend>Variation Settings</legend>
+
+		<label>
+			<span>Prompt</span>
+			<input type='text' name='prompt' data-bind="var: variation(prompt); format:popVal;" />
+			<span class='toolTip' title="This is what your users will be displayed e.g. Size, Color, Preference.">?</span>
+		</label>
+	
+		<label>
+			<span>Hint <span class='toolTip' title="Can be used by your app to display indicators to your customer (such as how this hint is displayed).">?</span></span>
+			<textarea name='ghint' data-bind="var: variation(ghint); format:popVal;" class='fullWidth'></textarea>
+		</label>
+
+		<div data-bind="var:variation(inv); format:showIfSet;" class='displayNone'>
+			<fieldset data-app-role='variationInventorySupplementals' data-bind="format:loadsTemplate; loadsTemplate:variationsDSTInputsTemplate;  useParentData:true;"></fieldset>
+		</div>
+
+		<div>
+			<span data-bind="var:variation(inv); format:showIfSet;" class='displayNone'>This group affects inventory.</span>
+			<span data-bind="var:variation(global); format:showIfSet;" class='displayNone'>This group is globally managed.</span>
+		</div>
+
+	</fieldset>
+	<!-- optional will show up for non-inventoryable options -->
+	<fieldset class='displayNone' data-app-role='variationOptionalContainer'>
+	<label>
+		<input type="checkbox" name="optional" class='applyAnycb' data-bind="var: variation(optional); format:popVal;" />
+		Optional <span class='toolTip' title="If enabled, the variation will not display in cart/order if it is not selected. Only available on non inventory-able options.">?</span>
+	</label>
+	</fieldset>
+
+	<fieldset class='displayNone' data-app-role='variationImgInputs'>
+
+		<label>
+			<span>Thumbnail width</span>
+			<input type='number' class='smallInput' min='25' step='1' value="75" name="width" size="3" data-bind="var: variation(width); format:popVal;" />
+			<span class='toolTip' title='In pixels, the width of the image. In this case, bigger is not always better. Between 75 and 125 is a good place to start.'>?</span>
+		</label>
+		
+		<label>
+			<span>Thumbnail height</span>
+			<input type='number' class='smallInput' min='25' step='1' value="75" name="height" size="3" data-bind="var: variation(height); format:popVal;" />
+			<span class='toolTip' title='In pixels, the height of the image. In this case, bigger is not always better.  Between 75 and 125 is a good place to start.'>?</span>
+		</label>
+		
+		<label>
+			<input type="checkbox" name="zoom"  data-bind="var: variation(height); format:popVal;" />
+			Enable click to zoom
+		</label>
+
+		<label>
+			<span>Image type</span>
+			<select name="img_type" data-bind="var: variation(img_type); format:popVal;">
+				<option value="other">Other</option>
+				<option value="swatch">Color Swatch</option>
+				<option value="sku_image">SKU Image</option>
+			</select>
+		</label>
+
+
+	</fieldset>
+
+
+
+
+	</td>
+
+<!-- show this only for select/radio style editor. allows left side of editor to be minimized so there's more room for dataTable. -->
+	<td class='variationEditorSplitter smallButton'>
+	<div>
+	<button data-app-click="admin_prodedit|variationSettingsToggle" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-triangle-w'>Toggle Variations Settings Display</button>
+	</div>
+	</td>
+
+	<td class='valignTop'>
+<!-- variation specific template loaded into this div, based on 'type' -->
+<div data-app-role='variationsTypeSpecificsContainer' class='marginLeft marginRight marginBottom'></div>
+
+<div class='buttonset alignRight marginRight'>
+<!--<button data-app-click='admin|execDialogClose'>Cancel Changes</button> -->
+<button class='applyButton' data-app-click='admin_prodedit|variationAdminProductMacroExec' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+</div>
+
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+	</section>
+	</form>
+</div>
+
+
+
+
+
+
+
+<fieldset id='variationsEditor_select'>
+	<legend>Select Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_radio'>
+	<legend>Radio Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_cb'>
+	<legend>Checkbox Settings</legend>
+</fieldset>
+
+
+<fieldset id='variationsEditor_hidden'>
+	<legend>Hidden Settings</legend>
+
+	<label>
+		<span>Maximum length</span>
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default text</span>
+		<input type="text" value="" name="default" data-bind='var: variation(default); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per character </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
+	</label>
+
+</fieldset>
+
+
+<fieldset id='variationsEditor_assembly'>
+	<legend>Assembly Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'>
+	
+	</div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_text'>
+	<legend>Text Settings</legend>
+
+
+	<label>
+		<span>Maximum length</span>
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default text</span>
+		<input type="text" value="25 char max" name="default" data-bind='var: variation(default); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per character </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;'>
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;'>
+	</label>
+
+</fieldset>
+
+<fieldset id='variationsEditor_number'>
+	<legend>Number Settings</legend>
+
+	<label>
+		<span>Maximum Length</span>
+		<input type='number' class='smallInput' min='0' step='1' value="" size="2" name="maxlength" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default Text</span>
+		<input type="text" value="25 char max" name="default" data-bind='var: variation(default); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Minimum Number</span>
+		<input size="10" name="min" value="3" type='number' class='smallInput' data-bind='var: variation(min); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Maximum Number</span>
+		<input type='number' class='smallInput' value="8" name="max" size="10" data-bind='var: variation(max); format:popVal;' />
+	</label>
+
+</fieldset>
+
+
+
+<fieldset id='variationsEditor_textarea'>
+	<legend>Textarea Settings</legend>
+	<label>
+		<span>Rows</span>
+		<input type="text" name="rows" size="3" value="" data-bind='var: variation(rows); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Columns</span>
+		<input type="text" name="cols" size="3" value="" data-bind='var: variation(cols); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Maximum length</span>
+		<input type="text" name="maxlength" size="4" value="" data-bind='var: variation(maxlength); format:popVal;' /> (in characters)
+	</label>
+	
+	<label>
+		<span>Default text</span>
+		<textarea name="default" cols="40" rows="4" data-bind='var: variation(default); format:popVal;' /></textarea>
+	</label>
+	
+	<label>
+		<span>Fee per character </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_char" data-bind='var: variation(fee_char); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per word </span>
+		$<input type='number' class='smallInput' value="" step='.01' size="6" name="fee_word" data-bind='var: variation(fee_word); format:popVal;' />
+	</label>
+	
+	<label>
+		<span>Fee per line: </span>
+		$<input type='number' class='smallInput' value="" step='.01' min='0' size="6" name="fee_line" data-bind='var: variation(fee_line); format:popVal;' />
+	</label>
+</fieldset>
+
+
+<fieldset id='variationsEditor_readonly'>
+	<legend>Readonly Settings</legend>
+
+	<label>
+		<span>Readonly text/HTML</span>
+		<textarea name="default" class='fullWidth' rows="20" data-bind="var:variations(default); format:popVal;"></textarea>
+	</label>
+	<p class='hint'>
+	The Readonly type simply outputs the text in the box above to the customers browser. You can use the readonly type to display messages to customers.
+	</p>
+</fieldset>
+
+
+<fieldset id='variationsEditor_attribs'>
+	<legend>Attribs Settings</legend>
+	
+	Attributes are a deprecated variation group type. An app with elastic search can be built for the purposes of layered search.
+	
+</fieldset>
+
+<fieldset id='variationsEditor_biglist'>
+	<legend>Big List Settings</legend>
+	
+	<p>A Big List is a dynamic, two level menu. A Big List may have a maximum of 1296 options. At this time - you may not have price and weight modifiers on Big Lists. </p>
+	<textarea rows="20" cols="50" name="biglist_contents" data-bind="var:variations(@options); format:bigListOptions; extension:admin_prodedit;"></textarea>
+	<p>
+	<b>Example:</b><br />
+Drinks|Soda<br />
+Drinks|Beer<br />
+Drinks|Wine<br />
+<br />
+Snacks|Chips<br />
+Snacks|Pretzels<br />
+Snacks|Doughnuts<br />
+</p>
+<p>The list above would create a top level menu with two options: "Drinks" and "Snacks", If "Drinks" is selected the options would be "Soda", "Beer", and "Wine". If "Snacks" is selected the options would be "Chips", "Pretzels", "Doughnuts". </p>
+	
+</fieldset>
+
+
+<fieldset id='variationsEditor_imgselect'>
+	<legend>Image Select Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'></div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_imggrid'>
+	<legend>Image Grid Settings</legend>
+	<div data-bind='format:loadsTemplate; loadsTemplate:optionsEditor; useParentData:true;'></div>
+</fieldset>
+
+
+<fieldset id='variationsEditor_calendar'>
+	<legend>Calendar Settings</legend>
+	<label>
+		<span>Add a rush fee of</span>
+		<input type='number' class='smallInput' step='.01' value="" name="fee_rush" size="6" data-bind="var: variation(fee_rush); format:popVal;" />
+		for orders within
+		<input type='number' class='smallInput' step='1' value='' name='rush_days' size='6'  data-bind="var: variation(rush_days); format:popVal;" />
+	</label>
+	
+	<label>
+		<span>Rush prompt</span>
+		<input type="text" value="" name="rush_prompt" data-bind="var: variation(rush_prompt); format:popVal;" />
+		<span class='toolTip' title="In addition to showing up on the product page, this will be displayed on the cart and checkout pages as well as the invoice.">?</span>
+	</label>
+	<label>
+		<span>Rush message</span>
+		<textarea name="rush_msg" data-bind="var: variation(rush_msg); format:popVal;"></textarea>
+	</label>
+</fieldset>
+
+<!-- a shared template used by select and radio input variation types -->
+<div id='optionsEditor' data-app-role='variationOptionEditorContainer' data-table-role='container'>
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class='valignTop'>
+	<table class='gridTable fullWidth' data-app-role='dataTable'>
+	<thead>
+	<tr>
+		<th></th>
+		<th></th>
+		<th>Prompt</th>
+		<th>Price</th>
+		<th>Weight</th>
+		<th>Assembly</th>
+		<th>ID/Value</th>
+		<th></th>
+	</tr>
+	</thead>
+<!-- sogs return @options, product return options. nice. -->	
+	<tbody data-app-role='variationsOptionsTbody' class='variationGroupOptions' data-table-role='content' data-bind="var:variations(@options); defaultVar: variations(options); format:processList; loadsTemplate:optionsEditorRowTemplate;">
+	
+	</tbody>
+	<tfoot>
+	<tr>
+		<td colspan='8' class='alignRight'>
+		<button data-app-click='admin|toggleAllRows4Remove' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-close'>Tag All As Remove</button>
+		</td>
+	</tr>
+	</tfoot>
+	</table>
+	</td>
+	
+	<td class='threeColumn valignTop'>
+	<!-- storeVariationsOptionsContainer is used when editing a product's store variation group. holds individual options for adding to group.
+	databind on tbody added w/ js later so that it isn't translated prematurely (wrong data was getting set) -->
+	<div data-tablefilter-role='container'>
+		<div>
+		<input name='tableSearchQuery' type='search' placeholder='filter options' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" data-app-role='productOptionsFilterInput' class='displayNone' />
+		</div>
+		<table data-app-role='storeVariationsOptionsContainer' class='displayNone gridTable' data-tablefilter-role='table'>
+		<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Prompt</th>
+			<th>Price</th>
+			<th>Weight</th>
+			<th>Assembly</th>
+			<th>ID/Value</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-app-role='storeVariationsOptionsTbody'></tbody>
+		</table>
+	</div>
+
+		<div class='buttonset alignRight'>
+			<button data-app-role='addNewOptionButton' class='applyButton' data-text='true' data-icon-primary='ui-icon-plus' data-app-click='admin_prodedit|variationOptionAddShow'>Add New Option</button>
+		</div>
+		
+		<div  data-table-role='inputs' data-app-role='varitionOptionAddUpdateContainer' >
+		<!-- gets populated w/ the input forms for either update or add option -->
+		</div>
+
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+
+<!--
+this is it's own template so that it can be easily cleared and repopulated w/ option specific data (for update and create)
+skipTrack is on the elements so that when this is used in the data-table in the variations editor, these inputs don't impact the save button num changes.
+ -->
+<div id='optionEditorInputsTemplate' class='alignedLabels'>
+	<input type='hidden' name='guid' value='' data-bind="var: variation(guid); format:popVal;" />
+	<input type='hidden' name='v' value='' data-bind="var: variation(v); format:popVal; hideZero:false;" />
+	<label>
+		<span>Text</span>
+		<input type="text" name="prompt" data-bind="var: variation(prompt); format:popVal;" class='skipTrack' />
+	</label>
+	<!--
+	the weight itself should be configured in the product, not here. this would be for display only and, in most cases, weight is not displayed.
+	<label class='displayNone nonInvOnly'>
+		<span>Weight modifier</span>
+		<input type="text" size="3" name="w" data-bind="var: variation(w); format:popVal;" class='skipTrack' />
+	</label>
+	-->
+	<label class='showForZoovyOnly'>
+		<span>Price modifier</span>
+		<input type="text" size="5" name="p" data-bind="var: variation(p); format:popVal;" class='skipTrack' />
+	</label>
+	<div class='hint marginBottom'>
+		<div class='nonInvOnly'>Non-inventoriable price modifier will be applied to sku base price.</div>
+		<div class='invOnly'>Inventoriable price modifiers are display ONLY - and are ignored for price calculations. Please set SKU level pricing for inventoriable variations.</div>
+	</div>
+	<label class='displayNone nonInvOnly'>
+		<span>Assembly</span>
+		<input type="text" name="asm" value="" data-bind="var: variation(asm); format:popVal;" class='skipTrack' />
+	</label>
+	
+	<div class='displayNone marginBottom label  imgOnly'>
+		<span>Image <a data-app-click="admin_prodedit|variationOptionImgLibShow" href="#"><b>[Edit]</b></a></span>
+
+		<img width="70" height="70" src="app-admin/images/blank.gif" data-app-role='variationImg'  data-bind='var: variation(img); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+		
+		<input type='text' name='img' class='displayNone skipTrack' /><!-- use text input cuz hidden inputs don't support change events, which are used for updating the save button -->
+
+
+	</div>
+
+
+	<label>
+		<span>RTF/HTML/Wiki detail text</span>
+		<textarea name="html" rows="5" class='fullWidth skipTrack' data-bind="var: variation(html); format:popVal;" ></textarea>
+	</label>
+</div>
+
+
+
+<table>
+<tr id='optionsEditorRowTemplate' class='pointer'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
+	<td class='isSearchable' data-bind="var:option(prompt); format:text;"></td>
+	<td data-bind="var:option(p); format:text;"></td>
+	<td data-bind="var:option(w); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(asm); format:text;"></td>
+	<td class='isSearchable' data-bind="var:option(v); format:text; hideZero:false;"></td>
+	<td class='alignRight'>
+	<div data-app-click='admin_prodedit|variationsOptionToggle' class='toggleByAppRole globalListOfOptions ui-icon ui-icon-arrowthick-1-w' title='Apply to Product'></div>
+	<button data-app-click="admin|tagRow4Remove" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-circle-close' data-text='false'>Delete</button>
+	<button data-app-click="admin_prodedit|variationOptionUpdateShow" class='toggleByAppRole optionsEnabledOnProduct applyButton' data-icon-primary='ui-icon-pencil' data-text='false'>Edit</button><!-- there's not dataTable default for edit. use an app event to add form and pre-populate -->
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+<div id='productVariationManager' class='ui-widget' data-app-role='productVariationManager'><!-- in product variations mode, PID will be set on this element -->
+
+	<section data-app-role='productVariationManagerContainer'>
+
+		<table class='fullWidth'>
+		<tr>
+			<td class='valignTop'>
+			<div class='marginRight' data-app-role='productVariationManagerProductContainer'>
+		<h2>Product Variations</h2>
+		<table class='gridTable fullWidth marginTop'>
+		<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>Name/Prompt</th>
+			<th>Type</th>
+			<th># Options</th>
+			<th>Code</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: variations(@variations); format: processList; loadsTemplate:productVariationManagerProductRowTemplate;"  data-app-role='productVariationManagerProductTbody'></tbody>
+		</table>
+			</div>
+			</td>
+			<td class='valignTop'>
+			<div class='marginLeft' data-app-role='productVariationManagerStoreContainer'>
+		<div class='clearfix'>
+			<button class='floatRight applyButton' data-app-click='admin_prodedit|storeVariationsRefresh' data-icon-secondary='ui-icon-refresh' data-text='false'>Refresh Store Variations</button>
+			<h2>Store Variations</h2>
+		</div>
+		<div class='storeVariationsListContainer'>
+		<table class='gridTable fullWidth marginTop'>
+		<thead>
+		<tr>
+			<th>Name/Prompt</th>
+			<th>Type</th>
+			<th>Code</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-app-role='storeVariationsTbody' data-bind="var: variations(%SOGS); format: processList; loadsTemplate:productVariationManagerStoreRowTemplate;"></tbody>
+		</table>
+		</div>
+			</div>
+			</td>
+		</tr>
+		</table>
+
+		<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
+<!--			<button class='floatRight applyButton' title="Save changes to the variations on this product." data-app-click="admin_prodedit|productVariationsUpdateExec" data-app-role="saveButton">Save Variations</button> -->
+			<button class='applyButton floatRight' data-app-role='saveButton' data-app-click="admin_prodedit|adminProductMacroSaveHandlersExec" data-save-handlers="variations">Save <span class='numChanges'></span> Variations</button>
+			
+			<button title="Add a new product-specific variation group." class='applyButton' data-text='true' data-icon-secondary='ui-icon-triangle-1-s' data-app-click='admin_prodedit|variationCreateShowMenu'>Create Variation</button>
+			<!-- when this is upgraded to app events, change this to be a menu() -->
+			<div class='displayNone ui-widget ui-widget-content ui-corner-all alignCenter'>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="product">Product Specific</button>
+				<button title="Add a new product-specific variation group." class='applyButton' data-app-click='admin_prodedit|variationCreateShow' data-variationmode="store" data-ui-source='productEditor'>Store Wide</button>
+			</div>
+		</div>
+
+	</section>
+
+</div>
+
+
+<table>
+
+<!-- used when editing a non-global store variation on a product. -->
+<tr id='productVariationManagerOptionRowTemplate'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td><img src='' data-bind='var: variation(img); format:imageURL;' width='35' height='35' alt='' /></td>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td data-bind="var: variation(v); format:text;"></td>
+</tr>
+
+
+<tr id='productVariationManagerStoreRowTemplate'>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td data-bind="var: variation(type); format:text;"></td>
+	<td data-bind="var: variation(id); format:text;"></td>
+	<td><button title="Add store option group to product" data-app-click='admin_prodedit|variationAddToProduct' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-w'>Apply</button></td>
+</tr>
+
+<tr id='productVariationManagerProductRowTemplate' class='pointer'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical'></span></td>
+	<td>
+		<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-circle-close'>Remove</button>
+		<button data-bind="var:variation(global); format:hideIfSet; extension:admin_prodedit;" data-app-click='admin_prodedit|variationUpdateShow' data-variationmode='product' class='applyButton' data-text='false' data-icon-primary='ui-icon-pencil'>Edit Variations</button>
+	</td>
+	<td data-bind="var: variation(prompt); format:text;"></td>
+	<td>
+	<div data-bind="var: variation(type); format:text;"></div>
+	<div data-bind="var: variation(global); format:showIfSet;" class='displayNone'>Global</div>
+	<div data-bind="var: variation(inv); format:showIfSet;" class='displayNone'>Inventory-able</div>
+	</td>
+	<td data-bind="var: variation(options.length); format:text;"></td>
+	<td data-bind="var: variation(id); hideZero:false; format:text;"></td>
+</tr>
+
+</td>
