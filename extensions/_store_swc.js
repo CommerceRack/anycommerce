@@ -1684,7 +1684,7 @@ var store_swc = function(_app) {
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]
 						},
-						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Darwin Barney,"Starlin Castro"], 
+						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jeff Samardzija","Starlin Castro"], 
 							"filters" : [
 								{"id":"shirts","img":"5/chicago_cubs_blue_logo_t_shirt5"},
 								{"id":"jerseys","img":"Chicago_Cubs/Chicago_Cubs_Home_Authentic_Jersey"},
