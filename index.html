@@ -68,7 +68,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="lightbox/css/lightbox.css"/>
 <link rel="stylesheet" type="text/css" href="jqueryui-theme/jquery-ui-1.10.4.custom.min.css"/>
 
-<link data-apptimize="embed" href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
+<link data-apptimize="embed" href='https://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
 
 <link rel="SHORTCUT ICON" href="favicon-app.ico" />
 <link rel="ICON" href="favicon-app.ico" />
@@ -326,14 +326,14 @@ var _robots = {
 <div class="clear"></div>
 <div id="footer" class="highlightBG_1">
 	
-	<span id="toggleFooterBtn" class="pointer highlightBG_1 displayNone_1280 displayNone_960" data-app-click="store_swc|toggleFooter">
+	<span id="toggleFooterBtn" class="pointer highlightBG_1" data-app-click="store_swc|toggleFooter">
 		
 	</span>
 	
-	<span id="toggleFooterBar" class="pointer highlightBG_1 alignCenter ui-state-default displayNone_640 displayNone_480 displayNone_320" data-app-click="store_swc|toggleFooter">
+	<!-- <span id="toggleFooterBar" class="pointer highlightBG_1 alignCenter ui-state-default displayNone_640 displayNone_480 displayNone_320" data-app-click="store_swc|toggleFooter">
 		<span class="showFooter ui-icon ui-icon-carat-1-n"></span>
 		<span class="hideFooter ui-icon ui-icon-carat-1-s"></span>
-	</span>
+	</span> -->
 	
 	<div class="fixedContainer">
 		<div id="footerLeft" class="footerColumn">
@@ -1496,7 +1496,7 @@ this will likely become more flexible in the future. ###
 		<div class="productInfoSection marginBottom">
 			<div class="floatRight mfgLogoContainer">
 				<a data-tlc="bind $href '.%attribs.zoovy:prod_mfg'; if(is $href --notblank;){{format --uriencode; format --prepend='#!search/manufacturer/'; apply --attrib='href';}};">
-					<img data-tlc="bind $var '.%attribs.zoovy:prod_image99'; if (is $var --notblank){{store_swc#imageurl --name=$var --b='ffffff'; apply --attrib='src';}};"/>
+					<img data-tlc="bind $var '.%attribs.zoovy:prod_image99'; if (is $var --notblank){{store_swc#imageurl --name=$var --b='tttttt'; apply --attrib='src';}};"/>
 				</a>
 			</div>
 			<h5 data-tlc="bind $var '.pid'; if(is $var --blank;){{apply --hide --tag;}};">Sku :<span data-tlc="bind $var '.pid'; apply --append;" class="stid" itemprop="productID"></span></h5>

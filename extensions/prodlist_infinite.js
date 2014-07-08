@@ -73,7 +73,9 @@ var prodlist_infinite = function(_app) {
 				var EQ = $list.data('elastic-query');
 				if($list && $list.length)	{
 					$list.data('total-page-count', Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
-					
+					if(_rtag.emptyList){
+						$list.intervaledEmpty();
+						}
 					$list.removeClass('loadingBG');
 					if(L == 0)	{
 						$list.append("Your query returned zero results.");
@@ -275,6 +277,13 @@ else	{
 				
 				var onScroll = function(override){
 					//will load data when two rows from bottom.
+					dump('onScroll');
+					dump(override);
+					dump($(window).scrollTop());
+					dump($(document).height());
+					dump($(window).height());
+					dump($tag.children().first().height());
+					dump(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) );
 					if(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
 						$(window).off('scroll.infiniteScroll');
 						if($tag.data('isDispatching') == true)	{}
@@ -300,7 +309,7 @@ else	{
 						onScroll(true);
 						}
 					else {
-						$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll', onScroll);
+						$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll', function(){onScroll(false);});
 						}
 					}
 				}

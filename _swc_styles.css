@@ -162,12 +162,16 @@ a.redText{color:#7e0000;}
 
 #appView #toggleFooterBar .hideFooter{display:none;}
 #appView.showFooter #toggleFooterBar .hideFooter{display:inline-block;}
+#appView.initFooter #toggleFooterBar .hideFooter{display:inline-block;}
 #appView #toggleFooterBar .showFooter{display:inline-block;}
 #appView.showFooter #toggleFooterBar .showFooter{display:none;}
+#appView.initFooter #toggleFooterBar .showFooter{display:none;}
 
 #footer{transition: bottom .6s;}
 #appView.peekFooter.showFooter #footer,
 #appView.showFooter #footer {bottom:0px;}
+#appView.peekFooter.initFooter #footer,
+#appView.initFooter #footer {bottom:0px;}
 
 #footer a {color:white; text-decoration: none;}
 

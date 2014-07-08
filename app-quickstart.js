@@ -518,18 +518,18 @@ need to be customized on a per-ria basis.
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 			
 			if(infoObj.performJumpToTop){
-				$('html, body').animate({scrollTop : 0}, 400);
+				$('html, body').animate({scrollTop : 0}, 300);
 				}
 			
 			if($o.length)	{
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
-				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 600);}, 600); //fade out old, fade in new.
+				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 300);}, 300); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
 				callback();
-				setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 600);
+				setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 300);
 				}
 			}, //pageTransition
 
@@ -2260,7 +2260,7 @@ elasticsearch.size = 50;
 				
 				_app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
 //				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,infoObj);
-				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')}));
+				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleInfiniteElasticResults', 'emptyList':true,'datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'prodlist_infinite','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')}));
 				_app.model.dispatchThis();
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
 				_app.renderFunctions.handleTemplateEvents($page,infoObj);

@@ -11,6 +11,7 @@
 #appView.showFooter {padding-bottom: 210px;}
 /* #appView.peekFooter.showFooter {padding-bottom: 210px;} */
 #appView #footer {bottom:-170px;}
+#appView.initFooter #footer {bottom:-170px;}
 /* #appView.peekFooter #footer {bottom:-130px;} */
 #footer{padding: 20px 0px;}
 

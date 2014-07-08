@@ -7,7 +7,9 @@
 #header {height:93px;}
 #appView {padding-top: 98px; padding-bottom:40px;}
 #appView.showFooter {padding-bottom: 210px;}
+#appView.initFooter {padding-bottom: 210px;}
 #appView.peekFooter.showFooter {padding-bottom: 210px;}
+#appView.peekFooter.initFooter {padding-bottom: 210px;}
 #appView #footer {bottom:-150px;}
 #appView.peekFooter #footer {bottom:-130px;}
 
