@@ -83,7 +83,7 @@ var store_swc = function(_app) {
 				if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam);
 					}
-				else if(document.location.hash.indexOf("#!filter")>=0 && document.location.hash.indexOf("team=") >= 0){
+				else if(/*document.location.hash.indexOf("#!filter")>=0 && */document.location.hash.indexOf("team=") >= 0){
 					dump("the filter will handle setting the team!");
 					//do nothing- filter will handle it
 					}
@@ -97,6 +97,9 @@ var store_swc = function(_app) {
 					showContent('static',{dataset:_app.ext.store_swc.vars.userTeams, 'templateID':'shopByPlayerTemplate'});
 					}});
 				*/
+				_app.router.appendHash({'type':'exact','route':'connect_with_sportsworld/', 'callback':function(routeObj){
+					showContent('static',{'templateID':'socialTemplate'});
+					}});
 				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
 					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
 					}});
