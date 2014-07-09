@@ -1030,6 +1030,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							$('body').showLoading({'message':'Transferring to secure login'});							
 							var SSLlocation = _app.vars.secureURL+"?cartID="+_app.model.fetchCartID();
 							SSLlocation += "#!customer/"+infoObj.show
+							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
 							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
 							document.location = SSLlocation; //redir to secure url.
 							}
@@ -1051,6 +1052,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
 							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+_app.model.fetchCartID()+"&_session="+_app.vars._session+"#!checkout";
+							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
+							
 							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
@@ -1605,7 +1608,7 @@ $target.tlc({
 //				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; dump('transition suppressed: showing modal cart.');}
 				if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading same category.");}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading homepage.");}
-				else if(infoObj.pageType == 'static' && $old.data('templateid') == infoObj.templateid && $old.data('pageid') == infoObj.id){r = false; dump("transition suppressed: same filter page "+infoObj.id);}
+				else if(infoObj.pageType == 'static' && infoObj.id && $old.data('templateid') == infoObj.templateid && $old.data('pageid') == infoObj.id){r = false; dump("transition suppressed: same filter page "+infoObj.id);}
 				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; dump("transition suppressed: reloading same product.");}
 				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; dump("transition suppressed: changing company articles.");}
 				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; dump("transition suppressed: changing customer articles.");}
