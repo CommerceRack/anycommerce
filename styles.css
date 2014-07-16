@@ -158,6 +158,13 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 .productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:1.1em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.3em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;} /* largish right margin for chrome/safari 'voice' button */
 
+/*Shop button attention grabber arrow*/
+.shopButtonAttentionArrowCont{
+	left: 55px;
+    position: absolute;
+    top: 30px;
+    z-index: 10000;
+}
 #tier1catContainer	{
 	display:none; 
 	position:absolute; left:1em; top:77px; width:90%;
@@ -190,6 +197,8 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	}
 #tier1categories img	{float:left; margin-right:.5em;}
 #tier1categories li a	{text-decoration:none;}
+
+
 
 
 
@@ -475,6 +484,15 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 #solicitFeedbackSB .primaryText	{font-size:1.6em;}
 
 @media only screen and (min-width: 768px) {
+	
+	/*Shop button attention grabber arrow*/
+	.shopButtonAttentionArrowCont{
+		left: 60px;
+		position: absolute;
+		top: 90px;
+		z-index: 10000;
+	}
+	
 	body	{background:url(images/zs10_body_bg-2000x16.gif) repeat-y; margin:0em; padding:.7em; font-weight:100;}
 	
 	#mastHead	{height:141px;}
@@ -604,6 +622,10 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 if this changes, some JS needs to be written to handle making sure the cats are visible. otherwise, in vertical the cats could be 'closed' and then on aspect change, they wouldn't show up.
 */
 @media only screen and (min-width: 1040px) {
+	/*Shop button attention grabber arrow*/
+	.shopButtonAttentionArrowCont{
+		display:none;
+	}
 	#headerDecal1	{display:block; position:absolute; top:20px; right:.5em; background:url(images/rapidssl-90x50.gif) no-repeat; height:50px; width:90px;}
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
@@ -641,6 +663,10 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 
 
 @media only screen and (min-width: 1280px) {
+	/*Shop button attention grabber arrow*/
+	.shopButtonAttentionArrowCont{
+		display:none;
+	}
 	.zProductList li.plLineItem	{width:19%; height:240px;}
 	}
 

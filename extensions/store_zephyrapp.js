@@ -36,46 +36,7 @@ var store_zephyrapp = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 
-//bind a click action for the dropdown on the shop link.
-				$('#shopNowLink').on('click',function(){
-					$('#tier1catContainer').slideDown();
-					$( document ).one( "click", function() {
-						$('#tier1catContainer').slideUp();
-						});
-					return false;
-					});
 
-
-//resize is executed continuously as the browser dimensions change. This function allows the code to be executed once, on finish (or pause)
-	$(window).resize(function() {
-		if(this.resizeTO) {clearTimeout(this.resizeTO);}
-		this.resizeTO = setTimeout(function() {
-			$(this).trigger('resizeEnd');
-			}, 500);
-		});
-
-	$(window).bind('resizeEnd', function(P) {
-		//resize all the images in the visible content area based on srcset and new browser dimensions.
-		if(typeof handleSrcSetUpdate == 'function')	{
-//			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length+" and ID: "+$("#mainContentArea :visible:first").attr('id'));
-			handleSrcSetUpdate($("#mainContentArea :visible:first"))
-			}
-		
-		//css will handle the category list show/hide to some degree.
-		//however, if the browser was smaller than 1040 and the cats were toggled, an inline 'hide' would be present and cats wouldn't show up. over 1040, cats are always visible.
-		if($(window).width() >= 1040)	{
-			$('#tier1catContainer').show(); 
-			}
-		else	{
-			$('#tier1catContainer').hide(); //may not need this. here in case width > 1040 and then scaled down. Cats would go into 'open' position. felt unnatural.
-			}
-		
-		//if a dialog is open, reposition it to the center of the screen.
-		$('.ui-dialog-content:visible').each(function(){
-			$(this).dialog("option", "position", "center");
-			})
-		
-		}).trigger('resizeEnd');
 
 
 
@@ -251,6 +212,7 @@ var store_zephyrapp = function(_app) {
 			},
 			startExtension: {
 				onSuccess : function()	{
+					/*
 					var temp = JSON.parse(_app.storageFunctions.readLocal('recentlyViewedItems'));
 					var oldTime = JSON.parse(_app.storageFunctions.readLocal('timeStamp'));
 					var d = new Date().getTime();
@@ -268,6 +230,91 @@ var store_zephyrapp = function(_app) {
 						$("ul",$container).empty(); //empty product list
 						$container.anycontent({data:_app.ext.myRIA.vars.session}); //build product list
 					}
+					*/
+					
+					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+
+
+//bind a click action for the dropdown on the shop link.
+				$('#shopNowLink').on('click',function(){
+					$(".shopButtonAttentionArrowCont").hide();
+					$('.shopButtonAttentionArrowCont').data('clickOff',true).append();
+					
+					if($('#tier1catContainer').data('sliderState')){}
+					else{
+						$('#tier1catContainer').data('sliderState',false).append();
+					}
+					
+					if($('#tier1catContainer').data('sliderState') === false){
+						$('#tier1catContainer').slideDown();
+						$('#tier1catContainer').data('sliderState',true).append();
+					}
+					else if($('#tier1catContainer').data('sliderState') === true){
+						$('#tier1catContainer').slideUp();
+						$('#tier1catContainer').data('sliderState',false).append();
+					}
+										
+					/*$( document ).one( "click", function() {
+						$('#tier1catContainer').slideUp();
+						});
+					*/
+					return false;
+				});
+
+
+			//resize is executed continuously as the browser dimensions change. This function allows the code to be executed once, on finish (or pause)
+				$(window).resize(function() {
+					if(this.resizeTO) {clearTimeout(this.resizeTO);}
+					this.resizeTO = setTimeout(function() {
+						$(this).trigger('resizeEnd');
+						}, 500);
+					});
+			
+				$(window).bind('resizeEnd', function(P) {
+					//resize all the images in the visible content area based on srcset and new browser dimensions.
+					if(typeof handleSrcSetUpdate == 'function')	{
+			//			dump(" -----------> firing off resize event. length: "+$("#mainContentArea :visible:first").length+" and ID: "+$("#mainContentArea :visible:first").attr('id'));
+						handleSrcSetUpdate($("#mainContentArea :visible:first"))
+						}
+					
+					//css will handle the category list show/hide to some degree.
+					//however, if the browser was smaller than 1040 and the cats were toggled, an inline 'hide' would be present and cats wouldn't show up. over 1040, cats are always visible.
+					if($(window).width() >= 1040)	{
+						$('#tier1catContainer').show(); 
+						}
+					else	{
+						$('#tier1catContainer').hide(); //may not need this. here in case width > 1040 and then scaled down. Cats would go into 'open' position. felt unnatural.
+						}
+					
+					//if a dialog is open, reposition it to the center of the screen.
+					$('.ui-dialog-content:visible').each(function(){
+						$(this).dialog("option", "position", "center");
+						})
+					
+					}).trigger('resizeEnd');
+					
+					_app.templates.homepageTemplate.on('complete.zephyr',function(event,$context,infoObj){
+						$('.shopButtonAttentionArrowCont').data('clickOff',false).append();
+						var loopDuration = 4000;
+						if($(window).width() < 1040)	{
+							for(i = 0; i < 10; i++){
+								loopDuration = loopDuration + 4000;
+								setTimeout((function (){
+									if($(window).width() < 1040)	{
+										if($('.shopButtonAttentionArrowCont').data('clickOff') === false){
+											$(".shopButtonAttentionArrowCont").effect("shake");
+										}
+										else{
+											$(".shopButtonAttentionArrowCont").hide();
+										}
+									}
+									else{
+										$(".shopButtonAttentionArrowCont").hide();
+									}
+									}), loopDuration);
+							}
+						}
+					});
 				},
 				onError : function()	{
 				}

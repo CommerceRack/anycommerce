@@ -30,7 +30,7 @@ myApp.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.j
 //custom extensions
 myApp.rq.push(['extension',0,'tools_zoom','extensions/tools_zoom/tools_zoom.js']);
 myApp.rq.push(['extension',0,'tools_magnificpopup','extensions/tools_magnificpopup/extension.js']);
-myApp.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js']);
+myApp.rq.push(['extension',0,'store_zephyrapp','extensions/store_zephyrapp.js','startExtension']);
 
 //disabled scripts
 //myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);

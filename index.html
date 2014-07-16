@@ -112,7 +112,7 @@ $(document).ready(function(){
 	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
 
 	window.myApp = new initApp({
-		"release":"201405.aa",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+		"release":"201405.ab",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 		"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 		"baseURL":baseURL, //used in non-local mode.
 		"checkoutAuthMode" : "active",//can be passive, active or required
@@ -216,9 +216,12 @@ $(document).ready(function(){
 		</a>
 		</nav>
 		
-		<div id='shopNowLink'>Shop <span class='arrow-down'></span></div><!-- hidden by default. on click, shows tier 1 categories -->		
+		<div id='shopNowLink'>Shop <span class='arrow-down'></span></div><!-- hidden by default. on click, shows tier 1 categories -->
+		<div class="shopButtonAttentionArrowCont displayNone" onClick="$('.shopButtonAttentionArrowCont').data('clickOff',true).append().hide();">
+        	<img src="images/PaintballArrowBlue--App_ShopButton_helper.png" />
+		</div>
 		<div id='tier1catContainer'>
-			<button title='close'>X</button>
+			<button onClick="$('#tier1catContainer').data('sliderState',false).append().slideUp();" title='close'>X</button>
 			<nav id='tier1categories' class='mastHeadMenu'></nav>
 			<div class='clearfix' id='shopByBrandContainer'>
 				<a class='sprite mfg eclipse' href='#!category/shop_by_brand.eclipse_paintball' title='eclipse'></a>
