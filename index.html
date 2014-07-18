@@ -578,7 +578,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 <li id="categoryListTemplateRootCats">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
+	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';" onclick="$('#tier1catContainer').slideUp(); $('#tier1catContainer').data('sliderState',false).append();">
 	<img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank;) {{ apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace; apply --add --class='rootCatThumb';}};" src="blank.gif" class="catThumb" alt="">
 	<span data-tlc="bind $var '.pretty'; apply --append;"></span>
 	</a>
