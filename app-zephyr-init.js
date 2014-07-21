@@ -22,6 +22,8 @@ myApp.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 myApp.rq.push(['extension',0,'store_tracking','extensions/store_tracking.js']);
 myApp.rq.push(['extension',0,'quickstart','app-quickstart.js','startMyProgram']);
 myApp.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
+myApp.rq.push(['extension',1,'google_adwords','extensions/partner_google_adwords.js','startExtension']);
+
 //myApp.rq.push(['extension',0,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 
 //myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
