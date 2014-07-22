@@ -128,7 +128,7 @@ $(document).ready(function(){
 	<div class='appMessaging'></div>
 
 	<div id='loginFormContainer'>
-		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom'>
+		<form name='merchantLogin' id='merchantLogin' action='#' class='clearfix marginBottom' data-app-submit="admin|accountLogin">
 		<input type='hidden' name='authtype' value='password' /><!-- required for the 'call' -->
 		<fieldset class='labelsAsBreaks alignedInputs'>
 			<legend>Merchant Login</legend>
@@ -136,12 +136,16 @@ $(document).ready(function(){
 			<div class='clearfix marginBottom'>
 				<input placeholder='login' type='text' name='userid' value='' required='required' class='textbox' />
 				<input placeholder='password' type='password' name='password' value=''  required='required' class='textbox' />
-				<button class='loginbutton' data-app-event="admin|accountLogin">login</button>				
+				<!-- <div class="advancedLoginShow displayNone">
+					<div class="alignCenter">OR</div>
+					<input name='authtoken' class='textbox' type='text' value='' placeholder='authtoken'/>
+				</div> -->
+				<button class='loginbutton' >login</button>				
 				
-				<div id='loginAdvancedContainer' class='displayNone'>
+				<div class='advancedLoginShow displayNone'>
 					<!-- advanced login -->
 					API Domain:
-					<input placeholder='www.domain.com' type='text' name='apidomain' value='' class='textbox' />					
+					<input placeholder='www.domain.com' type='text' name='apidomain' value='' class='textbox' />
 				</div>
 			</div>
 			
@@ -153,7 +157,8 @@ $(document).ready(function(){
 
 			<div class='clearfix marginBottom'>
 				<div class='lookLikeLink hint floatRight' data-app-event="admin|showPasswordRecover">Recover Password</div>
-				<div class='lookLikeLink hint' data-app-event="admin|showLoginAdvanced">Advanced Login</div>
+				<div class='lookLikeLink hint advancedLoginHide' data-app-click="admin|showLoginAdvanced">Advanced Login</div>
+				<div class='lookLikeLink hint advancedLoginShow displayNone' data-app-click="admin|showLoginSimple">Simple Login</div>
 				<!--
 				<div class="hint"><a href='/201401/app-admin.html'> &#187; Use previous version</a></div>
 				-->

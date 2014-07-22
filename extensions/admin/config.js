@@ -1914,12 +1914,12 @@ when an event type is changed, all the event types are dropped, then re-added.
 				$target.find("[data-app-role='addNotificationContainer']").empty().anycontent({"templateID":"appendNotificationFieldset","data":{}});
 				
 				_app.u.handleButtons($target);
+				_app.u.addEventDelegation($target);
 				$('form',$target).anyform();
-				$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
+				//$("[data-app-role='verb_"+($ele.data('event').split('.')[0])+"']",$target).show();
 				
 				return false;
 				}
-				
 
 			} //e [app Events]
 		} //r object.
