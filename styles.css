@@ -483,7 +483,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 #solicitFeedbackSB	{padding:.2em; border:1px solid #F33; margin-bottom:.5em; text-align:center; font-size:.9em;}
 #solicitFeedbackSB .primaryText	{font-size:1.6em;}
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 840px) {
 	
 	/*Shop button attention grabber arrow*/
 	.shopButtonAttentionArrowCont{
