@@ -30,7 +30,8 @@ var store_search = function(_app) {
 	vars : {
 //a list of the templates used by this extension.
 //if this is a custom extension and you are loading system extensions (prodlist, etc), then load ALL templates you'll need here.
-		"ajaxRequest" : {}
+		"ajaxRequest" : {},
+		"universalFilters":[]
 		},
 
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -50,8 +51,29 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 		appPublicProductSearch : {
 			init : function(P,tagObj,Q)	{
 //				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
-				if(_app.vars.debug == 'search')	{
-					dump(JSON.stringify(P));
+				var universalFilters = $.extend(true, [], _app.ext.store_search.vars.universalFilters);
+				if(universalFilters.length){
+					if(obj.filter){
+						var tmp = obj.filter;
+						obj.filter = {
+							"and" : universalFilters
+							}
+						obj.filter.and.push(tmp);
+						}
+					else if(obj.query){
+						var tmp = obj.query;
+						obj.query = {
+							"filtered" : {
+								"query" : tmp,
+								"filter" : {
+									"and" : universalFilters
+									}
+								}
+							}
+						}
+					else{
+						//This is not going to end well, but let's let Elastic tell you that.
+						}
 					}
 				this.dispatch(P,tagObj,Q)
 				return 1;
@@ -69,9 +91,29 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
-//				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
-				if(_app.vars.debug == 'search')	{
-					dump(JSON.stringify(obj));
+				var universalFilters = $.extend(true, [], _app.ext.store_search.vars.universalFilters);
+				if(universalFilters.length){
+					if(obj.filter){
+						var tmp = obj.filter;
+						obj.filter = {
+							"and" : universalFilters
+							}
+						obj.filter.and.push(tmp);
+						}
+					else if(obj.query){
+						var tmp = obj.query;
+						obj.query = {
+							"filtered" : {
+								"query" : tmp,
+								"filter" : {
+									"and" : universalFilters
+									}
+								}
+							}
+						}
+					else{
+						//This is not going to end well, but let's let Elastic tell you that.
+						}
 					}
 				this.dispatch(obj,tagObj,Q)
 				return 1;
@@ -458,7 +500,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 			getElasticResultsAsJQObject : function(P)	{
 //				_app.u.dump("BEGIN store_search.u.getElasticResultsAsJQObject ["+P.datapointer+"]")
 				var pid;//recycled shortcut to product id.
-				var L = _app.data[P.datapointer]['_count'];
+				var L = _app.data[P.datapointer]['_count'] || _app.data[P.datapointer].hits.hits.length;
 				var $r = $("<ul />"); //when this was a blank jquery object, it didn't work. so instead, we append all content to this imaginary list, then just return the children.
 //				_app.u.dump(" -> parentID: "+P.parentID); //resultsProductListContainer
 //				_app.u.dump(" -> L: "+L);
@@ -480,7 +522,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				es.type = 'product';
 				es.mode = 'elastic-search';
 				es.size = 250;
-//				es.sort = [{'prod_name.raw':'asc'}] //here for testing. prod_name is tokenized, so the .raw field must be used for sorting.
+				
 				return es;
 				},
 			
