@@ -827,11 +827,22 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div id="fieldcamTemplate" class="fieldCamPage alignCenter">
 	<span class="displayNone" data-routing-hash="#!fieldcam/"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
-	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
+	<span class="displayNone" data-seo-title="LIVE Wrigley Field Cam - Across From Wrigley Field Since 1979"></span>
+	<span class="displayNone" data-seo-desc="Live Earthcam of Wrigley Field From Clark & Addison St. in Chicago.  Across From Wrigley Field Since 1979. Chicago Cubs Tickets for Sale at SportsWorldChicago.com" ></span>
 	<div class="cam1" data-tlc="bind $html '.cam1'; apply --append;"></div>
 	<div class="cam2" data-tlc="bind $html '.cam2'; apply --append;"></div>
 	<div class="clear"></div>
+	
+	<p>
+		SportsWorldChicago.com has one of the only Live Web Cameras in Wrigleyville at the corner of Clark and Addison Streets.  Directly across from Wrigley Field, 
+		home of the Chicago Cubs, you can always see night and day what is happening at the epicenter of baseball in Chicago.
+	</p>
+	
+	<p>
+		Be sure to browse through SportsWorldChicago.com to shop for all your <a href="#!filter/shirts/">Chicago Cubs shirts</a> and Wrigley Field hats.  
+		Sports World has one of the largest selections of <a href="#!filter/hats/">Cubs caps and hats</a>, plus all <a href="#!filter/jerseys/">Chicago Cubs authentic jerseys</a> 
+		and on-field merchandise needed to make you a true Chicago Cubs fan!
+	</p>
 	<!--
 	<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>
 	<object width="650" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="650" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>
