@@ -220,7 +220,7 @@ var store_swc = function(_app) {
 					$context.empty().remove();
 					});
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
-				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tag":"IS_DISCONTINUED"}}});
+				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
 				
 				for(var sport in _app.ext.store_swc.validTeams){
 					for(var teamIndex in _app.ext.store_swc.validTeams[sport]){
