@@ -1283,6 +1283,25 @@ var store_swc = function(_app) {
 					"user:app_brands"
 					]
 				},
+			'bears' : {
+				title : "Chicago Bears",
+				onEnter : function(){
+					//var team = "chicago_blackhawks";
+					//_app.ext.store_swc.u.setUserTeam({sport:'app_nhl',team:'chicago_blackhawks'});
+					_app.u.throwMessage(_app.u.successMsgObject('Would you like to change your team to the <span class="redText">Chicago Bears</span>? <span class="pointer" data-app-click="store_swc|promptUserTeam" data-swc-team="chicago_bears" data-swc-sport="app_nfl">Click here!</span>'));
+					},
+				noteams : true,
+				baseFilter : {
+					"term" : {"app_nfl":"chicago_bears"}
+					},
+				optionList : [
+					"user:app_department",
+					"user:app_sub_department",
+					"user:app_t_shirts",
+					"user:app_souvenirs",
+					"user:app_brands"
+					]
+				},
 			'shirts' : {
 				title : "Shirts",
 				titleBuilder : function(teamName){
