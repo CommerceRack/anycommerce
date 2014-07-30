@@ -193,7 +193,8 @@ used, but not pre-loaded.
 				$tag.css('position','relative');  //so menu appears where it should.
 
 				if(data.value.HOSTTYPE == 'APPTIMIZER' || data.value.HOSTTYPE == 'VSTORE-APP')	{
-					$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+					//$menu.append("<li><a href='#' data-app-click='admin_sites|adminSEOInitExec'>Get SEO Token</a></li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='FQDN' data-type='UTILITY/SPIDER'>Request Spider</a></li>");
 
 					if(data.value.PROJECT && data.value.PROJECT.indexOf(data.value.HOSTNAME.toLowerCase()) >= 0)	{
 // * 201401 -> currently, 'choose template' is in the host editor if host type == aptimizer and 'template' is selected.
