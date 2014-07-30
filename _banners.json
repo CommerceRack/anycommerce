@@ -18,6 +18,12 @@
 		"href":"#!search/manufacturer/nike/"
 	},
 	{
+		"src":"banners/2014/chicago_blackhawks_transparent_banner_3.png",
+		"alt":"Chicago Blackhawks Shirts, Jerseys, Hats at SportsWorldChicago.com",
+		"title":"Chicago Blackhawks Shirts, Jerseys, Hats at SportsWorldChicago.com",
+		"href":"#!filter/blackhawks/"
+	},
+	{
 		"src":"banners/chicago_cubs_authentic_jersey_homepage_banner.png",
 		"alt":"Authentic Jerseys at SportsWorldChicago.com",
 		"title":"Authentic Jerseys at SportsWorldChicago.com",
@@ -31,8 +37,8 @@
 	},
 	{
 		"src":"banners/2014/blackhawks_transparent_banner.png",
-		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
-		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"alt":"Chicago Blackhawks Apparel and Merchandise",
+		"title":"Chicago Blackhawks Apparel and Merchandise",
 		"href":"#!filter/blackhawks/"
 	}
 ]
