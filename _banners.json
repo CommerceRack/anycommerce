@@ -6,10 +6,10 @@
 		"href":"#!filter/100_years_of_wrigley_field/"
 	},
 	{
-		"src":"banners/2014/blackhawks_transparent_banner.png",
-		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
-		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
-		"href":"#!filter/blackhawks/"
+		"src":"banners/2014/chicago_bears_transparent_artwork.png",
+		"alt":"Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com",
+		"title":"Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com",
+		"href":"#!filter/bears/"
 	},
 	{
 		"src":"banners/2014/sportsworldchicago_nike_transparent_banner_v2.png",
@@ -28,5 +28,11 @@
 		"alt":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
 		"title":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
 		"href":"#!filter/hats/"
+	},
+	{
+		"src":"banners/2014/blackhawks_transparent_banner.png",
+		"alt":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"title":"Chicago Blackhawks 2014 Playoff Apparel and Merchandise",
+		"href":"#!filter/blackhawks/"
 	}
 ]
