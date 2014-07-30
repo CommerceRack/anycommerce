@@ -2721,7 +2721,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 				if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
 					var newHref = _app.vars.baseURL;
-					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
+					newHref += href.substring(0,2) == '#!' ? href :'#!'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
