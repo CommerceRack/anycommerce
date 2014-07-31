@@ -1,5 +1,5 @@
-~path#rewrite  /c=.*?/(.*) /$1
-~path#rewrite  /s=.*?/(.*) /$1
+~path#rewrite	/c=.*?/(.*)	/$1
+~path#rewrite	/s=.*?/(.*)	/$1
 ~path	/category/wrigley_field_cam/?	/#!fieldcam/
 ~path	/category/chicago-cubs-souvenirs/?	/#!filter/souvenirs/
 ~path	/category/chicago-cubs-shirts/?	/#!filter/shirts/
