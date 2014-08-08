@@ -1258,7 +1258,7 @@ in a reorder, that data needs to be converted to the variations format required 
 						}
 					}
 				else if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
-					_app.u.dump("zGlobals.checkoutSettings.googleCheckoutMerchantId is set, but _gaq is not defined (google analytics not loaded but required)",'warn');
+					_app.u.dump("zGlobals.checkoutSettings.googleCheckoutMerchantId is set, but ga is not defined (google analytics not loaded but required)",'warn');
 					}
 				else	{
 					$tag.addClass('displayNone');

@@ -47,6 +47,8 @@ var store_tracking = function(_app) {
 					if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order){
 						var order = _app.data[P.datapointer].order;
 						var plugins = zGlobals.plugins;
+
+						ga('require', 'ecommerce');
 						
 						//analytics tracking
 						ga('ecommerce:addTransaction', {
