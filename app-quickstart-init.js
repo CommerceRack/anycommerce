@@ -106,7 +106,7 @@ myApp.u.appInitComplete = function()	{
 		if(myApp.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
 			$('.ocmFacebookComment',$checkout).click(function(){
 				myApp.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
-				_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+				ga('send','event','Checkout','User Event','FB message about order']);
 				window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','FB message about order');
 				});
 			}
