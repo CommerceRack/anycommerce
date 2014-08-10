@@ -30,13 +30,7 @@ var store_swc = function(_app) {
 			"filteredSearchTemplate",
 			"fieldcamTemplate"
 			],
-		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.            <p>1. I understand it takes 3-14 business days to customize my item.</p>
-			<p>1. This item is not returnable / exchangeable as it is considered customized.</p>
-			<p>1. Once this order is placed, no changes or cancellations are permitted.</p>
-			<p>1. May not contain profanity, “Miss/Ms. ‘Player’” or phrases deemed inappropriate by Major League Baseball.</p>
-            <p>2. Any current/retired player names and #'s or nicknames are prohibited.</p>
-            <p>3. All orders are produced with upper case lettering, and no punctuation marks or special characters of any kind.</p>
-            <p>4. All combinations must contain a Number. If you do not want a name, please type "No Name" in the name field.</p>",
+		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
 		elasticFields : {},
 		/*
 		userTeams : {
