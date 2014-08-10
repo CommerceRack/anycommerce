@@ -30,7 +30,9 @@ var store_swc = function(_app) {
 			"filteredSearchTemplate",
 			"fieldcamTemplate"
 			],
-		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
+		customPrompt : "I understand it takes 3-14 business days to customize my item. 
+		<p>1. This item is not returnable / exchangeable as it is considered customized.
+		<p>2. Once this order is placed, no changes or cancellations are permitted.",
 		elasticFields : {},
 		/*
 		userTeams : {
