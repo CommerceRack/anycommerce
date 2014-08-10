@@ -30,7 +30,7 @@ var store_swc = function(_app) {
 			"filteredSearchTemplate",
 			"fieldcamTemplate"
 			],
-		customPrompt : "<p class="heading">*By clicking <b>'I AGREE'</b>, you agree that all <b>Personalized items</b> are deemed <b>NON-RETURNABLE</b>. In addition, you acknowledge the following terms of personalized purchase:</p>
+		customPrompt : "*By clicking <b>'I AGREE'</b>, you agree that all <b>Personalized items</b> are deemed <b>NON-RETURNABLE</b>. In addition, you acknowledge the following terms of personalized purchase:</p>
             <p>1. I understand it takes 3-14 business days to customize my item.</p>
 			<p>1. This item is not returnable / exchangeable as it is considered customized.</p>
 			<p>1. Once this order is placed, no changes or cancellations are permitted.</p>
