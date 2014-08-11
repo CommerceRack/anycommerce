@@ -2145,12 +2145,12 @@ var store_swc = function(_app) {
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Boston Bruins","v":"boston_bruins", "img":"nhlhats/boston_bruins_hat.jpg", 
-							"filters" : [
-								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
-								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
-								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
-							]},
+//						{"p":"Boston Bruins","v":"boston_bruins", "img":"nhlhats/boston_bruins_hat.jpg", 
+//							"filters" : [
+//								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
+//								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
+//								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
+//							]},
 						{"p":"Buffalo Sabres","v":"buffalo_sabres", "img":"nhlhats/buffalo_sabres_hat.jpg", 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
