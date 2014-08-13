@@ -66,7 +66,8 @@ var store_tracking = function(_app) {
 								'price' : item.base_price,
 								'qty' : item.qty,
 								})
-							}
+							};
+
 						ga('ecommerce:send');
 						
 						for(var i in plugins){
