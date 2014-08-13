@@ -328,7 +328,7 @@ var store_zephyrapp = function(_app) {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-			
+				
 			}, //Actions
 
 ////////////////////////////////////   TLCFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

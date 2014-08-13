@@ -138,7 +138,6 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 	background: -o-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top, #ff9c00 0%,#ff4000 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #ff9c00 0%,#ff4000 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9c00', endColorstr='#ff4000',GradientType=0 ); /* IE6-9 */	
 	}
 
 #shopNowLink .arrow-down {
@@ -158,6 +157,26 @@ h5	{font-size:1.03em; color:#666; margin:0;}
 .productSearchKeyword	{margin:0; padding:0; text-indent:.2em; border:0; font-size:1.1em; z-index:9; width:100%;}
 #mastHeadSearchButton	{position:absolute; bottom: 0px; right:.3em; background-position:-95px -72px; width:20px; height:15px; border:0; padding:0; z-index:10;} /* largish right margin for chrome/safari 'voice' button */
 
+.searchResetButton{
+    border: medium none;
+    border-radius: 5px;
+    bottom: -23px;
+    color: white;
+    font-family: 'Oswald',Arial,Helvetica,sans-serif;
+    font-weight: bolder;
+    padding: 3px 7px;
+    position: absolute;
+    right: 1%;
+    z-index: 1000;
+	background: #e6731d; /* Old browsers */
+	background: -moz-linear-gradient(top,  #e6731d 0%, #f23d1f 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e6731d), color-stop(100%,#f23d1f)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  #e6731d 0%,#f23d1f 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  #e6731d 0%,#f23d1f 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  #e6731d 0%,#f23d1f 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  #e6731d 0%,#f23d1f 100%); /* W3C */
+
+}
 /*Shop button attention grabber arrow*/
 .shopButtonAttentionArrowCont{
 	left: 55px;
@@ -524,6 +543,11 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		background: linear-gradient(to bottom, rgba(114,110,107,1) 0%,rgba(68,72,75,1) 100%); /* W3C */
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#726e6b', endColorstr='#44484b',GradientType=0 ); /* IE6-9 */
 		}
+		
+	.searchResetButton{
+		left: 61%;
+		bottom: 3px;
+	}
 
 	#headerDecal2	{
 		display:block;
@@ -630,6 +654,10 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#menuNav, #headerDecal2	{right:110px;}
 	.checkoutText	{display:inline;}
 	#mastHeadSearchFrm	{left:.5em; width:50%;}
+	.searchResetButton{
+		left: 51%;
+		bottom: 3px;
+	}
 	#mainContentArea, #globalMessaging, #appNav	{
 		margin-left:195px; 
 		}
@@ -667,6 +695,10 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	.shopButtonAttentionArrowCont{
 		display:none;
 	}
+	.searchResetButton{
+    left: 51%;
+	bottom: 3px;
+}
 	.zProductList li.plLineItem	{width:19%; height:240px;}
 	}
 
