@@ -69,17 +69,18 @@ var store_tracking = function(_app) {
 							'shipping' : order.sum.shp_total,
 							'tax' : order.sum.tax_total
 							};
-						_app.u.dump(r);
-
+						// _app.u.dump(r);
 						ga('ecommerce:addTransaction',r);
+
 						for(var i in order['@ITEMS']){
 							var item = order['@ITEMS'][i];
+							// _app.u.dump(item);
 							ga('ecommerce:addItem', {
 								'id' : order.our.orderid,
 								'name' : item.prod_name,
 								'sku' : item.sku,
 								'price' : item.base_price,
-								'qty' : item.qty,
+								'quantity' : item.qty,
 								})
 							};
 
