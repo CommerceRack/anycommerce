@@ -1367,6 +1367,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <address id="billAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
 	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
+	<button data-app-click="quickstart|showBuyerAddressRemove" class="floatRight applyButton">remove</button>
 	<div class="addressFullname">
 		<span data-tlc="bind $var '.bill/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
 		<span data-tlc="bind $var '.bill/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
@@ -1387,6 +1388,7 @@ The 'data-action' attribute is used to assign an onclick.
 <!-- used in the my account area -->
 <address id="shipAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
 	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
+	<button data-app-click="quickstart|showBuyerAddressRemove" class="floatRight applyButton">remove</button>
 	<div class="addressFullname">
 		<span data-tlc="bind $var '.ship/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
 		<span data-tlc="bind $var '.ship/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>

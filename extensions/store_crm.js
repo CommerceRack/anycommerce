@@ -601,7 +601,85 @@ This is used to get add an array of skus, most likely for a product list.
 					$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressAddModal, either vars was undefined/not an object ['+typeof vars+'] or  addressType not set to bill or ship.','gMessage':true});
 					}
 				return r;
-				}
+				},
+				
+			showAddressRemoveModal : function(vars,onSuccessCallback)	{
+				var r = false; //what is returned. true if editor is displayed, false if an error occured.
+
+				if(typeof vars === 'object' && vars.addressID && vars.addressType)	{
+					var addressData = _app.ext.cco.u.getAddrObjByID(vars.addressType,vars.addressID);
+					
+					if(addressData)	{
+						r = true;
+						var $editor = $("<div>Are you sure you want to remove this address?</div>");
+						$editor.append("<input type='hidden' name='shortcut' value='"+vars.addressID+"' \/>");
+						$editor.append("<input type='hidden' name='type' value='"+vars.addressType+"' \/>");
+						$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
+						
+						$editor.dialog({
+							width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
+							height: ($(window).height() < 200) ? ($(window).height() - 50) : 200,
+							modal: true,
+							title: 'Remove Address?',
+							buttons : {
+								'cancel' : function(event){
+									event.preventDefault();
+									$(this).dialog('close');
+									},
+								'confirm' : function(event,ui) {
+									event.preventDefault();
+									var $form = $('form',$(this)).first();
+									var $editor = $(this);
+									if(_app.u.validateForm($form))	{
+										$form.showLoading('Deleting Address');
+										var sfo = $form.serializeJSON();
+											sfo._cmd = 'buyerAddressDelete',
+											sfo._tag =	{
+												'callback':function(rd){
+													$form.hideLoading(); //always hide loading, regardless of errors.
+													if(_app.model.responseHasErrors(rd)){
+														$form.anymessage({'message':rd});
+														}
+													else if(typeof onSuccessCallback === 'function')	{
+														$editor.dialog('close');
+														onSuccessCallback(rd,sfo);
+														}
+													else	{
+														//no callback defined 
+														$editor.dialog('close');
+														}
+													}
+												}
+										
+//save and then refresh the page to show updated info.
+										_app.model.addDispatchToQ(sfo,'immutable');
+//dump data in memory and local storage. get new copy up updated address list for display.
+										_app.model.destroy('buyerAddressList');
+										_app.calls.buyerAddressList.init({},'immutable');
+										_app.model.dispatchThis('immutable');
+										}
+									else	{} //errors handled in validateForm
+									
+									}
+								},
+							close : function(event, ui) {$(this).dialog('destroy').remove()}
+							});
+//* 201342 -> used in checkout (or potentailly any editor) to immediately highlight any invalid fields (useful in 'edit' as opposed to 'create' address)
+							if(vars.validateForm)	{
+								_app.u.validateForm($editor);
+								}
+
+						
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressEditModal, unable to determine address data.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressEditModal, either vars was undefined/not an object ['+typeof vars+'] or addressID and/or addressType not set.','gMessage':true});
+					}
+				return r;
+				} //showAddressRemoveModal
 			}, //util		
 		
 		
