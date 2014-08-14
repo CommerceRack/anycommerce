@@ -521,8 +521,8 @@ need to be customized on a per-ria basis.
 			if(infoObj.performJumpToTop){
 				$('html, body').animate({scrollTop : 0}, 300);
 				}
-			
-2. Puts control of this into custom page transitions.
+			if($o.length)	{
+//2. Puts control of this into custom page transitions.
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
 				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 300);}, 300); //fade out old, fade in new.
@@ -2230,8 +2230,6 @@ effects the display of the nav buttons only. should be run just after the handle
 							 {"term":{"tags":infoObj.tag}},
 							 ]
 						  }});
-							 ]
-						  }});
 					}
 				else if (infoObj.KEYWORDS) {
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
@@ -2249,7 +2247,6 @@ effects the display of the nav buttons only. should be run just after the handle
 								"boost_mode" : "sum",
 								}
 							}
-						});
 						});
 					}
 				else	{
