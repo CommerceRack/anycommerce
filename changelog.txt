@@ -5,6 +5,8 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201408.d - fixed several issues in store_tracking.js which would have broken conversion tracking
+
 201405
 
 1PC
@@ -16,7 +18,7 @@ QUICKSTART
 201405.b: fixes validation bug in admin-ui / product editor / attributes
 201405.c: fixes CUSTOMER emails not appearing
 201405.d: fixed issue with ebay listing duration
-
+201405.e: fixed global plugins not saving properly
 
 201404
 

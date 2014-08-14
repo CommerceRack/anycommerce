@@ -209,16 +209,20 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 						$(document.body).showLoading({'message':'Order '+_app.data[_rtag.datapointer].orderid+' Created. Verifying payment...'});
 						}
 					
+					/*
+					Handled in the callback for checkout, after the order has been processed
 					if(_rtag.attempt === 1)	{
 						if(_app.data[_rtag.datapointer]['previous-cartid'])	{
 							dump(" -> removing the cartID from the session.");
 							//first attempt. To get here, the 'cart' has been received by the API and is in memory and being processed. Pull the cart out of memory.
 							_app.model.removeCartFromSession(_app.data[_rtag.datapointer]['previous-cartid']);
 							}
-						}
+						} 
+					*/
 //Continue polling till order is finished.
 					setTimeout(function(){
-						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[_rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":_rtag.parentID,"attempt" :(_rtag.attempt+1), "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
+						var cartid = _app.data[_rtag.datapointer]['status-cartid']
+						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":cartid,"_tag":{"datapointer":"cartOrderStatus|"+cartid,"parentID":_rtag.parentID,"attempt" :(_rtag.attempt+1), "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
 						dump(" -------------> timeout triggered. dispatch cartOrderStatus. attempt: "+_rtag.attempt);
 						_app.model.dispatchThis("mutable");
 						},2000);
@@ -1118,6 +1122,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //cartDetail call in a callback to the appCartCreate call because that cartDetail call needs a cart id
 //			passed to it in order to know which cart to fetch (no longer connected to the session!).  This resulted in a bug that multiple
 //			orders placed from the same computer in multiple sessions could have the same cart id attached.  Very bad.
+							_app.model.removeCartFromSession(previousCartid);
 							_app.calls.appCartCreate.init({
 								"datapointer" : "appCartCreate",
 								"callback" : function(rd){

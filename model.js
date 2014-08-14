@@ -83,7 +83,7 @@ function model(_app) {
 	var r = {
 	
 		
-		version : "201403",
+		version : "201405",
 		
 		
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
@@ -354,7 +354,10 @@ can't be added to a 'complete' because the complete callback gets executed after
 		});
 
 	_app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
+//		_app.u.dump(" ------------------------ ");
 		_app.u.dump("UH OH! got into ajaxRequest.error. either call was aborted or something went wrong.");
+//		_app.u.dump(j); _app.u.dump("textStatus: "+textStatus); _app.u.dump(errorThrown);
+//		_app.u.dump(" ------------------------ ");
 		if(textStatus == 'abort')	{
 			delete _app.globalAjax.requests[QID][pipeUUID];
 			for(var index in Q) {
@@ -894,11 +897,12 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			else	{
 				switch(responseData['_rcmd'])	{
 					case 'appProductGet':
+					case 'adminProductDetail':
 	//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
 						if(!responseData['%attribs'] || !responseData['%attribs']['db:id']) {
 							r = true;
 							responseData['errid'] = "MVC-M-100";
-							responseData['errtype'] = "apperr"; 
+							responseData['errtype'] = "missing"; 
 							responseData['errmsg'] = "could not find product "+responseData.pid+". Product may no longer exist. ";
 							} //db:id will not be set if invalid sku was passed.
 						break;
@@ -1107,7 +1111,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				}
 			carts.unshift(cartID); //new carts get put on top. that way [0] is always the latest cart.
 			_app.vars.carts = carts;
-			this.dpsSet('app','carts',carts); //update localStorage.
+			return this.dpsSet('app','carts',carts); //update localStorage.
 			},
 
 //always use this to remove a cart from a session. That way all the storage containers are empty
@@ -1797,6 +1801,7 @@ A note about cookies:
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext and namespace (ns) are required. reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
+				var r = false; //what is returned.
 				if(ext && ns && (varObj || varObj == 0))	{
 					var DPS = this.readLocal('dps','local') || {}; //readLocal returns false if no data local.
 					if(typeof DPS[ext] === 'object'){
@@ -1807,11 +1812,12 @@ A note about cookies:
 						DPS[ext][ns] = varObj;
 						} //object  exists already. update it.
 //SANITY -> can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
-					this.writeLocal('dps',DPS,'local');
+					r = this.writeLocal('dps',DPS,'local');
 					}
 				else	{
 					_app.u.throwGMessage("Either extension ["+ext+"] or ns["+ns+"] or varObj ["+(typeof varObj)+"] not passed into admin.u.dpsSet.");
 					}
+				return r;
 				},
 
 //			getGrammar : function(url)	{
@@ -1854,12 +1860,13 @@ A note about cookies:
 					catch(e)	{
 						_app.u.dump("Could not build pegParser.","warn");
 						_app.u.dump(buildErrorMessage(e),"error");
+							_app.u.dump(e);
 						}
 					if(success)	{
 						_app.u.dump(" -> successfully built pegParser");
 						}
 					else	{
-						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file. errors:<br>'+errors});
 						}
 					}
 				else {

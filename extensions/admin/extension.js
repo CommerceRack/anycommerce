@@ -662,6 +662,7 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 					}
 				else if(uriParams.show == 'acreate')	{
 					_app.u.handleAppEvents($('#createAccountContainer'));
+					_app.u.addEventDelegation($('#createAccountContainer'));
 					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 						$("#appPreView").hide();
 						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
@@ -669,10 +670,23 @@ _app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/jHtmlArea-0.8/jH
 					}
 				else	{
 					_app.u.handleAppEvents($('#appLogin'));
+					_app.u.addEventDelegation($('#appLogin'));
 					$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
 						$("#appPreView").hide();
 						$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 						});
+						
+					if (_app.u.getParameterByName('apidomain')) {
+						$("#appLogin").find('input[name="apidomain"]').val( _app.u.getParameterByName('apidomain') );
+						}
+					if (document.location.protocol == 'file:') {
+						// automatically show the advanced login container
+						// Temporarily disabled
+						// $('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+						}
+					
+					
+
 					}
 				if(!$.support['localStorage'])	{
 					$("#globalMessaging").anymessage({"message":"It appears you have localStorage disabled or are using a browser that does not support the feature. Please enable the feature or upgrade your browser","errtype":"youerr","persistent":true});
@@ -2707,7 +2721,7 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 
 				if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
 					var newHref = _app.vars.baseURL;
-					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
+					newHref += href.substring(0,2) == '#!' ? href :'#!'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
 					$a.click(function(event){
 						event.preventDefault();
@@ -3927,12 +3941,45 @@ dataAttribs -> an object that will be set as data- on the panel.
 
 /* login and create account */
 
-			accountLogin : function($btn)	{
-				$btn.button();
-				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
-					event.preventDefault();
-					_app.ext.admin.a.login($btn.closest('form'));
-					});
+			// accountLogin : function($btn)	{
+				// $btn.button();
+				// $btn.off('click.accountLogin').on('click.accountLogin',function(event){
+				
+					// if ($btn.closest('form').find('input[name="apidomain"]').val() != '') {
+						// //window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+						// _app.vars.jqurl = "https://"+$btn.closest('form').find('input[name="apidomain"]').val()+":9000/jsonapi/";
+						// }
+					// else if (document.location.protocol == 'file:') {
+						// alert("use advanced login options when running as file://");
+						// }
+						
+	
+					// event.preventDefault();
+					// _app.ext.admin.a.login($btn.closest('form'));
+					// });
+				// },
+			
+			accountLogin : function($form, p)	{
+				p.preventDefault();
+				if ($form.find('input[name="apidomain"]').val() != '') {
+					//window.adminApp.vars.jqurl = "https://"+jqurl+":9000/jsonapi/";
+					
+					_app.vars.jqurl = "http://"+$form.find('input[name="apidomain"]').val()+"/jsonapi/";
+					_app.model.addDispatchToQ({
+						"_cmd" : "appConfig",
+						"_tag" : {
+							"datapointer" : "appConfig",
+							"callback" : function(rd){
+								_app.vars.jqurl = _app.data[rd.datapointer].appSettings.admin_api_url;
+								_app.ext.admin.a.login($form);
+								}
+							}
+						},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				else {
+					_app.ext.admin.a.login($form);
+					}
 				},
 			
 			showCreateAccount : function($btn)	{
@@ -3959,6 +4006,22 @@ dataAttribs -> an object that will be set as data- on the panel.
 					})
 				},
 
+			// showLoginAdvanced : function($btn)	{
+				// $btn.off('click.showLoginAdvanced').on('click.showLoginAdvanced',function(event){
+					// $('#loginAdvancedContainer').removeClass('displayNone').show().animate({'left':'0'},'slow');
+					// });
+				// },
+			showLoginAdvanced : function($ele, p)	{
+				p.preventDefault();
+				$('#loginFormContainer .advancedLoginShow').removeClass('displayNone').show();
+				$('#loginFormContainer .advancedLoginHide').hide();
+				},
+			showLoginSimple : function($ele, p)	{
+				p.preventDefault();
+				$('#loginFormContainer .advancedLoginShow').hide();
+				$('#loginFormContainer .advancedLoginHide').show();
+				},
+				
 			execPasswordRecover : function($btn)	{
 				$btn.button();
 				$btn.off('click.execPasswordRecover').on('click.execPasswordRecover',function(event){

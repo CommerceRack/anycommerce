@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>TLC test</title>
+
+
+<style>
+#content	{border:1px solid #ccc; padding:1em;}
+#datasrc	{float:right;}
+textarea	{width:49%;}
+</style>
+
+<script src="resources/jquery-2.0.3.min.js"></script>
+<script src="resources/jquery-ui-1.10.3.min.js"></script>
+
+<!-- specifically for tlc -->
+<script src="resources/jsonpath.0.8.0.js"></script>
+<script src="resources/tlc.js"></script>
+<script src="resources/peg-0.8.0.js"></script>
+<!-- wiki -->
+<script src="includes.js"></script>
+
+
+<script>
+function tlcTestInit()	{
+	console.log("Attempt to fetch the grammar file");
+	$._app = {'vars':{'debug':'tlc'}}; //enable tlc debug.
+
+//dump is executed from within tlc, so a shorthand version of it is added here. the nature of this debugger uses the console, so we don't check it's existence like we normally would.
+	window.dump = function(d){
+		if(typeof d == 'string')	{console.log(d)}
+		else	{console.debug(d);}
+		}
+
+	//Load the data into a textarea so that it can easily be manipulated, if need be.
+	$('#datasrc').on('change',function(e){
+		var $select = $(this);
+		if($select.val() == 'textarea')	{$('#json').val("")} //clear any existing json from the textarea.
+		else if($select.val() == 'ORDER' || $select.val() == '%ORDER')	{
+			$.getJSON("examples/sample-data/order.json").success(function(d){
+				$('#json').val(($select.val() == '%ORDER' ? '{"%ORDER": '+JSON.stringify(d)+' }' : JSON.stringify(d)));
+				});
+			}
+		else if($select.val() == 'product')	{
+			$.getJSON("examples/sample-data/product.json").success(function(d){
+				$('#json').val(JSON.stringify(d));
+				});
+			}
+		});
+
+	$('#translate').button().on('click',function(event){
+		event.preventDefault();
+		var $ele = $('#tlc').val().replace(/\r?\n|\r/g,''); //get tlc. strip comments and all linebreaks cuz the grammar doesn't like them.
+		var dataset = $.parseJSON($('#json').val());
+		dump(" -> translating...");
+		$('#content').empty().append($ele).tlc({"verb":"translate","dataset":dataset});
+		
+		return false;
+		});
+	
+	return $.ajax({
+		'url' : 'resources/pegjs-grammar-20140203.pegjs', //append release to eliminate caching on new releases.
+		'dataType' : 'html',
+		'error' : function()	{
+			console.error('An error occured while attempting to load the grammar file. Can not run the test without that file');
+			},
+		'success' : function(file){
+			var success;
+			try{
+				var pegParserSource = PEG.buildParser(file);
+				window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+				success = true;
+				}
+			catch(e)	{
+				console.error(buildErrorMessage(e));
+				}
+			if(success)	{
+				console.log(" -> successfully built pegParser. now run the tests.");
+				$('#translate').button('enable');
+				}
+			else	{
+				$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+				}
+			}
+		});
+	}
+</script>
+
+
+</head>
+
+<body onLoad="tlcTestInit();">
+
+
+<div>
+	<button id='translate' disabled>Translate</button>
+	<select id='datasrc' name='datasrc'>
+		<option value='textarea'>textarea</option>
+		<option value='%ORDER'>%order</option>
+		<option value='ORDER'>order</option>
+		<option value='product'>product</option>
+	</select>
+	</div>
+
+<textarea id='tlc' placeholder='paste your tlc here' rows='30' cols='40'></textarea>
+<textarea id='json' placeholder='paste your json here' rows='30' cols='40'></textarea>
+
+<div id='content'></div>
+
+</body>
+</html>

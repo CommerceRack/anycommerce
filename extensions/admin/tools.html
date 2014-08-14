@@ -875,7 +875,7 @@ has to be within the fieldset to for data-table to work right.
 				<div data-panel-id='flexEditOptionsInput' class='displayNone flexEditTypeInputs'>
 				<label>
 					<span>Options</span>
-					<textarea required='required' class='skipIfHidden fullWidth' rows='10' data-format-rules='validateJSON' data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
+					<textarea required='required' class='fullWidth' rows='10' data-validation-rules="skipIfHidden" data-format-rules='validateJSON' data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
 				</label>
 				</div>
 				<button data-app-click="admin_tools|flexDataTableAddEditCancel" class='applyButton'>Cancel</button>

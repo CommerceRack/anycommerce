@@ -16,6 +16,38 @@
 
 ************************************************************** */
 
+/* 
+Service-Entrance Protocol is a test harness which can also be used for SEO.
+It is briefly described here:
+http://blog.commercerack.com/2014/05/the-significance-of-service-entrance.html
+
+The spider roughly executes these commands:
+
+
+_robots.hello("MrRoboto/1.0");   // MrRoboto/1.0 is the user agent for the robot
+_robots.ready();  		 // wait until this returns true
+_robots.pop(10);		 // this says "give me 10 lines" to spider - lines are CR/LF separated
+_robots.next("#!someuri-returned-by-pop");  // this will navigate to one of the lines returned by .pop(1);
+
+// now the test harness will loop while the content is loaded. periodically checking if the document is ready.
+_robots.status(); // 100 it will loop, 200 is success
+// once it's 200 
+
+// inside the anyCommerce App framework .status() will return 200 ONLY when:
+_app.ext.quickstart.vars.showContentFinished = true;
+_app.ext.quickstart.vars.showContentCompleteFired = true;
+
+// to see the status, it's necessary to change _app to "myApp" ex:
+console.log(myApp.ext.quickstart.vars.showContentFinished);
+console.log(myApp.ext.quickstart.vars.showContentCompleteFired);
+
+// GOTCHAS: 
+//  this module likes to pass json *STRINGS* from .pop() 
+//  if you're running from the command line [notice how it's escaped]: 
+//  _robots.next('{"pageType":"category","navcat":".path.to.navcat"}');
+//  
+
+*/
 
 
 var store_seo = function(_app) {

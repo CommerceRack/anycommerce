@@ -49,7 +49,7 @@ or instead of P.filter, you may have
 P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } };
 */
 		appPublicProductSearch : {
-			init : function(P,tagObj,Q)	{
+			init : function(obj,tagObj,Q)	{
 //				_app.u.dump("BEGIN _app.ext.store_search.calls.appPublicSearch");
 				var universalFilters = $.extend(true, [], _app.ext.store_search.vars.universalFilters);
 				if(universalFilters.length){
@@ -78,12 +78,12 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				this.dispatch(P,tagObj,Q)
 				return 1;
 				},
-			dispatch : function(P,tagObj,Q)	{
-				P['_cmd'] = "appPublicSearch";
-				P.type = 'product';
-				P['_tag'] = tagObj;
-//				_app.u.dump(P);
-				_app.model.addDispatchToQ(P,Q);
+			dispatch : function(obj,tagObj,Q)	{
+				obj['_cmd'] = "appPublicSearch";
+				obj.type = 'product';
+				obj['_tag'] = tagObj;
+//				_app.u.dump(obj);
+				_app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPublicSearch
 
@@ -524,7 +524,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				es.size = 250;
 				
 				return es;
-			},
+				},
 			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
 			buildElasticSimpleQuery : function(obj)	{

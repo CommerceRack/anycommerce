@@ -1,18 +1,25 @@
+AnyCommerce Framework - v.201405
 
-Zoovy/AnyCommerce MVC JQuery Developer Framework
-
-Rich Internet Application, Model View Controller created using jQuery for creating standalone or 
-pluggable shopping applications that connect to the Zoovy e-Commerce Platform.
-
-WIKI Documentation:
-	https://github.com/zoovy/AnyCommerce-Development/wiki
+Description: 
+Rich Internet Application, Model View Controller created using jQuery for creating awesome shopping applications that 
+connects to the CommerceRack Backend-As-A-Service (BAAS) via a JSON/REST API.
 
 Official Repository:
-	https://github.com/zoovy/AnyCommerce-Development	
-
-API Calls Input/Output Reference:
-	http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51609
+	https://github.com/Commercerack/anycommerce
 
 Examples are stored in examples sub-directory.
 Extensions are stored in the extensions sub-directory.
+MIT License stored in license.txt
+
+-------------------------------------------------------------------------------
+
+Hey Developers!!
+
+When you fork this REPO - please write any project specific notes such as the URL's to the podio/basecamp project along 
+with usability instructions into this file.  
+
+Custom functionality should be documented how it is /supposed to work/ here, along with contact info for who is the 
+responsible party for maintenance. 
+
+Thanks!
 
