@@ -720,8 +720,11 @@
 						<option value="NONE">None</option>
 						<option value="EMAIL" data-show-panel='supplierAutomaticOrderingEMAIL'>Email</option>
 						<option value="FTP" data-show-panel='supplierAutomaticOrderingFTP'>FTP</option>
-						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>API</option>
+						<option value="API" data-show-panel='supplierAutomaticOrderingAPI'>REST API</option>
 						<option value="AMZSQS" data-show-panel='supplierAutomaticOrderingAMZSQS'>Amazon SQS</option>
+						<option value="SHELL" data-show-panel='supplierAutomaticOrderingSHELL'>Shell Script</option>
+						<option value="REDISQEUE" data-show-panel='supplierAutomaticOrderingREDISQUEUE'>Redis Queue</option>
+						<option value="UWSGISPOOL" data-show-panel='supplierAutomaticOrderingUWSGISPOOL'>UWSGI Spooler</option>
 						<option value='FBA' data-show-panel='supplierOurFBAConfig'>Amazon FBA</option>
 					</select>
 				</label>
@@ -729,6 +732,7 @@
 				<label><span>Version</span>
 				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;" data-input-change="panel-selector" data-panel-selector=".supplierExportFormat">
 					<option value=''>-</option>
+					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
 					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
 					<option value='XSLT#201240'  data-show-panel='supplierExportFormatXSLT'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>
 					<option value='JSON#201240'>v.201240 JSON - valid until: 2015-10-15</option>
@@ -792,12 +796,35 @@
 				</label>
 			</div>
 			
+			<div data-panel-id='supplierAutomaticOrderingSHELL' class='displayNone supplierAutomaticOrderingConnector'>
+				<label>
+					<span>script path:</span>
+					<input type='text' name='shell_path' data-bind="var: supplier(%ORDER.shell_path); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />				
+				</label>
+			</div>
+
+			<div data-panel-id='supplierAutomaticOrderingREDISQUEUE' class='displayNone supplierAutomaticOrderingConnector'>
+				<label>
+					<span>redis queue</span>
+					<input type='text' name='redis_queue' data-bind="var: supplier(%ORDER.redis_queue); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+				</label>
+			</div>
+
+			<div data-panel-id='supplierAutomaticOrderingUWSGISPOOL' class='displayNone supplierAutomaticOrderingConnector'>
+				<label>
+					<span>uwsgi spooler</span>
+					<input type='text' name='uwsgi_spool' data-bind="var: supplier(%ORDER.uwsgi_spool); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
+				</label>
+			</div>
+
+			
 			<div data-panel-id='supplierAutomaticOrderingFTP' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
 					<span>FTP URL:</span>
 					<input type='url' name='ftp_url' data-bind="var: supplier(%ORDER.ftp_url); format:popVal;"  required='required'  data-validation-rules='skipIfHidden' />
 				</label>
 			</div>
+
 			
 			<div data-panel-id='supplierAutomaticOrderingAPI' class='displayNone supplierAutomaticOrderingConnector'>
 				<label>
