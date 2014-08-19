@@ -203,7 +203,8 @@ var store_swc = function(_app) {
 							//dump(sku);
 							//dump(data["@inventory"][sku]);
 							if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
-								$(this).attr("disabled","disabled");
+								//$(this).attr("disabled","disabled");
+								$(this).remove();
 								}
 							});
 						}
