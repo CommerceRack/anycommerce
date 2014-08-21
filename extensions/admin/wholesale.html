@@ -267,6 +267,7 @@
 	<select name="action" required='required'>
 		<option value="">action for selected orders</option>
 		<option value="ORDER:APPROVE">Approve hold orders</option>
+		<option value="ORDER:FIXERROR">Re-open ERROR</option>
 		<option value="ORDER:ARCHIVE">Archive</option>
 		<option value="ORDER:CLOSE">Close</option><!--
 		<option value="ORDER:CONFIRM">Confirm</option>
@@ -732,9 +733,11 @@
 				<label><span>Version</span>
 				<select name='export_format' data-bind="var: supplier(%ORDER.export_format); format:popVal;" data-input-change="panel-selector" data-panel-selector=".supplierExportFormat">
 					<option value=''>-</option>
+					<option value='XML#201501'>v.201501 XML - valid until: 2018-01-01</option>
 					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
-					<option value='XML#201240'>v.201240 XML - valid until: 2015-10-15</option>
-					<option value='XSLT#201240'  data-show-panel='supplierExportFormatXSLT'>v.201240 XML w/XSLT- valid until: 2015-10-15</option>
+					<option value='XSLT#201501'  data-show-panel='supplierExportFormatXSLT'>v.201240 XML w/XSLT- valid until: 2018-01-01</option>
+					<option value='XSLT#201240'  data-show-panel='supplierExportFormatXSLT'>v.201501 XML w/XSLT- valid until: 2015-10-15</option>
+					<option value='JSON#201501'>v.201501 JSON - valid until: 2018-01-01</option>
 					<option value='JSON#201240'>v.201240 JSON - valid until: 2015-10-15</option>
 					<option value='CSV3D#0'>ORDER CSV-3D (brief output - no expiration)</option>
 					<option value='XCBL#4'>XCBL v4 (brief output - no expiration)</option>

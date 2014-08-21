@@ -355,7 +355,6 @@
 	<label><input type="checkbox" class='applyAnycb'  name="trusted_feed" data-bind="var: mkt(trusted_feed); format:popVal;" /> Enable Trusted Stores Shipping/Cancel Feed</label>
 </fieldset>
 
-
 <fieldset>
 	<legend>Options:</legend>
 <!--
@@ -371,6 +370,32 @@
 		
 	</label>
 
+	<label>
+		<span>Custom Label #0 Attrib:</span>
+		<input type="text" value="" name="custom_label_0_attrib" data-bind="var: mkt(custom_label_0_attrib); format:popVal;" />
+		<span class="hint">Default "g:custom_label_0" </span>
+	</label>
+	<label>
+		<span>Custom Label #1 Attrib:</span>
+		<input type="text" value="" name="custom_label_1_attrib" data-bind="var: mkt(custom_label_1_attrib); format:popVal;" />
+		<span class="hint">Default "g:custom_label_1"</span>
+	</label>
+	<label>
+		<span>Custom Label #2 Attrib:</span>
+		<input type="text" value="" name="custom_label_2_attrib" data-bind="var: mkt(custom_label_2_attrib); format:popVal;" />
+		<span class="hint">Default "g:custom_label_2"</span>
+	</label>
+	<label>
+		<span>Custom Label #3 Attrib:</span>
+		<input type="text" value="" name="custom_label_3_attrib" data-bind="var: mkt(custom_label_3_attrib); format:popVal;" />
+		<span class="hint">Default "g:custom_label_3"</span>
+	</label>
+	<label>
+		<span>Custom Label #4 Attrib:</span>
+		<input type="text" value="" name="custom_label_4_attrib" data-bind="var: mkt(custom_label_4_attrib); format:popVal;" />
+		<span class="hint">Default "g:custom_label_4"</span>
+	</label>
+	
 	<label class='showForZoovyOnly'>
 		<span>Link Syntax</span>
 		<select name='linkstyle' data-bind="var: mkt(linkstyle); format:popVal;">
@@ -379,8 +404,10 @@
 		</select>
 		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is #! syntax.'>?</span>
 	</label>
-
 </fieldset>
+
+
+
 
 </div>
 
