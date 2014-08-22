@@ -30,7 +30,10 @@ var store_swc = function(_app) {
 			"filteredSearchTemplate",
 			"fieldcamTemplate"
 			],
-		customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
+		customPrompt : {
+			"popup1" : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
+			"popup2" : "another prompt."
+			},
 		elasticFields : {},
 		/*
 		userTeams : {
@@ -1021,7 +1024,7 @@ var store_swc = function(_app) {
 			productAdd2Cart : function($form, p){
 				p.preventDefault();
 				if($form.attr('data-swc-custom-notice')){
-					var $notice = $('<div><div>'+_app.ext.store_swc.vars.customPrompt+'</div></div>');
+					var $notice = $('<div><div>'+_app.ext.store_swc.vars.customPrompt[$form.attr('data-swc-custom-notice')]+'</div></div>');
 						
 					var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
 					$button.bind('click',function(){
