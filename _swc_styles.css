@@ -1,7 +1,6 @@
 html, body{padding:0px; margin: 0px;}
 /*
 */
-
 body{background:url(images/Wrigley_Field_Bleachers8.jpg) repeat fixed center top;}
 .highlightBG_1 {background: #233628;}
 .highlightBG_1_alpha {background:rgba(35,54,40,.75);}
@@ -258,14 +257,6 @@ a.blockLink, li.blockLink {display: inline-block;}
 .playerFilterList a{margin-right: 5px;}
 .filterGroup {margin-bottom: 10px;}
 .playerFilterList {text-indent: 1em;}
-
-.noResults {
-	display: inline-block;
-	text-align: left;
-	background:rgba(256,256,256,.8);
-}
-.noResults legend {font-weight: bold; font-size: 1.2em; color: #233628;}
-.noResults label { width: 100px; display: inline-block; color: black;}
 
 .sliderValContainer {text-decoration: none;}
 .ui-slider-handle {text-decoration: none;}

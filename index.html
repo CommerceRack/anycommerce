@@ -465,25 +465,7 @@ var _robots = {
 	<h4 data-tlc="bind $name '.p'; apply --append;"></h4>
 </div>
 
-<div id="noResultsTemplate" class="noResults">
-	<form class="floatRight" action="#" onSubmit="return false;" data-app-submit="store_swc|sendInquiry">
-		<fieldset class="marginTop">
-			<legend>It looks like we couldn't find any results for your search.  Fill out the form below to contact us about a specific product and our Customer Support team will get back to you ASAP!</legend>
-			<div class="appMessaging"></div>
-			<div><label for='contactFormSubject'>Player Name: </label><input type='text' name='playername' /></div>
-			<div><label for='contactFormSubject'>Team: </label><input type='text' name='team' /></div>
-			<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' /></div>
-			<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required'></textarea></div>
-			
-			
-			<div class='alignRight'>
-				<button onClick="$(this).closest('form').trigger('submit'); return false;" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
-					<span class="ui-button-text">Send Message</span>
-				</button>
-			</div>
-		</fieldset>
-	</form>
-</div>
+
 
 <div id="myTeamChooserTemplate" class="chooser">
 	<h2 class="highlightBG_1">My Team Chooser <span class="closeButton floatRight" data-app-click="store_swc|hideMyTeamChooser"></span></h2>
@@ -2215,7 +2197,7 @@ subscribeListsArticle is used for authenticated buyers
 
 
 
-<div id="searchTemplate" class="searchResultsPage clearfix noBG">
+<div id="searchTemplate" class="searchResultsPage clearfix">
 
 	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
 	<div class="previewProductDetail displayNone"></div>
