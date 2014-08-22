@@ -72,13 +72,16 @@ var prodlist_infinite = function(_app) {
 				var $list = _rtag.list;
 				var EQ = $list.data('elastic-query');
 				if($list && $list.length)	{
-					$list.data('total-page-count', Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
+					$list.attr('data-total-page-count', Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
+					dump(_app.data[_rtag.datapointer].hits.total);
+					dump(EQ.size);
+					dump(Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
 					if(_rtag.emptyList){
 						$list.intervaledEmpty();
 						}
 					$list.removeClass('loadingBG');
 					if(L == 0)	{
-						$list.append("Your query returned zero results.");
+						//$list.append("Your query returned zero results.");
 						_app.ext.store_swc.vars.filterLoadingComplete = true;
 						}
 					else	{
@@ -270,20 +273,22 @@ else	{
 				},
 			handleElasticScroll : function(_rtag, $tag){
 				dump('handleElasticScroll');
-				dump(_rtag);
+				//dump(_rtag);
 				var EQ = $tag.data('elastic-query');
 				var currPage = $tag.data('page-in-focus');
+				//dump('CURRPAGE: '+currPage);
 				var totalPages = $tag.data('total-page-count');
-				
+				//dump('TOTAL: '+totalPages);
+				//dump(currPage >= totalPages);
 				var onScroll = function(override){
 					//will load data when two rows from bottom.
-					dump('onScroll');
-					dump(override);
-					dump($(window).scrollTop());
-					dump($(document).height());
-					dump($(window).height());
-					dump($tag.children().first().height());
-					dump(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) );
+					// dump('onScroll');
+					// dump(override);
+					// dump($(window).scrollTop());
+					// dump($(document).height());
+					// dump($(window).height());
+					// dump($tag.children().first().height());
+					// dump(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) );
 					if(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
 						$(window).off('scroll.infiniteScroll');
 						if($tag.data('isDispatching') == true)	{}
@@ -293,13 +298,15 @@ else	{
 							}
 						}
 					}
-			
-				if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{
-					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
-					_app.ext.store_swc.vars.filterLoadingComplete = true;
-					} //do nothing. fewer than 1 page worth of items.
-				else if(currPage >= totalPages)	{
+				
+				// if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{
+					// $tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					// _app.ext.store_swc.vars.filterLoadingComplete = true;
+					// } //do nothing. fewer than 1 page worth of items.
+				// else 
+				if(currPage >= totalPages)	{
 				//reached the last 'page'. disable infinitescroll.
+					dump("Reached last page, stopping scroll");
 					$(window).off('scroll.infiniteScroll');
 					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
 					_app.ext.store_swc.vars.filterLoadingComplete = true;
