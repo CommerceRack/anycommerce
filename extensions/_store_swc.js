@@ -284,6 +284,19 @@ var store_swc = function(_app) {
 					}
 				},
 			onError : function(){}
+			},
+		handleEmptyResults : {
+			onSuccess : function(rd){
+				var L = _app.data[rd.datapointer]['_count'] || _app.data[rd.datapointer].hits.hits.length;
+				if(L > 0){
+					_app.ext.prodlist_infinite.callbacks.handleInfiniteElasticResults.onSuccess(rd);
+					}
+				else {
+					rd.list.empty();
+					rd.list.tlc({'dataset':'', 'templateid':'noResultsTemplate', 'verb':'transmogrify'});
+					}
+				},
+			onError : function(){}
 			}
 		}, //callbacks
 
@@ -895,7 +908,7 @@ var store_swc = function(_app) {
 						_app.u.throwMessage(rd);
 						}
 					else {
-						_app.ext.prodlist_infinite.callbacks.handleInfiniteElasticResults.onSuccess(rd);
+						_app.ext.store_swc.callbacks.handleEmptyResults.onSuccess(rd);
 						if(_app.data[rd.datapointer].facets){
 							$('[data-filter-type=checkboxList]',rd.filterList).each(function(){
 								$('input', $(this)).each(function(){
