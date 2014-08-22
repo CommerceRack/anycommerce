@@ -32,7 +32,7 @@ var store_swc = function(_app) {
 			],
 		customPrompt : {
 			"popup1" : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
-			"popup2" : "another prompt."
+			"popup2" : "I understand it takes 1-2 business days to customize my Chicago Cubs item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted."
 			},
 		elasticFields : {},
 		/*
