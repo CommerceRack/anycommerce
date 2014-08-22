@@ -899,9 +899,7 @@ var store_swc = function(_app) {
 					es.size = 30;
 					}
 				$resultsContainer.empty();
-				
 				_app.ext.store_search.u.updateDataOnListElement($resultsContainer,_app.u.getBlacklistedObject(es, ["facets"]),1);
-				//dump(es);
 				_app.model.dispatchThis();
 				_app.ext.store_search.calls.appPublicSearch.init(es, {'callback':function(rd){
 					if(_app.model.responseHasErrors(rd)){

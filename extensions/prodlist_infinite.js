@@ -72,10 +72,13 @@ var prodlist_infinite = function(_app) {
 				var $list = _rtag.list;
 				var EQ = $list.data('elastic-query');
 				if($list && $list.length)	{
-					$list.attr('data-total-page-count', Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
-					dump(_app.data[_rtag.datapointer].hits.total);
-					dump(EQ.size);
-					dump(Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
+					var totalPages = Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size);
+					// dump(totalPages);
+					$list.data('total-page-count', totalPages);
+					// dump($list.attr('data-total-page-count'));
+					// dump(_app.data[_rtag.datapointer].hits.total);
+					// dump(EQ.size);
+					// dump(Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
 					if(_rtag.emptyList){
 						$list.intervaledEmpty();
 						}
@@ -276,10 +279,10 @@ else	{
 				//dump(_rtag);
 				var EQ = $tag.data('elastic-query');
 				var currPage = $tag.data('page-in-focus');
-				//dump('CURRPAGE: '+currPage);
+				// dump('CURRPAGE: '+currPage);
 				var totalPages = $tag.data('total-page-count');
-				//dump('TOTAL: '+totalPages);
-				//dump(currPage >= totalPages);
+				// dump('TOTAL: '+totalPages);
+				// dump(currPage >= totalPages);
 				var onScroll = function(override){
 					//will load data when two rows from bottom.
 					// dump('onScroll');
