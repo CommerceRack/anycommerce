@@ -55,7 +55,7 @@ var store_product = function(_app) {
 					r += 1;
 					this.dispatch(pid,tagObj,Q)
 					}
-				else if(typeof _app.data[tagObj.datapointer]['@inventory'] == 'undefined' || typeof _app.data[tagObj.datapointer]['@variations'] == 'undefined')	{
+				else if(typeof _app.data[tagObj.datapointer]['@inventory'] == 'undefined' || typeof _app.data[tagObj.datapointer]['@variations'] == 'undefined' || typeof _app.data[tagObj.datapointer]['%SKU'] == 'undefined')	{
 					_app.u.dump(" -> either inventory or variations not in memory or local. get everything.");
 //check to make sure inventory and pog info is available.
 					r += 1;
@@ -76,6 +76,7 @@ var store_product = function(_app) {
 				var obj = {};
 				obj["_cmd"] = "appProductGet";
 				obj["withVariations"] = 1;
+				obj["withSKU"] = 1;
 //only get inventory if it matters. inv_mode of 1 means inventory is not important.
 				if(_app.u.thisIsAnAdminSession() || (typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1))
 					obj["withInventory"] = 1;
@@ -834,7 +835,27 @@ NOTES
 					}
 				return {"average":avg,"total":L}
 				}
-			}	//util
+			},	//util
+			
+		e : {
+			updatePrice : function($ele, p){
+				var variations = $ele.closest('[data-app-role="productVariations"]').serializeJSON();
+				var pid = $ele.closest('[data-pid]').attr('data-pid');
+				var sku = ""+pid;
+				for(var i in variations){
+					sku += ":"+i+""+variations[i];
+					}
+				if(_app.data['appProductGet|'+pid]['%SKU']){
+					var skuArr = $.grep(_app.data['appProductGet|'+pid]['%SKU'], function(e,i){
+						return e[0] == sku;
+						})[0];
+					if(skuArr){
+						var price = skuArr[1]['sku:price'];
+						$('[data-app-role=productPrice]', $ele.closest('[data-templateid=productTemplate]')).empty().tlc({'dataset' : {'%attribs' : {'zoovy:base_price':price}}, 'verb':'translate'});
+						}
+					}
+				},
+			} //events
 		} //r object.
 	return r;
 	}
