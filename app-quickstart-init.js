@@ -178,6 +178,13 @@ myApp.router.appendInit({
 				}
 			showContent("product",infoObj);
 			}
+		else if(g.uriParams.hashbang){
+			var prevHash = document.location.hash;
+			document.location.hash = "#!"+g.uriParams.hashbang;
+			if(prevHash == document.location.hash){
+				myApp.router.handleHashChange();
+				}
+			}
 		else if(document.location.hash)	{	
 			myApp.u.dump('triggering handleHash');
 			myApp.router.handleHashChange();
