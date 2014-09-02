@@ -4,7 +4,7 @@
 		"size" : 28,
 		"charSize" : 12,
 		"radius" : 190,
-		"color" : "#DB2321",
+		"color" : "DB2321",
 		"strokeColor" : "FFFFFF",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
@@ -12,7 +12,7 @@
 	},
 	"number" : {
 		"size" : 65,
-		"color" : "#DB2321",
+		"color" : "DB2321",
 		"strokeColor" : "FFFFFF",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
