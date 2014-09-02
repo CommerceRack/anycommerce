@@ -90,6 +90,7 @@ var jerseypreview = function(_app) {
 			"CUBS598CUST",
 			"CUBSCUSTWRJ",
 			"M952-NLAN-NTL-PSG",
+			"M952-EJMN-EJ-PER",
 			"sample"
 			]
 		},
