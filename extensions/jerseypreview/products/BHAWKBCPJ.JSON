@@ -8,7 +8,7 @@
 		"strokeColor" : "313131",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
-		"y" : 50
+		"y" : 10
 	},
 	"number" : {
 		"size" : 65,
@@ -16,6 +16,6 @@
 		"strokeColor" : "313131",
 		"strokeThickness" : 1,
 		"xOffset" : -1,
-		"y" : 50
+		"y" : 10
 	}
 }
