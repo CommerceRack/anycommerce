@@ -95,6 +95,8 @@ var jerseypreview = function(_app) {
 			"M952-EJMR-EJ-PER",
 			"M958-EJMR-EJ-PER",
 			"M952-EJAE-EJ-PER",
+			"M958-EJAE-EJ-PER",
+			"MCN1-EJMN-EJ-PER",
 			"BHAWKBCPJ",
 			"sample"
 			]
