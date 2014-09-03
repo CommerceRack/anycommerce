@@ -92,6 +92,7 @@ var jerseypreview = function(_app) {
 			"M952-NLAN-NTL-PSG",
 			"M952-EJMN-EJ-PER",
 			"M958-EJMN-EJ-PER",
+			"M952-EJMR-EJ-PER",
 			"BHAWKBCPJ",
 			"sample"
 			]
