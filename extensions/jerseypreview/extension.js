@@ -99,6 +99,8 @@ var jerseypreview = function(_app) {
 			"MCN1-EJMN-EJ-PER",
 			"CUST13",
 			"CUST14",
+			"CUST13-Y",
+			"CUST14-Y",
 			"BHAWKBCPJ",
 			"sample"
 			]
