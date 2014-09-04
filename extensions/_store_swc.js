@@ -460,12 +460,22 @@ var store_swc = function(_app) {
 				lt += " "+data.value['%attribs']['zoovy:keywords'];
 				lt += " "+data.value['%attribs']['zoovy:prod_desc'];
 				
+				var pid = data.value.pid;
 				
 				var search = {
 					"query" : {
-						"more_like_this" : {
-							"fields" : ["prod_name", "keywords", "description"],
-							"like_text" : lt
+						"filtered" : {
+							"filter" : {
+								"not" : {
+									"term" : {"pid": pid}
+									}
+								},
+							"query" : {
+								"more_like_this" : {
+									"fields" : ["prod_name", "keywords", "description"],
+									"like_text" : lt
+									}
+								}
 							}
 						}
 					}
