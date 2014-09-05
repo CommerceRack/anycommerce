@@ -100,6 +100,7 @@ var jerseypreview = function(_app) {
 			"CUST13",
 			"CUST14",
 			"CUST13-Y",
+			"CUST13-G",
 			"CUST14-Y",
 			"BHAWKBCPJ",
 			"sample"
