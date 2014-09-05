@@ -14,7 +14,7 @@ a.redText{color:#7e0000;}
 .white{color:white;}
 .emph{font-size:1.2em;}
 
-#mainContentArea > div {background:rgba(256,256,256,.8);}
+#mainContentArea > div, .contentBG {background:rgba(256,256,256,.8);}
 #mainContentArea > div.noBG {background:none;}
 
 .preview img {
