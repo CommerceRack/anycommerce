@@ -78,7 +78,6 @@ var jerseypreview = function(_app) {
 			"6200-CUBR-EJ-PER",
 			"6300-CUBA-EJ-PER",
 			"6300-CUBD-EJ-PER",
-			"6300-CUBR-EJ-PER",
 			"6700-CUBD-EJ-PR1",
 			"6700-CUBH-EJ-PER",
 			"6200-CUBH-EJ-PER",
