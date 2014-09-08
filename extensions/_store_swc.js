@@ -218,7 +218,9 @@ var store_swc = function(_app) {
 				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
 					$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 					$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
-					$('form.filterList', $context).trigger('submit');
+					if(!$context.data('scroll-restore')){
+						$('form.filterList', $context).trigger('submit');
+						}
 					});
 				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
 					$context.empty().remove();

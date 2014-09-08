@@ -15,6 +15,7 @@ myApp.rq.push(['extension',0,'cco','']);
 myApp.rq.push(['extension',0,'store_routing','', 'attachEventHandlers']);
 myApp.rq.push(['extension',0,'store_tracking','', 'attachHandlers']);
 myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js', 'attachHandlers']);
+myApp.rq.push(['extension',0,'scrollrestore','extensions/_scrollrestore.js', 'attachHandlers']);
 
 myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
 myApp.rq.push(['extension',0,'jerseypreview','', 'attachHandlers']);

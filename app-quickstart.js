@@ -518,9 +518,9 @@ need to be customized on a per-ria basis.
 			$n.removeClass('displayNone').show();
 //if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
 			
-			if(infoObj.performJumpToTop){
-				$('html, body').animate({scrollTop : 0}, 300);
-				}
+			//if(infoObj.performJumpToTop){
+			//	$('html, body').animate({scrollTop : 0}, 300);
+			//	}
 			if($o.length)	{
 //2. Puts control of this into custom page transitions.
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
@@ -1100,7 +1100,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
-		
 //transition appPreView out on init.
 				// if($('#appPreView').is(':visible'))	{
 // //appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
