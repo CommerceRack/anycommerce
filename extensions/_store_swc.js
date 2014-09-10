@@ -228,16 +228,6 @@ var store_swc = function(_app) {
 				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
 				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
 				
-				for(var sport in _app.ext.store_swc.validTeams){
-					for(var teamIndex in _app.ext.store_swc.validTeams[sport]){
-						var team = _app.ext.store_swc.validTeams[sport][teamIndex];
-						for(var filterIndex in team.filters){
-							var hash = "#!filter/"+team.filters[filterIndex].id+"/?team="+team.v+"&sport="+sport;
-							if(sport == "app_mlb")
-							_app.ext.seo_robots.vars.pages.push(hash);
-							}
-						}
-					}
 				$.merge(_app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
 					"#!company/contact/",
@@ -253,13 +243,24 @@ var store_swc = function(_app) {
 					"#!filter/100_years_of_wrigley_field/",
 					"#!filter/chicago/",
 					"#!filter/blackhawks/",
-					// "#!filter/shirts/",
-					// "#!filter/jerseys/",
-					// "#!filter/personalized_jerseys/",
-					// "#!filter/sweatshirts/",
-					// "#!filter/hats/",
-					// "#!filter/souvenirs/"
+					"#!filter/shirts/",
+					"#!filter/jerseys/",
+					"#!filter/personalized_jerseys/",
+					"#!filter/sweatshirts/",
+					"#!filter/hats/",
+					"#!filter/souvenirs/"
 					]);
+				
+				for(var sport in _app.ext.store_swc.validTeams){
+					for(var teamIndex in _app.ext.store_swc.validTeams[sport]){
+						var team = _app.ext.store_swc.validTeams[sport][teamIndex];
+						for(var filterIndex in team.filters){
+							var hash = "#!filter/"+team.filters[filterIndex].id+"/?team="+team.v+"&sport="+sport;
+							if(sport == "app_mlb")
+							_app.ext.seo_robots.vars.pages.push(hash);
+							}
+						}
+					}
 				
 				var dismissNav = function(){
 					_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
