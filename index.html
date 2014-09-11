@@ -1678,7 +1678,9 @@ this will likely become more flexible in the future. ###
 				<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
 				<li class="prodDescTab"><a href="#prodShare">Share</a></li>
 				<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
+				<!--
 				<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank) {{ apply --show; }};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
+				-->
 				<li class="prodReviewsTab"><a href="#prodReviews">Reviews</a></li>
 				<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
 				<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
@@ -1694,11 +1696,11 @@ this will likely become more flexible in the future. ###
 			<div class="tabContent" data-anytab-content="prodSpecs">
 				<div data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 			</div>
-		
+			<!--
 			<div class="tabContent" data-anytab-content="prodFeatures">
 				<div data-tlc="bind $var '.%attribs.zoovy:prod_features'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 			</div>
-		
+			-->
 		
 			<div class="tabContent" data-anytab-content="prodReviews">
 		
