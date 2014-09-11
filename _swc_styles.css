@@ -129,7 +129,7 @@ a.redText{color:#7e0000;}
 
 #footer {
 	color:white; 
-	padding: 20px 0px;
+	/* padding: 20px 0px; */
 	position:fixed;
 	left:0px;
 	right:0px;

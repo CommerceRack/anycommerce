@@ -10,8 +10,8 @@
 #appView.initFooter {padding-bottom: 210px;}
 #appView.peekFooter.showFooter {padding-bottom: 210px;}
 #appView.peekFooter.initFooter {padding-bottom: 210px;}
-#appView #footer {bottom:-150px;}
-#appView.peekFooter #footer {bottom:-130px;}
+#appView #footer {bottom:-180px;}
+/* #appView.peekFooter #footer {bottom:-130px;} */
 
 #livechat {margin-left: 20px;}
 #livechat img {height:67px;}
@@ -20,7 +20,8 @@
 
 #search input{ height:21px;}
 
-#footer > div{position:relative; height:130px;}
+#footer .footerTeaser h3{line-height:30px;}
+#footer .footerContent{position:relative; height:130px; margin:40px auto;}
 
 .footerColumn {
 	position:absolute;

@@ -11,9 +11,8 @@
 #appView.showFooter {padding-bottom: 210px;}
 #appView.initFooter {padding-bottom: 210px;}
 /* #appView.peekFooter.showFooter {padding-bottom: 210px;} */
-#appView #footer {bottom:-170px;}
+#appView #footer {bottom:-180px;}
 /* #appView.peekFooter #footer {bottom:-130px;} */
-#footer{padding: 20px 0px;}
 
 /* #livechat {margin-left: 20px;} */
 /* #livechat img {width:115px; height:42px;} */
@@ -27,7 +26,9 @@
 #nav.expand .fullNav { left:50%;}
 #nav .fullNav {margin-left:-320px; padding: 12px; }
 
-#footer > div{position:relative; height:130px;}
+#footer .footerTeaser h3{line-height:30px;}
+#footer .footerContent{position:relative; height:130px; margin:40px auto;}
+
 .footerColumn {
 	position:absolute;
 	width:170px;
