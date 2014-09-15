@@ -1422,7 +1422,7 @@ will load everything in the RQ will a pass <= [pass]. so pass of 10 loads everyt
 							var eventObj = {
 								'hitType' : 		'event',
 								'eventCategory' :	AEF[0],
-								'eventAction' :		AEF[1],
+								'eventAction' :		AEF[1]
 								};
 							if($CT.attr('data-ga-label')){
 								eventObj.eventLabel = $CT.attr('data-ga-label');
