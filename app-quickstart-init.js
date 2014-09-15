@@ -138,6 +138,20 @@ myApp.u.appInitComplete = function()	{
 
 	}
 
+$('#productTemplate').on('complete.variations', function(event, $context, infoObj){
+	if(infoObj.sku){
+		var variations = infoObj.sku.split(':');
+		variations.splice(0,1);
+		
+		var $fields = $('[data-app-role="productVariations"]', $context)
+		
+		for(var i in variations){
+			var variation = variations[i].substr(0,2);
+			var choice = variations[i].substr(2,2);
+			$('[name='+variation+']', $fields).val(choice).trigger('change');
+			}
+		}
+	});
 
 
 
@@ -163,6 +177,13 @@ myApp.router.appendInit({
 				infoObj.sku = g.uriParams.sku;
 				}
 			showContent("product",infoObj);
+			}
+		else if(g.uriParams.hashbang){
+			var prevHash = document.location.hash;
+			document.location.hash = "#!"+g.uriParams.hashbang;
+			if(prevHash == document.location.hash){
+				myApp.router.handleHashChange();
+				}
 			}
 		else if(document.location.hash)	{	
 			myApp.u.dump('triggering handleHash');

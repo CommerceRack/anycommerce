@@ -148,7 +148,7 @@ renderOptionSELECT: function(pog) {
 //	dump('BEGIN renderOptionSELECT for pog'); dump(pog);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>");
-	var $selectList = $("<select>").attr({"name":pogid});
+	var $selectList = $("<select data-app-change='store_product|updatePrice'>").attr({"name":pogid});
     var i = 0;
     var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 
@@ -189,7 +189,7 @@ renderOptionBIGLIST: function(pog) {
 	var inc = 0;
      var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 	var $parentDiv = $("<span \/>");
-	var $selectList = $("<select \/>").attr({"name":pogid}).addClass("zform_select zform_biglist");
+	var $selectList = $("<select data-app-change='store_product|updatePrice' \/>").attr({"name":pogid}).addClass("zform_select zform_biglist");
 //sets the first options on both select lists.
 	$selectList.append("<option value='' disable='disabled' selected='selected'>Please Choose...<\/option>");
 
@@ -239,7 +239,7 @@ renderOptionIMGSELECT: function(pog) {
 //	dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>").addClass('imgSelectContainer');
-	var $selectList = $("<select>").attr({"name":pogid}).addClass('zform_select').bind('change', function(e){
+	var $selectList = $("<select data-app-change='store_product|updatePrice'>").attr({"name":pogid}).addClass('zform_select').bind('change', function(e){
 		var thumbnail = $("option:selected",$(this)).attr('data-thumbnail');
 		$(this).closest('.imgSelectContainer').find('img').attr('src',makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false}));
 		});
@@ -287,7 +287,7 @@ renderOptionRADIO: function(pog)	{
     var i = 0;
      var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 	while (i < len) {
-		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']})).append(pog['@options'][i]['prompt']));
+		$parentDiv.append($("<label \/>").append($('<input data-app-change="store_product|updatePrice">').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']})).append(pog['@options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -300,7 +300,7 @@ renderOptionCB: function(pog) {
 	var $parentDiv = $("<span \/>");
 	$('<input>').attr({type: "checkbox", name: pogid, value: 'ON'}).appendTo($parentDiv);
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	$('<input>').attr({type: "hidden", name: "pog_"+pogid+"_cb", value: '1'}).appendTo($parentDiv);
+	$('<input data-app-change="store_product|updatePrice">').attr({type: "hidden", name: "pog_"+pogid+"_cb", value: '1'}).appendTo($parentDiv);
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
@@ -317,7 +317,7 @@ renderOptionHIDDEN: function(pog) {
 	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	$parentDiv.append($('<input>').attr({type: "hidden", name: pogid, value: defaultValue}));
+	$parentDiv.append($('<input data-app-change="store_product|updatePrice">').attr({type: "hidden", name: pogid, value: defaultValue}));
 	
 	return $parentDiv;
 	},
@@ -338,7 +338,7 @@ renderOptionTEXT: function(pog) {
 	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $textbox = $('<input>').attr({type: "text", name: pogid, value: defaultValue});
+	var $textbox = $('<input data-app-change="store_product|updatePrice">').attr({type: "text", name: pogid, value: defaultValue});
 	if(pog['maxlength'])	{
 		$textbox.keyup(function(){
 			if (this.value.length > (pog['maxlength'] - 1)) // if too long...trim it!
@@ -360,7 +360,7 @@ renderOptionCALENDAR: function(pog) {
 	var defaultValue = pog['default'] ?  pog['default'] : "";
 	
 	var $parentDiv = $("<span \/>");
-	var $textbox = $('<input>').attr({type: "text", name:pogid, value: defaultValue}).addClass('zform_textbox').datepicker({altFormat: "DD, d MM, yy"});
+	var $textbox = $('<input data-app-change="store_product|updatePrice">').attr({type: "text", name:pogid, value: defaultValue}).addClass('zform_textbox').datepicker({altFormat: "DD, d MM, yy"});
 	$parentDiv.append($textbox);
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
@@ -384,7 +384,7 @@ renderOptionNUMBER: function(pog) {
 	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //right now, 'number' isn't widely supported, so a JS regex is added to strip non numeric characters
-	var $textbox = $('<input>').attr({type: "number", name: pogid, value: defaultValue}).keyup(function(){
+	var $textbox = $('<input data-app-change="store_product|updatePrice">').attr({type: "number", name: pogid, value: defaultValue}).keyup(function(){
 		this.value = this.value.replace(/[^0-9]/g, '');
 		});
 
@@ -409,7 +409,7 @@ renderOptionTEXTAREA: function(pog) {
 	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $textbox = $('<textarea>').attr({name: pogid, value: defaultValue});
+	var $textbox = $('<textarea data-app-change="store_product|updatePrice">').attr({name: pogid, value: defaultValue});
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
@@ -444,7 +444,7 @@ renderOptionIMGGRID: function(pog)	{
 	while (i < len) {
 		thumbnail = makeImage({"w":pog.width,"h":pog.height,"name":pog['@options'][i]['img'],"b":"FFFFFF","tag":true});
 		radioLabel = "<label>"+pog['@options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']});
+		$radioInput = $('<input data-app-change="store_product|updatePrice">').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']});
 		$parentDiv.append(thumbnail).append($radioInput).append(radioLabel).wrap("<div class='floatLeft'><\/div>");;
 		i++
 		}
