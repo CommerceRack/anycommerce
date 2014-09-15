@@ -80,7 +80,7 @@ var store_tracking = function(_app) {
 								'name' : item.prod_name,
 								'sku' : item.sku,
 								'price' : item.base_price,
-								'quantity' : item.qty,
+								'quantity' : item.qty
 								})
 							};
 
