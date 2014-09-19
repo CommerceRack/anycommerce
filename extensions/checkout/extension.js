@@ -60,7 +60,7 @@ var order_create = function(_app) {
 				if(_app.vars._clientid == '1pc')	{
 					_app.u.loadCSSFile(_app.vars.baseURL+"extensions/checkout/opc_styles.css","opcCheckoutCSS"); //loaded after checkoutCSS so that overrides can be set, if need be.
 					}
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/checkout/'+_app.vars.checkoutAuthMode+'.html',theseTemplates);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/checkout/'+_app.vars.checkoutAuthMode+'.html');
 
 				var r = true; //returns false if checkout can't load due to account config conflict.
 

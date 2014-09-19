@@ -93,6 +93,7 @@ var quickstart = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
+				_app.ext.quickstart.pageHandlers = {};
 				return r;
 				},
 			onError : function()	{
@@ -104,7 +105,7 @@ var quickstart = function(_app) {
 
 		startMyProgram : {
 			onSuccess : function()	{
-//			dump("BEGIN quickstart.callback.startMyProgram");
+			dump("BEGIN quickstart.callback.startMyProgram");
 //			dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			dump(" -> window.history.pushState: "+typeof window.history.pushState);
 
@@ -130,12 +131,12 @@ var quickstart = function(_app) {
 				if(cartID)	{
 					dump(" -> cartID is set, validate.");
 					// the addCart2CM uses the 'appCartExists' datapointer. if it changes here, update the callback.
-					_app.model.addDispatchToQ({"_cmd":"appCartExists",_cartid:cartID,"_tag":{"datapointer":"appCartExists","cartid":cartID,"callback":"addCart2CM","extension":"quickstart"}},"mutable");
+					_app.model.addDispatchToQ({"_cmd":"appCartExists",_cartid:cartID,"_tag":{"datapointer":"appCartExists","cartid":cartID,"callback":"addCart2CM","extension":"quickstart", "require":"cart_message"}},"mutable");
 					//do not set cart ID in session until it validates.
 					}
 				else	{
 					dump(" -> no cart found. create a new one");
-					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart', "require":"cart_message"},'mutable');
 					}
 
 //technically, a session lasts until the browser is closed. if fresh data is desired on refresh, uncomment the following few lines.
@@ -170,7 +171,10 @@ document.write = function(v){
 
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
-				//_app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"quickstart"},'mutable');
+				//_app.require('store_navcats', function(){
+					//_app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"quickstart"},'mutable');
+					//_app.model.dispatchThis('mutable');
+				//	});
 				_app.model.dispatchThis('mutable');
 				}
 			}, //startMyProgram 
@@ -178,14 +182,27 @@ document.write = function(v){
 		addCart2CM : {
 			onSuccess : function(_rtag){
 				var cartID = false;
-//				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
+				_app.u.dump("BEGIN quickstart.callbacks.addCart2CM.onSuccess");
 				if(_rtag.datapointer == 'appCartExists' && _app.data[_rtag.datapointer].exists)	{
 //					_app.u.dump(" -> existing cart is valid. add to cart manager"); 
 //					dump(" -> _rtag:"); dump(_rtag);
 					cartID = _rtag.cartid;
 					_app.model.addCart2Session(cartID);
-//					dump(" -> cart id is valid. added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
+					dump(" -> cart id is valid. added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
 					if($('#cartMessenger').length)	{
+						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);
+						$("textarea[name='message']",'#cartmessenger').on('keypress',function(event){
+							if (event.keyCode == 13) {
+								$("[data-app-role='messageSubmitButton']",$(this).closest('form')).trigger('click');
+								return false;
+								}
+							return true;
+							});
+						}
+					else	{
+						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
+						}if($('#cartMessenger').length)	{
 						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);
 						$("textarea[name='message']",'#cartmessenger').on('keypress',function(event){
@@ -203,7 +220,7 @@ document.write = function(v){
 				else if(_rtag.datapointer == 'appCartExists')	{
 					_app.u.dump(" -> existing cart was NOT valid. Fetch a new cartid");
 					_app.model.removeCartFromSession(_rtag.cartid); //this will ensure the cart isn't used again.
-					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');//The cart that was passed was exired in invalid.
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart', "require" : "cart_message"},'mutable');//The cart that was passed was exired in invalid.
 					_app.model.dispatchThis('mutable');
 					}
 				else	{
@@ -226,8 +243,6 @@ document.write = function(v){
 						_app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'quickstart'},'mutable');
 						_app.model.dispatchThis('mutable');
 						
-						_app.ext.quickstart.u.bindAppNav(); //adds click handlers for the next/previous buttons (product/category feature).
-	
 //						if(typeof _app.u.appInitComplete == 'function'){_app.u.appInitComplete()}; //gets run after app has been init
 						_app.ext.quickstart.thirdParty.init();
 						
@@ -289,8 +304,8 @@ document.write = function(v){
 
 		showProd : 	{
 			onSuccess : function(tagObj)	{
-//				dump("BEGIN quickstart.callbacks.showProd");
-//				dump(tagObj);
+				dump("BEGIN quickstart.callbacks.showProd");
+				dump(tagObj);
 				var tmp = _app.data[tagObj.datapointer];
 				var pid = _app.data[tagObj.datapointer].pid;
 				tmp.session = _app.ext.quickstart.vars.session;
@@ -298,7 +313,7 @@ document.write = function(v){
 					tmp['reviews'] = _app.ext.store_product.u.summarizeReviews(pid); //generates a summary object (total, average)
 					tmp['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 					}
-//				dump("Rendering product template for: "+pid);
+				dump("Rendering product template for: "+pid);
 				tagObj.jqObj.tlc({'verb':'translate','dataset':tmp});
 				tagObj.pid = pid;
 				//build queries will validate the namespaces used AND also fetch the parent product if this item is a child.
@@ -541,8 +556,10 @@ need to be customized on a per-ria basis.
 			searchbytag : function(data,thisTLC)	{
 				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 				var query = {"size":(argObj.size || 4),"mode":"elastic-search","filter":{"term":{"tags":argObj.tag}}};
-				_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+argObj.tag,'templateID':argObj.templateid,'extension':'store_search','callback':'handleElasticResults','list':data.globals.tags[data.globals.focusTag]},argObj));
-				_app.model.dispatchThis('mutable');
+				_app.require('store_search',function(){
+					_app.ext.store_search.calls.appPublicProductSearch.init(query,$.extend({'datapointer':'appPublicSearch|tag|'+argObj.tag,'templateID':argObj.templateid,'extension':'store_search','callback':'handleElasticResults','list':data.globals.tags[data.globals.focusTag]},argObj));
+					_app.model.dispatchThis('mutable');
+					});
 				return false; //in this case, we're off to do an ajax request. so we don't continue the statement.
 				}
 			},
@@ -919,7 +936,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				var
 					r = false,
 					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
-					$new;  //a jquery object returned by the 'show' functions (ex: showProd).
+					$new = $('<div class="alignCenter"><img src="loading.gif"/></div>');  //a jquery object returned by the 'show' functions (ex: showProd).
 
 //clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
 //this will fix that and only show the last clicked item. state of the world render this code obsolete.
@@ -962,7 +979,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							//the item is already in the list. move it to the front.
 							_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, _app.ext.quickstart.vars.session.recentlyViewedItems), 1)[0]);
 							}
-						$new = _app.ext.quickstart.u.showProd(infoObj);
+						_app.require(['store_product','store_navcats'], function(){
+							_app.ext.quickstart.u.showProd($new, infoObj);
+							});
 						break;
 	
 					case 'homepage':
@@ -1117,7 +1136,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						// });
 					// */
 					// }
-				// else 
+				// else
+				$new.addClass('displayNone').appendTo($('#mainContentArea'));
 				if(infoObj.performTransition == false)	{
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
@@ -1151,7 +1171,217 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
+			newShowContent : function(uri,infoObj)	{
+				dump(_app.ext.quickstart.pageHandlers);
+				_app.ext.quickstart.vars.showContentFinished = false;
+				_app.ext.quickstart.vars.showContentCompleteFired = false;
+				dump("BEGIN newShowContent ["+infoObj.pageType+"]."); dump(infoObj);
+				
+				infoObj = infoObj || {}; //could be empty for a cart or checkout
+				var
+					r = false,
+					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
+					$new = $('[data-app-uri="'+uri+'"]');  //a jquery object returned by the 'show' functions (ex: showProd).
+				
+//clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
+//this will fix that and only show the last clicked item. state of the world render this code obsolete.
+				if($old.length)	{
+					$old.siblings().hide(); //make sure only one 'page' is visible.
+					_app.renderFunctions.handleTemplateEvents($old,$.extend(_app.ext.quickstart.vars.hotw[0],{"state":"depart"}))
+					}
+				_app.ext.quickstart.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
 
+				_app.ext.quickstart.u.handleSearchInput(infoObj.pageType); //will clear keyword searches when on a non-search page, to avoid confusion.
+				
+				infoObj.state = 'init'; //needed for handleTemplateEvents.
+				_app.ext.quickstart.u.handleSandHOTW(infoObj);
+				
+				//The page already exists, we just have to show it
+				if($new.length){
+					//run init event
+					}
+				else {
+					$new = $('<div data-app-uri="'+uri+'"></div>');
+					if(_app.ext.quickstart.pageHandlers[infoObj.pageType]){
+						_app.ext.quickstart.pageHandlers[infoObj.pageType]($new, infoObj);
+						}
+					else{
+						//404
+						dump("No page handler found");
+						}
+					}
+				
+				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
+				
+				$new.addClass('displayNone').appendTo($('#mainContentArea'));
+				if(infoObj.performTransition == false)	{
+					_app.ext.quickstart.vars.showContentFinished = true;
+					}
+				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
+					var callback = function(){
+						var $hiddenpages = $("#mainContentArea > :hidden");
+						var L = $hiddenpages.length;
+						dump(L);
+						dump(L - _app.ext.quickstart.vars.cachedPageCount);
+						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
+							$($hiddenpages.get(i)).intervaledEmpty().remove();
+							}
+						}
+					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
+					}
+				else if($new instanceof jQuery)	{
+//no page transition specified. hide old content, show new. fancy schmancy.
+					$("#mainContentArea :visible:first").hide();
+					$new.show();
+					_app.ext.quickstart.vars.showContentFinished = true;
+					}
+				else	{
+					dump("WARNING! In showContent but there is no new page to show!");
+					_app.ext.quickstart.vars.showContentFinished = true;
+					}
+
+				return true;
+
+				
+				
+				switch(pageType)	{
+
+					case 'homepage':
+						infoObj.pageType = 'homepage';
+						infoObj.navcat = zGlobals.appSettings.rootcat;
+						$new = _app.ext.quickstart.u.showPage(infoObj);
+						break;
+					case 'static':
+						infoObj.pageType = 'static';
+						var parentID = infoObj.templateID+"_"+(infoObj.id || "");
+						var $parent = $(_app.u.jqSelector('#',parentID));
+						if($parent.length > 0){
+							infoObj.state = 'init';
+							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
+							}
+						else {
+							$parent = new tlc().getTemplateInstance(infoObj.templateID);
+							$parent.attr('id', parentID);
+							infoObj.state = 'init';
+							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
+							if(infoObj.dataset){
+								dump(infoObj);
+								infoObj.verb = 'translate';
+								$parent.tlc(infoObj);
+								}
+							}
+						$new = $parent;
+						$new.data('templateid',infoObj.templateid);
+						$new.data('pageid',infoObj.id);
+						$('#mainContentArea').append($new);
+						infoObj.state = 'complete';
+						_app.renderFunctions.handleTemplateEvents($new,infoObj);
+						break;
+					case 'category':
+//add item to recently viewed list IF it is not already the most recent in the list.				
+//Originally, used: 						if($.inArray(infoObj.navcat,_app.ext.quickstart.vars.session.recentCategories) < 0)
+//bad mojo because spot 0 in array isn't necessarily the most recently viewed category, which it should be.
+						if(_app.ext.quickstart.vars.session.recentCategories[0] != infoObj.navcat)	{
+							_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
+							}
+						
+						$new = _app.ext.quickstart.u.showPage(infoObj); //### look into having showPage return infoObj instead of just parentID.
+						break;
+	
+					case 'search':
+	//					dump(" -> Got to search case.");	
+						$new = _app.ext.quickstart.u.showSearch(infoObj);
+						break;
+	
+					case 'customer':
+//						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
+//201404 -> change in logic so that secure or file always hit before checking if authentication is required. reduces overhead.
+						if('https:' == document.location.protocol || 'file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
+							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
+							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
+								infoObj.performJumpToTop = false;
+								}
+							else	{
+								infoObj.performJumpToTop = true;
+								}
+							$new = _app.ext.quickstart.u.showCustomer(infoObj);
+							}
+						else	{
+//							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
+// * changed from 'empty' to showLoading because empty could be a heavy operation if mainContentArea has a lot of content.
+							$('body').showLoading({'message':'Transferring to secure login'});							
+							var SSLlocation = _app.vars.secureURL+"?cartID="+_app.model.fetchCartID();
+							SSLlocation += "#!customer/"+infoObj.show
+							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
+							document.location = SSLlocation; //redir to secure url.
+							}
+						break;
+
+					case 'checkout':
+//						dump("PROTOCOL: "+document.location.protocol);
+						infoObj.parentID = 'checkoutContainer'; //parent gets created within checkout. that id is hard coded in the checkout extensions.
+						infoObj.templateID = 'checkoutTemplate'
+						infoObj.state = 'init'; //needed for handleTemplateEvents.
+						var $checkoutContainer = $("#checkoutContainer");
+						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
+
+//for local, don't jump to secure. ### this may have to change for a native _app. what's the protocol? is there one?
+						if('http:' == document.location.protocol)	{
+							dump(" -> nonsecure session. switch to secure for checkout.");
+// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
+// * use showloading instead of .html (which could be heavy)
+//							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
+							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
+							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+_app.model.fetchCartID()+"&_session="+_app.vars._session+"#!checkout";
+							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
+							
+							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
+							document.location = SSLlocation;
+							}
+						else	{
+// * checkout was emptying mainContentArea and that was heavy. This solution is faster and doesn't nuke templates already rendered.
+							if(!$checkoutContainer.length)	{
+								$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
+								$('#mainContentArea').append($checkoutContainer );
+								}
+							_app.ext.order_create.a.startCheckout($checkoutContainer,_app.model.fetchCartID());
+							}
+						infoObj.state = 'complete'; //needed for handleTemplateEvents.
+						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
+// **201403 moved this to the bottom so $new gets the right pointer. -mc  
+						$new = $checkoutContainer;
+						break;
+	
+					case 'company':
+						_app.ext.quickstart.u.showCompany(infoObj);
+						$new = $('#mainContentArea_company');
+						break;
+	
+					case 'cart':
+						$new = _app.ext.quickstart.u.showCart(infoObj);
+						break;
+
+					case '404': 	//no specific code. shared w/ default, however a case is present because it is a recognized pageType.
+					default:		//uh oh. what are we? default to 404.
+						infoObj.pageType = '404';
+						infoObj.back = 0;
+						infoObj.templateID = 'pageNotFoundTemplate'
+						infoObj.state = 'init'; //needed for handleTemplateEvents.
+//						var $fourOhFour = _app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj);
+						$new = $("<div \/>").tlc({
+							dataAttribs : {'id':'page404'},
+							templateid : infoObj.templateID,
+							dataset : infoObj
+							});
+						_app.renderFunctions.handleTemplateEvents($new,infoObj);
+						$('#mainContentArea').append($new);
+						infoObj.state = 'complete'; //needed for handleTemplateEvents.
+						_app.renderFunctions.handleTemplateEvents($new,infoObj);
+					}
+
+				
+				},
 
 /*
 app messaging ui is a mechanism for buyers and merchants to communicate in real-time.
@@ -1188,14 +1418,16 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 				if($context)	{
 					var $inputs = $(".qtyChanged",$context);
 					if($inputs.length)	{
-						$inputs.each(function(){
-							var obj = _app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
-							if(obj)	{
-								_app.ext.cco.calls.cartItemAppend.init(obj,{});
-								}
+						_app.require(['store_product','cco'], function(){
+							$inputs.each(function(){
+								var obj = _app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
+								if(obj)	{
+									_app.ext.cco.calls.cartItemAppend.init(obj,{});
+									}
+								});
+							_app.calls.refreshCart.init({},'immutable');
+							_app.model.dispatchThis('immutable');
 							});
-						_app.calls.refreshCart.init({},'immutable');
-						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						$context.anymessage({'message':'Please set quantities before adding items to the cart.'});
@@ -1218,19 +1450,21 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 							}
 						else	{
 							//by now, item has been added to wishlist. So remove it from the cart.
-							_app.ext.cco.calls.cartItemUpdate.init({'stid':obj.stid,'quantity':0,'_cartid':$cart.data('cartid')},{callback:function(rd){
-								$cart.hideLoading();
-								if(_app.model.responseHasErrors(rd)){
-									$cart.anymessage({'message':rd});
-									}
-								else	{
-									//item successfully removed from the cart.
-									$cart.anymessage({'message':'Thank you. '+obj.stid+' has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
-									}
-								}});
-							$cart.trigger('fetch',{'Q':'immutable'});
-//							_app.calls.refreshCart.init({'callback':'handleCart','templateID':'cartTemplate','extension':'quickstart','parentID':'modalCartContents'},'immutable');
-							_app.model.dispatchThis('immutable');
+							_app.require('cco',function(){
+								_app.ext.cco.calls.cartItemUpdate.init({'stid':obj.stid,'quantity':0,'_cartid':$cart.data('cartid')},{callback:function(rd){
+									$cart.hideLoading();
+									if(_app.model.responseHasErrors(rd)){
+										$cart.anymessage({'message':rd});
+										}
+									else	{
+										//item successfully removed from the cart.
+										$cart.anymessage({'message':'Thank you. '+obj.stid+' has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
+										}
+									}});
+								$cart.trigger('fetch',{'Q':'immutable'});
+	//							_app.calls.refreshCart.init({'callback':'handleCart','templateID':'cartTemplate','extension':'quickstart','parentID':'modalCartContents'},'immutable');
+								_app.model.dispatchThis('immutable');
+								});
 							}
 						}},'immutable'); 
 					_app.model.dispatchThis('immutable');
@@ -1250,8 +1484,10 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 
 				if(pageType && infoObj && infoObj.templateID)	{
 					if(pageType == 'product' && infoObj.pid)	{
-						_app.ext.store_product.u.prodDataInModal(infoObj);
-						window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','product '+infoObj.pid);
+						_app.require('store_product', function(){
+							_app.ext.store_product.u.prodDataInModal(infoObj);
+							window[_app.vars.analyticsPointer]('send','event','Quickview','User Event','product '+infoObj.pid);
+							});
 						}
 						
 					else if(pageType == 'category' && infoObj.navcat)	{
@@ -1366,6 +1602,7 @@ the ui also helps the buyer show the merchant what they're looking at and, optio
 	//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
 	/*				
 	*/
+					//TODO use require syntax, skipping for now because... ugh
 					_app.ext.store_product.calls.appProductGet.init(pid,{
 						'callback':function(rd){
 
@@ -1518,7 +1755,6 @@ $target.tlc({
 
 
 		u : {
-
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
 			handleAppInit : function()	{
@@ -2058,43 +2294,50 @@ effects the display of the nav buttons only. should be run just after the handle
 				return r;
 				},
 
-//executed during the extension init. binds actions to the various appNav buttons.
-			bindAppNav : function(){
-				var $nextBtn = $("[data-app-role='prodDetailNextItemButton']","#appNav"),
-				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
-				
-				$nextBtn.button({icons: {primary: "ui-icon-seek-next"},text: false});
-				$prevBtn.button({icons: {primary: "ui-icon-seek-prev"},text: false});
-				
-				function step($btn,increment)	{
-					if($btn.data('datapointer').indexOf('appNavcatDetail') >= 0)	{
-						var csv = _app.data[$btn.data('datapointer')]['@products'],
-// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
-						index = $.inArray(_app.ext.quickstart.vars.hotw[0].pid, csv) + increment;
-						
-						if(index < 0)	{index = csv.length - 1} //after first product, jump to last
-						else if(index >= csv.length)	{index = 0} //afer last item, jump to first.
-						else	{} //leave index alone.
-						document.location.hash = _app.ext.store_routing.u.productAnchor(csv[index]);
-
-						}
-					else	{} //non category datapointer. really should never get here.
+			newShowProd : function($container, infoObj){
+				var pid = infoObj.pid;
+				if(!pid)	{
+					$('#globalMessaging').anymessage({'message':"Uh Oh. It seems an app error occured. Error: no product id. see console for details.",'gMessage':true});
+					dump("quickstart.u.showProd had no infoObj.pid, which is required. infoObj follows:",'error'); dump(infoObj);
 					}
-				
-				$nextBtn.off('click.next').on('click.next',function(){
-					step($(this),1);
-					});
-				$prevBtn.off('click.prev').on('click.prev',function(){
-					step($(this),-1);
-					});
+				else	{
+					infoObj.templateID = infoObj.templateID || 'productTemplate';
+					//dump(infoObj);
+					var $product = new tlc().getTemplateInstance(infoObj.templateID);
+					dump("Product jqObj follows:");
+					dump($product);
+					infoObj.state = 'init';
+					_app.renderFunctions.handleTemplateEvents($container,infoObj); //init event triggered.
+					//$product.attr('id',infoObj.parentID).data('pid',pid);
+					$container.append($product);//hidden by default for page transitions
+					_app.u.handleCommonPlugins($product);
+					
+					var nd = 0; //Number of Dispatches.
+
+//need to obtain the breadcrumb info pretty early in the process as well.
+//the breadcrumb renderformat handles most of the heavy lifting, so datapointers are not necessary for callback. Just getting them into memory here.
+					if(_app.ext.quickstart.vars.session.recentCategories.length > 0)	{
+						nd += _app.ext.store_navcats.u.addQueries4BreadcrumbToQ(_app.ext.quickstart.vars.session.recentCategories[0]).length;
+						}
+					$.extend(infoObj, {'callback':'showProd','extension':'quickstart','jqObj':$product,'templateID':'productTemplate'});
+					dump('InfoObj after extend follows:');
+					dump(infoObj);
+					nd += _app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
+					//if a dispatch is going to occur, might as well get updated product info.
+					if(nd)	{
+						_app.model.destroy('appProductGet|'+pid);
+						}
+					_app.ext.store_product.calls.appProductGet.init(pid,infoObj);
+					_app.model.dispatchThis();
+					
+					}
 				},
-
-
 //rather than having all the params in the dom, just call this function. makes updating easier too.
-			showProd : function(infoObj)	{
+			showProd : function($container, infoObj)	{
+				dump("OLD SHOW PROD");
 				var pid = infoObj.pid
 				var parentID = null; //what is returned. will be set to parent id if a pid is defined.
-//				dump("BEGIN quickstart.u.showProd ["+pid+"]");
+				dump("BEGIN quickstart.u.showProd ["+pid+"]");
 				if(!pid)	{
 					$('#globalMessaging').anymessage({'message':"Uh Oh. It seems an app error occured. Error: no product id. see console for details.",'gMessage':true});
 					dump("quickstart.u.showProd had no infoObj.pid, which is required. infoObj follows:",'error'); dump(infoObj);
@@ -2109,12 +2352,11 @@ effects the display of the nav buttons only. should be run just after the handle
 //no need to render template again.
 					if(!$product.length){
 //						dump(" -> product is NOT on the DOM yet. Add it.");
-						var $tmp = $("<div \/>");
-						$tmp.tlc({templateid:infoObj.templateID,'verb':'template'});
-						$product = $tmp.children();
+						$product = new tlc().getTemplateInstance(infoObj.templateID);
 						_app.renderFunctions.handleTemplateEvents($product,infoObj); //init event triggered.
 						$product.attr('id',infoObj.parentID).data('pid',pid);
-						$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
+						//$product.addClass('displayNone').appendTo($('#mainContentArea')); //hidden by default for page transitions
+						$container.append($product);//hidden by default for page transitions
 						_app.u.handleCommonPlugins($product);
 //						dump($._data($product[0], "events")); //will write object of events attached to an element.
 						var nd = 0; //Number of Dispatches.
@@ -2219,7 +2461,6 @@ effects the display of the nav buttons only. should be run just after the handle
 					
 //If raw elastic has been provided, use that.  Otherwise build a query.
 				if(infoObj.elasticsearch){
-					_app.ext.quickstart.u.updateDOMTitle("Search - advanced");
 					elasticsearch = _app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 					}
 				else if(infoObj.tag)	{
@@ -2473,7 +2714,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 									function populateBuyerProdlist(listID,$context)	{
 										//add the product list ul here because tlc statement has list ID for bind.
 										$("[data-buyerlistid='"+listID+"']",$customer).append("<ul data-tlc=\"bind $var '.@"+listID+"'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplateBuyerList'  --legacy;\" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>");
-										_app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : {'datapointer':'buyerProductListDetail|'+listID,"listid":listID,'callback':'buyerListAsProdlist','extension':'quickstart','jqObj':$("[data-buyerlistid='"+listID+"'] ul",$context)}},'mutable');
+										_app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : {'datapointer':'buyerProductListDetail|'+listID,"listid":listID,'callback':'buyerListAsProdlist','extension':'quickstart', "require":"store_prodlist",'jqObj':$("[data-buyerlistid='"+listID+"'] ul",$context)}},'mutable');
 										}
 									
 									var data = _app.data[rd.datapointer]['@lists']; //shortcut
@@ -2744,7 +2985,7 @@ buyer to 'take with them' as they move between  pages.
 							$parent.addClass('displayNone'); //hidden by default for page transitions.
 							$('#mainContentArea').append($parent);
 							}
-						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$parent});
+						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart', 'require':'store_navcats','jqObj':$parent});
 						_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
 						_app.model.dispatchThis();
 						}
@@ -3303,7 +3544,14 @@ later, it will handle other third party plugins as well.
 //				dump("END _app.ext.quickstart.thirdParty.fb.saveUserDataToSession");
 				}
 			}
-		}
+		},
+		
+		couplers : {
+			addPageHandler : function(args){
+				dump('adding handler');
+				_app.ext.quickstart.pageHandlers[args.pageType] = args.handler;
+				}
+			}
 
 		} //r object.
 	return r;
