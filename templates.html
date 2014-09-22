@@ -1329,21 +1329,19 @@ if you change these, you should move them above this comment so that when you (o
 	</li>
 </ul>
 
-<ul id="companySidelineTemplate" class="listStyleNone noPadOrMargin">
+<ul id="companySidelineTemplate" class="contentBG listStyleNone noPadOrMargin">
 	<li><a href="?about_us.html">About Us</a></li>
-	<li><a href="?company/contact/">Contact Information</a></li>
-	<li><a href="?company/faq/">Frequently Asked Questions</a></li>
-	<li><a href="?company/payment/">Payment Policy</a></li>
-	<li><a href="?company/privacy/">Privacy Policy</a></li>
-	<li><a href="?company/return/">Return Policy</a></li>
+	<li><a href="?contact_us.html">Contact Information</a></li>
+	<li><a href="?frequently_asked_questions.html">Frequently Asked Questions</a></li>
+	<li><a href="?payment_policy.html">Payment Policy</a></li>
+	<li><a href="?privacy_policy.html">Privacy Policy</a></li>
+	<li><a href="?return_policy.html">Return Policy</a></li>
 	<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
-	<li><a href="?company/shipping/">Shipping Information</a></li>
+	<li><a href="?shipping_policy.html">Shipping Information</a></li>
 </ul>
 
 <div id="aboutUsTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;">
-		
-	</div>
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
 	<div class="mainColumn">
 		<div class="textContentArea article">
 			<h1 class="" >About Us</h1>
@@ -1387,26 +1385,10 @@ if you change these, you should move them above this comment so that when you (o
 
 </div>
 
-<div id="companyTemplate" class="clearfix">
-
-	<div class="sideline">
-		<ul class="listStyleNone noPadOrMargin">
-			<li><a href="?company/about/">About Us</a></li>
-			<li><a href="?company/contact/">Contact Information</a></li>
-			<li><a href="?company/faq/">Frequently Asked Questions</a></li>
-			<li><a href="?company/payment/">Payment Policy</a></li>
-			<li><a href="?company/privacy/">Privacy Policy</a></li>
-			<li><a href="?company/return/">Return Policy</a></li>
-			<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
-			<li><a href="?company/shipping/">Shipping Information</a></li>
-		</ul>
-	</div>
-
+<div id="contactUsTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
 	<div class="mainColumn">
-<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
-		
-
-		<div id="contactArticle" class="displayNone textContentArea">
+		<div class="textContentArea">
 			<h1>Contact Information</h1>
 			<div class="companyAddress">
 			<!-- ::: add your contact information here ::: -->
@@ -1424,21 +1406,27 @@ if you change these, you should move them above this comment so that when you (o
 				<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
 			</fieldset>
 			</form>
-			<div data-tlc="bind $var '.zoovy:contact'; render --wiki='quickstart'; if (is $var --notblank;) {{apply --append;}};" id="contactContent"></div>
 		</div>
 
+	</div>
+</div>
 
-
-		<div id="faqArticle" class="displayNone textContentArea">
+<div id="faqTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Frequently Asked Questions</h1>
-			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
+			<div class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
 		</div>
+	</div>
+</div>
 
-
-
-		<div class="displayNone textContentArea" id="paymentArticle">
+<div id="paymentTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Payment Policy</h1>
-			<div id="paymentContent">
+			<div>
 				<h2>Credit Cards</h2>
 				<p>We accept the following credit cards: Visa, MasterCard, American Express, and Discover. There is no surcharge for using your credit card to make purchases with SportsWorldChicago Online. Please be sure to provide your exact billing address and telephone number (i.e. the address and phone number your credit card bank has on file for you). Incorrect information will cause a delay in processing your order. Your credit card will be billed upon shipment of your order. 
 				</p>
@@ -1451,9 +1439,13 @@ if you change these, you should move them above this comment so that when you (o
 				</p>
 			</div>
 		</div>
+	</div>
+</div>
 
-
-		<div class="displayNone textContentArea" id="privacyArticle">
+<div id="privacyTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h4>Privacy</h4>
 			<p>
 				We keep your personal information private and secure. When you make a purchase from our site, you provide your name, email address, credit card information, address, phone number, and a password. We use this information to process your orders, to keep you updated on your orders and to personalize your shopping experience.
@@ -1475,11 +1467,13 @@ if you change these, you should move them above this comment so that when you (o
 				Other sites accessible through our site have their own privacy policies and data collection practices. Please consult each site's privacy policy. Cubworld Online is not responsible for the actions of third parties. 
 			</p>
 		</div>
+	</div>
+</div>
 
-
-
-
-		<div class="displayNone textContentArea" id="returnArticle">
+<div id="returnTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Return Policy</h1>
 			<div id="returnContent">
 				<h2>Returns &amp; Exchanges</h2>
@@ -1515,10 +1509,13 @@ if you change these, you should move them above this comment so that when you (o
 				<p>After your package has been redelivered to us, please allow 1-2 weeks for processing time even when exchanging an item. Typically, we do turn all exchanges around in 24 hours.  We would notify you is the item is no longer available and call contact you with regards to finding an equivalent item or a credit. Out of the United States the shipping process is a little longer because of it has to go through customs. We will email you a notification when your order has been received and process.</p>
 			</div>
 		</div>
+	</div>
+</div>
 
-
-
-		<div class="displayNone textContentArea" id="shippingArticle">
+<div id="shippingTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Shipping Information</h1>
 			<div id="shippingContent">
 				<h2>Policies, Terms and Conditions:</h2>
@@ -1554,10 +1551,8 @@ if you change these, you should move them above this comment so that when you (o
 				<p>These Conditions will supersede any terms and/or conditions you include with any purchase order, regardless of whether SportsWorldChicago Online signs them or not. SportsWorldChicago Online reserves the right to make changes to this site and these Conditions at any time.</p>
 			</div>
 		</div>
-
 	</div>
-
-</div><!-- /companyTemplate -->
+</div>
 
 <div id="customerTemplate" class="clearfix smallButton">
 

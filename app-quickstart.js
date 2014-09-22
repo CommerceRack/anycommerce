@@ -984,11 +984,6 @@ fallback is to just output the value.
 						$new = $checkoutContainer;
 						break;
 	
-					case 'company':
-						_app.ext.quickstart.u.showCompany(infoObj);
-						$new = $('#mainContentArea_company');
-						break;
-	
 					case 'cart':
 						$new = _app.ext.quickstart.u.showCart(infoObj);
 						break;
@@ -1518,33 +1513,6 @@ $target.tlc({
 				_app.model.dpsSet('quickstart','hotw',$.extend(_app.ext.quickstart.vars.hotw));
 				},
 
-			showtransition : function(infoObj,$old)	{
-				var r = true; //what is returned.
-//				dump(" -> $old.data('templateid'): "+$old.data('templateid'));
-//				dump(" -> infoObj: "); dump(infoObj);
-//				dump(" -> $old.data('catsafeid'): "+$old.data('catsafeid'));
-//				dump(" -> infoObj.navcat: "+infoObj.navcat);
-//search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
-// or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-//				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; dump('transition suppressed: showing modal cart.');}
-				if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading same category.");}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; dump("transition suppressed: reloading homepage.");}
-				else if(infoObj.pageType == 'static' && infoObj.id && $old.data('templateid') == infoObj.templateid && $old.data('pageid') == infoObj.id){r = false; dump("transition suppressed: same filter page "+infoObj.id);}
-				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; dump("transition suppressed: reloading same product.");}
-				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; dump("transition suppressed: changing company articles.");}
-				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; dump("transition suppressed: changing customer articles.");}
-				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; dump("transition suppressed: new search from on search page.");}
-				else if(!_app.u.determineAuthentication() && this.thisArticleRequiresLogin(infoObj))	{
-					dump("transition suppressed: on a page that requires auth and buyer not authorized.");
-					r = false; //if the login modal is displayed, don't animate or it may show up off screen.
-					}
-				else	{
-
-					}
-//				dump(" -> R: "+r);
-				return r;
-				},
-
 //when changing pages, make sure keywords resets to the default to avoid confusion.
 			handleSearchInput : function(pageType)	{
 				if(pageType != 'search' && pageType != 'cart')	{
@@ -1977,49 +1945,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				},
 
 			
-//Show one of the company pages. This function gets executed by showContent.
-//handleTemplateEvents gets executed in showContent, which should always be used to execute this function.
-//The company navlinks are generated based on what articles are present and not disabled. built to allow for wizard to easily add new pages.
-			showCompany : function(infoObj)	{
-				infoObj.show = infoObj.show || 'about'; //what page to put into focus. default to 'about us' page
-				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
-				
-				infoObj.templateID = 'companyTemplate';
-				infoObj.state = 'init';
-				infoObj.parentID = 'mainContentArea_company';
-				var $mcac = $('#mainContentArea_company');
-				
-				if($mcac.length)	{
-					//template has already been added to the DOM. likley moving between company pages.
-					}
-				else	{
-//					var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID);
-//no interpolation takes place on the company pages (except faq). the content should be hard coded.
-					$mcac = new tlc().getTemplateInstance(infoObj.templateID);
-					$mcac.attr('id',infoObj.parentID);
-
-					var $nav = $('#companyNav ul:first',$mcac);
-//builds the nav menu.
-					$('.textContentArea',$mcac).not('.disabled').each(function(){
-						$nav.append("<li><a href='#!company/"+$(this).attr('id').replace('Article','')+"'>"+($('h1:first',$(this)).text())+"</a></li>");
-						});
-
-					$('#mainContentArea').append($mcac);
-
-					_app.u.handleCommonPlugins($mcac);
-					_app.u.handleButtons($mcac);
-					}
-
-				if(_app.ext.quickstart.u.showArticleIn($mcac,infoObj))	{
-					_app.renderFunctions.handleTemplateEvents($mcac,infoObj);
-					infoObj.state = 'complete';
-					_app.renderFunctions.handleTemplateEvents($mcac,infoObj);
-					}
-				else	{} //showArticle will handle displaying the error messaging.
-
-				return $mcac;
-				}, //showCompany
-				
 				
 //pio is PageInfo object
 //this showCart should only be run when no cart update is being run.

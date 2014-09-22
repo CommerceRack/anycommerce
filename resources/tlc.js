@@ -167,6 +167,7 @@ var tlc = function()	{
 //	this.gatherDatapointers = function(){}'
 
 	this.translate = function($ele,dataset)	{
+		dataset = dataset || {};
 //		dump(" -> dataset: "); dump(dataset);
 		if($ele instanceof jQuery && dataset)	{
 			var _self = this;

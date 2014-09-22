@@ -83,8 +83,49 @@ _app.router.appendHash({'type':'exact','route':'about_us.html','callback':functi
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'aboutUsTemplate',
-		'dataset':{},
-		'require':['templates.html','store_swc']
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'contact_us.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'contactUsTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'frequently_asked_questions.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'faqTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'payment_policy.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'paymentTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'privacy_policy.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'privacyTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'return_policy.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'returnTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'shipping_policy.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'shippingTemplate',
+		'require':['templates.html']
 		});
 	}});
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
