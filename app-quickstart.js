@@ -1006,7 +1006,9 @@ fallback is to just output the value.
 					r = false,
 					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
 					$new = $('[data-app-uri="'+uri+'"]');  //a jquery object returned by the 'show' functions (ex: showProd).
-				
+				if($old.attr('data-app-uri') == uri){
+					return false;
+					}
 //clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
 //this will fix that and only show the last clicked item. state of the world render this code obsolete.
 				if($old.length)	{
