@@ -26,6 +26,7 @@ _app.couple('quickstart','addPageHandler',{
 		infoObj.require = infoObj.require || [];
 		_app.require(infoObj.require,function(){
 			var $page = new tlc().getTemplateInstance(infoObj.templateID);
+			dump($page);
 			if(infoObj.dataset){
 				infoObj.verb = 'translate';
 				$page.tlc(infoObj);
@@ -68,7 +69,68 @@ _app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
 _app.router.addAlias('category', 	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'category'}, routeObj.params));});
 _app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
 
-
+_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
+	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
+		if(_app.ext.store_swc.filterData[routeObj.params.id]){
+			function showFilterPage(){
+				if(_app.ext.store_swc.vars.elasticFieldsLoaded){
+					routeObj.params.templateID = "filteredSearchTemplate";
+					routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
+					if(routeObj.params.dataset.onEnter){
+						routeObj.params.dataset.onEnter();
+						}
+					var optStrs = routeObj.params.dataset.optionList;
+					routeObj.params.dataset.options = routeObj.params.dataset.options || {};
+					for(var i in optStrs){
+						var o = optStrs[i];
+						if(_app.ext.store_swc.vars.elasticFields[o]){
+							routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_swc.vars.elasticFields[o]);
+							if(routeObj.hashParams && routeObj.hashParams[o]){
+								var values = routeObj.hashParams[o].split('|');
+								for(var i in routeObj.params.dataset.options[o].options){
+									var option = routeObj.params.dataset.options[o].options[i];
+									if($.inArray(option.v, values) >= 0){
+										option.checked = "checked";
+										}
+									}
+								}
+							}
+						else {
+							dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
+							}
+						}
+					if(routeObj.hashParams && routeObj.hashParams.sport && routeObj.hashParams.team){
+						_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
+						}
+					routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
+					
+					if(routeObj.params.dataset.titleBuilder){
+						routeObj.params.dataset.seo_title = routeObj.params.dataset.titleBuilder(routeObj.params.dataset.userTeam.p);
+						}
+						
+					if(routeObj.params.dataset.descriptionBuilder){
+						routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
+						}
+					
+					if(routeObj.params.dataset.metaDescriptionBuilder){
+						routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
+						}
+					routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
+					routeObj.params.pageType = 'static';
+					_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params)
+					}
+				else{
+					setTimeout(showFilterPage, 100);
+					}
+				}
+			showFilterPage();
+			}
+		else {
+			_app.ext.quickstart.a.newShowContent('404');
+			}
+		});
+	}});
+	
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(event, $context, infoObj){
 	dump('--> store_seo complete event'); 
 	event.stopPropagation(); 

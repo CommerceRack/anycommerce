@@ -35,6 +35,7 @@ var store_swc = function(_app) {
 			"popup2" : "I understand it may take 1-2 business days to customize my Chicago Cubs or Chicago Blackhawks item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted."
 			},
 		elasticFields : {},
+		elasticFieldsLoaded : false,
 		/*
 		userTeams : {
 			app_nba : [],
@@ -123,63 +124,6 @@ var store_swc = function(_app) {
 					}});
 				_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
 					showContent('search',{'elasticsearch':{"query" : {"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}}}});
-					}});
-				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
-					if(_app.ext.store_swc.filterData[routeObj.params.id]){
-						routeObj.params.templateID = "filteredSearchTemplate";
-						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
-						if(routeObj.params.dataset.onEnter){
-							routeObj.params.dataset.onEnter();
-							}
-						var optStrs = routeObj.params.dataset.optionList;
-						routeObj.params.dataset.options = routeObj.params.dataset.options || {};
-						for(var i in optStrs){
-							var o = optStrs[i];
-							if(_app.ext.store_swc.vars.elasticFields[o]){
-								routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_swc.vars.elasticFields[o]);
-								if(routeObj.hashParams[o]){
-									var values = routeObj.hashParams[o].split('|');
-									for(var i in routeObj.params.dataset.options[o].options){
-										var option = routeObj.params.dataset.options[o].options[i];
-										if($.inArray(option.v, values) >= 0){
-											option.checked = "checked";
-											}
-										}
-									}
-								}
-							else {
-								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
-								}
-							}
-						/*
-						routeObj.params.dataset.userTeams = {};
-						for(var sport in _app.ext.store_swc.validTeams){
-							routeObj.params.dataset.userTeams[sport] = $.grep(_app.ext.store_swc.validTeams[sport], function(e, i){ return $.inArray(e.v, _app.ext.store_swc.vars.userTeams[sport]) >= 0});
-							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
-							}
-						*/
-						if(routeObj.hashParams.sport && routeObj.hashParams.team){
-							_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
-							}
-						routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
-						
-						if(routeObj.params.dataset.titleBuilder){
-							routeObj.params.dataset.seo_title = routeObj.params.dataset.titleBuilder(routeObj.params.dataset.userTeam.p);
-							}
-							
-						if(routeObj.params.dataset.descriptionBuilder){
-							routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
-							}
-						
-						if(routeObj.params.dataset.metaDescriptionBuilder){
-							routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
-							}
-						routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
-						showContent('static',routeObj.params)
-						}
-					else {
-						showContent('404');
-						}
 					}});
 				
 				
@@ -285,6 +229,7 @@ var store_swc = function(_app) {
 					var field = data.contents['@products'][i];
 					_app.ext.store_swc.vars.elasticFields[field.id] = field;
 					}
+				_app.ext.store_swc.vars.elasticFieldsLoaded = true;
 				},
 			onError : function(){}
 			},

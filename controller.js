@@ -223,6 +223,7 @@ _app.templates holds a copy of each of the templates declared in an extension bu
 		
 	require : function(required, callback){
 		callback = callback || function(){};
+		if(required.length <= 0){callback();}
 		if(typeof required === "string"){
 			required = [required];
 			}
