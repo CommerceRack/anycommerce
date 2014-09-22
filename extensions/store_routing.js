@@ -32,7 +32,7 @@ var store_routing = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; 
-				
+				/*
 				if(_app.u.getParameterByName('seoRequest')){
 					_app.vars.showContentHashChange = true;
 					_app.vars.ignoreHashChange = true;
@@ -73,18 +73,8 @@ var store_routing = function(_app) {
 				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
 				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 
+				*/
 
-/*
-some other things we could do
-_app.router.appendHash({'type':'match','route':'quickview/product/{{pid}}*','callback':function(routeObj){
-	quickview('product',routeObj.params);
-	}});
-
-or a more generic one, like so:
-_app.router.appendHash({'type':'match','route':'modal/product/{{pid}}*','callback':function(routeObj){
-	quickview('product',routeObj.params);
-	}});
-*/
 				r = true;
 
 				return r;

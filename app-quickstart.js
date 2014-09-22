@@ -969,63 +969,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 
 				switch(pageType)	{
 
-					case 'product':
-	//add item to recently viewed list IF it is not already in the list.				
-						if($.inArray(infoObj.pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
-							_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(infoObj.pid);
-							}
-						else	{
-// ** 201332 indexOf changed to $.inArray for IE8 compatibility, since IE8 only supports the indexOf method on Strings
-							//the item is already in the list. move it to the front.
-							_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, _app.ext.quickstart.vars.session.recentlyViewedItems), 1)[0]);
-							}
-						_app.require(['store_product','store_navcats'], function(){
-							_app.ext.quickstart.u.showProd($new, infoObj);
-							});
-						break;
-	
-					case 'homepage':
-						infoObj.pageType = 'homepage';
-						infoObj.navcat = zGlobals.appSettings.rootcat;
-						$new = _app.ext.quickstart.u.showPage(infoObj);
-						break;
-					case 'static':
-						infoObj.pageType = 'static';
-						var parentID = infoObj.templateID+"_"+(infoObj.id || "");
-						var $parent = $(_app.u.jqSelector('#',parentID));
-						if($parent.length > 0){
-							infoObj.state = 'init';
-							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
-							}
-						else {
-							$parent = new tlc().getTemplateInstance(infoObj.templateID);
-							$parent.attr('id', parentID);
-							infoObj.state = 'init';
-							_app.renderFunctions.handleTemplateEvents($parent,infoObj);
-							if(infoObj.dataset){
-								dump(infoObj);
-								infoObj.verb = 'translate';
-								$parent.tlc(infoObj);
-								}
-							}
-						$new = $parent;
-						$new.data('templateid',infoObj.templateid);
-						$new.data('pageid',infoObj.id);
-						$('#mainContentArea').append($new);
-						infoObj.state = 'complete';
-						_app.renderFunctions.handleTemplateEvents($new,infoObj);
-						break;
-					case 'category':
-//add item to recently viewed list IF it is not already the most recent in the list.				
-//Originally, used: 						if($.inArray(infoObj.navcat,_app.ext.quickstart.vars.session.recentCategories) < 0)
-//bad mojo because spot 0 in array isn't necessarily the most recently viewed category, which it should be.
-						if(_app.ext.quickstart.vars.session.recentCategories[0] != infoObj.navcat)	{
-							_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
-							}
-						
-						$new = _app.ext.quickstart.u.showPage(infoObj); //### look into having showPage return infoObj instead of just parentID.
-						break;
-	
 					case 'search':
 	//					dump(" -> Got to search case.");	
 						$new = _app.ext.quickstart.u.showSearch(infoObj);
@@ -2843,61 +2786,6 @@ buyer to 'take with them' as they move between  pages.
 					}
 				return infoObj;
 				},
-
-//best practice would be to NOT call this function directly. call showContent.
-
-			showPage : function(infoObj)	{
-//				dump("BEGIN quickstart.u.showPage("+infoObj.navcat+")");
-
-				var catSafeID = infoObj.navcat;
-				if(!catSafeID)	{
-					$("#globalMessaging").anymessage({"message":"In quickstart.u.showPage, no navcat was passed in infoObj.","gMessage":true});
-					}
-				else	{
-					if(infoObj.templateID){
-						//templateID 'forced'. use it.
-						}
-					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
-						infoObj.templateID = 'homepageTemplate'
-						}
-					else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(catSafeID)){/*assigned in the conditional*/}
-					else	{
-						infoObj.templateID = 'categoryTemplate'
-						}
-					infoObj.state = 'init';
-					var parentID = infoObj.parentID || infoObj.templateID+'_'+_app.u.makeSafeHTMLId(catSafeID);
-					var $parent = $(_app.u.jqSelector('#',parentID));
-				
-					infoObj.parentID = parentID;
-					_app.renderFunctions.handleTemplateEvents($parent,infoObj);
-//only have to create the template instance once. showContent takes care of making it visible again. but the onComplete are handled in the callback, so they get executed here.
-					if($parent.length > 0){
-//set datapointer OR it won't be present on an oncomplete for a page already rendered.
-						infoObj.datapointer = infoObj.datapointer || "appNavcatDetail|"+catSafeID; 
-//						dump(" -> "+parentID+" already exists. Use it");
-						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						_app.renderFunctions.handleTemplateEvents($parent,infoObj);
-						}
-					else	{
-//						var $content = _app.renderFunctions.createTemplateInstance(infoObj.templateID,{"id":parentID,"catsafeid":catSafeID});
-						$parent = new tlc().getTemplateInstance(infoObj.templateID);
-						$parent.attr({id:parentID,"data-catsafeid":catSafeID});
-//if dialog is set, we've entered this function through showPageInDialog.
-//content gets added immediately to the dialog.
-//otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
-						if(infoObj.dialogID)	{$('#'+infoObj.dialogID).append($parent)}
-						else	{
-							$parent.addClass('displayNone'); //hidden by default for page transitions.
-							$('#mainContentArea').append($parent);
-							}
-						$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart', 'require':'store_navcats','jqObj':$parent});
-						_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
-						_app.model.dispatchThis();
-						}
-					}
-				return $parent;
-				}, //showPage
-
 
 
 //required params include templateid and either: tagObj.navcat or tagObj.pid  navcat can = . for homepage.

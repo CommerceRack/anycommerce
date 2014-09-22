@@ -271,7 +271,32 @@ templateID - the template id used (from _app.templates)
 
 
 		u : {
-/*
+			showPage : function($container, infoObj)	{
+				var catSafeID = infoObj.navcat;
+				if(!catSafeID)	{
+					$("#globalMessaging").anymessage({"message":"In quickstart.u.showPage, no navcat was passed in infoObj.","gMessage":true});
+					}
+				else	{
+					if(infoObj.templateID){/*templateID 'forced'. use it.*/}
+					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
+						infoObj.templateID = 'homepageTemplate'
+						}
+					else	{ infoObj.templateID = 'categoryTemplate'; }
+					
+					var parentID = infoObj.parentID || infoObj.templateID+'_'+_app.u.makeSafeHTMLId(catSafeID);
+					var $page = new tlc().getTemplateInstance(infoObj.templateID);
+					
+					infoObj.state = 'init';
+					_app.renderFunctions.handleTemplateEvents($page,infoObj);
+					
+					$container.append($page);
+
+					$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart', 'require':'store_navcats','jqObj':$page});
+					_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
+					_app.model.dispatchThis();
+					}
+				}, //showPage
+/*		
 In cases where the root categories are needed, this function will return them from the appCategoryList dataset.
 function assumes appCategoryList already exists in memory.
 will return an object of id:safeid, which is how the categories are stored in a appNavcatDetail.
