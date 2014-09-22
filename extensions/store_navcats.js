@@ -167,6 +167,8 @@ templateID - the template id used (from _app.templates)
 //to display a category w/ thumbnails, first the parent category obj is fetched (appNavcatDetail...) and this would be the callback.
 //it will get the detail of all the children, including 'meta' which has the thumbnail. It'll absorb the tag properties set in the inital request (parent, template) but
 // override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
+		
+		//Unused?
 		getChildData : {
 			onSuccess : function(tagObj)	{
 //				_app.u.dump('BEGIN _app.ext.quickstart.callbacks.getChildData.onSuccess');
