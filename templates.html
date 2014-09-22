@@ -1329,27 +1329,23 @@ if you change these, you should move them above this comment so that when you (o
 	</li>
 </ul>
 
+<ul id="companySidelineTemplate" class="listStyleNone noPadOrMargin">
+	<li><a href="?about_us.html">About Us</a></li>
+	<li><a href="?company/contact/">Contact Information</a></li>
+	<li><a href="?company/faq/">Frequently Asked Questions</a></li>
+	<li><a href="?company/payment/">Payment Policy</a></li>
+	<li><a href="?company/privacy/">Privacy Policy</a></li>
+	<li><a href="?company/return/">Return Policy</a></li>
+	<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
+	<li><a href="?company/shipping/">Shipping Information</a></li>
+</ul>
 
-
-
-<div id="companyTemplate" class="clearfix">
-
-	<div class="sideline">
-		<ul class="listStyleNone noPadOrMargin">
-			<li><a href="?company/about/">About Us</a></li>
-			<li><a href="?company/contact/">Contact Information</a></li>
-			<li><a href="?company/faq/">Frequently Asked Questions</a></li>
-			<li><a href="?company/payment/">Payment Policy</a></li>
-			<li><a href="?company/privacy/">Privacy Policy</a></li>
-			<li><a href="?company/return/">Return Policy</a></li>
-			<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
-			<li><a href="?company/shipping/">Shipping Information</a></li>
-		</ul>
+<div id="aboutUsTemplate">
+	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;">
+		
 	</div>
-
 	<div class="mainColumn">
-<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
-		<div id="aboutArticle" class="textContentArea article">
+		<div class="textContentArea article">
 			<h1 class="" >About Us</h1>
 			<div id="aboutUsContent">
 				<div data-bind="var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;" id="aboutUsContent">
@@ -1387,7 +1383,28 @@ if you change these, you should move them above this comment so that when you (o
 				</div>
 			</div>
 		</div>
+	</div>
 
+</div>
+
+<div id="companyTemplate" class="clearfix">
+
+	<div class="sideline">
+		<ul class="listStyleNone noPadOrMargin">
+			<li><a href="?company/about/">About Us</a></li>
+			<li><a href="?company/contact/">Contact Information</a></li>
+			<li><a href="?company/faq/">Frequently Asked Questions</a></li>
+			<li><a href="?company/payment/">Payment Policy</a></li>
+			<li><a href="?company/privacy/">Privacy Policy</a></li>
+			<li><a href="?company/return/">Return Policy</a></li>
+			<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
+			<li><a href="?company/shipping/">Shipping Information</a></li>
+		</ul>
+	</div>
+
+	<div class="mainColumn">
+<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
+		
 
 		<div id="contactArticle" class="displayNone textContentArea">
 			<h1>Contact Information</h1>

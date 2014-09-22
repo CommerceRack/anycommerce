@@ -25,12 +25,10 @@ _app.couple('quickstart','addPageHandler',{
 	"handler" : function($container, infoObj){
 		infoObj.require = infoObj.require || [];
 		_app.require(infoObj.require,function(){
-			var $page = new tlc().getTemplateInstance(infoObj.templateID);
-			dump($page);
-			if(infoObj.dataset){
-				infoObj.verb = 'translate';
-				$page.tlc(infoObj);
-				}
+			infoObj.verb = 'translate';
+			infoObj.templateid = infoObj.templateID;
+			var $page = new tlc().runTLC(infoObj);
+			//$page.tlc(infoObj);
 			$page.data('templateid',infoObj.templateid);
 			$page.data('pageid',infoObj.id);
 			$container.append($page);
@@ -81,6 +79,14 @@ _app.router.appendHash({'type':'exact','route':'404','callback':function(routeOb
 		});
 	}});
 
+_app.router.appendHash({'type':'exact','route':'about_us.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'aboutUsTemplate',
+		'dataset':{},
+		'require':['templates.html','store_swc']
+		});
+	}});
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){
