@@ -385,7 +385,6 @@ document.write = function(v){
 					delete tagObj.datapointer; //delete this so tlc doesn't do an unnecessary extend (data is already merged)
 					tagObj.verb = 'translate';
 //					dump(" -> tagObj: "); dump(tagObj);
-					_app.ext.quickstart.u.updateDOMTitle((tagObj.navcat == '.' ? 'Home' : tagObj.dataset.pretty));
 					if(tagObj.lists && tagObj.lists.length)	{
 						var L = tagObj.lists.length;
 						for(var i = 0; i < L; i += 1)	{
@@ -402,7 +401,6 @@ document.write = function(v){
 // the bulk of the product translation has already occured by now (attribs, reviews and session) via callbacks.showProd.
 // product lists are being handled through 'buildProductList'.
 					var pData = _app.data['appProductGet|'+tagObj.pid] //shortcut.
-					_app.ext.quickstart.u.updateDOMTitle(pData['%attribs']['zoovy:prod_seo_title'] || pData['%attribs']['zoovy:prod_name']);
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && _app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
@@ -924,56 +922,8 @@ fallback is to just output the value.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 // infoObj.back can be set to 0 to skip a URI update (will skip both hash state and popstate.) 
 			showContent : function(pageType,infoObj)	{
-				_app.ext.quickstart.vars.showContentFinished = false;
-				_app.ext.quickstart.vars.showContentCompleteFired = false;
-//				dump("BEGIN showContent ["+pageType+"]."); dump(infoObj);
-				infoObj = infoObj || {}; //could be empty for a cart or checkout
-/*
-what is returned. is set to true if pop/pushState NOT supported. 
-if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
-for legacy browsers. That means old browsers will use the anchor to retain 'back' button functionality.
-*/
-				var
-					r = false,
-					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
-					$new = $('<div class="alignCenter"><img src="loading.gif"/></div>');  //a jquery object returned by the 'show' functions (ex: showProd).
-
-//clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
-//this will fix that and only show the last clicked item. state of the world render this code obsolete.
-				if($old.length)	{
-					$old.siblings().hide(); //make sure only one 'page' is visible.
-					}
-				_app.ext.quickstart.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
-
-//if pageType isn't passed in, we're likely in a popState, so look in infoObj.
-				if(pageType){infoObj.pageType = pageType} //pageType
-				else if(pageType == '')	{pageType = infoObj.pageType}
-
-				_app.ext.quickstart.u.handleSearchInput(pageType); //will clear keyword searches when on a non-search page, to avoid confusion.
-
-//set some defaults.
-				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
-				infoObj.performTransition = infoObj.performTransition || _app.ext.quickstart.u.showtransition(infoObj,$old); //specific instances skip transition.
-				infoObj.state = 'init'; //needed for handleTemplateEvents.
-
-//if there's history (all pages loads after first, execute the onDeparts functions.
-//must be run before handleSandHOTW or history[0] will be this infoObj, not the last one.
-				if(!$.isEmptyObject(_app.ext.quickstart.vars.hotw[0]))	{
-					_app.renderFunctions.handleTemplateEvents($old,$.extend(_app.ext.quickstart.vars.hotw[0],{"state":"depart"}))
-					}
-					
-				_app.ext.quickstart.u.handleSandHOTW(infoObj);
-//handles the appnav. the ...data function must be run first because the display function uses params set by the function.
-				_app.ext.quickstart.u.handleAppNavData(infoObj);
-				_app.ext.quickstart.u.handleAppNavDisplay(infoObj);
-
 				switch(pageType)	{
 
-					case 'search':
-	//					dump(" -> Got to search case.");	
-						$new = _app.ext.quickstart.u.showSearch(infoObj);
-						break;
-	
 					case 'customer':
 //						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
 //201404 -> change in logic so that secure or file always hit before checking if authentication is required. reduces overhead.
@@ -1060,58 +1010,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.state = 'complete'; //needed for handleTemplateEvents.
 						_app.renderFunctions.handleTemplateEvents($new,infoObj);
 					}
-//this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
-				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
-//transition appPreView out on init.
-				// if($('#appPreView').is(':visible'))	{
-// //appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
-					// $('#appPreView').hide();
-					// _app.ext.quickstart.pageTransition({},$new,infoObj);
-					// /*
-					// var $bg = $('#appPreViewBG');
-					// if($bg.length)	{
-						// $bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
-						// }
-
-					// $('#appPreView').slideUp(1000,function(){
-						// $new.show(); //have to show content area here because the slideDown will only make the parent visible
-						// $('#appView').slideDown(3000);
-						// });
-					// */
-					// }
-				// else
-				$new.addClass('displayNone').appendTo($('#mainContentArea'));
-				if(infoObj.performTransition == false)	{
-					_app.ext.quickstart.vars.showContentFinished = true;
-					}
-				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
-					var callback = function(){
-						var $hiddenpages = $("#mainContentArea > :hidden");
-						var L = $hiddenpages.length;
-						dump(L);
-						dump(L - _app.ext.quickstart.vars.cachedPageCount);
-						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
-							$($hiddenpages.get(i)).intervaledEmpty().remove();
-							}
-						}
-					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
-					}
-				else if($new instanceof jQuery)	{
-//no page transition specified. hide old content, show new. fancy schmancy.
-					$("#mainContentArea :visible:first").hide();
-					$new.show();
-					_app.ext.quickstart.vars.showContentFinished = true;
-					}
-				else	{
-					dump("WARNING! in showContent and no parentID is set for the element being translated.");
-					_app.ext.quickstart.vars.showContentFinished = true;
-					}
-
-//NOT POSTING THIS MESSAGE AS ASYNC BEHAVIOR IS NOT CURRENTLY QUANTIFIABLE					
-				//Used by the SEO generation utility to signal that a page has finished loading. 
-				//parent.postMessage("renderFinished","*");
-				
-				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
 			newShowContent : function(uri,infoObj)	{
@@ -1572,10 +1470,6 @@ $target.tlc({
 					}
 				},
 
-			updateDOMTitle : function(title)	{
-				title = (typeof title === "string") ? title : ""; //better blank than 'undefined' or 'object'.
-				document.title = title;
-				},
 
 //used in checkout to populate username: so either login or bill/email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
@@ -2107,7 +2001,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				infoObj.templateID = 'companyTemplate';
 				infoObj.state = 'init';
 				infoObj.parentID = 'mainContentArea_company';
-				_app.ext.quickstart.u.updateDOMTitle("Company - "+infoObj.show);
 				var $mcac = $('#mainContentArea_company');
 				
 				if($mcac.length)	{
@@ -2197,7 +2090,6 @@ effects the display of the nav buttons only. should be run just after the handle
 						});
 					}
 				else	{
-					_app.ext.quickstart.u.updateDOMTitle("Search - error!");
 					}
 //				dump(elasticsearch);
 /*
@@ -2326,7 +2218,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				infoObj.state = 'init';
 				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
 				infoObj.templateID = 'customerTemplate';
-				_app.ext.quickstart.u.updateDOMTitle("Customer - "+infoObj.show);
 				var $customer = $('#'+infoObj.parentID);
 //only create instance once.
 				if($customer.length)	{
@@ -3026,8 +2917,10 @@ else	{
 			searchFormSubmit : function($ele,p)	{
 				p.preventDefault();
 				var sfo = $ele.serializeJSON($ele);
+				dump('searchFormSubmit');
+				dump(sfo);
 				if(sfo.KEYWORDS)	{
-					document.location.hash = '#!search/keywords/'+sfo.KEYWORDS;
+					_app.router.handleURIChange('search/keywords/'+sfo.KEYWORDS);
 					}
 				return false;
 				},

@@ -55,19 +55,23 @@ _app.extend({
 	"filename" : "extensions/store_routing.js"
 	});
 	//formerly in startup callback of store_routing
-_app.router.addAlias('product', 	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'product'}, routeObj.params));});
+_app.router.addAlias('product',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'product'}, routeObj.params));});
 _app.router.appendHash({'type':'match','route':'product/{{pid}}/{{name}}*','callback':'product'});
 _app.router.appendHash({'type':'match','route':'product/{{pid}}*','callback':'product'});
 
 
-_app.router.addAlias('homepage', 	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'homepage'}, routeObj.params));});
+_app.router.addAlias('homepage',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'homepage'}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
 _app.router.appendHash({'type':'exact','route':'home/','callback':'homepage'});
 _app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
 _app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
 
-_app.router.addAlias('category', 	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'category'}, routeObj.params));});
+_app.router.addAlias('category',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'category'}, routeObj.params));});
 _app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
+
+_app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'search'}, routeObj.params));});
+_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
+_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
@@ -245,6 +249,16 @@ _app.couple('quickstart','addPageHandler',{
 _app.extend({
 	"namespace" : "store_search",
 	"filename" : "extensions/store_search.js"
+	});
+
+_app.couple('quickstart','addPageHandler',{
+	"pageType" : "search",
+	"handler" : function($container, infoObj){
+		_app.require(['store_search','templates.html','store_routing'],function(){
+			_app.ext.store_search.u.showSearch($container, infoObj);
+			});
+						
+		}
 	});
 	
 _app.extend({
