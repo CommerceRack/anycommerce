@@ -455,10 +455,7 @@ it has no inventory AND inventory matters to merchant
 					}
 				else	{
 					infoObj.templateID = infoObj.templateID || 'productTemplate';
-					//dump(infoObj);
 					var $product = new tlc().getTemplateInstance(infoObj.templateID);
-					dump("Product jqObj follows:");
-					dump($product);
 					infoObj.state = 'init';
 					_app.renderFunctions.handleTemplateEvents($container,infoObj); //init event triggered.
 					//$product.attr('id',infoObj.parentID).data('pid',pid);
