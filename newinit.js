@@ -73,6 +73,14 @@ _app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.newShow
 _app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
 _app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
 
+_app.router.appendHash({'type':'exact','route':'404','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'pageNotFoundTemplate',
+		'require':'templates.html'
+		});
+	}});
+
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){

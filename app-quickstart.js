@@ -993,22 +993,6 @@ fallback is to just output the value.
 						$new = _app.ext.quickstart.u.showCart(infoObj);
 						break;
 
-					case '404': 	//no specific code. shared w/ default, however a case is present because it is a recognized pageType.
-					default:		//uh oh. what are we? default to 404.
-						infoObj.pageType = '404';
-						infoObj.back = 0;
-						infoObj.templateID = 'pageNotFoundTemplate'
-						infoObj.state = 'init'; //needed for handleTemplateEvents.
-//						var $fourOhFour = _app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj);
-						$new = $("<div \/>").tlc({
-							dataAttribs : {'id':'page404'},
-							templateid : infoObj.templateID,
-							dataset : infoObj
-							});
-						_app.renderFunctions.handleTemplateEvents($new,infoObj);
-						$('#mainContentArea').append($new);
-						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						_app.renderFunctions.handleTemplateEvents($new,infoObj);
 					}
 				}, //showContent
 
@@ -2035,89 +2019,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				}, //showCompany
 				
 				
-			showSearch : function(infoObj)	{
-//				dump("BEGIN quickstart.u.showSearch. infoObj follows: "); dump(infoObj);
-				infoObj.templateID = 'searchTemplate';
-				infoObj.parentID = 'mainContentArea_search';
-				infoObj.state = 'init';
-				var $page = $('#'+infoObj.parentID),
-				elasticsearch = {};
-
-				
-
-//only create instance once.
-				if($page.length)	{
-					_app.ext.quickstart.u.revertPageFromPreviewMode($page);
-					}
-				else	{
-					$page = new tlc().runTLC({'templateid':infoObj.templateID,'verb':'template'}).attr('id','mainContentArea_search').appendTo('#mainContentArea');
-					}
-				_app.renderFunctions.handleTemplateEvents($page,infoObj);
-
-//add item to recently viewed list IF it is not already in the list.
-				if($.inArray(infoObj.KEYWORDS,_app.ext.quickstart.vars.session.recentSearches) < 0)	{
-					_app.ext.quickstart.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
-					}
-					
-//If raw elastic has been provided, use that.  Otherwise build a query.
-				if(infoObj.elasticsearch){
-					elasticsearch = _app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
-					}
-				else if(infoObj.tag)	{
-					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
-					   "filter":{
-						  "and" : [
-							 {"term":{"tags":infoObj.tag}},
-							 ]
-						  }});
-					}
-				else if (infoObj.KEYWORDS) {
-					elasticsearch = _app.ext.store_search.u.buildElasticRaw({
-						"query":{
-							"function_score" : {										
-								"query" : {
-									"query_string":{"query":infoObj.KEYWORDS}	
-									},
-								"functions" : [
-									{
-										"filter" : {"query" : {"query_string":{"query":'"'+infoObj.KEYWORDS+'"'}}},
-										"script_score" : {"script":"10"}
-										}
-									],
-								"boost_mode" : "sum",
-								}
-							}
-						});
-					}
-				else	{
-					}
-//				dump(elasticsearch);
-/*
-#####
-if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
-ex:  elasticsearch.size = 200
-*/
-elasticsearch.size = 50;
-
-// ** 201346 -> extended infoObj w/ a new templateID was causing the ondepart templatefunctions to not execute properly for search results.
-//				$.extend(infoObj,{'callback':'handleElasticResults','datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')});
-				
-				//Used to build relative path
-				infoObj.elasticsearch = $.extend(true, {}, elasticsearch);
-				
-				
-				_app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
-//				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,infoObj);
-				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleEmptyResults', 'emptyList':true,'datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_swc','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')}));
-				_app.model.dispatchThis();
-				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				_app.renderFunctions.handleTemplateEvents($page,infoObj);
-
-				return $page;
-				}, //showSearch
-
-
-
 //pio is PageInfo object
 //this showCart should only be run when no cart update is being run.
 //this is run from showContent.
