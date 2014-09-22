@@ -325,12 +325,12 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</div>
 	
 		
-	<!-- <a class="blockLink" href="#!filter/100_years_of_wrigley_field/"> -->
+	<!-- <a class="blockLink" href="?filter/100_years_of_wrigley_field/"> -->
 	<a class="blockLink" href="?category/.mlb.chicago_cubs/Chicago%20Cubs">
 		<img data-apptimize="embed" src="images/homepage/100_years_wrigley_v5.jpg"/>
 	</a>
 	
-	<a class="blockLink" href="#!filter/shirts/">
+	<a class="blockLink" href="?filter/shirts/">
 		<img data-apptimize="embed" src="images/homepage/Chicago-Cubs-Homepage-Square.jpg"/>
 	</a>
 	
@@ -340,42 +340,42 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		
 	</a>
 	
-	<a class="blockLink" href="#!filter/jerseys/?user:app_jerseys_style=custom_personalized">
+	<a class="blockLink" href="?filter/jerseys/?user:app_jerseys_style=custom_personalized">
 		<img data-apptimize="embed" src="images/homepage/personalized_jersey_v4.jpg"/>
 	</a>
 	
 	<!--
-	<a class="blockLink" href="#!filter/jerseys/?user:app_jerseys_style=custom_personalized">
+	<a class="blockLink" href="?filter/jerseys/?user:app_jerseys_style=custom_personalized">
 		<img data-apptimize="embed" src="images/homepage/personalized.jpg"/>
 	</a>
 	-->
 	
 		
-	<a class="blockLink" href="#!filter/hats/">
+	<a class="blockLink" href="?filter/hats/">
 		<img data-apptimize="embed" src="images/homepage/caps_v4.jpg"/>
 	
 	</a>
 	
-	<a class="blockLink" href="#!filter/jerseys/">
+	<a class="blockLink" href="?filter/jerseys/">
 		<img data-apptimize="embed" src="images/homepage/authentic_jerseys_v5.jpg"/>
 	
 	</a>
 	
-	<a class="blockLink" href="#!fieldcam/">
+	<a class="blockLink" href="?fieldcam/">
 		<img data-apptimize="embed" src="images/homepage/webcam_v4.jpg"/>
 	
 	</a>
 	
-	<a class="blockLink" href="#!connect_with_sportsworld/">
+	<a class="blockLink" href="?connect_with_sportsworld/">
 		<img data-apptimize="embed" src="images/homepage/social_banner_v4.jpg"/>
 	
 	</a>
 	
-	<a class="blockLink pointer" href="#!filter/bears/">
+	<a class="blockLink pointer" href="?filter/bears/">
 		<img data-apptimize="embed" src="images/homepage/Chicago-Bears-Homepage-Square.jpg"/>
 	</a>
 	
-	<a class="blockLink pointer" href="#!category/.mlb.chicago_cubs/Chicago Cubs">
+	<a class="blockLink pointer" href="?category/.mlb.chicago_cubs/Chicago Cubs">
 		<img data-apptimize="embed" src="images/homepage/Chicago-Cubs-New-Player-Square.jpg"/>
 	</a>
 	
@@ -412,7 +412,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 <div id="fieldcamTemplate" class="fieldCamPage alignCenter">
-	<span class="displayNone" data-routing-hash="#!fieldcam/"></span>
+	<span class="displayNone" data-routing-hash="?fieldcam/"></span>
 	<span class="displayNone" data-seo-title="LIVE Wrigley Field Cam - Across From Wrigley Field Since 1979"></span>
 	<span class="displayNone" data-seo-desc="Live Earthcam of Wrigley Field From Clark & Addison St. in Chicago.  Across From Wrigley Field Since 1979. Chicago Cubs Tickets for Sale at SportsWorldChicago.com" ></span>
 	<div class="cam1" data-tlc="bind $html '.cam1'; apply --append;"></div>
@@ -425,8 +425,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</p>
 	
 	<p>
-		Be sure to browse through SportsWorldChicago.com to shop for all your <a href="#!filter/shirts/">Chicago Cubs shirts</a> and Wrigley Field hats.  
-		Sports World has one of the largest selections of <a href="#!filter/hats/">Cubs caps and hats</a>, plus all <a href="#!filter/jerseys/">Chicago Cubs authentic jerseys</a> 
+		Be sure to browse through SportsWorldChicago.com to shop for all your <a href="?filter/shirts/">Chicago Cubs shirts</a> and Wrigley Field hats.  
+		Sports World has one of the largest selections of <a href="?filter/hats/">Cubs caps and hats</a>, plus all <a href="?filter/jerseys/">Chicago Cubs authentic jerseys</a> 
 		and on-field merchandise needed to make you a true Chicago Cubs fan!
 	</p>
 	<!--
@@ -437,7 +437,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 <div id="affiliatesTemplate">
-	<span class="displayNone" data-routing-hash="#!affiliates/"></span>
+	<span class="displayNone" data-routing-hash="?affiliates/"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<div class="affiliate_category">
@@ -484,7 +484,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </div>
 
 <div id="inquiryTemplate">
-	<span class="displayNone" data-routing-hash="#!inquiry/"></span>
+	<span class="displayNone" data-routing-hash="?inquiry/"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<form class="floatRight" action="#" onSubmit="return false;" data-app-submit="store_swc|sendInquiry">
@@ -508,7 +508,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </div>
 
 <div id="rewardsTemplate">
-	<span class="displayNone" data-routing-hash="#!rewards/"></span>
+	<span class="displayNone" data-routing-hash="?rewards/"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	
@@ -536,7 +536,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 </div>
 
 <div id="groupSalesTemplate">
-	<span class="displayNone" data-routing-hash="#!group_sales/"></span>
+	<span class="displayNone" data-routing-hash="?group_sales/"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 
@@ -1083,12 +1083,12 @@ this will likely become more flexible in the future. ###
 	<div class="productInfo clearRight marginBottom no_underline">
 		<div class="productInfoSection marginBottom">
 			<div class="floatRight mfgLogoContainer">
-				<a data-tlc="bind $href '.%attribs.zoovy:prod_mfg'; if(is $href --notblank;){{format --uriencode; format --prepend='#!search/manufacturer/'; apply --attrib='href';}};">
+				<a data-tlc="bind $href '.%attribs.zoovy:prod_mfg'; if(is $href --notblank;){{format --uriencode; format --prepend='?search/manufacturer/'; apply --attrib='href';}};">
 					<img data-tlc="bind $var '.%attribs.zoovy:prod_image99'; if (is $var --notblank){{store_swc#imageurl --name=$var --b='tttttt'; apply --attrib='src';}};"/>
 				</a>
 			</div>
 			<h5 data-tlc="bind $var '.pid'; if(is $var --blank;){{apply --hide --tag;}};">Sku :<span data-tlc="bind $var '.pid'; apply --append;" class="stid" itemprop="productID"></span></h5>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --blank;) {{apply --hide --tag;}};">More Products By: <a data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; apply --append; bind $href '.%attribs.zoovy:prod_mfg'; format --uriencode; format --prepend='#!search/manufacturer/'; apply --attrib='href';" itemprop="manufacturer"></a></h5>
+			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --blank;) {{apply --hide --tag;}};">More Products By: <a data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; apply --append; bind $href '.%attribs.zoovy:prod_mfg'; format --uriencode; format --prepend='?search/manufacturer/'; apply --attrib='href';" itemprop="manufacturer"></a></h5>
 			<div class="clear"></div>
 		</div>
 	
@@ -1337,14 +1337,14 @@ if you change these, you should move them above this comment so that when you (o
 
 	<div class="sideline">
 		<ul class="listStyleNone noPadOrMargin">
-			<li><a href="#!company/about/">About Us</a></li>
-			<li><a href="#!company/contact/">Contact Information</a></li>
-			<li><a href="#!company/faq/">Frequently Asked Questions</a></li>
-			<li><a href="#!company/payment/">Payment Policy</a></li>
-			<li><a href="#!company/privacy/">Privacy Policy</a></li>
-			<li><a href="#!company/return/">Return Policy</a></li>
+			<li><a href="?company/about/">About Us</a></li>
+			<li><a href="?company/contact/">Contact Information</a></li>
+			<li><a href="?company/faq/">Frequently Asked Questions</a></li>
+			<li><a href="?company/payment/">Payment Policy</a></li>
+			<li><a href="?company/privacy/">Privacy Policy</a></li>
+			<li><a href="?company/return/">Return Policy</a></li>
 			<li class="indent" ><a href="#" onClick="myApp.ext.store_swc.u.showRMAForm(); return false;" >RMA Form</a></li>
-			<li><a href="#!company/shipping/">Shipping Information</a></li>
+			<li><a href="?company/shipping/">Shipping Information</a></li>
 		</ul>
 	</div>
 
@@ -1550,11 +1550,11 @@ if you change these, you should move them above this comment so that when you (o
 	<ul class="listStyleNone noPadOrMargin">
 <!-- before restoring this, test cuz news form on left was causing some conflicts
 		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
-		<li><a href="#!customer/myaccount" rel="nofollow">My Account</a></li>
-		<li><a href="#!customer/changepassword" rel="nofollow">Change Password</a></li>
-		<li><a href="#!customer/orders" rel="nofollow">Order History</a></li>
-		<li><a href="#!customer/lists" rel="nofollow">Manage Lists</a></li>
-		<li class="hideIfLoggedOut"><a href="#!customer/logout" rel="nofollow">Log Out</a></li>
+		<li><a href="?customer/myaccount" rel="nofollow">My Account</a></li>
+		<li><a href="?customer/changepassword" rel="nofollow">Change Password</a></li>
+		<li><a href="?customer/orders" rel="nofollow">Order History</a></li>
+		<li><a href="?customer/lists" rel="nofollow">Manage Lists</a></li>
+		<li class="hideIfLoggedOut"><a href="?customer/logout" rel="nofollow">Log Out</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -1862,7 +1862,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogClose">Continue Shopping</button></span>
 	
 			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
-				<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
+				<a class="applyButton ui-state-highlight checkoutButton" href='?checkout'>Store Checkout</a>
 			</span>
 	
 			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
