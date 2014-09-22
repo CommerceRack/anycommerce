@@ -441,12 +441,8 @@ $display.appendTo($tag);
 
 
 		u : {
-/*
-A product is NOT purchaseable if:
-it has no price. ### SANITY 0 IS a valid price. blank is not.
-it is a parent
-it has no inventory AND inventory matters to merchant 
-*/
+			//CALLED FROM PAGE HANDLER
+			//all requires should be handled by calling function
 			showProd : function($container, infoObj){
 				var pid = infoObj.pid;
 				if(!pid)	{
@@ -483,6 +479,12 @@ it has no inventory AND inventory matters to merchant
 					}
 				},
 				
+/*
+A product is NOT purchaseable if:
+it has no price. ### SANITY 0 IS a valid price. blank is not.
+it is a parent
+it has no inventory AND inventory matters to merchant 
+*/
 			productIsPurchaseable : function(pid)	{
 //				_app.u.dump("BEGIN store_product.u.productIsPurchaseable");
 				var 
@@ -808,9 +810,11 @@ NOTES
 //						_app.u.dump(" -> have a valid cart object"); _app.u.dump(cartObj);
 						if(cartObj)	{
 							r = true;
-							_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
-							_app.model.dispatchThis('immutable');
-							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
+							_app.require('cco',function(){
+								_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
+								_app.model.dispatchThis('immutable');
+								cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
+								});
 							}
 						}
 					else	{
@@ -832,14 +836,16 @@ NOTES
 //					_app.u.dump(" -> $forms.length: "+$forms.length);
 					_tag = _tag || {};
 					if($forms.length)	{
-						$forms.each(function(){
+						_app.require(['cco'], function(){
+							$forms.each(function(){
 
-							var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //handles error display.
-							if(cartObj)	{
-								_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag,'immutable');
-								}
+								var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($(this)); //handles error display.
+								if(cartObj)	{
+									_app.ext.cco.calls.cartItemAppend.init(cartObj,_tag,'immutable');
+									}
+								});
+							_app.model.dispatchThis('immutable');
 							});
-						_app.model.dispatchThis('immutable');
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':'handleAddToCart requires $FP to contain at least 1 form.','gMessage':true});
