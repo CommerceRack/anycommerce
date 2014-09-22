@@ -1414,7 +1414,7 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 						dump(coupler);
 						if(coupler){
 							_app.couple(namespace, coupler[0], coupler[1]);
-							setTimeout(couple, 100);
+							setTimeout(couple, 0);
 							}
 						}
 					couple();
