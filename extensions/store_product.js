@@ -447,6 +447,45 @@ it has no price. ### SANITY 0 IS a valid price. blank is not.
 it is a parent
 it has no inventory AND inventory matters to merchant 
 */
+			showProd : function($container, infoObj){
+				var pid = infoObj.pid;
+				if(!pid)	{
+					$('#globalMessaging').anymessage({'message':"Uh Oh. It seems an app error occured. Error: no product id. see console for details.",'gMessage':true});
+					dump("quickstart.u.showProd had no infoObj.pid, which is required. infoObj follows:",'error'); dump(infoObj);
+					}
+				else	{
+					infoObj.templateID = infoObj.templateID || 'productTemplate';
+					//dump(infoObj);
+					var $product = new tlc().getTemplateInstance(infoObj.templateID);
+					dump("Product jqObj follows:");
+					dump($product);
+					infoObj.state = 'init';
+					_app.renderFunctions.handleTemplateEvents($container,infoObj); //init event triggered.
+					//$product.attr('id',infoObj.parentID).data('pid',pid);
+					$container.append($product);//hidden by default for page transitions
+					_app.u.handleCommonPlugins($product);
+					
+					var nd = 0; //Number of Dispatches.
+
+//need to obtain the breadcrumb info pretty early in the process as well.
+//the breadcrumb renderformat handles most of the heavy lifting, so datapointers are not necessary for callback. Just getting them into memory here.
+					if(_app.ext.quickstart.vars.session.recentCategories.length > 0)	{
+						nd += _app.ext.store_navcats.u.addQueries4BreadcrumbToQ(_app.ext.quickstart.vars.session.recentCategories[0]).length;
+						}
+					$.extend(infoObj, {'callback':'showProd','extension':'quickstart','jqObj':$product,'templateID':'productTemplate'});
+					dump('InfoObj after extend follows:');
+					dump(infoObj);
+					nd += _app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
+					//if a dispatch is going to occur, might as well get updated product info.
+					if(nd)	{
+						_app.model.destroy('appProductGet|'+pid);
+						}
+					_app.ext.store_product.calls.appProductGet.init(pid,infoObj);
+					_app.model.dispatchThis();
+					
+					}
+				},
+				
 			productIsPurchaseable : function(pid)	{
 //				_app.u.dump("BEGIN store_product.u.productIsPurchaseable");
 				var 

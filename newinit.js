@@ -141,7 +141,7 @@ myApp.extend({
 	});
 
 myApp.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
-	alert('hi');
+	//alert('hi');
 	});
 myApp.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
@@ -156,7 +156,7 @@ myApp.couple('quickstart','addPageHandler',{
 		myApp.require(['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html'], function(){
 			dump("In the require");
 			dump(typeof myApp.templates.productTemplate);
-			myApp.ext.quickstart.u.newShowProd($container, infoObj);
+			myApp.ext.store_product.u.showProd($container, infoObj);
 			});
 		}
 	});
