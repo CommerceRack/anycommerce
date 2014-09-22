@@ -1409,15 +1409,10 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 	//If the extension sets willfetchmyowntemplates, then no need to run template load code, the extension will handle adding it's own templates.
 	//						_app.u.dump(" -> templates.length = "+_app.ext[namespace].vars.templates.length);
 					
-					function couple(){
-						var coupler = couplerArray.splice(0,1)[0];
-						dump(coupler);
-						if(coupler){
-							_app.couple(namespace, coupler[0], coupler[1]);
-							setTimeout(couple, 0);
-							}
+					for(var i in couplerArray){
+						var coupler = couplerArray[i];
+						_app.couple(namespace,coupler[0],coupler[1]);
 						}
-					couple();
 			//No longer automatically fetching templates, gotta do it manually (and the lazy way!)
 					//if(_app.ext[namespace].vars && _app.ext[namespace].vars.templates && !_app.ext[namespace].vars.willFetchMyOwnTemplates)	{
 					//	errors += this.loadTemplates(_app.ext[namespace].vars.templates);
