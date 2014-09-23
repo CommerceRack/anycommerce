@@ -324,6 +324,7 @@ _app.extend({
 _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
 	//alert('hi');
 	});
+
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
 	"handler" : function($container, infoObj){

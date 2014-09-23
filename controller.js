@@ -2691,6 +2691,11 @@ name Mod 10 or Modulus 10. */
 				"event" : event,
 				"handler" : handler
 				});
+			for(var i in _app.templates){
+				if(filterFunc(i)){
+					_app.templates[i].on(event, handler);
+					}
+				}
 			}
 
 		}, //util
