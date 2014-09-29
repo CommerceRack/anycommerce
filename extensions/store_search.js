@@ -300,7 +300,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				
 				var $list = $('[data-app-role="resultsContainer"]', $page);
 				_app.ext.store_search.u.updateDataOnListElement($list,elasticsearch,1);
-				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleEmptyResults', 'emptyList':true,'datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_swc', 'require' : 'prodlist_infinite','templateID':'productListTemplateResults','list':$list}));
+				_app.ext.store_search.calls.appPublicSearch.init(elasticsearch,$.extend(true,{},infoObj,{'callback':'handleEmptyResults', 'emptyList':true,'datapointer':"appPublicSearch|"+JSON.stringify(elasticsearch),'extension':'store_swc', 'require' : ['store_prodlist','prodlist_infinite'],'templateID':'productListTemplateResults','list':$list}));
 				_app.model.dispatchThis();
 				infoObj.state = 'complete'; //needed for handleTemplateEvents.
 				_app.renderFunctions.handleTemplateEvents($page,infoObj);
@@ -615,9 +615,15 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				return r;
 				}
 				
-			} //util
+			}, //util
 
-
+		couplers : {
+			addUniversalFilter : function(args){
+				if(args.filter){
+					_app.ext.store_search.vars.universalFilters.push(args.filter);
+					}
+				}
+			}
 		
 		} //r object.
 	return r;

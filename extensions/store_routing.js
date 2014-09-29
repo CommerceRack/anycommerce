@@ -32,48 +32,6 @@ var store_routing = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; 
-				/*
-				if(_app.u.getParameterByName('seoRequest')){
-					_app.vars.showContentHashChange = true;
-					_app.vars.ignoreHashChange = true;
-					}
-				
-				
-				_app.router.addAlias('homepage', 	function(routeObj){showContent('homepage',	routeObj.params);});
-				_app.router.addAlias('category', 	function(routeObj){
-					//* 201403 -> chrome on iOS doesn't like /. in hashbang.
-					if(routeObj.params && routeObj.params.navcat && routeObj.params.navcat.charAt(0) != '.')	{
-						routeObj.params.navcat = '.'+routeObj.params.navcat;
-						}
-					showContent('category',	routeObj.params);
-					});
-
-				_app.router.addAlias('product', 	function(routeObj){showContent('product',	routeObj.params);});
-				_app.router.addAlias('company', 	function(routeObj){showContent('company',	routeObj.params);});
-				_app.router.addAlias('customer', 	function(routeObj){showContent('customer',	routeObj.params);});
-				_app.router.addAlias('checkout', 	function(routeObj){showContent('checkout',	routeObj.params);});
-
-				_app.router.addAlias('search', 		function(routeObj){showContent('search',	routeObj.params);});
-
-
-				_app.router.appendHash({'type':'exact','route':'cart','callback':function(routeObj){showContent('cart',routeObj.params);}});
-				_app.router.appendHash({'type':'exact','route':'cart/','callback':function(routeObj){showContent('cart',routeObj.params);}});
-				_app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
-				_app.router.appendHash({'type':'exact','route':'home/','callback':'homepage'});
-				_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
-				_app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
-				_app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
-				_app.router.appendHash({'type':'match','route':'product/{{pid}}/{{name}}*','callback':'product'});
-				_app.router.appendHash({'type':'match','route':'product/{{pid}}*','callback':'product'});
-				_app.router.appendHash({'type':'match','route':'company/{{show}}*','callback':'company'});
-				_app.router.appendHash({'type':'exact','route':'company','callback':'company'});
-				_app.router.appendHash({'type':'match','route':'customer/{{show}}*','callback':'customer'});
-				_app.router.appendHash({'type':'exact','route':'customer','callback':'company'});
-				_app.router.appendHash({'type':'match','route':'checkout*','callback':'checkout'});
-				_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
-				_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
-
-				*/
 
 				r = true;
 
@@ -163,8 +121,9 @@ optional params:
 				
 				},
 			cleanURIComponent : function(str){
+				//trims whitespace
 				var component = str.replace(/^\s+|\s+$/g, '');
-				//component = component.replace(' ', '-');
+				//replaces all non alphanumerics with dashes
 				component = component.replace(/[^a-zA-Z0-9]+/g, '-');
 				return component;
 				},

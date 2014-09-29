@@ -169,8 +169,7 @@ var store_swc = function(_app) {
 				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
 					$context.empty().remove();
 					});
-				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
-				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
+				
 				
 				$.merge(_app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
@@ -897,7 +896,7 @@ var store_swc = function(_app) {
 								});
 							}
 						}
-					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
+					}, 'require':['store_prodlist','prodlist_infinite'],'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
 				_app.model.dispatchThis();
 				
 				},

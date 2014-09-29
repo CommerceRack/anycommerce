@@ -1554,90 +1554,86 @@ if you change these, you should move them above this comment so that when you (o
 	</div>
 </div>
 
-<div id="customerTemplate" class="clearfix smallButton">
-
-	<div class="sideline">
-	<nav id="customerNav">
+<nav id="customerSidelineTemplate">
 	<ul class="listStyleNone noPadOrMargin">
-<!-- before restoring this, test cuz news form on left was causing some conflicts
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
-		<li><a href="?customer/myaccount" rel="nofollow">My Account</a></li>
-		<li><a href="?customer/changepassword" rel="nofollow">Change Password</a></li>
-		<li><a href="?customer/orders" rel="nofollow">Order History</a></li>
-		<li><a href="?customer/lists" rel="nofollow">Manage Lists</a></li>
-		<li class="hideIfLoggedOut"><a href="?customer/logout" rel="nofollow">Log Out</a></li>
+		<li><a href="?my_account.html" rel="nofollow">My Account</a></li>
+		<li><a href="?change_password.html" rel="nofollow">Change Password</a></li>
+		<li><a href="?my_order_history.html" rel="nofollow">Order History</a></li>
+		<li><a href="?my_wishlist.html" rel="nofollow">Manage Lists</a></li>
+		<!-- <li class="hideIfLoggedOut"><a href="?customer/logout" rel="nofollow">Log Out</a></li> -->
 	</ul>
-	</nav>
-	</div>
+</nav>
 
+<div id="myAccountTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
 	<div class="mainColumn">
-<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
-
-<!--
-newsletterArticle is used for buyers who are not logged in or do not have an account.
-subscribeListsArticle is used for authenticated buyers
--->
-		<div id="myteamsArticle" class="displayNone textContentArea" data-templateid="myteamsArticleTemplate">
-			
-		</div>
-		
-		<div id="newsletterArticle" class="displayNone textContentArea">
-			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
-		</div>
-
-		<div id="subscriberListsArticle" class="displayNone textContentArea">
-			<h1>Manage your Subscriptions</h1>
-<!-- save onchange -->
-<form action="#" name="subscribeFrm">
-
-<fieldset data-tlc="bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
-
-</form>
-
-		</div>
-
-		<div id="myaccountArticle" class="displayNone textContentArea">
+		<div class="textContentArea">
 			<h1>My Account</h1>
-
 			<section>
-
-<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
-		<h2>Billing Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
-</div>
-
-<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
-		<h2>Shipping Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
-</div>
-
-
+				<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
+					<div class="marginBottom">
+						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
+						<h2>Billing Address(es)</h2>
+					</div>
+					<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
+				</div>
+				<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
+					<div class="marginBottom">
+						<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
+						<h2>Shipping Address(es)</h2>
+					</div>
+					<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
+				</div>
 			</section>
-
-
 		</div>
+	</div>
+</div>
 
-
-		<div id="ordersArticle" class="displayNone textContentArea">
+<div id="orderHistoryTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Order History</h1>
 			<div data-tlc="bind $var '.@orders'; controller#loop --templateid='orderLineItemTemplate'; if (is $var --notblank;) {{apply --append;}};" data-app-role="orderList" class="ui-accordion ui-widget ui-helper-reset ui-accordion-icons "></div>
 		</div>
+	</div>
+</div>
 
+<div id="subscribeTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
+			<h1>Manage your Subscriptions</h1>
+			<form action="#" name="subscribeFrm">
+				<fieldset data-tlc="bind $var '.@lists'; store_crm#subscribecheckboxes  --legacy; apply --append;" class="borderNone subscriberLists"></fieldset>
+			</form>
+		</div>
+	</div>
+</div>
 
-		<div id="invoiceArticle" class="displayNone textContentArea">
+<div id="newsletterTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
+			<h1>Subscribe to our Newsletter and Save!</h1>
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='subscribeFormTemplate'; apply --append;"></div>
+		</div>
+	</div>
+</div>
+
+<div id="customerInvoiceTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='invoiceTemplate'; apply --append;" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
 		</div>
+	</div>
+</div>
 
-
-
-		<div id="changepasswordArticle" class="displayNone textContentArea">
+<div id="changePasswordTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Change Password</h1>
 			<form action="#" name="changePasswordForm" data-app-submit="quickstart|passwordChangeSubmit" class='alignedForm'>
 			<fieldset class="borderNone">
@@ -1649,22 +1645,37 @@ subscribeListsArticle is used for authenticated buyers
 			</fieldset>
 			</form>
 		</div>
+	</div>
+</div>
 
-		<div id="listsArticle" class="displayNone textContentArea">
+<div id="customerListsTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>List Manager</h1>
 
 			<div class='applyAccordion' data-tlc="apply --empty; bind $var '.@lists'; controller#loop --templateid='buyerListTemplate'; apply --append; bind $content '.@lists'; controller#loop --templateid='buyerListProdlistContainerTemplate'; apply --append;"></div>
 
 		</div>
+	</div>
+</div>
 
-		<div id="forgetmeArticle" class="displayNone textContentArea">
+<div id="customerForgetMeTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<h1>Your 'Forget Me' list</h1>
 			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
 			<ul id="forgetmeContainer" class="prodlist ">
 			</ul>
 		</div>
-		
-		<div id="wholesale_signupArticle" class="displayNone textContentArea">
+	</div>
+</div>
+
+<div id="wholesaleSignupTemplate" class="clearfix smallButton">
+	<div class="sideline" data-tlc="transmogrify --templateid='customerSidelineTemplate'; apply --append;"></div>
+	<div class="mainColumn">
+		<div class="textContentArea">
 			<form onSubmit="return false;" data-app-submit="store_swc|wholesalesignup">
 				<fieldset class="highlightBG_2 white">
 					<legend class="ztitle highlightBG_1 white">Group Sales / Rooftop Parties / Wholesale Account Creation Form</legend><div class="zhint">Please fill out the fields below to create a customer account. Fields with a * next to them are required.</div>
@@ -1713,10 +1724,9 @@ subscribeListsArticle is used for authenticated buyers
 				</fieldset>
 			</form>
 		</div>
-
 	</div>
-
 </div>
+
 
 
 <h2 id='buyerListTemplate' data-tlc="bind $id '.id'; apply --append; bind $items '.items'; if (is $items --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></h2>

@@ -921,76 +921,17 @@ fallback is to just output the value.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 // infoObj.back can be set to 0 to skip a URI update (will skip both hash state and popstate.) 
-			showContent : function(pageType,infoObj)	{
-				switch(pageType)	{
-
-					case 'customer':
-//						if('file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj) || 'https:' == document.location.protocol)	{
-//201404 -> change in logic so that secure or file always hit before checking if authentication is required. reduces overhead.
-						if('https:' == document.location.protocol || 'file:' == document.location.protocol || !_app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
-							 //perform jump can be forced on. authenticate/require login indicate a login dialog is going to show and a jump should NOT occur so that the dialog is not off screen after the jump.
-							if(!infoObj.performJumpToTop && !_app.u.buyerIsAuthenticated() && _app.ext.quickstart.u.thisArticleRequiresLogin(infoObj))	{
-								infoObj.performJumpToTop = false;
-								}
-							else	{
-								infoObj.performJumpToTop = true;
-								}
-							$new = _app.ext.quickstart.u.showCustomer(infoObj);
-							}
-						else	{
-//							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
-// * changed from 'empty' to showLoading because empty could be a heavy operation if mainContentArea has a lot of content.
-							$('body').showLoading({'message':'Transferring to secure login'});							
-							var SSLlocation = _app.vars.secureURL+"?cartID="+_app.model.fetchCartID();
-							SSLlocation += "#!customer/"+infoObj.show
-							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
-							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
-							document.location = SSLlocation; //redir to secure url.
-							}
-						break;
-
-					case 'checkout':
-//						dump("PROTOCOL: "+document.location.protocol);
-						infoObj.parentID = 'checkoutContainer'; //parent gets created within checkout. that id is hard coded in the checkout extensions.
-						infoObj.templateID = 'checkoutTemplate'
-						infoObj.state = 'init'; //needed for handleTemplateEvents.
-						var $checkoutContainer = $("#checkoutContainer");
-						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
-
-//for local, don't jump to secure. ### this may have to change for a native _app. what's the protocol? is there one?
-						if('http:' == document.location.protocol)	{
-							dump(" -> nonsecure session. switch to secure for checkout.");
-// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-// * use showloading instead of .html (which could be heavy)
-//							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
-							$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
-							var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+_app.model.fetchCartID()+"&_session="+_app.vars._session+"#!checkout";
-							SSLlocation += "?team="+_app.ext.store_swc.vars.userTeam.v+"&sport="+_app.ext.store_swc.vars.userTeam.sport;
-							
-							window[_app.vars.analyticsPointer]('linker:decorate', SSLlocation); //for cross domain tracking.
-							document.location = SSLlocation;
-							}
-						else	{
-// * checkout was emptying mainContentArea and that was heavy. This solution is faster and doesn't nuke templates already rendered.
-							if(!$checkoutContainer.length)	{
-								$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
-								$('#mainContentArea').append($checkoutContainer );
-								}
-							_app.ext.order_create.a.startCheckout($checkoutContainer,_app.model.fetchCartID());
-							}
-						infoObj.state = 'complete'; //needed for handleTemplateEvents.
-						_app.renderFunctions.handleTemplateEvents($checkoutContainer,infoObj);
-// **201403 moved this to the bottom so $new gets the right pointer. -mc  
-						$new = $checkoutContainer;
-						break;
-	
-					case 'cart':
-						$new = _app.ext.quickstart.u.showCart(infoObj);
-						break;
-
+			secureContentLocation : function(path){
+				if(path.indexOf('?') == 0){
+					path = path.substr(1);
 					}
-				}, //showContent
-
+				var uri	= 	zGlobals.appSettings.https_app_url;
+				uri 	+=	"?"+path;
+				uri		+=	"#cartID="+_app.model.fetchCartID();
+				uri		+=	"&_session="+_app.vars._session;
+				return uri;
+				},
+				
 			newShowContent : function(uri,infoObj)	{
 				_app.ext.quickstart.vars.showContentFinished = false;
 				_app.ext.quickstart.vars.showContentCompleteFired = false;
@@ -1001,14 +942,34 @@ fallback is to just output the value.
 					r = false,
 					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
 					$new = $('[data-app-uri="'+uri+'"]');  //a jquery object returned by the 'show' functions (ex: showProd).
+				
+				//Don't navigate if we're already on the page
 				if($old.attr('data-app-uri') == uri){
 					return false;
 					}
+				
+				//Redirect to secure if required
+				if(((!_app.u.buyerIsAuthenticated() && infoObj.login) || infoObj.requireSecure) && document.location.protocol == "http:"){
+					var secure = _app.ext.quickstart.a.secureContentLocation(uri);
+					document.location = secure;
+					return false;
+					}
+				
+				if(!_app.u.buyerIsAuthenticated() && infoObj.login){
+					_app.ext.quickstart.u.showLoginModal();
+					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
+					$('<button>').addClass('stdMargin ui-state-default ui-corner-all  ui-state-active').attr('id','modalLoginContinueButton').text('Continue').click(function(){
+						$('#loginFormForModal').dialog('close');
+						_app.ext.quickstart.a.newShowContent(uri, infoObj) //binding this will reload this 'page' and show the appropriate content.
+						}).appendTo($('#loginSuccessContainer'));
+					return false;
+					}
+				
 //clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
 //this will fix that and only show the last clicked item. state of the world render this code obsolete.
 				if($old.length)	{
 					$old.siblings().hide(); //make sure only one 'page' is visible.
-					_app.renderFunctions.handleTemplateEvents($old,$.extend(_app.ext.quickstart.vars.hotw[0],{"state":"depart"}))
+					_app.renderFunctions.handleTemplateEvents($('> [data-templateid]',$old),$.extend(_app.ext.quickstart.vars.hotw[0],{"state":"depart"}))
 					}
 				_app.ext.quickstart.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
 
@@ -1042,8 +1003,6 @@ fallback is to just output the value.
 					var callback = function(){
 						var $hiddenpages = $("#mainContentArea > :hidden");
 						var L = $hiddenpages.length;
-						dump(L);
-						dump(L - _app.ext.quickstart.vars.cachedPageCount);
 						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
 							$($hiddenpages.get(i)).intervaledEmpty().remove();
 							}
@@ -1060,7 +1019,7 @@ fallback is to just output the value.
 					dump("WARNING! In showContent but there is no new page to show!");
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
-
+				
 				return true;
 				},
 
@@ -1946,47 +1905,6 @@ effects the display of the nav buttons only. should be run just after the handle
 
 			
 				
-//pio is PageInfo object
-//this showCart should only be run when no cart update is being run.
-//this is run from showContent.
-// when a cart update is run, the handleCart response also executes the handleTemplateEvents
-			showCart : function(infoObj)	{
-//				dump("BEGIN quickstart.u.showCart"); dump(infoObj);
-				if(typeof infoObj != 'object'){var infoObj = {}}
-				infoObj.templateID = 'cartTemplate';
-				infoObj.parentID = 'mainContentArea_cart';
-				infoObj.trigger = '';
-				infoObj.state = 'init'; //needed for handleTemplateEvents.
-				
-//only create instance once.
-				infoObj.cartid = _app.model.fetchCartID();
-				var $cart = $('#mainContentArea_cart');
-				
-				if($cart.length && $cart.data('cartid') == infoObj.cartid)	{
-					_app.renderFunctions.handleTemplateEvents($cart,infoObj);
-					//the cart has already been rendered.
-					infoObj.trigger = 'refresh';
-					$cart.hide();
-					}
-				else	{
-					infoObj.trigger = 'fetch';
-					$cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
-					_app.renderFunctions.handleTemplateEvents($cart,infoObj);
-					$cart.hide().on('complete',function(){
-						$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
-							$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
-							});
-						});
-					$cart.attr({'id':infoObj.parentID});
-					$cart.appendTo("#mainContentArea");
-					}
-//This will load the cart from memory, if set. otherwise it will fetch it.
-//so if you need to update the cart, run a destroy prior to showCart.
-				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				$cart.trigger(infoObj.trigger,$.extend({'Q':'mutable'},infoObj));
-				_app.model.dispatchThis('mutable');
-				return $cart;
-				}, //showCart
 
 /*
 This will open the cart in a modal. If an update is needed, that must be performed outside this function.
@@ -2040,52 +1958,6 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //handleTemplateEvents gets executed in showContent, which should always be used to execute this function.
 //by the time showCustomer is run, we are already on https if it is required.
 			showCustomer : function(infoObj)	{
-//				dump("BEGIN showCustomer. infoObj: "); dump(infoObj);
-				infoObj = infoObj || {};
-				infoObj.show = infoObj.show || 'newsletter';
-				infoObj.state = 'init';
-				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
-				infoObj.templateID = 'customerTemplate';
-				var $customer = $('#'+infoObj.parentID);
-//only create instance once.
-				if($customer.length)	{
-					dump(" -> customer page already rendered. just show.");
-					_app.renderFunctions.handleTemplateEvents($customer,infoObj);
-					}
-				else	{
-					$customer = new tlc().getTemplateInstance(infoObj.templateID);
-					$customer.attr({id:infoObj.parentID});
-					$('#mainContentArea').append($customer);
-					_app.renderFunctions.handleTemplateEvents($customer,infoObj);
-					_app.u.handleCommonPlugins($customer);
-					_app.u.handleButtons($customer);
-					}
-
-				$('.textContentArea',$customer).hide(); //hide all the articles by default and we'll show the one in focus later.
-
-				
-				if(!_app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
-					_app.ext.quickstart.u.showLoginModal();
-					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
-//this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
-					$('<button>').addClass('stdMargin ui-state-default ui-corner-all  ui-state-active').attr('id','modalLoginContinueButton').text('Continue').click(function(){
-						$('#loginFormForModal').dialog('close');
-						_app.ext.quickstart.u.showCustomer(infoObj) //binding this will reload this 'page' and show the appropriate content.
-						}).appendTo($('#loginSuccessContainer'));					
-					}
-//should only get here if the page does not require authentication or the user is logged in.
-				else	{
-
-					var $article = $('#'+infoObj.show+'Article',$customer)
-					$article.show(); //only show content if page doesn't require authentication.
-
-//					dump(" -> $article.data('isTranslated'): "+$article.data('isTranslated')); dump($article.data());
-
-//already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
-					if($article.data('isTranslated') && infoObj.show != 'orders')	{
-						dump(" -> article is already translated.");
-						}
-					else	{
 						switch(infoObj.show)	{
 							case 'help':
 								myApp.ext.quickstart.a.showBuyerCMUI();
@@ -2171,34 +2043,8 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 							default:
 								dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
 							}
-						_app.model.dispatchThis();
-						}
-					}
-				infoObj.state = 'complete'; //needed for handleTemplateEvents.
-				_app.renderFunctions.handleTemplateEvents($customer,infoObj);
-				return $customer;
 				},  //showCustomer				
 				
-//here, we error on the side of NOT requiring login. if a page does require login, the API will return that.
-//this way, if a new customer page is introduced that doesn't require login, it isn't hidden.
-			thisArticleRequiresLogin : function(infoObj)	{
-				var r = false; //what is returned. will return true if the page requires login
-				switch(infoObj.show)	{
-					case 'myaccount':
-					case 'changepassword':
-					case 'subscriberLists':
-					case 'lists':
-					case 'orders':
-						r = true;
-						break;
-					default:
-						r = false;
-					}
-				return r;
-				},
-
-
-
 			showPaymentUpdateModal : function(orderid,cartid)	{
 				var $updateDialog = $("<div \/>",{'title':'Payment Update'}).appendTo('body');
 				$updateDialog.dialog({'modal':true,'width':500,'height':500});
@@ -2262,64 +2108,6 @@ buyer to 'take with them' as they move between  pages.
 				
 		
 				}, //showLoginModal
-
-//executed from showCompany (used to be used for customer too)
-//articles should exist inside their respective pageInfo templates (companyTemplate or customerTemplate)
-//NOTE - as of version 201225, the parameter no longer has to be a string (subject), but can be an object. This allows for uri params or any other data to get passed in.
-// * 201346 -> function now returns a boolean based on whether or not hte page is shown.
-			showArticleIn : function($page,infoObj)	{
-				var r = true; //what is returned. set to false if the article is NOT shown.
-//				dump("BEGIN quickstart.u.showArticle"); dump(infoObj);
-				$('.textContentArea',$page).hide(); //hide all the articles by default and we'll show the one in focus later.
-				
-				var subject;
-				if(typeof infoObj == 'object')	{
-					subject = infoObj.show
-					$('.sideline .navLink_'+subject,$page).addClass('ui-state-highlight');
-					}
-				else if(typeof infoObj == 'string')	{subject = infoObj}
-				else	{
-					dump("WARNING - unknown type for 'infoObj' ["+typeof infoObj+"] in showArticle")
-					}
-
-				if(subject)	{
-					var $article = $('#'+subject+'Article',$page);
-					if($article.length)	{
-						if(!$article.hasClass('disabled'))	{
-							$article.show(); //only show content if page doesn't require authentication.
-							switch(subject)	{
-								case 'faq':
-									_app.ext.store_crm.calls.appFAQsAll.init({'parentID':'faqContent','callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
-									_app.model.dispatchThis();
-									break;
-								default:
-									//the default action is handled in the 'show()' above. it happens for all.
-								}
-							}
-						else	{
-							r = false;
-							$('#globalMessaging').anymessage({
-								'gMessage' : true,
-								'message' : "In quickstart.u.showArticle, subject = "+subject+" no longer exists."
-								});
-							}
-						}
-					else	{
-						r = false;
-						$('#globalMessaging').anymessage({
-							'gMessage' : true,
-							'message' : "In quickstart.u.showArticle, subject = "+subject+" but that article has no length on the DOM"
-							});
-						}
-					}
-				else	{
-					$('#globalMessaging').anymessage({
-						'gMessage' : true,
-						'message' : "In quickstart.u.showArticle, infoObj.show was not defined."
-						});
-					}
-				return r;
-				},
 
 //will return a list of recent searches as a jq object ordered list.
 			getRecentSearchesOL : function()	{
@@ -2566,7 +2354,13 @@ else	{
 				p.preventDefault();
 				if(_app.u.validateForm($ele))	{
 					var sfo = $ele.serializeJSON();
-					_app.ext.cco.calls.cartSet.init({"bill/email":sfo.login,"_cartid":_app.model.fetchCartID()}) //whether the login succeeds or not, set bill/email in the cart.
+					//whether the login succeeds or not, set bill/email in the cart.
+					_app.model.addDispatchToQ({
+						"_cmd":"cartSet",
+						"bill/email":sfo.login,
+						"_cartid":_app.model.fetchCartID(),
+						"_tag":{}
+						},'immutable');
 					sfo._cmd = "appBuyerLogin";
 					sfo.method = 'unsecure';
 					sfo._tag = {"datapointer":"appBuyerLogin",'callback':'authenticateBuyer','extension':'quickstart'}
@@ -2600,10 +2394,12 @@ else	{
 	
 			cartShipMethodSelect : function($ele,P)	{
 				P.preventDefault();
-				var $cart = $ele.closest("[data-template-role='cart']");
-				_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
-				$cart.trigger('fetch',{'Q':'immutable'});
-				_app.model.dispatchThis('immutable');
+				_app.require('cco',function(){
+					var $cart = $ele.closest("[data-template-role='cart']");
+					_app.ext.cco.calls.cartSet.init({'_cartid':$cart.data('cartid'),'want/shipping_id':$ele.val()},{},'immutable');
+					$cart.trigger('fetch',{'Q':'immutable'});
+					_app.model.dispatchThis('immutable');
+					});
 				return false;
 				},
 			
@@ -2640,20 +2436,22 @@ else	{
 			
 			execOrder2Cart : function($ele,p)	{
 				p.preventDefault();
-				var orderID = $ele.closest("[data-orderid]").data('orderid');
-				if(orderID)	{
-					_app.ext.cco.u.appendOrderItems2Cart({orderid:orderID,cartid:_app.model.fetchCartID()},function(rd){
-						if(_app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							document.location.hash = '#!cart';
-							}
-						});
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':"In quickstart.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
-					}
+				_app.require('cco',function(){
+					var orderID = $ele.closest("[data-orderid]").data('orderid');
+					if(orderID)	{
+						_app.ext.cco.u.appendOrderItems2Cart({orderid:orderID,cartid:_app.model.fetchCartID()},function(rd){
+							if(_app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								document.location.hash = '#!cart';
+								}
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In quickstart.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
+						}
+					});
 				return false;
 				}, //execOrder2Cart
 
@@ -2682,39 +2480,42 @@ else	{
 
 			passwordChangeSubmit : function($ele,p)	{
 				p.preventDefault();
-				if(_app.u.validateForm($ele))	{
-					_app.ext.store_crm.u.handleChangePassword($ele,{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$ele});
-					}
-				else	{}
+				_app.require('cco',function(){
+					if(_app.u.validateForm($ele))	{
+						_app.ext.store_crm.u.handleChangePassword($ele,{'callback':'showMessaging','message':'Thank you, your password has been changed','jqObj':$ele});
+						}
+					else	{}
+					});
 				return false;
 				},
 
 			productAdd2Cart : function($ele,p)	{
 				p.preventDefault();
-				
-				var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($ele);
-				if(cartObj)	{
-					cartObj["_cartid"] = _app.model.fetchCartID();
-					_app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');
-					_app.model.destroy('cartDetail|'+cartObj._cartid);
-					_app.calls.cartDetail.init(cartObj._cartid,{'callback':function(rd){
-						if(_app.model.responseHasErrors(rd)){
-							$('#globalMessaging').anymessage({'message':rd});
-							}
-						else	{
-							if($ele.data('show') == 'inline')	{
-								document.location.hash = '#!cart';
+				_app.require(['store_product','cco'],function(){
+					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($ele);
+					if(cartObj)	{
+						cartObj["_cartid"] = _app.model.fetchCartID();
+						_app.ext.cco.calls.cartItemAppend.init(cartObj,{},'immutable');
+						_app.model.destroy('cartDetail|'+cartObj._cartid);
+						_app.calls.cartDetail.init(cartObj._cartid,{'callback':function(rd){
+							if(_app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
 								}
 							else	{
-								_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+								if($ele.data('show') == 'inline')	{
+									document.location.hash = '#!cart';
+									}
+								else	{
+									_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
+									}
+								cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
 								}
-							cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
-							}
-						}},'immutable');
-					_app.model.dispatchThis('immutable');
-					
-					}
-				else	{} //do nothing, the validation handles displaying the errors.
+							}},'immutable');
+						_app.model.dispatchThis('immutable');
+						
+						}
+					else	{} //do nothing, the validation handles displaying the errors.
+					});
 				return false;
 				},
 			productAdd2List : function($ele,p)	{
@@ -2731,13 +2532,17 @@ else	{
 				
 			productPicsInModalShow : function($ele,p){
 				p.preventDefault();
-				_app.ext.store_product.u.showPicsInModal({"pid":$ele.closest("[data-pid]").data('pid')});
+				_app.require('store_product',function(){
+					_app.ext.store_product.u.showPicsInModal({"pid":$ele.closest("[data-pid]").data('pid')});
+					});
 				return false;
 				},
 
 			subscribeSubmit : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.store_crm.u.handleSubscribe($ele);
+				_app.require('store_crm',function(){
+					_app.ext.store_crm.u.handleSubscribe($ele);
+					});
 				return false;
 				},
 
@@ -2755,23 +2560,27 @@ else	{
 
 			showBuyerAddressUpdate : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.store_crm.u.showAddressEditModal({
-					'addressID' : $ele.closest("address").data('_id'),
-					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
-					},function(){
-					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-					showContent('customer',{'show':'myaccount'});
+				_app.require(['store_crm','cco'],function(){
+					_app.ext.store_crm.u.showAddressEditModal({
+						'addressID' : $ele.closest("address").data('_id'),
+						'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+						},function(){
+						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+						showContent('customer',{'show':'myaccount'});
+						});
 					});
 				return false;
 				}, //showBuyerAddressUpdate
 
 			showBuyerAddressAdd : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.store_crm.u.showAddressAddModal({
-					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
-					},function(rd){
-					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-					showContent('customer',{'show':'myaccount'});
+				_app.require(['store_crm', 'order_create'],function(){
+					_app.ext.store_crm.u.showAddressAddModal({
+						'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+						},function(rd){
+						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+						showContent('customer',{'show':'myaccount'});
+						});
 					});
 				return false;
 				}, //showBuyerAddressAdd

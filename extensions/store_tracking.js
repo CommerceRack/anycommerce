@@ -41,63 +41,6 @@ var store_tracking = function(_app) {
 			onError : function()	{
 				_app.u.dump('BEGIN store_tracking.callbacks.init.onError');
 				}
-			},
-		attachHandlers : {
-			onSuccess : function(){
-				// _app.u.dump('PUSHING store_tracking.onSuccess');
-				_app.ext.order_create.checkoutCompletes.push(function(P){
-
-					// _app.u.dump('BEGIN store_tracking.onSuccess');
-
-					if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order){
-						var order = _app.data[P.datapointer].order;
-						var plugins = zGlobals.plugins;
-						// note: order is an object that references the raw (public) cart
-						// order.our.xxxx  order[@ITEMS], etc.
-
-						// data will appear in google analytics immediately after adding it (there is no delay)
-
-						// _app.u.dump(order);
-						// _app.u.dump(order.our);
-
-						ga('require', 'ecommerce');
-						
-						//analytics tracking
-						var r = {
-							'id' : order.our.orderid,
-							'revenue' : order.sum.items_total,
-							'shipping' : order.sum.shp_total,
-							'tax' : order.sum.tax_total
-							};
-						// _app.u.dump(r);
-						ga('ecommerce:addTransaction',r);
-
-						for(var i in order['@ITEMS']){
-							var item = order['@ITEMS'][i];
-							// _app.u.dump(item);
-							ga('ecommerce:addItem', {
-								'id' : order.our.orderid,
-								'name' : item.prod_name,
-								'sku' : item.sku,
-								'price' : item.base_price,
-								'quantity' : item.qty,
-								})
-							};
-
-						ga('ecommerce:send');
-						_app.u.dump('FINISHED store_tracking.onSuccess (google analytics)');
-						
-						for(var i in plugins){
-							if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
-								_app.ext.store_tracking.trackers[i](order, plugins[i]);
-								}
-							}
-						}
-					});
-				},
-			onError : function()	{
-				_app.u.dump('BEGIN store_tracking.callbacks.attachHandlers.onError');
-				}
 			}
 		}, //callbacks
 

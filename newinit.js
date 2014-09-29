@@ -42,12 +42,53 @@ _app.extend({
 	"namespace" : "order_create",
 	"filename" : "extensions/checkout/extension.js"
 	});
+
+_app.couple('quickstart','addPageHandler',{
+	"pageType" : "checkout",
+	"handler" : function($container, infoObj){
+		infoObj.templateID = 'checkoutTemplate';
+		_app.require(['order_create','cco', 'extensions/checkout/active.html'],function(){
+			$container.attr('id', 'checkoutContainer');
+			_app.ext.order_create.a.startCheckout($container,_app.model.fetchCartID());
+			infoObj.state = 'complete'; //needed for handleTemplateEvents.
+			_app.renderFunctions.handleTemplateEvents($container,infoObj);
+			});
+		}
+	});
 	
 _app.extend({
 	"namespace" : "cco",
 	"filename" : "extensions/cart_checkout_order.js"
 	});
-	
+
+_app.couple('quickstart','addPageHandler',{
+	"pageType" : "cart",
+	"handler" : function($container, infoObj){
+		infoObj.navcat = zGlobals.appSettings.rootcat;
+		_app.require(['templates.html'],function(){
+			var $cart = new tlc().getTemplateInstance('cartTemplate');
+			$container.append($cart);
+			_app.calls.cartDetail.init(_app.model.fetchCartID(),{
+				'callback':'tlc',
+				'onComplete' : function(){
+					infoObj.state = 'complete';
+					_app.renderFunctions.handleTemplateEvents($cart,$.extend(true,{},infoObj));
+					},
+				'jqObj' : $cart
+				},'mutable');
+			_app.model.dispatchThis('mutable');
+			});
+		}
+	});
+_app.u.bindTemplateEvent('cartTemplate','depart.cartdestroy',function(event, $context, infoObj){
+	var $page = $context.closest('[data-app-uri]');
+	//alert('hi');
+	dump($page);
+	if($page){
+		$page.empty().remove();
+		}
+	});
+
 _app.extend({
 	"namespace" : "store_routing",
 	"filename" : "extensions/store_routing.js"
@@ -70,6 +111,12 @@ _app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback'
 _app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'search'}, routeObj.params));});
 _app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
 _app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
+
+_app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'checkout', 'requireSecure':true}, routeObj.params));});
+_app.router.appendHash({'type':'exact','route':'checkout','callback':'checkout'});
+
+_app.router.addAlias('cart',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'cart'}, routeObj.params));});
+_app.router.appendHash({'type':'exact','route':'cart','callback':'cart'});
 
 _app.router.appendHash({'type':'exact','route':'404','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
@@ -128,6 +175,77 @@ _app.router.appendHash({'type':'exact','route':'shipping_policy.html','callback'
 		'require':['templates.html']
 		});
 	}});
+_app.router.appendHash({'type':'exact','route':'my_account.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'login' : true,
+		'templateID':'myAccountTemplate',
+		'require':['cco','templates.html']
+		});
+	}});
+_app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event, $context, infoObj){
+	_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
+	_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$('.mainColumn',$context),'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
+	_app.model.dispatchThis();							
+	});
+_app.router.appendHash({'type':'exact','route':'change_password.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'login' : true,
+		'templateID':'changePasswordTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'my_order_history.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'login' : true,
+		'templateID':'orderHistoryTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(event, $context, infoObj){
+	_app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","_tag":{
+		"datapointer":"buyerPurchaseHistory",
+		"callback":"tlc",
+		"verb" : "translate",
+		"jqObj" : $("[data-app-role='orderList']",$context).empty()
+		}},"mutable");
+	_app.model.dispatchThis();							
+	});
+_app.router.appendHash({'type':'exact','route':'my_wishlist.html','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'login' : true,
+		'templateID':'customerListsTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.u.bindTemplateEvent('changePacustomerListsTemplatesswordTemplate','complete.customer',function(event, $context, infoObj){
+	_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag":{"datapointer":"buyerProductLists",'verb':'translate','jqObj': $('.mainColumn',$context),'callback':'tlc',onComplete : function(rd){
+//data formatting on lists is unlike any other format for product, so a special handler is used.				
+		function populateBuyerProdlist(listID,$context)	{
+			//add the product list ul here because tlc statement has list ID for bind.
+			$("[data-buyerlistid='"+listID+"']",$context).append("<ul data-tlc=\"bind $var '.@"+listID+"'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplateBuyerList'  --legacy;\" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>");
+			_app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : {'datapointer':'buyerProductListDetail|'+listID,"listid":listID,'callback':'buyerListAsProdlist','extension':'quickstart', "require":"store_prodlist",'jqObj':$("[data-buyerlistid='"+listID+"'] ul",$context)}},'mutable');
+			}
+		
+		var data = _app.data[rd.datapointer]['@lists']; //shortcut
+		var L = data.length;
+		var numRequests = 0;
+		for(var i = 0; i < L; i += 1)	{
+			populateBuyerProdlist(data[i].id,rd.jqObj)
+			}
+		_app.model.dispatchThis('mutable');
+		//no sense putting 1 list into an accordion.
+		if(L > 1)	{
+			$('.applyAccordion',rd.jqObj).accordion({heightStyle: "content"});
+			}
+		}}},"mutable");
+	_app.model.dispatchThis();							
+	});
+	
+	
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){
@@ -228,15 +346,73 @@ _app.extend({
 	"namespace" : "store_tracking",
 	"filename" : "extensions/store_tracking.js"
 	});
+_app.couple('order_create','addOrderCompleteHandler',{
+	'handler':function(P){
+		_app.require('store_tracking',function(){
+			if(P && P.datapointer && _app.data[P.datapointer] && _app.data[P.datapointer].order){
+				var order = _app.data[P.datapointer].order;
+				var plugins = zGlobals.plugins;
+				// note: order is an object that references the raw (public) cart
+				// order.our.xxxx  order[@ITEMS], etc.
+				// data will appear in google analytics immediately after adding it (there is no delay)
+				ga('require', 'ecommerce');
+				//analytics tracking
+				var r = {
+					'id' : order.our.orderid,
+					'revenue' : order.sum.items_total,
+					'shipping' : order.sum.shp_total,
+					'tax' : order.sum.tax_total
+					};
+				// _app.u.dump(r);
+				ga('ecommerce:addTransaction',r);
+
+				for(var i in order['@ITEMS']){
+					var item = order['@ITEMS'][i];
+					// _app.u.dump(item);
+					ga('ecommerce:addItem', {
+						'id' : order.our.orderid,
+						'name' : item.prod_name,
+						'sku' : item.sku,
+						'price' : item.base_price,
+						'quantity' : item.qty,
+						})
+					};
+
+				ga('ecommerce:send');
+				_app.u.dump('FINISHED store_tracking.onSuccess (google analytics)');
+				
+				for(var i in plugins){
+					if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
+						_app.ext.store_tracking.trackers[i](order, plugins[i]);
+						}
+					}
+				}
+			});
+		}
+	});
 	
 _app.extend({
 	"namespace" : "store_seo",
 	"filename" : "extensions/store_seo.js"
 	});
 	
-_app.extend({
-	"namespace" : "scrollrestore",
-	"filename" : "extensions/_scrollrestore.js"
+//Scroll restore
+_app.u.bindTemplateEvent(function(){return true;}, 'complete.scrollrestore',function(event, $context, infoObj){
+	var scroll = $context.data('scroll-restore');
+	if(scroll){
+		$('html, body').animate({scrollTop : scroll}, 300);
+		}
+	else if((infoObj.performJumpToTop === false) ? false : true) {
+		$('html, body').animate({scrollTop : 0}, 300);
+		}
+	else {
+		//do nothing
+		}
+	});
+	
+_app.u.bindTemplateEvent(function(){return true;}, 'depart.scrollrestore', function(event, $context, infoObj){
+	var scroll = $('html').scrollTop()
+	$context.data('scroll-restore',scroll);
 	});
 
 _app.extend({
@@ -247,6 +423,52 @@ _app.extend({
 _app.extend({
 	"namespace" : "jerseypreview",
 	"filename" : "extensions/jerseypreview/extension.js"
+	});
+_app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
+	var pid = infoObj.pid;
+	if($.inArray(pid, _app.ext.jerseypreview.vars.whitelist) >= 0 && typeof _app.ext.jerseypreview.vars.paramsByPID[pid] === 'undefined'){
+		$.getJSON("extensions/jerseypreview/products/"+pid+".json?_="+(new Date().getTime()))
+			.done(function(data, textStatus, jqXHR){
+				_app.u.dump("Checking font face support");
+				if(isFontFaceSupported){
+					_app.u.dump("Font Face Supported");
+					if(_app.data[infoObj.datapointer]["%attribs"]["user:jerseypreview_image"]){
+						font = data.font;
+						if(font){
+							$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
+							}
+						
+						data.img = $(_app.u.makeImage({
+							name : _app.data[infoObj.datapointer]["%attribs"]["user:jerseypreview_image"],
+							b : "FFFFFF",
+							tag : 1
+							})).get(0);
+						_app.ext.jerseypreview.vars.paramsByPID[pid] = data;
+						}
+					else {
+						_app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
+						}
+					}
+				else {
+					_app.u.throwMessage("Custom Jersey Previews are not available in your browser's version, sorry!");
+					_app.ext.jerseypreview.vars.paramsByPID[pid] = "Font Face Not Supported";
+					}
+				})
+			.fail(function(datajqXHR, textStatus, errorThrown){
+				_app.ext.jerseypreview.vars.paramsByPID[pid] = "JSON failed to load";
+				_app.u.dump("JSON failed to load");
+				//report failure?
+				});
+		}
+		
+	$('input[name=B5], input[name=B6]', $context).keyup(function(){
+		if($(this).data('timer')){
+			clearTimeout($(this).data('timer'));
+			}
+		$(this).data('timer', setTimeout(function(){
+			_app.ext.jerseypreview.u.updatePreview($context);
+			}, 600));
+		});
 	});
 	
 _app.extend({
@@ -305,7 +527,14 @@ _app.extend({
 	"namespace" : "store_search",
 	"filename" : "extensions/store_search.js"
 	});
-
+	
+_app.couple('store_search','addUniversalFilter',{
+	'filter' : {"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}}
+	});
+_app.couple('store_search','addUniversalFilter',{
+	'filter' : {"not":{"term":{"tags":"IS_DISCONTINUED"}}}
+	});
+				
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "search",
 	"handler" : function($container, infoObj){
@@ -321,9 +550,6 @@ _app.extend({
 	"filename" : "extensions/store_product.js"
 	});
 
-_app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
-	//alert('hi');
-	});
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
@@ -335,7 +561,7 @@ _app.couple('quickstart','addPageHandler',{
 			_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, _app.ext.quickstart.vars.session.recentlyViewedItems), 1)[0]);
 			}
 		//IMPORTANT: requiring every extension needed in order to render the page, including TLC formats in the template
-		_app.require(['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html'], function(){
+		_app.require(['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview', 'partner_addthis'], function(){
 			infoObj.templateID = 'productTemplate';
 			_app.ext.store_product.u.showProd($container, infoObj);
 			});
@@ -352,10 +578,40 @@ _app.extend({
 	"filename" : "extensions/store_crm.js"
 	});
 	
+_app.couple('quickstart','addPageHandler',{
+	"pageType" : "customer",
+	"handler" : function($container, infoObj){
+		_app.require(['store_crm','templates.html'], function(){
+			_app.ext.store_crm.u.showCustomer($container, infoObj);
+			});
+		}
+	});
 	
 _app.extend({
 	"namespace" : "partner_addthis",
 	"filename" : "extensions/partner_addthis.js"
+	});
+_app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
+	var $toolbox = $('.socialLinks', $context);
+	if($toolbox.hasClass('addThisRendered')){
+		//Already rendered, don't do it again.
+		}
+	else {
+		$toolbox.addClass('addThisRendered').append(
+				'<div class="addthis_toolbox addthis_default_style addthis_32x32_style">'
+			+		'<a class="addthis_button_preferred_1"></a>'
+			+		'<a class="addthis_button_preferred_2"></a>'
+			+		'<a class="addthis_button_preferred_3"></a>'
+			+		'<a class="addthis_button_preferred_4"></a>'
+			+		'<a class="addthis_button_preferred_5"></a>'
+			+		'<a class="addthis_button_preferred_6"></a>'
+			+		'<a class="addthis_button_preferred_7"></a>'
+			+		'<a class="addthis_button_preferred_8add"></a>'
+			+		'<a class="addthis_button_compact"></a>'
+			+	'</div>');
+		
+		_app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
+		}
 	});
 	
 _app.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']);

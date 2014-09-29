@@ -124,59 +124,7 @@ var jerseypreview = function(_app) {
 //you may or may not need it.
 				_app.u.dump('BEGIN _app.ext.cubworld.callbacks.init.onError');
 				}
-			},
-		attachHandlers : {
-			onSuccess : function(){
-				_app.templates.productTemplate.on('complete.jerseypreview', function(event, $context, infoObj){
-					var pid = infoObj.pid;
-					if($.inArray(pid, _app.ext.jerseypreview.vars.whitelist) >= 0 && typeof _app.ext.jerseypreview.vars.paramsByPID[pid] === 'undefined'){
-						$.getJSON("extensions/jerseypreview/products/"+pid+".json?_="+(new Date().getTime()))
-							.done(function(data, textStatus, jqXHR){
-								_app.u.dump("Checking font face support");
-								if(isFontFaceSupported){
-									_app.u.dump("Font Face Supported");
-									if(_app.data[infoObj.datapointer]["%attribs"]["user:jerseypreview_image"]){
-										font = data.font;
-										if(font){
-											$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
-											}
-										
-										data.img = $(_app.u.makeImage({
-											name : _app.data[infoObj.datapointer]["%attribs"]["user:jerseypreview_image"],
-											b : "FFFFFF",
-											tag : 1
-											})).get(0);
-										_app.ext.jerseypreview.vars.paramsByPID[pid] = data;
-										}
-									else {
-										_app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
-										}
-									}
-								else {
-									_app.u.throwMessage("Custom Jersey Previews are not available in your browser's version, sorry!");
-									_app.ext.jerseypreview.vars.paramsByPID[pid] = "Font Face Not Supported";
-									}
-								})
-							.fail(function(datajqXHR, textStatus, errorThrown){
-								_app.ext.jerseypreview.vars.paramsByPID[pid] = "JSON failed to load";
-								_app.u.dump("JSON failed to load");
-								//report failure?
-								});
-						}
-						
-					$('input[name=B5], input[name=B6]', $context).keyup(function(){
-						if($(this).data('timer')){
-							clearTimeout($(this).data('timer'));
-							}
-						$(this).data('timer', setTimeout(function(){
-							_app.ext.jerseypreview.u.updatePreview($context);
-							}, 600));
-						});
-					});
-				},
-			onError : function(){}
 			}
-			
 		}, //callbacks
 
 
