@@ -10,8 +10,14 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	_app.require('quickstart', function(){
+	_app.require(['quickstart','store_swc'], function(){
+		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
+		_app.ext.store_swc.u.renderMyTeams();
+		_app.ext.store_swc.u.loadBanners();
+				
+		_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
+		_app.model.dispatchThis('mutable');
 		});
 	}); //The config.js is dynamically generated.
 	
@@ -80,10 +86,8 @@ _app.couple('quickstart','addPageHandler',{
 			});
 		}
 	});
-_app.u.bindTemplateEvent('cartTemplate','depart.cartdestroy',function(event, $context, infoObj){
+_app.u.bindTemplateEvent(function(templateID){ return (templateID == 'cartTemplate' || templateID == 'fieldcamTemplate')},'depart.destroy',function(event, $context, infoObj){
 	var $page = $context.closest('[data-app-uri]');
-	//alert('hi');
-	dump($page);
 	if($page){
 		$page.empty().remove();
 		}
@@ -175,6 +179,67 @@ _app.router.appendHash({'type':'exact','route':'shipping_policy.html','callback'
 		'require':['templates.html']
 		});
 	}});
+	
+_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
+	_app.require(['templates.html','store_swc'],function(){
+		_app.ext.quickstart.a.newShowContent(routeObj.value,{
+			'pageType':'static',
+			'dataset': {
+				"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
+				"cam2" : '<object width="600" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="600" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>'
+				},
+			'templateID':'fieldcamTemplate'
+			})
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'affiliatesTemplate',
+		'require':['templates.html']
+		});
+	}});
+
+_app.router.appendHash({'type':'exact','route':'careers/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'category',
+		'navcat':'.careers',
+		'templateID':'categoryTemplateHTML',
+		'require':['templates.html']
+		});
+	}});	
+_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'category',
+		'navcat':'.help_desk.player-inquiry',
+		'templateID':'inquiryTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'category',
+		'navcat':'.rewards_program',
+		'templateID':'rewardsTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'exact','route':'group_sales/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'category',
+		'navcat':'.group_sales',
+		'templateID':'groupSalesTemplate',
+		'require':['templates.html']
+		});
+	}});
+_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'search',
+		'elasticsearch':{"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}},
+		'require':['templates.html']
+		});
+	}});
+	
 _app.router.appendHash({'type':'exact','route':'my_account.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
@@ -221,7 +286,7 @@ _app.router.appendHash({'type':'exact','route':'my_wishlist.html','callback':fun
 		'require':['templates.html']
 		});
 	}});
-_app.u.bindTemplateEvent('changePacustomerListsTemplatesswordTemplate','complete.customer',function(event, $context, infoObj){
+_app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(event, $context, infoObj){
 	_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag":{"datapointer":"buyerProductLists",'verb':'translate','jqObj': $('.mainColumn',$context),'callback':'tlc',onComplete : function(rd){
 //data formatting on lists is unlike any other format for product, so a special handler is used.				
 		function populateBuyerProdlist(listID,$context)	{
@@ -418,6 +483,46 @@ _app.u.bindTemplateEvent(function(){return true;}, 'depart.scrollrestore', funct
 _app.extend({
 	"namespace" : "store_swc",
 	"filename" : "extensions/_store_swc.js"
+	});
+	
+_app.u.bindTemplateEvent(function(){return true;}, 'complete.dismissnav',function(event, $context, infoObj){
+	_app.require('store_swc',function(){
+		_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
+		});
+	});
+_app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event, $context, infoObj){
+	_app.require('store_swc',function(){
+		_app.ext.store_swc.u.showHomepageSlideshow();
+		});
+	});
+_app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
+	$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+	$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
+	//quick hack- we know if there's scroll restore data, that we've been there before so we don't need to resubmit the form
+	if(!$context.data('scroll-restore')){
+		$('form.filterList', $context).trigger('submit');
+		}
+	});
+	
+_app.u.bindTemplateEvent('fieldcamTemplate', 'depart.destroy',function(event, $context, infoObj){
+	$('[data-app-uri]', $context).empty().remove();
+	});
+	
+_app.u.bindTemplateEvent('productTemplate', 'complete.invcheck',function(event, $context, infoObj){
+	var data = _app.data['appProductGet|'+infoObj.pid];
+	var variations = data['@variations'];
+	if(variations.length == 1 /*&& variations[0].id.match(/A[BDEFGHM]/) */){
+		var id = variations[0].id;
+		$('select[name='+id+'] option', $context).each(function(){
+			var sku = infoObj.pid+":"+id+""+$(this).attr("value");
+			dump(sku);
+			dump(data["@inventory"][sku]);
+			if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
+				//$(this).attr("disabled","disabled");
+				$(this).remove();
+				}
+			});
+		}
 	});
 	
 _app.extend({

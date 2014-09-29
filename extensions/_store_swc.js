@@ -55,34 +55,7 @@ var store_swc = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				// $(window).on('mousemove.swc', function(e){
-					// if(e.clientY > .8*$(this).outerHeight()){
-						// $('#appView').addClass('peekFooter');
-						// }
-					// else {
-						// $('#appView').removeClass('peekFooter');
-						// }
-					// });
-				_app.ext.store_swc.u.loadBanners();
-				
-				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
-				_app.model.dispatchThis('mutable');
-				
-				/*
-				var userTeams = false;
-				if(userTeams = _app.model.readLocal('swcUserTeams')){
-					for(var i in _app.ext.store_swc.vars.userTeams){
-						if(userTeams[i].length){
-							_app.ext.store_swc.u.setUserTeams(i, userTeams[i]);
-							}
-						}
-					}
-				else {
-					_app.ext.store_swc.u.setUserTeams('app_mlb',['chicago_cubs']);
-					//_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
-					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
-					}
-				*/
+
 				var userTeam = _app.model.readLocal('swcUserTeam');
 				if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam);
@@ -95,38 +68,6 @@ var store_swc = function(_app) {
 					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
-				
-				/*
-				_app.router.appendHash({'type':'exact','route':'shop-by-player/','callback':function(routeObj){
-					showContent('static',{dataset:_app.ext.store_swc.vars.userTeams, 'templateID':'shopByPlayerTemplate'});
-					}});
-				*/
-				_app.router.appendHash({'type':'exact','route':'connect_with_sportsworld/', 'callback':function(routeObj){
-					showContent('static',{'templateID':'socialTemplate'});
-					}});
-				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
-					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
-					showContent('static',{'templateID':'affiliatesTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'careers/','callback':function(routeObj){
-					showContent('category',{'navcat':'.careers','templateID':'categoryTemplateHTML'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
-					showContent('category',{'navcat':'.help_desk.player-inquiry','templateID':'inquiryTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
-					showContent('category',{'navcat':'.rewards_program','templateID':'rewardsTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'group_sales/','callback':function(routeObj){
-					showContent('category',{'navcat':'.group_sales','templateID':'groupSalesTemplate'})
-					}});
-				_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
-					showContent('search',{'elasticsearch':{"query" : {"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}}}});
-					}});
-				
-				
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -140,37 +81,6 @@ var store_swc = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				_app.templates.productTemplate.on('complete.swc', function(event, $context, infoObj){
-					var data = _app.data['appProductGet|'+infoObj.pid];
-					var variations = data['@variations'];
-					if(variations.length == 1 /*&& variations[0].id.match(/A[BDEFGHM]/) */){
-						var id = variations[0].id;
-						$('select[name='+id+'] option', $context).each(function(){
-							var sku = infoObj.pid+":"+id+""+$(this).attr("value");
-							dump(sku);
-							dump(data["@inventory"][sku]);
-							if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
-								//$(this).attr("disabled","disabled");
-								$(this).remove();
-								}
-							});
-						}
-					});
-				_app.templates.homepageTemplate.on('complete.swc', function(event, $context, infoObj){
-					_app.ext.store_swc.u.showHomepageSlideshow();
-					});
-				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
-					$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
-					$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
-					if(!$context.data('scroll-restore')){
-						$('form.filterList', $context).trigger('submit');
-						}
-					});
-				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
-					$context.empty().remove();
-					});
-				
-				
 				$.merge(_app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
 					"#!company/contact/",
@@ -205,19 +115,8 @@ var store_swc = function(_app) {
 						}
 					}
 				
-				var dismissNav = function(){
-					_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
-					}
-				for(var i in _app.templates){
-					_app.templates[i].on('complete.swc', dismissNav);
-					}
-				$('#appTemplates').children().each(function(){
-					$(this).on('complete.swc', dismissNav);
-					});
 				
-				// setTimeout(function(){_app.ext.store_swc.e.toggleFooter(null, {preventDefault : function(){}});}, 1200);
-				setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
-				_app.ext.store_swc.u.renderMyTeams();
+				
 				},
 			onError : function(){}
 			},
@@ -2293,15 +2192,7 @@ var store_swc = function(_app) {
 //								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]}],
-				},
-
-
-staticData : {
-"fieldcam" : {
-"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
-"cam2" : '<object width="600" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="600" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>'
-}
-}
+				}
 } //r object.
 return r;
 }
