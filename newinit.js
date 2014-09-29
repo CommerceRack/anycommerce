@@ -13,7 +13,6 @@ _app.u.loadScript(configURI,function(){
 	_app.require(['quickstart','store_swc'], function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
-		_app.ext.store_swc.u.renderMyTeams();
 		_app.ext.store_swc.u.loadBanners();
 				
 		_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
@@ -312,7 +311,7 @@ _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(ev
 	
 	
 _app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
-	_app.require(['store_swc','seo_robots', 'templates.html'], function(){
+	_app.require(['store_swc','seo_robots', 'store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){
 			function showFilterPage(){
 				if(_app.ext.store_swc.vars.elasticFieldsLoaded){
@@ -500,7 +499,18 @@ _app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(ev
 	$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
 	//quick hack- we know if there's scroll restore data, that we've been there before so we don't need to resubmit the form
 	if(!$context.data('scroll-restore')){
-		$('form.filterList', $context).trigger('submit');
+		var $form = $('form.filterList', $context);
+		function submitForm(){
+			if($form.attr('data-filter-base')){
+				dump($form.attr('data-filter-base'));
+				$form.trigger('submit');
+				}
+			else {
+				dump('gotta wait');
+				setTimeout(submitForm,100);
+				}
+			}
+		setTimeout(submitForm,0);
 		}
 	});
 	

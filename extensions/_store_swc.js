@@ -68,9 +68,9 @@ var store_swc = function(_app) {
 					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
+				_app.ext.store_swc.u.renderMyTeams();
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
-
 				return r;
 				},
 			onError : function()	{
@@ -492,15 +492,15 @@ var store_swc = function(_app) {
 				},
 			*/
 			saveUserTeam : function(team, homepageOverride){
-				$('#appView .filteredSearchPage').each(function(){
+				$('#appView .filteredSearchPage').closest(['data-app-uri']).each(function(){
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
-				$('#appView #shopByPlayerTemplate_').intervaledEmpty().remove();
 				if($('#appView #mainContentArea :visible').length < 1 && !homepageOverride){
 					window.location = "#!";
 					}
-					
-				$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
+				_app.require('templates.html',function(){
+					$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
+					});
 				
 				_app.model.writeLocal('swcUserTeam', team);
 				},
@@ -652,8 +652,9 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				p.preventDefault();
 				var loadFullList = $form.data('loadFullList');
-				// dump("Executing Filtered Search");
+				dump("Executing Filtered Search");
 				if(loadFullList){
 					_app.ext.store_swc.vars.filterLoadingComplete = false;
 					}
@@ -662,7 +663,6 @@ var store_swc = function(_app) {
 					}
 				$('.filterList',$form.closest('.filteredSearchPage')).removeClass('active');
 				$form = $form.closest('form');
-				p.preventDefault();
 				var $resultsContainer = $form.closest('[data-filter-page=parent]').find('.filterResults');
 				var filterBase = JSON.parse($form.attr('data-filter-base'));
 				var elasticsearch = {
