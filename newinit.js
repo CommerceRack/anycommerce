@@ -388,36 +388,22 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 	}});
 	
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(event, $context, infoObj){
-	dump('--> store_seo complete event'); 
-	event.stopPropagation(); 
 	if(infoObj){
-		var hash = "";
-		var $routeEle = $('[data-routing-hash]',$context);
-		if($routeEle.length){ hash = $routeEle.attr('data-routing-hash'); }
-		else {
-			switch(infoObj.pageType){
-				case 'homepage': hash = "#!/"; break;
-				case 'product': hash = "#!product/"+infoObj.pid+"/"; break;
-				case 'category': hash = "#!category/"+infoObj.navcat+"/"; break;
-				case 'search': hash = window.location.hash; break;
-				case 'company': hash = "#!company/"+infoObj.show+"/"; break;
-				case 'customer': hash = "#!customer/"+infoObj.show+"/"; break;
-				case 'cart': hash = "#!cart/"; break;
-				case 'checkout': hash = "#!checkout/"; break;
-				default: hash = window.location.hash; break;
-				}
+		var canonical = "";
+		
+		var $routeEle = $('[data-canonical]',$context);
+		if($routeEle.length){ canonical = $routeEle.attr('data-canonical'); }
+		else{
+			canonical = window.location.pathname;
 			}
+		
 		var $canonical = $('link[rel=canonical]')
 		if(!$canonical.length){
 			dump('NO CANONICAL IN THE DOCUMENT');
 			$canonical = $('<link rel="canonical" href="" />');
 			$('head').append($canonical);
 			}
-		$canonical.attr('href', hash);
-		if(_app.vars.showContentHashChange){
-			dump('forcing a hash change');
-			window.location.href = window.location.href.split("#")[0]+hash;
-			}
+		$canonical.attr('href', canonical);
 		}
 	});
 	
