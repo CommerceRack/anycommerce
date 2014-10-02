@@ -981,6 +981,8 @@ fallback is to just output the value.
 				//The page already exists, we just have to show it
 				if($new.length){
 					//run init event
+					infoObj.state = 'complete';
+					_app.renderFunctions.handleTemplateEvents($new,infoObj);
 					}
 				else {
 					$new = $('<div data-app-uri="'+uri+'"></div>');
