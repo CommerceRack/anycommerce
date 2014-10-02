@@ -1054,7 +1054,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			},
 		
-		handleURIChange : function(uri, search, hash){
+		handleURIChange : function(uri, search, hash, skipPush){
 			dump(uri);
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			dump(routeObj);
@@ -1067,11 +1067,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 				try{
 					_app.router._executeCallback(routeObj);
-					//window.history.pushState(uri, "", "?"+uri);
-					try{
+					if(!skipPush){
 						window.history.pushState(uri, "", uri);
-						}
-					catch(e){
 						}
 					}
 				catch(e){

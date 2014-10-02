@@ -806,7 +806,7 @@ _app.router.appendInit({
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
 		if(document.location.protocol == "file:"){
-			_app.router.handleURIChange("/", document.location.search, document.location.hash);
+			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
 			}
 		else if (g.uriParams.marketplace){
 			showContent("product",{"pid":g.uriParams.product});
@@ -814,7 +814,7 @@ _app.router.appendInit({
 			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
-			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash);
+			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
 			}
 		else	{
 			_app.router.handleURIChange("");
