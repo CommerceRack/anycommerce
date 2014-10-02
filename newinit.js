@@ -811,9 +811,9 @@ _app.router.appendInit({
 			showContent("product",{"pid":g.uriParams.product});
 			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
 			}
-		else if(document.location.search)	{	
+		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
-			_app.router.handleURIChange(document.location.search.substr(1));
+			_app.router.handleURIChange(document.location.pathname.substr(1));
 			}
 		else	{
 			_app.router.handleURIChange("");
