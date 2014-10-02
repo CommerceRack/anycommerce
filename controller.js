@@ -1066,10 +1066,10 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					routeObj.urihash = hash;
 					}
 				try{
-					_app.router._executeCallback(routeObj);
 					if(!skipPush){
 						window.history.pushState(uri, "", uri);
 						}
+					_app.router._executeCallback(routeObj);
 					}
 				catch(e){
 					dump("There was an error processing the callback for the follow route object:");
