@@ -213,7 +213,14 @@ _app.router.appendHash({'type':'exact','route':'/affiliates/','callback':functio
 		'require':['templates.html']
 		});
 	}});
-
+_app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','callback':function(routeObj){
+	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+		'pageType':'static',
+		'templateID':'socialTemplate',
+		'require':['templates.html']
+		});
+	}});
+	
 _app.router.appendHash({'type':'exact','route':'/careers/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'category',
