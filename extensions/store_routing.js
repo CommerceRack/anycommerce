@@ -128,18 +128,18 @@ optional params:
 				return component;
 				},
 			productAnchor : function(pid, seo){
-				return "?product/"+pid+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
+				return "/product/"+pid+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
-				return "?category/"+path+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
+				return "/category/"+path+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
 				var r;
 				if(type == 'tag')	{
-					r = '?search/tag/'+value;
+					r = '/search/tag/'+value;
 					}
 				else if(type == 'keywords')	{
-					r = '?search/keywords/'+value;
+					r = '/search/keywords/'+value;
 					}
 // ### FUTURE -> support ability to search for a match on a specific attribute.
 //				else if(type == 'attrib')	{
@@ -148,7 +148,7 @@ optional params:
 				else	{
 					//unrecognized type
 					}
-				return "?category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
+				return "/category/"+path+((seo) ? "/"+encodeURIComponent(seo) : '');
 				}
 			}, //u [utilities]
 

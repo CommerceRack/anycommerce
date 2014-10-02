@@ -1007,15 +1007,23 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
 				$('body').on('click.router','a[href], area[href]',function(event){
-					//event.preventDefault();
-					var href = $(this).attr('href');
-					var isHandled = _app.router.handleURIChange(href);
+					var a = event.currentTarget;
+					if(document.location.protocol == "file:"){
+						a = document.createElement('a');
+						var href = $(this).attr('href');
+						if(href.indexOf('/') != 0){href = "/"+href;}
+						a.href = "http://www.domain.com"+href;
+						}
+					var path = a.pathname;
+					var search = a.search;
+					var hash = a.hash;
+					var isHandled = _app.router.handleURIChange(path, search, hash);
 					dump("handled: "+isHandled);
 					if(isHandled){
 						event.preventDefault();
 						}
 					else {
-						event.target.target = "_blank";
+						event.currentTarget.target = "_blank";
 						}
 					});
 				
@@ -1046,13 +1054,17 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			},
 		
-		handleURIChange : function(uri){
-			if(uri.indexOf('?') == 0){
-				uri = uri.substr(1);
-				}
+		handleURIChange : function(uri, search, hash){
+			dump(uri);
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			dump(routeObj);
 			if(routeObj) {
+				if(search){
+					routeObj.searchParams = _app.u.kvp2Array(search);
+					}
+				if(hash){
+					routeObj.urihash = hash;
+					}
 				try{
 					_app.router._executeCallback(routeObj);
 					//window.history.pushState(uri, "", "?"+uri);

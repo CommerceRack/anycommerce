@@ -98,30 +98,29 @@ _app.extend({
 	});
 	//formerly in startup callback of store_routing
 _app.router.addAlias('product',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'product'}, routeObj.params));});
-_app.router.appendHash({'type':'match','route':'product/{{pid}}/{{name}}*','callback':'product'});
-_app.router.appendHash({'type':'match','route':'product/{{pid}}*','callback':'product'});
+_app.router.appendHash({'type':'match','route':'/product/{{pid}}/{{name}}*','callback':'product'});
+_app.router.appendHash({'type':'match','route':'/product/{{pid}}*','callback':'product'});
 
 
 _app.router.addAlias('homepage',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'homepage'}, routeObj.params));});
-_app.router.appendHash({'type':'exact','route':'home','callback':'homepage'});
-_app.router.appendHash({'type':'exact','route':'home/','callback':'homepage'});
-_app.router.appendHash({'type':'exact','route':'','callback':'homepage'});
+_app.router.appendHash({'type':'exact','route':'/home','callback':'homepage'});
+_app.router.appendHash({'type':'exact','route':'/home/','callback':'homepage'});
 _app.router.appendHash({'type':'exact','route':'/','callback':'homepage'});
 
 _app.router.addAlias('category',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'category'}, routeObj.params));});
-_app.router.appendHash({'type':'match','route':'category/{{navcat}}*','callback':'category'});
+_app.router.appendHash({'type':'match','route':'/category/{{navcat}}*','callback':'category'});
 
 _app.router.addAlias('search',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'search'}, routeObj.params));});
-_app.router.appendHash({'type':'match','route':'search/tag/{{tag}}*','callback':'search'});
-_app.router.appendHash({'type':'match','route':'search/keywords/{{KEYWORDS}}*','callback':'search'});
+_app.router.appendHash({'type':'match','route':'/search/tag/{{tag}}*','callback':'search'});
+_app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*','callback':'search'});
 
 _app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'checkout', 'requireSecure':true}, routeObj.params));});
-_app.router.appendHash({'type':'exact','route':'checkout','callback':'checkout'});
+_app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'});
 
 _app.router.addAlias('cart',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'cart'}, routeObj.params));});
-_app.router.appendHash({'type':'exact','route':'cart','callback':'cart'});
+_app.router.appendHash({'type':'exact','route':'/cart','callback':'cart'});
 
-_app.router.appendHash({'type':'exact','route':'404','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/404','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'pageNotFoundTemplate',
@@ -129,49 +128,49 @@ _app.router.appendHash({'type':'exact','route':'404','callback':function(routeOb
 		});
 	}});
 
-_app.router.appendHash({'type':'exact','route':'about_us.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/about_us.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'aboutUsTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'contact_us.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/contact_us.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'contactUsTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'frequently_asked_questions.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/frequently_asked_questions.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'faqTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'payment_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/payment_policy.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'paymentTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'privacy_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/privacy_policy.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'privacyTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'return_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/return_policy.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'returnTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'shipping_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/shipping_policy.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'shippingTemplate',
@@ -179,7 +178,7 @@ _app.router.appendHash({'type':'exact','route':'shipping_policy.html','callback'
 		});
 	}});
 	
-_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/fieldcam/','callback':function(routeObj){
 	_app.require(['templates.html','store_swc'],function(){
 		_app.ext.quickstart.a.newShowContent(routeObj.value,{
 			'pageType':'static',
@@ -191,7 +190,7 @@ _app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(r
 			})
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/affiliates/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'affiliatesTemplate',
@@ -199,7 +198,7 @@ _app.router.appendHash({'type':'exact','route':'affiliates/','callback':function
 		});
 	}});
 
-_app.router.appendHash({'type':'exact','route':'careers/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/careers/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'category',
 		'navcat':'.careers',
@@ -207,7 +206,7 @@ _app.router.appendHash({'type':'exact','route':'careers/','callback':function(ro
 		'require':['templates.html']
 		});
 	}});	
-_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/inquiry/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'category',
 		'navcat':'.help_desk.player-inquiry',
@@ -215,7 +214,7 @@ _app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(ro
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/rewards/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'category',
 		'navcat':'.rewards_program',
@@ -223,7 +222,7 @@ _app.router.appendHash({'type':'exact','route':'rewards/','callback':function(ro
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'group_sales/','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/group_sales/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'category',
 		'navcat':'.group_sales',
@@ -231,7 +230,7 @@ _app.router.appendHash({'type':'exact','route':'group_sales/','callback':functio
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
+_app.router.appendHash({'type':'match','route':'/search/manufacturer/{{mfg}}*','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'search',
 		'elasticsearch':{"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}},
@@ -239,7 +238,7 @@ _app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','c
 		});
 	}});
 	
-_app.router.appendHash({'type':'exact','route':'my_account.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_account.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -252,7 +251,7 @@ _app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event,
 	_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$('.mainColumn',$context),'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
 	_app.model.dispatchThis();							
 	});
-_app.router.appendHash({'type':'exact','route':'change_password.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/change_password.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -260,7 +259,7 @@ _app.router.appendHash({'type':'exact','route':'change_password.html','callback'
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'my_order_history.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_order_history.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -277,7 +276,7 @@ _app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(e
 		}},"mutable");
 	_app.model.dispatchThis();							
 	});
-_app.router.appendHash({'type':'exact','route':'my_wishlist.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_wishlist.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -310,7 +309,7 @@ _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(ev
 	});
 	
 	
-_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
+_app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){
 			function showFilterPage(){
@@ -804,8 +803,8 @@ _app.router.appendInit({
 	'callback':function(f,g){
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
-		if(g.uriParams.seoRequest){
-			showContent(g.uriParams.pageType, g.uriParams);
+		if(document.location.protocol == "file:"){
+			_app.router.handleURIChange("/", document.location.search, document.location.hash);
 			}
 		else if (g.uriParams.marketplace){
 			showContent("product",{"pid":g.uriParams.product});
@@ -813,7 +812,7 @@ _app.router.appendInit({
 			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
-			_app.router.handleURIChange(document.location.pathname.substr(1));
+			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash);
 			}
 		else	{
 			_app.router.handleURIChange("");
