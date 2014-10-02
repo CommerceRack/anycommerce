@@ -922,7 +922,7 @@ fallback is to just output the value.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 // infoObj.back can be set to 0 to skip a URI update (will skip both hash state and popstate.) 
 			secureContentLocation : function(path){
-				if(path.indexOf('?') == 0){
+				if(path.indexOf('/') == 0){
 					path = path.substr(1);
 					}
 				var uri	= 	zGlobals.appSettings.https_app_url;
