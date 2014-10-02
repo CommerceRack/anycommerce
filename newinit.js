@@ -70,18 +70,34 @@ _app.couple('quickstart','addPageHandler',{
 	"pageType" : "cart",
 	"handler" : function($container, infoObj){
 		infoObj.navcat = zGlobals.appSettings.rootcat;
-		_app.require(['templates.html'],function(){
-			var $cart = new tlc().getTemplateInstance('cartTemplate');
+		infoObj.cartid = _app.model.fetchCartID();
+		infoObj.templateID = 'cartTemplate';
+		infoObj.trigger = 'fetch';
+		_app.require(['cco','order_create','templates.html'],function(){
+			//var $cart = new tlc().getTemplateInstance('cartTemplate');
+			//var $cart = $(_app.renderFunctions.createTemplateInstance('cartTemplate',infoObj));
+			var $cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
 			$container.append($cart);
-			_app.calls.cartDetail.init(_app.model.fetchCartID(),{
-				'callback':'tlc',
-				'onComplete' : function(){
-					infoObj.state = 'complete';
-					_app.renderFunctions.handleTemplateEvents($cart,$.extend(true,{},infoObj));
-					},
-				'jqObj' : $cart
-				},'mutable');
-			_app.model.dispatchThis('mutable');
+			
+			$cart.on('complete',function(){
+				$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
+					$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
+					});
+				});
+
+			$cart.trigger(infoObj.trigger,$.extend({'Q':'mutable'},infoObj));
+				_app.model.dispatchThis('mutable');
+			
+			// _app.calls.cartDetail.init(_app.model.fetchCartID(),{
+				// 'callback':'tlc',
+				// 'onComplete' : function(){
+					// infoObj.state = 'complete';
+					// _app.renderFunctions.handleTemplateEvents($cart,$.extend(true,{},infoObj));
+					// },
+				// 'jqObj' : $cart,
+				// 'verb' : 'translate'
+				// },'mutable');
+			// _app.model.dispatchThis('mutable');
 			});
 		}
 	});

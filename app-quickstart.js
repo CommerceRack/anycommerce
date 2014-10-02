@@ -1914,7 +1914,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
  can't think of a reason not to use the default parentID, but just in case, it can be set.
 */
 			showCartInModal : function(P)	{
-
+				dump('showing cart in modal');
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
 					P.state = 'init';
 					var $modal = $('#modalCart');
@@ -1930,6 +1930,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					else	{
 						P.cartid = _app.model.fetchCartID();
 						$modal = _app.ext.cco.a.getCartAsJqObj(P).attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						dump($modal);
 						_app.renderFunctions.handleTemplateEvents($modal,P); //init
 						$modal.on('complete',function(){
 							$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
@@ -2491,7 +2492,7 @@ else	{
 
 			productAdd2Cart : function($ele,p)	{
 				p.preventDefault();
-				_app.require(['store_product','cco'],function(){
+				_app.require(['store_product','cco','templates.html'],function(){
 					var cartObj = _app.ext.store_product.u.buildCartItemAppendObj($ele);
 					if(cartObj)	{
 						cartObj["_cartid"] = _app.model.fetchCartID();
@@ -2503,7 +2504,7 @@ else	{
 								}
 							else	{
 								if($ele.data('show') == 'inline')	{
-									document.location.hash = '#!cart';
+									_app.router.handleURIChange('/cart');
 									}
 								else	{
 									_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});

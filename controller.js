@@ -1068,7 +1068,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				try{
 					_app.router._executeCallback(routeObj);
 					//window.history.pushState(uri, "", "?"+uri);
-					window.history.pushState(uri, "", uri);
+					try{
+						window.history.pushState(uri, "", uri);
+						}
+					catch(e){
+						}
 					}
 				catch(e){
 					dump("There was an error processing the callback for the follow route object:");
