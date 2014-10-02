@@ -926,8 +926,8 @@ fallback is to just output the value.
 					path = path.substr(1);
 					}
 				var uri	= 	zGlobals.appSettings.https_app_url;
-				uri 	+=	"?"+path;
-				uri		+=	"#cartID="+_app.model.fetchCartID();
+				uri 	+=	path;
+				uri		+=	"?cartID="+_app.model.fetchCartID();
 				uri		+=	"&_session="+_app.vars._session;
 				return uri;
 				},
