@@ -35,6 +35,7 @@ var store_swc = function(_app) {
 			"popup2" : "I understand it may take 1-2 business days to customize my Chicago Cubs or Chicago Blackhawks item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted."
 			},
 		elasticFields : {},
+		elasticFieldsLoaded : false,
 		/*
 		userTeams : {
 			app_nba : [],
@@ -54,34 +55,7 @@ var store_swc = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				// $(window).on('mousemove.swc', function(e){
-					// if(e.clientY > .8*$(this).outerHeight()){
-						// $('#appView').addClass('peekFooter');
-						// }
-					// else {
-						// $('#appView').removeClass('peekFooter');
-						// }
-					// });
-				_app.ext.store_swc.u.loadBanners();
-				
-				_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
-				_app.model.dispatchThis('mutable');
-				
-				/*
-				var userTeams = false;
-				if(userTeams = _app.model.readLocal('swcUserTeams')){
-					for(var i in _app.ext.store_swc.vars.userTeams){
-						if(userTeams[i].length){
-							_app.ext.store_swc.u.setUserTeams(i, userTeams[i]);
-							}
-						}
-					}
-				else {
-					_app.ext.store_swc.u.setUserTeams('app_mlb',['chicago_cubs']);
-					//_app.ext.store_swc.u.setUserTeams('app_mlb',[{p:"Chicago Cubs",v:"chicago_cubs","checked":"checked"}]);
-					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've added the Chicago Cubs to your Team list- to add or remove teams go <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
-					}
-				*/
+
 				var userTeam = _app.model.readLocal('swcUserTeam');
 				if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam);
@@ -94,98 +68,9 @@ var store_swc = function(_app) {
 					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
-				
-				/*
-				_app.router.appendHash({'type':'exact','route':'shop-by-player/','callback':function(routeObj){
-					showContent('static',{dataset:_app.ext.store_swc.vars.userTeams, 'templateID':'shopByPlayerTemplate'});
-					}});
-				*/
-				_app.router.appendHash({'type':'exact','route':'connect_with_sportsworld/', 'callback':function(routeObj){
-					showContent('static',{'templateID':'socialTemplate'});
-					}});
-				_app.router.appendHash({'type':'exact','route':'fieldcam/','callback':function(routeObj){
-					showContent('static',{dataset:_app.ext.store_swc.staticData.fieldcam, 'templateID':'fieldcamTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'affiliates/','callback':function(routeObj){
-					showContent('static',{'templateID':'affiliatesTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'careers/','callback':function(routeObj){
-					showContent('category',{'navcat':'.careers','templateID':'categoryTemplateHTML'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'inquiry/','callback':function(routeObj){
-					showContent('category',{'navcat':'.help_desk.player-inquiry','templateID':'inquiryTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'rewards/','callback':function(routeObj){
-					showContent('category',{'navcat':'.rewards_program','templateID':'rewardsTemplate'})
-					}});
-				_app.router.appendHash({'type':'exact','route':'group_sales/','callback':function(routeObj){
-					showContent('category',{'navcat':'.group_sales','templateID':'groupSalesTemplate'})
-					}});
-				_app.router.appendHash({'type':'match','route':'search/manufacturer/{{mfg}}*','callback':function(routeObj){
-					showContent('search',{'elasticsearch':{"query" : {"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}}}});
-					}});
-				_app.router.appendHash({'type':'match','route':'filter/{{id}}*','callback':function(routeObj){
-					if(_app.ext.store_swc.filterData[routeObj.params.id]){
-						routeObj.params.templateID = "filteredSearchTemplate";
-						routeObj.params.dataset = $.extend(true, {}, _app.ext.store_swc.filterData[routeObj.params.id]);
-						if(routeObj.params.dataset.onEnter){
-							routeObj.params.dataset.onEnter();
-							}
-						var optStrs = routeObj.params.dataset.optionList;
-						routeObj.params.dataset.options = routeObj.params.dataset.options || {};
-						for(var i in optStrs){
-							var o = optStrs[i];
-							if(_app.ext.store_swc.vars.elasticFields[o]){
-								routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_swc.vars.elasticFields[o]);
-								if(routeObj.hashParams[o]){
-									var values = routeObj.hashParams[o].split('|');
-									for(var i in routeObj.params.dataset.options[o].options){
-										var option = routeObj.params.dataset.options[o].options[i];
-										if($.inArray(option.v, values) >= 0){
-											option.checked = "checked";
-											}
-										}
-									}
-								}
-							else {
-								dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
-								}
-							}
-						/*
-						routeObj.params.dataset.userTeams = {};
-						for(var sport in _app.ext.store_swc.validTeams){
-							routeObj.params.dataset.userTeams[sport] = $.grep(_app.ext.store_swc.validTeams[sport], function(e, i){ return $.inArray(e.v, _app.ext.store_swc.vars.userTeams[sport]) >= 0});
-							$.map(routeObj.params.dataset.userTeams[sport], function(e){e.checked = "checked";});
-							}
-						*/
-						if(routeObj.hashParams.sport && routeObj.hashParams.team){
-							_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
-							}
-						routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
-						
-						if(routeObj.params.dataset.titleBuilder){
-							routeObj.params.dataset.seo_title = routeObj.params.dataset.titleBuilder(routeObj.params.dataset.userTeam.p);
-							}
-							
-						if(routeObj.params.dataset.descriptionBuilder){
-							routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
-							}
-						
-						if(routeObj.params.dataset.metaDescriptionBuilder){
-							routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
-							}
-						routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
-						showContent('static',routeObj.params)
-						}
-					else {
-						showContent('404');
-						}
-					}});
-				
-				
+				_app.ext.store_swc.u.renderMyTeams();
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
-
 				return r;
 				},
 			onError : function()	{
@@ -196,38 +81,6 @@ var store_swc = function(_app) {
 			},
 		attachHandlers : {
 			onSuccess : function(){
-				_app.templates.productTemplate.on('complete.swc', function(event, $context, infoObj){
-					var data = _app.data['appProductGet|'+infoObj.pid];
-					var variations = data['@variations'];
-					if(variations.length == 1 /*&& variations[0].id.match(/A[BDEFGHM]/) */){
-						var id = variations[0].id;
-						$('select[name='+id+'] option', $context).each(function(){
-							var sku = infoObj.pid+":"+id+""+$(this).attr("value");
-							dump(sku);
-							dump(data["@inventory"][sku]);
-							if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
-								//$(this).attr("disabled","disabled");
-								$(this).remove();
-								}
-							});
-						}
-					});
-				_app.templates.homepageTemplate.on('complete.swc', function(event, $context, infoObj){
-					_app.ext.store_swc.u.showHomepageSlideshow();
-					});
-				_app.templates.filteredSearchTemplate.on('complete.swc', function(event, $context, infoObj){
-					$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
-					$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
-					if(!$context.data('scroll-restore')){
-						$('form.filterList', $context).trigger('submit');
-						}
-					});
-				_app.templates.fieldcamTemplate.on('depart.swc', function(event, $context, infoObj){
-					$context.empty().remove();
-					});
-				_app.ext.store_search.vars.universalFilters.push({"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}});
-				_app.ext.store_search.vars.universalFilters.push({"not":{"term":{"tags":"IS_DISCONTINUED"}}});
-				
 				$.merge(_app.ext.seo_robots.vars.pages, [
 					"#!company/about/",
 					"#!company/contact/",
@@ -262,19 +115,8 @@ var store_swc = function(_app) {
 						}
 					}
 				
-				var dismissNav = function(){
-					_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
-					}
-				for(var i in _app.templates){
-					_app.templates[i].on('complete.swc', dismissNav);
-					}
-				$('#appTemplates').children().each(function(){
-					$(this).on('complete.swc', dismissNav);
-					});
 				
-				// setTimeout(function(){_app.ext.store_swc.e.toggleFooter(null, {preventDefault : function(){}});}, 1200);
-				setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
-				_app.ext.store_swc.u.renderMyTeams();
+				
 				},
 			onError : function(){}
 			},
@@ -285,6 +127,7 @@ var store_swc = function(_app) {
 					var field = data.contents['@products'][i];
 					_app.ext.store_swc.vars.elasticFields[field.id] = field;
 					}
+				_app.ext.store_swc.vars.elasticFieldsLoaded = true;
 				},
 			onError : function(){}
 			},
@@ -450,7 +293,7 @@ var store_swc = function(_app) {
 				},
 			filterlink : function(data,thisTLC){
 				var id = data.value;
-				data.globals.binds[data.globals.focusBind] = "#!filter/"+id+"/"
+				data.globals.binds[data.globals.focusBind] = "/filter/"+id+"/"
 				return true;
 				},
 			filtertitle : function(data,thisTLC){
@@ -552,7 +395,7 @@ var store_swc = function(_app) {
 				},
 			showHomepageSlideshow : function(){
 				if(_app.ext.store_swc.vars.homepageBanners){
-					var $slideshow = $('#homeSlideshow');
+					var $slideshow = $('.homeSlideshow');
 					if($slideshow.data('slideshow') !== 'true'){
 						for(var i=0; i<_app.ext.store_swc.vars.homepageBanners.length; i++){
 							//_app.u.dump(_app.ext.store_swc.vars.homepageBanners[i]);
@@ -649,15 +492,15 @@ var store_swc = function(_app) {
 				},
 			*/
 			saveUserTeam : function(team, homepageOverride){
-				$('#appView .filteredSearchPage').each(function(){
+				$('#appView .filteredSearchPage').closest(['data-app-uri']).each(function(){
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
-				$('#appView #shopByPlayerTemplate_').intervaledEmpty().remove();
 				if($('#appView #mainContentArea :visible').length < 1 && !homepageOverride){
-					window.location = "#!";
+					_app.router.handleURIChange('/');
 					}
-					
-				$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
+				_app.require('templates.html',function(){
+					$('#appView #headerTeam').empty().tlc({'verb':'transmogrify','dataset':_app.ext.store_swc.vars.userTeam, 'templateid':$('#appView #headerTeam').attr('data-templateid')});
+					});
 				
 				_app.model.writeLocal('swcUserTeam', team);
 				},
@@ -809,8 +652,9 @@ var store_swc = function(_app) {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			execFilteredSearch : function($form, p){
+				p.preventDefault();
 				var loadFullList = $form.data('loadFullList');
-				// dump("Executing Filtered Search");
+				dump("Executing Filtered Search");
 				if(loadFullList){
 					_app.ext.store_swc.vars.filterLoadingComplete = false;
 					}
@@ -819,7 +663,6 @@ var store_swc = function(_app) {
 					}
 				$('.filterList',$form.closest('.filteredSearchPage')).removeClass('active');
 				$form = $form.closest('form');
-				p.preventDefault();
 				var $resultsContainer = $form.closest('[data-filter-page=parent]').find('.filterResults');
 				var filterBase = JSON.parse($form.attr('data-filter-base'));
 				var elasticsearch = {
@@ -952,7 +795,7 @@ var store_swc = function(_app) {
 								});
 							}
 						}
-					}, 'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
+					}, 'require':['store_prodlist','prodlist_infinite'],'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
 				_app.model.dispatchThis();
 				
 				},
@@ -1702,7 +1545,7 @@ var store_swc = function(_app) {
 								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]}],
-			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"], 
+			'app_mlb' : [{"p":"Arizona Diamondbacks","v":"arizona_diamondbacks", "img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.arizona_diamondbacks/Arizona%20Diamondbacks", "players" : ["Brandon McCarthy","Bronson Arroyo","Paul Goldschmidt"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Arizona_Diamondbacks_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Arizona_Diamondbacks/Arizona_Diamondbacks_Alternate_Red_Authentic_Cool_Base_Jersey"},
@@ -1710,7 +1553,7 @@ var store_swc = function(_app) {
 								//{"id":"hats","img":"mlbhats/arizona_diamondbacks_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"#!category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
+						{"p":"Atlanta Braves","v":"atlanta_braves", "img":"mlbhats/atlanta_braves_home_cap.jpg", "catlink":"/category/.mlb.atlanta_braves/Atlanta%20Braves", "players" : ["Brandon Beachy","Craig Kimbrel","Jason Heyward"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Atlanta_Braves_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Atlanta_Braves/Atlanta_Braves_Road_Authentic_Cool_Base_Jersey"},
@@ -1718,7 +1561,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/atlanta_braves_home_cap"},
 								{"id":"souvenirs","img":"game_time/Atlanta_Braves_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"], 
+						{"p":"Baltimore Orioles","v":"baltimore_orioles", "img":"mlbhats/baltimore_orioles_alternate_47_franchise_cap6.jpg", "catlink":"/category/.mlb.baltimore_orioles/Baltimore%20Orioles", "players" : ["Adam Jones","Manny Machado","Nick Markakis"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Baltimore_Orioles_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Baltimore_Orioles/Baltimore_Orioles_Alternate_Orange_Authentic_Cool_Base_Jersey"},
@@ -1730,7 +1573,7 @@ var store_swc = function(_app) {
 							"p":"Boston Red Sox",
 							"v":"boston_red_sox", 
 							"img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", 
-							"catlink":"#!category/.mlb.boston_red_sox/Boston%20Red%20Sox", 
+							"catlink":"/category/.mlb.boston_red_sox/Boston%20Red%20Sox", 
 							"players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"], 
 							"filters" : [
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
@@ -1740,7 +1583,7 @@ var store_swc = function(_app) {
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]
 						},
-						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"#!category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jorge Soler","Javier Baez"], 
+						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"/category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Jorge Soler","Javier Baez"], 
 							"filters" : [
 								{"id":"shirts","img":"5/chicago_cubs_blue_logo_t_shirt5"},
 								{"id":"jerseys","img":"Chicago_Cubs/Chicago_Cubs_Home_Authentic_Jersey"},
@@ -1748,7 +1591,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand"},
 								{"id":"souvenirs","img":"C/1984_flag"}
 							]},
-						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"], 
+						{"p":"Chicago White Sox","v":"chicago_white_sox", "img":"mlbhats/chicago_white_sox_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.chicago_white_sox/Chicago%20White%20Sox", "players" : ["Chris Sale","Jose Abreu","Paul Konerko"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Chicago_White_Sox_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Chicago_White_Sox/Chicago_White_Sox_Road_Authentic_Cool_Base_Jersey"},
@@ -1756,7 +1599,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/chicago_white_sox_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Chicago_White_Sox_Womens_All_Star_Series_Watch"}
 							]},
-						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"], 
+						{"p":"Cincinnati Reds","v":"cincinnati_reds", "img":"mlbhats/cincinnati_reds_home_47_franchise_cap5.jpg", "catlink":"/category/.mlb.cincinnati_reds/Cincinnati%20Reds", "players" : ["Aroldis Chapman","Brandon Phillips","Joey Votto"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Cincinnati_Reds_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Cincinnati_Reds/Cincinnati_Reds_Alternate_Red_Authentic_Cool_Base_Jersey"},
@@ -1764,7 +1607,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/cincinnati_reds_home_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Cincinnati_Reds_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.cleveland_indians/Cleveland%20Indians", "players" : ["Jason Kipnis","Michael Bourn","Nick Swisher"], 
+						{"p":"Cleveland Indians","v":"cleveland_indians", "img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6.jpg", "catlink":"/category/.mlb.cleveland_indians/Cleveland%20Indians", "players" : ["Jason Kipnis","Michael Bourn","Nick Swisher"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Cleveland_Indians_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Cleveland_Indians/Cleveland_Indians_Road_Authentic_Cool_Base_Jersey"},
@@ -1772,7 +1615,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/cleveland_indians_alternate_road_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Cleveland_Indians_Womens_All_Star_Series_Watch"}
 							]},
-						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.colorado_rockies/Colorado%20Rockies", "players" : ["Boone Logan","Michael Cuddyer","Todd Helton"], 
+						{"p":"Colorado Rockies","v":"colorado_rockies", "img":"mlbhats/colorado_rockies_game_47_franchise_cap5.jpg", "catlink":"/category/.mlb.colorado_rockies/Colorado%20Rockies", "players" : ["Boone Logan","Michael Cuddyer","Todd Helton"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Colorado_Rockies_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Colorado_Rockies/Colorado_Rockies_Road_Replica_Jersey"},
@@ -1780,7 +1623,7 @@ var store_swc = function(_app) {
 								//{"id":"hats","img":"mlbhats/colorado_rockies_game_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Colorado_Rockies_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"#!category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Justin Verlander","Max Scherzer","Miguel Cabrera"], 
+						{"p":"Detroit Tigers","v":"detroit_tigers", "img":"mlbhats/detroit_tigers_home_47_franchise_cap5.jpg", "catlink":"/category/.mlb.detroit_tigers/Detroit%20Tigers", "players" : ["Justin Verlander","Max Scherzer","Miguel Cabrera"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Detroit_Tigers_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Detroit_Tigers/Detroit_Tigers_Road_Authentic_Cool_Base_Jersey"},
@@ -1788,7 +1631,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/detroit_tigers_home_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Detroit_Tigers_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"], 
+						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"/category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Houston_Astros_Orange_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Houston_Astros/Houston_Astros_Road_Authentic_Cool_Base_Jersey"},
@@ -1796,7 +1639,7 @@ var store_swc = function(_app) {
 								//{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Houston_Astros_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
+						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Kansas_City_Royals_Royal_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Kansas_City_Royals/Kansas_City_Royals_Road_Authentic_Cool_Base_Jersey"},
@@ -1804,7 +1647,7 @@ var store_swc = function(_app) {
 								//{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Kansas_City_Royals_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
+						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Los_Angeles_Angels_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Los_Angeles_Angels/Los_Angeles_Angels_Road_Authentic_Cool_Base_Jersey"},
@@ -1812,7 +1655,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap"},
 								{"id":"souvenirs","img":"game_time/Los_Angeles_Angels_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.jpg", "catlink":"#!category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers", "players" : ["Adrian Gonzalez","Clayton Kershaw","Yasiel Puig"], 
+						{"p":"Los Angeles Dodgers","v":"los_angeles_dodgers", "img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5.jpg", "catlink":"/category/.mlb.los_angeles_dodgers/Los%20Angeles%20Dodgers", "players" : ["Adrian Gonzalez","Clayton Kershaw","Yasiel Puig"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Los_Angeles_Dodgers_Royal_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Los_Angeles_Dodgers/Los_Angeles_Dodgers_Road_Authentic_Cool_Base_Jersey"},
@@ -1820,7 +1663,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Los_Angeles_Dodgers_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"#!category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Saltalamacchia","Justin Ruggiano","Ty Wigginton"], 
+						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Saltalamacchia","Justin Ruggiano","Ty Wigginton"], 
 							"filters" : [
 								{"id":"shirts","img":"C/miami_marlins_official_wordmark_t_shirt_by_majestic"},
 								{"id":"jerseys","img":"Miami_Marlins/Miami_Marlins_Road_Authentic_Cool_Base_Jersey"},
@@ -1828,7 +1671,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/miami_marlins_game_47_franchise_cap"},
 								{"id":"souvenirs","img":"game_time/Miami_Marlins_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"#!category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Matt Garza","Rickie Weeks","Ryan Braun"], 
+						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"/category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Matt Garza","Rickie Weeks","Ryan Braun"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Milaukee_Brewers_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Milwaukee_Brewers/Milwaukee_Brewers_Road_Authentic_Cool_Base_Jersey"},
@@ -1836,7 +1679,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/milwaukee_brewers_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Milwaukee_Brewers_Womens_All_Star_Series_Watch"}
 							]},
-						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Brian Dozier","Jason Kubel","Joe Mauer"], 
+						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"/category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Brian Dozier","Jason Kubel","Joe Mauer"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Minnesota_Twins_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Minnesota_Twins/Minnesota_Twins_Road_Authentic_Cool_Base_Jersey_ASG_Patch"},
@@ -1844,7 +1687,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Minnesota_Twins_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_mets/New%20York%20Mets", "players" : ["Curtis Granderson","Daniel Murphy","David Wright"], 
+						{"p":"New York Mets","v":"new_york_mets", "img":"mlbhats/new_york_mets_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.new_york_mets/New%20York%20Mets", "players" : ["Curtis Granderson","Daniel Murphy","David Wright"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/New_York_Mets_Royal_Authentic_Experience_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"New_York_Mets/New_York_Mets_Road_Authentic_Cool_Base_Jersey"},
@@ -1852,7 +1695,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/new_york_mets_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/New_York_Mets_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Derek Jeter","Ichiro Ichiro","Masahiro Tanaka"], 
+						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Derek Jeter","Ichiro Ichiro","Masahiro Tanaka"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/New_York_Yankees_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"New_York_Yankees/New_York_Yankees_Home_Authentic_Jersey"},
@@ -1860,7 +1703,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/new_york_yankees_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/New_York_Yankees_Pinstripe_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.oakland_athletics/Oakland%20Athletics", "players" : ["Eric Sogard","Jed Lowrie","Yoenis Cespedes"], 
+						{"p":"Oakland Athletics","v":"oakland_athletics", "img":"mlbhats/oakland_athletics_road_47_franchise_cap6.jpg", "catlink":"/category/.mlb.oakland_athletics/Oakland%20Athletics", "players" : ["Eric Sogard","Jed Lowrie","Yoenis Cespedes"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Oakland_Athletics_Green_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Oakland_Athletics/Oakland_Athletics_Road_Authentic_Cool_Base_Jersey"},
@@ -1868,7 +1711,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/oakland_athletics_road_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Oakland_Athletics_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Cliff Lee","Cole Hamels","Ryan Howard"], 
+						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"/category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Cliff Lee","Cole Hamels","Ryan Howard"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Philadelphia_Phillies_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Philadelphia_Phillies/Philadelphia_Phillies_Road_Authentic_Cool_Base_Jersey"},
@@ -1876,7 +1719,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5"},
 								{"id":"souvenirs","img":"game_time/Philadelphia_Phillies_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.jpg", "catlink":"#!category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates", "players" : ["Andrew McCutchen","Gerrit Cole","Jeff Locke"], 
+						{"p":"Pittsburgh Pirates","v":"pittsburgh_pirates", "img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8.jpg", "catlink":"/category/.mlb.pittsburgh_pirates/Pittsburgh%20Pirates", "players" : ["Andrew McCutchen","Gerrit Cole","Jeff Locke"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Pittsburgh_Pirates_Black_Authentic_Experience_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Pittsburgh_Pirates/Pittsburgh_Pirates_Road_Authentic_Cool_Base_Jersey"},
@@ -1884,7 +1727,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/pittsburgh_pirates_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Pittsburgh_Pirates_P_Logo_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_diego_padres/San%20Diego%20Padres", "players" : ["Cameron Maybin","Cory Luebke","Everth Cabrera"], 
+						{"p":"San Diego Padres","v":"san_diego_padres", "img":"mlbhats/san_diego_padres_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.san_diego_padres/San%20Diego%20Padres", "players" : ["Cameron Maybin","Cory Luebke","Everth Cabrera"], 
 							"filters" : [
 								{"id":"shirts","img":"majestic/San_Diego_Padres_Navy_Authentic_Collection_Featherweight_Tech_Fleece"},
 								{"id":"jerseys","img":"cooperstown/San_Diego_Padres_Brown_Replica_Cooperstown_Jersey_by_MajesticSDPB"},
@@ -1892,7 +1735,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/san_diego_padres_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/San_Diego_Padres_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"#!category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Brandon Belt","Brandon Crawford","Marco Scutaro"], 
+						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"/category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Brandon Belt","Brandon Crawford","Marco Scutaro"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/San_Francisco_Giants_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"San_Francisco_Giants/San_Francisco_Giants_Alternate_Grey_Authentic_Cool_Base_Jersey"},
@@ -1900,7 +1743,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/san_francisco_giants_black_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/San_Francisco_Giants_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.seattle_mariners/Seattle%20Mariners", "players" : ["Justin Smoak","Kyle Seager","Robinson Cano"], 
+						{"p":"Seattle Mariners","v":"seattle_mariners", "img":"mlbhats/seattle_mariners_game_47_franchise_cap7.jpg", "catlink":"/category/.mlb.seattle_mariners/Seattle%20Mariners", "players" : ["Justin Smoak","Kyle Seager","Robinson Cano"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Seattle_Mariners_Green_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Seattle_Mariners/Seattle_Mariners_Road_Authentic_Jersey"},
@@ -1908,7 +1751,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/seattle_mariners_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Seattle_Mariners_Mens_Elite_Series_Watch"}
 							]},
-						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"#!category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter","Jason Motte"], 
+						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"/category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter","Jason Motte"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/St_Louis_Cardinals_Red_Authentic_Experience_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"St_Louis_Cardinals/St_Louis_Cardinals_Road_Authentic_Cool_Base_Jersey"},
@@ -1916,7 +1759,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/St_Louis_Cardinals_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","David Price","Evan Longoria"], 
+						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","David Price","Evan Longoria"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Tampa_Bay_Rays_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Tampa_Bay_Rays/Tampa_Bay_Rays_Road_Authentic_Cool_Base_Jersey"},
@@ -1924,7 +1767,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Tampa_Bay_Rays_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"#!category/.mlb.texas_rangers/Texas%20Rangers", "players" : ["Adrian Beltre","Michael Young","Prince Fielder"], 
+						{"p":"Texas Rangers","v":"texas_rangers", "img":"mlbhats/texas_rangers_adjustable_clean_up_hat5.jpg", "catlink":"/category/.mlb.texas_rangers/Texas%20Rangers", "players" : ["Adrian Beltre","Michael Young","Prince Fielder"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Texas_Rangers_Red_Authentic_Experience_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Texas_Rangers/Texas_Rangers_Road_Authentic_Cool_Base_Jersey_New"},
@@ -1932,7 +1775,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/texas_rangers_adjustable_clean_up_hat5"},
 								{"id":"souvenirs","img":"game_time/Texas_Rangers_Mens_Victory_Series_Watch"}
 							]},
-						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"#!category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays", "players" : ["Jose Bautista","Mark Buehrle","Roy Halladay"], 
+						{"p":"Toronto Blue Jays","v":"toronto_blue_jays", "img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.toronto_blue_jays/Toronto%20Blue%20Jays", "players" : ["Jose Bautista","Mark Buehrle","Roy Halladay"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Toronto_Blue_Jays_Grey_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Toronto_Blue_Jays/Toronto_Blue_Jays_Road_Authentic_Jersey"},
@@ -1940,7 +1783,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/toronto_blue_jays_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Toronto_Blue_Jays_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"#!category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper","Tyler Clippard"], 
+						{"p":"Washington Nationals","v":"washington_nationals", "img":"mlbhats/washington_nationals_game_47_franchise_cap7.jpg", "catlink":"/category/.mlb.washington_nationals/Washington%20Nationals", "players" : ["Adam Laroche","Bryce Harper","Tyler Clippard"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Washington_Nationals_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Washington_Nationals/Washington_Nationals_Road_Authentic_Cool_Base_Jersey"},
@@ -2349,15 +2192,7 @@ var store_swc = function(_app) {
 //								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]}],
-				},
-
-
-staticData : {
-"fieldcam" : {
-"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
-"cam2" : '<object width="600" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="600" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>'
-}
-}
+				}
 } //r object.
 return r;
 }

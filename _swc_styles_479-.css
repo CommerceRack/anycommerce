@@ -32,7 +32,7 @@
 .footerColumn {width:320px;}
 #footer #copyright {position:static; margin-top:5px;}
 .homepageBanner {height:322px;}
-#homeSlideshow {max-width: 100%;}
+.homeSlideshow {max-width: 100%;}
 .blockLink, li.blockLink {width: 48%; margin: .8%;}
 .productListItem .prodInfo {font-size: 1.4em;}
 .productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}

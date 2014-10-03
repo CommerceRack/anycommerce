@@ -80,7 +80,7 @@ The advantage of saving the data in memory and local storage is lost if the data
 		getDetailedProduct : {
 			init : function(obj,tagObj,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-//				_app.u.dump("BEGIN _app.ext.store_product.calls.appProductGet");
+//				_app.u.dump("BEGIN _app.ext.store_prodlist.calls.appProductGet");
 //				_app.u.dump(" -> PID: "+obj.pid);
 //				_app.u.dump(" -> obj['withReviews']: "+obj['withReviews']);
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 

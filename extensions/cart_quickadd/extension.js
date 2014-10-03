@@ -56,7 +56,7 @@ var cart_quickadd = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				if(_app.ext.cart_quickadd.vars.willFetchMyOwnTemplates)	{
-					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_quickadd/templates.html',theseTemplates);
+					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_quickadd/templates.html');
 					}
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;

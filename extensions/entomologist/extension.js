@@ -41,7 +41,7 @@ var entomologist = function(_app) {
 				var r = false; 
 				window.showDebugger = _app.ext.entomologist.a.showDebugger
 				
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL + "extensions/entomologist/templates.html", []);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL + "extensions/entomologist/templates.html");
 				_app.u.loadCSSFile("extensions/entomologist/styles.css","entomologistCSS");
 				r = true;
 

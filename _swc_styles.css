@@ -14,8 +14,8 @@ a.redText{color:#7e0000;}
 .white{color:white;}
 .emph{font-size:1.2em;}
 
-#mainContentArea > div, .contentBG {background:rgba(256,256,256,.8);}
-#mainContentArea > div.noBG {background:none;}
+#mainContentArea > div > div, .contentBG {background:rgba(256,256,256,.8);}
+#mainContentArea > div > div.noBG {background:none;}
 
 .preview img {
 	margin-top: 30px;
@@ -197,9 +197,9 @@ a.redText{color:#7e0000;}
 }
 
 .homepageBanner{display: block; text-decoration: none; border:none; width: 100%; background:url(images/homepage/SportsWorldChicago-Homepagev3.jpg) no-repeat center center; position:relative;}
-#homeSlideshow{display:inline-block; vertical-align:middle; max-width: 60%; width: 100%; height:100%;}
-#homeSlideshow a{display:block; width: 100%; height:100%;}
-#homeSlideshow a .vAlignHelper{display:inline-block; vertical-align:middle; height:100%;}
+.homeSlideshow{display:inline-block; vertical-align:middle; max-width: 60%; width: 100%; height:100%;}
+.homeSlideshow a{display:block; width: 100%; height:100%;}
+.homeSlideshow a .vAlignHelper{display:inline-block; vertical-align:middle; height:100%;}
 .homepageBanner img{vertical-align:middle; max-width: 100%; max-height: 100%;}
 
 .homepageContent p{ font-size: .9em; padding: 0px 12px; text-indent: 12px;}

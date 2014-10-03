@@ -106,6 +106,8 @@ function controller(_app)	{
 _app.templates holds a copy of each of the templates declared in an extension but defined in the view. The template is stored in memory for speed.
 */
 		_app.templates = {};
+		_app.templateFiles = [];
+		_app.templateEvents = [];
 
 //queues are arrays, not objects, because order matters here. the model.js file outlines what each of these is used for.
 		_app.q = {mutable : new Array(), passive: new Array(), immutable : new Array()};
@@ -195,8 +197,75 @@ _app.templates holds a copy of each of the templates declared in an extension bu
 		_app.vars.username = _app.vars.username.toLowerCase();
 		
 		}, //handleAdminVars
-
-
+		
+	extend : function(extObj){
+		_app.ext[extObj.namespace] = [extObj.filename];
+		},
+		
+	couple : function(extension, coupler, args){
+		if(_app.ext[extension]){
+			if(_app.ext[extension] instanceof Array){
+				//The extension has not yet been loaded, store it in the Array for later processing
+				_app.ext[extension].push([coupler, args]);
+				}
+			else if(_app.ext[extension].couplers && _app.ext[extension].couplers[coupler]){
+				//The extension is loaded and has the coupler we are looking for
+				_app.ext[extension].couplers[coupler](args);
+				}
+			else {
+				//The extension is loaded but that coupler (or any couplers) are not present
+				}
+			}
+		else {
+			//This extension has not been declared, and so we can't couple to it
+			}
+		},
+		
+	require : function(required, callback){
+		callback = callback || function(){};
+		if(required.length <= 0){callback();}
+		if(typeof required === "string"){
+			required = [required];
+			}
+		
+		function loadCallback(){
+			var breaker = false;
+			for(var i in required){
+				var req = required[i];
+				if((req.indexOf(".html") >= 0 && $.inArray(req, _app.templateFiles) < 0) || _app.ext[req] instanceof Array){
+					//dump(req+" not loaded yet");
+					breaker = true;
+					break;
+					}
+				}
+			
+			if(!breaker){
+				callback();
+				//Prevents any future loadCallbacks from executing the callback twice
+				callback = function(){};
+				}
+			}
+		
+		for(var i in required){
+			var req = required[i];
+			if(req.indexOf(".html") >= 0){
+				_app.model.fetchNLoadTemplates(req, loadCallback);
+				}
+			else {
+				var ext = _app.ext[req];
+				if(!ext){
+					dump("ERROR: EXTENSION "+req+" REQUIRED BUT NOT DECLARED");
+					//callback will never be called
+					}
+				else if(ext instanceof Array){
+					_app.model.fetchExtension({"namespace":req, "filename":_app.ext[req][0]}, loadCallback); 
+					}
+				else{
+					loadCallback();
+					}
+				}
+			}
+		},
 					// //////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\		
 
 
@@ -209,6 +278,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 
 		appCartCreate : {
 			init : function(_tag,Q)	{
+				dump(_tag);
 				this.dispatch(_tag,Q); 
 				return 1;
 				},
@@ -874,6 +944,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				var isMatchArr = _app.router._doesThisRouteMatchHash(routesArr[i],matchValue); //will return an array where 0 is the 'match' from the regex and subsequent entries are the matched values. (ex: for product/PID , spot 1 is PID)
 				if(isMatchArr)	{
 					route = isMatchArr;
+					route.value = matchValue;
 					if(mode == 'hash') break;
 					}
 				}
@@ -935,6 +1006,31 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					//what to do here?
 					}
 		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
+				$('body').on('click.router','a[href], area[href]',function(event){
+					var a = event.currentTarget;
+					if(document.location.protocol == "file:"){
+						a = document.createElement('a');
+						var href = $(this).attr('href');
+						if(href.indexOf('/') != 0){href = "/"+href;}
+						a.href = "http://www.domain.com"+href;
+						}
+					var path = a.pathname;
+					var search = a.search;
+					var hash = a.hash;
+					var isHandled = _app.router.handleURIChange(path, search, hash);
+					dump("handled: "+isHandled);
+					if(isHandled){
+						event.preventDefault();
+						}
+					else {
+						event.currentTarget.target = "_blank";
+						}
+					});
+				
+				window.onpopstate = function(event){
+					_app.router.handleURIChange(event.state);
+					}
+				
 				if (window.addEventListener) {
 					dump(" -> addEventListener is supported and added for hash change.");
 					window.addEventListener("hashchange", _app.router.handleHashChange, false);
@@ -957,7 +1053,34 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				
 				}
 			},
-	
+		
+		handleURIChange : function(uri, search, hash, skipPush){
+			dump(uri);
+			var routeObj = _app.router._getRouteObj(uri, 'hash');
+			dump(routeObj);
+			if(routeObj) {
+				if(search){
+					routeObj.searchParams = _app.u.kvp2Array(search);
+					}
+				if(hash){
+					routeObj.urihash = hash;
+					}
+				if(!skipPush){
+					try{
+						window.history.pushState(uri, "", uri);
+						}
+					catch(e){
+						dump("There was an error processing the callback for the follow route object:");
+						dump(routeObj);
+						dump(e);
+						}
+					}
+				_app.router._executeCallback(routeObj);
+				return true;
+				}
+			return false;
+			},
+		
 		handleHashChange : function()	{
 			//_ignoreHashChange set to true to disable the router.  be careful.
 			if(location.hash.indexOf('#!') == 0  && !_app.vars.ignoreHashChange)	{
@@ -2571,6 +2694,22 @@ name Mod 10 or Modulus 10. */
 				if('placeholder' in test) {jQuery.support.placeholder = true};
 
 				}
+			},
+		bindTemplateEvent : function(filterFunc, event, handler){
+			if(typeof filterFunc === "string"){
+				var str = filterFunc;
+				filterFunc = function(tmpID){ return tmpID === str;}
+				}
+			_app.templateEvents.push({
+				"filterFunc" : filterFunc,
+				"event" : event,
+				"handler" : handler
+				});
+			for(var i in _app.templates){
+				if(filterFunc(i)){
+					_app.templates[i].on(event, handler);
+					}
+				}
 			}
 
 		}, //util
@@ -2620,7 +2759,7 @@ Then we'll be in a better place to use data() instead of attr().
 //			_app.u.dump(eleAttr);
 
 //If a template ID is specified but does not exist, try to make one. added 2012-06-12
-			if(templateID && !_app.templates[templateID])	{
+			if(templateID && !(_app.templates[templateID] instanceof jQuery))	{
 				var tmp = $('#'+templateID);
 				if(tmp.length > 0)	{
 					_app.model.makeTemplate(tmp,templateID);
@@ -2691,7 +2830,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 //creates a copy of the template.
 			var r;
 //if a templateID is passed, but no template exists, try to create one.
-			if(templateID && !_app.templates[templateID])	{
+			if(templateID && !(_app.templates[templateID] instanceof jQuery))	{
 				var tmp = $('#'+templateID);
 				if(tmp.length > 0)	{
 					_app.u.dump("WARNING! template ["+templateID+"] did not exist. Matching element found in DOM and used to create template.");
@@ -2956,10 +3095,12 @@ return $r;
 //			_app.u.dump('END parseDataBind');
 			return rule;
 			},
-
-
+			
 //infoObj.state = onCompletes or onInits. later, more states may be supported.
 			handleTemplateEvents : function($ele,infoObj)	{
+				dump("handleTemplateEvents");
+				dump($ele);
+				dump(infoObj);
 				infoObj = infoObj || {};
 				if($ele instanceof jQuery && infoObj.state)	{
 					if($.inArray(infoObj.state,['init','complete','depart']) >= 0)	{
@@ -3390,5 +3531,5 @@ $tmp.empty().remove();
 			}
 		
 		}
-	}
 	};
+};
