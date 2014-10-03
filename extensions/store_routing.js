@@ -143,7 +143,7 @@ optional params:
 					}
 // ### FUTURE -> support ability to search for a match on a specific attribute.
 //				else if(type == 'attrib')	{
-//					r = '#!search/attrib/' ... some key value pair.
+//					r = '/search/attrib/' ... some key value pair.
 //					}
 				else	{
 					//unrecognized type
