@@ -150,7 +150,8 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 		showFAQTopics : {
 
 			onSuccess : function(tagObj)	{
-				var $parent = $('#'+tagObj.parentID);
+				//var $parent = $('#'+tagObj.parentID);
+				var $parent = tagObj.jqObj;
 // ** 201336 This prevents FAQ's from being re-appended in the event the user revisits the FAQ page
 				if(!$parent.data('faqs-rendered')){
 					$parent.removeClass('loadingBG');

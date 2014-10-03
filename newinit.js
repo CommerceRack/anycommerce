@@ -167,8 +167,9 @@ _app.router.appendHash({'type':'exact','route':'/frequently_asked_questions.html
 	}});
 _app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, infoObj){
 	$context.off('complete.faq');
-	_app.require([],function(){
-		
+	_app.require(['store_crm','templates.html'],function(){
+		_app.ext.store_crm.calls.appFAQsAll.init({'jqObj':$('.faqContent',$context),'callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
+		_app.model.dispatchThis();							
 		});
 	});
 _app.router.appendHash({'type':'exact','route':'/payment_policy.html','callback':function(routeObj){
