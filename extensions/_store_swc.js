@@ -395,7 +395,7 @@ var store_swc = function(_app) {
 				},
 			showHomepageSlideshow : function(){
 				if(_app.ext.store_swc.vars.homepageBanners){
-					var $slideshow = $('#homeSlideshow');
+					var $slideshow = $('.homeSlideshow');
 					if($slideshow.data('slideshow') !== 'true'){
 						for(var i=0; i<_app.ext.store_swc.vars.homepageBanners.length; i++){
 							//_app.u.dump(_app.ext.store_swc.vars.homepageBanners[i]);

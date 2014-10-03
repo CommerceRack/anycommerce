@@ -165,6 +165,12 @@ _app.router.appendHash({'type':'exact','route':'/frequently_asked_questions.html
 		'require':['templates.html']
 		});
 	}});
+_app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, infoObj){
+	$context.off('complete.faq');
+	_app.require([],function(){
+		
+		});
+	});
 _app.router.appendHash({'type':'exact','route':'/payment_policy.html','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
@@ -498,6 +504,7 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.dismissnav',functio
 		});
 	});
 _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event, $context, infoObj){
+	$context.off('complete.slideshow');
 	_app.require('store_swc',function(){
 		_app.ext.store_swc.u.showHomepageSlideshow();
 		});
