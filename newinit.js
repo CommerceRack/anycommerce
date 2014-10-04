@@ -146,21 +146,21 @@ _app.router.appendHash({'type':'exact','route':'/404','callback':function(routeO
 		});
 	}});
 
-_app.router.appendHash({'type':'exact','route':'/about_us.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/about_us/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'aboutUsTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/contact_us.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/contact_us/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'contactUsTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/frequently_asked_questions.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/frequently_asked_questions/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'faqTemplate',
@@ -174,28 +174,28 @@ _app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, 
 		_app.model.dispatchThis();							
 		});
 	});
-_app.router.appendHash({'type':'exact','route':'/payment_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/payment_policy/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'paymentTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/privacy_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/privacy_policy/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'privacyTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/return_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/return_policy/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'returnTemplate',
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/shipping_policy.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/shipping_policy/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'templateID':'shippingTemplate',
@@ -270,7 +270,7 @@ _app.router.appendHash({'type':'match','route':'/search/manufacturer/{{mfg}}*','
 		});
 	}});
 	
-_app.router.appendHash({'type':'exact','route':'/my_account.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_account/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -283,7 +283,7 @@ _app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event,
 	_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$('.mainColumn',$context),'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
 	_app.model.dispatchThis();							
 	});
-_app.router.appendHash({'type':'exact','route':'/change_password.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/change_password/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -291,7 +291,7 @@ _app.router.appendHash({'type':'exact','route':'/change_password.html','callback
 		'require':['templates.html']
 		});
 	}});
-_app.router.appendHash({'type':'exact','route':'/my_order_history.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_order_history/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
@@ -308,7 +308,7 @@ _app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(e
 		}},"mutable");
 	_app.model.dispatchThis();							
 	});
-_app.router.appendHash({'type':'exact','route':'/my_wishlist.html','callback':function(routeObj){
+_app.router.appendHash({'type':'exact','route':'/my_wishlist/','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
 		'pageType':'static',
 		'login' : true,
