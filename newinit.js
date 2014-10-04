@@ -827,12 +827,22 @@ _app.router.appendInit({
 			showContent("product",{"pid":g.uriParams.product});
 			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
 			}
+		else if (document.location.hash.indexOf("#!") == 0){
+			var pathStr = document.location.hash.substr(2);
+			var search = false;
+			if(pathStr.indexOf('?') >= 0){
+				var arr = pathStr.split('?');
+				pathStr = arr[0];
+				search = arr[1];
+				}
+			_app.router.handleURIChange("/"+pathStr, search, false, true);
+			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
 			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
 			}
 		else	{
-			_app.router.handleURIChange("");
+			_app.router.handleURIChange("", document.location.search, document.location.hash, true);
 			}
 		if(g.uriParams && g.uriParams.meta)	{
 			_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
