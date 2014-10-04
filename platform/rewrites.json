@@ -12,8 +12,8 @@
 { "type":"path", "if":"/category/wrigley_field_cam/?", "then#redirect":"/fieldcam/" },
 { "type":"path", "if":"/category/chicago-cubs-souvenirs/?", "then#redirect":"/filter/souvenirs/" },
 { "type":"path", "if":"/category/chicago-cubs-shirts/?", "then#redirect":"/filter/shirts/" },
-{ "type":"path", "if":"/category/chicago-cubs-jerseys/?", "then#redirect":"filter/jerseys/" },
-{ "type":"path", "if":"/category/chicago-cubs-hats/?", "then#redirect":"filter/hats/" },
+{ "type":"path", "if":"/category/chicago-cubs-jerseys/?", "then#redirect":"/filter/jerseys/" },
+{ "type":"path", "if":"/category/chicago-cubs-hats/?", "then#redirect":"/filter/hats/" },
 { "type":"path", "if":"/search\\.cgis/(.*?)", "then#redirect":"/search/keywords/$1" },
 
 ]
