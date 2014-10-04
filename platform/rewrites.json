@@ -3,6 +3,12 @@
 { "type":"path", "if":"/c=.*?/(.*)", "then#rewrite":"/$1" },
 { "type":"path", "if":"/s=.*?/(.*)", "then#rewrite":"/$1" },
 
+// fixed fucked up rewrites
+{ "type":"path", "if":"/product/[a-zA-Z0-9\\-\\_]+/.*", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+/.*", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/filter/.*?/.*", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/search/.*?/.*", "then#sendfile":"/index.html" },
+
 // sendfile
 { "type":"path", "if":"/product/[a-zA-Z0-9]+/(.*?)/", "then#sendfile":"/index.html" },
 { "type":"path", "if":"/category/[a-zA-Z0-9]+/(.*?)/", "then#sendfile":"/index.html" },
