@@ -651,6 +651,11 @@ var store_swc = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			showRMAForm : function($ele, e){
+				dump('showing rma form');
+				e.preventDefault();
+				_app.ext.store_swc.u.showRMAForm();
+				},
 			execFilteredSearch : function($form, p){
 				p.preventDefault();
 				var loadFullList = $form.data('loadFullList');
