@@ -132,9 +132,11 @@ _app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*',
 
 _app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'checkout', 'requireSecure':true}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'});
+_app.router.appendHash({'type':'exact','route':'/checkout/','callback':'checkout'});
 
 _app.router.addAlias('cart',	function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value,	$.extend({'pageType':'cart'}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'/cart','callback':'cart'});
+_app.router.appendHash({'type':'exact','route':'/cart/','callback':'cart'});
 
 _app.router.appendHash({'type':'exact','route':'/404','callback':function(routeObj){
 	_app.ext.quickstart.a.newShowContent(routeObj.value,{
@@ -842,7 +844,9 @@ _app.router.appendInit({
 			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
 			}
 		else	{
-			_app.router.handleURIChange("", document.location.search, document.location.hash, true);
+			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
+			_app.u.throwMessage(_app.u.successMsgObject("We're sorry, the page you requested could not be found!"));
+			window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);
 			}
 		if(g.uriParams && g.uriParams.meta)	{
 			_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
