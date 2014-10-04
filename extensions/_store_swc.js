@@ -492,7 +492,7 @@ var store_swc = function(_app) {
 				},
 			*/
 			saveUserTeam : function(team, homepageOverride){
-				$('#appView .filteredSearchPage').closest(['data-app-uri']).each(function(){
+				$('#appView .filteredSearchPage').closest('[data-app-uri]').each(function(){
 					$(this).intervaledEmpty().remove();
 					}); //These will all need to be re-rendered with the new teams.  This is a bit of a heavy handed approach that could be tuned later.
 				if($('#appView #mainContentArea :visible').length < 1 && !homepageOverride){
