@@ -2556,7 +2556,7 @@ else	{
 				dump('searchFormSubmit');
 				dump(sfo);
 				if(sfo.KEYWORDS)	{
-					_app.router.handleURIChange('search/keywords/'+sfo.KEYWORDS);
+					_app.router.handleURIChange('/search/keywords/'+sfo.KEYWORDS);
 					}
 				return false;
 				},
