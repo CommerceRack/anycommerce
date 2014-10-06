@@ -13,6 +13,7 @@
 #nav .fullNav {margin-left:-160px; padding: 12px; text-align:center; font-size:16px;}
 #nav .fullNav input{width:225px; }
 #mainContentArea > div {height:100%; overflow: auto;}
+#mainContentArea > div > div {height:100%; overflow: auto;}
 #appView.showFooter {padding-bottom: 402px;}
 /* #appView.peekFooter.showFooter {padding-bottom: 402px;} */
 #appView #footer {height: 360px; bottom:-400px; font-size:16px;}
