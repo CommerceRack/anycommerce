@@ -1018,7 +1018,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					var search = a.search;
 					var hash = a.hash;
 					var isHandled = _app.router.handleURIChange(path, search, hash);
-					dump("handled: "+isHandled);
 					if(isHandled){
 						event.preventDefault();
 						}
@@ -1055,12 +1054,10 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			},
 		
 		handleURIChange : function(uri, search, hash, skipPush){
-			dump(uri);
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
-			dump(routeObj);
 			if(routeObj) {
 				if(search){
-					routeObj.searchParams = _app.u.kvp2Array(search);
+					routeObj.searchParams = _app.u.kvp2Array(search.substr(1));
 					}
 				if(hash){
 					routeObj.urihash = hash;
@@ -1070,8 +1067,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						window.history.pushState(uri, "", uri);
 						}
 					catch(e){
-						dump("There was an error processing the callback for the follow route object:");
-						dump(routeObj);
 						dump(e);
 						}
 					}

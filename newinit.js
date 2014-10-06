@@ -357,8 +357,8 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 						var o = optStrs[i];
 						if(_app.ext.store_swc.vars.elasticFields[o]){
 							routeObj.params.dataset.options[o] = $.extend(true, {}, _app.ext.store_swc.vars.elasticFields[o]);
-							if(routeObj.hashParams && routeObj.hashParams[o]){
-								var values = routeObj.hashParams[o].split('|');
+							if(routeObj.searchParams && routeObj.searchParams[o]){
+								var values = routeObj.searchParams[o].split('|');
 								for(var i in routeObj.params.dataset.options[o].options){
 									var option = routeObj.params.dataset.options[o].options[i];
 									if($.inArray(option.v, values) >= 0){
@@ -371,8 +371,8 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 							dump("Unrecognized option "+o+" on filter page "+routeObj.params.id);
 							}
 						}
-					if(routeObj.hashParams && routeObj.hashParams.sport && routeObj.hashParams.team){
-						_app.ext.store_swc.u.setUserTeam({sport:routeObj.hashParams.sport,team:routeObj.hashParams.team}, true);
+					if(routeObj.searchParams && routeObj.searchParams.sport && routeObj.searchParams.team){
+						_app.ext.store_swc.u.setUserTeam({sport:routeObj.searchParams.sport,team:routeObj.searchParams.team}, true);
 						}
 					routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
 					
