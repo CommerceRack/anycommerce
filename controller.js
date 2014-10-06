@@ -1017,8 +1017,12 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					var path = a.pathname;
 					var search = a.search;
 					var hash = a.hash;
-					var isHandled = _app.router.handleURIChange(path, search, hash);
-					if(isHandled){
+					dump($(this).attr('href'));
+					if($(this).attr('href').indexOf('#') == 0){
+						//This is an internal hash link, href="#.*"
+						//do nothing
+						}
+					else if(_app.router.handleURIChange(path, search, hash)){
 						event.preventDefault();
 						}
 					else {
