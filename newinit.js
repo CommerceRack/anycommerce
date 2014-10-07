@@ -13,7 +13,6 @@ _app.u.loadScript(configURI,function(){
 	_app.require(['quickstart','store_swc'], function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
-		_app.ext.store_swc.u.loadBanners();
 				
 		_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
 		_app.model.dispatchThis('mutable');
@@ -507,9 +506,23 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.dismissnav',functio
 		});
 	});
 _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event, $context, infoObj){
+	// We only need to run this once
+	//		this will only remove this event from this instance of the template, but the template object itself 
+	//		still has the listener.  Any future instances of the template will still have the listener upon creation
 	$context.off('complete.slideshow');
-	_app.require('store_swc',function(){
-		_app.ext.store_swc.u.showHomepageSlideshow();
+	var $slideshow = $('.homeSlideshow', $context);
+	$('img[data-src]', $slideshow).each(function(){
+		$(this).attr('src', _app.u.makeImage({
+			'name' : $(this).attr('data-src'), 
+			'b' : $(this).attr('data-bgcolor'),
+			'tag' : false
+			}));
+		});
+	$slideshow.data('slideshow','true').cycle({
+		fx:     'fade',
+		speed:  'slow',
+		timeout: 5000,
+		slides : 'a'
 		});
 	});
 _app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
