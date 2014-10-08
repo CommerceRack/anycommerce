@@ -470,10 +470,18 @@ _app.couple('order_create','addOrderCompleteHandler',{
 			});
 		}
 	});
+
+//Generate meta information
+_app.u.bindTemplateEvent(function(){return true;}, 'complete.metainformation',function(event, $context, infoObj){
+	var defaultTitle = "Chicago Cubs Apparel & Merchandise";
+	var titlePrefix = "";
+	var titlePostfix = " | SportsWorldChicago.com";
 	
-_app.extend({
-	"namespace" : "store_seo",
-	"filename" : "extensions/store_seo.js"
+	var baseTitle = $('[data-seo-title]', $context).attr('data-seo-title') || defaultTitle;
+	var desc = $('[data-seo-desc]', $context).attr('data-seo-desc') || '';
+	
+	document.title = titlePrefix + baseTitle + titlePostfix;
+	$('meta[name=description]').attr('content', desc);
 	});
 	
 //Scroll restore
