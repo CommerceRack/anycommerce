@@ -982,7 +982,7 @@ fallback is to just output the value.
 				if($new.length){
 					//run init event
 					infoObj.state = 'complete';
-					_app.renderFunctions.handleTemplateEvents($('[data-app-uri]',$new),infoObj);
+					_app.renderFunctions.handleTemplateEvents($('> *',$new),infoObj);
 					}
 				else {
 					$new = $('<div data-app-uri="'+uri+'"></div>');
