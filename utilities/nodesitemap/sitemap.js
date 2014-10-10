@@ -21,7 +21,7 @@ var opts = require('nomnom')
                 help : 'path to write the file'
                 })
 		.option('customurls',{
-				abbr:'c',
+				abbr:'cu',
 				default : false,
 				help : 'path to json file containing an array of custom urls to be added to the sitemap'
 				}).parse();
