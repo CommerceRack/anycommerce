@@ -70,7 +70,6 @@ var datestr = dateFormat(now,"yyyy-mm-dd");
 for( var i in urls['@OBJECTS'] ) {
         // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
         var res = urls['@OBJECTS'][i];
-		console.dir(res);
 		if(!res['seo:noindex']){
 				var url = '';
 				switch (res.type) {
