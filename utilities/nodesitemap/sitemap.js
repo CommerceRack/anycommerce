@@ -19,7 +19,12 @@ var opts = require('nomnom')
                 abbr: 'p',
                 default : './',
                 help : 'path to write the file'
-                }).parse();
+                })
+		.option('customurls',{
+				abbr:'c',
+				default : false,
+				help : 'path to json file containing an array of custom urls to be added to the sitemap'
+				}).parse();
 
 var DOMAIN = opts['domain'];
 var PATH = opts['path'];
@@ -28,9 +33,26 @@ var URLS = new Array;           // a list of URLS *without* the domain name ex: 
 //
 // step1: load any extra files
 //
-// insert custom urls here
-URLS.unshift('/');
-
+if(opts['customurls']){
+	console.log('Trying to load custom urls from file: '+opts['customurls']);
+	if(opts['customurls'].charAt(0) !== "."){
+		opts['customurls'] = "./"+opts['customurls'];
+		}
+	var customUrls;
+	try{
+		customUrls = require(opts['customurls']);
+		if(customUrls instanceof Array){
+			URLS = URLS.concat(customUrls);
+			}
+		else {
+			console.err("Custom URL file specified was not an Array");
+			}
+		}
+	catch(e){
+		throw "Either could not load custom urls from path: "+opts['customurls']+" or specified json file was not an Array";
+		}
+	
+	}
 
 //
 // now load all products and categories
@@ -104,7 +126,7 @@ while (CHUNKS.length>0) {
         URLS = CHUNKS.shift();
         for(var i in URLS) {
                 var url = URLS[i];
-                url = 'http://' + DOMAIN + '/' + url;
+                url = 'http://' + DOMAIN + url;
                 xw.startElement("url");
                         xw.startElement("loc").text(url).endElement();
                         xw.startElement("priority").text("1").endElement();
