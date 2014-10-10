@@ -57,15 +57,15 @@ var store_swc = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 				var userTeam = _app.model.readLocal('swcUserTeam');
-				if(userTeam){
-					_app.ext.store_swc.u.setUserTeam(userTeam);
+				if(document.location.search.indexOf("team=") >= 0){
+					dump(_app.u.kvp2Array(document.location.search.substr(1)));
+					_app.ext.store_swc.u.setUserTeam(_app.u.kvp2Array(document.location.search.substr(1)), true);
 					}
-				else if(/*document.location.hash.indexOf("#!filter")>=0 && */document.location.hash.indexOf("team=") >= 0){
-					dump("the filter will handle setting the team!");
-					//do nothing- filter will handle it
+				else if(userTeam){
+					_app.ext.store_swc.u.setUserTeam(userTeam, true);
 					}
 				else {
-					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'});
+					_app.ext.store_swc.u.setUserTeam({sport:'app_mlb',team:'chicago_cubs'}, true);
 					$('#globalMessaging').anymessage({'message' : "It looks like this is your first time here!  We've set your team to the Chicago Cubs, but you can follow a different team <a href='#' onClick='return false;' data-app-click='store_swc|showMyTeamChooser'>here!</a>", timeout:30000});
 					}
 				_app.ext.store_swc.u.renderMyTeams();
@@ -421,7 +421,7 @@ var store_swc = function(_app) {
 					this.saveUserTeam(team, homepageOverride);
 					}
 				else {
-					_app.u.throwMessage(_app.u.errorMsgObject("An error has occured- could not set user team to: "+team.team));
+					_app.u.throwMessage(_app.u.errMsgObject("An error has occured- could not set user team to: "+team.team));
 					}
 				},
 			promptUserTeam : function(team){

@@ -929,6 +929,8 @@ fallback is to just output the value.
 				uri 	+=	path;
 				uri		+=	"?cartID="+_app.model.fetchCartID();
 				uri		+=	"&_session="+_app.vars._session;
+				uri		+=	"&team="+_app.ext.store_swc.vars.userTeam.v;
+				uri		+=	"&sport="+_app.ext.store_swc.vars.userTeam.sport;
 				return uri;
 				},
 				

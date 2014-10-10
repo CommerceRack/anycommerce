@@ -843,14 +843,7 @@ _app.router.appendInit({
 	'callback':function(f,g){
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
-		if(document.location.protocol == "file:"){
-			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
-			}
-		else if (g.uriParams.marketplace){
-			showContent("product",{"pid":g.uriParams.product});
-			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
-			}
-		else if (document.location.hash.indexOf("#!") == 0){
+		if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);
 			var search = false;
 			if(pathStr.indexOf('?') >= 0){
@@ -859,6 +852,13 @@ _app.router.appendInit({
 				search = arr[1];
 				}
 			_app.router.handleURIChange("/"+pathStr, search, false, true);
+			}
+		else if(document.location.protocol == "file:"){
+			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
+			}
+		else if (g.uriParams.marketplace){
+			showContent("product",{"pid":g.uriParams.product});
+			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
 			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
