@@ -106,7 +106,7 @@ var CHUNKS = new Array;
 while (URLS.length > 0) {
         if (CHUNKS[CHUNKCOUNT]  == null) { CHUNKS[CHUNKCOUNT] = new Array; }    // initialize array
         CHUNKS[CHUNKCOUNT].push( URLS.shift() );
-        if (CHUNKS[CHUNKCOUNT].length > 50000) { CHUNKCOUNT++; }
+        if (CHUNKS[CHUNKCOUNT].length >= 50000) { CHUNKCOUNT++; }
         }
 
 //
