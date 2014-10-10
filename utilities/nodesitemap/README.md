@@ -24,7 +24,7 @@ By default, all products marked with the `seo:noindex` attribute are ignored.
 Custom URLS
 -----------
 
-To add any custom URLs to your sitemap, use the `-cu` or `--customurls` flag to pass a path to a .json file.  The json file
+To add any custom URLs to your sitemap, use the `-c` or `--customurls` flag to pass a path to a .json file.  The json file
 should contain an Array of any URLs to be added, for example:
 
 ```
