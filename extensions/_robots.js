@@ -49,6 +49,8 @@ var seo_robots = function(_app) {
 				
 				
 				_robots.next = function(page){
+					console.log(page);
+					console.log(typeof page);
 					if(typeof page !== 'undefined' || _app.ext.seo_robots.vars.pagesLoaded){
 						if(typeof page !== 'undefined'){
 							try{
@@ -110,6 +112,7 @@ var seo_robots = function(_app) {
 							}
 						}
 					else {
+						console.log('setting status to a backup 204 generator');
 						_robots.status = function(){
 							if(_app.ext.seo_robots.vars.pagesLoaded){
 								return 204;

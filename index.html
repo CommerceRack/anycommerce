@@ -160,12 +160,9 @@ var _robots = {
 		_robots.status = function(){
 			if(typeof myApp !== 'undefined' && 
 				typeof myApp.ext !== 'undefined' && 
-				typeof myApp.ext.quickstart !== 'undefined' && 
 				typeof myApp.ext.seo_robots !== 'undefined' && 
-				typeof myApp.ext.quickstart.vars !== 'undefined' &&
 				typeof myApp.ext.seo_robots.vars !== 'undefined' &&
-				myApp.ext.seo_robots.vars.pagesLoaded &&
-				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
+				myApp.ext.seo_robots.vars.pagesLoaded){
 				return 204;
 				}
 			else{
