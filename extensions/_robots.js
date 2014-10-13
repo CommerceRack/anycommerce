@@ -49,8 +49,7 @@ var seo_robots = function(_app) {
 				
 				
 				_robots.next = function(page){
-					console.log(page);
-					console.log(typeof page);
+					_robots.page() = function(){return page};
 					if(typeof page !== 'undefined' || _app.ext.seo_robots.vars.pagesLoaded){
 						if(typeof page !== 'undefined'){
 							try{
