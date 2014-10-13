@@ -24,6 +24,7 @@ var seo_robots = function(_app) {
 	var r = {
 
 	vars : {
+		page : "",
 		pages : [],
 		pagesLoaded : false,
 		counter : 0,
@@ -89,10 +90,7 @@ var seo_robots = function(_app) {
 								isFilter = true;
 								}
 							_app.router.handleURIChange(page);
-							_robots.page = function(){
-								dump(page);
-								return page;
-								};
+							_app.ext.seo_robots.vars.page = page;
 							//window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
