@@ -49,7 +49,6 @@ var seo_robots = function(_app) {
 				
 				
 				_robots.next = function(page){
-					_robots.page = function(){return page;};
 					if(typeof page !== 'undefined' || _app.ext.seo_robots.vars.pagesLoaded){
 						if(typeof page !== 'undefined'){
 							try{
@@ -89,6 +88,7 @@ var seo_robots = function(_app) {
 								isFilter = true;
 								}
 							_app.router.handleURIChange(page);
+							_robots.page = function(){return page;};
 							//window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
