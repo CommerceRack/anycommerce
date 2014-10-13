@@ -142,7 +142,7 @@ $(window).on('load', function(){
 //				myApp.u.showProgress(progress);
 //				});
 		myCreole = new Parse.Simple.Creole();
-		myApp.u.loadScript('newinit.js');
+		myApp.u.loadScript('newinit.js?_v='+new Date().getTime(););
 		$('#appversion').text(myApp.vars.release);
 		}
 	});
