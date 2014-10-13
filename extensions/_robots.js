@@ -91,12 +91,12 @@ var seo_robots = function(_app) {
 							//window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
-							$('#globalMessaging').intervaledEmpty();
-							showContent('',page);
-							
-							if(page.pageType == "static" && _app.ext.store_swc.filterData[page.id]){
-								isFilter = true;
-								}
+							//$('#globalMessaging').intervaledEmpty();
+							//showContent('',page);
+							//
+							//if(page.pageType == "static" && _app.ext.store_swc.filterData[page.id]){
+							//	isFilter = true;
+							//	}
 							}
 						else{
 							status = 404;
