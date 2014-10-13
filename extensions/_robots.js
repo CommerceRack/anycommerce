@@ -41,7 +41,7 @@ var seo_robots = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
-				
+				dump('seo_robots init');
 				if(_robots._robotGreeting){
 					_app.ext.seo_robots.u.welcomeRobot(_robots._robotGreeting);
 					}
@@ -82,15 +82,15 @@ var seo_robots = function(_app) {
 							}
 						var status = 100;
 						var isFilter = false;
-						if(typeof page == 'string' && page.indexOf('#!') == 0){
+						if(typeof page == 'string'){
 							_app.ext.quickstart.vars.showContentFinished = false;
 							_app.ext.quickstart.vars.showContentCompleteFired = false;
 							
-							if(page.indexOf('#!filter') >= 0){
+							if(page.indexOf('/filter') == 0){
 								isFilter = true;
 								}
-								
-							window.location.hash = page;
+							_app.router.handleURIChange(page);
+							//window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
 							$('#globalMessaging').intervaledEmpty();

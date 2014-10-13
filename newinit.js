@@ -10,7 +10,21 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	_app.require(['quickstart','store_swc'], function(){
+	var startupRequires = ['quickstart','store_swc']
+	
+	if(!_robots._robotGreeting){
+		_robots.hello = function(){
+			_app.require('seo_robots', function(){
+				//The init process of the ext should change the implementation of _robots.hello before it gets called here
+				_robots.hello();
+				});
+			}
+		}
+	else{
+		startupRequires.push('seo_robots');
+		}
+	
+	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
 				
@@ -638,11 +652,6 @@ _app.extend({
 _app.extend({
 	"namespace" : "prodlist_infinite",
 	"filename" : "extensions/prodlist_infinite.js"
-	});
-	
-_app.extend({
-	"namespace" : "seo_robots",
-	"filename" : "extensions/_robots.js"
 	});
 	
 _app.extend({

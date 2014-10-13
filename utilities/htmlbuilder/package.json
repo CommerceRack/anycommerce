@@ -1,0 +1,12 @@
+{
+  "name": "htmlbuilder",
+  "version": "0.1.0",
+  "description": "Build the requisite html files for an anycommerce project",
+  "author": "michaelc",
+  "dependencies": {
+    "dateformat": "^1.0.8",
+    "node-phantom-simple": "^1.2.0",
+    "nomnom": "^1.8.0",
+    "xmlhttprequest": "^1.6.0"
+  }
+}

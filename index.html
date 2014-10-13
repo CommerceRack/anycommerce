@@ -156,7 +156,7 @@ var _robots = {
 		return "1.0";
 		},
 	next : function(){
-		//This implementation of _robots.next returns a function that simply blocks with a '100' until the app has been fully instantiated
+		//This implementation of _robots.next sets 'status' a function that simply blocks with a '100' until the app has been fully instantiated
 		_robots.status = function(){
 			if(typeof myApp !== 'undefined' && 
 				typeof myApp.ext !== 'undefined' && 
@@ -175,6 +175,7 @@ var _robots = {
 		console.log("Bot saying goodbye: "+botStr);
 		}
 	}
+_robots.hello();
 </script>
 
 <script data-apptimize="embed" type="text/javascript" src="app-quickstart-init.js"></script>
