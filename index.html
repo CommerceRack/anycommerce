@@ -142,7 +142,7 @@ $(window).on('load', function(){
 //				myApp.u.showProgress(progress);
 //				});
 		myCreole = new Parse.Simple.Creole();
-		myApp.u.loadScript('newinit.js');
+		myApp.u.loadScript('newinit.js?_v='+new Date().getTime());
 		$('#appversion').text(myApp.vars.release);
 		}
 	});
@@ -161,7 +161,10 @@ var _robots = {
 			if(typeof myApp !== 'undefined' && 
 				typeof myApp.ext !== 'undefined' && 
 				typeof myApp.ext.quickstart !== 'undefined' && 
+				typeof myApp.ext.seo_robots !== 'undefined' && 
 				typeof myApp.ext.quickstart.vars !== 'undefined' &&
+				typeof myApp.ext.seo_robots.vars !== 'undefined' &&
+				myApp.ext.seo_robots.vars.pagesLoaded &&
 				myApp.ext.quickstart.vars.showContentFinished && myApp.ext.quickstart.vars.showContentCompleteFired){
 				return 204;
 				}
@@ -175,7 +178,7 @@ var _robots = {
 		console.log("Bot saying goodbye: "+botStr);
 		}
 	}
-//_robots.hello();
+_robots.hello('test');
 //_robots.next();
 //console.info(_robots.status());
 </script>

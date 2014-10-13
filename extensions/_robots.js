@@ -212,6 +212,7 @@ var seo_robots = function(_app) {
 					};
 				_app.model.addDispatchToQ(request, 'immutable');
 				_app.model.dispatchThis('immutable');
+				console.log('appSEOFetch request dispatched');
 				
 				return "1.0";
 				},
