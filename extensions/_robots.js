@@ -88,7 +88,8 @@ var seo_robots = function(_app) {
 								isFilter = true;
 								}
 							_app.router.handleURIChange(page);
-							_robots.page = function(){return page;};
+							_robots.page = page;
+							// _robots.page = function(){return page;};
 							//window.location.hash = page;
 							}
 						else if(typeof page == 'object'){ 
