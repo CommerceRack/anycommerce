@@ -42,9 +42,7 @@ var seo_robots = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
 				dump('seo_robots init');
-				if(_robots._robotGreeting){
-					_app.ext.seo_robots.u.welcomeRobot(_robots._robotGreeting);
-					}
+				
 				_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
 				_robots.goodbye = _app.ext.seo_robots.u.goodbyeRobot;
 				//Replace the _robots.next default functionality with some real stuff

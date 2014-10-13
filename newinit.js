@@ -12,7 +12,10 @@ _app.u.loadScript(configURI,function(){
 	
 	var startupRequires = ['quickstart','store_swc']
 	
-	if(!_robots._robotGreeting){
+	if(_robots._robotGreeting){
+		startupRequires.push('seo_robots');
+		}
+	else{
 		_robots.hello = function(){
 			_app.require('seo_robots', function(){
 				//The init process of the ext should change the implementation of _robots.hello before it gets called here
@@ -20,11 +23,11 @@ _app.u.loadScript(configURI,function(){
 				});
 			}
 		}
-	else{
-		startupRequires.push('seo_robots');
-		}
 	
 	_app.require(startupRequires, function(){
+		if(_robots._robotGreeting){
+			_app.ext.seo_robots.u.welcomeRobot(_robots._robotGreeting);
+			}
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
 				
