@@ -116,8 +116,8 @@ for(var i =0; i < opts['threads']; i++){
 				console.log("opened site? "+status);
 				//HERE IS WHERE THE COOL SHIT HAPPENS
 				function hello(){
-					_robots.hello('phantom');
-					_robots.next();
+					window._robots.hello('phantom');
+					window._robots.next();
 					}
 				function getStatus(){
 					var r = {
