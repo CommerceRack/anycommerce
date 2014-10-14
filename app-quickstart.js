@@ -538,12 +538,12 @@ need to be customized on a per-ria basis.
 //2. Puts control of this into custom page transitions.
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
-				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 300);}, 300); //fade out old, fade in new.
+				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){dump('setting showContentFinished true');_app.ext.quickstart.vars.showContentFinished = true;}, 300);}, 300); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
 				callback();
-				setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 300);
+				setTimeout(function(){dump('setting showContentFinished true');_app.ext.quickstart.vars.showContentFinished = true;}, 300);
 				}
 			}, //pageTransition
 
@@ -1001,6 +1001,7 @@ fallback is to just output the value.
 				
 				$new.addClass('displayNone').appendTo($('#mainContentArea'));
 				if(infoObj.performTransition == false)	{
+					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
@@ -1017,10 +1018,12 @@ fallback is to just output the value.
 //no page transition specified. hide old content, show new. fancy schmancy.
 					$("#mainContentArea :visible:first").hide();
 					$new.show();
+					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else	{
 					dump("WARNING! In showContent but there is no new page to show!");
+					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				
