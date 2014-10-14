@@ -947,6 +947,8 @@ fallback is to just output the value.
 				
 				//Don't navigate if we're already on the page
 				if($old.attr('data-app-uri') == uri){
+					_app.ext.quickstart.vars.showContentFinished = true;
+					_app.ext.quickstart.vars.showContentCompleteFired = true;
 					return false;
 					}
 				
