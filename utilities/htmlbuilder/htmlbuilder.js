@@ -116,51 +116,59 @@ for(var i =0; i < opts['threads']; i++){
 				console.log("opened site? "+status);
 				//HERE IS WHERE THE COOL SHIT HAPPENS
 				function hello(){
-					window._robots.hello('phantom');
-					//window._robots.next();
 					}
 				function getStatus(){
-					var r = {
-						'status' : window._robots.status(),
-						'html': window.document.documentElement.outerHTML
+					//console.log('creating a getStatus');
+					return function(){
+						var r = false;
+						if(window.myApp.ext &&
+							window.myApp.ext.quickstart &&
+							window.myApp.ext.quickstart.vars){
+							window.myApp.ext.quickstart.vars.cachedPageCount = 0;
+							}
+						
+						if(window.myApp.ext &&
+							window.myApp.ext.quickstart &&
+							window.myApp.ext.quickstart.vars &&
+							window.myApp.ext.quickstart.vars.showContentFinished && window.myApp.ext.quickstart.vars.showContentCompleteFired){
+							console.log('ready!');
+							r = {
+								page : window.__page,
+								html : window.document.documentElement.outerHTML
+								}
+							}
+						else {
+							// console.log('not ready');
+							// console.log(window.myApp.ext.quickstart.vars.showContentFinished);
+							// console.log(window.myApp.ext.quickstart.vars.showContentCompleteFired);
+							// console.log(window.myApp.ext.quickstart.vars.blinker);
+							}
+						return r
 						}
-					if(window.__page){
-						r.page = window.__page;
-						}
-					return r
 					}
 				function getNextPage(){
 					var url = URLS.shift();
-					return "function(){window.__page = '"+url+"';window._robots.next("+url+");}"
+					return "function(){window.__page = '"+url+"';window.myApp.router.handleURIChange('"+url+"');}"
 					}
 				function handleContinue(err, result){
 					//console.log(result);
-					if(result.status == 100){
-						setTimeout(function(){page.evaluate(getStatus, handleContinue)},100);
+					if(!result){
+						setTimeout(function(){page.evaluate(getStatus(), handleContinue)},100);
 						}
 					else {
-						console.log("Requesting next page");
-						console.log(URLS[0]);
-						page.evaluate(getNextPage())
-						page.evaluate(getStatus, handlePage);
+						evaluateNext();
 						}
 					}
 				function handlePage(err, result){
 					//console.log(result);
-					if(result.status == 100){
-						setTimeout(function(){page.evaluate(getStatus, handlePage)},100);
+					if(!result){
+						setTimeout(function(){page.evaluate(getStatus(), handlePage)},100);
 						}
-					else if (result.status == 200){
-						if(result.page){
-							console.log('status 200 on page: '+result.page);
-							var filename = "./built/"+result.page.replace(/\//g,'')+".html";
-							console.log(filename);
-							fs.writeFileSync(filename, result.html);
-							}
-						evaluateNext();
-						}
-					else {
-						console.log(404);
+					else if (result.page && result.html){
+						console.log('status 200 on page: '+result.page);
+						var filename = "./built/"+result.page.replace(/\//g,'')+".html";
+						console.log(filename);
+						fs.writeFileSync(filename, result.html);
 						evaluateNext();
 						}
 					
@@ -169,7 +177,7 @@ for(var i =0; i < opts['threads']; i++){
 					console.log(URLS.length);
 					if(URLS.length){
 						page.evaluate(getNextPage())
-						page.evaluate(getStatus, handlePage);
+						page.evaluate(getStatus(), handlePage);
 						
 						}
 					else {
@@ -181,7 +189,7 @@ for(var i =0; i < opts['threads']; i++){
 					}
 				setTimeout(function(){
 					page.evaluate(hello);
-					page.evaluate(getStatus, handleContinue);
+					page.evaluate(getStatus(), handleContinue);
 					}, 2000);
 				}})(page));
 			})
