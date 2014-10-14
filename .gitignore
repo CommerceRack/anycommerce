@@ -7,6 +7,7 @@
 .metadata
 bin/
 node_modules/
+/utilities/htmlbuilder/built/*
 /utilities/nodeproxy/jt.key
 /utilities/nodeproxy/www-spork*
 /utilities/nodeproxy/www.spork*
