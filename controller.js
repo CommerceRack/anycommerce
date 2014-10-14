@@ -3107,9 +3107,9 @@ return $r;
 			
 //infoObj.state = onCompletes or onInits. later, more states may be supported.
 			handleTemplateEvents : function($ele,infoObj)	{
-				dump("handleTemplateEvents");
-				dump($ele);
-				dump(infoObj);
+				// dump("handleTemplateEvents");
+				// dump($ele);
+				// dump(infoObj);
 				infoObj = infoObj || {};
 				if($ele instanceof jQuery && infoObj.state)	{
 					if($.inArray(infoObj.state,['init','complete','depart']) >= 0)	{

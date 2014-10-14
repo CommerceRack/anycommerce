@@ -149,6 +149,7 @@ _app.u.addEventDelegation($(document.body),{'destroyEvents':true});
 _app.u.addEventDelegation($(document.body)); 
 
 
+
 var hotw = _app.model.dpsGet('quickstart','hotw');
 if(!$.isEmptyObject(hotw))	{
 	_app.ext.quickstart.vars.hotw = hotw;
@@ -2746,7 +2747,7 @@ later, it will handle other third party plugins as well.
 		
 		couplers : {
 			addPageHandler : function(args){
-				dump('adding handler');
+				//dump('adding handler');
 				_app.ext.quickstart.pageHandlers[args.pageType] = args.handler;
 				}
 			}

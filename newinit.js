@@ -926,6 +926,7 @@ _app.router.appendInit({
 		if(g.uriParams && g.uriParams.meta_src)	{
 			_app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
 			}
+		$('#clickBlocker').remove();
 		}
 	});
 

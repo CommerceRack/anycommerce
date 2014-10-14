@@ -119,6 +119,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <script data-apptimize="minify" type="text/javascript">
+
 $(window).on('load', function(){
 	var paramStr = window.location.href.replace(window.location.hash, '').split('?')[1];
 	if(!paramStr || paramStr.indexOf('_escaped_fragment_') < 0){
@@ -185,6 +186,9 @@ window._robots = {
 
 <body class="dosis">
 
+<script type='text/javascript'>
+document.write('<div id="clickBlocker" style="position:absolute; width: 100%; height: 100%; z-index: 99999999;"></div>');
+</script>
 
 <!-- what is displayed onLoad until the view is loaded -->
 <!-- <div id='appPreView'>

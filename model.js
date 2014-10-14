@@ -1386,8 +1386,11 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 //data is saved to the control prior to template/view verification because we need access to the object.
 //yes, technically we could have saved it to a var, accessed the templates param, validated and NOT saved, but this is lighter.
 //it means that a developer could use an extension that didn't load properly, but that is their perogative, since we told them its broke.
-
-				if(typeof window[namespace] === 'function')	{
+				if(!(_app.ext[namespace] instanceof Array) && typeof _app.ext[namespace] === 'object'){
+					//already instantiated, so we'll just sit on our hands
+					initPassed = true;
+					}
+				else if(typeof window[namespace] === 'function')	{
 					var couplerArray = _app.ext[namespace];
 					couplerArray.splice(0,1);
 					_app.ext[namespace] = window[namespace](_app); //keep this as early in the process as possible so it's done before the next extension loads.
