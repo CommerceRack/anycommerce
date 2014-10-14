@@ -117,7 +117,7 @@ for(var i =0; i < opts['threads']; i++){
 				//HERE IS WHERE THE COOL SHIT HAPPENS
 				function hello(){
 					window._robots.hello('phantom');
-					window._robots.next();
+					//window._robots.next();
 					}
 				function getStatus(){
 					var r = {
