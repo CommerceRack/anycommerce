@@ -134,7 +134,7 @@ for(var i =0; i < opts['threads']; i++){
 							console.log('ready!');
 							r = {
 								page : window.__page,
-								html : window.document.documentElement.outerHTML
+								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML
 								}
 							}
 						else {
