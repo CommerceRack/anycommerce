@@ -44,12 +44,12 @@ var seo_robots = function(_app) {
 				
 				dump('seo_robots init');
 				
-				_robots.hello = _app.ext.seo_robots.u.welcomeRobot;
-				_robots.goodbye = _app.ext.seo_robots.u.goodbyeRobot;
-				//Replace the _robots.next default functionality with some real stuff
+				window._robots.hello = _app.ext.seo_robots.u.welcomeRobot;
+				window._robots.goodbye = _app.ext.seo_robots.u.goodbyeRobot;
+				//Replace the window._robots.next default functionality with some real stuff
 				
 				
-				_robots.next = function(page){
+				window._robots.next = function(page){
 					if(typeof page !== 'undefined' || _app.ext.seo_robots.vars.pagesLoaded){
 						if(typeof page !== 'undefined'){
 							try{
@@ -63,7 +63,7 @@ var seo_robots = function(_app) {
 							page = _app.ext.seo_robots.vars.pages.splice(0,1)[0];
 							}
 						else{
-							_robots.status = function(){return -1};
+							window._robots.status = function(){return -1};
 							return false;
 							}
 						
@@ -103,7 +103,7 @@ var seo_robots = function(_app) {
 						else{
 							status = 404;
 							}
-						_robots.status = function(){
+						window._robots.status = function(){
 							
 							if(status == 100 && _app.ext.quickstart.vars.showContentFinished && _app.ext.quickstart.vars.showContentCompleteFired && (!isFilter || _app.ext.store_swc.vars.filterLoadingComplete)){
 								status = 200;
@@ -113,7 +113,7 @@ var seo_robots = function(_app) {
 						}
 					else {
 						console.log('setting status to a backup 204 generator');
-						_robots.status = function(){
+						window._robots.status = function(){
 							if(_app.ext.seo_robots.vars.pagesLoaded){
 								return 204;
 								}
@@ -123,8 +123,8 @@ var seo_robots = function(_app) {
 							}
 						}
 					};
-				_robots.ready = function(){return _app.ext.seo_robots.vars.pagesLoaded};
-				_robots.pop = function(amt){
+				window._robots.ready = function(){return _app.ext.seo_robots.vars.pagesLoaded};
+				window._robots.pop = function(amt){
 					amt = amt || 1;
 					if(amt < 0){amt = 1;}
 					var pageArr = _app.ext.seo_robots.vars.pages.splice(0,amt);
