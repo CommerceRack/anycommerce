@@ -74,34 +74,34 @@ var urls = JSON.parse(request.responseText);
 var today = new Date();
 var datestr = dateFormat(now,"yyyy-mm-dd");
 
-// for( var i in urls['@OBJECTS'] ) {
-        // // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
-        // var res = urls['@OBJECTS'][i];
-		// if(!res['seo:noindex']){
-				// var url = '';
-				// switch (res.type) {
-						// case 'pid':
-								// url = '/product/' + res.id;
-								// break;
-						// case 'navcat':
-								// url = '/category/' + res.id.substr(1);  // strip leading . in category name
-								// break;
-						// case 'list' :
-								// // we don't index these.
-								// break;
-						// default :
-								// console.log(res);
-								// break;
-						// }
-				// if (url) {
-						// URLS.push(url);
-						// }
-				// }
-		// else {
-			// console.log('Following object was skipped due to inclusion of seo:noindex attribute:');
-			// console.dir(res);
-				// }
-        // }
+for( var i in urls['@OBJECTS'] ) {
+        // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
+        var res = urls['@OBJECTS'][i];
+		if(!res['seo:noindex']){
+				var url = '';
+				switch (res.type) {
+						case 'pid':
+								url = '/product/' + res.id;
+								break;
+						case 'navcat':
+								url = '/category/' + res.id.substr(1);  // strip leading . in category name
+								break;
+						case 'list' :
+								// we don't index these.
+								break;
+						default :
+								console.log(res);
+								break;
+						}
+				if (url) {
+						URLS.push(url);
+						}
+				}
+		else {
+			console.log('Following object was skipped due to inclusion of seo:noindex attribute:');
+			console.dir(res);
+				}
+        }
 		
 var doneCount = 0;
 		
@@ -175,6 +175,7 @@ for(var i =0; i < opts['threads']; i++){
 					}
 				function evaluateNext(){
 					console.log(URLS.length);
+					console.log(URLS[0]);
 					if(URLS.length){
 						page.evaluate(getNextPage())
 						page.evaluate(getStatus(), handlePage);

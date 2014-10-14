@@ -699,6 +699,9 @@ _app.couple('quickstart','addPageHandler',{
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "category",
 	"handler" : function($container, infoObj){
+		if(infoObj.navcat.charAt(0) != '.'){
+			infoObj.navcat = '.'+infoObj.navcat
+			}
 		if(_app.ext.quickstart.vars.session.recentCategories[0] != infoObj.navcat)	{
 			_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
 			}

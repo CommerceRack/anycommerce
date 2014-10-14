@@ -1058,11 +1058,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 		
 		handleURIChange : function(uri, search, hash, skipPush, forcedParams){
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
-			routeObj.params = routeObj.params || {};
-			if(forcedParams){
-				$.extend(routeObj.params, forcedParams);
-				}
 			if(routeObj) {
+				routeObj.params = routeObj.params || {};
+				if(forcedParams){
+					$.extend(routeObj.params, forcedParams);
+					}
 				if(search){
 					routeObj.searchParams = _app.u.kvp2Array(search.substr(1));
 					}
@@ -1079,6 +1079,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					}
 				_app.router._executeCallback(routeObj);
 				return true;
+				}
+			else {
+				dump('no route found for '+uri, 'error');
 				}
 			return false;
 			},

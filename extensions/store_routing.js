@@ -131,6 +131,9 @@ optional params:
 				return "/product/"+pid+"/"+(seo ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			categoryAnchor : function(path,seo)	{
+				if(path.charAt(0) == '.'){
+					path = path.substr(1);
+					}
 				return "/category/"+path+"/"+((seo) ? _app.ext.store_routing.u.cleanURIComponent(seo) : '');
 				},
 			searchAnchor : function(type,value)	{
