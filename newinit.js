@@ -155,144 +155,163 @@ _app.router.appendHash({'type':'exact','route':'/cart','callback':'cart'});
 _app.router.appendHash({'type':'exact','route':'/cart/','callback':'cart'});
 
 _app.router.appendHash({'type':'exact','route':'/404','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'pageNotFoundTemplate',
 		'require':'templates.html'
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 
 _app.router.appendHash({'type':'exact','route':'/about_us/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'aboutUsTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/contact_us/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'contactUsTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/frequently_asked_questions/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'faqTemplate',
 		'require':['templates.html']
 		});
+	dump(routeObj.params);
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, infoObj){
 	$context.off('complete.faq');
+	dump('in faq complete event');
 	_app.require(['store_crm','templates.html'],function(){
 		_app.ext.store_crm.calls.appFAQsAll.init({'jqObj':$('.faqContent',$context),'callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
 		_app.model.dispatchThis();							
 		});
 	});
 _app.router.appendHash({'type':'exact','route':'/payment_policy/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'paymentTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/privacy_policy/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'privacyTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/return_policy/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'returnTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/shipping_policy/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'shippingTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 	
 _app.router.appendHash({'type':'exact','route':'/fieldcam/','callback':function(routeObj){
+	$.extend(routeObj.params,{
+		'pageType':'static',
+		'dataset': {
+			"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
+			"cam2" : '<object width="600" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="600" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>'
+			},
+		'templateID':'fieldcamTemplate'
+		});
 	_app.require(['templates.html','store_swc'],function(){
-		_app.ext.quickstart.a.newShowContent(routeObj.value,{
-			'pageType':'static',
-			'dataset': {
-				"cam1" : '<iframe width="650" scrolling="no" height="366" frameborder="0" src="http://www.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>',
-				"cam2" : '<object width="600" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="600" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>'
-				},
-			'templateID':'fieldcamTemplate'
-			})
+		_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params)
 		});
 	}});
 _app.router.appendHash({'type':'exact','route':'/affiliates/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'affiliatesTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'socialTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 	
 _app.router.appendHash({'type':'exact','route':'/careers/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.careers',
 		'templateID':'categoryTemplateHTML',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});	
 _app.router.appendHash({'type':'exact','route':'/inquiry/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.help_desk.player-inquiry',
 		'templateID':'inquiryTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/rewards/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.rewards_program',
 		'templateID':'rewardsTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/group_sales/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.group_sales',
 		'templateID':'groupSalesTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'match','route':'/search/manufacturer/{{mfg}}*','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'search',
 		'elasticsearch':{"query_string" : {"query" : decodeURIComponent(routeObj.params.mfg), "fields" : ["prod_mfg"]}},
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 	
 _app.router.appendHash({'type':'exact','route':'/my_account/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'login' : true,
 		'templateID':'myAccountTemplate',
 		'require':['cco','templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event, $context, infoObj){
 	_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
@@ -300,20 +319,22 @@ _app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event,
 	_app.model.dispatchThis();							
 	});
 _app.router.appendHash({'type':'exact','route':'/change_password/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'login' : true,
 		'templateID':'changePasswordTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.router.appendHash({'type':'exact','route':'/my_order_history/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'login' : true,
 		'templateID':'orderHistoryTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(event, $context, infoObj){
 	_app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","_tag":{
@@ -325,12 +346,13 @@ _app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(e
 	_app.model.dispatchThis();							
 	});
 _app.router.appendHash({'type':'exact','route':'/my_wishlist/','callback':function(routeObj){
-	_app.ext.quickstart.a.newShowContent(routeObj.value,{
+	$.extend(routeObj.params,{
 		'pageType':'static',
 		'login' : true,
 		'templateID':'customerListsTemplate',
 		'require':['templates.html']
 		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(event, $context, infoObj){
 	_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag":{"datapointer":"buyerProductLists",'verb':'translate','jqObj': $('.mainColumn',$context),'callback':'tlc',onComplete : function(rd){
@@ -855,7 +877,24 @@ _app.router.appendInit({
 	'callback':function(f,g){
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
-		if (document.location.hash.indexOf("#!") == 0){
+		var $existingPage = $('#mainContentArea [data-app-uri]')
+		if($existingPage.length /*&& $existingPage.attr('data-app-uri') == document.location.pathname*/){
+			//We are a transplanted document, let's load accordingly.
+			//re-attach template handlers
+			var $renderedTemplate = $('[data-templateid]', $existingPage);
+			var templateid = $renderedTemplate.attr('data-templateid');
+			for(var i in _app.templateEvents){
+				var event = _app.templateEvents[i];
+				if(event.filterFunc(templateid)){
+					dump("Attaching event");
+					dump(event);
+					$renderedTemplate.on(event.event, event.handler);
+					}
+				}
+			//handleURIChange here will not change the page, but it will execute appropriate events
+			_app.router.handleURIChange($existingPage.attr('data-app-uri'), false, false, true, {"retrigger" : true});
+			}
+		else if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);
 			var search = false;
 			if(pathStr.indexOf('?') >= 0){

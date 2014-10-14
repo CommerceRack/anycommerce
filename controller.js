@@ -1056,8 +1056,12 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			},
 		
-		handleURIChange : function(uri, search, hash, skipPush){
+		handleURIChange : function(uri, search, hash, skipPush, forcedParams){
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
+			routeObj.params = routeObj.params || {};
+			if(forcedParams){
+				$.extend(routeObj.params, forcedParams);
+				}
 			if(routeObj) {
 				if(search){
 					routeObj.searchParams = _app.u.kvp2Array(search.substr(1));
@@ -1162,7 +1166,8 @@ Some utilities for loading external files, such as .js, .css or even extensions.
 */
 
 		loadScript : function(url, callback, params){
-//			dump("load script: "+url+" and typeof callback: "+(typeof callback));
+			dump("load script: "+url+" and typeof callback: "+(typeof callback));
+			callback = callback || function(){};
 			if(url)	{
 				var script = document.createElement("script");
 				script.type = "text/javascript";
@@ -1170,13 +1175,19 @@ Some utilities for loading external files, such as .js, .css or even extensions.
 					script.onreadystatechange = function(){
 						if (script.readyState == "loaded" || script.readyState == "complete"){
 							script.onreadystatechange = null;
+							//clean up after ourselves!  This is so that the document can be transplanted and re-instantiated
+							document.getElementsByTagName("head")[0].removeChild(script);
 							if(typeof callback == 'function')	{callback(params);}
 							}
 						};
 					}
 				else {
 					if(typeof callback == 'function')	{
-						script.onload = function(){callback(params)}
+						script.onload = function(){
+							//clean up after ourselves!  This is so that the document can be transplanted and re-instantiated
+							document.getElementsByTagName("head")[0].removeChild(script);
+							callback(params)
+							}
 						}
 					}
 			//append release to the end of included files to reduce likelyhood of caching.

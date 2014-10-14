@@ -144,7 +144,9 @@ var quickstart = function(_app) {
 //	window.sessionStorage.clear();
 //	}
 
-_app.u.addEventDelegation($(document.body)); //if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
+//if perfomance issues are noticed from adding this to the body instead of to each template, please report them.
+_app.u.addEventDelegation($(document.body),{'destroyEvents':true}); 
+_app.u.addEventDelegation($(document.body)); 
 
 
 var hotw = _app.model.dpsGet('quickstart','hotw');
@@ -949,6 +951,10 @@ fallback is to just output the value.
 				if($old.attr('data-app-uri') == uri){
 					_app.ext.quickstart.vars.showContentFinished = true;
 					_app.ext.quickstart.vars.showContentCompleteFired = true;
+					if(infoObj.retrigger){
+						infoObj.state = 'complete'
+						_app.renderFunctions.handleTemplateEvents($('> [data-templateid]',$old), infoObj);
+						}
 					return false;
 					}
 				
@@ -1363,7 +1369,7 @@ setTimeout(function(){
 
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
-//				dump("BEGIN showFAQbyTopic ["+topicID+"]");
+				dump("BEGIN showFAQbyTopic ["+topicID+"]");
 				var templateID = 'faqQnATemplate'
 				
 				if(!topicID)	{
