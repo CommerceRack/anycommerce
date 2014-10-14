@@ -8,8 +8,6 @@ var nXMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 var dateFormat = require('dateformat');
 var now = new Date();
 
-var phantom = require('node-phantom-simple');
-
 var opts = require('nomnom')
         .option('domain', {
                 abbr: 'd',
@@ -35,7 +33,7 @@ var opts = require('nomnom')
 
 var DOMAIN = opts['domain'];
 var PATH = opts['path'];
-var URLS = new Array;           // a list of URLS *without* the domain name ex: /path/to/file
+var PAGES = new Array;           // a list of URLS *without* the domain name ex: /path/to/file
 
 //
 // step1: load any extra files
@@ -49,7 +47,13 @@ if(opts['customurls']){
 	try{
 		customUrls = require(opts['customurls']);
 		if(customUrls instanceof Array){
-			URLS = URLS.concat(customUrls);
+			for(var i in customUrls){
+				PAGES.push({
+					'url':customUrls[i],
+					'filename':customUrls[i].replace(/\//g,'')+".html",
+					'buildpath':'./built/custom/'
+					});
+				}
 			}
 		else {
 			console.err("Custom URL file specified was not an Array");
@@ -68,23 +72,33 @@ var request = new nXMLHttpRequest();
 request.open('GET','http://www.sportsworldchicago.com/jsonapi/call/v201410/appSEOFetch',false);
 request.send(null);
 
-var urls = JSON.parse(request.responseText);
+var pages = JSON.parse(request.responseText);
 // console.log(urls['@OBJECTS']);
 
 var today = new Date();
 var datestr = dateFormat(now,"yyyy-mm-dd");
 
-for( var i in urls['@OBJECTS'] ) {
+for( var i in pages['@OBJECTS'] ) {
         // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
-        var res = urls['@OBJECTS'][i];
+        var res = pages['@OBJECTS'][i];
 		if(!res['seo:noindex']){
-				var url = '';
+				var page = false;
 				switch (res.type) {
 						case 'pid':
-								url = '/product/' + res.id;
+								page = {
+									url : '/product/' + res.id,
+									filename : res.id+".html",
+									buildpath : "./built/product/"
+									}
 								break;
 						case 'navcat':
-								url = '/category/' + res.id.substr(1);  // strip leading . in category name
+								if(res.id != '.'){
+									page = {
+										url : '/category/' + res.id.substr(1),  // strip leading . in category name
+										filename : res.id.substr(1)+".html",
+										buildpath : "./built/category/"
+										}
+									}
 								break;
 						case 'list' :
 								// we don't index these.
@@ -93,8 +107,8 @@ for( var i in urls['@OBJECTS'] ) {
 								console.log(res);
 								break;
 						}
-				if (url) {
-						URLS.push(url);
+				if (page) {
+						PAGES.push(page);
 						}
 				}
 		else {
@@ -103,97 +117,26 @@ for( var i in urls['@OBJECTS'] ) {
 				}
         }
 		
-var doneCount = 0;
-		
-for(var i =0; i < opts['threads']; i++){
-	console.log('creating phantom');
-	phantom.create(function(err,ph){
-		return ph.createPage(function(err,page){
-			// page.onConsoleMessage = function(msg){
-				// console.log(msg);
-				// }
-			return page.open("http://"+DOMAIN+"/?_v="+new Date().getTime(), (function(page){return function(err, status){
-				console.log("opened site? "+status);
-				//HERE IS WHERE THE COOL SHIT HAPPENS
-				function hello(){
-					}
-				function getStatus(){
-					//console.log('creating a getStatus');
-					return function(){
-						var r = false;
-						if(window.myApp.ext &&
-							window.myApp.ext.quickstart &&
-							window.myApp.ext.quickstart.vars){
-							window.myApp.ext.quickstart.vars.cachedPageCount = 0;
-							}
-						
-						if(window.myApp.ext &&
-							window.myApp.ext.quickstart &&
-							window.myApp.ext.quickstart.vars &&
-							window.myApp.ext.quickstart.vars.showContentFinished && window.myApp.ext.quickstart.vars.showContentCompleteFired){
-							console.log('ready!');
-							r = {
-								page : window.__page,
-								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML
-								}
-							}
-						else {
-							// console.log('not ready');
-							// console.log(window.myApp.ext.quickstart.vars.showContentFinished);
-							// console.log(window.myApp.ext.quickstart.vars.showContentCompleteFired);
-							// console.log(window.myApp.ext.quickstart.vars.blinker);
-							}
-						return r
-						}
-					}
-				function getNextPage(){
-					var url = URLS.shift();
-					return "function(){window.__page = '"+url+"';window.myApp.router.handleURIChange('"+url+"');}"
-					}
-				function handleContinue(err, result){
-					//console.log(result);
-					if(!result){
-						setTimeout(function(){page.evaluate(getStatus(), handleContinue)},100);
-						}
-					else {
-						evaluateNext();
-						}
-					}
-				function handlePage(err, result){
-					//console.log(result);
-					if(!result){
-						setTimeout(function(){page.evaluate(getStatus(), handlePage)},100);
-						}
-					else if (result.page && result.html){
-						console.log('status 200 on page: '+result.page);
-						var filename = "./built/"+result.page.replace(/\//g,'')+".html";
-						console.log(filename);
-						fs.writeFileSync(filename, result.html);
-						evaluateNext();
-						}
-					
-					}
-				function evaluateNext(){
-					console.log(URLS.length);
-					console.log(URLS[0]);
-					if(URLS.length){
-						page.evaluate(getNextPage())
-						page.evaluate(getStatus(), handlePage);
-						
-						}
-					else {
-						doneCount++;
-						if(doneCount >= opts['threads']){
-							process.exit(0);
-							}
-						}
-					}
-				setTimeout(function(){
-					page.evaluate(hello);
-					page.evaluate(getStatus(), handleContinue);
-					}, 2000);
-				}})(page));
-			})
-		},{parameters : {'load-images':false}})
+
+var Crawler = require('./crawler.js');
+
+var crawlers = new Array(opts['threads']);
+var CHUNKSIZE = 5;
+
+function makeCrawler(i){
+	console.log('makeCrawler '+i);
+	if(PAGES.length){
+		crawlers[i] = new Crawler(DOMAIN, PAGES.splice(0,CHUNKSIZE), function(){makeCrawler(i)}, i);
+		}
+	else{
+		crawlers.splice(i,1);
+		if(crawlers.length <= 0){
+			//theoretically we are done
+			process.exit();
+			}
+		}
 	}
 
+for(var i = 0; i < crawlers.length; i++){
+	makeCrawler(i);
+	}
