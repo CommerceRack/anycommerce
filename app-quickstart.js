@@ -194,20 +194,7 @@ document.write = function(v){
 					_app.model.addCart2Session(cartID);
 					dump(" -> cart id is valid. added the cart to the session is "+_app.model.addCart2Session(cartID)); //this function updates _app.vars.carts
 					if($('#cartMessenger').length)	{
-						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
-						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);
-						$("textarea[name='message']",'#cartmessenger').on('keypress',function(event){
-							if (event.keyCode == 13) {
-								$("[data-app-role='messageSubmitButton']",$(this).closest('form')).trigger('click');
-								return false;
-								}
-							return true;
-							});
-						}
-					else	{
-						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");
-						}if($('#cartMessenger').length)	{
-						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+						//_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						$('#cartMessenger').tlc({'verb':'translate','dataset':_app.data['cartDetail|'+cartID]}).attr('data-cartid',cartID);
 						$("textarea[name='message']",'#cartmessenger').on('keypress',function(event){
 							if (event.keyCode == 13) {
@@ -224,7 +211,7 @@ document.write = function(v){
 				else if(_rtag.datapointer == 'appCartExists')	{
 					_app.u.dump(" -> existing cart was NOT valid. Fetch a new cartid");
 					_app.model.removeCartFromSession(_rtag.cartid); //this will ensure the cart isn't used again.
-					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart', "require" : "cart_message"},'mutable');//The cart that was passed was exired in invalid.
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');//The cart that was passed was exired in invalid.
 					_app.model.dispatchThis('mutable');
 					}
 				else	{
@@ -232,7 +219,7 @@ document.write = function(v){
 					//this was a appCartCreate.
 					if($('#cartMessenger').length)	{
 						cartID = _app.model.fetchCartID();
-						_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
+						//_app.ext.cart_message.u.initCartMessenger(cartID,$('#cartMessenger')); //starts the cart message polling
 						}
 					else	{
 						dump("#cartMessenger does NOT exist. That means the cart messaging extension won't work right.","warn");

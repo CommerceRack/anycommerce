@@ -759,10 +759,10 @@ _app.couple('quickstart','addPageHandler',{
 		}
 	});
 	
-_app.extend({
-	"namespace" : "cart_message",
-	"filename" : "extensions/cart_message/extension.js"
-	});
+// _app.extend({
+	// "namespace" : "cart_message",
+	// "filename" : "extensions/cart_message/extension.js"
+	// });
 	
 _app.extend({
 	"namespace" : "store_crm",
