@@ -62,6 +62,7 @@ var quickstart = function(_app) {
 		"hotw" : new Array(15), //history of the world. contains 15 most recent sotw objects.
 		"showContentFinished" : false,
 		"showContentCompleteFired" : false,
+		"showContentCleanup" : false,
 		"cachedPageCount" : 0,
 		"session" : {
 			"recentSearches" : [],
@@ -541,7 +542,14 @@ need to be customized on a per-ria basis.
 //2. Puts control of this into custom page transitions.
 				//dump(" -> got here.  n.is(':visible'): "+$n.is(':visible'));
 				$o.addClass('post'); 
-				setTimeout(function(){$n.addClass('active'); $o.removeClass('post active').hide(); callback(); setTimeout(function(){dump('setting showContentFinished true');_app.ext.quickstart.vars.showContentFinished = true;}, 300);}, 300); //fade out old, fade in new.
+				setTimeout(function(){
+					$n.addClass('active'); 
+					$o.removeClass('post active').hide(); 
+					callback(); setTimeout(function(){
+						dump('setting showContentFinished true');
+						_app.ext.quickstart.vars.showContentFinished = true;
+						}, 300);
+					}, 300); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
@@ -940,6 +948,7 @@ fallback is to just output the value.
 			newShowContent : function(uri,infoObj)	{
 				_app.ext.quickstart.vars.showContentFinished = false;
 				_app.ext.quickstart.vars.showContentCompleteFired = false;
+				_app.ext.quickstart.vars.showContentCleanup = false;
 				dump("BEGIN newShowContent ["+infoObj.pageType+"]."); dump(infoObj);
 				
 				infoObj = infoObj || {}; //could be empty for a cart or checkout
@@ -1009,30 +1018,34 @@ fallback is to just output the value.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 				
 				$new.addClass('displayNone').appendTo($('#mainContentArea'));
+				var callback = function(){
+					var $hiddenpages = $("#mainContentArea > :hidden");
+					var L = $hiddenpages.length;
+					for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
+						$($hiddenpages.get(i)).intervaledEmpty().remove();
+						}
+					_app.ext.quickstart.vars.showContentCleanup = true;
+					dump('cleared pages');
+					}
 				if(infoObj.performTransition == false)	{
+					callback();
 					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
-					var callback = function(){
-						var $hiddenpages = $("#mainContentArea > :hidden");
-						var L = $hiddenpages.length;
-						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
-							$($hiddenpages.get(i)).intervaledEmpty().remove();
-							}
-						dump('cleared pages');
-						}
 					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
 					}
 				else if($new instanceof jQuery)	{
 //no page transition specified. hide old content, show new. fancy schmancy.
 					$("#mainContentArea :visible:first").hide();
 					$new.show();
+					callback();
 					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else	{
 					dump("WARNING! In showContent but there is no new page to show!");
+					callback();
 					dump('setting showContentFinished true');
 					_app.ext.quickstart.vars.showContentFinished = true;
 					}
