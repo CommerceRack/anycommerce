@@ -40,7 +40,7 @@
 	<h2 class="highlightBG_1">My Team Chooser <span class="closeButton floatRight" data-app-click="store_swc|hideMyTeamChooser"></span></h2>
 	
 	<div class="contentContainer positionRelative">
-		<div id="sportChooser" class="alignCenter displayNone_1280 displayNone_960">
+		<div class="sportChooser alignCenter displayNone_1280 displayNone_960">
 			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb">
 				<h2 class="highlightBG_1_alpha white">MLB</h2>
 				<img data-tlc="set $var 'A/awlings_romlb_official_major_league_baseball'; store_swc#imageurl --name=$var; apply --attrib='src';" />
@@ -322,6 +322,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<div class="homepageBanner highlightBG_1 alignCenter">
 		<div class="homeSlideshow">
+			<a href="/filter/100_years_of_wrigley_field/">
+				<span class="vAlignHelper"></span>
+				<img data-bgcolor="tttttt" data-src="banners/wrigley_centennial_banner.png" title="100 Years of Wrigley Field" alt="100 Years of Wrigley Field" />
+			</a>
 			<a href="/filter/100_years_of_wrigley_field/">
 				<span class="vAlignHelper"></span>
 				<img data-bgcolor="tttttt" data-src="banners/wrigley_centennial_banner.png" title="100 Years of Wrigley Field" alt="100 Years of Wrigley Field" />
