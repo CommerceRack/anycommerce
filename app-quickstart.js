@@ -63,7 +63,7 @@ var quickstart = function(_app) {
 		"showContentFinished" : false,
 		"showContentCompleteFired" : false,
 		"showContentCleanup" : false,
-		"cachedPageCount" : 0,
+		"cachedPageCount" : 20,
 		"session" : {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
