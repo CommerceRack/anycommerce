@@ -117,23 +117,29 @@ for( var i in pages['@OBJECTS'] ) {
 				}
         }
 		
-
 var Crawler = require('./crawler.js');
 
 var crawlers = new Array(opts['threads']);
-var CHUNKSIZE = 5;
+var CHUNKSIZE = 200;
 
 function makeCrawler(i){
-	console.log('makeCrawler '+i);
+	// console.log('makeCrawler '+i);
 	if(PAGES.length){
+		console.log('Making new crawler.  Remaining pages: '+PAGES.length);
 		crawlers[i] = new Crawler(DOMAIN, PAGES.splice(0,CHUNKSIZE), function(){makeCrawler(i)}, i);
 		}
 	else{
-		crawlers.splice(i,1);
-		if(crawlers.length <= 0){
-			//theoretically we are done
-			process.exit();
+		// console.log('crawler '+i+' setting itself to false');
+		crawlers[i] = false;
+		for(var j in crawlers){
+			if(crawlers[j]){
+				// console.log('Not Exiting.');
+				return true;
+				}
 			}
+		//we've made it to the end of the crawler list and they're all false
+		// console.log('Exiting!');
+		process.exit();
 		}
 	}
 

@@ -29,7 +29,9 @@ var crawler = function(domain, pageArr, onFinish, id){
 						if(window.myApp.ext &&
 							window.myApp.ext.quickstart &&
 							window.myApp.ext.quickstart.vars &&
-							window.myApp.ext.quickstart.vars.showContentFinished && window.myApp.ext.quickstart.vars.showContentCompleteFired){
+							window.myApp.ext.quickstart.vars.showContentFinished && 
+							window.myApp.ext.quickstart.vars.showContentCompleteFired &&
+							window.myApp.ext.quickstart.vars.showContentCleanup){
 							r = {
 								appuri : window.$('[data-app-uri]').attr('data-app-uri'),
 								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML
@@ -67,12 +69,17 @@ var crawler = function(domain, pageArr, onFinish, id){
 						}
 					else if (typeof result == 'object' && result.html){
 						var filepath = currentPage.buildpath+""+currentPage.filename;
-						console.log('Phantom crawler '+id+' writing file: '+filepath);
-						console.log('returned appuri '+result.appuri);
-						fs.writeFileSync(filepath, result.html);
+						if(result.appuri != currentPage.url){
+							throw 'ERROR: page '+currentPage.url+' returned appuri '+result.appuri;
+							}
+						else{
+							// console.log('Phantom crawler '+id+' writing file: '+filepath);
+							fs.writeFileSync(filepath, result.html);
+							}
 						evaluateNext();
 						}
 					else{
+						console.error('Received a timeout on page '+currentPage.url);
 						//We got a go from result, but no info.  Continue.
 						evaluateNext();
 						}
@@ -80,12 +87,11 @@ var crawler = function(domain, pageArr, onFinish, id){
 					}
 				function evaluateNext(){
 					if(pageArr.length){
-						console.log('Phantom crawler '+id+' getting next page: '+pageArr[0].url);
+						// console.log('Phantom crawler '+id+' getting next page: '+pageArr[0].url);
 						page.evaluate(getNextPage())
 						page.evaluate(getStatus(), handlePage);
 						}
 					else {
-						console.log('Phantom crawler '+id+' calling onFinish');
 						ph.exit();
 						onFinish();
 						}
