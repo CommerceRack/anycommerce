@@ -481,7 +481,7 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(
 		var $routeEle = $('[data-canonical]',$context);
 		if($routeEle.length){ canonical = $routeEle.attr('data-canonical'); }
 		else{
-			canonical = window.location.pathname;
+			canonical = $context.closest('[data-app-uri]').attr('data-app-uri');
 			}
 		
 		var $canonical = $('link[rel=canonical]')

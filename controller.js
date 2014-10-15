@@ -944,7 +944,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				var isMatchArr = _app.router._doesThisRouteMatchHash(routesArr[i],matchValue); //will return an array where 0 is the 'match' from the regex and subsequent entries are the matched values. (ex: for product/PID , spot 1 is PID)
 				if(isMatchArr)	{
 					route = isMatchArr;
-					route.value = matchValue;
 					if(mode == 'hash') break;
 					}
 				}
@@ -1077,6 +1076,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						dump(e);
 						}
 					}
+				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				_app.router._executeCallback(routeObj);
 				return true;
 				}
