@@ -9,7 +9,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 		id = new Date().getTime();
 		}
 	var currentPage = false;
-	phantom.create(function(err,ph){
+	phantom.create((function(phantom){return function(err,ph){
 		return ph.createPage(function(err,page){
 			// page.onConsoleMessage = function(msg){
 				// console.log(msg);
@@ -31,6 +31,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 							window.myApp.ext.quickstart.vars &&
 							window.myApp.ext.quickstart.vars.showContentFinished && window.myApp.ext.quickstart.vars.showContentCompleteFired){
 							r = {
+								appuri : window.$('[data-app-uri]').attr('data-app-uri'),
 								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML
 								}
 							}
@@ -67,6 +68,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 					else if (typeof result == 'object' && result.html){
 						var filepath = currentPage.buildpath+""+currentPage.filename;
 						console.log('Phantom crawler '+id+' writing file: '+filepath);
+						console.log('returned appuri '+result.appuri);
 						fs.writeFileSync(filepath, result.html);
 						evaluateNext();
 						}
@@ -94,7 +96,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 					}, 2000);
 				});
 			})
-		},{parameters : {'load-images':false}});
+		}})(phantom),{parameters : {'load-images':false}});
 	
 	}
 

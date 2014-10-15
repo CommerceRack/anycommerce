@@ -62,7 +62,7 @@ var quickstart = function(_app) {
 		"hotw" : new Array(15), //history of the world. contains 15 most recent sotw objects.
 		"showContentFinished" : false,
 		"showContentCompleteFired" : false,
-		"cachedPageCount" : 20,
+		"cachedPageCount" : 0,
 		"session" : {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
@@ -1020,6 +1020,7 @@ fallback is to just output the value.
 						for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
 							$($hiddenpages.get(i)).intervaledEmpty().remove();
 							}
+						dump('cleared pages');
 						}
 					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
 					}
