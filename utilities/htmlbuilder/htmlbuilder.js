@@ -86,7 +86,7 @@ for( var i in pages['@OBJECTS'] ) {
 				switch (res.type) {
 						case 'pid':
 								page = {
-									url : '/product/' + res.id,
+									url : '/product/' + res.id + '/',
 									filename : res.id+".html",
 									buildpath : "./built/product/"
 									}
@@ -94,7 +94,7 @@ for( var i in pages['@OBJECTS'] ) {
 						case 'navcat':
 								if(res.id != '.'){
 									page = {
-										url : '/category/' + res.id.substr(1),  // strip leading . in category name
+										url : '/category/' + res.id.substr(1) + '/',  // strip leading . in category name
 										filename : res.id.substr(1)+".html",
 										buildpath : "./built/category/"
 										}
