@@ -1853,15 +1853,20 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 							$fieldset.anymessage({'message':rd});
 							}
 						else	{
-							$input.val(''); //reset input only on success.  allows for a typo to be corrected.
-							$fieldset.anymessage(_app.u.successMsgObject('Your coupon has been added.'));
-							_app.ext.order_create.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
-	//if a cart messenger is open, log the cart update.
-							if(cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+cartid,_app))	{
-								_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
-								_app.model.dispatchThis('passive');
-								}
-							window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','Cart updated - coupon added');
+							// !!! THIS IS A HACK AND SHOULD BE FIXED !!!
+							//Has to run asynchronously because the cartDetail call is sent in handleCommonPanels- There won't be a cart in the data until after
+							//that has a chance to run.  Since it's in the same pipeline, this has to delay.
+							setTimeout(function(){
+								$input.val(''); //reset input only on success.  allows for a typo to be corrected.
+								$fieldset.anymessage(_app.u.successMsgObject('Your coupon has been added.'));
+								_app.ext.order_create.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic']);
+		//if a cart messenger is open, log the cart update.
+								if(cartid && _app.u.thisNestedExists('ext.cart_message.vars.carts.'+cartid,_app))	{
+									_app.model.addDispatchToQ({'_cmd':'cartMessagePush','what':'cart.update','description':'Coupon added','_cartid':cartid},'passive');
+									_app.model.dispatchThis('passive');
+									}
+								window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','Cart updated - coupon added');
+								}, 0);
 							}
 						}});
 					
