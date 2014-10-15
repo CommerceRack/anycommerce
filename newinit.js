@@ -258,13 +258,46 @@ _app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','cal
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
+_app.router.appendHash({'type':'exact','route':'/major_league_baseball/','callback':function(routeObj){
+	$.extend(routeObj.params,{'pageType':'category','navcat':'.mlb','templateID':'leagueTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
+_app.router.appendHash({'type':'match','route':'/major_league_baseball/{{team}}/','callback':function(routeObj){
+	$.extend(routeObj.params,{'sport':'app_mlb','team':routeObj.params.team,'pageType':'category','navcat':'.mlb.'+routeObj.params.team,'templateID':'leagueTeamTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
+_app.router.appendHash({'type':'exact','route':'/national_football_league/','callback':function(routeObj){
+	$.extend(routeObj.params,{'pageType':'category','navcat':'.nfl_teams','templateID':'leagueTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
+_app.router.appendHash({'type':'match','route':'/national_football_league/{{team}}/','callback':function(routeObj){
+	$.extend(routeObj.params,{'sport':'app_nfl','team':routeObj.params.team,'pageType':'category','navcat':'.nfl_teams.'+routeObj.params.team,'templateID':'leagueTeamTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
+_app.router.appendHash({'type':'exact','route':'/national_basketball_association/','callback':function(routeObj){
+	$.extend(routeObj.params,{'pageType':'category','navcat':'.nba','templateID':'leagueTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
+_app.router.appendHash({'type':'exact','route':'/national_hockey_league/','callback':function(routeObj){
+	$.extend(routeObj.params,{'pageType':'category','navcat':'.nhl','templateID':'leagueTemplate'});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
 	
+_app.u.bindTemplateEvent('leagueTeamTemplate', 'complete.filterlinks', function(event, $context, infoObj){
+	var data = $.grep(_app.ext.store_swc.validTeams[infoObj.sport], function(e, i){ return e.v == infoObj.team})[0];
+	for(var i in data.filters){
+		data.filters[i].sport = infoObj.sport;
+		data.filters[i].team = infoObj.team;
+		}
+	if(data){
+		$('.filterSubcatContainer',$context).tlc({'verb':'transmogrify','templateid':$('.filterSubcatContainer',$context).attr('data-templateid'),'dataset':$.extend({},data)});
+		}
+	});
 _app.router.appendHash({'type':'exact','route':'/careers/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.careers',
-		'templateID':'categoryTemplateHTML',
-		'require':['templates.html']
+		'templateID':'categoryTemplateHTML'
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});	
@@ -706,7 +739,8 @@ _app.couple('quickstart','addPageHandler',{
 			_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
 			}
 		_app.require(['store_navcats','templates.html','store_swc','store_routing'],function(){
-			if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
+			if(infoObj.templateID){}
+			else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
 			else{infoObj.templateID = 'categoryTemplate';}
 			_app.ext.store_navcats.u.showPage($container, infoObj);
 			});

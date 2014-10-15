@@ -185,6 +185,32 @@ var store_swc = function(_app) {
 					return false;
 					}
 				},
+			leaguefilteranchor : function(data,thisTLC){
+				dump(data);
+				var href = "/filter/"+data.value.id+"/?sport="+data.value.sport+"&team="+data.value.team;
+				data.globals.binds[data.globals.focusBind] = href;
+				return true;
+				},
+			leagueanchor : function(data,thisTLC){
+				var navcat = data.globals.binds[data.globals.focusBind].substr(1);
+				navcat = navcat.split('.');
+				if(navcat.length == 2){
+					var href = "/";
+					if(navcat[0] == 'mlb'){
+						href += "major_league_baseball/";
+						}
+					else if(navcat[0] == "nfl_teams"){
+						href += "national_football_league/";
+						}
+					else{
+						return false;
+						}
+					href += navcat[1] + "/";
+					data.globals.binds[data.globals.focusBind] = href;
+					return true;
+					}
+				return false;
+				},
 			filterrange : function(data, thisTLC){
 				var args = thisTLC.args2obj(data.command.args, data.globals);
 				if(typeof args.filterType === "undefined"){

@@ -326,10 +326,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<span class="vAlignHelper"></span>
 				<img data-bgcolor="tttttt" data-src="banners/wrigley_centennial_banner.png" title="100 Years of Wrigley Field" alt="100 Years of Wrigley Field" />
 			</a>
-			<a href="/filter/100_years_of_wrigley_field/">
-				<span class="vAlignHelper"></span>
-				<img data-bgcolor="tttttt" data-src="banners/wrigley_centennial_banner.png" title="100 Years of Wrigley Field" alt="100 Years of Wrigley Field" />
-			</a>
 			<a href="/filter/bears/">
 				<span class="vAlignHelper"></span>
 				<img data-bgcolor="tttttt" data-src="banners/2014/chicago_bears_transparent_artwork.png" title="Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com" alt="Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com" />
@@ -356,11 +352,28 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</a>
 		</div>
 	</div>
+	<div class="leagueLinkContainer alignCenter displayTable fillWidth">
+		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/major_league_baseball/">
+			MLB
+		</a>
+		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_football_league/">
+			NFL
+		</a>
+		<!-- 
+		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_basketball_association/">
+			NBA
+		</a>
+		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_hockey_league/">
+			NHL
+		</a> 
+		-->
+	</div>
 	
 		
 	<a class="blockLink" href="/filter/100_years_of_wrigley_field/">
 		<img data-apptimize="embed" src="images/homepage/100_years_wrigley_v5.jpg"/>
 	</a>
+	
 	
 	<a class="blockLink" href="/filter/shirts/">
 		<img data-apptimize="embed" src="images/homepage/Chicago-Cubs-Homepage-Square.jpg"/>
@@ -440,8 +453,44 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</div>
 </div>
 
+<div id="leagueTemplate" class="">
+	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{bind $var '.%page.meta_description';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
+	
+	<h1 data-tlc="bind $var '.%page.page_title'; if (is $var --notblank;) {{apply --append;}};"></h1>
+	<p class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
+	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='leagueListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
+</div>
 
+<ul>
+	<li id="leagueListTemplate" class="categoryListItem blockLink alignLeft">
+		<a data-tlc="bind $var '.path'; store_swc#leagueanchor; apply --attrib='href';" >
+			<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
+			<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
+		</a>
+	</li>
+	<li id="leagueFilterListTemplate" class="categoryListItem blockLink alignLeft">
+		<a data-tlc="bind $var '.'; store_swc#leaguefilteranchor; apply --attrib='href';" >
+			<div class="thumbContainer"><img data-tlc="bind $var '.img'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
+			<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.id'; store_swc#filtertitle; apply --append;"></span></div>
+		</a>
+	</li>
+</ul>
 
+<div id="leagueTeamTemplate" class="">
+	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
+	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{bind $var '.%page.meta_description';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
+	
+	<h1 data-tlc="bind $var '.%page.page_title'; if (is $var --notblank;) {{apply --append;}};"></h1>
+	<p class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
+	
+	<div class="filterSubcatContainer" data-templateid="leagueTeamFilterULTemplate"></div>
+	
+</div>
+
+<ul id="leagueTeamFilterULTemplate" data-tlc="bind $sport '.sport'; apply --attrib='data-sport';
+												bind $team '.team'; apply --attrib='data-team';
+												bind $var '.filters'; controller#loop --templateid='leagueFilterListTemplate'; apply --append;"></ul>
 
 <div id="fieldcamTemplate" class="fieldCamPage alignCenter">
 	<span class="displayNone" data-seo-title="LIVE Wrigley Field Cam - Across From Wrigley Field Since 1979"></span>

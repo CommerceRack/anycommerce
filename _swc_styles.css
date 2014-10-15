@@ -3,6 +3,8 @@ html, body{padding:0px; margin: 0px;}
 */
 
 body{background:url(images/Wrigley_Field_Bleachers9.jpg) no-repeat fixed center top, #233628;}
+.highlight_1, a.highlight_1{color:#233628;}
+.highlight_2, a.highlight_2{color:#5c6a60;}
 .highlightBG_1 {background: #233628;}
 .highlightBG_1_alpha {background:rgba(35,54,40,.75);}
 .highlightBG_2 {background: #5c6a60;}
@@ -10,6 +12,7 @@ body{background:url(images/Wrigley_Field_Bleachers9.jpg) no-repeat fixed center 
 a.redText{color:#7e0000;}
 .strong{font-weight:bold;}
 .underline {text-decoration:underline;}
+.noUnderline, a.noUnderline {text-decoration:none;}
 .blockLink, .blockLink a {text-decoration:none;}
 .bold {font-weight:bold;}
 .white{color:white;}
@@ -205,6 +208,10 @@ a.redText{color:#7e0000;}
 
 .homepageContent p{ font-size: .9em; padding: 0px 12px; text-indent: 12px;}
 .homepageContent {border: 2px solid #233628; padding-bottom: 12px;}
+
+.leagueLinkContainer {border-spacing: 5px;}
+.leagueLink {font-size: 3em; border: 3px solid #233628;}
+a.leagueLink:hover {background:#233628; color:white;}
 
 a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
