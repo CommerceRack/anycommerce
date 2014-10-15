@@ -924,10 +924,14 @@ _app.router.appendInit({
 			window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);
 			}
 		if(g.uriParams && g.uriParams.meta)	{
-			_app.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
+			_app.require('cco', function(){
+				_app.ext.cco.calls.cartSet.init({'want/refer':g.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
+				});
 			}
 		if(g.uriParams && g.uriParams.meta_src)	{
-			_app.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
+			_app.require('cco',function(){
+				_app.ext.cco.calls.cartSet.init({'want/refer_src':g.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
+				});
 			}
 		$('#clickBlocker').remove();
 		}
