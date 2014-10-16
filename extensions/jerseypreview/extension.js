@@ -83,6 +83,7 @@ var jerseypreview = function(_app) {
 			"6200-CUBH-EJ-PER",
 			"6700-CUBR-EJ-PR1",
 			"6700-PDRH-DRS-PER",
+			"6300-ROYH-ROW-PIN",
 			"blank",
 			"CHIC24",
 			"CUBS81",
