@@ -1068,15 +1068,15 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(hash){
 					routeObj.urihash = hash;
 					}
+				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				if(!skipPush){
 					try{
-						window.history.pushState(uri, "", uri);
+						window.history.pushState(routeObj.value, "", routeObj.value);
 						}
 					catch(e){
-						dump(e);
+						//dump(e);
 						}
 					}
-				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				_app.router._executeCallback(routeObj);
 				return true;
 				}
