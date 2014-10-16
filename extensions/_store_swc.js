@@ -1635,7 +1635,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Kansas_City_Royals_Royal_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Kansas_City_Royals/Kansas_City_Royals_Road_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/kansas_city_royals_royal_authentic_triple_peak_cool_base_convertible_gamer_jacke"},
-								//{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
+								{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Kansas_City_Royals_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
