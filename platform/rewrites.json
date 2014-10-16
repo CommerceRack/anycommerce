@@ -17,6 +17,10 @@
 // more rewrites
 { "type":"path", "if":"/filter/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/search/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/major_league_baseball/.*?/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/national_football_league/.*?/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/major_league_baseball/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/national_football_league/", "then#sendfile":"/index.html", "apptimize":false },
 
 // sendfile
 { "type":"path", "if":"/cart/?", "then#sendfile":"/index.html", "apptimize":false },
