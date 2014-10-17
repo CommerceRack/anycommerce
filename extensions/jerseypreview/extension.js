@@ -90,6 +90,7 @@ var jerseypreview = function(_app) {
 			"7700-ROYH-ROW-PSO",
 			"7703-ROYH-ROW-PSO",
 			"6300-GIAH-GIW-PIN",
+			"6300-GNTR-GIW-PIN",
 			"blank",
 			"CHIC24",
 			"CUBS81",
