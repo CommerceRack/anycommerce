@@ -168,11 +168,14 @@ var jerseypreview = function(_app) {
 				if($canvas.length != 0){
 					$canvas.get(0).width = $canvas.parent().innerWidth();
 					$canvas.get(0).height = $canvas.parent().innerHeight();
-					var name = $('input[name=B5]', $context).val().toUpperCase();
+					var params = _app.ext.jerseypreview.vars.paramsByPID[$canvas.attr('data-pid')];
+					var name = "";
+					if(params.name){
+						name = $('input[name=B5]', $context).val().toUpperCase() || "";
+						}
 					var number = $('input[name=B6]', $context).val().toUpperCase();
-					if(name != "" && number != ""){
+					if((name != "" || !params.name) && number != ""){
 						var context = $canvas.get(0).getContext('2d');
-						var params = _app.ext.jerseypreview.vars.paramsByPID[$canvas.attr('data-pid')];
 						var w = $canvas.innerWidth();
 						var h = $canvas.innerHeight();
 						var ratio = w / 296;
@@ -200,14 +203,15 @@ var jerseypreview = function(_app) {
 						context.strokeText(number, x, (params.number.y+params.number.size)*ratio);
 						
 						//draw name to canvas
-						
-						context.font = (params.name.size*ratio)+"px "+params.font+","+params.font+"2";
-						context.fillStyle = "#"+params.name.color;
-						context.strokeStyle = "#"+params.name.strokeColor;
-						context.lineWidth = params.name.strokeThickness*ratio;
-						
-						x = w/2 + params.name.xOffset*ratio;
-						this.drawTextAlongArc(context, name, x, (params.name.y+params.name.radius)*ratio, params.name.radius*ratio, params.name.charSize*ratio);
+						if(params.name){
+							context.font = (params.name.size*ratio)+"px "+params.font+","+params.font+"2";
+							context.fillStyle = "#"+params.name.color;
+							context.strokeStyle = "#"+params.name.strokeColor;
+							context.lineWidth = params.name.strokeThickness*ratio;
+							
+							x = w/2 + params.name.xOffset*ratio;
+							this.drawTextAlongArc(context, name, x, (params.name.y+params.name.radius)*ratio, params.name.radius*ratio, params.name.charSize*ratio);
+						}
 						
 						if(!$canvas.is(':visible')){
 							$canvas.fadeIn();
