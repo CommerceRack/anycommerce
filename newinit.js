@@ -817,7 +817,7 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
-	"require" : ['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview', 'partner_addthis'],
+	"require" : ['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview'],
 	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
@@ -945,6 +945,7 @@ _app.router.appendInit({
 		return {'init':true} //returning anything but false triggers a match.
 		},
 	'callback':function(f,g){
+		$('#clickBlocker').remove();
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
 		var $existingPage = $('#mainContentArea [data-app-uri]');
@@ -1001,7 +1002,6 @@ _app.router.appendInit({
 				_app.ext.cco.calls.cartSet.init({'want/refer_src':g.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
 				});
 			}
-		$('#clickBlocker').remove();
 		}
 	});
 
