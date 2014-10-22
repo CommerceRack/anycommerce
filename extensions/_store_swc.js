@@ -1845,7 +1845,7 @@ var store_swc = function(_app) {
 							]},
 						{"p":"Dallas Cowboys","v":"dallas_cowboys", "img":"nfl/dallas_cowboys_cap.jpg", 
 							"filters" : [
-								{"id":"game_time/Dallas_Cowboys_Mens_All_Pro_Series_Watch"}
+								{"id":"souvenirs","img":"game_time/Dallas_Cowboys_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Denver Broncos","v":"denver_broncos", "img":"nfl/denver_broncos_cap.jpg", 
 							"filters" : [

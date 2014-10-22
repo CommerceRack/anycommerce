@@ -195,7 +195,7 @@
 	"/filter/sweatshirts/?sport=app_nfl&team=cleveland_browns",
 	"/filter/hats/?sport=app_nfl&team=cleveland_browns",
 	"/filter/souvenirs/?sport=app_nfl&team=cleveland_browns",
-	"/filter/game_time/Dallas_Cowboys_Mens_All_Pro_Series_Watch/?sport=app_nfl&team=dallas_cowboys",
+	"/filter/souvenirs/?sport=app_nfl&team=dallas_cowboys",
 	"/filter/shirts/?sport=app_nfl&team=denver_broncos",
 	"/filter/hats/?sport=app_nfl&team=denver_broncos",
 	"/filter/souvenirs/?sport=app_nfl&team=denver_broncos",
