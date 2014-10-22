@@ -131,12 +131,12 @@ var quickstart = function(_app) {
 				if(cartID)	{
 					dump(" -> cartID is set, validate.");
 					// the addCart2CM uses the 'appCartExists' datapointer. if it changes here, update the callback.
-					_app.model.addDispatchToQ({"_cmd":"appCartExists",_cartid:cartID,"_tag":{"datapointer":"appCartExists","cartid":cartID,"callback":"addCart2CM","extension":"quickstart", "require":"cart_message"}},"mutable");
+					_app.model.addDispatchToQ({"_cmd":"appCartExists",_cartid:cartID,"_tag":{"datapointer":"appCartExists","cartid":cartID,"callback":"addCart2CM","extension":"quickstart"}},"mutable");
 					//do not set cart ID in session until it validates.
 					}
 				else	{
 					dump(" -> no cart found. create a new one");
-					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart', "require":"cart_message"},'mutable');
+					_app.calls.appCartCreate.init({'callback':"addCart2CM","extension":'quickstart'},'mutable');
 					}
 
 //technically, a session lasts until the browser is closed. if fresh data is desired on refresh, uncomment the following few lines.

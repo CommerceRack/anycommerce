@@ -497,8 +497,7 @@ _app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(ev
 	if(infoObj.deferred){
 		$('form.filterList',$context).data('deferred', infoObj.deferred);
 		}
-	//quick hack- we know if there's scroll restore data, that we've been there before so we don't need to resubmit the form
-	if(!$context.data('scroll-restore')){
+	if(!$context.attr('data-filter-rendered')){
 		var $form = $('form.filterList', $context);
 		function submitForm(){
 			if($form.attr('data-filter-base')){
@@ -513,7 +512,9 @@ _app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(ev
 		setTimeout(submitForm,0);
 		}
 	});
-	
+_app.u.bindTemplateEvent('filteredSearchTemplate', 'depart.filter',function(event, $context, infoObj){
+	$context.attr('data-filter-rendered',"true");
+	});
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(event, $context, infoObj){
 	if(infoObj){
 		var canonical = "";
@@ -946,7 +947,8 @@ _app.router.appendInit({
 	'callback':function(f,g){
 		dump(" -> triggered callback for appendInit");
 		g = g || {};
-		var $existingPage = $('#mainContentArea [data-app-uri]')
+		var $existingPage = $('#mainContentArea [data-app-uri]');
+		console.log($existingPage.length);
 		if($existingPage.length /*&& $existingPage.attr('data-app-uri') == document.location.pathname*/){
 			//We are a transplanted document, let's load accordingly.
 			//re-attach template handlers
@@ -961,7 +963,7 @@ _app.router.appendInit({
 					}
 				}
 			//handleURIChange here will not change the page, but it will execute appropriate events
-			_app.router.handleURIChange($existingPage.attr('data-app-uri'), false, false, true, {"retrigger" : true});
+			_app.router.handleURIString($existingPage.attr('data-app-uri'), true, {"retrigger" : true});
 			}
 		else if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);

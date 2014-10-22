@@ -1085,13 +1085,16 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return false;
 			},
-		handleURIString : function(uriStr){
+		handleURIString : function(uriStr, skipPush, forcedParams){
 			var a = document.createElement('a');
 			a.href = "http://www.domain.com"+uriStr;
 			var path = a.pathname;
 			var search = a.search;
 			var hash = a.hash;
-			this.handleURIChange(path,search,hash);
+			console.log(path);
+			console.log(search);
+			console.log(hash);
+			this.handleURIChange(path,search,hash,skipPush,forcedParams);
 			},
 		handleHashChange : function()	{
 			//_ignoreHashChange set to true to disable the router.  be careful.

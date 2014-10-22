@@ -57,9 +57,9 @@ var store_swc = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 				var userTeam = _app.model.readLocal('swcUserTeam');
-				if(document.location.search.indexOf("team=") >= 0){
-					dump(_app.u.kvp2Array(document.location.search.substr(1)));
-					_app.ext.store_swc.u.setUserTeam(_app.u.kvp2Array(document.location.search.substr(1)), true);
+				if((document.location.pathname.indexOf('filter/') >= 0 && document.location.search.indexOf("team=") >= 0) ||
+					(document.location.protocol == "file:" && document.location.href.indexOf('filter') >= 0 && document.location.href.indexOf('team=') >= 0)){
+					//do nothing, it'll get handled in the filter callback
 					}
 				else if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam, true);
