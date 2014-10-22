@@ -1016,9 +1016,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					var path = a.pathname;
 					var search = a.search;
 					var hash = a.hash;
+					console.log($(this).attr('href'));
+					console.log($(this).attr('href').indexOf('#'));
 					if($(this).attr('href').indexOf('#') == 0){
 						//This is an internal hash link, href="#.*"
-						//do nothing
+						event.preventDefault();
 						}
 					else if(_app.router.handleURIChange(path, search, hash)){
 						event.preventDefault();
@@ -1032,30 +1034,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					_app.router.handleURIChange(event.state);
 					}
 				
-				if (window.addEventListener) {
-					dump(" -> addEventListener is supported and added for hash change.");
-					window.addEventListener("hashchange", _app.router.handleHashChange, false);
-					$(document.body).data('isRouted',true);
-					}
-				//IE 8
-				else if(window.attachEvent)	{
-					//A little black magic here for IE8 due to a hash related bug in the browser.
-					//make sure a hash is set.  Then set the hash to itself (yes, i know, but that part is key). Then wait a short period and add the hashChange event.
-					window.location.hash = window.location.hash || '#!home'; //solve an issue w/ the hash change reloading the page.
-					window.location.hash = window.location.hash;
-					setTimeout(function(){
-						window.attachEvent("onhashchange", _app.router.handleHashChange);
-						},1000);
-					$(document.body).data('isRouted',true);
-					}
-				else	{
-					$("#globalMessaging").anymessage({"message":"Browser doesn't support addEventListener OR attachEvent.","gMessage":true});
-					}
-				
 				}
 			},
 		
 		handleURIChange : function(uri, search, hash, skipPush, forcedParams){
+			console.log('handleURIChange');
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			if(routeObj) {
 				routeObj.params = routeObj.params || {};
@@ -1095,32 +1078,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			console.log(search);
 			console.log(hash);
 			this.handleURIChange(path,search,hash,skipPush,forcedParams);
-			},
-		handleHashChange : function()	{
-			//_ignoreHashChange set to true to disable the router.  be careful.
-			if(location.hash.indexOf('#!') == 0  && !_app.vars.ignoreHashChange)	{
-				// ### TODO -> test this with hash params set by navigateTo. may need to uri encode what is after the hash.
-// *** 201403 use .href.split instead of .hash for routing- Firefox automatically decodes the hash string, which breaks any URIComponent encoded characters, like "%2F" -> "/" -mc
-// http://stackoverflow.com/questions/4835784/firefox-automatically-decoding-encoded-parameter-in-url-does-not-happen-in-ie
-				var routeObj = _app.router._getRouteObj(location.href.split('#!')[1],'hash'); //if we decide to strip trailing slash, use .replace(/\/$/, "")
-				if(routeObj)	{
-					routeObj.hash = location.hash;
-					routeObj.hashParams = (location.hash.indexOf('?') >= 0 ? _app.u.kvp2Array(location.hash.split("?")[1]) : {});
-					window[_app.vars.analyticsPointer]('send', 'screenview', {'screenName' : routeObj.hash} );
-					_app.router._executeCallback(routeObj);
-					}
-				else	{
-					_app.u.dump(" -> Uh Oh! no valid route found for "+location.hash);
-					if(typeof _app.router.aliases['404'] == 'function')	{
-						_app.router._executeCallback({'callback':'404','hash':location.hash});
-						}
-					}
-				}
-			else	{
-				if(_app.vars.ignoreHashChange)	{_app.u.dump(" -> ignoreHashChange is true. Router is disabled.")}
-				else	{_app.u.dump(" -> not a hashbang")}
-				//is not a hashbang. do nothing.
-				}
 			}
 		},
 
