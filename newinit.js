@@ -323,8 +323,7 @@ _app.router.appendHash({'type':'exact','route':'/inquiry/','callback':function(r
 	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.help_desk.player-inquiry',
-		'templateID':'inquiryTemplate',
-		'require':['templates.html']
+		'templateID':'inquiryTemplate'
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
@@ -332,8 +331,7 @@ _app.router.appendHash({'type':'exact','route':'/rewards/','callback':function(r
 	$.extend(routeObj.params,{
 		'pageType':'category',
 		'navcat':'.rewards_program',
-		'templateID':'rewardsTemplate',
-		'require':['templates.html']
+		'templateID':'rewardsTemplate'
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});

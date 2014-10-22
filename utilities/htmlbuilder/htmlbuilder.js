@@ -145,7 +145,18 @@ var CHUNKSIZE = 200;
 function makeCrawler(i){
 	// console.log('makeCrawler '+i);
 	if(PAGES.length){
-		crawlers[i] = new Crawler(DOMAIN, PAGES.splice(0,CHUNKSIZE), function(){makeCrawler(i)}, i);
+		function requeue(page){
+			page.attempts = page.attempts || 0;
+			page.attempts++;
+			if(page.attempts < 20){
+				console.log('requeueing '+page.url);
+				PAGES.push(page);
+				}
+			else{
+				console.warn('After 20 attempts to scrape '+page.url+' it has been omitted');
+				}
+			}
+		crawlers[i] = new Crawler(requeue, DOMAIN, PAGES.splice(0,CHUNKSIZE), function(){makeCrawler(i)}, i);
 		console.log('New crawler spawned.  Remaining pages: '+PAGES.length);
 		}
 	else{

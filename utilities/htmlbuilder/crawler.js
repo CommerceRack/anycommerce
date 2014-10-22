@@ -3,7 +3,7 @@ var fs = require('fs');
 var ATTEMPT_LIMIT = 200;
 var TIMEOUT = 100; // total timeout limit of 200*100 = 20000, or 20 seconds 
 
-var crawler = function(domain, pageArr, onFinish, id){
+var crawler = function(requeue, domain, pageArr, onFinish, id){
 	onFinish = onFinish || function(){};
 	if(typeof id == "undefined"){
 		id = new Date().getTime();
@@ -29,10 +29,14 @@ var crawler = function(domain, pageArr, onFinish, id){
 						if(window.myApp.ext &&
 							window.myApp.ext.quickstart &&
 							window.myApp.ext.quickstart.vars &&
-							window.myApp.ext.quickstart.vars.showContentFinished){
+							window.myApp.ext.quickstart.vars.showContentFinished &&
+							window.$('[data-app-uri]').length <= 1){
 							r = {
 								appuri : window.$('[data-app-uri]').attr('data-app-uri'),
 								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML
+								}
+							if(r.appuri.indexOf('/?_v') == 0){
+								r.appuri = '/';
 								}
 							}
 						else if(window.__attempts < window.__ATTEMPT_LIMIT){
@@ -48,7 +52,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 					currentPage = pageArr.shift();
 					return "function(){"
 								+"window.__attempts=0;"
-								+"window.myApp.router.handleURIChange('"+currentPage.url+"');"
+								+"window.myApp.router.handleURIString('"+currentPage.url+"');"
 								+"}"
 					}
 				function handleContinue(err, result){
@@ -72,14 +76,14 @@ var crawler = function(domain, pageArr, onFinish, id){
 							throw 'ERROR: page '+currentPage.url+' returned appuri '+result.appuri;
 							}
 						else{
-							// console.log('Phantom crawler '+id+' writing file: '+filepath);
+							console.log('Phantom crawler '+id+' writing file: '+filepath);
 							fs.writeFileSync(filepath, result.html);
 							}
 						evaluateNext();
 						}
 					else{
-						console.error('Received a timeout on page');
-						console.error('Received a timeout on page '+currentPage.url);
+						//console.error('Received a timeout on page '+currentPage.url);
+						requeue(currentPage);
 						//We got a go from result, but no info.  Continue.
 						evaluateNext();
 						}
