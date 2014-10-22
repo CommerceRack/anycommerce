@@ -95,6 +95,7 @@ var quickstart = function(_app) {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 				_app.ext.quickstart.pageHandlers = {};
+				_app.ext.quickstart.pageRequires = {};
 				return r;
 				},
 			onError : function()	{
@@ -947,8 +948,16 @@ fallback is to just output the value.
 				//Don't navigate if we're already on the page
 				if($old.attr('data-app-uri') == uri){
 					if(infoObj.retrigger){
-						infoObj.state = 'complete'
-						_app.renderFunctions.handleTemplateEvents($('> [data-templateid]',$old), infoObj);
+						var triggerComplete = function(){
+							infoObj.state = 'complete'
+							_app.renderFunctions.handleTemplateEvents($('> [data-templateid]',$old), infoObj);
+							}
+						if(_app.ext.quickstart.pageRequires[infoObj.pageType]){
+							_app.require(_app.ext.quickstart.pageRequires[infoObj.pageType], triggerComplete);
+							}
+						else{
+							triggerComplete();
+							}
 						}
 					infoObj.defPipeline.execute();
 					return false;
@@ -993,7 +1002,7 @@ fallback is to just output the value.
 				else {
 					$new = $('<div data-app-uri="'+uri+'"></div>');
 					if(_app.ext.quickstart.pageHandlers[infoObj.pageType]){
-						_app.ext.quickstart.pageHandlers[infoObj.pageType]($new, infoObj);
+						_app.ext.quickstart.pageHandlers[infoObj.pageType]($new, infoObj, _app.ext.quickstart.pageRequires[infoObj.pageType]);
 						}
 					else{
 						//404
@@ -2744,6 +2753,7 @@ later, it will handle other third party plugins as well.
 			addPageHandler : function(args){
 				//dump('adding handler');
 				_app.ext.quickstart.pageHandlers[args.pageType] = args.handler;
+				_app.ext.quickstart.pageRequires[args.pageType] = args.require || [];
 				}
 			}
 

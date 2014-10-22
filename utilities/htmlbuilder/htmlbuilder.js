@@ -76,8 +76,6 @@ var pages = JSON.parse(request.responseText);
 
 var today = new Date();
 var datestr = dateFormat(now,"yyyy-mm-dd");
-var prods = 0;
-var navcats = 0;
 for( var i in pages['@OBJECTS'] ) {
         // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
         var res = pages['@OBJECTS'][i];
@@ -85,13 +83,10 @@ for( var i in pages['@OBJECTS'] ) {
 				var page = false;
 				switch (res.type) {
 						case 'pid':
-								if(prods < 10){
-									page = {
-										url : '/product/' + res.id + '/',
-										filename : res.id+".html",
-										buildpath : "./built/product/"
-										}
-									prods++
+								page = {
+									url : '/product/' + res.id + '/',
+									filename : res.id+".html",
+									buildpath : "./built/product/"
 									}
 								break;
 						case 'navcat':
@@ -115,14 +110,14 @@ for( var i in pages['@OBJECTS'] ) {
 									}
 								else if(res.id != '.'){
 									url = '/category/' + res.id.substr(1) + '/';  // strip leading . in category name
+									filename = res.id.substr(1);
 									}
-								if(url && navcats <10){
+								if(url){
 									page = {
 										url : url,
 										filename : filename+".html",
 										buildpath : "./built/category/"
 										}
-									navcats++
 									}
 								break;
 						case 'list' :
@@ -150,8 +145,8 @@ var CHUNKSIZE = 200;
 function makeCrawler(i){
 	// console.log('makeCrawler '+i);
 	if(PAGES.length){
-		console.log('Making new crawler.  Remaining pages: '+PAGES.length);
 		crawlers[i] = new Crawler(DOMAIN, PAGES.splice(0,CHUNKSIZE), function(){makeCrawler(i)}, i);
+		console.log('New crawler spawned.  Remaining pages: '+PAGES.length);
 		}
 	else{
 		// console.log('crawler '+i+' setting itself to false');

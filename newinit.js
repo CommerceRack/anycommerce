@@ -43,12 +43,15 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "static",
+	"require" : [],
 	"handler" : function($container, infoObj){
 		var deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(deferred);
 		if(infoObj.deferred){
 			infoObj.defPipeline.addDeferred(infoObj.deferred);
 			}
+		//We use infoObj.require here because the router handlers may have put something in there.
+		//By nature, the static page handler requires nothing, but the templates it renders may require all kinds of stuff
 		infoObj.require = infoObj.require || [];
 		_app.require(infoObj.require,function(){
 			infoObj.verb = 'translate';
@@ -73,11 +76,12 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "checkout",
-	"handler" : function($container, infoObj){
+	"require" : ['order_create','cco', 'extensions/checkout/active.html'],
+	"handler" : function($container, infoObj, require){
 		var deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(deferred);
 		infoObj.templateID = 'checkoutTemplate';
-		_app.require(['order_create','cco', 'extensions/checkout/active.html'],function(){
+		_app.require(require,function(){
 			$container.attr('id', 'checkoutContainer');
 			_app.ext.order_create.a.startCheckout($container,_app.model.fetchCartID());
 			infoObj.state = 'complete'; //needed for handleTemplateEvents.
@@ -94,14 +98,15 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "cart",
-	"handler" : function($container, infoObj){
+	"require" : ['cco','order_create','templates.html'],
+	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		infoObj.navcat = zGlobals.appSettings.rootcat;
 		infoObj.cartid = _app.model.fetchCartID();
 		infoObj.templateID = 'cartTemplate';
 		infoObj.trigger = 'fetch';
-		_app.require(['cco','order_create','templates.html'],function(){
+		_app.require(require,function(){
 			//var $cart = new tlc().getTemplateInstance('cartTemplate');
 			//var $cart = $(_app.renderFunctions.createTemplateInstance('cartTemplate',infoObj));
 			var $cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
@@ -628,7 +633,7 @@ _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event
 	//		still has the listener.  Any future instances of the template will still have the listener upon creation
 	$context.off('complete.slideshow');
 	var $slideshow = $('.homeSlideshow', $context);
-	$('img[data-src]', $slideshow).each(function(){
+	$('img[data-src]:not([src])', $slideshow).each(function(){
 		$(this).attr('src', _app.u.makeImage({
 			'name' : $(this).attr('data-src'), 
 			'b' : $(this).attr('data-bgcolor'),
@@ -649,19 +654,22 @@ _app.u.bindTemplateEvent('fieldcamTemplate', 'depart.destroy',function(event, $c
 	});
 	
 _app.u.bindTemplateEvent('productTemplate', 'complete.invcheck',function(event, $context, infoObj){
-	var data = _app.data['appProductGet|'+infoObj.pid];
-	var variations = data['@variations'];
-	if(variations.length == 1 /*&& variations[0].id.match(/A[BDEFGHM]/) */){
-		var id = variations[0].id;
-		$('select[name='+id+'] option', $context).each(function(){
-			var sku = infoObj.pid+":"+id+""+$(this).attr("value");
-			dump(sku);
-			dump(data["@inventory"][sku]);
-			if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
-				//$(this).attr("disabled","disabled");
-				$(this).remove();
-				}
-			});
+	if(!$context.attr('data-invcheck')){
+		$context.attr('data-invcheck','true');
+		var data = _app.data['appProductGet|'+infoObj.pid];
+		var variations = data['@variations'];
+		if(variations.length == 1 /*&& variations[0].id.match(/A[BDEFGHM]/) */){
+			var id = variations[0].id;
+			$('select[name='+id+'] option', $context).each(function(){
+				var sku = infoObj.pid+":"+id+""+$(this).attr("value");
+				dump(sku);
+				dump(data["@inventory"][sku]);
+				if(data["@inventory"][sku] && data["@inventory"][sku].AVAILABLE <= 0){
+					//$(this).attr("disabled","disabled");
+					$(this).remove();
+					}
+				});
+			}
 		}
 	});
 	
@@ -738,12 +746,13 @@ _app.extend({
 	
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "homepage",
-	"handler" : function($container, infoObj){
+	"require" : ['store_navcats','templates.html','store_swc','store_routing'],
+	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		dump('homepage handler');
 		infoObj.navcat = zGlobals.appSettings.rootcat;
-		_app.require(['store_navcats','templates.html','store_swc','store_routing'],function(){
+		_app.require(require,function(){
 			infoObj.templateID = 'homepageTemplate';
 			_app.ext.store_navcats.u.showPage($container, infoObj);
 			});
@@ -752,21 +761,24 @@ _app.couple('quickstart','addPageHandler',{
 	
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "category",
-	"handler" : function($container, infoObj){
+	"require" : ['store_navcats','store_prodlist','prodlist_infinite','templates.html','store_swc','store_routing'],
+	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
-		infoObj.prodRenderedDeferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
-		infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
 		if(infoObj.navcat.charAt(0) != '.'){
 			infoObj.navcat = '.'+infoObj.navcat
 			}
 		if(_app.ext.quickstart.vars.session.recentCategories[0] != infoObj.navcat)	{
 			_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
 			}
-		_app.require(['store_navcats','store_prodlist','prodlist_infinite','templates.html','store_swc','store_routing'],function(){
+		_app.require(require,function(){
 			if(infoObj.templateID){}
 			else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
 			else{infoObj.templateID = 'categoryTemplate';}
+			if(infoObj.templateID = 'categoryTemplate'){
+				infoObj.prodRenderedDeferred = $.Deferred();
+				infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
+				}
 			_app.ext.store_navcats.u.showPage($container, infoObj);
 			});
 						
@@ -787,10 +799,11 @@ _app.couple('store_search','addUniversalFilter',{
 				
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "search",
-	"handler" : function($container, infoObj){
+	"require" : ['store_search','templates.html','store_routing'],
+	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
-		_app.require(['store_search','templates.html','store_routing'],function(){
+		_app.require(require,function(){
 			_app.ext.store_search.u.showSearch($container, infoObj);
 			});
 						
@@ -805,7 +818,8 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
-	"handler" : function($container, infoObj){
+	"require" : ['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview', 'partner_addthis'],
+	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		if($.inArray(infoObj.pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
@@ -815,7 +829,7 @@ _app.couple('quickstart','addPageHandler',{
 			_app.ext.quickstart.vars.session.recentlyViewedItems.splice(0, 0, _app.ext.quickstart.vars.session.recentlyViewedItems.splice($.inArray(infoObj.pid, _app.ext.quickstart.vars.session.recentlyViewedItems), 1)[0]);
 			}
 		//IMPORTANT: requiring every extension needed in order to render the page, including TLC formats in the template
-		_app.require(['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview', 'partner_addthis'], function(){
+		_app.require(require, function(){
 			infoObj.templateID = 'productTemplate';
 			_app.ext.store_product.u.showProd($container, infoObj);
 			});
