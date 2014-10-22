@@ -100,6 +100,7 @@ var prodlist_infinite = function(_app) {
 //this gets run whether there are results or not. It is the events responsibility to make sure results were returned. 
 // That way, it can handle a no-results action.
 				$list.trigger('listcomplete');
+				if(_rtag.deferred){_rtag.deferred.resolve();}
 				},
 			onError : function(){
 				

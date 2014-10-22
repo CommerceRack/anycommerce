@@ -14,15 +14,10 @@ var opts = require('nomnom')
                 required : true,
                 help : 'domain to generate a sitemap for'
                 })
-		.option('app-path',{
-				abbr:'a',
-				default:'../../',
-				help : 'path to the directory of the app to build'
-				})
 		.option('threads',{
 				abbr:'t',
 				default:1,
-				callback:function(tabs){if(tabs != parseInt(tabs)){return "tabs must be an int"}},
+				callback:function(threads){if(threads != parseInt(threads)){return "threads must be an int"}},
 				help : 'how many phantom instances to run concurrently'
 				})
 		.option('customurls',{
@@ -48,11 +43,15 @@ if(opts['customurls']){
 		customUrls = require(opts['customurls']);
 		if(customUrls instanceof Array){
 			for(var i in customUrls){
-				PAGES.push({
+				var page = {
 					'url':customUrls[i],
-					'filename':customUrls[i].replace(/\//g,'')+".html",
+					'filename':customUrls[i].replace(/\//g,'').replace(/\?/g,'_')+".html",
 					'buildpath':'./built/custom/'
-					});
+					}
+				if(page.filename == ".html"){
+					page.filename = "home.html";
+					}
+				PAGES.push(page);
 				}
 			}
 		else {
@@ -77,7 +76,8 @@ var pages = JSON.parse(request.responseText);
 
 var today = new Date();
 var datestr = dateFormat(now,"yyyy-mm-dd");
-
+var prods = 0;
+var navcats = 0;
 for( var i in pages['@OBJECTS'] ) {
         // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
         var res = pages['@OBJECTS'][i];
@@ -85,19 +85,39 @@ for( var i in pages['@OBJECTS'] ) {
 				var page = false;
 				switch (res.type) {
 						case 'pid':
-								page = {
-									url : '/product/' + res.id + '/',
-									filename : res.id+".html",
-									buildpath : "./built/product/"
+								if(prods < 10){
+									page = {
+										url : '/product/' + res.id + '/',
+										filename : res.id+".html",
+										buildpath : "./built/product/"
+										}
+									prods++
 									}
 								break;
 						case 'navcat':
-								if(res.id != '.'){
+								var url = "";
+								if(res.id == ".mlb"){
+									url = '/major_league_baseball/';
+									}
+								else if(res.id.indexOf('.mlb') == 0 && res.id.split('.').length == 3){
+									url = '/major_league_baseball/'+res.id.split('.')[2]+'/';
+									}
+								else if(res.id == ".nfl_teams"){
+									url = '/national_football_league/';
+									}
+								else if(res.id.indexOf('.nfl_teams') == 0 && res.id.split('.').length == 3){
+									url = '/national_football_league/'+res.id.split('.')[2]+'/';
+									}
+								else if(res.id != '.'){
+									url = '/category/' + res.id.substr(1) + '/';  // strip leading . in category name
+									}
+								if(url && navcats <10){
 									page = {
-										url : '/category/' + res.id.substr(1) + '/',  // strip leading . in category name
+										url : url,
 										filename : res.id.substr(1)+".html",
 										buildpath : "./built/category/"
 										}
+									navcats++
 									}
 								break;
 						case 'list' :

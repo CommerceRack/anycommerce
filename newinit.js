@@ -44,6 +44,11 @@ _app.extend({
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "static",
 	"handler" : function($container, infoObj){
+		var deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(deferred);
+		if(infoObj.deferred){
+			infoObj.defPipeline.addDeferred(infoObj.deferred);
+			}
 		infoObj.require = infoObj.require || [];
 		_app.require(infoObj.require,function(){
 			infoObj.verb = 'translate';
@@ -54,7 +59,9 @@ _app.couple('quickstart','addPageHandler',{
 			$page.data('pageid',infoObj.id);
 			$container.append($page);
 			infoObj.state = 'complete';
+			//this method is synchronous so no extra deferred required
 			_app.renderFunctions.handleTemplateEvents($page,infoObj);
+			deferred.resolve();
 			});
 		}
 	});
@@ -67,12 +74,15 @@ _app.extend({
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "checkout",
 	"handler" : function($container, infoObj){
+		var deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(deferred);
 		infoObj.templateID = 'checkoutTemplate';
 		_app.require(['order_create','cco', 'extensions/checkout/active.html'],function(){
 			$container.attr('id', 'checkoutContainer');
 			_app.ext.order_create.a.startCheckout($container,_app.model.fetchCartID());
 			infoObj.state = 'complete'; //needed for handleTemplateEvents.
 			_app.renderFunctions.handleTemplateEvents($container,infoObj);
+			deferred.resolve();
 			});
 		}
 	});
@@ -85,6 +95,8 @@ _app.extend({
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "cart",
 	"handler" : function($container, infoObj){
+		infoObj.deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		infoObj.navcat = zGlobals.appSettings.rootcat;
 		infoObj.cartid = _app.model.fetchCartID();
 		infoObj.templateID = 'cartTemplate';
@@ -186,14 +198,15 @@ _app.router.appendHash({'type':'exact','route':'/frequently_asked_questions/','c
 		'require':['templates.html']
 		});
 	dump(routeObj.params);
+	routeObj.params.deferred = $.Deferred();
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
 _app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, infoObj){
 	$context.off('complete.faq');
 	dump('in faq complete event');
 	_app.require(['store_crm','templates.html'],function(){
-		_app.ext.store_crm.calls.appFAQsAll.init({'jqObj':$('.faqContent',$context),'callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
-		_app.model.dispatchThis();							
+		_app.ext.store_crm.calls.appFAQsAll.init({'jqObj':$('.faqContent',$context),'deferred':infoObj.deferred,'callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
+		_app.model.dispatchThis();			
 		});
 	});
 _app.router.appendHash({'type':'exact','route':'/payment_policy/','callback':function(routeObj){
@@ -458,7 +471,8 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 					if(routeObj.params.dataset.metaDescriptionBuilder){
 						routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
 						}
-					routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
+					routeObj.params.deferred = $.Deferred();
+					// routeObj.params.loadFullList = _app.ext.seo_robots.u.isRobotPresent();
 					routeObj.params.pageType = 'static';
 					_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params)
 					}
@@ -473,6 +487,29 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 			}
 		});
 	}});
+	
+_app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
+	$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
+	$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
+	if(infoObj.deferred){
+		$('form.filterList',$context).data('deferred', infoObj.deferred);
+		}
+	//quick hack- we know if there's scroll restore data, that we've been there before so we don't need to resubmit the form
+	if(!$context.data('scroll-restore')){
+		var $form = $('form.filterList', $context);
+		function submitForm(){
+			if($form.attr('data-filter-base')){
+				dump($form.attr('data-filter-base'));
+				$form.trigger('submit');
+				}
+			else {
+				dump('gotta wait');
+				setTimeout(submitForm,100);
+				}
+			}
+		setTimeout(submitForm,0);
+		}
+	});
 	
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(event, $context, infoObj){
 	if(infoObj){
@@ -605,25 +642,7 @@ _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event
 		slides : 'a'
 		});
 	});
-_app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
-	$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
-	$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
-	//quick hack- we know if there's scroll restore data, that we've been there before so we don't need to resubmit the form
-	if(!$context.data('scroll-restore')){
-		var $form = $('form.filterList', $context);
-		function submitForm(){
-			if($form.attr('data-filter-base')){
-				dump($form.attr('data-filter-base'));
-				$form.trigger('submit');
-				}
-			else {
-				dump('gotta wait');
-				setTimeout(submitForm,100);
-				}
-			}
-		setTimeout(submitForm,0);
-		}
-	});
+
 	
 _app.u.bindTemplateEvent('fieldcamTemplate', 'depart.destroy',function(event, $context, infoObj){
 	$('[data-app-uri]', $context).empty().remove();
@@ -720,6 +739,8 @@ _app.extend({
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "homepage",
 	"handler" : function($container, infoObj){
+		infoObj.deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		dump('homepage handler');
 		infoObj.navcat = zGlobals.appSettings.rootcat;
 		_app.require(['store_navcats','templates.html','store_swc','store_routing'],function(){
@@ -732,6 +753,9 @@ _app.couple('quickstart','addPageHandler',{
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "category",
 	"handler" : function($container, infoObj){
+		console.dir(infoObj);
+		infoObj.deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		if(infoObj.navcat.charAt(0) != '.'){
 			infoObj.navcat = '.'+infoObj.navcat
 			}
@@ -763,6 +787,8 @@ _app.couple('store_search','addUniversalFilter',{
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "search",
 	"handler" : function($container, infoObj){
+		infoObj.deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		_app.require(['store_search','templates.html','store_routing'],function(){
 			_app.ext.store_search.u.showSearch($container, infoObj);
 			});
@@ -779,6 +805,8 @@ _app.extend({
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
 	"handler" : function($container, infoObj){
+		infoObj.deferred = $.Deferred();
+		infoObj.defPipeline.addDeferred(infoObj.deferred);
 		if($.inArray(infoObj.pid,_app.ext.quickstart.vars.session.recentlyViewedItems) < 0)	{
 			_app.ext.quickstart.vars.session.recentlyViewedItems.unshift(infoObj.pid);
 			}
@@ -801,15 +829,6 @@ _app.couple('quickstart','addPageHandler',{
 _app.extend({
 	"namespace" : "store_crm",
 	"filename" : "extensions/store_crm.js"
-	});
-	
-_app.couple('quickstart','addPageHandler',{
-	"pageType" : "customer",
-	"handler" : function($container, infoObj){
-		_app.require(['store_crm','templates.html'], function(){
-			_app.ext.store_crm.u.showCustomer($container, infoObj);
-			});
-		}
 	});
 	
 // _app.extend({

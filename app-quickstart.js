@@ -414,6 +414,7 @@ document.write = function(v){
 				_app.u.handleButtons(tagObj.jqObj);
 				_app.u.handleCommonPlugins(tagObj.jqObj);
 				_app.renderFunctions.handleTemplateEvents((tagObj.jqObj || $(_app.u.jqSelector('#',tagObj.parentID))),tagObj);
+				if(tagObj.deferred){tagObj.deferred.resolve();}
 				},
 			onError : function(responseData,uuid)	{
 				$('#mainContentArea').removeClass('loadingBG')
@@ -532,16 +533,12 @@ need to be customized on a per-ria basis.
 				setTimeout(function(){
 					$n.addClass('active'); 
 					$o.removeClass('post active').hide(); 
-					callback(); setTimeout(function(){
-						dump('setting showContentFinished true');
-						_app.ext.quickstart.vars.showContentFinished = true;
-						}, 300);
+					callback();
 					}, 300); //fade out old, fade in new.
 				}
 			else	{
 				$n.addClass('active')
 				callback();
-				setTimeout(function(){dump('setting showContentFinished true');_app.ext.quickstart.vars.showContentFinished = true;}, 300);
 				}
 			}, //pageTransition
 
@@ -934,11 +931,12 @@ fallback is to just output the value.
 				
 			newShowContent : function(uri,infoObj)	{
 				_app.ext.quickstart.vars.showContentFinished = false;
-				_app.ext.quickstart.vars.showContentCompleteFired = false;
-				_app.ext.quickstart.vars.showContentCleanup = false;
+				
 				dump("BEGIN newShowContent ["+infoObj.pageType+"]."); dump(infoObj);
 				
 				infoObj = infoObj || {}; //could be empty for a cart or checkout
+				infoObj.defPipeline = $.PromisePipeline();
+				infoObj.defPipeline.done(function(){_app.ext.quickstart.vars.showContentFinished = true;});
 				var
 					r = false,
 					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).
@@ -946,12 +944,11 @@ fallback is to just output the value.
 				
 				//Don't navigate if we're already on the page
 				if($old.attr('data-app-uri') == uri){
-					_app.ext.quickstart.vars.showContentFinished = true;
-					_app.ext.quickstart.vars.showContentCompleteFired = true;
 					if(infoObj.retrigger){
 						infoObj.state = 'complete'
 						_app.renderFunctions.handleTemplateEvents($('> [data-templateid]',$old), infoObj);
 						}
+					infoObj.defPipeline.execute();
 					return false;
 					}
 				
@@ -1005,19 +1002,18 @@ fallback is to just output the value.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
 				
 				$new.addClass('displayNone').appendTo($('#mainContentArea'));
+				var cleanupDef = $.Deferred();
+				infoObj.defPipeline.addDeferred(cleanupDef);
 				var callback = function(){
 					var $hiddenpages = $("#mainContentArea > :hidden");
 					var L = $hiddenpages.length;
 					for(var i = 0; i < L - _app.ext.quickstart.vars.cachedPageCount; i++){
 						$($hiddenpages.get(i)).intervaledEmpty().remove();
 						}
-					_app.ext.quickstart.vars.showContentCleanup = true;
-					dump('cleared pages');
+					cleanupDef.resolve();
 					}
 				if(infoObj.performTransition == false)	{
 					callback();
-					dump('setting showContentFinished true');
-					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else if(typeof _app.ext.quickstart.pageTransition == 'function')	{
 					_app.ext.quickstart.pageTransition($old,$new,infoObj, callback);
@@ -1027,16 +1023,12 @@ fallback is to just output the value.
 					$("#mainContentArea :visible:first").hide();
 					$new.show();
 					callback();
-					dump('setting showContentFinished true');
-					_app.ext.quickstart.vars.showContentFinished = true;
 					}
 				else	{
 					dump("WARNING! In showContent but there is no new page to show!");
 					callback();
-					dump('setting showContentFinished true');
-					_app.ext.quickstart.vars.showContentFinished = true;
 					}
-				
+				infoObj.defPipeline.execute();
 				return true;
 				},
 
@@ -2197,7 +2189,7 @@ var bindArr = new tlc().getBinds(tagObj.templateID);
 
 if(tagObj.pid)	{
 	if($.inArray('%attribs.zoovy:grp_children',bindArr) >= 0 && _app.u.thisNestedExists("data.appProductGet|"+tagObj.pid+".%attribs",_app) && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && _app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent'])	{
-		numRequests += _app.calls.appProductGet.init({'pid':_app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
+		numRequests += _app.calls.appProductGet.init({'pid':_app.data['appProductGet|'+tagObj.pid]['%attribs']['zoovy:grp_parent']},tagObj,'mutable');
 		}
 	}
 else if(tagObj.navcat)	{

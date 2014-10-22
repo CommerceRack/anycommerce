@@ -140,6 +140,9 @@ var store_swc = function(_app) {
 				else {
 					rd.list.empty();
 					rd.list.tlc({'dataset':'', 'templateid':'noResultsTemplate', 'verb':'transmogrify'});
+					if(rd.deferred){
+						rd.deferred.resolve();
+						}
 					}
 				},
 			onError : function(){}
@@ -645,6 +648,7 @@ var store_swc = function(_app) {
 			execFilteredSearch : function($form, p){
 				p.preventDefault();
 				var loadFullList = $form.data('loadFullList');
+				var deferred = $form.data('deferred') || {resolve:function(){}};
 				dump("Executing Filtered Search");
 				if(loadFullList){
 					_app.ext.store_swc.vars.filterLoadingComplete = false;
@@ -786,7 +790,7 @@ var store_swc = function(_app) {
 								});
 							}
 						}
-					}, 'require':['store_prodlist','prodlist_infinite'],'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
+					}, 'deferred':deferred, 'require':['store_prodlist','prodlist_infinite'],'datapointer':'appFilteredSearch','templateID':'productListTemplateResults','list':$resultsContainer, 'filterList' : $form, 'loadFullList' : loadFullList});
 				_app.model.dispatchThis();
 				
 				},

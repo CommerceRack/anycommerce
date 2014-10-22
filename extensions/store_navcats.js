@@ -293,7 +293,7 @@ templateID - the template id used (from _app.templates)
 					
 					$container.append($page);
 
-					$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart', 'require':'store_navcats','jqObj':$page});
+					$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$page});
 					_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
 					_app.model.dispatchThis();
 					}

@@ -223,6 +223,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							//no error gets thrown here. it is an acceptable use case to display search results w/ no multipage functionality.
 							}
 						}
+						if(_rtag.deferred){_rtag.deferred.resolve();}
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In store_search.callbacks.handleElasticResults, $list ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});

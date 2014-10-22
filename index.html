@@ -118,6 +118,19 @@ css files should be included before any .js file to ensure they are downloaded i
 <script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
 <script data-apptimize="embed" type="text/javascript" src="includes.js"></script>
 
+<script type="text/javascript">
+$.PromisePipeline = function(){
+	var def = new $.Deferred();
+	var deferreds = [];
+	def.addDeferred = function(d){
+		deferreds.push(d);
+		}
+	def.execute = function(){
+		$.when.apply($,deferreds).done(function(){def.resolve();}).fail(function(){def.reject();});
+		}
+	return def;
+}
+</script>
 
 <script data-apptimize="minify" type="text/javascript">
 

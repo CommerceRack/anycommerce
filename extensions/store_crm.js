@@ -172,6 +172,7 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 						}
 					$parent.data('faqs-rendered', true);
 					}
+				if(tagObj.deferred){tagObj.deferred.resolve();}
 				
 				}
 			}, //showFAQTopics

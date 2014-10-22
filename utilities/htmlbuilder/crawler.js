@@ -29,9 +29,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 						if(window.myApp.ext &&
 							window.myApp.ext.quickstart &&
 							window.myApp.ext.quickstart.vars &&
-							window.myApp.ext.quickstart.vars.showContentFinished && 
-							window.myApp.ext.quickstart.vars.showContentCompleteFired &&
-							window.myApp.ext.quickstart.vars.showContentCleanup){
+							window.myApp.ext.quickstart.vars.showContentFinished){
 							r = {
 								appuri : window.$('[data-app-uri]').attr('data-app-uri'),
 								html : '<!DOCTYPE html>'+window.document.documentElement.outerHTML

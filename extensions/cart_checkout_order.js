@@ -407,7 +407,9 @@ left them be to provide guidance later.
 							'onComplete' : function(r){
 								P.state = 'complete';
 								_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
+								if(r.deferred){r.deferred.resolve();}
 								},
+							'deferred' : vars.deferred,
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
 							},P.Q);
