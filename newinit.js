@@ -753,16 +753,17 @@ _app.couple('quickstart','addPageHandler',{
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "category",
 	"handler" : function($container, infoObj){
-		console.dir(infoObj);
 		infoObj.deferred = $.Deferred();
+		infoObj.prodRenderedDeferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
+		infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
 		if(infoObj.navcat.charAt(0) != '.'){
 			infoObj.navcat = '.'+infoObj.navcat
 			}
 		if(_app.ext.quickstart.vars.session.recentCategories[0] != infoObj.navcat)	{
 			_app.ext.quickstart.vars.session.recentCategories.unshift(infoObj.navcat);
 			}
-		_app.require(['store_navcats','templates.html','store_swc','store_routing'],function(){
+		_app.require(['store_navcats','store_prodlist','prodlist_infinite','templates.html','store_swc','store_routing'],function(){
 			if(infoObj.templateID){}
 			else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
 			else{infoObj.templateID = 'categoryTemplate';}

@@ -382,7 +382,9 @@ document.write = function(v){
 							tagObj.dataset[tagObj.lists[i]] = _app.data['appNavcatDetail|'+tagObj.lists[i]];
 							}
 						}
-
+					if(tagObj.prodRenderedDeferred){
+						tagObj.dataset.deferred = tagObj.prodRenderedDeferred;
+						}
 //a category page gets translated. A product page does not because the bulk of the product data has already been output. prodlists are being handled via buildProdlist
 //					_app.renderFunctions.translateTemplate(tmp,tagObj.parentID); // * 201401 ->	removing all references to renderFunctions in favor of tlc.
 					tagObj.jqObj.tlc(tagObj);

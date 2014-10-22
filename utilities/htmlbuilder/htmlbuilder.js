@@ -96,17 +96,22 @@ for( var i in pages['@OBJECTS'] ) {
 								break;
 						case 'navcat':
 								var url = "";
+								var filename = "";
 								if(res.id == ".mlb"){
 									url = '/major_league_baseball/';
+									filename = 'major_league_baseball';
 									}
 								else if(res.id.indexOf('.mlb') == 0 && res.id.split('.').length == 3){
 									url = '/major_league_baseball/'+res.id.split('.')[2]+'/';
+									filename = 'major_league_baseball.'+res.id.split('.')[2];
 									}
 								else if(res.id == ".nfl_teams"){
 									url = '/national_football_league/';
+									filename = 'national_football_league';
 									}
 								else if(res.id.indexOf('.nfl_teams') == 0 && res.id.split('.').length == 3){
 									url = '/national_football_league/'+res.id.split('.')[2]+'/';
+									filename = 'national_football_league.'+res.id.split('.')[2];
 									}
 								else if(res.id != '.'){
 									url = '/category/' + res.id.substr(1) + '/';  // strip leading . in category name
@@ -114,7 +119,7 @@ for( var i in pages['@OBJECTS'] ) {
 								if(url && navcats <10){
 									page = {
 										url : url,
-										filename : res.id.substr(1)+".html",
+										filename : filename+".html",
 										buildpath : "./built/category/"
 										}
 									navcats++

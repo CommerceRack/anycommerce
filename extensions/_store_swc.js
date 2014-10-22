@@ -165,6 +165,16 @@ var store_swc = function(_app) {
 //on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		tlcFormats : {
+			resolveDeferred : function(data,thisTLC){
+				var deferred = data.globals.binds[data.globals.focusBind];
+				if(deferred && typeof deferred.resolve === 'function'){
+					deferred.resolve();
+					return true;
+					}
+				else{
+					return false;
+					}
+				},
 			imageurl : function(data,thisTLC){
 				var args = thisTLC.args2obj(data.command.args, data.globals);
 				data.globals.binds[data.globals.focusBind] = _app.u.makeImage(args);

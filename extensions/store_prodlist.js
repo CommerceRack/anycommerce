@@ -381,6 +381,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 */
 
 			setProdlistVars : function(obj)	{
+				dump(obj);
 //				_app.u.dump("BEGIN store_prodlist.u.setProdlistVars"); _app.u.dump(obj);
 				var r = false;
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.

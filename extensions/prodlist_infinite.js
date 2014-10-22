@@ -118,7 +118,22 @@ var prodlist_infinite = function(_app) {
 						////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-
+	tlcFormats : {
+		infiniteproductlist : function(data, thisTLC){
+			var bindData = thisTLC.args2obj(data.command.args, data.globals);
+			bindData.csv = data.globals.binds[data.globals.focusBind];
+			if(bindData.csv){
+				console.log(bindData.csv);
+				var $tag = data.globals.tags[data.globals.focusTag];
+				$tag.data('bindData',bindData);
+				_app.ext.prodlist_infinite.u.buildInfiniteProductList($tag);
+				return true;
+				}
+			else{
+				return false;
+				}
+			}
+		},
 
 
 	renderFormats : {
@@ -162,7 +177,6 @@ It is run once, executed by the renderFormat.
 			buildInfiniteProductList : function($tag)	{
 //				_app.u.dump("BEGIN store_prodlist.u.buildInfiniteProductList()");
 //				_app.u.dump(" -> obj: "); _app.u.dump(obj);
-
 				var bindData = $tag.data('bindData');
 //tag is likely an li or a table.  add a loading graphic after it.
 				$tag.parent().append($("<div \/>").addClass('loadingBG').attr('data-app-role','infiniteProdlistLoadIndicator'));
@@ -215,14 +229,20 @@ It is run once, executed by the renderFormat.
 						}
 					else	{
 						_app.ext.prodlist_infinite.u.handleScroll($tag);
-						}				
+						}
+					if(rd.deferred){rd.deferred.resolve();}
 					}
-
+				var _tag = {
+					'callback' : infiniteCallback
+					}
+				if(plObj.deferred){
+					_tag.deferred = plObj.deferred;
+					}
 				if(numRequests == 0)	{
-					infiniteCallback({})
+					infiniteCallback(_tag)
 					}
 				else	{
-					_app.calls.ping.init({'callback':infiniteCallback},'mutable');
+					_app.calls.ping.init(_tag,'mutable');
 					_app.model.dispatchThis();
 					}
 
