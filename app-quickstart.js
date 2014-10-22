@@ -61,8 +61,6 @@ var quickstart = function(_app) {
 		"sotw" : {}, //state of the world. set to most recent page info object.
 		"hotw" : new Array(15), //history of the world. contains 15 most recent sotw objects.
 		"showContentFinished" : false,
-		"showContentCompleteFired" : false,
-		"showContentCleanup" : false,
 		"cachedPageCount" : 20,
 		"session" : {
 			"recentSearches" : [],
@@ -170,7 +168,6 @@ document.write = function(v){
 	$("body").append(v);
 	}
 
-				window.showContent = _app.ext.quickstart.a.showContent; //a shortcut for easy execution.
 				window.quickView = _app.ext.quickstart.a.quickView; //a shortcut for easy execution.
 
 
@@ -939,7 +936,10 @@ fallback is to just output the value.
 				
 				infoObj = infoObj || {}; //could be empty for a cart or checkout
 				infoObj.defPipeline = $.PromisePipeline();
-				infoObj.defPipeline.done(function(){_app.ext.quickstart.vars.showContentFinished = true;});
+				//doing a setTimeout 0 here to allow the UI thread to finish executing before this condition sets
+				infoObj.defPipeline.done(function(){
+					setTimeout(function(){_app.ext.quickstart.vars.showContentFinished = true;}, 0);
+					});
 				var
 					r = false,
 					$old = $("#mainContentArea :visible:first"),  //used for transition (actual and validation).

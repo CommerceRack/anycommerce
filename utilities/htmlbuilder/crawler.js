@@ -68,6 +68,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 					else if (typeof result == 'object' && result.html){
 						var filepath = currentPage.buildpath+""+currentPage.filename;
 						if(result.appuri != currentPage.url){
+							console.error('ERROR: page '+currentPage.url+' returned appuri '+result.appuri);
 							throw 'ERROR: page '+currentPage.url+' returned appuri '+result.appuri;
 							}
 						else{
@@ -77,6 +78,7 @@ var crawler = function(domain, pageArr, onFinish, id){
 						evaluateNext();
 						}
 					else{
+						console.error('Received a timeout on page');
 						console.error('Received a timeout on page '+currentPage.url);
 						//We got a go from result, but no info.  Continue.
 						evaluateNext();

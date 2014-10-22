@@ -158,7 +158,7 @@ function makeCrawler(i){
 				}
 			}
 		//we've made it to the end of the crawler list and they're all false
-		// console.log('Exiting!');
+		console.log('Exiting!');
 		process.exit();
 		}
 	}

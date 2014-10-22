@@ -122,7 +122,7 @@ var prodlist_infinite = function(_app) {
 		infiniteproductlist : function(data, thisTLC){
 			var bindData = thisTLC.args2obj(data.command.args, data.globals);
 			bindData.csv = data.globals.binds[data.globals.focusBind];
-			if(bindData.csv){
+			if(bindData.csv && bindData.csv.length){
 				console.log(bindData.csv);
 				var $tag = data.globals.tags[data.globals.focusTag];
 				$tag.data('bindData',bindData);
