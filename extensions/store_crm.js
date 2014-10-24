@@ -150,7 +150,8 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 		showFAQTopics : {
 
 			onSuccess : function(tagObj)	{
-				var $parent = $('#'+tagObj.parentID);
+				//var $parent = $('#'+tagObj.parentID);
+				var $parent = tagObj.jqObj;
 // ** 201336 This prevents FAQ's from being re-appended in the event the user revisits the FAQ page
 				if(!$parent.data('faqs-rendered')){
 					$parent.removeClass('loadingBG');
@@ -171,6 +172,7 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 						}
 					$parent.data('faqs-rendered', true);
 					}
+				if(tagObj.deferred){tagObj.deferred.resolve();}
 				
 				}
 			}, //showFAQTopics
@@ -430,6 +432,7 @@ This is used to get add an array of skus, most likely for a product list.
 				var r = false; //what is returned. true if editor is displayed, false if an error occured.
 
 				if(typeof vars === 'object' && vars.addressID && vars.addressType)	{
+					//require is made before showAddressEditModal gets called
 					var addressData = _app.ext.cco.u.getAddrObjByID(vars.addressType,vars.addressID);
 					
 					if(addressData)	{
@@ -526,6 +529,7 @@ This is used to get add an array of skus, most likely for a product list.
 
 //if the placeholder attribute on an input is not supported (thx IE8), then add labels.
 					if(_app.ext.order_create)	{
+						//require is made before showAddressAddModal gets called
 						_app.ext.order_create.u.handlePlaceholder($editor);
 						}
 //adds a tooltip which is displayed on focus. lets the user know what field they're working on once they start typing and placeholder goes away.
@@ -786,7 +790,7 @@ This is used to get add an array of skus, most likely for a product list.
 			
 			productReviewShow : function($ele,p)	{
 				p.preventDefault();
-
+				console.log('here');
 				var pid = $ele.data('pid') || $ele.closest("[data-pid]").data('pid'); //used on product page
 				if(pid)	{
 					_app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});

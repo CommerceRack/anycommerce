@@ -15,7 +15,7 @@
 
 <base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
-
+<meta name="description" content="">
 
 <script type="text/javascript">
 var myCreole, baseURL;
@@ -60,15 +60,37 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <!-- jquery and jquery ui are pivotal to the functionality of the app. load them early -->
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
-<script src="controller.js"></script>
-<script src="model.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="controller.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="model.js"></script>
 
-<!-- ### TODO -> test how the load process goes w/ these in init. if includes is moved, move the new Parse  -->
-<script src="resources/jquery.ui.anyplugins.js"></script>
-<script type="text/javascript" src="includes.js"></script><!-- contains some polyfills and should be loaded early -->
+<!-- SCRIPTS -->
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.showloading-v1.0.jt.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jsonpath.0.8.0.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/peg-0.8.0.js"></script>
 
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="includes.js"></script><!-- contains some polyfills and should be loaded early -->
+
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="resources/anyplugins.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/checkout/styles.css"/>
+<link data-apptimize="embed" rel="stylesheet" type="text/css" href="extensions/cart_message/styles.css"/>
+
+<script type="text/javascript">
+$.PromisePipeline = function(){
+	var def = new $.Deferred();
+	var deferreds = [];
+	def.addDeferred = function(d){
+		deferreds.push(d);
+		}
+	def.execute = function(){
+		$.when.apply($,deferreds).done(function(){def.resolve();}).fail(function(){def.reject();});
+		}
+	return def;
+}
+</script>
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -79,20 +101,13 @@ $(document).ready(function(){
 			"_clientid":"zmvc", //zmvc for store app, 1pc for one page checkout.
 			"baseURL":baseURL, //used in non-local mode.
 			"checkoutAuthMode" : "active",//can be passive, active or required
-			"testURL":"http://app.sporks.zoovy.com/", //used ONLY if protocol is file: (for testing)
+			"testURL":"http://www.sportsworldchicago.com/", //used ONLY if protocol is file: (for testing)
 			"addjQueryPointer" : true,
-			"analyticsPointer" : "ga",
-			"initComplete" : function(){
-				dump(" -> init is complete");
-				myApp.u.loadScript('app-quickstart-init.js',function(){
-					var progress = myApp.u.loadResources(); //the object returns by loadResources will get updated as the resources finish loading.
-					myApp.u.showProgress(progress);
-					});
-				$('#appversion').text(myApp.vars.release);
-				}
+			"analyticsPointer" : "ga"
 			});
-		myApp.vars.initComplete();
 		myCreole = new Parse.Simple.Creole();
+		myApp.u.loadScript('app-quickstart-init.js?_v='+new Date().getTime());
+		$('#appversion').text(myApp.vars.release);		
 		}
 	});
 
@@ -111,33 +126,8 @@ This file is intended to go along with the 10-step tutorial at:
 
 
 
-<!-- what is displayed onLoad until the view is loaded -->
-<div id='appPreView'>
-<table>
-<tr>
-	<td><!-- put logo here --></td>
-	<td>
 
-	<div id="loader">
-		<h3>One moment please.</h3>
-
-		<div class='alignCenter'>
-		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
-		</div>
-		<div id='appPreViewProgressText'>0% Complete</div>
-	</div>
-	<div id="clickToLoad" class="displayNone pointer">
-		Click here to load your shopping experience!
-	</div>
-	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
-</div>
-
-
-
-<div id='appView' class='displayNone'>
+<div id='appView'>
 
 <!--
 ANIMATION TESTING
@@ -157,13 +147,11 @@ ANIMATION TESTING
 	
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 
-<!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
-<div id='appNav'>
-	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
-	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
-</div>
 
-<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+<!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+<div id='mainContentArea'>
+	<div class="alignCenter"><img src="loading.gif"/></div>
+</div>
 
 <!-- ... your html ends -->
 <!-- /VIEW CONTENT -->
@@ -204,1293 +192,6 @@ ANIMATION TESTING
 		</section>
 	</form>
 </div>
-
-
-
-
-
-
-
-
-
-
-<!--
-*************************************************************************************************************
-**
-**
-**										T E M P L A T E S      S T A R T      H E R E
-**
-** template id's are specified within myria.js and loaded, then interpolated with dynamic data from the api.
-**
-*************************************************************************************************************
--->
-
-
-<div id='appTemplates' class='displayNone seoStrip'>
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-
-############################
-
-COMMONLY EDITED TEMPLATES
-
-############################
-
--->
-
-
-
-<!--
-the homepageTemplate template is loaded into mainContentArea by default when the application loads
--->
-<div id="homepageTemplate" class="homeTemplate">
-	
-	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
-
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
-
-	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-
-	<ul data-tlc="quickstart#searchbytag --tag='IS_BESTSELLER' --title='Best Sellers' --size='8' --templateid='productListTemplateResultsNoPreview';" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-
-	<!--
-	<ul data-tlc="bind $var '.$listName.@products'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
-	-->
-</div>
-
-
-
-
-
-
-
-
-
-
-<!--
-used to organize content when a category is clicked.
-each of the 'sections' are used to load another template. don't change the id.
-don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
--->
-<div id="categoryTemplate" class=" categoryTemplate">
-	<span class="displayNone" data-tlc="bind $navcat '.navcat'; bind $seo '.pretty'; bind $hash ''; store_routing#categorylink --navcat=$navcat --seo=$seo; apply --attrib='data-routing-hash';"></span>
-	
-	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
-
-	<img data-tlc="bind $var '.%page.banner1'; quickstart#banner  --height='250' --width='750' --legacy;" src="images/blank.gif" alt="">
-
-	<h2 data-tlc="bind $var '.%page.header'; if (is $var --notblank;) {{apply --append;}};"></h2>
-
-	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-
-	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul><!-- outputs a list of subcategories -->
-
-	<ul data-tlc="bind $var '.@products'; store_prodlist#productlist  --withReviews='1' --withInventory='1' --withVariations='1' --itemsperpage='25' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul><!-- outputs the product list -->
-
-	<p data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-
-
-</div>
-
-
-
-
-
-
-
-<!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
-<ul>
-<li id="categoryListTemplate">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
-		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="120" width="120"></div>
-		<div class="catName white2LGray"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
-	</a>
-</li>
-
-
-<li id="categoryListTemplateRootCats">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category' --seo; apply --attrib='href';">
-		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{apply --img --media=$var --width=35 --height=35 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="catThumb" alt="" height="35" width="35"></div>
-		<div class="catName"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy; apply --append;"></span></div>
-	</a>
-</li>
-
-</ul>
-
-
-
-<ul>
-<!--
-Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
-the loadingBG class is removed (must be that classname) when the template is translated.
-remember to NOT put the button inside the href or two events will occur onclick.
--->
-<li id="productListTemplate" class="loadingBG  " onmouseover="$('.quickView',$(this)).show();" onmouseout="$('.quickView').hide();">
-
-	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
-	
-	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
-		<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;" class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD';  format --prepend='Our Price: '; apply --append;}};"></h6>
-		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
-	</a>
-	
-	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="return false" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
-		<input name="qty" value="1" type="hidden">
-		<button data-tlc="quickstart#addtocartbutton  --legacy; apply --append;" data-bind="format:addtocartbutton; extension:quickstart; useParentData:true;" class='applyButton'>more details</button>
-	</form>
-
-</li>
-
-
-<!--
-for product lists with addToCart feature (accessories, for example)
-container ul should have lineItemProdlist class on it instead of productList
--->
-<li id="productListTemplateATC" class="loadingBG  ">
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';">
-
-		<div class="prodThumbContainer floatLeft">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
-
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-	
-		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
-	
-			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
-	
-			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
-		</form>
-
-	</div>
-</li>
-
-
-<li id="productListTemplateBuyerList" class="loadingBG floatLeft marginRight marginBottom">
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';">
-
-		<div class="prodThumbContainer marginBottom">
-			<div class="ui-widget ui-widget-content ui-corner-all">
-				<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-				<div class="smallButtonList ui-widget ui-widget-header ui-corner-all alignCenter">
-
-<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class='applyButton' data-text='false' data-icon-primary='ui-icon-cart'>Add To Cart</a>
-<a href='#' data-app-click="quickstart|quickviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-info' data-loadstemplate='productTemplate'>Details</a>
-<a href='#' data-app-click="store_crm|productReviewShow" class='applyButton' data-text='false' data-icon-primary='ui-icon-star'>Write Review</a>
-<a href='#' data-app-click="store_crm|productBuyerListRemoveExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-trash'>Remove From List</a>
-
-				</div>
-			</div>
-		</div>
-		
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
-
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
-
-		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
-
-
-	</div>
-</li>
-
-
-</ul>
-
-
-
-
-
-<ul>
-<!--
-Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
-the loadingBG class is removed (must be that classname) when the template is translated.
-remember to NOT put the button inside the 'href' container or two events will occur onclick.
-
-SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
--->
-<li id="productListTemplateResults" class="loadingBG searchResultsProduct ">
-	<div data-app-click="quickstart|inlineProductPreviewShow" class="pointer">
-		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
-
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{math --div='100'; format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-		
-	</div>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
-</li>
-
-<li id="productListTemplateResultsNoPreview" class="loadingBG searchResultsProduct ">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='product' --seo; apply --attrib='href';" class="pointer">
-		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{apply --img --media=$var --width=120 --height=120 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="120" width="120">
-		</div>
-
-		<h5 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};" class="hideInMinimalMode"></h5>
-
-		<h6 data-tlc="bind $var '.base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="hideInMinimalMode"></h6>
-	</a>
-	<a class="hideInMinimalMode pointer moreDetails" data-tlc="bind $seoname '.prod_name'; bind $var '.'; store_routing#seoanchor --type='product' --seo --seoname=$seoname; apply --attrib='href';">more details</a>
-</li>
-</ul>
-
-
-
-
-
-
-
-
-
-<!--
-form - the form id gets modified to be unique in case multiple viewers are open at the same time. _pid is appended to it.
-NOTE - currently, variations.js supports only 1 viewer at a time. this will change.
-2 fieldsets are present:
- -> One is for variations/options and really ought to be present.
- -> The other is for a quantity input and is optional
-
-the submit button does not need to be within the form (a button could be used elsewhere if needed.
- -> use the button to submit the form, not execute the call or utility separately. That way if additional
- actions are added to the submit, they only have to be managed in one place.
-
-Additionally, the cross selling features also have hard coded id's, though they're specified within this extension in the xsell callback.
-
-this will likely become more flexible in the future. ###
--->
-
-
-<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" id="productTemplate" class="productPage">
-	<span class="displayNone" data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='data-routing-hash';"></span>
-	
-	<ul data-tlc="bind $var '.recentCategories.0'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy; apply --append;" class="clearfix noPadOrMargin fluidList breadcrumb"></ul>
-	
-	<table class="prodViewerContainer">
-	<tbody><tr>
-		<td class="imageContainer">
-	
-	<div data-app-click="quickstart|productPicsInModalShow" class="pointer clearfix">
-	
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer"></div>
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{apply --img --media=$var --width=340 --height=340 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodBigImage" alt="" height="340" width="340">
-	
-	</div>
-	
-		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodThumbs">
-	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'2'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image2';  if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
-	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'3'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
-	
-	<div onclick="myApp.ext.store_product.u.showPicsInModal({'pid':$(this).parent().attr('data-pid'),'int':'4'});" class="pointer"><img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; if(is $var --notblank){{apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;}};" src="blank.gif" alt="" height="100" width="100"></div>
-	
-		</div>
-	
-		</td>
-	
-		<td class="prodSummaryContainer marginBottom no_underline">
-		<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;"></h1>
-
-		<div class="marginBottom">
-			<h5 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{format --prepend='Sku: '; apply --append;}};" class="stid"></h5>
-			<h5><a href='#' data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if(is $var --notblank;) {{apply --append; format --prepend='#!search/keywords/'; apply --attrib='href';}};"></a></h5>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfgid';  if (is $var --notblank;) {{format --prepend='Mfg ID: '; apply --append;}};"></h5>
-		</div>
-
-		<div class="priceContainer marginBottom">
-			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: '; apply --append;}};" class="basePrice"></h4>
-			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
-			<span class="savings">
-				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-				<span data-useparentdata='1' data-tlc="quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
-			</span>
-		</div>
-		<div class="socialLinks"></div>
-	
-	
-		<table class="marginBottom fullWidth gridTable" data-app-role="childrenSiblingsContainer">
-			<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
-		</table>
-	
-	
-		<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; if (is $var --notblank;) {{ format --prepend='Normally ships in '; format --append=' day(s)'; apply --append;}};" class="latency marginBottom"></div>
-		<div data-app-role="timeInTransit" class="displayNone"></div>
-	
-		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix marginBottom" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="inline">
-	
-			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone"></fieldset>
-	
-			<div class='marginBottom'><input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit"></div>
-		</form>
-	
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_cpsiawarning'; if(is $var --notblank) {{apply --add --class='marginBottom'}}; quickstart#cpsiawarning  --legacy;"></div>
-		<div data-tlc="bind $var '.%attribs.zoovy:qty_price'; if(is $var --notblank) {{apply --add --class='marginBottom'}}; store_product#quantitydiscounts  --legacy;"></div>
-	
-		<section class="marginBottom clearfix">
-			<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatLeft marginRight"></span>
-			<span data-tlc="bind $var '.reviews.total'; if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews'; apply --append;}};" class='floatLeft'></span>
-		</section>
-	
-		<menu data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="CRMButtonMenu">
-	
-		<a href="#" data-app-click="store_crm|productReviewShow">Write Review</a>	|
-	
-		<a href="#" data-app-click="quickstart|productAdd2List" data-listid="wishlist">Add to Wishlist</a>
-	
-		</menu>
-	
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2" class="tabbedProductContentTD">
-	<!--
-	the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
-	or the tab clicked won't open the right content.
-	It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
-	-->
-	
-	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodTabs tabbedProductContent applyAnytabs">
-		<ul class="tabs">
-			<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if(is $var --notblank) {{apply --show; }};" class="prodDetailTab displayNone"><a href="#prodSpecs">Specs</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:prod_features'; if(is $var --notblank) {{ apply --show; }};" class="prodFeaturesTab displayNone"><a href="#prodFeatures">Features</a></li>
-			<li class="prodReviewsTab"><a href="#prodReviews">Reviews</a></li>
-			<li data-tlc="bind $var '.%attribs.youtube:videoid'; if(is $var --notblank) {{ apply --show; }};" class="prodVideoTab displayNone"><a href="#prodVideo">Video</a></li>
-			<li data-tlc="bind $var '.%attribs.zoovy:accessory_products'; if(is $var --notblank) {{ apply --show; }};" class="prodAccessoriesTab displayNone"><a href="#prodAccessories">Accessories</a></li>
-		</ul>
-	
-		<div class="tabContent" data-anytab-content="prodDesc">
-			<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
-		</div>
-	
-		<div class="tabContent" data-anytab-content="prodSpecs">
-			<div data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
-		</div>
-	
-		<div class="tabContent" data-anytab-content="prodFeatures">
-			<div data-tlc="bind $var '.%attribs.zoovy:prod_features'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
-		</div>
-	
-	
-		<div class="tabContent" data-anytab-content="prodReviews">
-	
-			<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="clearfix alignRight">
-				<button class="applyButton" data-app-click="store_crm|productReviewShow">Write Review</button>
-			</div>
-
-			<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
-		</div>
-	
-		<div class="tabContent" data-anytab-content="prodVideo">
-			<div data-tlc="bind $var '.%attribs.youtube:videoid'; controller#youtubevideo --legacy;"></div>
-		</div>
-
-		<div class="tabContent" data-anytab-content="prodAccessories">
-			<ul data-tlc="bind $var '.%attribs.zoovy:accessory_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --withReviews='1' --withInventory='1' --withVariations='1' --templateid='productListTemplateATC'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist"></ul>
-		</div>
-
-	</div>
-	
-		</td>
-	</tr>
-	</tbody></table>
-	<div class="prodlistRelatedContainer">
-		<ul data-tlc="bind $var '.%attribs.zoovy:related_products'; store_prodlist#productlist  --hidePagination='true' --hideSummary='true' --prepend='<h2>Similar Items</h2>' --withReviews='1' --templateid='productListTemplate'  --legacy; apply --append;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
-	</div>
-
-
-</div><!-- productTemplate -->
-
-
-
-
-<!-- a template used for a quickview link off of a category page -->
-<div id="productTemplateQuickView">
-
-<table class="prodViewerContainer">
-<tbody><tr>
-	<td class="imageContainer">
-<div>
-
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
-	<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
-
-</div>
-
-	</td>
-
-	<td class="prodSummaryContainer marginBottom no_underline">
-	<h1 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h1>
-	<h6 data-tlc="bind $var '.pid'; if (is $var --notblank;) {{ format --prepend='Sku#: ';apply --append;}};" class="ztable_row_small stid"></h6>
-
-
-	<div class="priceContainer">
-		<h4 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};" class="basePrice"></h4>
-		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_msrp';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='MSRP: ';  apply --append;}};" class="prodMSRP"></h5>
-		<span class="savings">
-			<span data-tlc="bind $var '.pid'; format --prepend='You save: '; quickstart#priceretailsavingsdifference  --legacy; apply --append;" class="savingsDifference"></span>
-			<span data-tlc="bind $var '.pid'; format --prepend='('; format --append=')'; quickstart#priceretailsavingspercentage  --legacy; apply --append;" class="savingsPercentage"></span>
-		</span>
-	</div>
-
-	<div data-tlc="bind $var '.%attribs.zoovy:ship_latency'; format --prepend='Normally ships in '; format --append=' day(s)'; if (is $var --notblank;) {{apply --append;}};" class="latency"></div>
-
-	<section class="marginBottom">
-		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-		<span data-tlc="bind $var '.reviews.total';  if (is $var --notblank;) {{format --prepend=' from ' --append=' reviews' ;apply --append;}};"></span>
-	</section>
-
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
-
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-
-	<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
-
-	</td>
-</tr>
-</tbody></table>
-
-
-</div><!-- productTemplateQuickView -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- 404 page -->
-<div id="pageNotFoundTemplate">
-
-	<h1>Unable to find page...</h1>
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-
-############################
-
-MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
-if modified, be careful about changing id's or classes.
-adding classes is not likely to have any bad effects.
-if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
-
-############################
-
--->
-
-
-
-
-
-<!--  used in breadcrumb -->
-<ul>
-	<li id="breadcrumbTemplate">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category'; apply --attrib='href'; bind $pretty '.pretty'; quickstart#cattext  --legacy; apply --append;"></a>
-	</li>
-</ul>
-
-
-
-
-<div id="companyTemplate" class="clearfix">
-
-	<div class="sideline">
-<nav id="companyNav">
-<ul class="listStyleNone noPadOrMargin">
-<!-- these are generated via javascript, based on the quickstart.pages object. -->
-</ul>
-</nav>
-	</div>
-
-	<div class="mainColumn">
-<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
-		<div id="aboutArticle" class="textContentArea article">
-			<h1>About Us</h1>
-			<div>
-			<!-- ::: add your about us information here -->
-			</div>
-		</div>
-
-
-		<div id="contactArticle" class="displayNone textContentArea">
-			<h1>Contact Information</h1>
-			<div class="companyAddress">
-			<!-- ::: add your contact information here ::: -->
-			</div>
-
-			<form action="#" data-app-submit="store_crm|contactFormSubmit" name="contactForm" class='alignedForm'>
-			<input name="msgtype" value="feedback" type="hidden">
-			<fieldset>
-				<legend>Contact Us</legend>
-				<div id="contactFormMessaging"></div>
-				<label><span class="prompt">Email Address</span><input name="sender" required type="email" class='alignInput'></label>
-				<label><span class="prompt">Subject</span><input name="subject" required type="text" class='alignInput'></label>
-				<label><span class="prompt">Order ID</span><input name="OID" type="text" class='alignInput'></label>
-				<label><span class="prompt">Message</span><textarea name="body" required rows='6' class='alignInput'></textarea></label>
-				<div class="alignRight"><input class="applyButton" value="Send Message" type="submit"></div>
-			</fieldset>
-			</form>
-		</div>
-
-
-		<!-- faq are generated through the faq manager in the admin UI. do not add content in the faqContent area -->
-		<div id="faqArticle" class="displayNone textContentArea">
-			<h1>Frequently Asked Questions</h1>
-			<div id="faqContent" class=" ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
-		</div>
-
-
-
-		<div class="displayNone textContentArea" id="paymentArticle">
-			<h1>Payment Policy</h1>
-			<div>
-			<!-- ::: add your payment policy here ::: -->
-			</div>
-		</div>
-
-
-		<div class="displayNone textContentArea" id="privacyArticle">
-			<h1>Privacy Statement</h1>
-	<h4>About this Privacy Policy:</h4>
-	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
-
-	<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
-
-	<h5>Zoovy.com tracks IP Addresses</h5>
-	<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
-
-
-	<h3>This site may contains links to other sites.</h3>
-	<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
-
-	<h3>This site requires Unique Identifiers.</h3>
-	<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
-
-	<h3>This site requires Financial Information.</h3>
-	<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
-
-	<h3>This site may have Surveys and/or Contests.</h3>
-	<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
-
-
-	<h3>Third Party Cookies</h3>
-	<p>Third party vendors, including Google, use cookies to serve the badge on the website and to serve ads based on a user's prior visits to the website.  Users may opt out of Google's use of cookies by visiting the Google advertising opt-out page.</p>
-
-	<h3>This site may contain Public Forums</h3>
-	<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
-
-	<h3>About our System Security</h3>
-	<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
-
-	<h3>This site provides the choice to Opt In or Out</h3>
-	<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
-
-	<h3>We provide the ability to Correct/Update YOUR information.</h3>
-	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
-	<!-- !!! load amendments here -->
-		</div>
-
-
-
-
-		<div class="displayNone textContentArea" id="returnArticle">
-			<h1>Return Policy</h1>
-			<div>
-			<!-- ::: add your return policy here ::: -->
-			</div>
-		</div>
-
-
-
-		<div class="displayNone textContentArea" id="shippingArticle">
-			<h1>Shipping Information</h1>
-			<div>
-			<!-- ::: add your shipping information here ::: -->
-			</div>
-		</div>
-
-	</div>
-
-</div><!-- /companyTemplate -->
-
-
-
-<div id="customerTemplate" class="clearfix smallButton">
-
-	<div class="sideline">
-	<nav id="customerNav">
-	<ul class="listStyleNone noPadOrMargin">
-		<li><a href='#!customer/subscriberLists'>Newsletter Subscription</a></li>
-		<li><a href="#!customer/myaccount">My Account</a></li>
-		<li><a href="#!customer/changepassword">Change Password</a></li>
-		<li><a href="#!customer/orders">Order History</a></li>
-		<li><a href="#!customer/lists">Manage Lists</a></li>
-		<li class="hideIfLoggedOut"><a href="#!customer/logout">Log Out</a></li>
-	</ul>
-	</nav>
-	</div>
-
-	<div class="mainColumn">
-<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
-
-<!--
-newsletterArticle is intended for buyers who are not logged in or do not have an account.
--->
-		<div id="newsletterArticle" class="displayNone textContentArea">
-			<h1>Subscribe to our Newsletter and Save!</h1>
-			<form action="#" name="subscribeFrm" data-app-submit="quickstart|subscribeSubmit" class='alignedForm'>
-				<fieldset class="userInfo borderNone">
-					<label>
-					<input placeholder="email address" maxlength="50" size="30" required name="email" value="" type="email" data-tlc="bind $var '.customer.login'; if(is $var --notblank;) {{apply --select=$var;}};">
-					</label>
-				</fieldset>
-				
-				<fieldset data-tlc="apply --empty; bind $var '.@lists'; controller#loop --templateid='subscriberListItemTemplate'; apply --append;" class="borderNone subscriberLists"></fieldset>
-			
-				<input class="applyButton" value="Subscribe" type="submit">
-			
-			</form>
-		</div>
-<!--
-subscribeListsArticle is used for authenticated buyers.
--->
-		<div id="subscriberListsArticle" class="displayNone textContentArea">
-			<h1>Manage your Subscriptions</h1>
-
-			<form action="#" name="subscribeFrm" data-app-submit="store_crm|buyerUpdate" class='alignedForm' onSubmit="return false">
-				<!-- buyer is logged in. Don't need email/name inputs -->
-				<fieldset data-update-verb='tags' data-tlc="apply --empty; bind $tags '.%info.@tags'; bind $var '.@lists'; controller#loop --templateid='subscriberListItemTemplate'; apply --append;" class="borderNone subscriberLists"></fieldset>
-				<input class="applyButton" value="Subscribe" type="submit">
-			</form>
-
-		</div>
-
-		<div id="myaccountArticle" class="displayNone textContentArea">
-			<h1>My Account</h1>
-
-			<section>
-
-<div class="billAddressContainer" data-app-role="addressContainer" data-app-addresstype="bill">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Billing Address</button>
-		<h2>Billing Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@bill'; controller#loop --templateid='billAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
-</div>
-
-<div class="shipAddressContainer" data-app-role="addressContainer" data-app-addresstype="ship">
-	<div class="marginBottom">
-		<button class="floatRight applyButton" data-icon-primary="ui-icon-plus" data-app-click="quickstart|showBuyerAddressAdd">New Shipping Address</button>
-		<h2>Shipping Address(es)</h2>
-	</div>
-	<div data-tlc="bind $var '.@ship'; controller#loop --templateid='shipAddressTemplate'; if (is $var --notblank;) {{apply --empty; apply --append;}};" class="billAddresses"></div>
-</div>
-
-
-			</section>
-
-
-		</div>
-
-
-		<div id="ordersArticle" class="displayNone textContentArea">
-			<h1>Order History</h1>
-			<div data-tlc="bind $var '.@orders'; controller#loop --templateid='orderLineItemTemplate'; if (is $var --notblank;) {{apply --append;}};" data-app-role="orderList" class="ui-accordion ui-widget ui-helper-reset ui-accordion-icons "></div>
-		</div>
-
-
-		<div id="invoiceArticle" class="displayNone textContentArea">
-			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='invoiceTemplate'; apply --append;" data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
-		</div>
-
-
-
-		<div id="changepasswordArticle" class="displayNone textContentArea">
-			<h1>Change Password</h1>
-			<form action="#" name="changePasswordForm" data-app-submit="quickstart|passwordChangeSubmit" class='alignedForm'>
-			<fieldset class="borderNone">
-			<p>For passwords, we recommend using mixed case, at least one number and one special character.</p>
-			<div class="messaging"></div>
-			<label><span class="prompt">Password</span><input name="password" size="35" required type="password" data-minlength='8'></label>
-			<label><span class="prompt">Confirm Password</span><input name="password2" required size="35" type="password" data-minlength='8'></label>
-			<div class='alignCenter'><input value="Change Password" class="loadingButton applyButton" type="submit"></div>
-			</fieldset>
-			</form>
-		</div>
-
-		<div id="listsArticle" class="displayNone textContentArea">
-			<h1>List Manager</h1>
-
-			<div class='applyAccordion' data-tlc="apply --empty; bind $var '.@lists'; controller#loop --templateid='buyerListTemplate'; apply --append; bind $content '.@lists'; controller#loop --templateid='buyerListProdlistContainerTemplate'; apply --append;"></div>
-
-		</div>
-
-		<div id="forgetmeArticle" class="displayNone textContentArea">
-			<h1>Your 'Forget Me' list</h1>
-			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
-			<ul id="forgetmeContainer" class="prodlist ">
-			</ul>
-		</div>
-
-	</div>
-
-</div>
-
-
-<ul>
-
-<li id='subscriberListItemTemplate'>
-	<label data-tlc="bind $var '.EXEC_SUMMARY'; apply --attrib='title';" >
-	<input type='checkbox'  data-tlc="bind $id '.ID'; format --prepend='USER#SUB'; apply --attrib='name'; set $checked ''; store_crm#buyersubscribe --id=$id; if(is $checked --notblank;) {{ apply --attrib='checked';}};" />
-	<span data-tlc="bind $var '.NAME'; apply --append;"></span>
-</li>
-
-</ul>
-
-<h2 id='buyerListTemplate' data-tlc="bind $id '.id'; apply --append; bind $items '.items'; if (is $items --notblank;) {{format --prepend=' (' --append=')'; apply --append;}};"></h2>
-
-
-
-<div id='buyerListProdlistContainerTemplate' class='buyerList' data-tlc="bind $id '.id'; apply --attrib='data-buyerlistid';">
-	<!--
-	the UL is generated automatically because the tlc bind is specific to the list id. trying to use tlc to generate tlc would probably get me committed.
-	the div is NOT added dynamically so the accordion can be generated.
-	-->
-</div>
-
-
-
-<div id="searchTemplate" class="searchResultsPage clearfix">
-
-	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
-	<div class="previewProductDetail displayNone"></div>
-
-	<div class="previewListContainer">
-		<!-- productListTemplateResults gets loaded into here -->
-		<ul id="resultsProductListContainer" class="listStyleNone fluidList noPadOrMargin productList"></ul>
-	</div>
-
-</div>
-
-
-
-
-
-
-
-
-
-<!--
-a template for multipage controls
-after this is generated, actions for going to last and next page will be added by the extension.
-to any element with a class of paging and a data-role of either 'next' or 'previous'
-onclicks are recursive, so only add it to the parent element.
-.mpControlsPagination is used to 'hide' the pagination portion of the header if pagination is disabled.
--->
-
-<div id="mpControlSpec" class="mpControlContainer">
-	<div class="mpControls ui-widget ui-state-default ui-corner-top">
-
-<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role="next" title="next page">
-	<span class="ui-icon ui-icon-circle-triangle-e"></span>
-</span>
-
-<div class="floatRight ddUlMenu mpControlsPagination">
-<ul>
-	<li>
-
-	<a href="#" onclick="return false;">
-		<span data-tlc="bind $var '.page_in_focus'; format --prepend='page '; if (is $var --notblank;) {{apply --append;}};"></span>
-		<span data-tlc="bind $var '.total_page_count'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></span>
-	</a>
-	<ul data-tlc="bind $var '.total_page_count'; store_prodlist#mppagesaslistitems  --legacy; apply --append;" class="ui-widget-content ui-corner-bottom"></ul>
-	</li>
-</ul>
-</div>
-
-<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role="previous" title="previous page">
-	<span class="ui-icon ui-icon-circle-triangle-w"></span>
-</span>
-
-
-<span data-tlc="bind $var '.page_start_point'; format --prepend='items '; if (is $var --notblank;) {{apply --append;}};"></span>
-<span data-tlc="bind $var '.page_end_point'; format --prepend='- '; if (is $var --notblank;) {{apply --append;}};"></span>
-<span data-tlc="bind $var '.total_product_count'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></span>
-
-	</div><!-- /.mpControls -->
-</div><!-- /#mpControlSpec -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-Cart template
-This is the template used both within a dialog and inline, unless implicitly overridden in showContent params.
--->
-
-<div id="cartTemplate" class="clearfix"><!-- template role gets added by the myApp. don't add it yourself -->
-
-<form action="#" onsubmit="return false">
-
-<div class="cartStuffContainer">
-	<ul data-tlc="bind $var '.@ITEMS'; controller#loop --templateid='productListTemplateCart'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist"></ul>
-</div>
-
-<div class="cartSummaryTotalsContainer">
-	<div class="ui-widget ui-corner-all">
-		<div class='ui-widget-header ui-corner-top ui-header smallPadding smallButton'>
-			<button class='applyButton cartRefreshButton' data-text='false' data-icon-primary='ui-icon-refresh' data-app-click="cco|cartFetchExec">Refresh Cart</button>
-			<h2>Cart Totals</h2>
-		</div>
-		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
-
-<section class="cartSummary marginBottom">
-
-	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
-
-	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
-
-	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipinfobyid; extension:cco;"></div>
-
-	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
-
-	<div data-tlc="bind $var '.sum.gfc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Giftcard(s): '; apply --add --class='orderGiftcardTotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum.pnt_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Reward Points: '; apply --add --class='rewardPointsTotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum.rmc_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Returns Credit: '; apply --add --class='returnsCreditTotal'; apply --append;}};"></div>
-
-	<div data-tlc="bind $var '.sum.balance_due_total'; cco#orderbalance  --classname='orderBalanceDue' --hidezero='false' --currencysign='$' --legacy;"></div>
-
-</section>
-
-<section data-app-role="cartTemplateShippingContainer" class="marginBottom cartTemplateShippingContainer">
-	<h3>Shipping:</h3>
-
-	<div class="cartZipCodeContainer marginBottom">
-		<label>Zip/Postal Code:
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-keypress="quickstart|triggerBlurOnEnter" data-app-blur="cco|cartZipUpdateExec" type="text"></label>
-	</div>
-
-	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
-</section>
-
-<section class="marginBottom">
-
-	
-
-</section>
-
-		</div>
-		<div class="ui-state-default cartButtons stdPadding clearfix">
-			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="myRIA|dialogCloseExec">Continue Shopping</button></span>
-	
-			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
-				<a class="applyButton ui-state-highlight checkoutButton" href='#!checkout'>Store Checkout</a>
-			</span>
-	
-			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
-	
-		</div>
-
-	</div>
-</div>
-</form>
-</div>
-
-
-
-<!-- /cartTemplate -->
-
-
-
-
-
-
-
-
-<!-- cart line-item template -->
-<ul>
-	<li id="productListTemplateCart" class="padMargBorderBottom clearfix">
-
-		<button data-tlc="cco#cartitemremovebutton  --legacy;" class="floatRight removeButton" data-bind="format:cartitemremovebutton; extension:cco; useParentData:true;" data-app-click="cco|cartItemRemove">Remove Item From Cart</button>
-		<button data-tlc="quickstart#movetowishlistbutton  --legacy;" class="floatRight moveToWishlist marginRight" data-bind="format:moveToWishlistButton; extension:quickstart; useParentData:true;">Move to Wishlist</button>
-
-
-		<div class="floatLeft"><img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{apply --img --media=$var --width=75 --height=75 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="75" width="75"></div>
-
-		<h4 data-tlc="bind $var '.prod_name'; if (is $var --notblank;) {{apply --append;}};"></h4>
-
-		<div data-tlc="bind $var '.sku'; format --prepend='Sku: '; if (is $var --notblank;) {{apply --append;}};" class="ztable_row_small stid"></div>
-
-		<div>
-		qty: <input data-tlc="cco#cartitemqty  --legacy;" class="qtyInput numberInput" data-app-change="cco|cartItemUpdateExec" data-bind="format:cartItemQty;extension:cco;useParentData:true;" name="quantity" type="number">
-		<button class="displayNone">update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-tlc="bind $var '.price'; if (is $var --notblank;) {{ format --currency='USD'; format --prepend=' x '; apply --append;}};"></span>
-		<span data-tlc="bind $var '.extended'; if (is $var --notblank;) {{format --currency='USD';  format --prepend='= '; apply --append;}};"></span>
-
-		</div>
-
-		<div data-tlc="bind $var '.%options'; controller#selectedoptionsdisplay --legacy;  if (is $var --notblank;) {{apply --append;}};" class="ztable_row_small prodOptions"></div>
-	</li>
-</ul>
-
-
-
-
-
-<!--
-used on a product layout. Some product have 'children' which may represent the same item in a different color (variations are commonly used for sizing)
--->
-
-<table>
-<tbody><tr id="productListTemplateChildren">
-	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=45 --height=45 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="45" width="45"></td>
-	<td data-tlc="bind $var '.%attribs.amz:grp_varvalue'; if(is $var --blank) {{bind $var 'product(zoovy:prod_name)';}}; if (is $var --notblank;) {{apply --append;}};"></td>
-	<td>
-	<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
-
-		<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
-		<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
-
-		<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
-	</form>
-	</td>
-</tr>
-</tbody></table>
-
-
-
-
-
-<!-- individual review template -->
-<ul>
-	<li id="productReviewsTemplateDetail" class="reviewLineItem clearfix">
-	<ul class="prodReviewInfo">
-		<li data-tlc="bind $var '.RATING'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></li>
-		<li data-tlc="bind $var '.CUSTOMER_NAME'; if (is $var --notblank;) {{apply --append;}};"></li>
-		<li data-tlc="bind $var '.LOCATION'; format --prepend='of '; if (is $var --notblank;) {{apply --append;}};"></li>
-		<li data-tlc="bind $var '.CREATED_GMT'; if (is $var --notblank;) {{datetime --out='mdy'; format --prepend='on '; apply --append;}};"></li>
-
-	</ul>
-	<blockquote>
-		<h2 data-tlc="bind $var '.SUBJECT'; if (is $var --notblank;) {{apply --append;}};"></h2>
-		<p data-tlc="bind $var '.MESSAGE'; if (is $var --notblank;) {{apply --append;}};"></p>
-	</blockquote>
-	</li>
-</ul>
-
-
-
-
-<!-- image viewer template -->
-<div id="imageViewerTemplate">
-
-<table>
-<tbody><tr>
-	<td><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=500 --height=500 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="500" width="500"></td>
-	<td>
-	<img data-tlc="bind $var '.%attribs.zoovy:prod_image2'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="100" width="100">
-	<img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="100" width="100">
-	<img data-tlc="bind $var '.%attribs.zoovy:prod_image4'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="100" width="100">
-	<img data-tlc="bind $var '.%attribs.zoovy:prod_image5'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="100" width="100">
-	<img data-tlc="bind $var '.%attribs.zoovy:prod_image6'; apply --img --media=$var --width=100 --height=100 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodThumb" alt="" height="100" width="100">
-	</td>
-</tr>
-</tbody></table>
-</div>
-
-
-
-
-
-
-
-
-<!--
-used for store_crm.js
--->
-
-<div id="reviewFrmTemplate" class='alignedForm'>
-
-<form name="reviewFrm" action="#" data-app-submit="store_crm|productReviewSubmit">
-<input data-tlc="bind $var '.pid'; apply --select=$var; if (is $var --notblank;) {{apply --append;}};" name="pid" id="reviewsPid" value="" type="hidden">
-
-
-<label><span class="prompt">Your Name</span><input name="CUSTOMER_NAME" value="" maxlength="30" required type="text" class='alignInput'></label>
-
-<label><span class="prompt">Location</span><input maxlength="30" name="LOCATION" value="" type="text" class='alignInput'></label>
-
-<label><span class="prompt">Subject</span><input maxlength="60" name="SUBJECT" type="text" class='alignInput'></label>
-
-<label><span class="prompt">Review</span><textarea required name="MESSAGE" class='alignInput'></textarea></label>
-
-<label>
-	<span class="prompt">Score</span>
-	<select name="RATING" id="reviewsRating">
-		<option value="10">5</option>
-		<option value="9">4.5</option>
-		<option value="8">4</option>
-		<option value="7">3.5</option>
-		<option value="6">3</option>
-		<option value="5">2.5</option>
-		<option value="4">2</option>
-		<option value="3">1.5</option>
-		<option value="2">1</option>
-		<option value="1">.5</option>
-	</select>
-</label>
-
-<button class="applyButton floatRight marginTop">Submit Review</button>
-
-</form>
-</div>
-
-
-
-
-
-<!-- used in the /customer section for order view -->
-
-<section data-tlc="bind $var '.ORDERID'; apply --attrib='data-orderid';" id="orderLineItemTemplate" class="appAccordianesque" data-app-role="orderLineitemContainer">
-
-	<div data-app-role="orderHeader" data-app-click="quickstart|orderDetailShow" class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom">
-	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
-	<span data-tlc="bind $var '.ORDERID'; if (is $var --notblank;) {{ format --prepend='Order ID: ';apply --append;}};"></span>
-	<span data-tlc="bind $var '.MODIFIED_GMT'; if (is $var --notblank;) {{datetime --out='mdy'; format --prepend='Placed on '; apply --append;}};"></span>
-	</div>
-
-	<div data-app-role="orderContents" class="ui-accordion-content ui-helper-reset displayNone ui-widget-content "></div>
-
-</section>
-
-
-
-
-
-
-
-
-<section id="faqTopicTemplate">
-
-	<div class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom" data-app-click="quickstart|faqDetailShow">
-	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
-	<span data-tlc="bind $var '.TOPIC_TITLE'; if (is $var --notblank;) {{apply --append;}};"></span>
-	</div>
-
-	<div data-tlc="bind $var '.TOPIC_ID'; format --prepend='faqDetails4Topic_'; apply --attrib='id';" class="ui-accordion-content ui-helper-reset ui-widget-content displayNone"></div>
-
-</section>
-
-
-<div id="faqQnATemplate">
-	<div data-tlc="bind $var '.QUESTION'; if (is $var --notblank;) {{apply --append;}};" class="faqQuestion"></div>
-	<div data-tlc="bind $var '.ANSWER'; if (is $var --notblank;) {{apply --append;}};" class="faqAnswer"></div>
-</div>
-
-
-
-<!--
-
-The following classes used in the bill and ship address templates are used in the quickstart.js file: buyerAddressContainer, buttonMenu, offMenu, onMenu, editable
-The 'data-action' attribute is used to assign an onclick.
-
--->
-
-<address id="billAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
-	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
-	<button data-app-click="quickstart|showBuyerAddressRemove" class="floatRight applyButton">remove</button>
-	<div class="addressFullname">
-		<span data-tlc="bind $var '.bill/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
-		<span data-tlc="bind $var '.bill/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
-	</div>
-	<div class="address">
-		<div data-tlc="bind $var '.bill/address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
-		<div data-tlc="bind $var '.bill/address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
-
-		<span data-tlc="bind $var '.bill/city'; if (is $var --notblank;) {{format --append=', '; apply --append;}};" title="city"></span>
-		<span data-tlc="bind $var '.bill/region'; if (is $var --notblank;) {{format --append='. '; apply --append;}};" title="state"></span>
-		<span data-tlc="bind $var '.bill/postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
-		<div data-tlc="bind $var '.bill/countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
-	</div>
-
-</address>
-
-
-<!-- used in the my account area -->
-<address id="shipAddressTemplate" class="ui-widget ui-widget-content ui-corner-all marginBottom ">
-	<button data-app-click="quickstart|showBuyerAddressUpdate" class="floatRight applyButton">edit</button>
-	<button data-app-click="quickstart|showBuyerAddressRemove" class="floatRight applyButton">remove</button>
-	<div class="addressFullname">
-		<span data-tlc="bind $var '.ship/firstname'; if (is $var --notblank;) {{apply --append;}};" title="first name"></span>
-		<span data-tlc="bind $var '.ship/lastname'; if (is $var --notblank;) {{apply --append;}};" title="last name"></span>
-	</div>
-	<div class="address">
-		<div data-tlc="bind $var '.ship/address1'; if (is $var --notblank;) {{apply --append;}};" title="address"></div>
-		<div data-tlc="bind $var '.ship/address2'; if (is $var --notblank;) {{apply --append;}};" title="address 2"></div>
-
-		<span data-tlc="bind $var '.ship/city'; if (is $var --notblank;) {{format --append=', '; apply --append;}};" title="city"></span>
-		<span data-tlc="bind $var '.ship/region'; if (is $var --notblank;) {{format --append='. '; apply --append;}};" title="state"></span>
-		<span data-tlc="bind $var '.ship/postal'; if (is $var --notblank;) {{apply --append;}};" title="zip"></span>
-		<div data-tlc="bind $var '.ship/countrycode'; if (is $var --notblank;) {{apply --append;}};" title="country"></div>
-
-	</div>
-
-</address>
-
-
-
-
-<div class="orderContentsTable" data-app-role="invoiceContainer" id="invoiceTemplate">
-
-	<div class="clearfix marginBottom">
-		<div class="floatRight">
-		<button data-app-click="quickstart|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
-		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
-		</div>
-		<h2 data-tlc="bind $var '.order.our.orderid'; if (is $var --notblank;) {{apply --append;}};"></h2>
-		<h3 data-tlc="bind $var '.order.flow.pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
-		<h5 data-tlc="bind $var '.order.sum.order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
-		<h5 data-tlc="bind $var '.order.sum.balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>
-
-	</div>
-
-	<section class="clearfix invoiceAddressContainer marginBottom">
-
-		<address class="billAddress">
-		<b>
-			<span data-tlc="bind $var '.order.bill.firstname'; format --prepend='Bill To: '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.bill.lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
-		</b>
-		<div data-tlc="bind $var '.order.bill.address1'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div data-tlc="bind $var '.order.bill.address2'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div>
-			<span data-tlc="bind $var '.order.bill.city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.bill.region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.bill.postal'; if(is $var --blank) {{bind $var 'order(order.data.bill_int_zip)';}}; if (is $var --notblank;) {{apply --append;}};"></span>
-		</div>
-		<div data-tlc="bind $var '.order.bill.countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
-		</address>
-
-		<address class="shipAddress">
-		<b>
-			<span data-tlc="bind $var '.order.ship.firstname'; format --prepend='Ship To: '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.ship.lastname'; if (is $var --notblank;) {{apply --append;}};"></span>
-		</b>
-		<div data-tlc="bind $var '.order.ship.address1'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div data-tlc="bind $var '.order.ship.address2'; if (is $var --notblank;) {{apply --append;}};"></div>
-		<div>
-			<span data-tlc="bind $var '.order.ship.city'; format --append=', '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.ship.region'; format --append='. '; if (is $var --notblank;) {{apply --append;}};"></span>
-			<span data-tlc="bind $var '.order.ship.postal'; if (is $var --notblank;) {{apply --append;}};"></span>
-		</div>
-		<div data-tlc="bind $var '.order.ship.countrycode'; if (is $var --notblank;) {{apply --append;}};"></div>
-		</address>
-
-	</section>
-
-	<section class="orderContentsProdlistContainer">
-	<ul data-tlc="bind $var '.order.tracking'; store_crm#ordertrackinglinks  --legacy; apply --append;" class="displayNone noListStyle marginBottom"></ul>
-	<table class="listStyleNone lineItemProdlist">
-		<tbody data-tlc="bind $var '.order.@ITEMS'; controller#loop --templateid='chkoutInvoiceItemTemplate'; if (is $var --notblank;) {{apply --append;}};"></tbody>
-	</table>
-	</section>
-
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</div><!-- /templates -->
-
-
-
-
-
-
-
-
-
 
 <div id='loginFormForModal' class='loginOption displayNone seoStrip' title='Please log in'>
 
@@ -1534,6 +235,7 @@ The 'data-action' attribute is used to assign an onclick.
 		</div><!-- /recoverPasswordContainer -->
 
 		<div>
+		<!-- !!!!! NOT YET IMPLEMENTED -->
 		<a class='applyButton' href='#!customer/newsletter'>Create Account</a>
 		</div>
 	</div>
@@ -1554,11 +256,11 @@ The 'data-action' attribute is used to assign an onclick.
 <ul class='debugQuickLinks'>
 	<li>Store Links
 	<ul>
-		<li><a href='#!home'>Homepage</a></li>
-		<li><a href='#!customer/orders'>Orders</a></li>
-		<li><a href='#!cart' >Cart</a></li>
-		<li><a href='#!company'>Returns</a></li>
-		<li><a href='#!company/privacy'>Privacy</a></li>
+		<li><a href='/'>Homepage</a></li>
+		<li><a href='/my_order_history/'>Orders</a></li>
+		<li><a href='/cart/' >Cart</a></li>
+		<li><a href='/return_policy/'>Returns</a></li>
+		<li><a href='/privacy_policy/'>Privacy</a></li>
 		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
 	</ul>
 	</li>
@@ -1580,6 +282,223 @@ The 'data-action' attribute is used to assign an onclick.
 </table>
 
 </div>
+
+<script type="text/pegjs" id="pegjs">
+dataTLC
+ = grammar+
+
+grammar
+ = _ cmd:(IfStatement) _ lb* { return cmd; }
+ / _ cmd:(WhileLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(ForeachLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(BindStatement) _ lb* { return cmd; } 
+ / _ cmd:(SetStatement) _ lb* { return cmd; } 
+ / _ cmd:(ExportStatement) _ lb* { return cmd; } 
+ / _ cmd:(command) _ lb* { return cmd; }
+
+command
+ = _ module:([a-z_]+ "#")? cmd:[a-z?]+ args:((ws+ value)+)? _ lb* {
+     return {
+       type: "command",
+       module: module ? module[0].join("") : "core",
+       name: cmd.join("").toLowerCase(),
+       args: args ? args.map(function(a) { return a[1] }) : null
+     }
+   }
+
+
+// ** BIND **
+// bind $var 'something'; (jsonpath lookup)
+// bind $var $someothervar; (jsonpath lookup)
+// bind $var ~tag; (returns tag id/path)
+// bind ~tag '#tagid'; jQuery('#tagid')
+// bind ~tag $tagid jQuery($tagid)
+BindStatement
+ = "bind" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
+  return { type:"BIND", Set:set, Src:src }
+  }
+
+
+// ** EXPORT **
+// export 'key' --dataset=$var
+// export '%key' --dataset=$var
+ExportStatement
+= "export" _ set:(scalar / variable) args:(ws+ value)+ _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null } 
+  }
+
+// ** SET ** 
+// set $dst $src --path='.xyz';
+SetStatement
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag / boolean / integer) args:((ws+ value)+)? _ lb+ {
+  return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
+  }
+
+// if (command) {{ }} else {{ }};
+IfStatement
+  = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
+      return ({
+        type: "IF",
+        When: condition,
+        IsTrue: ifStatement,
+        IsFalse: elseStatement !== null ? elseStatement[3] : null
+      });
+   }
+
+// while (something) {{ inner loop }};
+WhileLoopStatement
+  = "while" _ "(" _ condition:command _ ")" _ whileStatement:Block lb+ {
+      return ({
+        type: "WHILE",
+        While: condition,
+        Loop: whileStatement,
+      });
+   }
+
+
+// foreach $item in $items {{ inner loop }};
+ForeachLoopStatement
+  = "foreach" _ set:(variable) _ "in" _ members:(variable) _ loop:Block lb+ {
+      return ({
+        type: "FOREACH",
+        Set: set,
+        Members: members,
+        Loop: loop,
+      });
+   }
+
+
+Block
+  = "{{" _ statements:(StatementList _)? "}}" {
+      return {
+        type: "Block",
+        statements: statements !== null ? statements[0][0] : []
+      };
+    }
+
+StatementList
+  = head:Statement tail:(_ Statement)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][1]);
+      }
+      return result;
+    }
+
+Statement
+  = Block
+  / grammar+
+
+
+/* value types */
+
+// ~tag is a reference to a jquery object
+tag
+ = "~" tag:([a-zA-Z]+) {
+   // tag table should maintain reference to tags on DOM
+   return { type:"tag", tag:tag.join(""), jq:null }
+   }
+
+boolean
+ = "true" {return{ "type":"boolean", "value": true }}
+ / "false" {return{ "type":"boolean", "value": false }}
+
+// longopt start with a --
+longopt
+ = "--" k:([a-zA-Z]+) "=" v:( value ) {
+    return {
+       type: "longopt",
+       key: k.join(""),
+       value: v
+       }
+    }
+ / "--" k:([a-zA-Z]+) {
+    return {
+      type: "longopt",
+      key: k.join(""),
+      value: null
+      }
+    }
+
+
+// scalar (string)
+// NOTE: at this point there is no way to escape a ' in a string.
+//
+scalar
+ = "'" v:([^']*) "'" {
+     return {
+       type: "scalar",
+       value: v.join("")
+     }
+   }
+
+// Variables can't start with a number
+variable
+ = "$" v:([a-zA-Z0-9_]*) {
+     return {
+       type: "variable",
+       value: v.join("")
+     }
+   }
+
+integer
+  = digits:[0-9]+ {
+      return {
+        type: "integer",
+        value: parseInt(digits.join(""), 10)
+      }
+    }
+
+hexcolor
+  = "#" v:([A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]) {
+     return { type:"hexcolor", value: v.join("") }
+     }
+
+additive
+  = left:muldiv _ sign:[+-] _ right:additive {
+      return {
+        type: "command",
+        name:sign,
+        args:[left,right]
+      }
+    }
+  / muldiv
+
+muldiv
+  = left:primary _ sign:[*/] _ right:muldiv {
+      return {
+        type: "command",
+        name: sign,
+        args:[left, right]
+      }
+    }
+  / primary
+
+primary
+  = (variable / integer)
+  / "(" _ additive:additive _ ")" { return additive; }
+
+value
+ = longopt / variable / integer / scalar / boolean / tag / hexcolor / additive
+
+// /* i am a comment (i can only appear before a command) */
+comment
+  = "/*" (!"*/" SourceCharacter)* "*/" { return{}; }
+
+SourceCharacter
+  = .
+
+ws
+ = [ \t\n\r]
+
+_
+ = (ws / comment)*
+
+lb
+ = ";"
+
+
+</script>
 
 </body>
 </html>

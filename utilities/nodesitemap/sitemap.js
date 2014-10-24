@@ -74,10 +74,10 @@ for( var i in urls['@OBJECTS'] ) {
 				var url = '';
 				switch (res.type) {
 						case 'pid':
-								url = '/product/' + res.id;
+								url = '/product/' + res.id + '/';
 								break;
 						case 'navcat':
-								url = '/category/' + res.id.substr(1);  // strip leading . in category name
+								url = '/category/' + res.id.substr(1) +'/';  // strip leading . in category name
 								break;
 						case 'list' :
 								// we don't index these.
@@ -105,7 +105,7 @@ var CHUNKS = new Array;
 while (URLS.length > 0) {
         if (CHUNKS[CHUNKCOUNT]  == null) { CHUNKS[CHUNKCOUNT] = new Array; }    // initialize array
         CHUNKS[CHUNKCOUNT].push( URLS.shift() );
-        if (CHUNKS[CHUNKCOUNT].length > 50000) { CHUNKCOUNT++; }
+        if (CHUNKS[CHUNKCOUNT].length >= 50000) { CHUNKCOUNT++; }
         }
 
 //

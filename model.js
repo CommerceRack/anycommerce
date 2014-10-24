@@ -332,11 +332,19 @@ If this isn't done, attempts to see if an immutable or other request is in proce
 must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
 can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
 */
-
-
+	var extra = "";
+	for(var i = 0; i < Q.length; i++){
+		var req = Q[i];
+		extra += req["_cmd"];
+		if(i < Q.length-1){
+			extra += ".";
+			}
+		}
+	var url = _app.vars.jqurl+"v-"+_app.model.version+"/"+extra
+	dump(url);
 	_app.globalAjax.requests[QID][pipeUUID] = $.ajax({
 		type: "POST",
-		url: _app.vars.jqurl,
+		url: url,
 //		context : app,
 		async: true,
 		contentType : "text/json",
@@ -475,6 +483,35 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 		handleResponse : function(responseData,QID,Q)	{
 //			_app.u.dump('BEGIN model.handleResponse.');
 			
+			function executeResponseHandler(rd){
+				function callback(){
+					if(typeof _app.model['handleResponse_'+rd['_rcmd']] == 'function')	{
+						_app.model['handleResponse_'+rd['_rcmd']](rd)	//executes a function called handleResponse_X where X = _cmd, if it exists.
+						} 
+					else	{
+						_app.model.handleResponse_defaultAction(rd,null);
+						}
+					}
+				if(rd._rtag.extension || rd._rtag.require){
+					var requirements = [];
+					if(rd._rtag.extension){
+						requirements.push(rd._rtag.extension);
+						}
+					if(rd._rtag.require){
+						if(typeof rd._rtag.require == "string"){
+							requirements.push(rd._rtag.require);
+							}
+						else{
+							$.merge(requirements, rd._rtag.require);
+							}
+						}
+					_app.require(requirements, callback);
+					}
+				else {
+					callback();
+					}
+				}
+			
 //if the request was not-pipelined or the 'parent' pipeline request contains errors, this would get executed.
 //the handlereq function manages the error handling as well.
 			if(responseData && !$.isEmptyObject(responseData))	{
@@ -535,43 +572,25 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //pipeline request
 				else if(responseData && responseData['_rcmd'] == 'pipeline')	{
 					
-//					_app.u.dump(' -> pipelined request. size = '+responseData['@rcmds'].length);
-
-					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
-// _tag is reassociated early so that the data is available as quick as possible, including in any custom handleResponse_ functions
-//has to be called before writing to local because datapointer is in _tag
-						responseData['@rcmds'][i]['_rtag'] = responseData['@rcmds'][i]['_rtag'] || this.getRequestTag(responseData['@rcmds'][i]['_uuid']); 
-						this.writeToMemoryAndLocal(responseData['@rcmds'][i]);
-						}
-
 //handle all the call specific handlers.
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
 						responseData['@rcmds'][i].ts = _app.u.epochNow()  //set a timestamp on local data
-
-						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
-							this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']](responseData['@rcmds'][i])	//executes a function called handleResponse_X where X = _cmd, if it exists.
-	//						_app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
-							} 
-						else	{
-		//					_app.u.dump(' -> going straight to defaultAction');
-							this.handleResponse_defaultAction(responseData['@rcmds'][i],null);
-	//						_app.u.dump("NO custom handleresponse defined for "+responseData['_rcmd']);
-							}
+// _tag is reassociated early so that the data is available as quick as possible, including in any custom handleResponse_ functions
+//has to be called before writing to local because datapointer is in _tag
+						var _rtag = responseData['@rcmds'][i]['_rtag'] || this.getRequestTag(responseData['@rcmds'][i]['_uuid']); 
+						responseData['@rcmds'][i]['_rtag'] = _rtag;
+						this.writeToMemoryAndLocal(responseData['@rcmds'][i]);
+						
+						executeResponseHandler(responseData['@rcmds'][i]);
 						}
 					}
 //a solo successful request.
 //the logic for the order here is the same as in the pipelined response, where it is documented.
 				else {
 					responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(responseData['_uuid']);
-					this.writeToMemoryAndLocal(responseData['@rcmds'])
-					if(responseData['_rcmd'] && typeof this['handleResponse_'+responseData['_rcmd']] == 'function')	{
-	//					_app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
-						this['handleResponse_'+responseData['_rcmd']](responseData)	//executes a function called handleResponse_X where X = _cmd, if it exists.
-						} 
-					else	{
-	//					_app.u.dump("NO custom handleresponse defined for "+responseData['_rcmd']);
-						this.handleResponse_defaultAction(responseData,null);
-						}
+					this.writeToMemoryAndLocal(responseData)
+					
+					executeResponseHandler(responseData);
 					}
 				}
 			else	{
@@ -1218,11 +1237,11 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 				for(var i = 0; i < L; i += 1) {
 //					_app.u.dump(" -> i: "+i);
 //namespace and filename are required for any extension.
-					if(!extObj[i].namespace || !extObj[i].filename)	{
+					if(!extObj[i].namespace)	{
 						if(extObj.callback && typeof extObj.callback == 'string')	{
-							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] and/or filename ["+extObj[i].filename+"]  not set",'')
+							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] not set",'')
 							}
-						_app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") or filename ("+extObj[i].filename+") was left blank.");
+						_app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") was left blank.");
 						continue; //go to next index in loop.
 						}
 					else if (typeof window[extObj[i].namespace] == 'function')	{
@@ -1231,8 +1250,14 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 						//extension has already been imported. Here for cases where extensions are added as part of preloader (init.js)
 						}
 					else	{
-//						_app.u.dump(" -> fetch extension: "+extObj[i].namespace);
-						this.fetchExtension(extObj[i],i);
+						if(!extObj[i].filename){
+							_app.u.dump(" -> extension did not load because filename ("+extObj[i].filename+") was left blank.");
+							_app.u.dump(extObj[i]);
+							}
+						else {
+//							_app.u.dump(" -> fetch extension: "+extObj[i].namespace);
+							this.fetchExtension(extObj[i],i);
+							}
 						}
 					} // end loop.
 				this.executeCallbacksWhenExtensionsAreReady(extObj); //reexecutes itself. will execute callbacks when all extensions are loaded.
@@ -1256,9 +1281,17 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 				else{
 					$templateSpec = $($templateSpec);
 					}
+				
 				_app.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone(true); //events needs to be copied from original
 				_app.templates[templateID].removeAttr('id'); //get rid of the ID to reduce likelyhood of duplicate ID's on the DOM.
 				$('#'+templateID).empty().remove(); //here for templates created from existing DOM elements. They're removed to ensure no duplicate ID's exist.
+				
+				for(var i in _app.templateEvents){
+					if(_app.templateEvents[i].filterFunc(templateID)){
+						_app.templates[templateID].on(_app.templateEvents[i].event, _app.templateEvents[i].handler);
+						}
+					}
+				
 				}
 			else	{
 				r = false;
@@ -1302,7 +1335,8 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 //templates is an array of element id's that are present in the .html file.
 //an ajax request is made to load the .html file and, if successful, the templates are loaded into _app.templates.
 
-		fetchNLoadTemplates : function(templateURL,templates)	{
+		fetchNLoadTemplates : function(templateURL,callback)	{
+			callback = callback || function(){};
 //			_app.u.dump("BEGIN model.fetchNLoadTemplates");
 //			_app.u.dump(" -> templateURL: "+templateURL);
 	//		_app.u.dump(" -> templates: "+templates);
@@ -1328,28 +1362,13 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 				});
 	
 			ajaxRequest.success(function(data){
-	//			_app.u.dump("template file loaded successfully.");
-	//remote templates are added to their own div so that .html() can be used without impacting any default templates that may not have loaded.
-	//unique id's are needed so that it multiple extensions are loading remote templates, .html doesn't save over them.
-	//can't use append because it'll treat content as text not html
-	//so if the templateurl is /something/checkout/templates.html, the template id will be remoteTemplates_checkout
-				var templateContainerID = 'remoteTemplates_'+templateURL.split('/').splice(-2,1);
-//** 201320 -> in admin extensions, all templates were getting added to the same container element and nothing could be 'left' behind for adding later on the fly.
-				if(templateContainerID == 'remoteTemplates_admin')	{
-					templateContainerID += '_'+templateURL.split('/').splice(-1,1);
-					templateContainerID = templateContainerID.replace('.html','');
-					}
-				var $remoteTemps = $('#'+templateContainerID);
-				if($remoteTemps.length == 0)	{
-					$remoteTemps = $("<div />").attr('id',templateContainerID).hide().appendTo('body');
-					}
-				$remoteTemps.html(data);
-				var templateErrors = _app.model.loadTemplates(templates);
-				if(templateErrors)	{
-// * 201320 -> error messages were only displaying in appPreView.
-					$('.appMessaging').anymessage({'message':templateErrors,'persistent':true});
-	//				_app.u.dump(templateErrors);
-					}
+				var $templateFile = $('<div/>');
+				$templateFile.html(data);
+				$('[id]',$templateFile).each(function(){
+					_app.model.makeTemplate($(this), $(this).attr('id'));
+					});
+				_app.templateFiles.push(templateURL);
+				callback();
 				});
 			return ajaxRequest;
 			}, //fetchNLoadTemplates 
@@ -1367,8 +1386,13 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 //data is saved to the control prior to template/view verification because we need access to the object.
 //yes, technically we could have saved it to a var, accessed the templates param, validated and NOT saved, but this is lighter.
 //it means that a developer could use an extension that didn't load properly, but that is their perogative, since we told them its broke.
-
-				if(typeof window[namespace] === 'function')	{
+				if(!(_app.ext[namespace] instanceof Array) && typeof _app.ext[namespace] === 'object'){
+					//already instantiated, so we'll just sit on our hands
+					initPassed = true;
+					}
+				else if(typeof window[namespace] === 'function')	{
+					var couplerArray = _app.ext[namespace];
+					couplerArray.splice(0,1);
 					_app.ext[namespace] = window[namespace](_app); //keep this as early in the process as possible so it's done before the next extension loads.
 
 
@@ -1387,12 +1411,18 @@ will return false if datapointer isn't in _app.data or local (or if it's too old
 	//whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
 	//If the extension sets willfetchmyowntemplates, then no need to run template load code, the extension will handle adding it's own templates.
 	//						_app.u.dump(" -> templates.length = "+_app.ext[namespace].vars.templates.length);
-					if(_app.ext[namespace].vars && _app.ext[namespace].vars.templates && !_app.ext[namespace].vars.willFetchMyOwnTemplates)	{
-						errors += this.loadTemplates(_app.ext[namespace].vars.templates);
+					
+					for(var i in couplerArray){
+						var coupler = couplerArray[i];
+						_app.couple(namespace,coupler[0],coupler[1]);
 						}
-					else	{
-	//							_app.u.dump("WARNING: extension "+namespace+" did not define any templates. This 'may' valid, as some extensions may have no templates.");
-						}
+			//No longer automatically fetching templates, gotta do it manually (and the lazy way!)
+					//if(_app.ext[namespace].vars && _app.ext[namespace].vars.templates && !_app.ext[namespace].vars.willFetchMyOwnTemplates)	{
+					//	errors += this.loadTemplates(_app.ext[namespace].vars.templates);
+					//	}
+					//else	{
+	//				//			_app.u.dump("WARNING: extension "+namespace+" did not define any templates. This 'may' valid, as some extensions may have no templates.");
+					//	}
 
 					}
 				else	{
@@ -1451,8 +1481,10 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 
 */
 		
-		fetchExtension : function(extObjItem)	{
-//			_app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
+		fetchExtension : function(extObjItem, callback)	{
+			//_app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
+			//_app.u.dump(extObjItem);
+			callback = callback || function(){};
 			var errors = '';
 			var url = extObjItem.filename+"?_v="+_app.vars.release;
 			var namespace = extObjItem.namespace; //for easy reference.
@@ -1478,12 +1510,14 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 					if(data.statusText == 'success' || data.statusText == 'OK')	{
 //						_app.u.dump(" -> adding extension to controller");
 						errors = _app.model.loadAndVerifyExtension(extObjItem);
+						callback();
 						}
 					},
 				error: function(a,b,c) {
 					var msg = _app.u.errMsgObject("Oops! It appears something went wrong with our _app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")",123);
 					msg.persistent = true;
 					_app.u.throwMessage(msg);
+					_app.u.dump(a);
 					_app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					_app.u.dump(c);
 					}
@@ -1806,39 +1840,58 @@ A note about cookies:
 				return r;
 				},
 
-			getGrammar : function(url)	{
-				$.ajax({
-					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
-					'dataType' : 'html',
-					'error' : function()	{
-						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
-						},
-					'success' : function(file){
-						var success, errors;
-/*
-SANITY -> if the eval is giving trouble in IE, save the contents of the eval into a file and test against that. You'll get more detailed errors.
- -> also, first step would be to check for any orphaned commas on object literals. They kill old IE.
-*/
-
-						try{
-							var pegParserSource = PEG.buildParser(file);
-							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
-							success = true;
-							}
-						catch(e)	{
-							_app.u.dump("Could not build pegParser. errors follow: ","error");
-							errors = (e.line !== undefined && e.column !== undefined) ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
-							_app.u.dump(e);
-							}
-						if(success)	{
-							_app.u.dump(" -> successfully built pegParser");
-							}
-						else	{
-							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file. errors:<br>'+errors});
-							}
+//			getGrammar : function(url)	{
+//				$.ajax({
+//					'url' : url + (url.indexOf('?') >= 0 ? '' : '?') + 'release='+_app.vars.release, //append release to eliminate caching on new releases.
+//					'dataType' : 'html',
+//					'error' : function()	{
+//						$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar file. See console for details. The rendering engine will not run without that file.'});
+//						},
+//					'success' : function(file){
+//						var success;
+//						try{
+//							var pegParserSource = PEG.buildParser(file);
+//							window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+//							success = true;
+//							}
+//						catch(e)	{
+//							_app.u.dump("Could not build pegParser.","warn");
+//							_app.u.dump(buildErrorMessage(e),"error");
+//							}
+//						if(success)	{
+//							_app.u.dump(" -> successfully built pegParser");
+//							}
+//						else	{
+//							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file.'});
+//							}
+//						}
+//					})
+//
+//				}
+			getGrammar : function(id){
+				var script = $('#'+id).text();
+				if(script){
+				var success;
+					try{
+						var pegParserSource = PEG.buildParser(script);
+						window.pegParser = eval(pegParserSource); //make sure pegParser is valid.
+						success = true;
 						}
-					})
-
+					catch(e)	{
+						_app.u.dump("Could not build pegParser.","warn");
+						//_app.u.dump(buildErrorMessage(e),"error");
+							_app.u.dump(e);
+						}
+					if(success)	{
+						_app.u.dump(" -> successfully built pegParser");
+						}
+					else	{
+							$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'The grammar file did not pass evaluation. It may contain errors (check console). The rendering engine will not run without that file. errors:<br>'});
+						}
+					}
+				else {
+					$('#globalMessaging').anymessage({'errtype':'fail-fatal','message':'An error occured while attempting to load the grammar script. See console for details. The rendering engine will not run without that script.'});
+					}
 				}
 
 
