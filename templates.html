@@ -866,7 +866,10 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id="categoryListTemplate" class="categoryListItem blockLink alignLeft">
-	<a data-tlc="bind $var '.'; store_routing#seoanchor --type='category'; apply --attrib='href';" >
+	<a data-tlc="bind $title '.%page.page_title'; 
+					if(is $title --null;){{bind $title '.pretty';}};
+					if(is $title --blank;){{bind $title '.pretty';}}; 
+					bind $parent '.'; store_routing#seoanchor  --seo=$title; apply --attrib='href';" >
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
 		<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
 	</a>

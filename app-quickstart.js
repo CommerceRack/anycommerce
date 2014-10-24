@@ -2529,7 +2529,7 @@ else	{
 								else	{
 									_app.ext.quickstart.u.showCartInModal({'templateID':'cartTemplate'});
 									}
-								cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
+								//cartMessagePush(cartObj._cartid,'cart.itemAppend',_app.u.getWhitelistedObject(cartObj,['sku','pid','qty','quantity','%variations']));
 								}
 							}},'immutable');
 						_app.model.dispatchThis('immutable');

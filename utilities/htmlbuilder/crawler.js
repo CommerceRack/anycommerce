@@ -43,7 +43,9 @@ var crawler = function(requeue, domain, pageArr, onFinish, id){
 							window.__attempts++;
 							}
 						else {
-							r = true;
+							r = {
+								error : ""
+								};
 							}
 						return r
 						}
@@ -69,6 +71,11 @@ var crawler = function(requeue, domain, pageArr, onFinish, id){
 					if(!result){
 						setTimeout(function(){page.evaluate(getStatus(), handlePage)},TIMEOUT);
 						}
+					else if (typeof result == 'object' && result.error){
+						console.error(result.error);
+						requeue(currentPage);
+						evaluateNext();
+						}
 					else if (typeof result == 'object' && result.html){
 						var filepath = currentPage.buildpath+""+currentPage.filename;
 						if(result.appuri != currentPage.url){
@@ -82,9 +89,8 @@ var crawler = function(requeue, domain, pageArr, onFinish, id){
 						evaluateNext();
 						}
 					else{
-						//console.error('Received a timeout on page '+currentPage.url);
+						console.error('Unknown error processing ['+currentPage.url+'] will requeue');
 						requeue(currentPage);
-						//We got a go from result, but no info.  Continue.
 						evaluateNext();
 						}
 					
