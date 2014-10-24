@@ -10,9 +10,9 @@
 
 // check rendered files.
 { "type":"path", "if":"/product/([a-zA-Z0-9\\-\\_]+)/.*", "then#sendfile":"/product/$1.html" },
-{ "type":"path", "if":"/product/[a-zA-Z0-9\\-\\_]+/.*", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/product/[a-zA-Z0-9\\-\\_]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/category/([a-zA-Z0-9\\.\\_\\-]+)/.*", "then#sendfile":"/category/$1.html" },
-{ "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+/.*", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
 
 // more rewrites
 { "type":"path", "if":"/filter/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
