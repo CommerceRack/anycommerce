@@ -105,6 +105,7 @@ var jerseypreview = function(_app) {
 			"7700-GNTR-GIW-PX1",
 			"7703-GIAH-GIW-PIR",
 			"7703-GIA4-GIW-PX1",
+			"M952-GIGP-GIW-PI6",
 			"blank",
 			"CHIC24",
 			"CUBS81",
