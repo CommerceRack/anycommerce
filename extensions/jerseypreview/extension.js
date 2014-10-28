@@ -107,7 +107,7 @@ var jerseypreview = function(_app) {
 			"7703-GIA4-GIW-PX1",
 			"M952-GIGP-GIW-PI6",
 			"M952-GIMN-GIW-PI6",
-
+			"M952-GOMN-GIW-PI6",
 			"blank",
 			"CHIC24",
 			"CUBS81",
