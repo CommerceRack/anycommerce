@@ -192,7 +192,7 @@ _app.router.appendHash({'type':'exact','route':'/contact_us/','callback':functio
 	$.extend(routeObj.params,{
 		'pageType':'static',
 		'templateID':'contactUsTemplate',
-		'require':['templates.html']
+		'require':['templates.html', 'store_crm']
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
@@ -774,10 +774,11 @@ _app.couple('quickstart','addPageHandler',{
 			if(infoObj.templateID){}
 			else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
 			else{infoObj.templateID = 'categoryTemplate';}
-			if(infoObj.templateID = 'categoryTemplate'){
-				infoObj.prodRenderedDeferred = $.Deferred();
-				infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
-				}
+			
+			//currently this is expected to be resolved by the prodlist_infinite tlc format.  Probably a bad idea.
+			infoObj.prodRenderedDeferred = $.Deferred();
+			infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
+
 			_app.ext.store_navcats.u.showPage($container, infoObj);
 			});
 						
