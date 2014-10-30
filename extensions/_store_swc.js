@@ -1740,7 +1740,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/san_diego_padres_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/San_Diego_Padres_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"/category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Brandon Belt","Brandon Crawford","Marco Scutaro"], 
+						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"/category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Madison Bumgarner","Pablo Sandoval","Joe Panik"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/San_Francisco_Giants_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"San_Francisco_Giants/San_Francisco_Giants_Alternate_Grey_Authentic_Cool_Base_Jersey"},
