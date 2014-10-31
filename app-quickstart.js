@@ -3114,7 +3114,7 @@ else	{
 					});
 				return false;
 				}, //showBuyerAddressUpdate
-
+			
 			showBuyerAddressAdd : function($ele,p)	{
 				p.preventDefault();
 				_app.ext.store_crm.u.showAddressAddModal({
@@ -3125,7 +3125,19 @@ else	{
 					});
 				return false;
 				}, //showBuyerAddressAdd
-
+			
+			showBuyerAddressRemove : function($ele, p){
+				p.preventDefault();
+				_app.ext.store_crm.u.showAddressRemoveModal({
+					"addressID" : $ele.closest("address").data('_id'),
+					'addressType' : $ele.closest("[data-app-addresstype]").data('app-addresstype')
+					},function(){
+					$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+					showContent('customer',{'show':'myaccount'});
+					});
+				return false;
+				},
+			
 			quickviewShow : function($ele,p)	{
 				p.preventDefault();
 				var PID = $ele.data('pid') || $ele.closest('[data-pid]').attr('data-pid');

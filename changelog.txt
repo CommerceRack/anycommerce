@@ -5,6 +5,8 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
+201408.d - fixed several issues in store_tracking.js which would have broken conversion tracking
+
 201405
 
 1PC

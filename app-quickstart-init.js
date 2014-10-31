@@ -158,7 +158,11 @@ myApp.router.appendInit({
 			showContent(g.uriParams.pageType, g.uriParams);
 			}
 		else if (g.uriParams.marketplace){
-			showContent("product",{"pid":g.uriParams.product});
+			var infoObj = {"pid":g.uriParams.product};
+			if(g.uriParams.sku){
+				infoObj.sku = g.uriParams.sku;
+				}
+			showContent("product",infoObj);
 			}
 		else if(document.location.hash)	{	
 			myApp.u.dump('triggering handleHash');
