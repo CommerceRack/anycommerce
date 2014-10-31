@@ -848,6 +848,8 @@ has to be within the fieldset to for data-table to work right.
 				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
 				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
 				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;'  data-input-keyup="format" data-input-format='lowercase,alphanumeric' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
+				<label><span>Cart</span><input name='cart' type='text' maxlength="20" data-bind='var: flexedit(cart); format:popVal;'  data-input-keyup="format" data-input-format='lowercase,flex' /> <span title="If set, field will be
+				copied into the cart" class='toolTip'>?</span></label>
 				<label>
 					<span>Type</span>
 					<select name='type' data-bind='var: flexedit(type); format:popVal;'  required='required' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
