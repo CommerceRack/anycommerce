@@ -711,7 +711,7 @@ var admin_tools = function(_app) {
 						}
 					else	{
 						keys.push($(this).data('id'));
-						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','cart','type','options']));
 						}
 					})
 				_app.model.addDispatchToQ({
