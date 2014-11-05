@@ -448,3 +448,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 	display:inline-block;
 	width: 200px;
 }
+
+.notFoundContainer{
+	padding: 12px;
+	}

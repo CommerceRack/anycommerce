@@ -1369,9 +1369,28 @@ this will likely become more flexible in the future. ###
 
 <!-- 404 page -->
 <div id="pageNotFoundTemplate">
-
-	<h1>Unable to find page...</h1>
-
+	<h1 class="dosis white highlightBG_1">Foul Ball!</h1>
+	<div class="notFoundContainer" >
+		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --blank;){{bind $route '.route' if(is $route --notblank;{{apply --show --tag;}};}};">
+			We couldn't find the page you were looking for (<span data-tlc="bind $var '.route'; apply --append;"></span>)
+		</p>
+		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --notblank;){{apply --show --tag; apply --append;}};">
+			We reached an error trying to reach this page: 
+		</p>
+		<h4>May we suggest:</h4>
+		<div><a href="/">Home</a></div>
+		<div><a href="/fieldcam/">LIVE! Wrigley Field Cam page</a></div>
+		<div>
+			Shop by League:
+			<ul class="noPadOrMargin listStyleNone">
+				<li><a href="/major_league_baseball/">MLB</a></li>
+				<li><a href="/national_football_league/">NFL</a></li>
+			</ul>
+		</div>
+		<p>
+			If you feel you have reached this page in error, please feel free to <a href="/contact_us/">Contact Us</a>!
+		</p>
+	</div>
 </div>
 
 

@@ -311,10 +311,10 @@ document.write = function(v){
 				
 // SANITY - handleTemplateEvents does not get called here. It'll get executed as part of showPageContent callback, which is executed in buildQueriesFromTemplate.
 				},
-			onError : function(responseData,uuid)	{
-//				dump(responseData);
-//				$('#mainContentArea').empty();
-				_app.u.throwMessage(responseData);
+			onMissing : function(responseData,uuid)	{
+				var $container = responseData._rtag.jqObj.closest('[data-app-uri]');
+				console.dir(responseData);
+				_app.ext.quickstart.a.pageNotFound($container, {});
 				}
 			}, //showProd 
 
@@ -347,10 +347,9 @@ document.write = function(v){
 				_app.ext.quickstart.u.buildQueriesFromTemplate($.extend(true, {}, tagObj));
 				_app.model.dispatchThis();
 				},
-			onError : function(responseData)	{
-				_app.u.throwMessage(responseData);
-				$('.loadingBG',$('#mainContentArea')).removeClass('loadingBG'); //nuke all loading gfx.
-				_app.ext.quickstart.u.changeCursor('auto'); //revert cursor so app doesn't appear to be in waiting mode.
+			onError: function(responseData)	{
+				var $container = responseData._rtag.jqObj.closest('[data-app-uri]');
+				_app.ext.quickstart.a.pageNotFound($container, responseData);
 				}
 			}, //fetchPageContent
 
@@ -927,6 +926,24 @@ fallback is to just output the value.
 				uri		+=	"&team="+_app.ext.store_swc.vars.userTeam.v;
 				uri		+=	"&sport="+_app.ext.store_swc.vars.userTeam.sport;
 				return uri;
+				},
+				
+			pageNotFound : function($container, failObj, params){
+				failObj = failObj || {};
+				$container.empty();
+				params = $.extend({
+					"templateID" : "pageNotFoundTemplate",
+					"require" : ["templates.html"]
+					},params);
+				
+				failObj.route = $container.attr('data-app-uri');
+				_app.require(params.require, function(){
+					var $page = new tlc().getTemplateInstance(params.templateID);
+					$page.tlc({'verb':'translate','dataset':failObj});
+					$container.append($page);
+					//override the deferred pipeline, just call it here
+					_app.ext.quickstart.vars.showContentFinished = true;
+					});
 				},
 				
 			newShowContent : function(uri,infoObj)	{
