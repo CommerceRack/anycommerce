@@ -1061,6 +1061,8 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						}
 					}
 				_app.router._executeCallback(routeObj);
+				window[_app.vars.analyticsPointer]('send', 'pageview', routeObj.value);
+				window[_app.vars.analyticsPointer]('send', 'screenview', {'screenName' : routeObj.value} );
 				return true;
 				}
 			else {
