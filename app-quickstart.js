@@ -313,8 +313,7 @@ document.write = function(v){
 				},
 			onMissing : function(responseData,uuid)	{
 				var $container = responseData._rtag.jqObj.closest('[data-app-uri]');
-				console.dir(responseData);
-				_app.ext.quickstart.a.pageNotFound($container, {});
+				_app.ext.quickstart.a.pageNotFound($container, responseData);
 				}
 			}, //showProd 
 
