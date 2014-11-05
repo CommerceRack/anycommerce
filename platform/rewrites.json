@@ -1,7 +1,7 @@
 [
 // rewrite legacy vstore cart and session id's out of path
-{ "type":"path", "if":"/c=.*?/(.*)", "then#rewrite":"/$1" },
-{ "type":"path", "if":"/s=.*?/(.*)", "then#rewrite":"/$1" },
+{ "type":"path", "if":"/c=.*?/(.*)", "then#redirect":"/$1" },
+{ "type":"path", "if":"/s=.*?/(.*)", "then#redirect":"/$1" },
 // LEGACY VSTORE: about_us.cgis, privacy.cgis
 { "type":"path", "if":"/.*\\.cgis", "then#sendfile":"/index.html" },
 { "type":"path", "if":"/careers/.*", "then#sendfile":"/index.html" },
