@@ -986,12 +986,19 @@ _app.router.appendInit({
 			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
-			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
+			
+			if(_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true)){
+				//we're good
+				}
+			else{
+				_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
+				_app.u.throwMessage(_app.u.successMsgObject("We're sorry, the page you requested could not be found!"));
+				window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);				
+				}
+			
 			}
 		else	{
 			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
-			_app.u.throwMessage(_app.u.successMsgObject("We're sorry, the page you requested could not be found!"));
-			window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);
 			}
 		if(g.uriParams && g.uriParams.meta)	{
 			_app.require('cco', function(){
