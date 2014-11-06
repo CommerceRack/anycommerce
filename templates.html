@@ -1084,7 +1084,8 @@ this will likely become more flexible in the future. ###
 				<div class="imgContainer positionRelative">
 					<canvas class="prodPreviewer displayNone" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';"></canvas>
 					<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
-					<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=550 --h=550 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
+					<img class="displayNone_320 displayNone_480 displayNone_640" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=550 --h=550 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
+					<img class="displayNone_960 displayNone_1280" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=400 --h=400 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 				</div>
 			</a>
 			<a data-tlc="
