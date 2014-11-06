@@ -942,6 +942,8 @@ fallback is to just output the value.
 					$container.append($page);
 					//override the deferred pipeline, just call it here
 					_app.ext.quickstart.vars.showContentFinished = true;
+					failObj.state = 'complete';
+					_app.renderFunctions.handleTemplateEvents($page, failObj);
 					});
 				},
 				
