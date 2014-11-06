@@ -57,7 +57,7 @@ var store_swc = function(_app) {
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 				var userTeam = _app.model.readLocal('swcUserTeam');
-				if((document.location.search.indexOf("team=") >= 0){
+				if(document.location.search.indexOf("team=") >= 0){
 					//do nothing, it'll get handled in the filter callback
 					}
 				else if(userTeam){
