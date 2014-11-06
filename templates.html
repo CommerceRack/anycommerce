@@ -1372,7 +1372,7 @@ this will likely become more flexible in the future. ###
 <div id="pageNotFoundTemplate">
 	<h1 class="dosis white highlightBG_1">Foul Ball!</h1>
 	<div class="notFoundContainer" >
-		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --blank;){{bind $route '.route' if(is $route --notblank;{{apply --show --tag;}};}};">
+		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --blank;){{bind $route '.route'; if(is $route --notblank;){{apply --show --tag;}};}};">
 			We couldn't find the page you were looking for (<span data-tlc="bind $var '.route'; apply --append;"></span>)
 		</p>
 		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --notblank;){{apply --show --tag; apply --append;}};">

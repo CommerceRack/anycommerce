@@ -55,7 +55,10 @@ else	{
 document.getElementsByTagName('base')[0].href = baseURL;
 </script>
 
-
+<!-- GOOGLE ADWORDS REMARKETING CALL CONVERSION SCRIPT -->
+<script type="text/javascript">
+(function(a,e,c,f,g,b,d){var h={ak:"1071884015",cl:"Bgy-CK-lhVcQ782O_wM"};a[c]=a[c]||function(){(a[c].q=a[c].q||[]).push(arguments)};a[f]||(a[f]=h.ak);b=e.createElement(g);b.async=1;b.src="//www.gstatic.com/wcm/loader.js";d=e.getElementsByTagName(g)[0];d.parentNode.insertBefore(b,d);a._googWcmGet=function(b,d,e){a[c](2,b,h,d,null,new Date,e)}})(window,document,"_googWcmImpl","_googWcmAk","script");
+</script>
 
 <!--
 all css includes need to be after the js that changes the base url.
@@ -158,6 +161,12 @@ $(window).on('load', function(){
 		myCreole = new Parse.Simple.Creole();
 		myApp.u.loadScript('newinit.js?_v='+new Date().getTime());
 		$('#appversion').text(myApp.vars.release);
+		_googWcmGet(function(niceNumber, uglyNumber){
+			$('.phoneNumber').each(function(){
+				$(this).attr('href','tel:'+uglyNumber).text(niceNumber);
+				
+				});
+			}, '1-844-462-4422');
 		}
 	});
 </script>
@@ -247,7 +256,7 @@ document.write('<div id="clickBlocker" style="position:absolute; width: 100%; he
 			</div>
 			
 			<div id="contact" class="floatRight clearRight displayNone_320">
-				Questions? <a class="redText textDecNone" href="tel:8444624422">Call 844-GO-CHICAGO</a>
+				Questions? Call <a class="redText textDecNone phoneNumber" href="tel:8444624422">844-GO-CHICAGO</a>
 			</div>
 			
 			<div id="expandNav" class="floatRight alignCenter displayNone_1280 displayNone_960 displayNone_640 displayNone_480">
@@ -294,7 +303,7 @@ document.write('<div id="clickBlocker" style="position:absolute; width: 100%; he
 				</div>
 				
 				<div>
-					Questions? <a class="textDecNone" href="tel:8444624422">Call 844-GO-CHICAGO</a>
+					Questions? Call <a class="textDecNone phoneNumber" href="tel:8444624422">844-GO-CHICAGO</a>
 				</div>
 				
 				<form class="noPadOrMargin" onSubmit="return false;" data-app-submit="quickstart|searchFormSubmit">
@@ -359,7 +368,7 @@ document.write('<div id="clickBlocker" style="position:absolute; width: 100%; he
 		<span class="hideFooter ui-icon ui-icon-carat-1-s"></span>
 	</span> -->
 	<div class="fixedContainer footerTeaser displayNone_320 displayNone_480">
-		<h3 class="floatLeft">Need Help? Call us at <a href="tel:844-462-4422">844-GO-CHICAGO</a></h3>
+		<h3 class="floatLeft">Need Help? Call us at <a class="phoneNumber" href="tel:8444624422">844-GO-CHICAGO</a></h3>
 		<h3 class="floatRight">FREE SHIPPING on all orders over $99!</h3>
 	</div>
 	
@@ -1080,6 +1089,17 @@ lb
  = ";"
 
 
+</script>
+
+<!-- GOOGLE ADWORDS REMARKETING CONVERSION TRACKING SCRIPT -->
+<script type="text/javascript">
+/* <![CDATA[ */
+var google_conversion_id = 1071884015;
+var google_custom_params = window.google_tag_params;
+var google_remarketing_only = true;
+/* ]]> */
+</script>
+<script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
 </script>
 
 </body>
