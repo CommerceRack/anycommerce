@@ -75,7 +75,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						//This is not going to end well, but let's let Elastic tell you that.
 						}
 					}
-				this.dispatch(P,tagObj,Q)
+				this.dispatch(obj,tagObj,Q)
 				return 1;
 				},
 			dispatch : function(obj,tagObj,Q)	{
