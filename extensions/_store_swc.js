@@ -1640,7 +1640,7 @@ var store_swc = function(_app) {
 								{"id":"shirts","img":"blanks/Houston_Astros_Orange_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Houston_Astros/Houston_Astros_Road_Authentic_Cool_Base_Jersey"},
 								{"id":"sweatshirts","img":"majestic/Houston_Astros_Navy_Authentic_Triple_Climate_3_In_1_On_Field_Jacket"},
-								//{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
+								{"id":"hats","img":"mlbhats/houston_astros_adjustable_clean_up_hat8"},
 								{"id":"souvenirs","img":"game_time/Houston_Astros_Mens_All_Pro_Series_Watch"}
 							]},
 						{"p":"Kansas City Royals","v":"kansas_city_royals", "img":"mlbhats/kansas_city_royals_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.kansas_city_royals/Kansas%20City%20Royals", "players" : ["Billy Butler","Eric Hosmer","Mike Moustakas"], 
