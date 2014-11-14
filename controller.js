@@ -1050,6 +1050,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(hash){
 					routeObj.urihash = hash;
 					}
+				routeObj.path = uri;
+				routeObj.search = search;
+				routeObj.hash = hash;
 				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				if(!skipPush){
 					try{

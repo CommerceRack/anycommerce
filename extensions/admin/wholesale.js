@@ -45,7 +45,7 @@ var admin_wholesale = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/wholesale.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/wholesale.html',theseTemplates);
 				var $wm = $("<div \/>",{'id':'wholesaleModal'}).appendTo('body'); //a recycleable element for modals.
 				$wm.dialog({'autoOpen':false,'modal':true,'width':500,'height':500});
 				
@@ -1440,7 +1440,7 @@ var admin_wholesale = function(_app) {
 
 			adminOrganizationSearchShowUI : function($ele,P)	{
 				if($ele.data('searchby') && $ele.data('keywords'))	{
-					navigateTo("#!ext/admin_wholesale/showOrganizationManager",{'searchby':$ele.data('searchby'),'keywords':$ele.data('keywords')});
+					navigateTo("/ext/admin_wholesale/showOrganizationManager",{'searchby':$ele.data('searchby'),'keywords':$ele.data('keywords')});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.adminOrganizationSearchShowUI, either searchby ["+$ele.data('searchby')+"] or keywords  ["+$ele.data('keywords')+"] not set on trigger element.","gMessage":true});
@@ -1453,7 +1453,7 @@ var admin_wholesale = function(_app) {
 				P.preventDefault();
 				var orgID = $ele.closest('tr').data('orgid');
 				if(orgID)	{
-					navigateTo("#!ext/admin_wholesale/showOrganizationEditor",{'orgID':orgID});
+					navigateTo("/ext/admin_wholesale/showOrganizationEditor",{'orgID':orgID});
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin_wholesale.e.showOrganizationUpdate, unable to ascertain orgID.","gMessage":true});
@@ -1485,7 +1485,7 @@ var admin_wholesale = function(_app) {
 								//sample action. success would go here.
 								$form.append($("<button>").text('Edit Org').button().on('click',function(){
 									$(this).closest('.ui-dialog-content').dialog('close');
-									navigateTo("#!ext/admin_wholesale/showOrganizationEditor",{'orgID':_app.data[rd.datapointer].ORGID});
+									navigateTo("/ext/admin_wholesale/showOrganizationEditor",{'orgID':_app.data[rd.datapointer].ORGID});
 									}));
 								$form.append($("<button>").text('Back to Org Manager').button().on('click',function(){
 									$(this).closest('.ui-dialog-content').dialog('close');

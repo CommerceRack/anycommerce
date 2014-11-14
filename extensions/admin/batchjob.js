@@ -34,7 +34,7 @@ var admin_batchjob = function(_app) {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
 
 				var $target = $("<div \/>").attr({'id':'batchJobStatusModal'}).appendTo('body');
 				$target.dialog({'modal':false,'autoOpen':false});

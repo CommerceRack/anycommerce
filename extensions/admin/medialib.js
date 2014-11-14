@@ -254,7 +254,7 @@ var admin_medialib = function(_app) {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
 				_app.rq.push(['script',0,_app.vars.baseURL+'app-admin/resources/lazyload-v1.8.4.js']); //
@@ -386,7 +386,7 @@ setTimeout(function(){
 		handleFileUpload2Batch : {
 			onSuccess : function(tagObj){
 				var jobID = _app.data[tagObj.datapointer].JOBID;
-				$("<div \/>").attr({'id':'batchDialog_'+jobID,'title':'Job ID: '+jobID}).append("<p class='pointer' onClick='navigateTo(\"#!ext/admin_batchjob/showBatchJobManager\"); $(this).closest(\".ui-dialog-content\").dialog(\"close\");'>File uploaded. <span class='lookLikeLink'>click here</span> to see job status. job id: "+jobID+"<\/p>").dialog();
+				$("<div \/>").attr({'id':'batchDialog_'+jobID,'title':'Job ID: '+jobID}).append("<p class='pointer' onClick='navigateTo(\"/ext/admin_batchjob/showBatchJobManager\"); $(this).closest(\".ui-dialog-content\").dialog(\"close\");'>File uploaded. <span class='lookLikeLink'>click here</span> to see job status. job id: "+jobID+"<\/p>").dialog();
 				}
 			},
 
@@ -1103,7 +1103,7 @@ if(selector && mode)	{
 	else if(mode == 'publicFileUpload')	{
 		//do not double-bind the event. remove then re-add.
 		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',function(){
-			navigateTo('#!ext/admin_medialib/publicFiles');
+			navigateTo('/ext/admin_medialib/publicFiles');
 			}); 
 		}
 	else if(mode == 'adminTicketFileAttach')	{

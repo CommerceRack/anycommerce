@@ -42,7 +42,7 @@ var admin_marketplace = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
 
 				r = true;
 

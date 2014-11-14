@@ -53,7 +53,7 @@ var admin_orders = function(_app) {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 //				_app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
 				return r;
 				},
 			onError : function()	{
@@ -2166,7 +2166,7 @@ handleOrder(orders[i]);
 						$btn.closest('.ui-dialog-content').dialog('close');
 						}
 					else	{
-						navigateTo("#!tab/orders");
+						navigateTo("/tab/orders");
 						}
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
