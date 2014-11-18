@@ -22,7 +22,7 @@
 // CATEGORY REDIRECTS
 // category/affiliates?meta=8.10.12
 // LEGACY: /c=37y2QN9H5q1UAIEJ2m34bR0be/category/a_cubworld_cam/
-{ "type":"path", "if":"/category/a_cubworld_cam/", "then#redirect":"/fieldcam/" },
+{ "type":"path", "if":"/category/a_cubworld_cam/?", "then#redirect":"/fieldcam/" },
 { "type":"path", "if":"/category/wrigley_field_cam/?", "then#redirect":"/fieldcam/" },
 { "type":"path", "if":"/category/chicago-cubs-souvenirs/?", "then#redirect":"/filter/souvenirs/" },
 { "type":"path", "if":"/category/chicago-cubs-shirts/?", "then#redirect":"/filter/shirts/" },
