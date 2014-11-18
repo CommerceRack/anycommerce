@@ -114,6 +114,7 @@ var admin_marketplace = function(_app) {
 						_rtag.jqObj.hideLoading();
 						_rtag.jqObj.anycontent({'templateID':'syndication_register_ebf','showLoading':false});
 						_app.u.handleAppEvents(_rtag.jqObj);
+						_app.u.handleButtons(_rtag.jqObj);
 						}
 					}
 				else	{
@@ -345,6 +346,7 @@ var admin_marketplace = function(_app) {
 						else	{
 							$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
 							_app.u.handleAppEvents($target);
+							_app.u.handleButtons($target);
 							}
 						}
 					}}},'mutable');
