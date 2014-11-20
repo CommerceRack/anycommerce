@@ -1036,7 +1036,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			},
 		
-		handleURIChange : function(uri, search, hash, skipPush, forcedParams){
+		handleURIChange : function(uri, search, hash, replace, forcedParams){
 			console.log('handleURIChange');
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			if(routeObj) {
@@ -1054,13 +1054,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				routeObj.search = search;
 				routeObj.hash = hash;
 				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
-				if(!skipPush){
-					try{
-						window.history.pushState(routeObj.value, "", routeObj.value);
-						}
-					catch(e){
-						//dump(e);
-						}
+				try{
+					window.history[replace ? 'replaceState' : 'pushState'](routeObj.value, "", routeObj.value);
+					}
+				catch(e){
+					//dump(e);
 					}
 				_app.router._executeCallback(routeObj);
 				return true;
@@ -1070,7 +1068,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return false;
 			},
-		handleURIString : function(uriStr, skipPush, forcedParams){
+		handleURIString : function(uriStr, replace, forcedParams){
 			var a = document.createElement('a');
 			a.href = "http://www.domain.com"+uriStr;
 			var path = a.pathname;
