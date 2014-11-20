@@ -547,7 +547,9 @@ need to be customized on a per-ria basis.
 
 
 		tlcFormats : {
-			
+			dump : function(data, thisTLC){
+				dump(data);
+				},
 			searchbytag : function(data,thisTLC)	{
 				var argObj = thisTLC.args2obj(data.command.args,data.globals); //this creates an object of the args
 				var query = {"size":(argObj.size || 4),"mode":"elastic-search","filter":{"term":{"tags":argObj.tag}}};
