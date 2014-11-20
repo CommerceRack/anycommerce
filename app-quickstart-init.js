@@ -72,7 +72,12 @@ _app.couple('quickstart','addPageHandler',{
 			});
 		}
 	});
-	
+_app.u.bindTemplateEvent('checkoutTemplate','depart.destroy',function(){
+	var $page = $context.closest('[data-app-uri]');
+	if($page){
+		$page.empty().remove();
+		}
+	});
 _app.extend({
 	"namespace" : "cco",
 	"filename" : "extensions/cart_checkout_order.js"
