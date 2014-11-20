@@ -1045,10 +1045,10 @@ see shipping panel in product editor for example
 .pageLanding .ui-anypanel-header .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
 
 /* three column panel layout (homepage) */
-#dashboardColumn1	{width:65%; float:left;}
-#dashboardColumn2	{width:33%; float:right;}
+.dashboardColumn1	{width:65%; float:left;}
+.dashboardColumn2	{width:33%; float:right;}
 
-#dashboardColumn2 .varImage	{max-width:300px; width:100%;}
+.dashboardColumn2 .varImage	{max-width:300px; width:100%;}
 
 .recentNewsContainer	{height:450px; overflow:auto;}
 .recentNewsContainer article	{margin-bottom:24px;}

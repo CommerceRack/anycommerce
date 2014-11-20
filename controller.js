@@ -1708,6 +1708,7 @@ window.frames["printContainerIframe"].print();
 	//				_app.u.dump(" -> msg: "); _app.u.dump(msg);
 					if(msg._rtag && msg._rtag.jqObj)	{$target = msg._rtag.jqObj}
 					else if(msg.parentID){$target = $(_app.u.jqSelector('#',msg.parentID));}
+					else if(msg.jqObj){$target = msg.jqObj;}
 					else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
 						if(msg._rtag.parentID)	{$target = $(_app.u.jqSelector('#',msg._rtag.parentID))}
 						else if(msg._rtag.targetID)	{$target = $(_app.u.jqSelector('#',msg._rtag.targetID))}

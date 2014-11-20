@@ -75,9 +75,9 @@ PRODUCT FINDER/CHOOSER
 	<tbody>
 	<tr>
 		<td colspan='2'>
-<form id='finderSearchForm' action='#' name='finderSearchForm' >
+<form action='#' name='finderSearchForm' >
 <fieldset>
-<input type='text' class='ui-corner-left finderSearch' value='' name='query' id='finderSearchQuery' size='40' />
+<input type='text' class='ui-corner-left finderSearch' value='' name='query' size='40' />
 <input class='ui-state-default ui-corner-right ui-state-active' type='submit' value='search' />
 <input type='hidden' value='' name='CATALOG' />
 </fieldset>
@@ -85,30 +85,30 @@ PRODUCT FINDER/CHOOSER
 		</td>
 	</tr>
 	<tr>
-		<td><h4><span id='resultsKeyword'></span><span id='resultsListItemCount' class='displayNone'></span></h4></td>
-		<td><h4>Current Items<span id='focusListItemCount'></span>:</h4></td>
+		<td><h4><span class='resultsKeyword'></span><span class='resultsListItemCount displayNone'></span></h4></td>
+		<td><h4>Current Items<span class='focusListItemCount'></span>:</h4></td>
 	</tr>
 	<tr>
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
-		<ul id='finderSearchResults' class='connectedSortable finderProdlist finderResults'></ul>
+		<ul class='finderSearchResults connectedSortable finderProdlist finderResults'></ul>
 		</div>
 		</td>
 		
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
-		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList'></ul>
-		<ul id='finderRemovedList' class='displayNone'></ul>
-		<div id='chooserResultContainer'></div>
+		<ul class='finderTargetList connectedSortable finderProdlist targetList'></ul>
+		<ul class='finderRemovedList displayNone'></ul>
+		<div class='chooserResultContainer'></div>
 		</div>
 
 		</td>
 	</tr>
 	<tr>
 		<td colspan='2'>
-		<div class='floatRight finderMessaging' id='finderMessaging'></div>
+		<div class='floatRight finderMessaging'></div>
 		<div class='clearfix'></div>
-		<div id='adminFinderButtonBar'>
+		<div class='adminFinderButtonBar'>
 			<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-btn-action='selectAll'>
 			<span class='ui-button-text'>select all</span>
 			<span class='ui-icon ui-icon-arrow-1-n ui-button-icon-secondary'></span>
@@ -129,7 +129,7 @@ PRODUCT FINDER/CHOOSER
 			</button>		
 		</div>
 
-		<div id='adminChooserButtonBar' class='alignRight'>
+		<div class='adminChooserButtonBar' class='alignRight'>
 <!-- contents created when the CHOOSER finder is instantiated -->	
 		</div>
 
@@ -229,11 +229,11 @@ LANDING PAGE
 </article>
 
 <div id='dashboardTemplate' class='page pageLanding clearfix'>
-	<div class="lpColumn" id="dashboardColumn1">
+	<div class="lpColumn dashboardColumn1" >
 		<h2>Recent News</h2>
 		<div class='recentNewsContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;'></div>
 	</div>  
-	<div class="lpColumn" id="dashboardColumn2">
+	<div class="lpColumn dashboardColumn2" >
 <!--		<div class='marginBottom alignCenter'>
 		<iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'></iframe>
 		</div> -->
@@ -271,7 +271,7 @@ SETUP PAGE TEMPLATE
 
 <div class='floatPanel'>
 
-	<div id="manage" class='ui-widget marginBottom'>
+	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Manage Apps/Website</h3>
 		</div>
@@ -297,7 +297,7 @@ SETUP PAGE TEMPLATE
 	</div><!-- /manage -->
 
 	
-	<div id="developer" class='ui-widget'>
+	<div class='ui-widget'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Developer Tools</h3>
 		</div>
@@ -317,7 +317,7 @@ SETUP PAGE TEMPLATE
 </div>
 <div class='floatPanel'>
 
-	<div id="properties" class='ui-widget marginBottom'>
+	<div class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Store Properties</h3>
 		</div>
@@ -346,7 +346,7 @@ SETUP PAGE TEMPLATE
 		</div>
 	</div><!-- /properties -->
 
-	<div id="vstore" class='ui-widget showForZoovyOnly'>
+	<div class='ui-widget showForZoovyOnly'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>vStore</h3>
 		</div>
@@ -407,7 +407,7 @@ SETUP PAGE TEMPLATE
 </div>
 <div class='floatPanel'>
 
-	<div id="account" class='ui-widget'>
+	<div class='ui-widget'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Account Settings</h3>
 		</div>
@@ -554,7 +554,7 @@ UTILITIES PAGE TEMPLATE
 		</div>
 	</div>
 
-	<div id="tools" class='ui-widget floatPanel'>
+	<div class='ui-widget floatPanel'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3 class='smallPadding'>Tools</h3>
 		</div>
@@ -638,13 +638,13 @@ PRODUCT TAB
 
 
 
-
+<!-- unused? -->
 <div id='productTabTemplate'>
 
 <table>
 <tr>
 	<td class='leftColNav'>
-	<div id='prodLeftCol'>
+	<div>
 
 
 <ul>
@@ -685,8 +685,8 @@ PRODUCT TAB
 	</ul>
 	</li>
 	<li><a href='#' onClick="return navigateTo('//biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
-		<ul id='manCats' class='displayNone'>
+	<li class='displayNone'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
+		<ul class='displayNone'>
 		</ul>
 	</li>
 </ul>
@@ -726,10 +726,8 @@ PRODUCT TAB
 
 
 
-
+<!--  duplicate in product_editor.html?
 <div id='ProductCreateNewTemplate'>
-
-<div id='prodCreateMessaging'></div>
 
 <form name="createNewProductForm" action="#" method="POST" onSubmit="adminApp.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
 	
@@ -759,7 +757,7 @@ PRODUCT TAB
 </form>
 
 </div>
-
+-->
 
 
 

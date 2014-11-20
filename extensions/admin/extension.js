@@ -943,9 +943,9 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 			onSuccess : function(tagObj)	{
 //				_app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
 				var L = _app.data[tagObj.datapointer]['_count'];
-				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
+				$('.resultsKeyword').html(L+" results <span class='resultsListItemCount'></span>:");
 //				_app.u.dump(" -> Number Results: "+L);
-				$parent = $(_app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG')
+				$parent = tagObj.jqObj;
 				if(L == 0)	{
 					$parent.append("Your query returned zero results.");
 					}
@@ -976,11 +976,11 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 		pidFinderChangesSaved : {
 			onSuccess : function(tagObj)	{
 				_app.u.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
-				$('#finderMessaging').anymessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"})
+				$('.finderMessaging').anymessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"})
 				_app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 			onError : function(responseData)	{
-				responseData.parentID = "finderMessaging";
+				responseData.jqObj = $(".finderMessaging");
 				_app.u.throwMessage(responseData);
 				_app.ext.admin.u.changeFinderButtonsState('enable');
 				}
@@ -999,7 +999,7 @@ var eReport = ''; // a list of all the errors.
 
 var $tmp;
 
-$('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function(){
+$('.finderTargetList, .finderRemovedList').find("li[data-status]").each(function(){
 	$tmp = $(this);
 //	_app.u.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
 	if($tmp.attr('data-status') == 'complete')	{
@@ -1033,7 +1033,7 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 				},
 			onError : function(responseData)	{
-				responseData.parentID = "finderMessaging";
+				responseData.jqObj = $(".finderMessaging");
 				_app.u.throwMessage(responseData);
 				_app.ext.admin.u.changeFinderButtonsState('enable');
 				}
@@ -1073,7 +1073,7 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				targetID += "_"+tmp[2];
 //				_app.u.dump(" -> targetID: "+targetID);
-				$(_app.u.jqSelector('#',targetID)).attr('data-status','complete');
+				$(_app.u.jqSelector('.',targetID)).attr('data-status','complete');
 				},
 			onError : function(d)	{
 //				_app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
@@ -1082,7 +1082,7 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
-				$(_app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':d._rtag.datapointer});
+				$(_app.u.jqSelector('.',targetID)).attr({'data-status':'error','data-pointer':d._rtag.datapointer});
 //				_app.u.dump(d);
 				}
 			}, //finderProductUpdate
@@ -1097,12 +1097,12 @@ _app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var $tmp;
 //				_app.u.dump(" -> safePath: "+safePath);
 				//go through the results and if they are already in this category, disable drag n drop.
-				$results = $('#finderSearchResults');
+				$results = $('.finderSearchResults');
 				//.find( "li" ).addClass( "ui-corner-all" ) )
 
 				$results.find('li').each(function(){
 					$tmp = $(this);
-					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
+					if($('.finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
 				//		_app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
@@ -1371,7 +1371,7 @@ function getIndexByObjValue(arr,key,value)	{
 				$('.ui-tooltip',_app.u.jqSelector('#',_app.ext.admin.vars.tab+"Content")).intervaledEmpty();
 //sometimes you need to refresh the page you're on. if the hash doesn't change, the onHashChange code doesn't get run so this is a solution to that.
 				if(path == document.location.hash)	{
-					adminApp.router.handleURIChange();
+					adminApp.router.handleURIChange(path);
 					}
 				else	{
 					if(path.indexOf('/') == 0)	{newHash = path;}
@@ -1859,7 +1859,7 @@ vars.findertype is required. acceptable values are:
 					}
 				else if(vars.findertype == 'PAGE')	{
 					dump(">>>>>>>>>>>>>>>>>>>>>>> GOT HERE. HOW? <<<<<<<<<<<<<<<<<<<<<<<<");
-					$('#finderTargetList').show();
+					$('.finderTargetList').show();
 					
 					_app.model.addDispatchToQ({"_cmd":"appPageGet",'PATH':vars.path,'@get':[vars.attrib],_tag : {"datapointer":"appPageGet|"+vars.path,"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID}},"immutable");
 					}
@@ -1975,11 +1975,11 @@ vars.findertype is required. acceptable values are:
 				
 //recent news panel.
 				_app.model.destroy('appResource|recentnews.json'); //always fetch the most recent news.
-				$('#dashboardColumn1',$content).anypanel({
+				$('.dashboardColumn1',$content).anypanel({
 					'showClose' : false
 					}).showLoading({'message':'Fetching recent news'});
 
-				_app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'anycontent','jqObj':$('#dashboardColumn1')},'mutable'); //total sales
+				_app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'anycontent','jqObj':$('.dashboardColumn1')},'mutable'); //total sales
 
 
 //quickstats ogms.
@@ -1988,7 +1988,7 @@ vars.findertype is required. acceptable values are:
 					'showLoading' : false,
 					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='dashboardReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
 					});
-				$('#dashboardColumn2',$content).append($salesReportPanel);
+				$('.dashboardColumn2',$content).append($salesReportPanel);
 				_app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
 				_app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
 				_app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
@@ -2793,7 +2793,7 @@ for a category, each sku added or removed is a separate request.
 					var sku = path;	// we do this just to make the code clear-er
 					var list = '';
 					var attribute = _app.renderFunctions.parseDataVar(attrib);
-					$('#finderTargetList').find("li").each(function(index){
+					$('.finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
 						});
@@ -2813,7 +2813,7 @@ for a category, each sku added or removed is a separate request.
 					}
 				else if (findertype == 'NAVCAT')	{
 					// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
-					$('#finderRemovedList').find("li").each(function(){
+					$('.finderRemovedList').find("li").each(function(){
 						$tmp = $(this);
 						if($tmp.attr('data-status') == 'remove')	{
 							_app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
@@ -2823,7 +2823,7 @@ for a category, each sku added or removed is a separate request.
 					
 					//category/list based finder.
 					//concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
-					$("#finderTargetList li").each(function(index){
+					$(".finderTargetList li").each(function(index){
 						$tmp = $(this);
 						//	_app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
 	
@@ -2843,7 +2843,7 @@ for a category, each sku added or removed is a separate request.
 					var list = ""; //set to empty string so += below doesn't start with empty stirng
 					var obj = {};
 //finder for product attribute.
-					$('#finderTargetList').find("li").each(function(index){
+					$('.finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
 						});
@@ -2879,7 +2879,7 @@ if($(_app.u.jqSelector('#',newLiID)).length > 0)	{
 	}
 else	{
 	var $copy = $listItem.clone();
-	$copy.attr({'id':newLiID,'data-status':'remove'}).appendTo('#finderRemovedList');
+	$copy.attr({'class':newLiID,'data-status':'remove'}).appendTo('.finderRemovedList');
 	}
 
 //kill original.
@@ -2918,10 +2918,10 @@ var $target = $(_app.u.jqSelector('#',targetID));
 //empty to make sure we don't get two instances of finder if clicked again.
 $target.empty().append(_app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinderContents"));
 
-$('#chooserResultContainer', $target).hide();
-$('#adminFinderButtonBar', $target).show();
-$('#adminChooserButtonBar', $target).hide().empty(); //chooser button(s) are reset each time a chooser is instantiated.
-$('#finderTargetList', $target).show();
+$('.chooserResultContainer', $target).hide();
+$('.adminFinderButtonBar', $target).show();
+$('.adminChooserButtonBar', $target).hide().empty(); //chooser button(s) are reset each time a chooser is instantiated.
+$('.finderTargetList', $target).show();
 
 
 if(vars.findertype == 'PRODUCT')	{
@@ -2937,10 +2937,10 @@ else if(vars.findertype == 'NAVCAT')	{
 	prodlist = _app.data['appNavcatDetail|'+vars.path]['@products'];
 	}
 else if (vars.findertype == 'CHOOSER')	{
-	$('#chooserResultContainer', $target).show();
-	$('#adminFinderButtonBar', $target).hide();
-	$('#adminChooserButtonBar', $target).show();
-	$('#finderTargetList', $target).hide();
+	$('.chooserResultContainer', $target).show();
+	$('.adminFinderButtonBar', $target).hide();
+	$('.adminChooserButtonBar', $target).show();
+	$('.finderTargetList', $target).hide();
 	prodlist = []; //no items show up by default.
 	}
 else if(vars.findertype == 'PAGE')	{
@@ -2964,16 +2964,16 @@ else	{
 //_app.u.dump(" -> prodlist: "+prodlist);
 
 //bind the action on the search form.
-$('#finderSearchForm').off('submit.search').on('submit.search',function(event){
+$('form[name=finderSearchForm]').off('submit.search').on('submit.search',function(event){
 	event.preventDefault();
-	_app.ext.admin.u.handleFinderSearch(vars.findertype);
+	_app.ext.admin.u.handleFinderSearch($('input[name=query]',$(this)).val(),vars.findertype);
 	return false;
 	});
 
 
 if(vars.findertype && vars.findertype == 'CHOOSER')	{
 	if(vars['$buttons'])	{
-		$('#adminChooserButtonBar', $target).append(vars['$buttons']);
+		$('.adminChooserButtonBar', $target).append(vars['$buttons']);
 		}
 	}
 else if (vars.findertype)	{
@@ -2983,15 +2983,14 @@ else if (vars.findertype)	{
 		"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
 		"items_per_page" : 500, //max out at 500 items
 		"hide_summary" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
-		"parentID":"finderTargetList",
 	//	"items_per_page":100,
 		"csv":prodlist
-		},$('#finderTargetList'))
+		},$('.finderTargetList'))
 	
 	
 	// connect the results and targetlist together by class for 'sortable'.
 	//sortable/selectable example found here:  http://jsbin.com/aweyo5
-	$( "#finderTargetList , #finderSearchResults" ).sortable({
+	$( ".finderTargetList , .finderSearchResults" ).sortable({
 		connectWith:".connectedSortable",
 		items: "li:not(.ui-state-disabled)",
 		handle: ".handle",
@@ -3005,7 +3004,7 @@ else if (vars.findertype)	{
 			var parent = ui.item.parent().attr('id')
 	//		_app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
 			if(parent == 'finderTargetList')	{
-				ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
+				ui.item.attr({'data-status':'changed','class':'finderTargetList_'+ui.item.attr('data-pid')});
 				}
 			_app.ext.admin.u.updateFinderCurrentItemCount();
 			} 
@@ -3014,9 +3013,9 @@ else if (vars.findertype)	{
 	//make results panel list items selectable. 
 	//only 'li' is selectable otherwise clicking a child node will move just the child over.
 	// .ui-state-disabled is added to items in the results list that are already in the category list.
-	$("#finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
+	$(".finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
 	//make category product list only draggable within itself. (can't drag items out).
-	$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {_app.u.dump($(this).attr('id'))});
+	$(".finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {_app.u.dump($(this).attr('id'))});
 		
 	
 	//set a data-btn-action on an element with a value of save, moveToTop or moveToBottom.
@@ -3059,32 +3058,31 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				},
 
 			updateFinderCurrentItemCount : function()	{
-				$('#focusListItemCount').text(" ("+$("#finderTargetList li").size()+")");
-				var resultsSize = $("#finderSearchResults li").size();
+				$('.focusListItemCount').text(" ("+$(".finderTargetList li").size()+")");
+				var resultsSize = $(".finderSearchResults li").size();
 				if(resultsSize > 0)	{
-					$('#resultsListItemCount').show(); //keeps the zero hidden on initial load.
+					$('.resultsListItemCount').show(); //keeps the zero hidden on initial load.
 					}
-				$('#resultsListItemCount').text(" ("+resultsSize+" remain)")
+				$('.resultsListItemCount').text(" ("+resultsSize+" remain)")
 				},
 
 
 			handleChooserResultsClick : function($t)	{
-				$('#chooserResultContainer').empty();
+				$('.chooserResultContainer').empty();
 				_app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$t.data('pid'),'templateID':'productTemplateChooser'});
 				},
 
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
-			handleFinderSearch : function(findertype)	{
-				$('#finderSearchResults').empty().addClass('loadingBG');
+			handleFinderSearch : function(query, findertype)	{
+				$('.finderSearchResults').empty().addClass('loadingBG');
 				var qObj = {}; //query object
-				var columnValue = $('#finderSearchQuery').val();
 				qObj.type = 'product';
 				qObj.mode = 'elastic-search';
 				qObj.size = 400;
-				qObj.query =  {"query_string" : {"query" : columnValue}};
+				qObj.query =  {"query_string" : {"query" : query}};
 			
 				//dispatch is handled by form submit binder
-				_app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch","templateID": findertype == 'CHOOSER' ? 'adminChooserElasticResult' : 'adminElasticResult'});
+				_app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","jqObj":$(".finderSearchResults"),"datapointer":"elasticsearch","templateID": findertype == 'CHOOSER' ? 'adminChooserElasticResult' : 'adminElasticResult'});
 				_app.model.dispatchThis();
 				},
 
@@ -3095,11 +3093,11 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				var $tmp;
 //go through the results and if they are already in this category, disable drag n drop.
 //data-path will be the SKU of the item in focus (for a product attribute finder)
-				$results = $('#finderSearchResults');
+				$results = $('.finderSearchResults');
 				var sku = $results.closest('[data-path]').attr('data-path');
 				$results.find('li').each(function(){
 					$tmp = $(this);
-					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0 || $tmp.attr('data-pid') == sku)	{
+					if($('.finderTargetList_'+$tmp.attr('data-pid')).length > 0 || $tmp.attr('data-pid') == sku)	{
 //						_app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
@@ -3140,7 +3138,7 @@ if($button.attr('data-btn-action') == 'save')	{
 else if($button.attr('data-btn-action') == 'selectAll')	{
 	$button.click(function(event){
 		event.preventDefault();
-		$('#finderSearchResults li').not('.ui-state-disabled').addClass('ui-selected');
+		$('.finderSearchResults li').not('.ui-state-disabled').addClass('ui-selected');
 		});
 	}
 //these two else if's are very similar. the important part is that when the items are moved over, the id is modified to match the targetCat 
@@ -3148,15 +3146,15 @@ else if($button.attr('data-btn-action') == 'selectAll')	{
 else if($button.attr('data-btn-action') == 'moveToTop' || $button.attr('data-btn-action') == 'moveToBottom'){
 	$button.click(function(event){
 		event.preventDefault();
-		$('#finderSearchResults .ui-selected').each(function(){
+		$('.finderSearchResults .ui-selected').each(function(){
 			var $copy = $(this).clone();
 			_app.u.dump(" -> moving item "+$copy.attr('data-pid'));
 			if($button.attr('data-btn-action') == 'moveToTop')
-				$copy.prependTo('#finderTargetList')
+				$copy.prependTo('.finderTargetList')
 			else
-				$copy.appendTo('#finderTargetList')
+				$copy.appendTo('.finderTargetList')
 			$copy.attr('data-status','changed'); //data-status is used to compile the list of changed items for the update request.
-			$copy.removeClass('ui-selected').attr('id','finderTargetList_'+$copy.attr('data-pid'));
+			$copy.removeClass('ui-selected').addClass('finderTargetList_'+$copy.attr('data-pid'));
 			$(this).remove();
 			})
 		_app.ext.admin.u.updateFinderCurrentItemCount();

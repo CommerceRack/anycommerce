@@ -483,7 +483,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 			
 			gotoProductExec : function($ele,p)	{
 				p.preventDefault();
-				var sku = $("input[name='sku']",'#chooserResultContainer').val();
+				var sku = $("input[name='sku']",'.chooserResultContainer').val();
 				//cart id on parent set by gotoProductShowChooser
 				cartMessagePush(cartid,'goto.product',{'vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')});
 				$('#prodFinder').anymessage({'message':'Product '+sku+' sent to buyer.','errtype':'done'});

@@ -1465,7 +1465,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					var $button = $("<button>").text("Add to Cart").button().on('click',function(event){
 						event.preventDefault();
 						$(this).button('disable'); //prevent doubleclick.
-						var $form = $('form','#chooserResultContainer');
+						var $form = $('form','.chooserResultContainer');
 						if($form && $form.length)	{
 	//						_app.u.dump(" -> found form");
 							$form.append("<input type='hidden' name='_cartid' value='"+$checkout.data('cartid')+"' \/>");
@@ -1509,7 +1509,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 								}
 							}
 						else	{
-							$('#productFinderContents').anymessage({"message":"In order_create.e.cartItemAddWithChooser, #chooserResultContainer had no length.","gMessage":true});
+							$('#productFinderContents').anymessage({"message":"In order_create.e.cartItemAddWithChooser, .chooserResultContainer had no length.","gMessage":true});
 							$(this).button('enable');
 							}
 						});

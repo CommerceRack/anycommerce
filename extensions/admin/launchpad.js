@@ -192,8 +192,8 @@ optional
 			handleTileGroupResize : function(){
 
 				_app.u.dump("BEGIN admin_launchpad.u.handleTileGroupResize");
-				var $LP = $('#launchpad'),
-				$LPI = $('#launchpadInner'),
+				var $LP = $('#launchpad');
+				var $LPI = $('.launchpadInner', $LP),
 				tileWidth = $('.tile_1x1',$LPI).first().outerWidth(true),
 				tileHeight = $('.tile_1x1',$LPI).first().outerHeight(true);
 //handle some sizing.
@@ -224,14 +224,14 @@ optional
 			
 					});
 				
-				$lastCol = $('.launchpad_tiles:last','#launchpadInner'); 
+				$lastCol = $('.launchpad_tiles:last',$LPI); 
 				$LPI.width(($lastCol.position().left + $lastCol.outerWidth(true) + 30)); //for determining total width of all ul's + buffer.
 				},
 
 			addMouseWheel2Launchpad : function(){
 
-				var $LPI = $('#launchpadInner'),
-				$LP = $('#launchpad')
+				var $LP = $('#launchpad');
+				var $LPI = $('#launchpadInner', $LP);
 				
 			//bind mousewheel event to launchpad.
 				$LP.bind('mousewheel', function(event, delta, deltaX, deltaY) {
