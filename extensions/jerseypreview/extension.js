@@ -126,6 +126,7 @@ var jerseypreview = function(_app) {
 			"M952-ROR1-ROW-PI6",
 			"M958-ROR1-ROW-PI6",
 			"MCN1-ROA1-ROW-PI6",
+			"6200-CUBA-EJ-PER",
 			"blank",
 			"CHIC24",
 			"CUBS81",
