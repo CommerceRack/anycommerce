@@ -859,6 +859,7 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				}
 			}, //handleElementSave
 
+//This callback is exclusively used for 'booting up'
 		showHeader : {
 			onSuccess : function(_rtag){
 				$('body').hideLoading();
@@ -868,8 +869,23 @@ SANITY -> jqObj should always be the data-app-role="dualModeContainer"
 				if(_app.data[_rtag.datapointer] && _app.data[_rtag.datapointer].domain)	{
 //					_app.u.dump(" -> response contained a domain. use it to set the domain.");
 					_app.ext.admin.a.changeDomain(_app.data[_rtag.datapointer].domain);
+					
+					
 					navigateTo('/dashboard');
 					}
+				//Intercom logging
+				dump('Calling Intercom boot code');
+				dump(_app.data[_rtag.datapointer]);
+				var data = _app.data[_rtag.datapointer];
+				window.Intercom('boot',{
+					app_id : 'de6tmbrt',
+					email : '', //where to get their email address?
+					user_id : data.userid,
+					extraCrap : 'testing',
+					widget : {
+						activator : '.jquery .selector'
+						}
+					});
 				_app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
@@ -1393,6 +1409,8 @@ function getIndexByObjValue(arr,key,value)	{
 							search = "?"+$.param(opts);
 							}
 						// document.location.hash = newHash; //update hash on URI.
+						//Intercom "pageview"
+						window.Intercom('update');
 						_app.router.handleURIChange(newHash, search); //update hash on URI.
 						}
 					else	{
