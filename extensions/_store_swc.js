@@ -371,7 +371,7 @@ var store_swc = function(_app) {
 					"templateID":"productListTemplateRelatedResults"
 					}
 				es = _app.ext.store_search.u.buildElasticRaw(search);
-				es.size = 3;
+				es.size = 6;
 				_app.ext.store_search.calls.appPublicSearch.init(es, _tag, 'immutable');
 				//_app.model.addDispatchToQ(reqObj, 'immutable');
 				_app.model.dispatchThis('immutable');
