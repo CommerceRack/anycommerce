@@ -366,7 +366,7 @@ setTimeout(function(){
 */
 //for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
 				setTimeout(function(){
-					_app.ext.admin_medialib.u.convertFormToJQFU('form[name=mediaLibUploadForm]','mediaLibrary'); //turns the file upload area into a jquery file upload
+					_app.ext.admin_medialib.u.convertFormToJQFU($('form[name=mediaLibUploadForm]'),'mediaLibrary'); //turns the file upload area into a jquery file upload
 					},2000);
 				}
 			}, //showMediaLibrary
@@ -494,7 +494,7 @@ setTimeout(function(){
 
 			publicFiles : function($target,p){
 				$target.anycontent({'templateID':'page-setup-publicfiles','data':{}});
-				_app.ext.admin_medialib.u.convertFormToJQFU('form[name=publicFilesUploadForm]','publicFileUpload');
+				_app.ext.admin_medialib.u.convertFormToJQFU($('form[name=publicFilesUploadForm]'),'publicFileUpload');
 				_app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
 				_app.model.dispatchThis();
 				},
@@ -849,7 +849,7 @@ else	{
 				if(verb && $contentArea instanceof jQuery)	{
 
 					$contentArea.intervaledEmpty().append(_app.renderFunctions.transmogrify({},'page-setup-import-'+verb.toLowerCase(),{})); //load the page template.
-					_app.ext.admin_medialib.u.convertFormToJQFU('form[name=csvUploadToBatchForm]','csvUploadToBatch');
+					_app.ext.admin_medialib.u.convertFormToJQFU($('form[name=csvUploadToBatchForm]'),'csvUploadToBatch');
 					
 					if(verb == 'INVENTORY')	{
 						var $sc = $("[data-app-role='fileImportSupplierContainer']",$contentArea).showLoading({"message":"Fetching supplier list"}); //Supplier Container
@@ -1072,6 +1072,7 @@ if(selector && mode)	{
 
 
 	// Initialize the jQuery File Upload widget:
+	
 	$selector.fileupload({
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},

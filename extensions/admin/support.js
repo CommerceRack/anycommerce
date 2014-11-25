@@ -213,7 +213,7 @@ var admin_support = function(_app) {
 					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='domain' value='"+_app.vars.domain+"' \/>"); //file upload wants domain specified.
 					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
 					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
-					_app.ext.admin_medialib.u.convertFormToJQFU('form[name=supportFileUploadForTicket]','adminTicketFileAttach');
+					_app.ext.admin_medialib.u.convertFormToJQFU($('form[name=supportFileUploadForTicket]'),'adminTicketFileAttach');
 					
 					}
 				else	{
