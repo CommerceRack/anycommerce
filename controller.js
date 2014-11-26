@@ -1071,7 +1071,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						window.history.replaceState(routeObj.value,"",routeObj.value);
 						}
 					else if (windowHistoryAction == 'hash'){
-						window.history.pushState(routeObj.value, "", window.location.path+"#!"+routeObj.value);
+						window.history.pushState(routeObj.value, "", "#!"+routeObj.value);
 						}
 					else {
 						//skip
