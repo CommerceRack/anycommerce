@@ -2087,7 +2087,7 @@ vars.findertype is required. acceptable values are:
 					//the chooser will prompt the user to select a domain and execute a navigateTo.
 					}
 				else	{
-					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
+					_app.u.dump(" -> execute navigateTo as no linkFrom is present.");
 					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('/dashboard'));
 					}
 
