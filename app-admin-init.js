@@ -223,7 +223,7 @@ var startupRequires = [
 	"store_product",
 
 	"cco",
-	"order_create",
+	"order_create", "extensions/checkout/"+_app.vars.checkoutAuthMode+".html",
 	"cart_message",
 
 	"admin_support", "extensions/admin/support.html",
