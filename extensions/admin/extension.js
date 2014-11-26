@@ -2060,7 +2060,7 @@ vars.findertype is required. acceptable values are:
 //will prompt user to choose a domain, if necessary.
 //does not dispatch itself, will piggyback on the following immutable dispatches.
 				_app.ext.admin.u.handleDomainInit();
-
+				
 				_app.u.addEventDelegation($('#messagesContent'));
 				_app.model.addDispatchToQ({"_cmd":"adminMessagesList","msgid":_app.ext.admin.u.getLastMessageID(),"_tag":{"datapointer":"adminMessagesList|"+_app.ext.admin.u.getLastMessageID(),'callback':'handleMessaging','extension':'admin'}},"immutable");
 				_app.model.addDispatchToQ({'_cmd':'platformInfo','_tag':	{'datapointer' : 'info'}},'immutable');
@@ -2088,10 +2088,7 @@ vars.findertype is required. acceptable values are:
 					}
 				else	{
 					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
-					if(!document.location.hash)	{
-						//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
-						_app.ext.admin.a.navigateTo('/dashboard');
-						}
+					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('/dashboard'));
 					}
 
 				_app.model.dispatchThis('immutable');
