@@ -57,7 +57,7 @@ var admin = function(_app) {
 	var r = {
 		
 		vars : {
-			tab : 'setup', //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
+			tab : 'home', //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
 			tabs : ['setup','sites','home','product','orders','crm','syndication','reports','kpi','utilities','support','launchpad'],
 			state : {},
 			tab : 'home',
