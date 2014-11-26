@@ -3019,9 +3019,9 @@ else if (vars.findertype)	{
 	this does NOT get executed when items are moved over via selectable and move buttons.
 	*/
 		stop: function(event, ui) {
-			var parent = ui.item.parent().attr('id')
+			var role = ui.item.parent().attr('data-app-role')
 	//		_app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
-			if(parent == 'finderTargetList')	{
+			if(role == 'finderTargetList')	{
 				ui.item.attr({'data-status':'changed','class':'finderTargetList_'+ui.item.attr('data-pid')});
 				}
 			_app.ext.admin.u.updateFinderCurrentItemCount();
