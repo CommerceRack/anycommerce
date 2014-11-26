@@ -95,7 +95,7 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 			//leave the base as is
 			}
 		else{
-			href = '/latest/';
+			href = window.location.pathname.replace('app-admin.html','');
 			}
 		$('head').append('<base href="'+href+'" />');
 		})()
