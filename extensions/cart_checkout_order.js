@@ -1418,7 +1418,7 @@ in a reorder, that data needs to be converted to the variations format required 
 
 			cartZipUpdateExec : function($ele,p)	{
 				p.preventDefault();
-				_app.ext.cco.calls.cartSet.init({'ship/postal':$ele.val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
+				_app.ext.cco.calls.cartSet.init({'ship/postal':$('input[name="ship/postal"]',$ele).val(), 'ship/region':'','_cartid': $ele.closest("[data-template-role='cart']").data('cartid')},{},'immutable');
 				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
 				_app.model.dispatchThis('immutable');
 				return false;

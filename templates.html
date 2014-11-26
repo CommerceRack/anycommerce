@@ -1940,18 +1940,19 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 <div id="cartTemplate" class="clearfix"><!-- template role gets added by the myApp. don't add it yourself -->
 
-<form action="#" onsubmit="return false">
 
 <div class="cartStuffContainer">
-	<ul data-tlc="bind $var '.@ITEMS'; controller#loop --templateid='productListTemplateCart'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist"></ul>
+	<form action="#" onsubmit="return false">
+		<ul data-tlc="bind $var '.@ITEMS'; controller#loop --templateid='productListTemplateCart'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist"></ul>
+	</form>
 </div>
 
 <div class="cartSummaryTotalsContainer">
 	<div class="ui-widget ui-corner-all">
-		<div class='ui-widget-header ui-corner-top ui-header smallPadding smallButton'>
+		<form action="#" onsubmit="return false;" class='ui-widget-header ui-corner-top ui-header smallPadding smallButton'>
 			<button class='applyButton cartRefreshButton' data-text='false' data-icon-primary='ui-icon-refresh' data-app-click="cco|cartFetchExec">Refresh Cart</button>
 			<h2>Cart Totals</h2>
-		</div>
+		</form>
 		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
 
 <section class="cartSummary marginBottom">
@@ -1973,12 +1974,20 @@ This is the template used both within a dialog and inline, unless implicitly ove
 </section>
 
 <section data-app-role="cartTemplateShippingContainer" class="marginBottom cartTemplateShippingContainer">
+	<h3>Coupon:</h3>
+	<form class="cartZipCodeContainer marginBottom" onsubmit="return false;" data-app-submit="store_swc|addCoupon">
+		<label for="coupon">Enter Code:</label>
+		<input name="coupon" type="text">
+		<button class="applyButton" type="submit">Go!</button>
+	</form>
+	
 	<h3>Shipping:</h3>
 
-	<div class="cartZipCodeContainer marginBottom">
-		<label for="data-ship_zip">Zip/Postal Code:</label>
-		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" data-app-blur="cco|cartZipUpdateExec" type="text">
-	</div>
+	<form class="cartZipCodeContainer marginBottom" onsubmit="return false;" data-app-submit="cco|cartZipUpdateExec">
+		<label for="ship/postal">Zip/Postal Code:</label>
+		<input data-tlc="bind $var '.ship.postal'; if(is $var --blank) {{bind $var '.bill.postal'; }}; apply --select=$var; " size="6" name="ship/postal" value="" maxlength="10" type="text">
+		<button type="submit" class="applyButton">Go!</button>
+	</form>
 
 	<ul data-tlc="order_create#shipmethodsasradiobuttons  --legacy;" class="noPadOrMargin listStyleNone" data-bind="useParentData:true; format:shipmethodsasradiobuttons; extension: order_create;" data-app-role="shipMethodsUL"></ul>
 </section>
@@ -1992,7 +2001,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		</div>
 		<div class="ui-state-default cartButtons stdPadding clearfix">
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
-			<span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogCloseExec">Continue Shopping</button></span>
+			<!-- <span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogCloseExec">Continue Shopping</button></span> -->
 	
 			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
 				<a class="applyButton ui-state-highlight checkoutButton" href='/checkout/'>Store Checkout</a>
@@ -2004,7 +2013,6 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 	</div>
 </div>
-</form>
 </div>
 
 

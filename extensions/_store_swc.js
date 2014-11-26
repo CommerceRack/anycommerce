@@ -649,6 +649,18 @@ var store_swc = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			addCoupon : function($ele, e){
+				_app.ext.cco.calls.cartCouponAdd.init($('input[name=coupon]',$ele).val(),_app.model.fetchCartID(),{"callback":function(rd){
+					if(_app.model.responseHasErrors(rd)){
+						_app.u.throwMessage(rd);
+						}
+					else{
+						_app.u.throwMessage(_app.u.successMsgObject('Your coupon has been added.'));
+						}
+					}});
+				$ele.closest("[data-template-role='cart']").trigger('fetch',{'Q':'immutable'});
+				_app.model.dispatchThis('immutable');
+				},
 			showRMAForm : function($ele, e){
 				dump('showing rma form');
 				e.preventDefault();
