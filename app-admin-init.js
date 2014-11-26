@@ -208,8 +208,7 @@ _app.router.appendInit({
 		return {'some':'value'} //returning anything but false triggers a match.
 		},
 	'callback':function(f){
-		//this is used to load the page when the domain has already been selected
-		_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('/dashboard'));
+		//no need to do anything
 		}
 	});
 
