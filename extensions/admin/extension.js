@@ -2216,6 +2216,9 @@ Changing the domain in the chooser will set three vars in localStorage so they'l
 				var page = window.location.hash || defaultPage;
 				if(page)	{
 					if(page.substring(0,2) == '/' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz navigateTo wants #.
+					if(page.substring(0,2) == "#!"){
+						page = page.substring(2);
+						}
 					else	{
 						page = page.replace(/^#/, ''); //strip preceding # from hash.
 						}

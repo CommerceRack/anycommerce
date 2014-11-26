@@ -65,7 +65,8 @@ function controller(_app)	{
 		_app.vars.fbUser = {};
 
 //used in conjunction with support/admin login. nukes entire local cache.
-		if(_app.u.getParameterByName('flush') == 1)	{
+		if(_app.u.getParameterByName('flush') == 1 || 
+			(_app.vars.thisSessionIsAdmin && document.location.protocol == "file:"))	{
 			_app.u.dump(" !!! Flush is enabled. session and local storage get nuked !!!");
 			if($.support.sessionStorage)	{
 				window.sessionStorage.clear();
@@ -1078,7 +1079,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						}
 					}
 				catch(e){
-					//dump(e);
+					if(windowHistoryAction == 'hash'){
+						window.location.hash = "#!"+routeObj.value;
+						}
 					}
 				_app.router._executeCallback(routeObj);
 				return true;
