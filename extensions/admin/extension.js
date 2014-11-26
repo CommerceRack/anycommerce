@@ -2088,6 +2088,7 @@ vars.findertype is required. acceptable values are:
 					}
 				else	{
 					_app.u.dump(" -> execute navigateTo as no linkFrom is present.");
+					dump(_app.ext.admin.u.whatPageToShow('/dashboard'));
 					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('/dashboard'));
 					}
 
