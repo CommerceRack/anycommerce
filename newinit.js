@@ -981,7 +981,7 @@ _app.router.appendInit({
 			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
 			}
 		else if (g.uriParams.marketplace){
-			showContent("product",{"pid":g.uriParams.product});
+			_app.router.handleURIString('/product/'+g.uriParams.product+'/', 'replace');
 			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
 			}
 		else if(document.location.pathname)	{	
