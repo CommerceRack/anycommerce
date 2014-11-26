@@ -208,7 +208,7 @@ _app.router.appendInit({
 		return {'some':'value'} //returning anything but false triggers a match.
 		},
 	'callback':function(f){
-		_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
+		_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, 'replace');
 		}
 	});
 

@@ -1041,7 +1041,11 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			},
 		
-		handleURIChange : function(uri, search, hash, replace, forcedParams){
+		handleURIChange : function(uri, search, hash, windowHistoryAction, forcedParams){
+			//default to pushstate
+			if(typeof windowHistoryAction == 'undefined'){
+				windowHistoryAction = 'push';
+				}
 			console.log('handleURIChange');
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			if(routeObj) {
@@ -1060,7 +1064,18 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				routeObj.hash = hash;
 				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				try{
-					window.history[replace ? 'replaceState' : 'pushState'](routeObj.value, "", routeObj.value);
+					if(windowHistoryAction == 'push'){
+						window.history.pushState(routeObj.value,"",routeObj.value);
+						}
+					else if (windowHistoryAction == 'replace'){
+						window.history.replaceState(routeObj.value,"",routeObj.value);
+						}
+					else if (windowHistoryAction == 'hash'){
+						window.history.pushState(routeObj.value, "", window.location.path+"#!"+routeObj.value);
+						}
+					else {
+						//skip
+						}
 					}
 				catch(e){
 					//dump(e);
@@ -1073,7 +1088,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return false;
 			},
-		handleURIString : function(uriStr, replace, forcedParams){
+		handleURIString : function(uriStr, windowHistoryAction, forcedParams){
 			var a = document.createElement('a');
 			a.href = "http://www.domain.com"+uriStr;
 			var path = a.pathname;
@@ -1082,7 +1097,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			console.log(path);
 			console.log(search);
 			console.log(hash);
-			this.handleURIChange(path,search,hash,skipPush,forcedParams);
+			this.handleURIChange(path,search,hash,windowHistoryAction,forcedParams);
 			}
 		},
 

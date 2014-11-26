@@ -667,7 +667,8 @@ _app.router.appendInit({
 					}
 				}
 			//handleURIChange here will not change the page, but it will execute appropriate events
-			_app.router.handleURIString($existingPage.attr('data-app-uri'), true, {"retrigger" : true});
+			//that's why we pass false for the windowHistoryAction- no pushstate
+			_app.router.handleURIString($existingPage.attr('data-app-uri'), false, {"retrigger" : true});
 			}
 		else if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);
@@ -677,10 +678,10 @@ _app.router.appendInit({
 				pathStr = arr[0];
 				search = arr[1];
 				}
-			_app.router.handleURIChange("/"+pathStr, search, false, true);
+			_app.router.handleURIChange("/"+pathStr, search, false, 'replace');
 			}
 		else if(document.location.protocol == "file:"){
-			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
+			_app.router.handleURIChange("/", document.location.search, document.location.hash, 'replace');
 			}
 		else if (g.uriParams.marketplace){
 			_app.router.handleURIString('/product/'+g.uriParams.product+'/', 'replace');
@@ -688,10 +689,10 @@ _app.router.appendInit({
 			}
 		else if(document.location.pathname)	{	
 			_app.u.dump('triggering handleHash');
-			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true);
+			_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, 'replace');
 			}
 		else	{
-			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
+			_app.router.handleURIChange("/", document.location.search, document.location.hash, 'replace');
 			_app.u.throwMessage(_app.u.successMsgObject("We're sorry, the page you requested could not be found!"));
 			window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);
 			}

@@ -1411,7 +1411,7 @@ function getIndexByObjValue(arr,key,value)	{
 						// document.location.hash = newHash; //update hash on URI.
 						//Intercom "pageview"
 						window.Intercom('update');
-						_app.router.handleURIChange(newHash, search); //update hash on URI.
+						_app.router.handleURIChange(newHash, search, false, 'hash'); //update hash on URI.
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':'In navigateTo, the path provided ['+path+'] does not start w/ a / or is not an acceptable legacy compatibility mode link.','gMessage':true});
