@@ -2088,7 +2088,12 @@ vars.findertype is required. acceptable values are:
 					}
 				else	{
 					_app.u.dump(" -> execute navigateTo cuz no linkFrom being present.");
-					_app.ext.admin.a.navigateTo(_app.ext.admin.u.whatPageToShow('/dashboard'));
+					
+					if(!document.location.hash)	{
+						//if a hash is present, the router will load that page. But if there's no hash, we load the default page.
+						navigateTo('/dashboard');
+						}
+					
 					}
 
 				_app.model.dispatchThis('immutable');
