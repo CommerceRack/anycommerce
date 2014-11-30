@@ -72,8 +72,6 @@ var jerseypreview = function(_app) {
 			
 			},
 		whitelist : [
-			"974",
-			"974CB",
 			"6200-CUBA-EJ-PER",
 			"6200-CUBR-EJ-PER",
 			"6300-CUBA-EJ-PER",
@@ -146,6 +144,7 @@ var jerseypreview = function(_app) {
 			"M958-EJAE-EJ-PER",
 			"MCN1-EJMN-EJ-PER",
 			"MCN1-ECMN-EJ-PER",
+			"M952-CU91-CU7-PER",
 			"CUSTAR2",
 			"CUST13",
 			"CUST14",
