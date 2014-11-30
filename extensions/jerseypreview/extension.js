@@ -131,6 +131,7 @@ var jerseypreview = function(_app) {
 			"6300-CUBD-EJ-PER",
 			"7700-CUBH-EJ-PER",
 			"3800-EJBP-EJ-PB8",
+			"6200-YANH-NK-PER",
 			"blank",
 			"CHIC24",
 			"CUBS81",
