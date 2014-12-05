@@ -3087,7 +3087,8 @@ else	{} //findertype is not declared. The error handling for this has already ta
 
 
 			handleChooserResultsClick : function($t)	{
-				$('.chooserResultContainer').empty();
+			
+				$('.chooserResultContainer').attr('id','chooserResultContainer').empty();
 				_app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$t.data('pid'),'templateID':'productTemplateChooser'});
 				},
 
