@@ -3844,6 +3844,15 @@
       "page_title" : "Drake Britton Jersey, Drake Britton Shirt | Boston Red Sox Drake Britton Jerseys & Shirts",
       "%head_title" : "Drake Britton Jersey, Drake Britton Shirt | Boston Red Sox Drake Britton Jerseys & Shirts"
    },
+   ".mlb.seattle.z_nelson_cruz" : {
+      "meta_keywords" : "Nelson Cruz Jersey, Nelson Cruz Shirt, Seattle Shirts, Nelson Cruz Jerseys, Seattle Jerseys",
+      "player_name" : "Nelson Cruz",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Nelson Cruz Jersey Or Shirt From Our Wide Selection Of Nelson Cruz Jerseys And Other Seattle Apparel.",
+      "page_title" : "Nelson Cruz Jersey, Nelson Cruz Shirt | Seattle Nelson Cruz Jerseys & Shirts",
+      "head_title" : "Nelson Cruz Jersey, Nelson Cruz Shirt | Seattle Nelson Cruz Jerseys & Shirts",
+      "team_name" : "Seattle"
+   },
    ".mlb.detroit_tigers.z_ian_kinsler" : {
       "meta_keywords" : "Ian Kinsler Jersey, Ian Kinsler Shirt, Detroit Tigers Shirts, Ian Kinsler Jerseys, Detroit Tigers Jerseys",
       "player_name" : "Ian Kinsler",
@@ -5830,6 +5839,15 @@
       "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
       "page_title" : "Ted Lilly Jersey, Ted Lilly Shirt | Los Angeles Dodgers Ted Lilly Jerseys & Shirts",
       "head_title" : "Ted Lilly Jersey, Ted Lilly Shirt | Los Angeles Dodgers Jerseys & Shirts"
+   },
+   ".mlb.chicago_cubs.jon_lester" : {
+      "meta_keywords" : "Jon Lester Jersey, Jon Lester Shirt, Chicago Cubs Shirts, Jon Lester Jerseys, Chicago Cubs Jerseys",
+      "player_name" : "Jon Lester",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Jon Lester Jersey Or Shirt From Our Wide Selection Of Jon Lester Jerseys And Other Chicago Cubs Apparel.",
+      "page_title" : "Jon Lester Jersey, Jon Lester Shirt | Chicago Cubs Jon Lester Jerseys & Shirts",
+      "head_title" : "Jon Lester Jersey, Jon Lester Shirt | Chicago Cubs Jon Lester Jerseys & Shirts",
+      "team_name" : "Chicago Cubs"
    },
    ".careers" : {
       "meta_keywords" : "Careers at SportsWorldChicago.com",
@@ -9639,7 +9657,6 @@
       "page_title" : "Davey Johnson Jersey, Davey Johnson Shirt | Washington Nationals Davey Johnson Jerseys & Shirts",
       "%head_title" : "Davey Johnson Jersey, Davey Johnson Shirt | Washington Nationals Davey Johnson Jerseys & Shirts"
    },
-   ".mlb.seattle_mariners.z_zach_miner" : {},
    ".chicago-cubs-sweatshirts.men" : {
       "meta_keywords" : "baseball sweatshirt, baseball sweatshirts, sweatshirts baseball, baseball hooded sweatshirt , men's chicago cubs sweatshirt, mens baseball sweatshirts, cubs team sweatshirts for men",
       "meta_description" : "Great selection and great prices on Cubs team sweatshirts for men at SportsWorldChicago.com. All the styles, colors and sizes men look for in a baseball sweatshirt.",
@@ -18648,6 +18665,15 @@
       "page_title" : "Chris Heisey Jersey, Chris Heisey Shirt | Cincinnati Reds Chris Heisey Jerseys & Shirts",
       "%head_title" : "Chris Heisey Jersey, Chris Heisey Shirt | Cincinnati Reds Chris Heisey Jerseys & Shirts"
    },
+   ".mlb.chicago_cubs.dave_martinez" : {
+      "meta_keywords" : "Dave Martinez Jersey, Dave Martinez Shirt, Chicago Cubs Shirts, Dave Martinez Jerseys, Chicago Cubs Jerseys",
+      "player_name" : "Dave Martinez",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Dave Martinez Jersey Or Shirt From Our Wide Selection Of Dave Martinez Jerseys And Other Chicago Cubs Apparel.",
+      "page_title" : "Dave Martinez Jersey, Dave Martinez Shirt | Chicago Cubs Dave Martinez Jerseys & Shirts",
+      "head_title" : "Dave Martinez Jersey, Dave Martinez Shirt | Chicago Cubs Dave Martinez Jerseys & Shirts",
+      "team_name" : "Chicago Cubs"
+   },
    ".mlb.washington_nationals.z_ross_detwiler" : {
       "meta_keywords" : "Ross Detwiler Jersey, Ross Detwiler Shirt, Washington Nationals Shirts, Ross Detwiler Jerseys, Washington Nationals Jerseys",
       "player_name" : "Ross Detwiler",
@@ -20957,6 +20983,11 @@
       "page_title" : "Andrew Romine Jersey, Andrew Romine Shirt | Detroit Tigers Andrew Romine Jerseys & Shirts",
       "%head_title" : "Andrew Romine Jersey, Andrew Romine Shirt | Detroit Tigers Andrew Romine Jerseys & Shirts"
    },
+   ".mlb.milwaukee_brewers.t-shirts" : {
+      "meta_keywords" : "Milwaukee Brewers Shirts, Milwaukee Brewers Player Shirts",
+      "page_title" : "Milwaukee Brewers Shirts",
+      "head_title" : "Milwaukee Brewers Shirts"
+   },
    ".nfl_teams.jacksonville_jaguars.game_room" : {
       "meta_keywords" : "Jacksonville Jaguars Game Room Accessories, Jacksonville Jaguars Pool Cues, Billiard Products, Jacksonville Jaguars Game Room Furniture",
       "player_name" : "Game Room",
@@ -20965,11 +20996,6 @@
       "page_title" : "Jacksonville Jaguars Game Room Accessories, Billiards and Furniture",
       "head_title" : "Jacksonville Jaguars Game Room Accessories, Jacksonville Jaguars Game Room Billiards | Jacksonville Jaguars Game Room Furniture",
       "team_name" : "Jacksonville Jaguars"
-   },
-   ".mlb.milwaukee_brewers.t-shirts" : {
-      "meta_keywords" : "Milwaukee Brewers Shirts, Milwaukee Brewers Player Shirts",
-      "page_title" : "Milwaukee Brewers Shirts",
-      "head_title" : "Milwaukee Brewers Shirts"
    },
    ".mlb.new_york_yankees.z_whitey_ford" : {
       "meta_keywords" : "Whitey Ford Jersey, Whitey Ford Shirt, New York Yankees Shirts, Whitey Ford Jerseys, New York Yankees Jerseys",
@@ -21075,6 +21101,15 @@
       "team_name" : "Minnesota Vikings"
    },
    "ncaaboise_state.home_and_tailgate" : {},
+   ".mlb.seattle_mariners.z_nelson_cruz" : {
+      "meta_keywords" : "Nelson Cruz Jersey, Nelson Cruz Shirt, Seattle Mariners Shirts, Nelson Cruz Jerseys, Seattle Mariners Jerseys",
+      "player_name" : "Nelson Cruz",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Nelson Cruz Jersey Or Shirt From Our Wide Selection Of Nelson Cruz Jerseys And Other Seattle Mariners Apparel.",
+      "page_title" : "Nelson Cruz Jersey, Nelson Cruz Shirt | Seattle Mariners Nelson Cruz Jerseys & Shirts",
+      "head_title" : "Nelson Cruz Jersey, Nelson Cruz Shirt | Seattle Mariners Nelson Cruz Jerseys & Shirts",
+      "team_name" : "Seattle Mariners"
+   },
    ".mlb.st_louis_cardinals.z_derek_lilliquist" : {
       "meta_keywords" : "Derek Lilliquist Jersey, Derek Lilliquist Shirt, St. Louis Cardinals Shirts, Derek Lilliquist Jerseys, St. Louis Cardinals Jerseys",
       "player_name" : "Derek Lilliquist",
