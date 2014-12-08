@@ -2401,7 +2401,7 @@ else	{
 			showContent : function($ele,p)	{
 				p.preventDefault();p
 				if($ele.attr('data-href'))	{
-					_app.handleURIString($ele.attr('data-href'));
+					_app.router.handleURIString($ele.attr('data-href'));
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In quickstart.e.showContent, no data-hash set on trigger element.","gMessage":true});

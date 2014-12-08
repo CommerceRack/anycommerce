@@ -916,12 +916,13 @@ an existing user gets a list of previous addresses they've used and an option to
 						payby = cartData.want.payby;
 						}
 					if(payby)	{
-						var
-							$radio = $("input[value='"+payby+"']",$fieldset),
-							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
-						if($supplemental)	{
-							_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
-							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
+						var $radio = $("input[value='"+payby+"']",$fieldset);
+						if($radio.length > 0){
+							var $supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
+							if($supplemental)	{
+								_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
+								$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
+								}
 							}
 						//the 'loop' renderformat for wallet display only accepts one piece of data. in this case, the walley payment method.
 						//so the 'cart' isn't available to load payby. crappy. a better long term solution would be a tlcFormat 
