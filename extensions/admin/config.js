@@ -1039,7 +1039,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 						.find(".applyDatepicker").datetimepicker({
 							changeMonth: true,
 							dateFormat : 'yymmdd',
-							timeFormat: 'hhmmss',
+							timeFormat: 'HHmmss',
 							changeYear: true,
 							separator : '' //get rid of space between date and time.
 							})
@@ -1069,7 +1069,7 @@ when an event type is changed, all the event types are dropped, then re-added.
 				$( ".applyDatepicker",$D).datetimepicker({
 						changeMonth: true,
 						dateFormat : 'yymmdd',
-						timeFormat: 'hhmmss',
+						timeFormat: 'HHmmss',
 						changeYear: true,
 						separator : '' //get rid of space between date and time.
 						});
