@@ -864,7 +864,7 @@ fallback is to just output the value.
 							})
 						}
 					else	{
-						$tag.attr({'data-hash':'#!product/'+pid,'data-app-click':'quickstart|showContent'});
+						$tag.attr({'data-href':'/product/'+pid,'data-app-click':'quickstart|showContent'});
 						}
 					}
 //				dump(" -> ID at end: "+$tag.attr('id'));
@@ -2400,8 +2400,8 @@ else	{
 			// !!! check for use, probably remove (why use an app-click for this when an <a> with an href is crawlable?
 			showContent : function($ele,p)	{
 				p.preventDefault();p
-				if($ele.data('hash'))	{
-					document.location.hash = $ele.data('hash');
+				if($ele.attr('data-href'))	{
+					_app.handleURIString($ele.attr('data-href'));
 					}
 				else	{
 					$("#globalMessaging").anymessage({"message":"In quickstart.e.showContent, no data-hash set on trigger element.","gMessage":true});
