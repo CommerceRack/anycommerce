@@ -166,8 +166,9 @@ h5	{font-size:1.03em; color:#666; margin:0;}
     font-weight: bolder;
     padding: 3px 7px;
     position: absolute;
-    right: 1%;
     z-index: 10;
+    right: 1%;
+	display: none;
 	background: #e6731d; /* Old browsers */
 	background: -moz-linear-gradient(top,  #e6731d 0%, #f23d1f 100%); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#e6731d), color-stop(100%,#f23d1f)); /* Chrome,Safari4+ */
