@@ -622,7 +622,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 		-moz-box-sizing: border-box;    /* Firefox, other Gecko */
 		box-sizing: border-box;
-		height:130px;
+		height:200px;
 		}
 	/* product template */
 	
