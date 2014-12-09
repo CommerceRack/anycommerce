@@ -686,6 +686,7 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#shopByBrandContainer .mfg	{display:block; float:left; margin:.3em .1em;}
 	
 	.zProductList li.plLineItem	{width:24%; height:320px;}
+	.zProductList li.plLineItem img {width: 90px;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
 	.vidsAndPics	{width:550px}
 	}
