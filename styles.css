@@ -460,7 +460,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff9c00', endColorstr='#ff4000',GradientType=0 ); /* IE6-9 */
 	}
 .productListCycleSlide	{width: 270px; margin-right:30px; white-space:normal;}
-.isRelatedItemsList	{width:100%; overflow:hidden; height:300px; }
+.isRelatedItemsList	{width:100%; overflow:hidden; height:170px; }
 .relatedItemsContainer	{position:relative;}
 .relatedItemsContainer	.carouselNav	{position:absolute; text-align:center; right:0; top:0px;}
 .relatedItemsContainer	.carouselNav .prev, .isRelatedItemsList	.carouselNav .next	{font-size:1em; font-weight:500; margin:0 1em;}
