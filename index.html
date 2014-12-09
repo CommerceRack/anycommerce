@@ -637,7 +637,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	
 		<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href'; " class="blockLink">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=90&w=90&dpi=1x&vp=400w,h=150&w=150&dpi=1x&vp=768w,h=150&w=150&dpi=1x&vp=1800w';}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
+		<img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if (is $var --notblank;) {{ apply --img --media=$var --width=200 --height=200 --bgcolor='#ffffff' --replace; store_zephyrapp#srcset --views='h=90&w=90&dpi=1x&vp=400w,h=150&w=150&dpi=1x&vp=768w,h=150&w=150&dpi=1x&vp=1800w';}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
 		<div class='displayNone sprite shipsFree' data-tlc="bind $var '.%attribs.is:shipfree'; if(is $var --eq='1'){{apply --remove --class='displayNone';}};"></div>
 		</div>
 
