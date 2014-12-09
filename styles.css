@@ -380,6 +380,7 @@ hr.subtle	{margin:.1em 0;
 .zProductList	{list-style:none; margin:0; padding:0;}
 li.plLineItem	{display:block; margin:0 0 .5em 0; font-weight:300; padding:0; font-size:.9em; position:relative; min-height:105px;} /* prodlist and search results */
 .prodThumbContainer	{float:left; margin-right:.5em;}
+.prodThumbContainer img {width:100%;}
 .blockLink	{text-decoration:none;}
 .zProductList a 	{color:#333;}
 .prodListArrow {position:absolute; right: 5px; top:20px;}
