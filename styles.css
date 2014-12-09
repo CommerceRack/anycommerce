@@ -624,6 +624,7 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 		box-sizing: border-box;
 		height:200px;
 		}
+	.zProductList li.plLineItem img {width: 90px;}
 	/* product template */
 	
 	.vidsAndPics	{float:left; margin-right:2%; width:400px}
@@ -686,7 +687,6 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#shopByBrandContainer .mfg	{display:block; float:left; margin:.3em .1em;}
 	
 	.zProductList li.plLineItem	{width:24%; height:320px;}
-	.zProductList li.plLineItem img {width: 90px;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
 	.vidsAndPics	{width:550px}
 	}
