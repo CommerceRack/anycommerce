@@ -685,7 +685,7 @@ if this changes, some JS needs to be written to handle making sure the cats are 
 	#shopByBrandContainer	{border:1px solid #cccccc; padding:.3em; margin:.5em 0;}
 	#shopByBrandContainer .mfg	{display:block; float:left; margin:.3em .1em;}
 	
-	.zProductList li.plLineItem	{width:24%; height:300px;}
+	.zProductList li.plLineItem	{width:24%; height:320px;}
 	.prodThumbContainer	{float:none; margin:0 auto .3em auto;}
 	.vidsAndPics	{width:550px}
 	}
@@ -701,7 +701,7 @@ if this changes, some JS needs to be written to handle making sure the cats are 
     left: 51%;
 	bottom: 3px;
 }
-	.zProductList li.plLineItem	{width:19%; height:300px;}
+	.zProductList li.plLineItem	{width:19%; height:320px;}
 	}
 
 
