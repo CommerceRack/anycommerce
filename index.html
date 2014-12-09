@@ -743,7 +743,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; ">
 		<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; bind $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" class="blockLink">
 		<div class="prodThumbContainer">
-		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{ apply --img --media=$var --width=200 --height=200 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
+		<img data-tlc="bind $var '.images.0'; if (is $var --notblank;) {{ apply --img --media=$var --width=90 --height=90 --bgcolor='#ffffff' --replace;}};" src="blank.gif" class="prodThumb" alt="" height="90" width="90">
 		<div class='displayNone sprite shipsFree' data-tlc="bind $var '.prod_tags.shipfree'; if(is $var --eq='1'){{apply --remove --class='displayNone';}};"></div>
 		</div>
 
