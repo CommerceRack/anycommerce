@@ -384,7 +384,7 @@ li.plLineItem img {width:90px; height: 90px;}
 .prodThumbContainer	{float:left; margin-right:.5em;}
 .blockLink	{text-decoration:none;}
 .zProductList a 	{color:#333;}
-.prodListArrow {position:absolute; right: 5px; top:20px;}
+.prodListArrow {position:absolute; right: 5px; top:20px; width: 13px; height: 20px;}
 .plAdd2Cart {margin-right:1em;} /* for padding next to reviews. can't put it on reviews because it'll sometimes be on the next line down */
 .reviewPLAdjust	{margin:0em 0 -.5em 0em;} /* -bottom is to pull review icon down to align w/ add to cart. is a span, so can't use top margin */
 .plLineItem .marginBottom	{margin-bottom:.3em;}
