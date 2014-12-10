@@ -351,6 +351,7 @@ hr.subtle	{margin:.1em 0;
 /* pager */
 #slideshowContainer	{width:100%; overflow:hidden; height:265px; position:relative; max-width:2000px; margin-left:auto; margin-right:auto; text-align: center;}
 .slideImage {width: 100%; max-width: 2000px; height: 265px; display: block; background-position: center center;}
+.slide {width: 100%;}
 
 .cycle-pager { 
     z-index: 101; position: absolute; bottom: .2em; left:.2em; overflow: hidden;
