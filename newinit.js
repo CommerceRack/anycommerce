@@ -818,7 +818,7 @@ _app.extend({
 
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "product",
-	"require" : ['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'jerseypreview'],
+	"require" : ['store_product','store_navcats', 'store_swc', 'store_routing', 'store_search', 'templates.html', 'partner_addthis', 'jerseypreview'],
 	"handler" : function($container, infoObj, require){
 		infoObj.deferred = $.Deferred();
 		infoObj.defPipeline.addDeferred(infoObj.deferred);
@@ -846,32 +846,32 @@ _app.extend({
 	"filename" : "extensions/store_crm.js"
 	});
 	
-// _app.extend({
-	// "namespace" : "partner_addthis",
-	// "filename" : "extensions/partner_addthis.js"
-	// });
-// _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
-	// var $toolbox = $('.socialLinks', $context);
-	// if($toolbox.hasClass('addThisRendered')){
-		// //Already rendered, don't do it again.
-		// }
-	// else {
-		// $toolbox.addClass('addThisRendered').append(
-				// '<div class="addthis_toolbox addthis_default_style addthis_32x32_style">'
-			// +		'<a class="addthis_button_preferred_1"></a>'
-			// +		'<a class="addthis_button_preferred_2"></a>'
-			// +		'<a class="addthis_button_preferred_3"></a>'
-			// +		'<a class="addthis_button_preferred_4"></a>'
-			// +		'<a class="addthis_button_preferred_5"></a>'
-			// +		'<a class="addthis_button_preferred_6"></a>'
-			// +		'<a class="addthis_button_preferred_7"></a>'
-			// +		'<a class="addthis_button_preferred_8add"></a>'
-			// +		'<a class="addthis_button_compact"></a>'
-			// +	'</div>');
+_app.extend({
+	"namespace" : "partner_addthis",
+	"filename" : "extensions/partner_addthis.js"
+	});
+_app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $context, infoObj){
+	var $toolbox = $('.socialLinks', $context);
+	if($toolbox.hasClass('addThisRendered')){
+		//Already rendered, don't do it again.
+		}
+	else {
+		$toolbox.addClass('addThisRendered').append(
+				'<div class="addthis_toolbox addthis_default_style addthis_32x32_style">'
+			+		'<a class="addthis_button_preferred_1"></a>'
+			+		'<a class="addthis_button_preferred_2"></a>'
+			+		'<a class="addthis_button_preferred_3"></a>'
+			+		'<a class="addthis_button_preferred_4"></a>'
+			+		'<a class="addthis_button_preferred_5"></a>'
+			+		'<a class="addthis_button_preferred_6"></a>'
+			+		'<a class="addthis_button_preferred_7"></a>'
+			+		'<a class="addthis_button_preferred_8add"></a>'
+			+		'<a class="addthis_button_compact"></a>'
+			+	'</div>');
 		
-		// _app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
-		// }
-	// });
+		_app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
+		}
+	});
 	
 _app.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']);
 
