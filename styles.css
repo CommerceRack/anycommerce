@@ -350,7 +350,12 @@ hr.subtle	{margin:.1em 0;
 /***** Homepage CSS Start *****/
 /* pager */
 #slideshowContainer	{width:100%; overflow:hidden; height:265px; position:relative; max-width:2000px; margin-left:auto; margin-right:auto; text-align: center;}
-#slideshowContainer	{width:200px; overflow:hidden; height:265px; position:relative; max-width:2000px; margin-left:auto; margin-right:auto; text-align: center;}
+	.slidesmall {
+		display: none;
+	}
+	.slidelarge {
+		display: block;
+	}
 
 .slideImage {width: 100%; max-width: 2000px; height: 265px; display: block; background-position: center center;}
 .slide {width: 100%;}
@@ -510,6 +515,13 @@ doesn't respond quite as well once in a tab. will need media queries to adjust t
 #solicitFeedbackSB .primaryText	{font-size:1.6em;}
 
 @media only screen and (min-width: 840px) {
+
+	.slidesmall {
+		display: block;
+	}
+	.slidelarge {
+		display: none;
+	}
 	
 	/*Shop button attention grabber arrow*/
 	.shopButtonAttentionArrowCont{
