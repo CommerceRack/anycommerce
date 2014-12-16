@@ -7288,6 +7288,15 @@
    ".chicago-cubs-hats.mlb-hats.detroit-tigers" : {
       "page_title" : "Detroit Tigers Caps / Hats"
    },
+   ".mlb.chicago_white_sox.z_melky_cabrera" : {
+      "meta_keywords" : "Melky Cabrera Jersey, Melky Cabrera Shirt, Chicago White Sox Shirts, Melky Cabrera Jerseys, Chicago White Sox Jerseys",
+      "player_name" : "Melky Cabrera",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Melky Cabrera Jersey Or Shirt From Our Wide Selection Of Melky Cabrera Jerseys And Other Chicago White Sox Apparel.",
+      "page_title" : "Melky Cabrera Jersey, Melky Cabrera Shirt | Chicago White Sox Melky Cabrera Jerseys & Shirts",
+      "head_title" : "Melky Cabrera Jersey, Melky Cabrera Shirt | Chicago White Sox Melky Cabrera Jerseys & Shirts",
+      "team_name" : "Chicago White Sox"
+   },
    ".ncaa.university_of_illinois" : {
       "meta_keywords" : "University of Illinois Shirts, University of Illinois Sweatshirts",
       "meta_description" : "Buy your University of Illinois Shirt and Sweatshirt at SportsWorldChicago.com",
@@ -18517,6 +18526,15 @@
    ".mlb.milwaukee_brewers.hats" : {
       "page_title" : "Milwaukee Brewers Caps / Hats"
    },
+   ".mlb.chicago_cubs.jason_motte" : {
+      "meta_keywords" : "Jason Motte Jersey, Jason Motte Shirt, Chicago Cubs Shirts, Jason Motte Jerseys, Chicago Cubs Jerseys",
+      "player_name" : "Jason Motte",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Jason Motte Jersey Or Shirt From Our Wide Selection Of Jason Motte Jerseys And Other Chicago Cubs Apparel.",
+      "page_title" : "Jason Motte Jersey, Jason Motte Shirt | Chicago Cubs Jason Motte Jerseys & Shirts",
+      "head_title" : "Jason Motte Jersey, Jason Motte Shirt | Chicago Cubs Jason Motte Jerseys & Shirts",
+      "team_name" : "Chicago Cubs"
+   },
    ".mlb.new_york_yankees.z_david_huff" : {
       "meta_keywords" : "David Huff Jersey, David Huff Shirt, New York Yankees Shirts, David Huff Jerseys, New York Yankees Jerseys",
       "player_name" : "David Huff",
@@ -20933,10 +20951,6 @@
       "page_title" : "Pat Neshek Jersey, Pat Neshek Shirt | St. Louis Cardinals Pat Neshek Jerseys & Shirts",
       "%head_title" : "Pat Neshek Jersey, Pat Neshek Shirt | St. Louis Cardinals Pat Neshek Jerseys & Shirts"
    },
-   ".chicago-sports-team-apparel.chicago-white-sox-apparel" : {
-      "meta_keywords" : "Chicago White Sox",
-      "page_title" : "Chicago Teams â  White Sox Caps, Hat and T-Shirts"
-   },
    ".mlb.miami_marlins.z_michael_dunn" : {
       "meta_keywords" : "Michael Dunn Jersey, Michael Dunn Shirt, Miami Marlins Shirts, Michael Dunn Jerseys, Miami Marlins Jerseys",
       "player_name" : "Michael Dunn",
@@ -20951,6 +20965,10 @@
       "head_title" : "Michael Dunn Jersey, Michael Dunn Shirt | Miami Marlins Michael Dunn Jerseys & Shirts",
       "page_title" : "Michael Dunn Jersey, Michael Dunn Shirt | Miami Marlins Michael Dunn Jerseys & Shirts",
       "%head_title" : "Michael Dunn Jersey, Michael Dunn Shirt | Miami Marlins Michael Dunn Jerseys & Shirts"
+   },
+   ".chicago-sports-team-apparel.chicago-white-sox-apparel" : {
+      "meta_keywords" : "Chicago White Sox",
+      "page_title" : "Chicago Teams â  White Sox Caps, Hat and T-Shirts"
    },
    ".mlb.san_francisco_giants.z_angel_pagan" : {
       "meta_keywords" : "Angel Pagan Jersey, Angel Pagan Shirt, San Francisco Giants Shirts, Angel Pagan Jerseys, San Francisco Giants Jerseys",
@@ -22297,6 +22315,15 @@
       "head_title" : "Carlos Ruiz Jersey, Carlos Ruiz Shirt | Philadelphia Phillies Carlos Ruiz Jerseys & Shirts",
       "page_title" : "Carlos Ruiz Jersey, Carlos Ruiz Shirt | Philadelphia Phillies Carlos Ruiz Jerseys & Shirts",
       "%head_title" : "Carlos Ruiz Jersey, Carlos Ruiz Shirt | Philadelphia Phillies Carlos Ruiz Jerseys & Shirts"
+   },
+   ".mlb.chicago_white_sox.z_jeff_samardzija" : {
+      "meta_keywords" : "Jeff Samardzija Jersey, Jeff Samardzija Shirt, Chicago White Sox Shirts, Jeff Samardzija Jerseys, Chicago White Sox Jerseys",
+      "player_name" : "Jeff Samardzija",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect Jeff Samardzija Jersey Or Shirt From Our Wide Selection Of Jeff Samardzija Jerseys And Other Chicago White Sox Apparel.",
+      "page_title" : "Jeff Samardzija Jersey, Jeff Samardzija Shirt | Chicago White Sox Jeff Samardzija Jerseys & Shirts",
+      "head_title" : "Jeff Samardzija Jersey, Jeff Samardzija Shirt | Chicago White Sox Jeff Samardzija Jerseys & Shirts",
+      "team_name" : "Chicago White Sox"
    },
    ".mlb.atlanta_braves.z_anthony_varvaro" : {
       "meta_keywords" : "Anthony Varvaro Jersey, Anthony Varvaro Shirt, Atlanta Braves Shirts, Anthony Varvaro Jerseys, Atlanta Braves Jerseys",
