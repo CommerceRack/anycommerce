@@ -1028,7 +1028,7 @@ if(selector && mode)	{
 			dump("Got to csvUploadToBatch success.");
 	//		dump(" -> data:"); dump(data);]
 	//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
-			_app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('form[name=csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
+			_app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('form[name=csvUploadToBatchForm]').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
 			_app.model.dispatchThis('immutable');
 			}
 		}
