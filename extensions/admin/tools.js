@@ -498,12 +498,12 @@ var admin_tools = function(_app) {
 					var	$form = $btn.closest('form');
 					
 					if(_app.ext.admin.u.validatePicker($form))	{
-						if($('form[name=powerToolActionListTbody] tr').not('.rowTaggedForRemove').length)	{
+						if($('tbody[name=powerToolActionListTbody] tr').not('.rowTaggedForRemove').length)	{
 							obj = {
 								'%vars' : {
 									'GUID' : _app.u.guidGenerator(),
 									'product_selectors' : _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
-									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('form[name=powerToolActionListTbody]'))
+									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('tbody[name=powerToolActionListTbody]'))
 									},
 								'type' : 'UTILITY/PRODUCT_POWERTOOL'
 								}
