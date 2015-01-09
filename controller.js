@@ -3310,7 +3310,9 @@ $tmp.empty().remove();
 		epoch2mdy : function($tag,data)	{
 			$tag.text(_app.u.epoch2Pretty(data.value,data.bindData.showtime))
 			},
-	
+		data : function($tag, data){
+			$tag.data(data.bindData.index, data.value);
+			},
 		text : function($tag,data){
 			var o = '';
 			if(jQuery.isEmptyObject(data.bindData))	{o = data.value}
@@ -3354,7 +3356,7 @@ $tmp.empty().remove();
 				}
 			else	{
 //for all other inputs and selects, simply setting the value will suffice.
-				if($tag.data('stringify'))	{
+				if($tag.data('stringify') || data.bindData.stringify)	{
 					$tag.val(JSON.stringify(data.value));
 					}
 				else	{
