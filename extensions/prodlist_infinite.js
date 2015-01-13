@@ -35,7 +35,7 @@ Currently, this is specific to product Lists and will not work on a prodsearch a
 */
 
 
-var prodlist_infinite = function() {
+var prodlist_infinite = function(_app) {
 	var r = {
 	vars : {
 		forgetmeContainer : {} //used to store an object of pids (key) for items that don't show in the prodlist. value can be app specific. TS makes sense.
@@ -56,18 +56,54 @@ var prodlist_infinite = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
+//				_app.u.dump('BEGIN _app.ext.prodlist_infinite.init.onSuccess ');
 				return true;  //currently, there are no config or extension dependencies, so just return true. may change later.
-//unbind this from window anytime a category page is left.
-//NOTE! if infinite prodlist is used on other pages, remove run this on that template as well.
-				app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-					$(window).off('scroll.infiniteScroll'); 
-					}]);
-				
-//				app.u.dump('END app.ext.store_prodlist.init.onSuccess');
+		
+//				_app.u.dump('END _app.ext.store_prodlist.init.onSuccess');
 				},
 			onError : function()	{
-				app.u.dump('BEGIN app.ext.store_prodlist.callbacks.init.onError');
+				_app.u.dump('BEGIN _app.ext.store_prodlist.callbacks.init.onError');
+				}
+			},
+		handleInfiniteElasticResults : {
+			onSuccess : function(_rtag){
+				dump(" >>>> BEGIN handleInfiniteElasticResults <<<<<<<<<<<<<");
+				var L = _app.data[_rtag.datapointer]['_count'];
+				var $list = _rtag.list;
+				var EQ = $list.data('elastic-query');
+				if($list && $list.length)	{
+					var totalPages = Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size);
+					// dump(totalPages);
+					$list.data('total-page-count', totalPages);
+					// dump($list.attr('data-total-page-count'));
+					// dump(_app.data[_rtag.datapointer].hits.total);
+					// dump(EQ.size);
+					// dump(Math.ceil( _app.data[_rtag.datapointer].hits.total / EQ.size));
+					if(_rtag.emptyList){
+						$list.intervaledEmpty();
+						}
+					$list.removeClass('loadingBG');
+					if(L == 0)	{
+						//$list.append("Your query returned zero results.");
+						_app.ext.store_swc.vars.filterLoadingComplete = true;
+						}
+					else	{
+						$list.append(_app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
+						_app.ext.prodlist_infinite.u.handleElasticScroll(_rtag, $list);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In prodlist_infinite.callbacks.handleInfiniteElasticResults, $list ['+typeof _rtag.list+'] was not defined, not a jquery object ['+(_rtag.list instanceof jQuery)+'] or does not exist ['+_rtag.list.length+'].',gMessage:true});
+					_app.u.dump("handleInfiniteElasticResults _rtag.list: "); _app.u.dump(_rtag.list);
+					}
+
+//this gets run whether there are results or not. It is the events responsibility to make sure results were returned. 
+// That way, it can handle a no-results action.
+				$list.trigger('listcomplete');
+				if(_rtag.deferred){_rtag.deferred.resolve();}
+				},
+			onError : function(){
+				
 				}
 			}
 
@@ -82,7 +118,22 @@ var prodlist_infinite = function() {
 						////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-
+	tlcFormats : {
+		infiniteproductlist : function(data, thisTLC){
+			var bindData = thisTLC.args2obj(data.command.args, data.globals);
+			bindData.csv = data.globals.binds[data.globals.focusBind];
+			if(bindData.csv && bindData.csv.length){
+				console.log(bindData.csv);
+				var $tag = data.globals.tags[data.globals.focusTag];
+				$tag.data('bindData',bindData);
+				_app.ext.prodlist_infinite.u.buildInfiniteProductList($tag);
+				return true;
+				}
+			else{
+				return false;
+				}
+			}
+		},
 
 
 	renderFormats : {
@@ -91,13 +142,14 @@ var prodlist_infinite = function() {
 //that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
 
-			infiniteProductList : function($tag,data)	{
-//				app.u.dump("BEGIN prodlist_infinite.renderFormats.infiniteProductList");
-//				app.u.dump(" -> data.bindData: "); app.u.dump(data.bindData);
-				if(app.u.isSet(data.value))	{
+			infiniteproductlist : function($tag,data)	{
+//				_app.u.dump("BEGIN prodlist_infinite.renderFormats.infiniteProductList"); dump(data);
+//				_app.u.dump(" -> data.bindData: "); _app.u.dump(data.bindData);
+				data.bindData.loadsTemplate = data.bindData.templateid;
+				if(_app.u.isSet(data.value))	{
 					data.bindData.csv = data.value;
 					$tag.data('bindData',data.bindData);
-					app.ext.prodlist_infinite.u.buildInfiniteProductList($tag);
+					_app.ext.prodlist_infinite.u.buildInfiniteProductList($tag);
 					}
 				}//prodlist		
 
@@ -123,9 +175,8 @@ This is the function that gets executed to build a product list.
 It is run once, executed by the renderFormat.
 */
 			buildInfiniteProductList : function($tag)	{
-//				app.u.dump("BEGIN store_prodlist.u.buildInfiniteProductList()");
-//				app.u.dump(" -> obj: "); app.u.dump(obj);
-
+//				_app.u.dump("BEGIN store_prodlist.u.buildInfiniteProductList()");
+//				_app.u.dump(" -> obj: "); _app.u.dump(obj);
 				var bindData = $tag.data('bindData');
 //tag is likely an li or a table.  add a loading graphic after it.
 				$tag.parent().append($("<div \/>").addClass('loadingBG').attr('data-app-role','infiniteProdlistLoadIndicator'));
@@ -134,86 +185,90 @@ It is run once, executed by the renderFormat.
 //Need either the tag itself ($tag) or the parent id to build a list. recommend $tag to ensure unique parent id is created
 //also need a list of product (csv)
 				if($tag && bindData.csv)	{
-//					app.u.dump(" -> required parameters exist. Proceed...");
-					bindData.csv = app.ext.store_prodlist.u.cleanUpProductList(bindData.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
+//					_app.u.dump(" -> required parameters exist. Proceed...");
+					
+					bindData.csv = _app.ext.store_prodlist.u.cleanUpProductList(bindData.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
+//					_app.u.dump(" -> bindData.csv after cleanup: "); _app.u.dump(bindData.csv);
 					this.addProductToPage($tag);
 					}
 				else	{
-					app.u.throwGMessage("WARNING: store_prodlist.u.buildInfiniteProductList is missing some required fields. bindData follows: ");
-					app.u.dump(bindData);
+					_app.u.throwGMessage("WARNING: store_prodlist.u.buildInfiniteProductList is missing some required fields. bindData follows: ");
+					_app.u.dump(bindData);
 					}
-//				app.u.dump(" -> r = "+r);
+//				_app.u.dump(" -> r = "+r);
 				}, //buildInfiniteProductList
 
 			addProductToPage : function($tag)	{
-				app.u.dump("BEGIN prodlist_infinite.u.addProductToPage");
+				_app.u.dump("BEGIN prodlist_infinite.u.addProductToPage");
 				$tag.data('isDispatching',true);
 				
-				var plObj = app.ext.store_prodlist.u.setProdlistVars($tag.data('bindData')),
+				var plObj = _app.ext.store_prodlist.u.setProdlistVars($tag.data('bindData')),
 				numRequests = 0,
-				pageCSV = app.ext.store_prodlist.u.getSkusForThisPage(plObj), //gets a truncated list based on items per page.
+				pageCSV = _app.ext.store_prodlist.u.getSkusForThisPage(plObj), //gets a truncated list based on items per page.
 				L = pageCSV.length;
 				$tag.data('prodlist',plObj); //sets data object on parent
+				var $template = new tlc().getTemplateInstance(plObj.loadsTemplate);
 
+				function handleProd(pid,$templateCopy)	{
+					$templateCopy.attr('data-pid',pid);
+					return _app.calls.appProductGet.init({"pid":pid,"withVariations":plObj.withVariations,"withInventory":plObj.withInventory},{'callback':'translateTemplate','extension':'store_prodlist',jqObj:$templateCopy,'verb':'translate'},'mutable');
+					}
 //Go get ALL the data and render it at the end. Less optimal from a 'we have it in memory already' point of view, but solves a plethora of other problems.
 				for(var i = 0; i < L; i += 1)	{
-					numRequests += app.calls.appProductGet.init({
-						"pid":pageCSV[i],
-						"withVariations":plObj.withVariations,
-						"withInventory":plObj.withInventory
-						},{},'mutable');
+					numRequests += handleProd(pageCSV[i],$template.clone(true).appendTo($tag))
 					if(plObj.withReviews)	{
-						numRequests += app.ext.store_prodlist.calls.appReviewsList.init(pageCSV[i],{},'mutable');
+						numRequests += _app.ext.store_prodlist.calls.appReviewsList.init(pageCSV[i],{},'mutable');
 						}
 					}
-				
+
 				var infiniteCallback = function(rd)	{
+					$('.loadingBG',$tag).removeClass('loadingBG');
 					$tag.data('isDispatching',false); //toggle T/F as a dispatch occurs so that only 1 infinite scroll dispatch occurs at a time.
-					if(app.model.responseHasErrors(rd)){
+					if(_app.model.responseHasErrors(rd)){
 						$tag.parent().anymessage({'message':rd});
 						}
 					else	{
-						for(var i = 0; i < L; i += 1)	{
-							var $placeholder = $('<span />');
-							$tag.append($placeholder);
-							app.ext.prodlist_infinite.u.insertProduct(pageCSV[i], plObj, $placeholder);
-							}
-						app.ext.prodlist_infinite.u.handleScroll($tag);
-						}				
+						_app.ext.prodlist_infinite.u.handleScroll($tag);
+						}
+					if(rd.deferred){rd.deferred.resolve();}
 					}
-
+				var _tag = {
+					'callback' : infiniteCallback
+					}
+				if(plObj.deferred){
+					_tag.deferred = plObj.deferred;
+					}
 				if(numRequests == 0)	{
-					infiniteCallback({})
+					infiniteCallback(_tag)
 					}
 				else	{
-					app.calls.ping.init({'callback':infiniteCallback},'mutable');
-					app.model.dispatchThis();
+					_app.calls.ping.init(_tag,'mutable');
+					_app.model.dispatchThis();
 					}
 
 				},
+// *** 201330  The new insertProduct function re-attempts the append a reasonable number of times
+// before failing with a warning to the console.
 			insertProduct : function(pid, plObj, $placeholder, attempts){
-				var data = app.data['appProductGet|'+pid];
+				var data = _app.data['appProductGet|'+pid];
 				attempts = attempts || 0;
 				if(data){
-					if(typeof app.data['appReviewsList|'+pid] == 'object'  && app.data['appReviewsList|'+pid]['@reviews'].length)	{
-						data['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
-						data['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
+					if(typeof _app.data['appReviewsList|'+pid] == 'object'  && _app.data['appReviewsList|'+pid]['@reviews'].length)	{
+						data['reviews'] = _app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
+						data['reviews']['@reviews'] = _app.data['appReviewsList|'+pid]['@reviews']
 						}
-														//if you want this list inventory aware, do you check here and skip the append below.
-// !!!!!!!!! SPORTSWORLDCHICAGO- DON'T RENDER PRODUCTS THAT ARE NOT PURCHASEABLE.
-// note, this is a terrible solution.  DO NOT DO THIS ON OTHER SITES.  it does not account for summaries, pagination, etc...
-					if(app.ext.store_product.u.productIsPurchaseable(pid)){
-						$placeholder.before(app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
-						}
+//if you want this list inventory aware, do you check here and skip the append below.
+//					$placeholder.before(_app.renderFunctions.transmogrify({'pid':pid},plObj.loadsTemplate,data));
+					$placeholder.before(new tlc().getTemplateInstance(plObj.loadsTemplate).attr('data-pid',pid))
 					$placeholder.remove();
 					}
 				else if(attempts < 50){
 					setTimeout(function(){
-						app.ext.prodlist_infinite.u.insertProduct(pid, plObj, $placeholder, attempts+1);
+						_app.ext.prodlist_infinite.u.insertProduct(pid, plObj, $placeholder, attempts+1);
 						}, 250);
 					}
 				else {
-					app.u.dump("-> prodlist_infinite FAILED TO INSERT PRODUCT: "+pid)
+					_app.u.dump("-> prodlist_infinite FAILED TO INSERT PRODUCT: "+pid)
 					$placeholder.remove();
 					}
 				},
@@ -233,12 +288,61 @@ else	{
 			else	{
 				plObj.prodlist.page_in_focus += 1;
 				$tag.data('prodlist',plObj.prodlist);
-				app.ext.prodlist_infinite.u.addProductToPage($tag);
+				_app.ext.prodlist_infinite.u.addProductToPage($tag);
 				}
 			}
 		});
 	}
 
+				},
+			handleElasticScroll : function(_rtag, $tag){
+				dump('handleElasticScroll');
+				//dump(_rtag);
+				var EQ = $tag.data('elastic-query');
+				var currPage = $tag.data('page-in-focus');
+				// dump('CURRPAGE: '+currPage);
+				var totalPages = $tag.data('total-page-count');
+				// dump('TOTAL: '+totalPages);
+				// dump(currPage >= totalPages);
+				var onScroll = function(override){
+					//will load data when two rows from bottom.
+					// dump('onScroll');
+					// dump(override);
+					// dump($(window).scrollTop());
+					// dump($(document).height());
+					// dump($(window).height());
+					// dump($tag.children().first().height());
+					// dump(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) );
+					if(override || $(window).scrollTop() >= ( $(document).height() - $(window).height() - ($tag.children().first().height() * 2) ) )	{
+						$(window).off('scroll.infiniteScroll');
+						if($tag.data('isDispatching') == true)	{}
+						else	{
+							var _tag = _app.u.getWhitelistedObject(_rtag, ['datapointer','callback','extension','list','templateID','loadFullList']);
+							_app.ext.store_search.u.changePage($tag, currPage+1, _tag);
+							}
+						}
+					}
+				
+				// if(_app.data[_rtag.datapointer].hits.total <= EQ.size)	{
+					// $tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					// _app.ext.store_swc.vars.filterLoadingComplete = true;
+					// } //do nothing. fewer than 1 page worth of items.
+				// else 
+				if(currPage >= totalPages)	{
+				//reached the last 'page'. disable infinitescroll.
+					dump("Reached last page, stopping scroll");
+					$(window).off('scroll.infiniteScroll');
+					$tag.parent().find("[data-app-role='infiniteProdlistLoadIndicator']").hide();
+					_app.ext.store_swc.vars.filterLoadingComplete = true;
+					}
+				else	{
+					if(_rtag.loadFullList){
+						onScroll(true);
+						}
+					else {
+						$(window).off('scroll.infiniteScroll').on('scroll.infiniteScroll', function(){onScroll(false);});
+						}
+					}
 				}
 
 			} //util

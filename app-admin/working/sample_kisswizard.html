@@ -1,0 +1,102 @@
+<!--
+
+The Pirate Code:
+
+Each fieldset represents one step in the wizard.
+Fieldsets can include more than one input, but these inputs should be related to one another on a macro level. (grouping shipping icons and shipping policy is ok, but don't group all policies together)
+If a fieldset includes more than one input, include a legend.
+
+styling:
+ buttons will have jqueryui button() applied to them.
+ apply class labelsAsBreaks to the fieldset to have labels treated as block elements.
+-->
+
+
+<!-- If this fieldset is dealing with a specific element within the template, specify the ID and the element will be opened in the object inspector when the fieldset is displayed. -->
+<fieldset data-wizard-element-id="LOGO" id='thisFieldset'>
+	<label>Company Logo</label>
+	<button onClick="magic.inspect('#LOGO'); magic.medialib('#LOGO')" data-target='#LOGO'>Select Image</button>
+</fieldset>
+
+
+<fieldset class='labelsAsBreaks' id='thisFieldset2' data-onfocus="(function(){
+	$('#KISS_SHIPPING_POLICY_TEXTAREA').val(magic.inspect('#KISS_SHIPPING_POLICY').html());
+	if(magic.inspect('#KISS_SHIPPING_FEDEXLOGO').data('enabled'))	{ $('#KISS_SHIPPING_FEDEXLOGO_CB').prop('checked',true); }
+	if(magic.inspect('#KISS_SHIPPING_UPSLOGO').data('enabled'))	{$('#KISS_SHIPPING_UPSLOGO_CB').prop('checked',true)}
+	if(magic.inspect('#KISS_SHIPPING_USPSLOGO').data('enabled'))	{$('#KISS_SHIPPING_USPSLOGO_CB').prop('checked',true)}
+})()">
+
+	<legend>Shipping</legend>
+
+
+	<div><textarea id='KISS_SHIPPING_POLICY_TEXTAREA' data-target="#KISS_SHIPPING_POLICY" onKeyUp="magic.inspect('#KISS_SHIPPING_POLICY'); magic.modify('KISS_SHIPPING_POLICY','set-value',{'$input':$(this)});
+	" placeholder='Policy'></textarea></div>
+
+
+	<label><input type='checkbox' name='fedex' data-target="#KISS_SHIPPING_FEDEXLOGO2" id='KISS_SHIPPING_FEDEXLOGO_CB' onChange="magic.inspect('#KISS_SHIPPING_FEDEXLOGO'); if($(this).is(':checked')){
+		magic.modify('#KISS_SHIPPING_FEDEXLOGO','show');
+		magic.modify('#KISS_SHIPPING_FEDEXLOGO','set-attribs',{
+			'type':'img',
+			'attribs':{
+				'data-enabled':true,
+				'height':'75',
+				'width':'75',
+				'src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'
+				}
+			});
+		}
+	else {
+		magic.modify('#KISS_SHIPPING_FEDEXLOGO','hide');
+		magic.modify('#KISS_SHIPPING_FEDEXLOGO','set-attribs',{'type':'img','attribs':{'data-enabled':true}});
+		}" />Fedex Logo</label>
+<!--
+	<label><input type='checkbox' name='ups' id='KISS_SHIPPING_UPSLOGO_CB' onChange="magic.inspect('KISS_SHIPPING_UPSLOGO'); if($(this).is(':checked')){
+		magic.modify('show',{'id':'KISS_SHIPPING_UPSLOGO'});
+		magic.modify('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'data-enabled':true,'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		}
+	else {
+		magic.modify('hide',{'id':'KISS_SHIPPING_UPSLOGO'});
+		magic.modify('set-attribs',{'id':'KISS_SHIPPING_UPSLOGO','type':'img','attribs':{'data-enabled':true}});
+		}" />UPS Logo</label>
+
+	<label><input type='checkbox' name='usps' id='KISS_SHIPPING_USPSLOGO_CB' onChange="magic.inspect('KISS_SHIPPING_USPSLOGO'); if($(this).is(':checked')){
+		magic.modify('show',{'id':'KISS_SHIPPING_USPSLOGO'});
+		magic.modify('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'data-enabled':true,'height':'75','width':'75','src':'http://www.logoinn.org/wp-content/uploads/2008/12/fedex_logo.jpg'}});
+		}
+	else {
+		magic.modify('hide',{'id':'KISS_SHIPPING_USPSLOGO'});
+		magic.modify('set-attribs',{'id':'KISS_SHIPPING_USPSLOGO','type':'img','attribs':{'data-enabled':true}});
+		}" />USPS Logo</label>
+	-->
+</fieldset>
+
+
+
+
+<fieldset class='labelsAsBreaks' data-onfocus="$('#KISS_RETURN_POLICY_TEXTAREA').val(magic.inspect('#KISS_RETURN_POLICY').html());">
+	<legend>Returns</legend>
+	<div><textarea onKeyUp="magic.modify('#KISS_RETURN_POLICY','set-value',{'$input':$(this)});" id="KISS_RETURN_POLICY_TEXTAREA" placeholder='Policy'></textarea></div>
+</fieldset>
+
+
+<!--
+something that isn't onfocus tho.
+http://www.htmlgoodies.com/beyond/javascript/creating-custom-events-with-jquery.html
+maybe data-onfocus
+alternatively, if that can't be executed w/ jquery, explore using a hidden input within the fieldset with an onfocus. 
+-->
+<fieldset class='labelsAsBreaks' >
+	<legend>Payment</legend>
+
+	<div><textarea id='KISS_PAYMENT_POLICY_TEXTAREA' onKeyUp="magic.inspect('#KISS_PAYMENT_POLICY'); magic.modify('#KISS_PAYMENT_POLICY','set-value',{'$input':$(this)});" placeholder='Policy'></textarea></div>
+
+
+	<label><input type='checkbox' name='mastercard' id='KISS_PAYMENT_MCLOGO_CB' onChange="if($(this).is(':checked')){
+		magic.modify('KISS_PAYMENT_ICONS','append',{'html':'<img src=http://africanbrains.net/wp-content/uploads/2013/06/mastercard_logo.jpg id=PAYMENT_MASTERCARD_LOGO width=75 height=75>'});
+		}
+	else {
+		magic.inspect('PAYMENT_MASTERCARD_LOGO').empty().remove();
+		}" />mastercard Logo</label>
+
+	
+</fieldset>

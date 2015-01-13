@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+
+<link rel="stylesheet" type="text/css" href="styles.css"/>
+<link rel="stylesheet" type="text/css" href="../resources/anyplugins.css"/>
+<link rel="stylesheet" type="text/css" href="jquery-ui-1.10.3.anycommerce.min.css"/>
+<style type='text/css'>
+
+#icons	{list-style:none;}
+#icons li	{display:block; margin-bottom:3px; clear:both; height:26px; line-height:26px;}
+#icons li .app-icon	{float:left; margin-right:3px;}
+</style>
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../resources/jquery.ui.anyplugins.js"></script>
+
+
+<script type='text/javascript'>
+var messageTypes = {
+	success	: "yay!",
+	info : "Common response format.",
+	warning  : "something odd happened, but the request was otherwise successful",
+	challenge: "you will need to complete the task in order to continue.",
+	youerr : "user (probably correctable) error, ex: invalid phone number",
+	youwarn: "user (possibly ignorable) error, ex: no firstname in email",
+	fileerr : "an error occurred with an external file",
+	missing : "successful request, but no data ex: an expired cart or req a pid that doesn't exist.",
+	//note -> there is also a 'missing' type.
+	apperr : "developer error (probably not correctable by user), ex: data formatting -- this is something the app developer can fix.",
+	apierr : "server error (probably not correctable by app), ex: facebook plugin did not work, site offline for maintenance, but usually an uncorrectable 3rd party error.",
+	iseerr : "reserved for application to handle 'server down', 'unreachable' or otherwise 'invalid response format' errors",
+	cfgerr : "configuration error (something in the server configuration prohibits the request)"
+	}
+
+var icons = new Array("error","fail","fail-soft","fail-fatal","abort","fatal","crashed","ise","youerr","apperr","apierr","iseerr",'warning','warn','status','info','detail','help','hint','tip','todo','task','alert','deprecated','future','good','bad','flow','end','done','stop','halt','wait','pause','skip','win','success','debug');
+
+
+function addMessages()	{
+	var $messaging = $('#messaging');
+	for(index in messageTypes)	{
+		$("<div \/>",{'id':index}).appendTo($messaging).anymessage({'errid':'#1234','errmsg':messageTypes[index],'message':messageTypes[index] + " ("+index+")",'errtype':index,'uiIcon':index,'uiClass':index,'iconClass':'app-icon-'+index,'containerClass':'ui-state-'+index,'persistent':true});
+		}
+	}
+
+
+function addIcons()	{
+	icons.sort();
+	var $icons = $('#icons');
+	for(var i = 0, L = icons.length; i < L; i += 1)	{
+		$("<li \/>").append($("<span>").addClass('app-icon app-icon-'+icons[i])).append($("<span>").text(icons[i])).appendTo($icons);
+		}
+	}
+
+
+</script>
+
+</head>
+
+<body onLoad='addMessages(); addIcons();' style='margin:15px;'>
+
+<table>
+<tr>
+	<td width='50%' valign='top'>
+	<div id='messaging'></div>
+	</td>
+
+	<td width='50%' valign='top'>
+	<ul id='icons'></ul>
+	</td>
+
+</tr>
+</table>
+
+</body>
+</html>

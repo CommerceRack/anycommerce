@@ -1,10 +1,410 @@
 #
 # This file will be updated with each release
-# It will contain a list of the changes that apply to quickstart.html to facilitate an easier upgrade process on custom apps.
-# Items indicated with an asterisk indiciate a feature or enhancement that may not directly impact quickstart.html, but deserves attention.
+# It will contain a list of changes made to the admin and quickstart apps.
 #
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
+
+201408.d - fixed several issues in store_tracking.js which would have broken conversion tracking
+
+201405
+
+1PC
+	bug fix - social media links after checkout now working again.
+
+QUICKSTART
+	enhancement - history of the world is now persistent between sessions.
+
+201405.b: fixes validation bug in admin-ui / product editor / attributes
+201405.c: fixes CUSTOMER emails not appearing
+201405.d: fixed issue with ebay listing duration
+201405.e: fixed global plugins not saving properly
+
+201404
+
+ADMIN
+	enhancement - new FAQ manager
+	enhancement - added variations filter (inline search) for options
+	enhancement - some cleanup in the supplier interface
+	bug fix - adding a domain will refresh list of domains.
+	public files
+		bug fix - delete now working.
+		bug fix - file list will refresh after upload.
+	Integrations
+		enhancement - added GA Universal (not supported in checkout yet)
+		enhancemnet - ability to add a custom integration
+	enhancement - product editor 'sku finder' for product with a large # of skus*
+	enhancement - batch job status dialog will now show view/download button when finished (for report or file job types)
+	flexedit manager
+		enhancement - options for select based inputs will now validate JSON.
+		enhancement - attribute id and index will now disallow most special characters and convert to lowercase.
+	enhancement - sales tax rules can now be enabled/disabled.
+	bug fix - schedule prices saving again.
+	enhancement - price input for variation options (inventory-able or not) will show. Used for display purposes only.
+
+
+
+QUICKSTART
+	bug fix - paypal button (on empty cart) now errors appropriately
+	enhancement - some tlc on checkout/paypal buttons to hide if cart is empty
+	enhancement - DOM title updated w/ page change.
+	bug fix - breadcrumb li's were getting an id assigned and no data-catsafeid
+
+TLC
+	bug fix - negative amounts now working with currency format.
+
+
+* There was an issue where a PID with a large # of skus could crash the browser. The sku-finder will now show up if a product has more than 100 skus. This impacts the following tabs: attributes, variations, buy.com and competition.
+
+
+
+201403
+
+GLOBAL
+	'elastic-native' changed to 'elastic-search' for appPublicSearch
+	Elastic is now inventory aware (optionally).
+	Elastic can now search by category.
+	checkout is now asynchronous (see video for details)
+
+ADMIN
+	Product editor debug
+		enhancement - now includes 'inventory transactions'.
+		bug fix - now shows column headers.
+	enhancement - added a link to the debugger taxes, shipping and promotions.
+	UX - product editor search input now bigger.
+	enhancement - new one page checkout.
+	enhancement - order detailed search will include purchase order, last 4 of CC and/or tender type.
+
+
+
+QUICKSTART
+	Enhancements to appNav
+	-> The container is hidden/visible as well as the buttons to allow for css adjustments.
+	-> if referring page only had 1 product, appnav will remain hidden.
+	Enhancement - keyword and tag search can now only return results w/ positive inventory.
+	Enhancement - infoObj now passed into pageTransition. Allows more customization and control.
+	Bug fix - edit address in checkout was broken (as of 201402)
+	Enhancement - some better responsiveness for checkout on small screens.
+
+
+
+201402
+
+GLOBAL
+	introduction of a new templating language, data-tlc. Data-bind will be supported for another few versions.
+	introduction of unit-test for TLC (still in development).
+
+ADMIN
+	plugins section in setup renamed 'integrations'.
+	new integration for shipping: ShipWorks and ShipStation (in integrations).
+	new email manager interface in setup (store properties panel). Lots of new features here.
+	new email send interface (linked from orders and customer editor).
+	enhancements to cart messaging (more admin events get logged).
+	A plethora of bug fixes.
+	Login page 'recover password' is restored and working.
+	Change password on setup page now works.
+	orders - custom invoice and packslip now supported for web printing!
+		- customize your invoice and packing slip through utilities -> email messaging (in order menu)
+		- new popup-less print method (we tested FF, Chrome and IE, plus iOS7. still printing issues in droid/chrome)
+		- print option added as contextual menu in order list
+	new button in the coupon and shipping interface for downloading the rules (creates a batch process).
+	downloads link moved to the vstore section of setup.
+	help docs added to support page and removed from header.
+	COD and CHKOD handling charge removed from UI (wasn't a supported feature).
+	changes to passwords for customers
+		- customer passwords are now more secure, they do NOT show up in the admin interface.
+		- temporary passwords can be created so admins can log in as customers.
+		- some changes to the customer editor to accomodate these password-related updates.
+
+QUICKSTART
+	update to the new TLC template language.
+	search ul's no longer require an ID.
+	prodsearch render format now supports listcomplete, run after the list is done (whether it has product or not).
+	prodlist render format 'complete' event changed to 'listcomplete'.
+	cart template now has a 'refresh' button.
+	Integrated new router. big changes on how to link to pages (no more showContent).
+	enhancements to cart messaging (more buyer events get logged).
+	searchlink render format in quickstart removed. see mfg in producttemplate for working example of tlc.
+
+
+201401
+
+GLOBAL
+	The default storage for data was changed from 'local' to 'session'. This means a browser close/open will clear most data from storage.
+	store_cart and store_checkout extensions removed (haven't been used in store for some time). admin now references cco (cart_checkout_order extension)
+	reduce # of domains used for remotely loaded files (more friendly w/ some ff security plugins)
+	clean up of non-used plugins/libraries.
+	The init process changed substantially, as well as what var the app is saved to (store is myApp and admin is adminApp)
+	lots of 'calls' removed from the controller. use addDispatchToQ
+
+ADMIN
+	enhancement - several pages moved to a delegated events model, improving performance/memory consumption. including (but not limited to):
+		- reports
+		- review manager
+		- tax config
+		- batch manager
+		- rss
+		- flexedit manager
+	bug - store variations > search by variation ID fixed.
+	change - UPS option for 'perform rule processing' has been removed. If rules are present, they'll be applied.
+	bug - rss feeds can now be deleted.
+	bug - user roles now saving.
+	bug - coupon expirations now saving correctly on create.
+	bug - reports > inventory > quick reports > recent changes link now works.
+	enhancement - batch job status dialog will now auto-refresh and is no longer a modal (can be shrunk and left on screen).
+	enhancement - ability to save powertool jobs for easy re-execution later.
+	bug - suppliers can be edited again.
+	deprecate - setup > projects
+	enhancements - domain config is now domain and app config. includes projects (these are all related right now).
+	enhancement - updated order create interface.
+		- uses most recent 1PC extension
+		- better support for existing customers, including re-order.
+		- an order can be started, abandoned, and returned to later (from same computer)
+	bug - usps was saving, but UI not updating properly for international ship methods.
+	enhancement - utilities > support utilities > logs now supports 'filtering'.
+	enhancement - utitilies and setup pages are now responsive.
+	enhancement - new ui 'theme'.
+	new - product editor now has 'competition' tab.
+	enhancement - utilities > reviews manager.  Export now available.
+	enhancement - general UI cleanup, including 'hiding' inputs where an enable is required (ex: shipping > insurance > flat, weight or price)
+	enhancement - new html editor for templates (campaign, ebay and site). site editor got UI update.
+	new - cart manager (interact w/ client carts)
+	new - interface for order create received overhaul. supports multiple carts (order in progress).
+	new - all new help doc. click 'help' in header.
+	new - file attachment for ticket is new. This method will replace what is used elsewhere (csv, media lib, etc).
+	enhancement - flexedit manager
+		now has a 'filter' at the top to make it easier to find attributes.
+		boolean and keyword list now supported in the editor.
+
+Checkout/1PC
+	payment methods now hidden/not required if balance is zero.
+
+CONTROLLER
+	unixNow renamed to epochNow (utility)
+	unix2Pretty renamed to epoch2Pretty (utility)
+	unix2mdy renamed to epoch2mdy (render format)
+	New router feature for defining what hash tags should do.
+	
+
+QUICKSTART (and store related updates)
+	Product lists now support a 'complete' event, triggered after all product have loaded.
+	Cart template is now responsive.
+	New method for creating carts for easy update. Uses delegated events (data-app-click).
+	fixed bug in add to buyer list.
+	fixed bug in remove from buyer list.
+	init,complete and depart events now handled through data-app-EVENTTYPE and/or on('complete').
+	set app.vars.apptimizer to true to disable popstate (required for pure-app environment)
+
+
+
+201346
+ADMIN
+	enhancement - updated users interface. faster and more memory efficient for browser.
+	bug - in support > create ticket, apostrophes were causing content after the apostrophe to drop.
+	bug - In product editor, drag and dropping images would create a folder with a dash if the sku had a dash. now creates dash-free folders.
+	bug - fix login if invalid username is supplied (would get stuck in showLoading)
+	enhancement - product selector (used in powertool and product export) > Comma Separated List now handles whitespace, tabs and returns better.
+	bug - CRM escalate ticket now working.
+	enhancement - 'about' link now contains link to version changelogs. videos archives will now open in dialog.
+	bug - order edit > send mail would send mail twice.
+	enhancement - 'select all' button added to task list (click twice for unselect all).
+	bug fix - product editor > variations > apply didn't activate the 'save' button.
+	bug fix - add new payment method in billing history works again.
+	enhancement - new button in utilities for private elastic rebuild.
+	enhancement - product editor > amazon > error and history report. Added # of errors @ top and message type icons.
+	bug fix - flexedit 'clear' for images didn't clear in product editor or unlock the 'save' button.
+	bug fix - UPS reapply > form submit > didn't close dialog or show success message in a viewable location. does now.
+	enhancement - ticket updates and file attach will update ticket panel to more clearly indicate a change occured.
+	enhancement - add a 'return' filter to orders interface.
+	feature - supply chain interface allows creation of batch jobs for get inventory, process orders or update tracking for a given supplier (or a group of suppliers).  Each job/supplier is 1 batch job
+	feature - export pages.json file added to sites for app based hosts.
+	enhancement - addition of pages.json file was just one button to many. app utilities are now in a dropdown.
+	enhancement - In some places, it's necessary to show a dialog interstitial when trying to open a popup. Reduced these in places it isn't required.
+	feature - plugins > communication > apple/ios added. (for native app push notifications)
+	feature - plugins > cloud services > Amazon Simple Email Services
+	feature - setup > notifications. allows for events to trigger actions (currently supports customer inquiry. more to come...)
+	feature - utilities > support tools > ebay listing sync button. Complete download of ebay listings. [201346.i]
+	bug fix - setup > shipping > ups.  checkboxes under 'rating services' header didn't save. [201346.i]
+	enhancement - reports > inventory > saved reports can now be deleted. [201346.i]
+	bug fix - product > edit product > web page edit now working again.
+	deprecate - setup > payments > google checkout removed (service no longer provided)
+	deprecate - setup > global settings > inventory notifications moved to setup > notifications
+	change - orders > items set to DONE are now editable (short term change).
+
+QUICKSTART
+	enhancement - content of company pages (except faq) is now hard coded into their respective articles.
+	enhancement - company nav links now generated based on what articles exist w/in company (and in that order). H1 is used to build title.
+	bug fix - searchTemplate onCompletes were not running.
+	enhancement - cartTemplate is now responsive. (major changes to css and the template itself)
+	bug fix - inventory in appProductGet working again.
+	bug fix - appProfileInfo was not passing a valid profile. domain is now passed.
+
+201344
+ADMIN
+	feature - product editor now supports a sku-specific price per schedule (attributes panel)
+	enhancement - if inventory-able options are present, no quantity pricing will show for the product (wouldn't have worked anyway)
+	feature - ebay store category 2 is back in the product editor (ebay panel)
+	bug - in product editor -> variations -> attribs, existing values were not always populating.
+	bug - in product power tool, 'conditionals' were not being applied.
+	enhancement - in product editor -> ebay, if inventory-able variations are present, the warning for the incompatibility now stands out more.
+	bug - logout was going to a 404 (logout was occuring).
+	enhancement - icons in messages to better visually indicate differences (errors, warnings, etc)
+	bug fix - dropzone in product editor (for images) now strips special characters from filename.
+	bug fix - supplier add inventory had bug where dialog had to be closed after each add.
+	bug fix - batch detail dialog/modal cleanup didn't show success/fail messaging on complete.
+	enhancement - shipping UI now restores buttons and hides 'deleted' (banned users, countries, etc) items after save.
+	bug fix - flexedit manager 'show all fields' now works.
+	bug fix - whim inventory lookup didn't report the 'no results found' message.
+	bug fix - product selector (what's used in product export and power tool) supplier list now working.
+	bug fix - crm manager allowed same ticket to be open twice.
+	bug fix - reviews manager review editor working again.
+	bug fix - deleting an rss feed caused a never ending 'deleting...' screen (delete did still occur).
+	enhancement - task manager updated. faster and more memory efficient for browser.
+	enhancement - support/tickets interface updated. faster and more memory efficient for browser.
+	feature - sites interface now has 'update sitemap' button for domains (starts a batch job).
+	enhancement - crm/tickets interface udpated. faster and more memory efficient for browser.
+	enhancement - product selector (powertool, product export) now supports linebreaks OR commas for comma separated list input.
+	bug fix - better error/warning display in syndication.
+	bug fix - global settings > inventory 'remove from website' is saving now.
+	enhancement - store variations can now be added from within the product.
+	feature - refresh button for store variations in product editor.
+	bug fix - 'open original' button for images in media library now works
+	feature - new tool in support utilities to add PID to product task list
+	bug fix - master save button in product now doesn't 'lock' all panels that had no edits.
+	bug fix - product that no longer exist can now be removed using the product finder (product list editor).
+	bug fix - user manager > edit user would get stuck in 'loading' mode.
+	enhancement - change eBay 'link account' flow.
+
+
+
+
+ANYPLUGINS
+	anymessages - some changes to icons/classes. Moved these into anystyles.css so they recycled in store and admin.
+
+
+
+201342.c
+ADMIN
+	bug - in payments CBA (wasn't loading existing settings/saving)
+	bug - in rss (edit feed was double-loading template)
+	bug - in syndication that caused the 'schedules' select list to not preselect the current schedule.
+	bug - in billing history (it'll load now)
+	bug - in product editor causing brand new products to not load properly (variations panel, specifically)
+	feature - in product editor, inventory panel now hides some detail records. A button at the bottom w/ a dropdown allows display.
+	feature - 'unstructured' zone type added for WMS.
+
+
+201342
+ADMIN
+	Addition of amazon sku-specific LOG.
+	Bug fixes in orders stickytab (edit button works again).
+	Bug fixes in UPS and USPS settings.
+	bug fixes in domain host edit (indicates save was pushed w/ showloading)
+
+
+201342 (some of these were in 38)
+Checkout
+	Fixes for better support in older IE/Quirks mode.
+	Improvements in return user address updates.
+	Support for payment type handling fees.
+	Some text/layout cleanup.
+	More reliable handling of ROI/Tracking code.
+	Logging of OS/browser in order (handy for debug purposes).
+	Improvement in changing from paypal to another payment method after returning from paypal.
+	Bug fix which allowed orders to be created w/out email address.
+	Buyer logout (not you? click here)
+
+
+201338
+ADMIN
+New inventory system
+	Update to inventory panel in product.
+	Change to variations panel in product.
+	Updates to warehouse interface (now support zones/positions
+New 'WHIM' (in utilities) interface for working with inventory.
+ 	receiving/unmanifested: assign a sku to a zone/position.
+	fix mistakes/location lookup: enter sku/skus and get a list of locations
+update to online order manager
+	improved load time and reduced memory consumption.
+	new 'items' menu (for pick lists, preorders, backorders).
+
+bug fixes / enhancements in new product editor.
+ 	ebay
+	buy.com
+	amazon (more to come here)
+	checkbox based attributes now saving.
+	return of 'Remove from All' in categorization tab.
+	return of debugger (in general panel)
+
+bug fix in support (update ticket working again).
+update to task list manager. will display up to 100 active tasks and tasks completed in last three days.
+
+Updates to supplier interface
+	inventory records for supplier can be added per sku/pid
+	new FBA supplier format.
+	some interface changes based on format.
+	format can no longer be changed once set per supplier.
+
+
+
+201336
+ADMIN
+New product manager/editor interfaces.
+ 	no longer support buy.com DBMaps.
+	no longer have definitions for marketplaces (except amazon)
+	powerlister in product went away.
+
+fixed some bug in variations, flexedit (images) and more.
+global variations moved to setup.
+
+PLUGINS
+some updates to anypanel (uses anycontent now)
+
+
+201334
+ADMIN
+domain manager out of beta
+new 'sites' interface
+new 'edit' site for domain apps
+bug fixes in campaign/ebay template download.
+amz thesaurus bug fixes.
+bug fixes in supplier interface (handling)
+bug fix in coupons begin/expire
+
+
+201332
+ADMIN
+new domain config interface
+fixes to variations
+fixes to handling and insurance
+fixes to shipping rules
+fixes to flexedit manager
+fixes to flexedit in product
+fixes to campaigns
+'choose domain' dialog will only show favorites IF favorites are configured.
+new 'images' panel in product editor.
+new eBay Item Specifics form (with @RECOMMENDATIONS). Old XSLT piece not used any more.
+
+
+301330
+ADMIN
+new options in customer search (schedule, account manager and account type)
+new options in organization search (schedule, account type)
+new interface for price schedules
+everywhere schedule is referenced in the UI got updated (syndication, organizations, etc)
+new interface for account utilities (that interface formerly known as tech tools)
+ 	disk usage and inventory event queue are in the 'logs' section.
+"Inventory Lookup" in utilities moved to 'vstore' in setup.
+new interface for vendors
+new flexedit manager interface in utilities
+flexedit panel in product editor upgraded to full app
+fixed bugs in powertool
+
+
+301324
+popCheckbox and popRadio are retired. popVal will now handle all input types. all files were updated.
+https://github.com/zoovy/AnyCommerce-Development/commit/877a5a382f629150aedfcaa9087b0f37d1667a92
+https://github.com/zoovy/AnyCommerce-Development/commit/a6c2fbff7ad08c077842e38100c2dbe7dfc93f6f
 
 
 

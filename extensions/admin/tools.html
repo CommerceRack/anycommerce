@@ -1,0 +1,1036 @@
+
+
+<div id='productPowerToolTemplate'>
+
+<form action='#' onSubmit="return false" class='labelsAsBreaks' id='productPowerToolForm' novalidate>
+<input type="hidden" value="0" name="JOBID" />
+
+
+<h1>Product Power Tool</h1>
+<p class="hint">REMINDER: The Product Power Tool lets you to make a lot of changes all at once - Please be sure to have backups of your data.</p>
+
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 1: Select Product</h3>
+		</div>
+		
+		<fieldset class='stdPadding ui-widget-content ui-corner-bottom' data-app-role='pickerContainer'></fieldset>
+	</div>
+
+	</td><!-- /step 1 -->
+	
+	<td class="valignTop nwColumnW">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 2: Specify Attributes and Actions</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		<fieldset>
+			<h2>Which attribute to Change</h2>
+
+
+<!--
+data-app-role='manipulatedDataContainer' is used for storing picker data after it's been put into a more usable format. 
+It's a separate container than the fieldset so it can be emptied.
+has to be within the fieldset to for data-table to work right.
+ -->
+<div data-app-role='manipulatedDataContainer'></div>
+
+
+
+
+			<label>
+				<span>Attribute</span>
+				<select required='required' name='attrib' data-app-event="admin_tools|powerToolAttribChange">
+
+<option value='' selected="selected">Please Choose</option>
+<option value="_">custom attribute (specify below)</option>
+
+<optgroup label="Base Fields">
+	<option value="zoovy:profile">Profile [zoovy:profile]</option>
+	<option value="zoovy:base_price">Price [zoovy:base_price]</option>
+	<option value="zoovy:prod_desc">Description [zoovy:prod_desc]</option>
+	<option value="zoovy:prod_detail">Detail Description [zoovy:prod_detail]</option>
+	<option value="zoovy:prod_promoclass">Promotion Class [zoovy:prod_promoclass]</option>
+	<option value="zoovy:prod_folder">Product Folder</option>
+	<option value="zoovy:prod_mfg">Product Manufacturer [zoovy:prod_mfg]</option>
+	<option value="zoovy:prod_mfgid">Product Manufacturer ID [zoovy:prod_mfgid]</option>
+	<option value="zoovy:fl">Page Flow [zoovy:fl]</option>
+	<option value="zoovy:keywords">Product Keywords [zoovy:keywords]</option>
+</optgroup>
+
+<optgroup label="Shipping">
+	<option value="zoovy:ship_sortclass">Ship Sort Class [zoovy:ship_sortclass]</option>
+	<option value="zoovy:ship_cost1">Fixed Ship Cost (1st Item) [zoovy:ship_cost1]</option>
+	<option value="zoovy:ship_cost2">Fixed Ship Cost (2+ Item) [zoovy:ship_cost2]</option>
+	<option value="zoovy:ship_can_cost1">Fixed Canada Ship Cost (1st Item) [zoovy:ship_can_cost1]</option>
+	<option value="zoovy:ship_can_cost2">Fixed Canada Ship Cost (2+ Item) [zoovy:ship_can_cost2]</option>
+	<option value="zoovy:ship_int_cost1">Fixed International Ship Cost (1st Item) [zoovy:ship_int_cost1]</option>
+	<option value="zoovy:ship_int_cost2">Fixed International Ship Cost (2+ Item) [zoovy:ship_int_cost2]</option>
+</optgroup>
+
+<optgroup label='Product Tags'>
+	<option value="is:fresh">is:fresh (tag:IS_FRESH)</option>
+	<option value="is:needreview">is:needreview (tag:IS_NEEDREVIEW)</option>
+	<option value="is:haserrors">is:haserrors (tag:IS_HASERRORS)</option>
+	<option value="is:configable">is:configable (tag:IS_CONFIGABLE)</option>
+	<option value="is:colorful">is:colorful (tag:IS_COLORFUL)</option>
+	<option value="is:sizeable">is:sizeable (tag:IS_SIZEABLE)</option>
+	<option value="is:download">is:download (tag:IS_DOWNLOAD)</option>
+	<option value="is:openbox">is:openbox (tag:IS_OPENBOX)</option>
+	<option value="is:preorder">is:preorder (tag:IS_PREORDER)</option>
+	<option value="is:discontinued">is:discontinued (tag:IS_DISCONTINUED)</option>
+	<option value="is:specialorder">is:specialorder (tag:IS_SPECIALORDER)</option>
+	<option value="is:bestseller">is:bestseller (tag:IS_BESTSELLER)</option>
+	<option value="is:sale">is:sale (tag:IS_SALE)</option>
+	<option value="is:shipfree">is:shipfree (tag:IS_SHIPFREE)</option>
+	<option value="is:newarrival">is:newarrival (tag:IS_NEWARRIVAL)</option>
+	<option value="is:clearance">is:clearance (tag:IS_CLEARANCE)</option>
+	<option value="is:refurb">is:refurb (tag:IS_REFURB)</option>
+	<option value="is:user1">is:user1 (tag:IS_USER1)</option>
+	<option value="is:user2">is:user2 (tag:IS_USER2)</option>
+	<option value="is:user3">is:user3 (tag:IS_USER3)</option>
+	<option value="is:user4">is:user4 (tag:IS_USER4)</option>
+	<option value="is:user5">is:user5 (tag:IS_USER5)</option>
+	<option value="is:user6">is:user6 (tag:IS_USER6)</option>
+	<option value="is:user7">is:user7 (tag:IS_USER7)</option>
+	<option value="is:user8">is:user8 (tag:IS_USER8)</option>
+	<option value="is:backorder">is:backorder (tag:IS_BACKORDER)</option>
+</optgroup>
+
+<optgroup label='Syndication'>
+	<option value="ebay:ts">ebay:ts</option>
+	<option value="sears:ts">sears:ts</option>
+	<option value="amz:ts">amz:ts</option>
+	<option value="gbase:ts">gbase:ts</option>
+	<option value="pricegrabber:ts">pricegrabber:ts</option>
+	<option value="bizrate:ts">bizrate:ts</option>
+	<option value="shopping:ts">shopping:ts</option>
+	<option value="overstock:ts">overstock:ts</option>
+	<option value="bing:ts">bing:ts</option>
+	<option value="buycom:ts">buycom:ts</option>
+	<option value="bestbuy:ts">bestbuy:ts</option>
+	<option value="wishpot:ts">wishpot:ts</option>
+	<option value="nextag:ts">nextag:ts</option>
+	<option value="amzpa:ts">amzpa:ts</option>
+	<option value="hsn:ts">hsn:ts</option>
+	<option value="smarter:ts">smarter:ts</option>
+	<option value="become:ts">become:ts</option>
+	<option value="pronto:ts">pronto:ts</option>
+	<option value="thefind:ts">thefind:ts</option>
+	<option value="doba:ts">doba:ts</option>
+	<option value="cj:ts">cj:ts</option>
+	<option value="dijipop:ts">dijipop:ts</option>
+	<option value="linkshare:ts">linkshare:ts</option>
+	<option value="imshopping:ts">imshopping:ts</option>
+	<option value="ioffer:ts">ioffer:ts</option>
+	<option value="sas:ts">sas:ts</option>
+	<option value="newegg:ts">newegg:ts</option>
+	<option value="arp:ts">arp:ts</option>
+	<option value="us1:ts">us1:ts</option>
+	<option value="us2:ts">us2:ts</option>
+	<option value="us3:ts">us3:ts</option>
+	<option value="us4:ts">us4:ts</option>
+	<option value="us5:ts">us5:ts</option>
+	<option value="us6:ts">us6:ts</option>
+	<option value="auk:ts">auk:ts</option>
+	<option value="acn:ts">acn:ts</option>
+	<option value="ade:ts">ade:ts</option>
+	<option value="afr:ts">afr:ts</option>
+	<option value="ait:ts">ait:ts</option>
+	<option value="ajp:ts">ajp:ts</option>
+	<option value="auk:ts">auk:ts</option>
+	<option value="zoovy:prod_fakeupc">Product Fake UPC [zoovy:prod_fakeupc]</option>
+</optgroup>
+
+<optgroup label='Amazon'>
+	<option value="amz:ts">Amazon Checkbox [amz:ts]</option>
+	<option value="amz:catalog">Amazon Product Type [amz:catalog]</option>
+	<option value="amz:thesaurus">Amazon Thesaurus [amz:thesaurus]</option>
+</optgroup>
+
+<optgroup label='eBay'>
+	<option value="ebay:ts">eBay Checkbox [ebay:ts]</option>
+	<option value="ebay:start_price">eBay Starting Price [ebay:start_price]</option>
+	<option value="ebay:fixed_price">eBay Fixed Price [ebay:fixed_price]</option>
+	<option value="ebay:buytinow_price">eBay BuyItNow Price [ebay:buyitnow_price]</option>
+	<option value="ebay:power_starttime">eBay Powerlister Starting Hour (0-23) [ebay:power_starttime]</option>
+	<option value="ebay:power_endtime">eBay Powerlister Ending Hour (0-23) [ebay:power_endtime]</option>
+	<option value="zoovy:related_products">Related Products [zoovy:related_products]</option>
+	<option value="zoovy:accessory_products">Accessory Products [zoovy:accessory_products]</option>
+</optgroup>
+
+				</select>
+			</label>
+
+			<label class='displayNone'>
+				<span>Custom Attribute:</span>
+				<input type="text" name='attrib_custom' />
+			</label>
+
+
+			<h2>Now what to do?</h2>
+			<div class='marginBottom' data-app-role='radioContainer'>
+			<table>
+			<tbody>
+				<tr>
+					<td><input type="radio" value="set" name="verb" required='required' data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td>Set value to</td>
+					<td><input type="text" name="setval" class='lockOnVerbChange' /></td>
+					<td><span class='toolTip' title="Will set the attribute selected above to the value specified in the text input on this row">?</span></td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="add" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td>Simple equation:</td>
+					<td><input type="text" name="addval" class='lockOnVerbChange' /></td>
+					<td><span class='toolTip' title="Will perform a mathmatical operation on the attribute selected above based on the value of the text input on this row. +/- and % okay. This action is reserved for numeric fields only">?</span></td>
+				</tr>
+				<tr>
+					<td class='valignTop'><input type="radio" value="replace" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td class='valignTop'>Search and replace</td>
+					<td class='alignedLabels alignedInputs valignTop'>
+						<label>
+							<input placeholder='Search for' type="text" name="searchval" class='lockOnVerbChange' />
+						</label>
+						<label>
+							<input placeholder='Replace with' type="text" name="replaceval" class='lockOnVerbChange' />
+						</label>
+					</td>
+					<td class='valignTop'><span class='toolTip' title="Will search the attribute for the value of 'search for' and if a match, will replace with 'replace with' value. Use * to match wildcard">?</span></td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="copy" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td>Copy to</td>
+					<td><input type="text" name="copyto" class='lockOnVerbChange' /></td>
+					<td><span class='toolTip' title="Will copy the value of the attribute selected above into the value of the attribute set on the text input on this row.">?</span></td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="copyfrom" name="verb" data-app-event="admin_tools|powerToolVerbChange" / ></td>
+					<td>Copy from</td>
+					<td><input type="text" name="copyfrom" class='lockOnVerbChange' /></td>
+					<td><span class='toolTip' title="Will copy the value of the text input on this row into the attribute selected above.">?</span></td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="deleteattrib" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Delete Attribute from product record</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="explode" name="verb" data-app-event="admin_tools|powerToolVerbChange" /> </td>
+					<td colspan='3'>Apply "keyword explosion" algorithm</td>
+				</tr>
+
+				<tr>
+					<td><input type="radio" value="cleandeadproducts" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Remove expired products from CSV list (related items, and accessories)</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="wikify" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Convert HTML to Wiki</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="striphtml" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Strip HTML</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="stripwiki" name="verb" data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Strip WIKI</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="stripcrlf" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td colspan='3'>Strip CR/LF</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="set-empty-sku-from-product" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td colspan='3'>Copy Base Product attribute into ALL EMPTY SKUs</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="set-sku-from-product" name="verb"  data-app-event="admin_tools|powerToolVerbChange"/></td>
+					<td colspan='3'>Copy Base Product attribute into ALL SKUs</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="fmakeupc" name="verb"  data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>Generate *FAKE* UPC</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="amazon:requeue" name="verb"  data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>[amz:ts] Amazon - ReQueue</td>
+				</tr>
+				<tr>
+					<td><input type="radio" value="amazon:delete" name="verb"  data-app-event="admin_tools|powerToolVerbChange" /></td>
+					<td colspan='3'>[amz:ts] Amazon - Delete</td>
+				</tr>
+			</tbody>
+			</table>
+			</div>
+			<div app-data-role='powerToolConditionalContainer'>
+				<div class='label'>Optional: When shall we do it?</div>
+				
+				<label><input type="radio" value="" name="when" checked="checked" data-app-event="admin_tools|powerToolConditionalChange" /> Perform Action On Every Selected Product</label>
+				<label><input type="radio" value="when-attrib-contains" name="when" data-app-event="admin_tools|powerToolConditionalChange"> Conditional</label>
+				
+				<div data-app-role='conditionalsContainer' class='displayNone marginLeft paddingLeft'>
+					When attribute <input type="text" name="when-attrib" class="zinput" size="10"> 
+					<select name="when-attrib-operator" class="zselect">
+						<option value="has">Contains</option>
+						<option value="eq">Equals (String)</option>
+						<option value="ne">Not Equal (String)</option>
+						<option value="gt">is Greater Than</option>
+						<option value="lt">is Less Than</option>
+						<option value="isblank">is Blank/Not Set</option>
+						<option value="isnull">is Not Set</option>
+					</select>
+					<input type="text" name="when-attrib-contains" size="10" class="zinput">
+				</div>
+			</div>
+			
+			
+			<button data-app-event='admin_config|dataTableAddExec'>Add Action</button><!-- admin_config|dataTableAddExec -->
+			<p class='hint'>HINT: You can add more than one action.</p>
+		</fieldset>
+		</div>
+	</div>
+	
+	</td><!-- /step 2 -->
+
+	<td class="valignTop nwColumnN">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 3: Make It So</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+
+<div data-app-role='powertoolSelectedActionsContainer' class='marginBottom'>
+<h4>Review Actions</h4>
+<table class='gridTable fullWidth marginTop' data-app-role='dataTable'>
+<thead>
+<tr>
+	<th>verb</th>
+	<th>attrib</th>
+	<th>value</th>
+	<th>condition</th>
+	<th></th>
+</tr>
+</thead>
+<tbody id='powerToolActionListTbody' data-bind="var: batch(@ACTIONS); format:processList; loadsTemplate:powerToolActionsRowTemplate;" ></tbody>
+</table>
+</div>
+
+		
+		<label class='marginBottom marginTop'>
+			<input type="text" name="jobtitle" placeholder='Job Title (optional)' value="" size="20" maxlength="20" />
+			<span class='toolTip' title="if job title is set, the job will be saved for future re-use.">?</span>
+		</label>
+		
+		<button data-app-role='saveButton' data-app-event='admin_tools|powerToolBatchJobExec' class='ui-state-focus'>Engage</button>
+		<hr />
+		
+		<div data-bind="forceRender:true; format:batchJobParametersList; extension:admin_batchjob; batch_exec:UTILITY/PRODUCT_POWERTOOL;"></div>
+		
+		
+		</div>
+	</div>
+	</td>
+</tr>
+</tbody>
+</table>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+<table>
+<tr id='powerToolActionsRowTemplate'>
+	<td data-bind='var: action(verb); format:text;'></td>
+	<td>
+<span data-bind='var: action(attrib); format:text;'></span>
+<div data-bind='var: action(attrib_custom); format:text;'></div>
+	</td>
+	<td>
+<div data-bind='var: action(setval); format:text;'></div>
+<div data-bind='var: action(addval); format:text;'></div>
+<div data-bind='var: action(searchval); format:text; pretext: replace ;'></div>
+<div data-bind='var: action(replaceval); format:text; pretext: with ;'></div>
+<div data-bind='var: action(copyto); format:text;'></div>
+<div data-bind='var: action(copyfrom); format:text;'></div>
+
+	</td>
+	<td>
+<span  data-bind='var: action(when-attrib); format:text; pretext:when ;'></span>
+<span  data-bind='var: action(when-attrib-operator); format:text;'></span>
+<span  data-bind='var: action(when-attrib-contains); format:text;'></span>
+	</td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+
+</table>
+
+
+
+
+
+
+<!--
+
+/// COMPETITIVE INTELLIGENCE ENGINE \\\
+
+-->
+
+<table>
+<tr id='CIE_DSA_rowTemplate'>
+	<td data-bind='var: agent(AGENTID); format:text;'></td>
+	<td data-bind='var: agent(REVISION); format:text;'></td>
+	<td data-bind='var: agent(LINE_COUNT); format:text; posttext: Lines;'></td>
+	<td data-bind='var: agent(INTERFACE); format:text;'></td>
+	<td data-bind='var: agent(CREATED_TS); format:text;'></td>
+	<td>
+		<button data-app-event="admin_tools|agentRemoveConfirm">Delete</button>
+		<button data-app-event="admin_tools|agentDetailDMIPanel">Edit</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+<div id='CIE_DSA_AddUpdateTemplate'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels alignedInputs' data-app-submit="admin|submitForm">
+
+<input type='hidden' name='GUID' value=''  data-bind='var: agent(GUID); format:popVal;' />
+
+<fieldset>
+
+<label>
+	<span>Name</span>
+	<input name='AGENTID' value='' data-bind='var: agent(AGENTID); format:popVal;' data-input-keyup="format" data-input-format='alphanumeric' />
+</label>
+
+<label>
+	<span>Script</span>
+	<textarea name='SCRIPT' rows='20' class='fullWidth' data-bind='var: agent(SCRIPT); format:popVal;' />
+</label>
+
+
+<button class='applyButton'>Save</button>
+
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+//////////////////   PRIVATE FILES  \\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<table>
+<tr id='privateFilesRowTemplate'>
+	<td data-bind="var: file(CREATED); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: file(FILENAME); format:text;"></td>
+	<td data-bind="var: file(FILETYPE); format:text;"></td>
+	<td data-bind="var: file(EXPIRES); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: file(CREATEDBY); format:text;" class='hideInDetailMode'></td>
+	<td class='alignRight'>
+	<button data-app-click="admin|tagRow4Remove" class='applyButton' data-text='false' data-icon-primary='ui-icon-close'>Delete</button>
+	<button data-app-click="admin_tools|adminPrivateFileDownloadExec" class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>Download</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+<!--
+
+//////////////////   PRODUCT EXPORT TO CSV  \\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='productExportToolTemplate'>
+
+<form action='#' onSubmit="return false" class='labelsAsBreaks' name='productExportToolForm'>
+<input type="hidden" value="0" name="JOBID" />
+<input type="hidden" value="PRODUCTS" name="EXPORT" />
+
+<h1>Product Export Tool</h1>
+
+<table class='fullWidth'>
+<tbody>
+<tr>
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 1: Select Product</h3>
+		</div>
+		
+		<fieldset class='stdPadding ui-widget-content ui-corner-bottom' data-app-role='pickerContainer'></fieldset>
+	</div>
+
+	</td><!-- /step 1 -->
+	
+	<td class="valignTop nwColumnW">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 2: Configure Export</h3>
+		</div>
+	
+	<fieldset class='stdPadding ui-widget-content ui-corner-bottom' data-app-role='exportConfiguration'>
+	
+		<label>
+			<span>Attributes</span>
+			<select name='attribute_source' data-app-event='admin_tools|productExportAttributeSrcChange'>
+				<option value='all'>All</option>
+				<option value='specify'>Specify</option>
+			</select>
+		</label>	
+		
+		
+		<div class='toggleThis displayNone' data-app-role='exportToolAttributeListContainer'>
+			<label>Attribute list</label>
+			<textarea name="headers" class='fullWidth' rows="5"></textarea>
+			<p class='hint'>
+			To specify header fields, specify product attributes separated by commas or newslines, leave no whitespace e.g. "zoovy:prod_name,zoovy:base_price,zoovy:prod_image1" (without the quotes) - without specifying which fields you want to export you will be limited to 500 products per export.<br />
+			<strong>Advanced users</strong>: You can alternatively specify a map to generate a particular CSV file for a trading partner. Use multiple lines 
+			</p>
+		</div>
+
+		<label>
+			<span>Variations formatting</span>
+			<select name="pogs">
+				<option value="">ignore</option>
+				<option value="JSON">JSON</option>
+				<option value="XML">XML</option>
+			</select>
+			<span class='toolTip' title="Variations are the actual input fields (textboxes, checkboxes, drop-down lists), along with any associated options and price/weight modifiers if applicable. ">?</span>
+		</label>
+	
+		<label>
+			<span>Variation detail</span>
+			<select name="variations">
+				<option value="0" selected="">base products only (recommended)</option>
+				<option value="1">base products+variations</option>
+				<option value="2">variation level only</option>
+			</select>
+		</label>
+
+
+		<label><input type="checkbox" name="navcats" /> Export Navigation Categories</label>
+		
+		<label><input type="checkbox" name="categories" /> Export Management Categories</label>
+		
+		<label><input type="checkbox" name="imagelib" /> Export Image URLs rather than Image Library names (may break Excel) <span class='toolTip' title="Remember to use %IMGURL=zoovy:prod_image1 as your header to get the URL instead of the image name.">?</span></label>
+		
+		<label><input type="checkbox" name="stripcrlf" checked='checked' /> Strip Carriage Return/Line Feeds</label>
+		
+		<label><input type="checkbox" name="convertutfx" /> Attempt to convert UTFx data to HTML.</label>
+		
+		<label><input type="checkbox" name="produrls" /> Enable the %PRODUCTURL header.</label>
+		
+		<label><input type="checkbox" name="addtocart" /> Enable the %ADDTOCART header.</label>
+
+	</fieldset>
+	</div>
+	</td>
+
+
+	<td class="valignTop nwColumnN">
+
+	<div class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Step 3: Start Export</h3>
+		</div>
+		<fieldset class='stdPadding ui-widget-content ui-corner-bottom'>
+			<button data-app-event="admin_tools|productExportBatchJobCreateExec">Just Do It!</button>
+		</fieldset>
+	</div>
+	</td>
+
+	
+</tr>
+</tbody>
+</table>
+</form>
+</div>
+
+
+
+
+
+
+
+<!-- ACCOUNT UTILITIES (formerly tech tools) -->
+
+
+
+
+<div id='accountUtilitiesTemplate' class='stdPadding ui-widget ui-widget-content ui-corner-all clearfix'>
+	<h1>Account Utilities</h1>
+	<p class="hint marginTop marginBottom clearfix">Please make sure all users are logged out of your account, and all sync processes are disabled while using utilities in this area. They are *very* resource intensive and can cause outages if concurrent use is attempted.</p>
+
+	
+	<section class='floatRight marginBottom marginLeft' data-app-role='accountUtilityLogContainer' data-tablefilter-role='container'>
+		<input name='tableSearchQuery' type='search' placeholder='filter logs' data-app-keyup="admin|tableFilter" class='floatRight' />
+		<h2>Logs</h2>
+	
+		<table class='gridTable applyAnytable marginTop' data-tablefilter-role='table'>
+		<thead>
+		<tr>
+			<th>Filename</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: tools(@LOGS); format:processList; loadsTemplate:accountUtilityLogRowTemplate;">		</tbody>
+		</table>
+	</section><!-- /reporting -->
+
+	<section class='marginTop marginBottom'>
+		<h2>Product/Inventory</h2>
+	
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_RESUMMARIZE','%vars':{}}); return false;">Inventory Resummarize</button></td>
+			<td class='valignTop small'>
+			Forces the system to recompute the summary inventory for all SKU's. 
+			This should not be necessary unless you have encountered a bug which caused inventory summaries to not match inventory detail.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_CLEANUP','%vars':{}}); return false;">Product Cleanup</button></td>
+			<td class='valignTop small'>
+			Resets/Rebuilds Product Index, clears out deleted items, and source pid from zoovy:related_products, and zoovy:accessory_products. Removes unicode characters. 
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_CLEANUP','%vars':{}}); return false; ">Inventory Cleanup</button></td>
+			<td class='valignTop small'>
+			Removes orphan inventory records which are not associated with a sku, creates records w/0 qty for pids which don't have inv. records.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/INVENTORY_UPDATE_RESERVES','%vars':{}}); return false; ">Inventory Update Reserves</button></td>
+			<td class='valignTop small'>
+			Removes orphaned inventory reservations / verifies reserves.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/IMAGE_REINDEX','%vars':{}}); return false; ">Image Reindex</button></td>
+			<td class='valignTop small'>
+			Image Reindex
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'public'}}); return false; ">Elastic Rebuild (Public)</button></td>
+			<td class='valignTop small'>
+			Elastic Product Search Rebuild (note: will be offline/unavailable during rebuild)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/ELASTIC_REBUILD','%vars':{'index':'private'}}); return false; ">Elastic Rebuild (Private)</button></td>
+			<td class='valignTop small'>
+			Elastic Private Search Rebuild (note: will be offline/unavailable during rebuild)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_LISTING_DOWNLOAD','%vars':{}}); return false; ">eBay Listing Download</button></td>
+			<td class='valignTop small'>
+			eBay Listing Complete Download (note: do not launch any new listings while this is running, eBay limits this to once per day per token)
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/PRODUCT_SALESRANK','%vars':{}}); return false; ">Update SalesRanks</button></td>
+			<td class='valignTop small'>
+			Goes through all products which have customer reviews and updates zoovy:prod_salesrank
+			<p class="warning ui-corner-all stdPadding">Notice about Sales Rank:<br />
+			App based sites do not use salesrank for review summary, they build their own summary.<br />
+			For legacy, sometimes design used prod_salesrank to store other data like dates, doing this will destroy that data.<br />
+			Verify with customer this field is intended to store sales ranking data based on reviews prior to execution.</p>
+			</td>
+		</tr>	
+		</tbody>
+		</table>
+	</section><!-- /product/inventory -->
+
+
+	<section class='marginTop marginBottom'>
+	<h2>App</h2>
+
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onClick="navigateTo('#!ext/admin_support/showPlatformInfo'); return false;">App/Server Details</button></td>
+			<td>Some details about the server you are on, app version, etc.</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin.u.selectivelyNukeLocalStorage();">Clear Some localStorage</button></td>
+			<td class='valignTop small'>
+			This will selectively clear local storage for the admin interface. Clear all data but login and device specific preferences from localStorage.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="localStorage.clear(); location.reload(); ">Clear localStorage</button></td>
+			<td class='valignTop small'>
+			This will clear all local storage for the admin interface/domain. It will not impact local storage for other domains. This action is browser-specific. You will need to log in again. All device specific preferences (what panels are open/closed by default) will reset.<br />
+			<b>This action will refresh your browser</b>.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="sessionStorage.clear(); location.reload(); ">Clear sessionStorage</button></td>
+			<td class='valignTop small'>
+			This will clear all session storage for the admin interface/domain. Some data, such as customer or product, is only retrieved once per session. Session storage is where it's kept. This action will not impact session storage for other domains. This action is browser-specific.<br />
+			<b>This action will refresh your browser</b>.
+			</td>
+		</tr>
+		<tr>
+			<td class='valignTop'><button class='applyButton' data-app-click='admin_support|ping'>Ping!</button></td>
+			<td>The simplest of calls on our API. Hit this and get a report of how long it took to make. For accurate results, make sure entire page is done loading prior to running this.</td>
+		</tr>
+		</tbody>
+		</table>
+
+	
+	</section>
+
+
+	<section class='marginTop marginBottom'>
+		<h2>Customer/CRM</h2>
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'guid' : adminApp.u.guidGenerator(),'type' : 'UTILITY/CUSTOMER_SCRUB'}); return false; ">Clean Subscriber Lists</button></td>
+			<td class='valignTop small'>
+			Remove all duplicates and clear invalid emails.
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /ebay -->
+
+
+
+	<section class='marginTop marginBottom'>
+		<h2>eBay</h2>
+	
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'><button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/EBAY_UPDATE','%vars':{'f':'end-all'}}); return false; ">Close All Listings</button></td>
+			<td class='valignTop small'>
+			Ends all active listings on eBay.
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /ebay -->
+
+
+	<section class='marginTop marginBottom'>
+		<h2>Reporting</h2>
+	
+		<table class='marginTop'>
+		<tbody>
+		<tr>
+			<td class='valignTop'>
+			<button class='applyButton' onclick="adminApp.ext.admin_batchjob.a.adminBatchJobCreate({'type':'UTILITY/KPIBI_RESET','%vars':{}}); return false; ">Reset KPIBI</button>
+			</td>
+			<td class='valignTop'>
+			Rebuilds all KPIBI data for the last year
+			</td>
+		</tr>
+		</tbody>
+		</table>
+	</section><!-- /reporting -->
+
+
+	<section class='marginTop marginBottom'>
+		<h2>Inspectors &amp; More</h2>
+		<form class='marginTop'><label><span>Order</span><input type='text' name='orderid' class='marginLeft marginRight' /></label><button data-app-click='admin_tools|inspectorExec' data-inspect='order'>Go</button></form>
+		
+		<form action='#' onSubmit='return false'><label><span>Product ID</span><input type='text' name='pid' class='marginLeft marginRight' /></label>
+			<button data-app-click='admin_tools|inspectorExec' data-inspect='product'>Inspect</button>
+			<button data-app-click='admin_tools|forcePIDIntoPTL' class='applyButton' title="This will add the sku in question to the product task list">Force into Product Task</button>
+			</form>
+		
+		<form><label><span>Shipping Methods/Rules</span><span class='toolTip' title="This will list the ship methods and their rules for the partition in focus.">?</span></label><button class='marginLeft' data-app-click='admin_tools|inspectorExec' data-inspect='shipmethods'>Go</button></form>		
+		<!--
+		started, but not done yet. -->
+		<form><label><span>Site Debug</span><span class='toolTip' title="A variety of site debuggging tools (shipping, tax, promotions, etc)">?</span></label><button class='marginLeft' data-app-click='admin_tools|siteDebugDialog'>Go</button></form>
+		
+	</section>
+
+	<section class='marginTop marginBottom'>
+		<h2>Raw API Request</h2>
+		<form action='#' onSubmit='return false' class='labelsAsBreaks alignedInputs marginTop'>
+		<label>
+			<span>Query</span>
+			<textarea name='JSON' rows='10' class='fullWidth'></textarea>
+		</label>
+		<button data-app-click="admin_tools|rawJSONRequestExec" class='applyButton'>Make Request</button>
+		<ul>
+			<li>There is no 'undo' for this. Use with extreme caution.</li>
+			<li>https://github.com/zoovy/AnyCommerce-Development/wiki/API_Call_Reference</li>
+		</ul>
+		</form>
+	</section>
+
+</div><!-- /accountUtilitiesTemplate -->
+
+
+<table>
+<tr id='accountUtilityLogRowTemplate'>
+	<td data-bind="var: log(TITLE); format:text;" class='isSearchable'></td>
+	<td><button data-app-click='admin_tools|adminPlatformLogDownloadExec' class='applyButton' data-text='false' data-icon-primary='ui-icon-arrowthickstop-1-s'>download</button></td>
+</tr>
+</table>
+
+
+
+<div id='manageFlexeditTemplate' data-app-role='flexeditManager'>
+<h1>Product Flexedit Manager</h1>
+	
+	<div class='ui-widget twoColumn'>
+		<h3  class='stdPadding ui-widget-header ui-corner-top'>Enabled Attributes</h3>
+		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
+		
+			<fieldset data-table-role='container'>
+			<table data-app-role='dataTable' class=' fullWidth gridTable flexeditEnabledListContainer'>
+				<tbody data-table-role='content' data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' data-app-role='flexeditEnabledListTbody' ></tbody>
+			</table>
+			
+			<div class='buttonset marginTop alignRight'>
+				<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create' class='applyButton'>Add Custom</button>
+				<button data-app-click='admin_tools|flexeditSaveExec' class='applyButton'>Save Changes</button>
+			</div>
+
+<!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
+			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer' data-table-role='inputs'>
+				<label><span>Attribute ID </span><input name='id' value='' type='text' required='required' data-bind='var: flexedit(id); format:popVal;' data-input-keyup="format" data-input-format='lowercase,flex' /></label>
+				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
+				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
+				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;'  data-input-keyup="format" data-input-format='lowercase,alphanumeric' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
+				<label>
+					<span>Type</span>
+					<select name='type' data-bind='var: flexedit(type); format:popVal;'  required='required' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
+						<option value='boolean'>Boolean (checkbox)</option>
+						<option value='checkbox'>Checkbox</option>
+						<option value='currency'>Currency</option>
+						<option value='image'>Image</option>
+						<option value='keyword'>Keyword</option>
+						<option value='keywordlist'>Keyword list</option>
+						<option value='number'>Number</option>
+						<option value='select' data-show-panel='flexEditOptionsInput'>Select</option>
+						<option value='textbox'>Text (single line)</option>
+						<option value='textarea'>Text (multi line)</option>
+						<option value='weight'>Weight</option>
+					</select>
+				</label>
+				
+				<!-- add this to your select list. make the class very specific. anything with this class will get toggled off onChange -->
+
+
+<!-- add this to each option that 'reveals' something. make the value very specific -->
+
+
+<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option -->
+				<div data-panel-id='flexEditOptionsInput' class='displayNone flexEditTypeInputs'>
+				<label>
+					<span>Options</span>
+					<textarea required='required' class='fullWidth' rows='10' data-validation-rules="skipIfHidden" data-format-rules='validateJSON' data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
+				</label>
+				</div>
+				<button data-app-click="admin_tools|flexDataTableAddEditCancel" class='applyButton'>Cancel</button>
+				<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton' data-hide-inputs-onapply='true'>Apply Attribute</button>
+			</div>
+			</fieldset>
+		</form>
+	</div>
+	
+	
+	<section class='ui-widget twoColumn column2' data-tablefilter-role='container'>
+		<h3 class='stdPadding ui-widget-header ui-corner-top'>Popular Attributes</h3>
+		<div class='ui-widget-content ui-corner-bottom stdPadding flexeditMasterListContainer' data-app-role='flexeditMasterListContainer'>
+			<div class='buttonset'>
+				<input name='tableSearchQuery' type='search' placeholder='filter attributes' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+				<button data-app-click="admin_tools|flexeditAttributesFullListShow" class='applyButton floatRight'>Full Attribute List</button>
+				</div>
+			<p>To enable a new attribute, simply drag it to the 'enabled' list on the left</p>
+			<table class='fullWidth gridTable' data-tablefilter-role='table' data-tablefilter-selector='tr'>
+				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" data-app-role='flexeditAttributeListTbody'>
+				</tbody>
+			</table>
+
+		</div>
+	</section>
+
+
+</div>
+
+
+
+
+
+<table>
+<tr id='flexeditAttributeRowTemplate'>
+	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
+	<td class='alignLeft isSearchable'>
+		<div data-bind='var:flexedit(id); format:text;'></div>
+		<div>
+			<span data-bind='var:flexedit(title); defaultVar:flexedit(tag); format:text;'></span>
+			<span data-bind='var:flexedit(index); format:text; pretext:(; posttext:);'></span>
+		</div>
+	</td>
+	<td class='alignRight'>
+		<span data-app-click="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList ui-icon ui-icon-circle-arrow-w pointer' title="Add to Enabled List"></span>
+		<button data-app-click="admin|tagRow4Remove" class='hideInMasterList applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Remove Field</button>
+		<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList applyButton' data-text='false' data-icon-primary="ui-icon-pencil">Update Attribute</button>
+	</td>
+</tr>
+
+</table>
+
+
+
+
+
+
+<!-- BILLING HISTORY
+<table>
+<tr id='billingHistoryInvoiceRowTemplate'>
+	<td data-bind='var:invoice(id); format:text;'></td>
+	<td data-bind='var:invoice(created); format:text;'></td>
+	<td data-bind='var:invoice(payment); format:text;'></td>
+	<td data-bind='var:invoice(amount); format:text;'></td>
+	<td>
+	<button>View Invoice</button>
+	</td>
+</tr>
+</table>
+ -->
+
+
+<div id='siteDebugTemplate'>
+<form action='#' onSubmit='return false'>
+	<fieldset class='marginBottom labelsAsBreaks'>
+		<label>
+			<span>Service</span>
+			<select name='_cmd' data-input-change="panel-selector" data-panel-selector=".debugCMDSpecifics" data-tlc="bind $var '.verb'; apply --select=$var;">
+				<option value=''>please choose</option>
+				<option value='adminDebugProduct' data-show-panel='debugCMDSpecificsProduct'>Product</option>
+				<option value='adminDebugPromotion' data-show-panel='debugCMDSpecificsCommon'>Promotion</option>
+				<option value='adminDebugSearch'>Search</option>
+				<option value='adminDebugShipping' data-show-panel='debugCMDSpecificsCommon'>Shipping</option>
+				<option value='adminDebugSite'>Site</option>
+				<option value='adminDebugTaxes' data-show-panel='debugCMDSpecificsCommon'>Taxes</option>
+			</select>
+		</label>
+		
+		
+		<div data-panel-id='debugCMDSpecificsProduct' class='displayNone debugCMDSpecifics'>
+		<label>
+			<span>Product id</span>
+			<input type='text' name='pid' value=''  />
+		</label>	
+		</div>
+		
+		<div data-panel-id='debugCMDSpecificsCommon' class='displayNone debugCMDSpecifics'>
+			<label>
+				<span>Source</span>
+				<select name='SRC' data-input-change="panel-selector" data-panel-selector=".debugSRCSpecifics">
+					<option value='CART' data-show-panel='debugSRCSpecificsCart'>Cart</option>
+					<option value='DEST' data-show-panel='debugSRCSpecificsDest'>Dest</option>
+					<option value='ORDER' data-show-panel='debugSRCSpecificsOrder'>Order</option>
+				</select>
+			</label>
+
+			<div data-panel-id='debugSRCSpecificsCart' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Cart id</span>
+				<input type='text' name='_cart' value=''  />
+			</label>
+			</div>
+			
+			<div data-panel-id='debugSRCSpecificsDest' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Item</span>
+				<input type='text' name='ITEM1' value=''  />
+			</label>
+			<label>
+				<span>Qty</span>
+				<input type='text' name='QTY1' value=''  />
+			</label>
+			<label>
+				<span>Zip</span>
+				<input type='text' name='ZIP' value=''  />
+			</label>
+			<label>
+				<span>State</span>
+				<input type='text' name='STATE' value=''  />
+			</label>
+			<label>
+				<span>Country</span>
+				<input type='text' name='COUNTRY' value=''  />
+			</label>
+			</div>
+		
+			<div data-panel-id='debugSRCSpecificsOrder' class='displayNone debugSRCSpecifics'>
+			<label>
+				<span>Order ID</span>
+				<input type='text' name='ORDERID' value=''  />
+			</label>
+			</div>
+		
+		
+		
+		</div>
+	</fieldset>
+
+
+	<div class='buttonset alignRight'>
+	<button data-app-click="admin_tools|siteDebugExec" data-icon-primary='ui-icon-wrench' class='applyButton'>Go</button>
+	</div>
+
+	<div data-app-role='siteDebugContent'></div>
+</form>
+
+
+</div>

@@ -1,0 +1,21 @@
+/*
+For the buyer side...
+*/
+
+#cartMessenger	{font-weight:normal;}
+.messageHistoryContainer	{max-height:120px; overflow:auto; font-size:.8em; margin-bottom: .8em;}
+.messageInputContainer	{padding:0; margin:0; margin-bottom:.8em; border:0;}
+.messageInputContainer textarea	{
+	height:60px;
+	font-weight:normal; 
+	display:block;
+	width:100%;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;	
+	}
+.selfMessage	{color:#366;}
+.otherMessage	{color:#639;}
+
+
+.cartMessageChooser  .chooserAddToCartForm	{display:none;}

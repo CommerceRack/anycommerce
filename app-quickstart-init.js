@@ -1,159 +1,190 @@
-var app = app || {vars:{},u:{}}; //make sure app exists.
-app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
+configureApp = function(){
+myApp.rq.push(['script',0,(document.location.protocol == 'file:') ? myApp.vars.testURL+'jsonapi/config.js' : myApp.vars.baseURL+'jsonapi/config.js',function(){
+//in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
+//	myApp.u.dump(" ->>>>>>>>>>>>>>>>>>>>>>>>>>>>> zGlobals is an object");
+	myApp.vars.username = zGlobals.appSettings.username.toLowerCase(); //used w/ image URL's.
+//need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
+	myApp.vars.secureURL = zGlobals.appSettings.https_app_url;
+	myApp.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
+	myApp.vars.jqurl = (document.location.protocol === 'file:') ? myApp.vars.testURL+'jsonapi/' : '/jsonapi/';
+	}]); //The config.js is dynamically generated.
+	
+myApp.rq.push(['extension',0,'order_create','']);
+myApp.rq.push(['extension',0,'cco','']);
+
+myApp.rq.push(['extension',0,'store_routing','', 'attachEventHandlers']);
+myApp.rq.push(['extension',0,'store_tracking','', 'attachHandlers']);
+myApp.rq.push(['extension',0,'store_seo','extensions/store_seo.js', 'attachHandlers']);
+myApp.rq.push(['extension',0,'scrollrestore','extensions/_scrollrestore.js', 'attachHandlers']);
+
+myApp.rq.push(['extension',0,'store_swc','', 'attachHandlers']);
+myApp.rq.push(['extension',0,'jerseypreview','', 'attachHandlers']);
+//myApp.rq.push(['css',0,'lightbox/css/lightbox.css', 'lightboxCSS']); 
+myApp.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']); 
+myApp.rq.push(['extension',0,'seo_robots','']);
+
+myApp.rq.push(['extension',0,'store_prodlist','']);
+myApp.rq.push(['extension',0,'prodlist_infinite','']);
+myApp.rq.push(['extension',0,'store_navcats','']);
+myApp.rq.push(['extension',0,'store_search','']);
+myApp.rq.push(['extension',0,'store_product','']);
+myApp.rq.push(['extension',0,'cart_message','']);
+myApp.rq.push(['extension',0,'store_crm','']);
+myApp.rq.push(['extension',0,'quickstart','','startMyProgram']);
+
+//myApp.rq.push(['extension',0,'entomologist','extensions/entomologist/extension.js']);
+//myApp.rq.push(['extension',0,'tools_animation','extensions/tools_animation.js']);
+
+// 201405 - Deprecated for Universal Analytics
+//myApp.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+
+//myApp.rq.push(['extension',1,'tools_ab_testing','extensions/tools_ab_testing.js']);
+myApp.rq.push(['extension',0,'partner_addthis','', 'attachHandlers']);
+//myApp.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
+//myApp.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
+//myApp.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
+//myApp.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
+
+
+//once peg is loaded, need to retrieve the grammar file. Order is important there. This will validate the file too.
+myApp.u.loadScript(myApp.vars.baseURL+'resources/peg-0.8.0.js',function(){
+	//myApp.model.getGrammar(myApp.vars.baseURL+"resources/pegjs-grammar-20140203.pegjs");
+	myApp.model.getGrammar("pegjs");
+	}); // ### TODO -> callback on RQ.push wasn't getting executed. investigate.
 
 
 
-app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
-app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
-
-app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
-app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
-app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
-app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
-app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
-app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
-app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
-
-//app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
-app.rq.push(['extension',1,'tools_ABtesting','extensions/tools_ABtesting.js']);
-//app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
-//app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
-//app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
-//app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
-//app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
-
-app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.testURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
-app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
-app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
-
-app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
-
-app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
-app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
-
-
-
-
-//add tabs to product data.
-//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
-app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
-	var $context = $(app.u.jqSelector('#',P.parentID));
-	var $tabContainer = $( ".tabbedProductContent",$context);
-		if($tabContainer.length)	{
-			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
-			else	{
-				$tabContainer.anytabs();
-				}
-			}
-		else	{} //couldn't find the tab to tabificate.
-	}]);
-
-//sample of an onDeparts. executed any time a user leaves this page/template type.
-//app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
+//gets executed from app-admin.html as part of controller init process.
+//progress is an object that will get updated as the resources load.
 /*
-app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
-	if(app.data.cartDetail && app.data.cartDetail.ship && app.data.cartDetail.ship.postal)	{
-		app.ext.myRIA.u.fetchTimeInTransit($(app.u.jqSelector('#',P.parentID)),new Array(P.pid));
-		}
-	}]);
+'passZeroResourcesLength' : [INT],
+'passZeroResourcesLoaded' : [INT],
+'passZeroTimeout' : null //the timeout instance running within loadResources that updates this object. it will run indef unless clearTimeout run here OR all resources are loaded.
+
 */
-
-//group any third party files together (regardless of pass) to make troubleshooting easier.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
-
-
-/*
-This function is overwritten once the controller is instantiated. 
-Having a placeholder allows us to always reference the same messaging function, but not impede load time with a bulky error function.
-*/
-app.u.throwMessage = function(m)	{
-	alert(m); 
-	}
-
-app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
-	var L = app.vars.rq.length;
-	var r = 0; //what is returned. total # of scripts that have finished loading.
-	for(var i = 0; i < L; i++)	{
-		if(app.vars.rq[i][app.vars.rq[i].length - 1] === true)	{
-			r++;
+myApp.u.showProgress = function(progress)	{
+	function showProgress(attempt)	{
+		if(progress.passZeroResourcesLength == progress.passZeroResourcesLoaded)	{
+			//All pass zero resources have loaded.
+			//the app will handle hiding the loading screen.
+			myApp.u.appInitComplete();
 			}
-		if(debug)	{app.u.dump(" -> "+i+": "+app.vars.rq[i][2]+": "+app.vars.rq[i][app.vars.rq[i].length -1]);}
-		}
-	return r;
-	}
-
-
-//gets executed once controller.js is loaded.
-//check dependencies and make sure all other .js files are done, then init controller.
-//function will get re-executed if not all the scripts in app.vars.scripts pass 1 are done loading.
-//the 'attempts' var is incremented each time the function is executed.
-
-app.u.initMVC = function(attempts){
-//	app.u.dump("app.u.initMVC activated ["+attempts+"]");
-	var includesAreDone = true,
-	percentPerInclude = (100 / app.vars.rq.length),   //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded(),
-	percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
-
-//make sure precentage is never over 100
-	if(percentComplete > 100 )	{
-		percentComplete = 100;
-		}
-
-	$('#appPreViewProgressBar','#appPreView').val(percentComplete);
-	$('#appPreViewProgressText','#appPreView').empty().append(percentComplete+"% Complete");
-
-	if(resourcesLoaded == app.vars.rq.length)	{
-		var clickToLoad = false;
-		if(clickToLoad){
-			$('#loader').fadeOut(1000);
-			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
-				app.u.loadApp();
-			});
-		} else {
-			app.u.loadApp();
+		else if(attempt > 150)	{
+			//hhhhmmm.... something must have gone wrong.
+			clearTimeout(progress.passZeroTimeout); //end the resource loading timeout.
+			$('.appMessaging','#appPreView').anymessage({'message':'Init failed to load all the resources within a reasonable number of attempts.','gMessage':true,'persistent':true});
+			}
+		else	{
+			var percentPerInclude = (100 / progress.passZeroResourcesLength);
+			var percentComplete = Math.round(progress.passZeroResourcesLength * percentPerInclude); //used to sum how many includes have successfully loaded.
+//			dump(" -> percentPerInclude: "+percentPerInclude+" and percentComplete: "+percentComplete);
+			$('#appPreViewProgressBar').val(percentComplete);
+			$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+			attempt++;
+			setTimeout(function(){showProgress(attempt);},250);
 			}
 		}
-	else if(attempts > 50)	{
-		app.u.dump("WARNING! something went wrong in init.js");
-		//this is 10 seconds of trying. something isn't going well.
-		$('#appPreView').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
-		app.u.howManyPassZeroResourcesAreLoaded(true);
-		}
-	else	{
-		setTimeout("app.u.initMVC("+(attempts+1)+")",250);
-		}
-
-	}
-
-app.u.loadApp = function() {
-//instantiate controller. handles all logic and communication between model and view.
-//passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
-//tmp is a throw away variable. app is what should be used as is referenced within the mvc.
-	app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication.
-	var tmp = new zController(app);
-//instantiate wiki parser.
-	myCreole = new Parse.Simple.Creole();
+	showProgress(0)
 	}
 
 
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
-app.u.appInitComplete = function(P)	{
-	app.u.dump("Executing myAppIsLoaded code...");
+myApp.u.appInitComplete = function()	{
+//	myApp.u.dump("Executing myAppIsLoaded code...");
+	
+	myApp.ext.order_create.checkoutCompletes.push(function(vars,$checkout){
+		dump(" -> begin checkoutCOmpletes code: "); dump(vars);
+		
+		var cartContentsAsLinks = encodeURIComponent(myApp.ext.cco.u.cartContentsAsLinks(myApp.data[vars.datapointer].order));
+	
+		
+//append this to 
+		$("[data-app-role='thirdPartyContainer']",$checkout).append("<h2>What next?</h2><div class='ocm ocmFacebookComment pointer zlink marginBottom checkoutSprite  '></div><div class='ocm ocmTwitterComment pointer zlink marginBottom checkoutSprit ' ></div><div class='ocm ocmContinue pointer zlink marginBottom checkoutSprite'></div>");
+		$('.ocmTwitterComment',$checkout).click(function(){
+			window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
+			window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','Tweeted about order');
+			window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','Tweeted about order');
+			});
+		//the fb code only works if an appID is set, so don't show banner if not present.				
+		if(myApp.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
+			$('.ocmFacebookComment',$checkout).click(function(){
+				myApp.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
+				ga('send','event','Checkout','User Event','FB message about order');
+				window[myApp.vars.analyticsPointer]('send', 'event','Checkout','User Event','FB message about order');
+				});
+			}
+		else	{$('.ocmFacebookComment').hide()}
+		});
+	
+	//Cart Messaging Responses.
+	myApp.cmr.push(['chat.join',function(message){
+		if(message.FROM == 'ADMIN')	{
+			var $ui = myApp.ext.quickstart.a.showBuyerCMUI();
+			$("[data-app-role='messageInput']",$ui).show();
+			$("[data-app-role='messageHistory']",$ui).append("<p class='chat_join'>"+message.FROM+" has joined the chat.<\/p>");
+			$('.show4ActiveChat',$ui).show();
+			$('.hide4ActiveChat',$ui).hide();
+			}
+		}]);
+
+	myApp.cmr.push(['goto',function(message,$context){
+		var $history = $("[data-app-role='messageHistory']",$context);
+		$P = $("<P>")
+			.addClass('chat_post')
+			.append("<span class='from'>"+message.FROM+"<\/span> has sent over a "+(message.vars.pageType || "")+" link for you within this store. <span class='lookLikeLink'>Click here<\/span> to view.")
+			.on('click',function(){
+				showContent(myApp.ext.quickstart.u.whatAmIFor(message.vars),message.vars);
+				});
+		$history.append($P);
+		$history.parent().scrollTop($history.height());
+		}]);
+
 	}
 
 
 
 
-//don't execute script till both jquery AND the dom are ready.
-$(document).ready(function(){
-	app.u.handleRQ(0)
+
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+//it'll also handle the old 'meta' uri params.
+//this will trigger the content to load on app init. so if you push refresh, you don't get a blank page.
+//it'll also handle the old 'meta' uri params.
+myApp.router.appendInit({
+	'type':'function',
+	'route': function(v){
+		return {'init':true} //returning anything but false triggers a match.
+		},
+	'callback':function(f,g){
+		dump(" -> triggered callback for appendInit");
+		g = g || {};
+		if(g.uriParams.seoRequest){
+			showContent(g.uriParams.pageType, g.uriParams);
+			}
+		else if (g.uriParams.marketplace){
+			showContent("product",{"pid":g.uriParams.product});
+			window[myApp.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
+			}
+		else if(document.location.hash)	{	
+			myApp.u.dump('triggering handleHash');
+			myApp.router.handleHashChange();
+			}
+		else	{
+			//IE8 didn't like the shortcut to showContent here.
+			myApp.ext.quickstart.a.showContent('homepage');
+			}
+		if(g.uriParams && g.uriParams.meta)	{
+			myApp.ext.cco.calls.cartSet.init({'want/refer':infoObj.uriParams.meta,'cartID':_app.model.fetchCartID()},{},'passive');
+			}
+		if(g.uriParams && g.uriParams.meta_src)	{
+			myApp.ext.cco.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src,'cartID':_app.model.fetchCartID()},{},'passive');
+			}
+		}
 	});
 
 
 
-
+}
 
 

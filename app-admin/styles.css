@@ -1,0 +1,1212 @@
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: local('PT Sans'),local('PTSans-Regular'), url(fonts/ptsans.woff) format('woff');
+	}
+@font-face {
+	font-family: 'PT Sans';
+	font-style: normal;
+	font-weight: 700;
+	src: local('PT Sans Bold'), local('PTSans-Bold'), url(fonts/ptsans_bold.woff) format('woff');
+	}
+
+@font-face	{
+	font-family: barcode3of9;
+	src: url('fonts/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
+body {line-height: 1;} /* helps to reduce some errant whitespace issues */
+
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:PT Sans, Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+
+img {border:0px;}
+
+/*
+*** 201338 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+	}
+
+.ui-dialog-content .ui-widget-anymessage	{max-height: 300px; overflow:auto;} /* inside a dialog, let's keep to a reasonable height */
+
+
+/*
+items that are floated may cause their containers to 'shrink'. apply this class to the container
+class can also be applied to a 1 item per row list.
+*/
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.displayInlineBlock	{display:inline-block;}
+
+.alignRight, .gridTable th.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+
+.valignTop	{vertical-align:top;}
+.valignMiddle	{vertical-align:middle;}
+
+.displayNone,
+.labelsAsBreaks label.displayNone,
+.labelsAsBreaks .label.displayNone,
+.debug,
+.showForZoovyOnly,
+.showForAnyCommerceOnly,
+.conditionalHide, /* a generic class used for hiding/unhiding based on when specific conditions are met */
+.detailMode .hideInDetailMode,
+.minimalMode .hideInMinimalMode 	{display:none;}
+
+.isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+.isZoovy option.showForZoovyOnly	{display:bloock;} /* otherwise the options go inline */
+.conditionMet .conditionalHide	{display:block;}
+.conditionMet span.conditionalHide	{display:inline-block;}
+
+/* for use on lists where no bullets, indents, etc are needed. add on ul */
+/* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
+
+
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+
+
+.ui-accordion .ui-accordion-header	{padding-left:30px;}
+
+a, .lookLikeLink, .ui-widget-content a 	{cursor:pointer; color:#7398a5; text-decoration:none; outline: 0;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+
+a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
+.pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
+
+
+.opacity50	{
+	-moz-opacity: 0.5; /* Netscape */
+	-khtml-opacity: 0.5; /* Safari 1.x */
+	opacity: 0.5;	/* Good browsers */
+	}
+.width50	{width:50%;}
+.queryMatch	{background-color:#f0f4f5;}
+/* text styling */
+
+pre.prettyPre {
+	white-space: pre-wrap;       /* css-3 */
+	white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	white-space: -pre-wrap;      /* Opera 4-6 */
+	white-space: -o-pre-wrap;    /* Opera 7 */
+	word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	}
+
+.barcode	{font-family: barcode3of9 !important;}
+
+
+/*section or page header. There should only be one of these per page and it should be at the very top.*/
+h1	{font-size: 1.4em;  margin: .8em 0px; padding:0; font-weight:bold;}
+
+/* used for the heading of section of text blocks each with it's own sub heading.
+must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
+h2	{font-size: 1.3em; margin: .6em 0px; padding:0; font-weight:bold;}
+
+/* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
+should be followed by a P , TABLE or LIST. */
+h3, legend	{font-size: 1.2em; margin: .5em 0px; font-weight: bold; padding:0;}
+
+/* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
+h4	{font-size: 1.1em; margin: .4em 0px; font-weight: bold; padding:0;}
+
+h5,h6	{font-size: 1em; margin: .3em 0px; font-weight: bold; padding:0;}
+/* if you want to display a hint or tip, give it the hint class */
+
+
+fieldset	{margin:0; padding:0; margin-bottom:1em; border:0;}
+input.smallInput	{max-width:6.2em;} /* will fit six chars plus a decimal. */
+
+
+.hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
+.small	{font-size:.85em;}
+.lowercase	{text-transform:lowercase;}
+
+
+
+
+
+
+
+/* some positioning classes */
+
+.positionRelative	{position:relative;}
+.positionAbsolute	{position:absolute;}
+.positionTop	{top:0;}
+.positionRight	{right:0;}
+.positionLeft	{left:0;}
+.positionBottom	{bottom:0;}
+
+
+/*
+Generic text styles
+*/
+.lineThrough	{text-decoration:line-through}
+.uppercase	{text-transform:uppercase;}
+.spacedLetters	{letter-spacing:.6em;}
+/* apply this class to a pre tag and whitespace formatting will be supporting, but word wraping will occur */
+.preformatted {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	display:block; 
+	white-space: pre-wrap;  
+	white-space: -moz-pre-wrap; 
+	white-space: -pre-wrap; 
+	white-space: -o-pre-wrap; 
+	word-wrap: break-word; 
+	width:100%; overflow:visible; /* formatting caused scroll bars for a few px */
+	font-family:Tahoma, Geneva, sans-serif; /* have to redeclare for pre default */
+	}
+
+
+/* use these to indicate severity, where red is the highest alert state and green is the 'everything is dandy' state. */
+.red		{color:#660000;}
+.orange	{color:#F60;}
+.yellow	{color:#CC0;}
+.blue	{color:#000066;}
+.green	{color:#006600;}
+
+.smallTxt,
+.ui-widget select.smallTxt	{font-size:.75em;}
+
+
+
+/* some tooltip styling */
+.toolTip	{color:#F60;} /* add the tooltip class to whatever element is having tooltip applied to it. */
+.ui-tooltip	{font-size:.85em; line-height:1.3em;}
+
+
+
+/*
+some global padding and margins.
+As often as practical, use margin or padding of 12px; this will give the UI a consistent look and feel.
+If more is needed, jump up in increments of 12.
+If less is needed, use increments of 4
+*/
+
+.noPadOrMargin	{padding:0; margin:0;}
+.paddingNone {padding:0;}
+.borderNone {border:0;}
+
+
+/*
+MARGIN CLASSES
+some standard margins that can be used for spacing between elements.
+In general, rule of thumb would be to apply bottom margin to stacked elements, not top. That way if the element order changes, there's no alignment issues on top.
+if extra spacing is needed between two elements, add a leftmargin to the right element and rightmargin to the left element. doubles the margin.
+using these shared margins will help make the UI more consistent.
+*/
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px !important;}
+.marginTopNone	{margin-top:0;}
+
+.paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
+
+.stdMargin	{margin:12px;}
+.stdPadding, .ui-widget .stdPadding	{padding:12px;}
+.smallPadding, .ui-widget .smallPadding	{padding:4px;}
+.ui-widget-header	{margin-bottom:0;} /* this mostly butts up next to a ui-widget-content and no bottom margin is wanted/necessary. it's applied to a header occassionally */
+.ui-widget-header-padding	{padding:3px 6px;}
+section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
+
+.ui-corner-none	{
+	-webkit-border-radius: 0px;
+	border-radius: 0px; 	
+	}
+
+.boxModelBorder	{
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	}
+
+
+/* 
+LIST CLASSES
+apply liststylenone and nopadormargin to the UL to get an inline list.
+if you want the list responsive, apply the .fluidList class. 
+ -> In this case, you want a separate class to specify height and width of each LI to maintain a grid. ex: .mediaLib li	{...}
+*/
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
+/* in a list, when one item is 'selected' (such as the ebay category chooser), apply this class to indicate. */
+.activeListItem, .activeListItem.lookLikeLink	{color:#333333;}
+.activeListItem:before	{content: "\00bb "; font-weight:bold;} /* &#187 / double arrow icon */
+
+
+.minHeight100	{min-height:100px;} /* apply onto elements that will have showloading run on them if they're empty.
+
+
+/* some generic styles for tables */
+
+/* use paddedTable when you have a table where you need some small spacing between each td col and row */
+.paddedTable td, .paddedTable th, .paddedTable tf	{padding:2px 10px 2px 0;}
+
+/* for non-datagrid tables. ex: setup page. */
+table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
+td.width1	{width:1%;}
+.width20	{width:20%;}
+.width75	{width:75%;}
+
+/* 201336 -> removed limitations by type so any element could use this class */
+/* table.fullWidth, iframe.fullWidth, textarea.fullWidth	{width:100%;}*/
+.fullWidth	{width:100%;}
+
+
+iframe.noBorders	{overflow:hidden; border:none;}
+
+iframe.ad-300x250	{height:250px;}
+
+/*
+Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set.
+*/
+.gridTable	{background:#cccccc; border-spacing:0 1px;}
+.gridTable td, .gridTable th, .gridTable tf	{padding:2px 10px 2px 2px; vertical-align:top;}
+.gridTable tr:nth-child(odd)	{background:#ffffff;}
+.gridTable tr:nth-child(even)	{background:#f0f0f0;}
+
+.gridTable tr.ui-state-highlight	{background: inherit !important;} /* the important here is important. it overrides some odd/even and other classes. it's used conservatively */
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+
+.gridTable th, .gridTable .tf	{background:#efefef; text-align:left;}
+
+.gridTable tr.alert {background:#ffc8c8;}
+.gridTable tr.warning {background:#fbf9dc;}
+
+
+
+/* floating panels, used for the setup and utilities landing pages */
+
+.floatPanel	{
+	width:100%;
+	margin:0 0 1% 0;
+	}
+.floatPanel .helper	{display:none;} /* condense the panels down to decrease scrolling */
+.floatPanel a	{padding:5px 0; display:block;} /* add a little space around each link to accomodate a touch */
+.floatPanel .ui-widget-header h3	{margin:0; }
+.floatPanel .ui-widget-header	{border-bottom:0;}
+/*   product/customer picker */
+
+/* apply a max height for picker accordion content, but only when it's in a dialog. no constraints needed in the body (in general). */
+.ui-dialog-content .pickerAccordionContainer .ui-accordion-content	{max-height:200px; overflow:auto;}
+
+
+
+
+/* a global 'handle' class for now. for consistency. 
+later if more variety is needed, we can either create exceptions or more rules to handle all cases.
+*/
+.finderProdlistContainer .handle	{position: absolute; right: 0; top: 0; bottom: 0;background: #f8f8f8; padding:14px 6px 0 6px;}
+.handle { padding:6px; cursor:pointer; }
+
+.simpleListItem .removeProd, .simpleListItem .handle	{padding-top:3px;} /* less padding on top because lineitem is shorter (no image) */
+
+
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:30px; min-width:115px;}
+li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
+
+.wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
+
+
+/* This gets applied to the parent containers around each tabs content area.  */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.showInTabContent	{display:none !important;}
+.tabContent .showInTabContent	{display:inline-block !important; }
+
+/* multipage controls */
+
+
+/* a border is added via another class on the mpheader, so this strips off all but the bottom */
+.mpControls	{clear:both; display:block; padding:3px; position:relative; margin-bottom:6px; z-index:600;}
+.mpControls span.ui-state-active	{padding: 2px 3px;}
+.finderProdlistContainer .mpControls	{border:0; border-bottom-width:1px; line-height:24px;}
+
+
+/* use this in combo with ui-widget, ui-corner-all and ui-widget-content to create a horizontal bar of buttons with a container around them. */
+.ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
+.ui-widget-buttonbar button	{margin:0 2px;}
+
+
+#headerSearchFrm	{float:right;}
+#headerSearchFrm legend {display:none;}
+#headerSearchFrm fieldset	{text-align:right}
+#headerKeywordsInput	{width:350px;}
+
+
+
+
+
+
+/*
+some jquery ui overrides/corrections
+*/
+
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
+
+/* if the ul has a fixed width on it, the li's, set to 100%, can flow outside the container. */
+li.ui-menu-item	{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;	
+	}
+
+li.ui-menu-item .ui-state-focus	{color:#ffffff;}
+
+button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very short. */
+
+
+
+
+
+
+
+/*
+
+STICKY TABS
+
+*/
+
+
+#stickytabs	{
+	position:fixed;
+	left:0;
+	top:120px;
+	width:40px;
+	height:300px;
+	z-index:500;
+	}
+
+#stickytabs .positionRelative	{width:400px;}
+/* positioning and text rotation was barfing. so only the span within the tab is rotated */
+#stickytabs .stickytab	{
+	position:absolute; cursor:pointer; z-index:510; 
+	text-align:center;
+	width:19px;
+	height:100px;
+	top:10px;
+	right:-30px; /* positioning takes into account there's some padding */
+	text-indent:6px;
+	}
+
+#stickytabs .stickytab .sticktabText	{
+	white-space: nowrap;
+	margin:auto;
+	display:block; /* block required for rotation, at least in FF.  */
+	-webkit-transform: rotate(90deg);/* Safari */
+	-moz-transform: rotate(90deg);/* Firefox */
+	-ms-transform: rotate(90deg);/* IE */
+	-o-transform: rotate(90deg);/* Opera */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	/* Internet Explorer */	
+	}
+#stickytabs .stickycontent	{font-size:.75em; overflow:auto; width:400px; height:300px;}
+
+
+
+/* css for a three column layout. will be used on dashboard and in customer editor. */
+
+
+
+/* two column panel layout. will go to two column @ 768. */
+.twoColumn{  
+	width:100%;
+	}  
+
+.twoColumn .placeholder{  
+	background: #ffffff;  
+	}  
+
+.threeColumn	{width:31%; margin:0 2% 0 0; padding:0;}
+
+/* for a three column layout, where two columns are Narrow and one is Wide (NW) */
+.nwColumnN	{width:19%;}
+.nwColumnW	{width:60%;}
+
+
+
+
+
+/* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
+
+
+
+/* Pure CSS3 Multi Level Drop Down Navigation Menu */
+/*             http://www.bloggermint.com/demos/darknavmenu/#            */
+
+
+/* menu container */
+.ddUlMenu ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier1 menu behavior */
+.ddUlMenu ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier 1 menu link style (ok to change this). will affect tier2 also */
+.ddUlMenu ul li a {
+	float: left;
+	text-decoration:none;
+	padding:0 12px;
+	cursor:pointer;
+	}
+
+
+.ddUlMenu li ul {
+	background:#efefef;
+	left: -999em;
+	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
+	position: absolute;
+	width: 160px;
+	z-index: 9999;
+	border:1px solid #cccccc;
+	}
+
+.ddUlMenu li:hover ul {
+	left: auto;
+	}
+
+/* tier 2 nav */
+.ddUlMenu li ul li	{cursor:pointer;} /* click is likely binded to li, so make it all a cursor */
+.ddUlMenu li ul a {
+	background: none;
+	line-height:24px;
+	font-weight:normal; font-size:.8em;
+	display:block;
+	border: 0 none;
+	width: 160px;
+	}
+	
+
+/*
+
+########################################################
+
+HEADER
+
+########################################################
+
+*/
+
+
+#mastHead	{position:relative; min-width:700px;}
+#mastHead .logo	{float:left; margin-left:12px; margin-top:5px;}
+#mastHead .menu	{float:right; margin-right:12px; white-space: nowrap;}
+#mastHead .menu span	{display:inline;}
+#mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
+
+#mastHead .partition:before	{content:"prt: ";}
+
+/*
+the row with the logo and text links
+
+NOTE - the overflow hidden on headerTop and the display inlineblock/width are to solve an errant spacing issue appearin between the two elments using these classes.
+*/
+.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656; overflow:hidden;}
+.mhTabsContainer	{
+	position:relative; display:inline-block; width:100%;
+	background:#757779;
+	}
+
+
+
+.mhTabsContainer ul	{width:100%; padding:0; margin:0; display:inline-block; position:relative; z-index:100; float:left;}
+.mhTabsContainer li	{display:block; float:left; list-style:none;border-right:1px solid #ededed; width:8%; padding:1px 4px 0 4px; margin:0; font-size:.75em; position:relative; color:#ffffff; cursor:pointer;}
+.mhTabsContainer li:last-child	{border-right:0px;}
+.mhTabsContainer li:hover	{background:#7398a5;}
+.mhTabsContainer li.active, #navTabs	{background:#c0d2d8; color:#565656;}
+#navTabs a	{color: #333333;}
+.mhTabsContainer .toggleArrow	{width:1%;}
+
+.mhTabsContainer ul.navIcons	{max-width:1150px;} /* as the browser gets very wide, the icon/tabs don't look as good stretched out. cap em */
+.mhTabsContainer ul.showIcons .icon	{
+	/* display:block; */
+	float:right;}
+.mhTabsContainer ul.showIcons li	{height:55px;}
+.mhTabsContainer ul.hideIcons .icon	{display:none;}
+.mhTabsContainer ul.hideIcons .animIcon	{display:none;}
+.mhTabsContainer ul.hideIcons .animator{display:none;}
+.mhTabsContainer ul.hideIcons li	{height:20px;}
+
+.mhTabsContainer .text	{position:relative; z-index:10;}
+.mhTabsContainer .icon	{display: none; background-image:url(images/tab_sprites_v2-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .active .animIcon	{display: none;} 
+.mhTabsContainer .animIcon	{background-repeat:no-repeat; position:absolute; z-index:9;}
+.mhTabsContainer .animator {left: 0px; width: 92px; height: 55px; position: absolute; z-index: 10;}
+
+.mhTabsContainer .setupTab .animIcon	{bottom:0; right:0; height:55px; width:55px;} 
+.mhTabsContainer .sitesTab .animIcon	{width:42px; height:32px; bottom: 5px; right: 6px;}
+.mhTabsContainer .productTab .animIcon	{width:45px; height:39px; bottom: 0px; right: 5px;}
+.mhTabsContainer .ordersTab .animIcon	{width:61px; height:42px; bottom: 6px; right: 0px;}
+.mhTabsContainer .crmTab .animIcon	{width:62px; height:36px; bottom: 10px; right: 0px;}
+.mhTabsContainer .syndicationTab .animIcon	{width:60px; height:39px; bottom: 3px; right: 0px;}
+.mhTabsContainer .reportsTab .animIcon	{width:33px; height:39px; bottom: 10px; right: 6px;}
+.mhTabsContainer .kpiTab .animIcon	{width:41px; height:42px; bottom: 6px; right: 6px;}
+.mhTabsContainer .utilitiesTab .animIcon	{width:53px; height:53px; bottom: 1px; right: 1px;}
+.mhTabsContainer .supportTab .animIcon	{width:38px; height:38px; bottom: 8px; right: 8px;}
+.mhTabsContainer .messagesTab .animIcon	{width:45px; height:45px; bottom: 5px; right: 5px;}
+/*
+.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 //reminder close this comment
+.mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
+.mhTabsContainer .productTab .icon	{background-position: -110px 0;}
+.mhTabsContainer .ordersTab .icon	{background-position: -165px 0;}
+.mhTabsContainer .crmTab .icon	{background-position: -220px 0;}
+.mhTabsContainer .syndicationTab .icon	{background-position: -275px 0;}
+.mhTabsContainer .reportsTab .icon	{background-position: -330px 0;}
+.mhTabsContainer .kpiTab .icon	{background-position: -385px 0;}
+.mhTabsContainer .utilitiesTab .icon	{background-position: -440px 0;}
+.mhTabsContainer .supportTab .icon	{background-position: -495px 0;}
+*/
+
+.mhTabsContainer .setupTab.active .icon	{display: block; background-position: 0px -55px;} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab.active .icon	{display: block; background-position: -55px -55px;}
+.mhTabsContainer .productTab.active .icon	{display: block; background-position: -110px -55px;}
+.mhTabsContainer .ordersTab.active .icon	{display: block; background-position: -165px -55px;}
+.mhTabsContainer .crmTab.active .icon	{display: block; background-position: -220px -55px;}
+.mhTabsContainer .syndicationTab.active .icon	{display: block; background-position: -275px -55px;}
+.mhTabsContainer .reportsTab.active .icon	{display: block; background-position: -330px -55px;}
+.mhTabsContainer .kpiTab.active .icon	{display: block; background-position: -385px -55px;}
+.mhTabsContainer .utilitiesTab.active .icon	{display: block; background-position: -440px -55px;}
+.mhTabsContainer .supportTab.active .icon	{display: block; background-position: -495px -55px;}
+
+
+.mhTabsContainer .messageCount	{
+	color:#ffffff; font-size:12px; font-weight:normal; line-height:18px;
+	display:none; /* off by default. will be turned on by app when messages are present */
+	position:absolute; top:-2px; right:-3px;
+	z-index:110;
+	height:20px; width:20px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	text-align:center;
+	border:1px solid #ffffff;
+	-webkit-box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+background: rgb(153,0,0); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(153,0,0,1) 0%, rgba(204,0,0,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(153,0,0,1)), color-stop(100%,rgba(204,0,0,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#990000', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
+
+	}
+
+#navTabs	{text-align:center; font-size:.75em; line-height:1.7em;}
+#navTabs a	{padding:0px 12px; text-decoration:none;}
+#navTabs a:hover	{text-decoration:underline;}
+
+#breadcrumb	{border-bottom:1px solid #ededed; font-size:.8em; text-indent:12px;}
+
+.mhTabsContainer li.messagesTab:hover, #messagesContent, .mhTabsContainer li.messagesTabActive	{background:#565656 !important;}
+#messagesContent	{position:absolute; top:65px; left:17px; right:17px; min-height:300px; z-index:99; color:#ffffff; padding:12px;}
+#messagesContent a, #messagesContent .lookLikeLink	{color:#0CF;}
+
+#messagesContent .messagesList	{float:left; width:30%; overflow:auto; height:300px; padding-right:12px; font-size:.75em;}
+#messagesContent .messageDetail	{float:right; width:60%; margin-right:3%;}
+
+
+
+
+
+.pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
+
+
+
+
+/*
+
+########################################################
+
+LOGIN and preView
+
+########################################################
+
+*/
+
+
+#appLogin	{max-width:350px}
+#appLogin input.textbox, #appLogin .loginbutton	{width:100%; display:block; margin-bottom:6px;}
+#appLogin .ui-button	{margin-right:0;}	
+
+#appPreView, #createAccountContainer, #appPasswordRecover	{width:500px;} /* top margin F's up FF and body/html 100% height */
+#appPreView, #createAccountContainer, #appPasswordRecover, #appLogin	{font-size:1.2em; margin: auto;  position:relative; top:200px;}
+
+
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+
+
+#appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
+
+
+.treatAsthreePLSprite, .threePLSprite	{height:30px; width:162px; display:inline-block; margin:4px; text-align:left;}
+.threePLSprite	{background-image:url(images/third_party_logins-176x276.png); background-repeat:no-repeat;}
+.twitter	{background-position:0 0;}
+.facebook	{background-position:0 -48px;}
+.linkedin	{background-position:0 -93px;}
+.yahoo	{background-position:0 -141px;}
+.openid	{background-position:0 -188px;}
+.google	{background-position:0 -235px;}
+
+
+
+/*
+
+########################################################
+
+FINDER
+
+########################################################
+
+*/
+
+
+/*
+any div that is going to be the container for a product finder should have this class.
+the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
+*/
+
+.finderContainer	{width:100%; margin:12px 0;}
+.finderContainer .ui-widget-header	{padding:4px;}
+
+
+.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
+.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+
+#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
+
+/*
+used in the template for a product finder.
+use only variable widths, so that the finder expands proportionally depending
+on it's container element.
+*/
+.finderTable	{width:96%; margin:0 auto;}
+.finderTable	td {padding:6px; width:50%;}
+
+
+
+/* for product lists in a finder. */
+
+/* scrolly-div for product lists */
+.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
+
+/*
+parent element for list (either ol or ul)
+min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
+*/
+.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
+
+/*
+a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
+the right padding is to accomodate the handle and removeProd elements.
+ */
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
+.finderProdlist li:hover	{border-color: #cccccc;}
+
+.finderProdlist .prodThumb	{float:left; margin-right:12px;}
+.finderProdlist .pid	{font-size:.8em}
+.finderProdlist .prodName	{margin-right:55px;}
+
+
+/*
+styles for lists that are selectable
+a background on the target element may require an implicit override here.
+*/
+.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def !important ;}
+.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
+
+/* if a list is selectable and sortable, add an element with a handle class */
+.ui-selecting .handle { background: #ddd; }
+.ui-selected .handle { background: #cde; }
+
+
+.finderResults	{z-index:100;}
+.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
+
+/* the remove feature is only available on the target side */
+.finderResults .removeProd	{display:none;}
+
+
+
+/*
+
+####################
+
+Collapseable panel (product editor, domains)
+
+####################
+
+
+note - the parent 'stackedPanels' was to compensate for legacy/compatability content class clashing.
+*/
+
+.stackedPanels .panelContents	{border-top: none; min-height:100px;} /* panels are collapsed by default. when opened, need min-height for loading while content is obtained */
+.stackedPanels .panelHeader	{margin-top:12px; padding:3px 12px;}
+.stackedPanels .panelHeader span	{float:left; margin-right:6px;}
+
+.stackedPanels	.panelContents fieldset	{border:none; margin:0; padding:10px;} /* add a little padding inside the panel */
+
+
+
+
+
+
+
+/*
+
+########################################################
+
+
+Messaging Styles
+anymessage styles are in the anyplugins.css file. they're shared with the storefront.
+
+########################################################
+
+*/
+
+
+
+
+/*
+
+########################################################
+
+
+SHARED CLASSES FOR INLINE EDITING
+
+########################################################
+
+*/
+
+
+
+.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
+/*
+added to an editable element once edit is enabled.
+inline block and width are added so that elements that are empty will be more obviously editable.
+be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
+the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
+*/
+.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px; min-height:12px;} 
+.editEnabled input	{border:0; padding:0; margin:0;}
+.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
+.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
+
+.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
+a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
+
+
+
+
+/*
+
+########################################################
+
+
+PAGE STYLES
+
+########################################################
+
+*/
+
+
+
+/* styles for csv import pages */
+/* this was a horrible idea. at some point, these should be removed */
+.page section	{display:block; padding:0; margin:0 0 24px 0}
+.page section.displayNone	{display:none;}
+.page fieldset	{border:none; padding:0;}
+
+
+/*
+
+########################################################
+
+
+DEBUGGER
+
+########################################################
+
+*/
+
+#debugPanel	{position:fixed; bottom:100px; left:-15px; width:125px; padding-left:25px; display:none;}
+#debugPanel .debugMenu ul	{width:250px;}
+#debugPanel h5 {margin:4px 0;}
+#debugPanel h6 {margin:4px 0;}
+
+
+/*
+
+########################################################
+
+
+STYLES FOR SPECIFIC UI LAYOUTS (dualMode, soloMode, slimLeft, etc)
+
+########################################################
+
+*/
+
+
+/* these are the styles added AFTER the shared dualMode function was created */
+h1.dualModeHeader	{line-height:35px; height:35px;display:inline-block; margin:0; padding:0; text-indent:12px;} /* the text header */
+.dualModeListThead th	{text-align:left; padding:2px 4px;} /* the table headers */
+
+.dualModeListControls	{padding:2px 12px; line-height:25px; min-height:25px;} /* any sort of 'clear' added here messes w/ panels. test. */
+
+.dualModeDetail	{float:right; display:none;} /* the container for the detail column. */
+
+/* end global dualmode classes */
+
+
+.dualModeListContainer .heading, 
+.soloModeListContainer .heading, 
+.slimLeftContentSection .heading	{text-indent:12px; line-height:35px;}
+
+
+.dualModeListContainer .buttonSet,
+.soloModeListContainer .buttonSet,
+.slimLeftContentSection .buttonSet	{float:right; vertical-align:middle; margin:3px;}
+
+
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .ui-widget-header div.buttonset	{min-height:35px;} /* this is set so when in minimal mode, if only floating buttons are present, the header doesn't collapse */
+.dualModeListContainer .formRow	{min-height:30px; line-height:30px;}
+
+.dualModeListContainer.detailMode	{font-size:.80em;} /* shrink list text in detail mode */
+
+
+
+.slimLeftNav	{float: left; width:20%;}
+
+/* the way accordion is used here, no left/right padding is desired. the padding is added to the inner elements so their focus state can go to the edges */
+.slimLeftNav .ui-accordion-content	{padding:.3em 0;}
+.slimLeftNav .ui-accordion-content li {padding:.2em 1em;}
+
+.slimLeftContentSection	{float: right; width:75%;}
+.slimLeftContent	{min-height:250px;} /* minheight here for showLoading */
+
+.slimLeftNav .ui-widget-header	{margin:0; border-bottom:0;}
+.slimLeftNav .roundedList li, .slimLeftNav .paddedList li	{margin-bottom:3px; padding:3px 6px;}
+
+/*
+
+########################################################
+
+
+SHARED FORM STYLES
+
+########################################################
+
+*/
+
+
+/*
+for use in forms where the label is the row container.
+put the prompt into a span
+<label><span>prompt</span>input</label>
+*/
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin-bottom:.4em; vertical-align:top; clear:both; } /* left and right margin should NOT be forced to zero */
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
+.labelsAsBreaks .subset	{margin-left:36px;}
+
+
+/* 
+within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
+add floatleft to each label inside the div
+see shipping panel in product editor for example
+*/
+
+.labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
+.labelsAsBreaks div.label label, .labelsAsBreaks .prompt	{ margin-right:12px;}
+
+
+
+/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+/* first of type was a HORRIBLE idea. started adding 'prompt' so that the first-of-type can be ditched */
+.alignedLabels label span:first-of-type, .alignedLabels .prompt	{width:30%;display:inline-block;}
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=url],
+.alignedInputs input[type=password],
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]:not([size])	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+
+.alignedInputs input[type=number], 
+.alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
+
+
+/* SITES TAB */
+
+.domainPanel	{
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	float:left;
+	margin:1%;
+	padding:12px;
+	width:29%;
+	}
+
+
+
+/* categories and lists interface */
+
+
+.navcats_lists .wait, .navcats_lists .hide4lists	{display:none;}
+
+
+
+
+/* CAMPAIGN MANAGER */
+.campaignPlatformIcons span {float:left; margin-right:4px;}
+
+.templateEditor .ToolBar	{
+	position:relative;
+	z-index:15;
+	}
+/* this applies clearfix */
+.templateEditor .ToolBar:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+.wizardForm fieldset div	{margin-bottom:12px;}
+
+
+.templateEditor .templatePreviewContainer {position:relative;}
+.templateEditor .device{position:absolute; top:0; left:0;} /* applied to all the 'device' backgrounds. */
+/* device-specific class added to a 'device' div and also the parent container that holds both the iframe and the .device */
+
+.templateEditor .device	{z-index:10;}
+.templateEditor iframe	{border:0px; z-index:21; position:relative;} /* in device specific mode, position is changed to absolute. */
+
+.templateEditor .iphone5 .device	{background:url(images/devices/iphone5.jpg) no-repeat; height:798px; width:385px;}
+.templateEditor .iphone5 .device.landscape	{top:-175px; left:180px;} /* correct device image placement */
+
+.templateEditor .iphone5 iframe.portrait	{top:134px; left:33px; position:absolute;}
+.templateEditor .iphone5 iframe.landscape	{top:60px; left:90px; position:absolute;}
+
+
+.templateEditor .templatePreviewContainer div.landscape	{
+	/* for firefox, safari, chrome, etc. */
+	-webkit-transform: rotate(-90deg);
+	-moz-transform: rotate(-90deg);
+	/* for ie */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	
+	}
+
+/* landing page (aka recent news) */
+
+/* .pageLanding .ui-widget-content	{max-height:400px; overflow:auto; min-height:75px;} /* if/when browsers support it, check out  overflow-style */
+
+.pageLanding .ui-anypanel-header .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
+
+/* three column panel layout (homepage) */
+#dashboardColumn1	{width:65%; float:left;}
+#dashboardColumn2	{width:33%; float:right;}
+
+#dashboardColumn2 .varImage	{max-width:300px; width:100%;}
+
+.recentNewsContainer	{height:450px; overflow:auto;}
+.recentNewsContainer article	{margin-bottom:24px;}
+
+/* achievements page */
+table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-collapse: collapse;}
+.achievementList td	{vertical-align:top;border-bottom:1px solid #efefef; padding:6px 12px;}
+.achievementList p	{font-size:1em; margin:0px;}
+.achievementList h3	{font-size:1.5em; font-weight:normal; font-family: 'PT Sans', sans-serif;}
+
+
+/* ebay reports page */
+.ebayListingsReportPage fieldset.oneThird	{width:30%}
+
+
+
+/*
+
+#########################
+
+help documentation styles (aka webdoc)
+
+#########################
+*/
+
+
+/* asides are used for click by click, caution and hints.
+ex of cbc, hint and caution: search 'product' and open 'product edit'
+*/
+
+.helpDetail aside	{padding:12px; margin:12px 0;}
+.helpDetail aside div	{background:#fff; padding:12px;}
+.helpDetail aside div li	{margin-left:30px; list-style: none; margin-bottom:6px;}
+.helpDetail aside h6	{padding-bottom:12px; font-size:1.5em;}
+
+
+.helpDetail aside.cbc	{background:#C0D2D8;}
+.helpDetail aside.cbc h6:before {content: "\e132"; font-family:iconFont; padding-right:3px;}
+
+.helpDetail aside.hint	{background:#efefef;}
+.helpDetail aside.hint h6:before {content: "\e044"; font-family:iconFont; padding-right:3px;}
+
+
+
+
+.helpDetail aside.caution	{background:#fe5252;}
+.helpDetail aside.caution h6	{color:#ffffff;}
+.helpDetail aside.caution h6:before {content: "\e145"; font-family:iconFont; padding-right:6px;}
+
+
+.helpDetail .ui-widget-content h1	{margin:0 0 24px 0; font-size:1.5em; color:#000000;} /* document title */
+.helpDetail .ui-widget-content h2	{margin:0 0 12px 0; font-size:1.3em; color:#333333;} /* title for each article (used to be SECTION) */
+.helpDetail .ui-widget-content h3	{margin:0 0 12px 0; font-size:1.1em; color:#666666;} /* title for each section (used to be SUBSECTION) */
+
+.helpDetail article {margin-bottom:24px; } /* divides each section */
+.helpDetail article, .helpDetail .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
+
+
+
+
+/*
+REPORTING -> KPI
+wasn't enough css to justify a separate .css file. If this content grows, move to extensions/admin/reports.css
+*/
+ul.kpiSortable	{width:250px; min-height:200px; max-height:250px; overflow:auto; list-style:none; margin:0; padding:0;}
+ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
+ul.kpiSortable li:last-child	{border-bottom:0;}
+.KPIGraphBuilder	{margin:50px;}
+
+.kpiGraphContainer .graph	{
+	width:90%;
+	height:250px;
+	margin:0 auto 12px auto; padding-bottom:12px; border-bottom:1px dashed #ccc;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	}
+
+
+
+
+/*
+Account utilities / support tools
+*/
+.objectInspector .objectInspector li {padding:4px;}
+.objectInspector .objectInspector li:nth-child(even)	{background-color:#efefef;}
+.objectInspector .objectInspector li:nth-child(odd)	{background-color:#ffffff;}
+.objectInspector .prompt {
+    display: inline-block;
+    width: 250px;
+	}
+
+
+.flexeditMasterListContainer .hideInMasterList	{display:none;} /* these fields will become visible once dragged over to the enabled column */
+.flexeditEnabledListContainer .hideInEnabledList	{display:none;} /* these fields will become visible once dragged over to the enabled column */
+
+
+
+
+/*
+SYNDICATION
+wasn't enough css to justify a separate .css file. If this content grows, move to extensions/admin/syndication.css
+*/
+
+.ebayCategoryChooser .leftCol	{width:25%;}
+.ebayCategoryChooser .leftCol li	{margin:3px 0 3px 0}
+
+
+.pageSyndication .market	{border:1px solid #ffffff; padding:8px;}
+.pageSyndication .selectedMarket	{border:1px solid #efefef;}
+
+
+
+
+/* batch jobs and manager */
+
+.batchTimer:before	{content:"Auto update in: "}
+
+
+
+/*
+NOTIFICATIONS
+*/
+
+.notificationDatatableInputs	{min-width:40%;}
+
+
+/* this is a phone in landscape mode */
+@media screen and (min-width: 400px) {
+	.floatPanel .helper	{
+		display:block;
+		}
+	}
+
+
+@media screen and (min-width: 760px) {
+	.floatPanel	{
+		width:31%;
+		margin:0 1% 1% 1%;
+		float:left;
+		box-sizing:border-box;
+		-moz-box-sizing:border-box;
+		webkit-box-sizing:border-box;		
+		}
+	.floatPanel .ui-widget-header h3	{font-size:1.0em;}
+	.twoColumn{  
+		width:48%;  
+		min-height:200px;  
+		float:left; 
+		}  
+	
+	.twoColumn.column2 {float:right;}
+	.slimLeftNav	{width:30%;}
+	.slimLeftContentSection	{float: right; width:68%;}
+	}
+
+
+@media screen and (max-width: 1024px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
+	}

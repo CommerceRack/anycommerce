@@ -1,5 +1,37 @@
 //this file merges three formerly separate files: variations.js, json2.js and wiki.js
 
+// POLYFILL FOR MAP.  required for peg.
+// *** 201402 -> added to make peg more backwards compatible (run in IE8)
+if (!Array.prototype.map)
+{
+  Array.prototype.map = function(fun /*, thisArg */)
+  {
+    "use strict";
+
+    if (this === void 0 || this === null)
+      throw new TypeError();
+
+    var t = Object(this);
+    var len = t.length >>> 0;
+    if (typeof fun !== "function")
+      throw new TypeError();
+
+    var res = new Array(len);
+    var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+    for (var i = 0; i < len; i++)
+    {
+      // NOTE: Absolute correctness would demand Object.defineProperty
+      //       be used.  But this method is fairly new, and failure is
+      //       possible only if Object.prototype or Array.prototype
+      //       has a property |i| (very unlikely), so use a less-correct
+      //       but more portable alternative.
+      if (i in t)
+        res[i] = fun.call(thisArg, t[i], i, t);
+    }
+
+    return res;
+  };
+}
 
 
 /*
@@ -61,7 +93,7 @@ initialize: function(pogs,o) {
 	this.invCheck = o.invCheck ? o.invCheck : false; //set to true and a simple inventory check occurs on add to cart.
 	this.imgClassName = o.imgClassName ? o.imgClassName : 'sogImage'; //allows a css class to be set on images (for things like magicZoom)
 	this.sku = o.sku; //
-//	app.u.dump('inventory check = '+this.invCheck+' and className = '+this.imgClassName);
+//	dump('inventory check = '+this.invCheck+' and className = '+this.imgClassName);
 
 	this.handlers = {};
 	this.addHandler("type","text","renderOptionTEXT");
@@ -113,12 +145,12 @@ getOptionByID: function(id) {
 
 //upgraded to jquery.
 renderOptionSELECT: function(pog) {
-//	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
+//	dump('BEGIN renderOptionSELECT for pog'); dump(pog);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select>").attr({"name":pogid});
     var i = 0;
-    var len = pog.options.length;
+    var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -131,16 +163,16 @@ renderOptionSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
 
-//	app.u.dump(" -> pogid: "+pogid);
-//	app.u.dump(" -> pog hint: "+pog['ghint']);
+//	dump(" -> pogid: "+pogid);
+//	dump(" -> pog hint: "+pog['ghint']);
 	$selectList.appendTo($parentDiv);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
@@ -155,7 +187,7 @@ renderOptionBIGLIST: function(pog) {
 	var selOptions = '';
 	var lastOptGrp,selValues;
 	var inc = 0;
-    var len = pog.options.length;
+     var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 	var $parentDiv = $("<span \/>");
 	var $selectList = $("<select \/>").attr({"name":pogid}).addClass("zform_select zform_biglist");
 //sets the first options on both select lists.
@@ -170,14 +202,14 @@ create first optgroup.
 These are here instead of in the while loop to save a lookup during each iteration. Otherwise we need to 
 check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tighter loop.
 */
-	selValues = pog['options'][inc]['prompt'].split('|');
+	selValues = pog['@options'][inc]['prompt'].split('|');
 	lastOptGrp = selValues[0];
 	selOptions += "<optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 	while (inc < len) {
 
 //selValues[0] = first dropdown prompt/opt group.
 //selValues[1] = second dropdown prompt.
-		selValues = pog['options'][inc]['prompt'].split('|');
+		selValues = pog['@options'][inc]['prompt'].split('|');
 		optGrp = selValues[0];
 
 //at each 'change' of grouping, add the current group to the select list.
@@ -185,13 +217,13 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 			selOptions += "<\/optgroup><optgroup label='"+selValues[0]+"'>"; //add option to first dropdown list.
 			}
 		
-		selOptions += "<option value='"+pog['options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
+		selOptions += "<option value='"+pog['@options'][inc]['v']+"'>"+selValues[1]+"<\/option>\n";
 		lastOptGrp = selValues[0]
 		inc += 1;
 		}
 	selOptions += "<\/optgroup>";
 	
-//	app.u.dump(selOptions);
+//	dump(selOptions);
 	
 	$selectList.append(selOptions).appendTo($parentDiv); //append optgroups.
 	
@@ -204,15 +236,15 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 
 //upgraded to jquery.
 renderOptionIMGSELECT: function(pog) {
-//	app.u.dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
+//	dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>").addClass('imgSelectContainer');
 	var $selectList = $("<select>").attr({"name":pogid}).addClass('zform_select').bind('change', function(e){
 		var thumbnail = $("option:selected",$(this)).attr('data-thumbnail');
-		$(this).closest('.imgSelectContainer').find('img').attr('src',app.u.makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false,"lib":app.username}));
+		$(this).closest('.imgSelectContainer').find('img').attr('src',makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false}));
 		});
     var i = 0;
-    var len = pog.options.length;
+     var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 
 	var selOption; //used to hold each option added to the select
 	var optionTxt;
@@ -225,10 +257,10 @@ renderOptionIMGSELECT: function(pog) {
 		}
 //adds options to the select list.
     while (i < len) {
-		optionTxt = pog['options'][i]['prompt'];
-		if(pog['options'][i]['p'])
-			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"' data-thumbnail='"+pog['options'][i]['img']+"' id='option_"+pogid+""+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		optionTxt = pog['@options'][i]['prompt'];
+		if(pog['@options'][i]['p'])
+			optionTxt += pogs.handlePogPrice(pog['@options'][i]['p']); //' '+pog['@options'][i]['p'][0]+'$'+pog['@options'][i]['p'].substr(1);
+		selOption = "<option value='"+pog['@options'][i]['v']+"' data-thumbnail='"+pog['@options'][i]['img']+"' id='option_"+pogid+""+pog['@options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -237,10 +269,10 @@ renderOptionIMGSELECT: function(pog) {
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 
-	$imageDiv = $('<div>').addClass('imageselect_image');
-	$imageDiv.html(app.u.makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"lib":app.username,"id":"selectImg_"+pogid}));
+	var $imageDiv = $('<div>').addClass('imageselect_image');
+	$imageDiv.html(makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"id":"selectImg_"+pogid}));
 	$imageDiv.appendTo($parentDiv);
-//	app.u.dump('END renderOptionIMGSELECT for pog '+pog.id);
+//	dump('END renderOptionIMGSELECT for pog '+pog.id);
 	return $parentDiv;
 	},
 
@@ -248,14 +280,14 @@ renderOptionIMGSELECT: function(pog) {
 renderOptionRADIO: function(pog)	{
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>");
+	var $parentDiv = $("<span \/>").addClass('labelsAsBreaks');
 	
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
     var i = 0;
-    var len = pog['options'].length;
+     var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 	while (i < len) {
-		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt'])));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']})).append(pog['@options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -282,7 +314,7 @@ renderOptionHIDDEN: function(pog) {
 	var pogid = pog.id;
 //hidden attributes don't need a label. !!!
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
-	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
+	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
 	$parentDiv.append($('<input>').attr({type: "hidden", name: pogid, value: defaultValue}));
@@ -303,7 +335,7 @@ renderOptionATTRIBS: function(pog)	{
 renderOptionTEXT: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
-	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
+	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
 	var $textbox = $('<input>').attr({type: "text", name: pogid, value: defaultValue});
@@ -325,7 +357,7 @@ renderOptionTEXT: function(pog) {
 renderOptionCALENDAR: function(pog) {
 	var pogid = pog.id;
 	
-	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
+	var defaultValue = pog['default'] ?  pog['default'] : "";
 	
 	var $parentDiv = $("<span \/>");
 	var $textbox = $('<input>').attr({type: "text", name:pogid, value: defaultValue}).addClass('zform_textbox').datepicker({altFormat: "DD, d MM, yy"});
@@ -349,7 +381,7 @@ renderOptionCALENDAR: function(pog) {
 renderOptionNUMBER: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
-	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
+	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //right now, 'number' isn't widely supported, so a JS regex is added to strip non numeric characters
 	var $textbox = $('<input>').attr({type: "number", name: pogid, value: defaultValue}).keyup(function(){
@@ -359,13 +391,8 @@ renderOptionNUMBER: function(pog) {
 	if(pog['max'])
 		$textbox.attr('max',pog['max']);
 	if(pog['min'])
-		$textbox.attr('max',pog['max']);
-	if(pog['maxlength'])	{
-		$textbox.keyup(function(){
-			if (this.value.length > (pog['maxlength'] - 1)) // if too long...trim it!
-		        this.value = this.value.substring(0, pog['maxlength']);
-			});
-		}
+		$textbox.attr('min',pog['min']);
+		
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
@@ -379,7 +406,7 @@ renderOptionNUMBER: function(pog) {
 renderOptionTEXTAREA: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
-	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
+	var defaultValue = pog['default'] ?  pog['default'] : "";
 	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
 	var $textbox = $('<textarea>').attr({name: pogid, value: defaultValue});
@@ -413,11 +440,11 @@ renderOptionIMGGRID: function(pog)	{
 	var radioLabel; //used to create the radio button label.
 	var thumbnail; //guess what this holds
     var i = 0;
-    var len = pog['options'].length;
+    var len = $.isEmptyObject(pog['@options']) ? 0 : pog['@options'].length;
 	while (i < len) {
-		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
-		radioLabel = "<label>"+pog['options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']});
+		thumbnail = makeImage({"w":pog.width,"h":pog.height,"name":pog['@options'][i]['img'],"b":"FFFFFF","tag":true});
+		radioLabel = "<label>"+pog['@options'][i]['prompt']+"<\/label>";
+		$radioInput = $('<input>').attr({type: "radio", name: pogid, value: pog['@options'][i]['v']});
 		$parentDiv.append(thumbnail).append($radioInput).append(radioLabel).wrap("<div class='floatLeft'><\/div>");;
 		i++
 		}
@@ -433,7 +460,7 @@ renderOptionUNKNOWN: function(pog) {
 
 // !!! this'll need fixin
 showHintIcon : function(pogid,pogHint)	{
-//	app.u.dump("BEGIN variations.showHintIcon");
+//	dump("BEGIN variations.showHintIcon");
 	return "<span class='ghint_qmark_container'><a href='#' onclick='$(this).parent().next().toggle(); return false;' class='ghint_qmark'>?<\/a></span><div style='display:none;' class='zhint'>"+pogHint+"</div>";
 	},
 
@@ -468,23 +495,23 @@ renderOption: function(pog,pid) {
 	var pogid = pog.id;
 
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").addClass("variation").addClass("pogType_"+pog.type);
+	var $formFieldDiv = $("<div>").addClass("variation variation_"+pog.type+" variation_"+pogid);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;
 
 
 //create the label (prompt) for the form input and make it a child of the newly created div.
-	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).text(pog.prompt);
-	if(pogid != 'AK'){
-		$formFieldDiv.append($formFieldLabel);
-		}
+	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).addClass("label_"+pog.type).text(pog.prompt);
+
+	$formFieldDiv.append($formFieldLabel);
+	
 //Push the new div into a div with id JSONPogDisplay as a new child.
 //	var $displayObject = $("#JSONPogDisplay_"+pid);
 //	$displayObject.append($formFieldDiv);   /// NOTE the form ID on this should probably be auto-generated from the element ID.
 
     if (this.handlers["pogid."+pogid]) {
-      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");
+      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");  // this[this.handlers["pogid."+pogid]](pog)
       }
     else if (this.handlers["type."+pog.type]) {
       $optionObj = eval("this."+this.handlers["type."+pog.type]+"(pog)");
@@ -1011,18 +1038,18 @@ this was necessary because otherwise the converted html was output as <a href...
             		suffix = phrase;
             		}
 
-			
+				dump(' -> operation: '+operation+' and linkCmdPointer'+linkCmdPointer+' and suffix: '+suffix+' and phrase: '+phrase);
 				switch(operation) {
 					case ":url" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":url"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":url"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
 						else
 							output = "<a href=\""+suffix+"\" target='_blank'>"+phrase+"</a>";
 						break;
 
 					case ":search" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":search"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase);
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":search"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":search"](suffix,phrase);
 						else
 							output = "<a href=\""+domain+"search.cgis?KEYWORDS="+suffix+"\">"+phrase+"</a>";
 						break;
@@ -1030,50 +1057,50 @@ this was necessary because otherwise the converted html was output as <a href...
 
 					case ":category" :
 						if(suffix.indexOf('.') != 0) {suffix = "."+suffix} //make sure category suffixes (safe id) start with .
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":category"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":category"](suffix,phrase); 
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":category"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":category"](suffix,phrase); 
 						else
 							output = "<a href=\""+domain+"/category/"+suffix+"/\">"+phrase+"</a>";
 						break
 
 					
 					case ":product" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":product"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":product"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":product"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":product"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/product/"+suffix+"/\">"+phrase+"</a>"
 						break;
 
 
 					case ":customer" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":customer"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":customer"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":customer"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":customer"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/customer/"+suffix+"/\">"+phrase+"</a>"
 						break;					
 					
 
 					case ":popup" :
-//						app.u.dump(":popup suffix: "+suffix);
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":popup"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":popup"](suffix,phrase)
+//						dump(":popup suffix: "+suffix);
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":popup"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":popup"](suffix,phrase)
 						else
 							output = "<a href=\""+suffix+"\" target='popup'>"+phrase+"</a>";
 						break;
 
 					case ":policy" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":policy"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":policy"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":policy"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":policy"](suffix,phrase)
 						else
 							output = "<a href=\""+domain+"/policy/"+suffix+"/\">"+phrase+"</a>"
 						break;		
 
 
 					case ":app" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":app"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":app"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject($._app.ext[linkCmdPointer].wiki) && typeof $._app.ext[linkCmdPointer].wiki[":app"] == 'function')
+							output = $._app.ext[linkCmdPointer].wiki[":app"](suffix,phrase)
 						else	{
-							app.u.dump("WARNING! no app handle/token specified (required per app): "+chunk);
+							dump("WARNING! no app handle/token specified (required per app): "+chunk);
 							output = phrase;
 							}
 						break;	
@@ -1141,13 +1168,65 @@ the rest of the code below that is for backward compatibility with IE7... and ma
 
 if(typeof jQuery === 'function')	{
 //will serialize a form into JSON
-	jQuery.fn.serializeJSON=function() {
+/*	jQuery.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];
 			});
 		return json;
 		};
+*/
+//the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
+// ** 201320 -> serializeJSON now supports an options object.  set cb:true to get a more rational way of managing checkboxes.
+// 				the serialized object will have any cb set to 1 or 0 based on whether it's checked. That means unchecked items WILL get serialized.
+$.fn.serializeJSON = function(options){
+	var json = {}
+	var $form = $(this);
+	options = options || {}
+	options.cb = options.cb || false;
+	//allows for a different selector to be passed, such as :input.edited
+	options.selector = options.selector || ":input";
+
+	$(options.selector,$form).each(function(){
+		var val;
+//		dump(" -> this.type: "+this.type);
+		if(!this.name){return}; //early exit if name not set, which is required.
+
+		if ('radio' === this.type) {
+			if(json[this.name]) { return; } //value already set, exit early.
+			json[this.name] = this.checked ? this.value : '';
+			}
+		else if('select-multiple' === this.type)	{
+			if(!this.value)	{}
+			else	{
+//multiple select is saved as an array.  If you need it flattened, either write a param to change the behavior or flatten it outside.
+				var optionsArr = new Array(); // 'this' loses meaning in the option loop, so a var is created and set after.
+				$('option',$(this)).each(function(){
+					var $option = $(this);
+	//				dump(" -> $option.prop('selected'): "+$option.prop('selected'));
+					if($option.prop('selected'))	{
+						optionsArr.push($option.val());
+						}
+					})
+				json[this.name] = optionsArr;
+				}
+			}
+		else if ('checkbox' === this.type) {
+			if(options.cb)	{
+				if (this.checked) {json[this.name] = '1';}
+				else {json[this.name] = '0';}
+				}
+			else	{
+				if (this.checked) {json[this.name] = 'on';} //must be lowercase. that's the html default and what the old cgi's are looking for.
+				}
+//			else	{json[this.name] = 0;}
+			}
+		else {
+			json[this.name] = this.value;
+			}
+		})
+		return json;
+		}
 	}
 
 
@@ -1543,6 +1622,7 @@ if (!this.JSON) {
             if (replacer && typeof replacer !== 'function' &&
                     (typeof replacer !== 'object' ||
                      typeof replacer.length !== 'number')) {
+
                 throw new Error('JSON.stringify');
             }
 
@@ -1611,7 +1691,7 @@ jQuery.extend(imgSlider.prototype, {
 		this.pause = 200; //first pic has been displayed, so start rotation quickly.
 		this.handleAnime(); //start the slideshow
 		this.pause = 3500; //used to determine length of time before slide leaves. takes into account time it takes to slide in (but not depart)
-//		app.u.dump(this);
+//		dump(this);
 		},
 	getWidth : function(){
 		var r = 0; //what is returned. sum width;

@@ -1,0 +1,454 @@
+html, body{padding:0px; margin: 0px;}
+/*
+*/
+
+body{background:url(images/andho15g.jpg) no-repeat fixed center top, #233628;}
+.highlight_1, a.highlight_1{color:#233628;}
+.highlight_2, a.highlight_2{color:#5c6a60;}
+.highlightBG_1 {background: #233628;}
+.highlightBG_1_alpha {background:rgba(35,54,40,.75);}
+.highlightBG_2 {background: #5c6a60;}
+.redText{color:#7e0000;}
+a.redText{color:#7e0000;}
+.strong{font-weight:bold;}
+.underline {text-decoration:underline;}
+.noUnderline, a.noUnderline {text-decoration:none;}
+.blockLink, .blockLink a {text-decoration:none;}
+.bold {font-weight:bold;}
+.white{color:white;}
+.emph{font-size:1.2em;}
+
+#mainContentArea > div > div, .contentBG {background:rgba(256,256,256,.8);}
+#mainContentArea > div > div.noBG {background:none;}
+
+.preview img {
+	margin-top: 30px;
+	background:rgba(256,256,256,.8);
+}
+
+.textDecNone{text-decoration:none;}
+.alignBottom {vertical-align:bottom;}
+.alignJustify {text-align:justify;}
+.displayTable {display: table;}
+.displayTableRow {display: table-row;}
+.displayTableCell {display: table-cell;}
+
+.positionRelative{position:relative}
+
+.fillWidth {width:100%;}
+
+.clear{clear:both;}
+.clearLeft{clear:left;}
+.clearRight{clear:right;}
+
+.dosis {font-family:'Dosis', sans-serif;}
+
+@font-face {font-family: LHFFullBlock; src: url('extensions/jerseypreview/LHFFullBlock.ttf');}
+@font-face {font-family: LHFFullBlock2; src: url('extensions/jerseypreview/LHFFullBlock.TTF');}
+.LHFFullBlock { font-family: LHFFullBlock, LHFFullBlock2;}
+@font-face {font-family: LHFoldblockCONDBOLD; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.ttf');}
+@font-face {font-family: LHFoldblockCONDBOLD2; src: url('extensions/jerseypreview/LHFoldblockCONDBOLD.TTF');}
+.LHFoldblockCONDBOLD { font-family: LHFoldblockCONDBOLD, LHFoldblockCONDBOLD2;}
+@font-face {font-family: LHFoldblockCONDMED; src: url('extensions/jerseypreview/LHFoldblockCONDMED.ttf');}
+@font-face {font-family: LHFoldblockCONDMED2; src: url('extensions/jerseypreview/LHFoldblockCONDMED.TTF');}
+.LHFoldblockCONDMED { font-family: LHFoldblockCONDMED, LHFoldblockCONDMED2;}
+@font-face {font-family: LHFoldblockREGBOLD; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.ttf');}
+@font-face {font-family: LHFoldblockREGBOLD2; src: url('extensions/jerseypreview/LHFoldblockREGBOLD.TTF');}
+.LHFoldblockREGBOLD { font-family: LHFoldblockREGBOLD, LHFoldblockREGBOLD2;}
+@font-face {font-family: LHFoldblockREGMED; src: url('extensions/jerseypreview/LHFoldblockREGMED.ttf');}
+@font-face {font-family: LHFoldblockREGMED2; src: url('extensions/jerseypreview/LHFoldblockREGMED.TTF');}
+.LHFoldblockREGMED { font-family: LHFoldblockREGMED, LHFoldblockREGMED2;}
+
+#appPreView{
+	background: rgba(64,64,64,.5);
+	position:fixed;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;
+	z-index:1000;
+	
+	width: 100%;
+	max-width:100%;
+}
+#appPreView > div {
+	background: white;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	height: 100px;
+	width: 200px;
+	margin-left: -100px;
+	margin-top: -50px;
+	border: 5px solid #233628;
+	box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);
+}
+#mainContentArea {position:relative;}
+#mainContentArea > div {
+	position:relative;
+	left: -150%;
+	transition: left .6s;
+	width: 100%;
+}
+#mainContentArea > div.active {left:0%;}
+#mainContentArea > div.active.post {left:150%;}
+
+#header {
+	position:fixed;
+	background:white;
+	left:0px;
+	right:0px;
+	top:0px;
+	z-index: 100;
+}
+
+#headerTeam {display:block; border:0px; text-decoration:none;}
+
+#expandNav a {display:block; width: 30px; height: 30px; line-height:30px}
+#expandNav a img{vertical-align:middle;}
+#nav {padding:3px 0px; position:absolute; left:0px; right:0px; bottom:0px;}
+#nav .fullNav {
+	position:absolute;
+	top:0px;
+	width: 100%;
+	left: -150%;
+	transition: all .4s;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box; 
+}
+#nav  a {
+	text-decoration:none;
+	font-weight:bold;
+	color: white;
+}
+
+#nav .tableNav a {
+	border-left:1px solid white;
+	border-right:1px solid white;
+}
+#nav a:hover {color:#9e0000;}
+#mininav a{color:black;}
+#search input{ border-radius:3px; border: 1px solid #b3b3b3;}
+
+#footer {
+	color:white; 
+	/* padding: 20px 0px; */
+	position:fixed;
+	left:0px;
+	right:0px;
+	z-index:100;
+}
+
+#toggleFooterBtn{
+	height:40px;
+	width: 40px;
+	position:absolute;
+	right:0px;
+	top:-40px;
+	border-left:1px solid white;
+	border-top: 1px solid white;
+	box-shadow: -2px -2px 6px rgba(64,64,64,.5);
+	background-image:url(images/wrapper/menu_icon.png);
+	background-position:center center;
+	background-repeat: no-repeat;
+}
+
+#toggleFooterBar{
+	border-bottom: none;
+	border-right: none;
+	border-left: none;
+	height: 20px;
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+}
+
+#appView #toggleFooterBar .hideFooter{display:none;}
+#appView.showFooter #toggleFooterBar .hideFooter{display:inline-block;}
+#appView.initFooter #toggleFooterBar .hideFooter{display:inline-block;}
+#appView #toggleFooterBar .showFooter{display:inline-block;}
+#appView.showFooter #toggleFooterBar .showFooter{display:none;}
+#appView.initFooter #toggleFooterBar .showFooter{display:none;}
+
+#footer{transition: bottom .6s;}
+#appView.peekFooter.showFooter #footer,
+#appView.showFooter #footer {bottom:0px;}
+#appView.peekFooter.initFooter #footer,
+#appView.initFooter #footer {bottom:0px;}
+
+#footer a {color:white; text-decoration: none;}
+
+#footerMiddle .displayTableCell, #footerLeft .displayTableCell {padding: 4px 0px; font-size:.9em;}
+
+#footerRight .displayTableCell {width: 16.66%}
+#footerRight .socialIcons img{width: 100%; max-width:33px;}
+#footerRight form {padding: 20px 0px;}
+
+.footerColumn h3 { letter-spacing:6px; font-size: .8em; padding: 4px 0px;}
+.footerBottomBorder .displayTableCell{border-bottom:1px solid #2f483d;}
+
+#footerLeft .displayTableCell {width:50%;}
+#footerMiddle .displayTableCell {width:33.33%;}
+
+#footer #copyright {
+	margin: 0px auto;
+	max-width:260px;
+	position:absolute; bottom: -6px; font-size: .7em;
+	left: 0px;
+	right: 0px;
+}
+
+.homepageBanner{display: block; text-decoration: none; border:none; width: 100%; background:url(images/homepage/SportsWorldChicago-Homepagev3.jpg) no-repeat center center; position:relative;z-index:50;}
+.homeSlideshow{display:inline-block; vertical-align:middle; max-width: 60%; width: 100%; height:100%;}
+.homeSlideshow a{display:block; width: 100%; height:100%;}
+.homeSlideshow a .vAlignHelper{display:inline-block; vertical-align:middle; height:100%;}
+.homepageBanner img{vertical-align:middle; max-width: 98%; max-height: 98%;}
+
+.homepageContent p{ font-size: .9em; padding: 0px 12px; text-indent: 12px;}
+.homepageContent {border: 2px solid #233628; padding-bottom: 12px;}
+
+.leagueLinkContainer {border-spacing: 5px;}
+.leagueLink {font-size: 3em; border: 3px solid #233628;}
+a.leagueLink:hover {background:#233628; color:white;}
+
+a.blockLink, li.blockLink {display: inline-block;}
+.categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
+.categoryListItem .catName, .productListItem .prodInfo {position:absolute; bottom:0px; right:0px; left:0px; color: white; padding: .8em 0em; font-weight:bold;}
+.productListItem .prodInfo {height: 12%;}
+.productListItem .prodInfo .prodName {padding: 0px 10px;}
+.productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.2em;}
+.productListItem .price > span {color:white; font-size.75em;}
+
+.productListItem.blockLink { padding-bottom: 66px;}
+.productListItem .prodInfo {height: 60px; padding: 3px 0px;}
+
+.blockLink img {width:100%;}
+
+.fieldCamPage iframe,
+.fieldCamPage object {max-width: 100%;}
+
+.productPage {color:#333333;}
+.productPage a {color:#333333;}
+.productTitle, .productInfo, .productTabs{float:right; clear:right; width: 36%;}
+
+.productImages {float:left; width: 60%;}
+.productImages a {text-decoration:none;}
+.productImages .prodThumb { width: 30%;}
+.productImages .prodThumb img{max-width:100%; max-height: 550px;}
+.productImages .morefromteamlink img {max-width:100%;}
+.productImages .prodThumb .imgContainer{display:inline-block; max-width: 100%;}
+.productImages .prodThumbs .prodThumb img{width:100%;}
+
+.productImages canvas.prodPreviewer {
+	position:absolute;
+	left:0px;
+	top:0px;
+	bottom:0px;
+	right:0px;
+	width: 100%;
+	height: 100%;
+}
+
+.productInfoSection {border-bottom: 1px solid #b3b3b3; padding-bottom: 1em;}
+.productInfoSection label {font-weight:bold;}
+.prodPrice .prefix, .prodMSRP .prefix { display:inline-block; width: 100px; }
+.prodPrice .prefix{ color: #333333;}
+.basePrice {color:#e24b2c; font-size: 1.5em;}
+
+.productPage .addtocartbutton{border:none;}
+
+.productPage .tabContent{overflow-y: auto; height:400px; font-size: .9em;}
+
+.filteredSearchPage form {color:white;}
+.filterList { width: 16%; padding: 15px 2%;}
+.filterList legend {font-weight: bold; margin-bottom: 6px;}
+.filterResultsContainer {float:right; width: 80%;}
+.filterCheckboxList {max-height: 120px; overflow:auto;}
+.myTeamList .filterCheckboxList {max-height: none;}
+.playerFilterList {max-height: 90px; overflow: auto; margin-bottom: 8px;}
+.playerFilterList a{margin-right: 5px;}
+.filterGroup {margin-bottom: 10px;}
+.playerFilterList {text-indent: 1em;}
+
+.noResults {
+	display: inline-block;
+	text-align: left;
+	background:rgba(256,256,256,.8);
+}
+.noResults legend {font-weight: bold; font-size: 1.2em; color: #233628;}
+.noResults label { width: 100px; display: inline-block; color: black;}
+
+.sliderValContainer {text-decoration: none;}
+.ui-slider-handle {text-decoration: none;}
+
+.myteams h4 > span { padding-left: 10px;}
+
+.prodListTagsContainer {
+	height: 26px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 99;
+}
+.productListItem .prodListTagsContainer {
+	bottom: 66px;
+}
+.prodListTagsContainer span{
+	display: inline-block;
+	height: 26px;
+	background: url(images/cubworld_bigtags.png) no-repeat;
+}
+.prodListTagsContainer .is_user3 {display:none;}
+
+.prodListTagsContainer .is_fresh{background-position:0px 0px; width:83px;}
+.prodListTagsContainer .is_bestseller{background-position:0px -26px; width:80px;}
+.prodListTagsContainer .is_user1{background-position:0px -52px; width:99px;}
+.prodListTagsContainer .is_sale{background-position:0px -78px; width:99px;}
+.prodListTagsContainer .is_specialorder {background-position:0px -104px; width:116px;}
+.prodListTagsContainer .is_preorder{background-position:0px -130px; width:135px;}
+.prodListTagsContainer .is_discontinued,
+.prodListTagsContainer .is_outofstock{background-position:0px -156px; width: 128px;}
+.prodListTagsContainer .is_shipfree{background-position:0px -182px; width: 176px;}
+
+#myTeamChooser {position:fixed; left:0px; right:0px; bottom:0px; top:0px; z-index:1000; opacity:0; transition: all .4s; visibility:hidden; background: rgba(64,64,64,.5);}
+#myTeamChooser.active {opacity:1; visibility:visible;}
+/*
+#myTeamChooser.hidden {z-index:-1000;}
+*/
+#myTeamChooser .closeButton{width:1em;}
+#myTeamChooser .chooser {position:absolute; background: white; padding: 5px; box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);overflow:hidden;}
+#myTeamChooser .chooser h2{color:white; padding: 5px; height:30px;}
+#myTeamChooser .contentContainer{position:absolute; top:45px; bottom: 5px; left:5px; right:5px;}
+#myTeamChooser .sportChooser {height:100%;}
+#myTeamChooser .sportChooser .selector h2 {position:absolute; bottom:0px; right:0px; left:0px;}
+#myTeamChooser .sportChooser .selector {
+	position:relative;
+	width: 40%;
+	height: 36%;
+	padding-bottom: 2.4%;
+	padding-top: 2.4%;
+	display:inline-block;
+}
+#myTeamChooser .sportChooser .selector img{
+	max-width: 100%;
+	max-height: 100%;
+}
+#myTeamChooser .teamlist {width: 45%; display: inline-block; padding: 0px 2.4%; overflow: auto; height: 90%;}
+#myTeamChooser .teamlist .teamTemplate {height:45px; font-size:1.2em; vertical-align:middle; line-height: 45px;}
+#myTeamChooser .teamlist .teamTemplate button {height:30px; width: 30px; text-align:center; vertical-align:middle; display:inline-block;}
+#myTeamChooser .teamlist .teamTemplate button {vertical-align:middle;}
+#myTeamChooser .teamlist .teamTemplate img {height:100%;}
+#myTeamChooser .sportContainer{
+	position:absolute;
+	width: 100%;
+	background: white;
+	top:0px;
+	bottom:0px;
+	overflow:auto;
+	transition: left 1s;
+	left: 120%;
+}
+#myTeamChooser[data-swc-sport=app_mlb] .sportContainer[data-swc-sport=app_mlb]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nfl] .sportContainer[data-swc-sport=app_nfl]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nba] .sportContainer[data-swc-sport=app_nba]{left: 0px;}
+#myTeamChooser[data-swc-sport=app_nhl] .sportContainer[data-swc-sport=app_nhl]{left: 0px;}
+
+#myTeamChooser .myTeamPopupContainer,
+#myTeamChooser .myTeamPromptContainer,
+#myTeamChooser .myTeamSelectedContainer {
+	display: none;
+	position:absolute;
+	left:0px;
+	right:0px;
+	top:0px;
+	bottom:0px;
+	
+	background: rgba(64,64,64,.5);
+}
+#myTeamChooser.popup .myTeamPopupContainer {display:block;}
+#myTeamChooser.selected .myTeamSelectedContainer {display:block;}
+#myTeamChooser.prompt .myTeamPromptContainer {display:block;}
+
+#myTeamChooser .myTeamPopupContainer form .checkbox{position:absolute; bottom: 20px; left: 20px;}
+#myTeamChooser .myTeamPopupContainer form .button{position:absolute; bottom: 20px; right: 20px;}
+
+#myTeamChooser .myTeamPromptContainer .dismiss{position:absolute; bottom: 20px; left: 20px;}
+#myTeamChooser .myTeamPromptContainer .accept{position:absolute; bottom: 20px; right: 20px;}
+
+#myTeamChooser .myTeamPopupContainer form{background:white; padding: 20px;}
+#myTeamChooser .myTeamSelectedContainer > div{background:white; padding: 20px;}
+#myTeamChooser .myTeamPromptContainer > div{background:white; padding: 20px;}
+
+#myTeamChooser .myTeamSelectedContainer li{display: inline-block; padding: 12px;}
+#myTeamChooser .myTeamSelectedContainer li .title{font-weight:bold; position:absolute; bottom:0px; right:0px; left:0px;}
+#myTeamChooser .myTeamSelectedContainer li a{text-decoration:none;display:block;}
+#myTeamChooser .myTeamSelectedContainer li img{display:block;}
+
+.sideline .indent {
+	text-indent: 25px;
+}
+
+#rma-form {
+	font-size: .8em;
+	padding: 20px;
+}
+#rma-form label {
+	display: inline-block;
+	width: 150px;
+	text-align: right;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+#rma-form textarea {
+	width: 100%;
+}
+#rmaItems label {
+	font-weight: normal;
+	font-size: .8em;
+}
+
+#rmaItems { padding-left: 40px;}
+
+#rmaItems .col1,
+#rmaItems .col2,
+#rmaItems .col3,
+#rmaItems .col4,
+#rmaItems .col5{
+	display: inline-block;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+}
+
+#rmaItems .col1{width:20px;}
+#rmaItems .col2{width:200px;}
+#rmaItems .col3{width:60px; text-align: center;}
+#rmaItems .col4{width:60px; text-align: center; margin-right: 14px;}
+#rmaItems .col5{width:200px;}
+.addRMAItemButton {
+	margin-left: 40px;
+	margin-top: 20px;
+}
+.rmaItem  button{
+	position:relative;
+	top:-2px;
+	width: 20px;
+	height: 20px;
+}
+
+.affliate_banner{ max-width: 100%;}
+.affiliate_category .text_desc, .affiliate_category .box_desc { padding: 5px;}
+
+#wholesale_signupArticle label {
+	display:inline-block;
+	width: 200px;
+}
+
+.notFoundContainer{
+	padding: 12px;
+	}

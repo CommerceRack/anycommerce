@@ -1,0 +1,80 @@
+.displayNone_960{display:none;}
+
+.fixedContainer {
+	max-width:960px;
+	margin: auto;
+}
+#header {height:93px;}
+#appView {padding-top: 98px; padding-bottom:40px;}
+#appView.showFooter {padding-bottom: 210px;}
+#appView.initFooter {padding-bottom: 210px;}
+#appView.peekFooter.showFooter {padding-bottom: 210px;}
+#appView.peekFooter.initFooter {padding-bottom: 210px;}
+#appView #footer {bottom:-180px;}
+/* #appView.peekFooter #footer {bottom:-130px;} */
+
+#livechat {margin-left: 20px;}
+#livechat img {height:67px;}
+
+#headerTeam {margin-left: 20px; width: 180px; height: 65px; padding: 2px;}
+
+#search input{ height:21px;}
+
+#footer .footerTeaser h3{line-height:30px;}
+#footer .footerContent{position:relative; height:130px; margin:40px auto;}
+
+.footerColumn {
+	position:absolute;
+	width:256px;
+}
+
+#footerLeft{left:0px;}
+#footerRight{right:0px;}
+#footerMiddle{left: 50%; margin-left:-128px;}
+
+.homepageBanner {height:322px;}
+.blockLink, li.blockLink {width: 19%; margin: .3%;}
+
+.productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
+.productPage .mfgLogoContainer img {
+	max-width: 150px;
+	max-height: 80px;
+	padding-right: 20px;
+}
+.productImages {padding-left: 5px;}
+
+#myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:100px;}
+#myTeamChooser .sportContainer{width: 24.2%; padding: 0px .1%;}
+#myTeamChooser .teamlist  {width: 90%; padding: 0% 5%;}
+#myTeamChooser .teamlist{height: auto;}
+#myTeamChooser .sportContainer{position: static; display:inline-block; overflow: auto; height: 90%;}
+#myTeamChooser .sportContainer h4{font-size: 1em;}
+#myTeamChooser .teamlist .teamTemplate {font-size:.9em}
+#myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}
+/*
+#myTeamChooser .myteams {width: 30%;}
+#myTeamChooser .moreteams {width: 60%;}
+#myTeamChooser .moreteams ul {text-align: center;}
+#myTeamChooser .moreteams li {width: 48%; display:inline-block; text-align:left;}
+#myTeamChooser .teamlist .teamTemplate {height:85px; line-height: 85px;font-size:1.0em}
+*/
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -260px;
+	margin-top: -90px;
+	width:480px;
+	height: 140px;
+}
+#myTeamChooser .myTeamSelectedContainer > div{background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -260px;
+	margin-top: -165px;
+	width:480px;
+	height: 290px;
+}

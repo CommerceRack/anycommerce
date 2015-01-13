@@ -1,0 +1,92 @@
+<div id="debuggerTemplate" class="entomologyLab">
+	<h4>
+		This is the Debugger.
+	</h4>
+	<div class="tabificateMe">
+		<ul>
+			<li><a href="#prodDumper">Prod Data</a></li>
+			<li><a href="#catDumper">Cat Data</a></li>
+			<li><a href="#localStorageDumper">Local Storage</a></li>
+		</ul>
+		
+		<div data-anytab-content="prodDumper">
+			<p>
+				Below is a list of all the product data that is currently loaded into the app.  A product record can be requested for many reasons,
+				but the most common are: 
+				<ul>
+					<li>
+						The user has visited the product page, 
+					</li>
+					<li>
+						The user has visited a category that has the product displayed on it in a list.
+					</li>
+				</ul>
+			</p>
+			<p>
+				CAUTION: Search results pages that load product lists DO NOT load the product!  They load the elasticsearch indexed version, which is a much
+				smaller version of the product record.  Notably, as of 201332, elasticsearch indexes contain no information about inventory.
+			</p>
+			<p>
+				Clicking the "Dump" link for any of these entries will print the contents of the data to the console.  If you are in IE this may not be pretty,
+				so try using the "Dump JSON" link instead.
+			</p>
+			<a class="marginBottom" href="#" onClick="return false;" data-debug="refresh" data-debug-target="prodDumperList">Refresh ProdList</a>
+			<div class="displayTable dumperList" data-debug="prodDumperList" data-debug-loadsTemplate="prodDumperTemplate" data-debug-datapointerPrefix="appProductGet" ></div>
+		</div>
+
+		<div data-anytab-content="catDumper">
+			<p>
+				Below is a list of all the category data that is currently loaded into the app.  A category can be requested for many reasons,
+				but the most common are: 
+				<ul>
+					<li>
+						The user has visited the category page, 
+					</li>
+					<li>
+						The user has visited a parent category that has its subcats displayed on it in a list.
+					</li>
+				</ul>
+			</p>
+			<p>
+				Clicking the "Dump" link for any of these entries will print the contents of the data to the console.  If you are in IE this may not be pretty,
+				so try using the "Dump JSON" link instead.
+			</p>
+			<a class="marginBottom" href="#" onClick="return false;" data-debug="refresh" data-debug-target="catDumperList">Refresh CatList</a>
+			<div class="displayTable dumperList" data-debug="catDumperList" data-debug-loadsTemplate="catDumperTemplate" data-debug-datapointerPrefix="appNavcatDetail" ></div>
+		</div>
+		
+		<div data-anytab-content="localStorageDumper">
+			<a class="marginBottom" href="#" onClick="return false;" data-debug="refresh" data-debug-target="localStorageDumperList">Refresh LocalStorage List</a>
+			<div class="displayTable dumperList" data-debug="localStorageDumperList" data-debug-loadsTemplate="localStorageDumperTemplate" data-debug-localStorage="true" data-debug-datapointerPrefix=""></div>
+		</div>
+	</div>
+</div>
+
+
+
+<div id="prodDumperTemplate" class="displayTableRow">
+	
+	<span class="displayTableCell" data-bind="var: product(pid); format:text;"></span>
+	<span class="displayTableCell" data-bind="var: product(zoovy:prod_name); format:text;"></span>
+	<a class="displayTableCell" href="#" data-bind="var: product(pid); format:assignAttribute; attribute: data-pid;" onClick="app.ext.entomologist.u.dumpData('appProductGet|'+$(this).attr('data-pid')); return false;">Dump</a>
+	<a class="displayTableCell" href="#" data-bind="var: product(pid); format:assignAttribute; attribute: data-pid;" onClick="app.ext.entomologist.u.dumpData('appProductGet|'+$(this).attr('data-pid'), true); return false;">Dump JSON</a>
+</div>
+	
+<div id="catDumperTemplate" class="displayTableRow">
+	
+	<span class="displayTableCell" data-bind="var: category(id); format:text;"></span>
+	<span class="displayTableCell" data-bind="var: cateogyr(pretty); format:text;"></span>
+	<a class="displayTableCell" href="#" data-bind="var: category(id); format:assignAttribute; attribute: data-navcat;" onClick="app.ext.entomologist.u.dumpData('appNavcatDetail|'+$(this).attr('data-navcat')); return false;">Dump</a>
+	<a class="displayTableCell" href="#" data-bind="var: category(id); format:assignAttribute; attribute: data-navcat;" onClick="app.ext.entomologist.u.dumpData('appNavcatDetail|'+$(this).attr('data-navcat'), true); return false;">Dump JSON</a>
+</div>
+
+<div id="localStorageDumperTemplate" class="displayTableRow">
+	<span class="displayTableCell" data-bind="var: ls(lsKey); format: text;"></span>
+	<a class="displayTableCell" href="#" data-bind="var: ls(lsKey); format:assignAttribute; attribute: data-key;" onClick="app.ext.entomologist.u.dumpData($(this).attr('data-key'), false, true); return false;">Dump</a>
+	<a class="displayTableCell" href="#" data-bind="var: ls(lsKey); format:assignAttribute; attribute: data-key;" onClick="app.ext.entomologist.u.dumpData($(this).attr('data-key'), true, true); return false;">Dump JSON</a>
+	
+	<!--
+	A DEBUG RENDER FORMAT THAT DUMPS THE DATA.VALUE
+	<div class="displayNone" data-bind="useParentData:true; format:dumpData; extension:entomologist;"></div>
+	-->
+</div>

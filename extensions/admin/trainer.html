@@ -1,0 +1,627 @@
+<!--
+
+Article templates
+
+-->
+
+
+
+
+<div id='trainerArticleTemplate_video' class='trainerArticle'>
+	<div class='videoThumbnail'><img data-bind="var:article(youtubeid); format:youtubeThumbnail; extension:admin_trainer;" width='120' height='90' /></div>
+	<hgroup class='trainerAttribs'>
+		<h5 data-bind="var:article(title); format:text;"></h5>
+		<h6 data-bind="var:article(runtime); format:text;"></h6>
+	</hgroup>
+</div>
+
+
+
+<div id='trainerArticleTemplate_webdoc' class='trainerArticle'>
+	<div>ICON</div>
+	<hgroup class='trainerAttribs'>
+		<h5 data-bind="var:article(title); format:text;"></h5>
+	</hgroup>
+</div>
+
+
+
+
+<!--
+
+Blank trainer template.  Copy this and paste near bottom of this file. change content as needed. change nothing else.
+
+in app-admin, there's a style_guidelines.txt file. read it before continuing.
+
+The NAME is important. should be trainer_someCamelCaseNameThatSaysConsiselyWhatThisTrainerIsFor
+-->
+
+
+<div id='trainer_NAME' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'><!-- title goes here --></h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<div class='pointer floatedSubgroup' data-show-selector="[data-app-role='trainerStep1Section1'], [data-app-role='trainerNavButtons']"><b><span class='lookLikeLink'>I'd like a tour, please.</span></b></div>
+			<div class='floatedSubgroup'>I'm excited to be here, but will <span class='lookLikeLink'>explore on my own</span>.</div>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+<!--
+Content that appears as a result of making a selection goes here.
+The selection could have been made in this trainer or a previous one.
+-->
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article data-title="This is the title" data-article-type='html'>This content would show up.</article>
+<article data-title="This is a webdoc" data-article-type='webdoc' data-docid='dev_detail_imglib'>This content would show up.</article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+
+<div id='trainer_welcome' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Welcome!</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+<p>Welcome and thanks for signing up!</p>
+<div class='pointer' data-input-click="show" data-show-selector="[data-app-role='trainerStep1Section1'], [data-app-role='trainerNavButtons']"><b><span class='lookLikeLink'>I'd like a tour, please.</span></b></div>
+<div>I'm excited to be here, but will <span class='lookLikeLink'>explore on my own</span>.</div>
+
+
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+		<div class='questionGroup clearfix displayNone' data-app-role='trainerStep1Section1'>
+			<h4>Alright! Let's get started</h4>
+		
+			<div>
+				<p>Which describe your role? <span class='hint'>(check all that apply)</span></p>
+<label>
+	<input type='checkbox' name='is_boss' data-input-change='checked-classes' data-check-selectors="is_boss,is_not_boss" data-checked-classes='is_boss' data-unchecked-classes="is_not_boss" />
+	I'm a principal in the business
+</label>
+
+<label>
+	<input type='checkbox' name='is_webmaster' data-input-change='checked-classes' data-check-selectors="is_webmaster,is_not_webmaster" data-checked-classes='is_webmaster' data-unchecked-classes="is_not_webmaster" />
+	I manage the website
+</label>
+
+<label>
+	<input type='checkbox' name='is_mktmaster' data-input-change='checked-classes' data-check-selectors="is_mktmaster,is_not_mktmaster" data-checked-classes='is_mktmaster' data-unchecked-classes="is_not_mktmaster" />
+	I manage the marketing
+</label>
+
+<label>
+	<input type='checkbox' name='is_csmaster' data-toggle-class='is_csmaster' data-check-selectors="is_csmaster,is_not_csmaster" data-checked-classes='is_csmaster' data-unchecked-classes="is_not_csmaster" />
+	I manage customer service
+</label>
+
+<label>
+	<input type='checkbox' name='is_wmsmaster' data-toggle-class='is_wmsmaster' data-check-selectors="is_wmsmaster,is_not_wmsmaster" data-checked-classes='is_wmsmaster' data-unchecked-classes="is_not_wmsmaster" />
+	I manage the warehouse/fulfillment
+</label>
+
+<label>
+	<input type='checkbox' name='is_developer' data-toggle-class='is_developer' data-check-selectors="is_developer,is_not_developer" data-checked-classes='is_developer' data-unchecked-classes="is_not_developer" />
+	I'm a developer
+</label>
+			</div>
+	
+			<div class='hideForNotBoss'>
+				<p>How many employees does the business have in all divisions?</p>
+				<label><input type='radio' name='employeecount' value='large'>Large 1,000+</label>
+				<label><input type='radio' name='employeecount' value='medium'>Medium 100 or more</label>
+				<label><input type='radio' name='employeecount' value='smb'>SMB 10-99</label>
+				<label><input type='radio' name='employeecount' value='microsmb'>Micro SMB 2-9</label>
+				<label><input type='radio' name='employeecount' value='soleproprietor'>Sole Proprietor</label>
+			</div>
+	
+		
+		</div>
+
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+<article data-title="This is a webdoc" data-article-type='webdoc' data-docid='dev_detail_imglib'></article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+<div id='trainer_yourBusiness' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Your Business</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>Which best describes your business? <span class='hint'>(check all that apply)</span></p>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample' name='bizdesc' value='is_new_business' />This is a new endeavor (no products, images)</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_container,trainerImportMethod_sample,trainerImportMethod_scrape,trainerImportMethod_csv,trainerImportMethod_scratch' name='bizdesc' value='is_existing_business' />I have existing infrastructure online already</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' data-show-panel='trainerImportMethod_sample' name='bizdesc' value='is_evaluating' />I'm just evaluating this</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_a_consultant' />I'd like a consultant to help me set this up for me</label>
+
+			<label><input type='radio' data-input-change="panel-selector" data-panel-selector='.trainerImportMethods' name='bizdesc' value='is_none_apply' />None of these apply to me</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='floatedSubgroup trainerImportMethods displayNone' data-panel-id='trainerImportMethod_container' data-app-role='trainerDataImportContainer'>
+				<p>How would you like to bring in your product data?</p>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_sample'><input type='checkbox' name='WANT_SAMPLEDATA'>I'd like some sample data to test with</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scrape'><input type='checkbox' value='WANT_SCRAPE'>Try and import my existing site</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_csv'><input type='checkbox' value='WANT_CSV'>I'll import my data</label>
+
+				<label class='trainerImportMethods displayBlock' data-panel-id='trainerImportMethod_scratch'><input type='checkbox' value='WANT_SCRATCH'>I'd like to create all my data from scratch</label>
+			</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		<div class='articles' data-app-role='trainerArticles'>
+		
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article>
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+		
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+<div id='trainer_whatYouSell' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>What You Sell</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+
+<p>Alright let's figure out what you sell, and how you're currently selling.  Check all that apply.</p>
+
+<label ><input type='checkbox' name='selling_product' data-input-change="panel-selector" data-panel-selector='.trainerSellProduct' data-show-panel='trainerSellProduct'>We sell product</label>
+	
+<label ><input type='checkbox' name='selling_services' data-input-change="panel-selector" data-panel-selector='.trainerSellServices' data-show-panel='trainerSellServices'>We sell services</label>
+
+<label ><input type='checkbox' name='selling_subscriptions' data-input-change="panel-selector" data-panel-selector='.trainerSellSubscriptions' data-show-panel='trainerSellSubscriptions'>We sell subscriptions</label>
+
+<label ><input type='checkbox' name='selling_has_bricknmortar' data-input-change="panel-selector" data-panel-selector='.trainerSellHasBricknMortar' data-show-panel='trainerSellHasBricknMortar'>We operate one or more retail stores</label>
+
+
+
+
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+<div class='trainerSellProduct displayNone' data-panel-id='trainerSellProduct'>
+	<label ><input type='checkbox' value='product_has_variations'>Some or all product have variations (color, size, etc)</label>
+</div>
+
+<div class='trainerSellServices displayNone ' data-panel-id='trainerSellServices'>
+	<label><input type='checkbox' value='selling_services_location'>Services are performed at our location</label>
+	<label><input type='checkbox' value='selling_services_offsite'>Services are performed off site</label>
+</div>
+
+
+<div class='trainerSellSubscriptions displayNone ' data-panel-id='trainerSellSubscriptions'>				
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_have'>We have a tracking/fulfillment system</label>
+	<label><input type='checkbox' value='selling_subscriptions_fulfillment_need'>We need a tracking/fulfillment system</label>
+</div>
+
+<div class='trainerSellHasBricknMortar displayNone ' data-panel-id='trainerSellHasBricknMortar'>
+	<p>What type of store(s) do you have?</p>
+	<label><input type='checkbox' value='retailer_attached_warehouse'>Single store with attached warehouse</label>
+	<label><input type='checkbox' value='retailer_regional'>One or more stores in a regional area</label>
+	<label><input type='checkbox' value='retailer_national'>Nationwide retailer</label>
+	
+	<p>Tell us about your point of sale solution</p>
+	<label><input type='checkbox' value='pos_need'>We need a cloud based one that works on mobile, tablets, ipads, etc.</label>
+	<label><input type='checkbox' value='pos_has'>We'd like to integrate with our existing point of sale</label>
+	
+	<p>Are you interested in offering retail clients self checkout?</p>
+	<label><input type='radio' name='pos_selfcheckout' value='yes'>Yes</label>
+	<label><input type='radio' name='pos_selfcheckout' value='no'>No</label>
+</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		<div class='articles' data-app-role='trainerArticles'>
+		
+		
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+
+<div id='trainer_whereSell' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Selling Avenues</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+			<p>Alright, now where do you sell?</p>
+			<label ><input type='checkbox' name='sell_via_direct' data-input-change="panel-selector" data-panel-selector='.trainerSellDirect2Consumers' data-show-panel='trainerSellDirect2Consumers'>We sell directly to consumers on our websites and/or mobile apps</label>
+
+			<label><input type='checkbox' name='sell_via_social' />We use social channels like Facebook, Google+, Twitter</label>
+			<label><input type='checkbox' name='sell_via_markets' data-input-change="panel-selector" data-panel-selector='.trainerSellOnMarketplaces' data-show-panel='trainerSellOnMarketplaces' />We accept orders from retail marketplaces like eBay, Amazon, etc</label>
+				
+			<label ><input type='checkbox' name='sell_via_wholesale' data-input-change="panel-selector" data-panel-selector='.trainerSellWholesale' data-show-panel='trainerSellWholesale'>We have wholesale/commercial buyers who receive special pricing</label>
+
+			<label><input type='checkbox' name='sell_via_phone' />We have sales representatives who follow up on inbound leads</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+
+			<div class='trainerSellDirect2Consumers displayNone ' data-panel-id='trainerSellDirect2Consumers'>
+				<label><input type='checkbox' value='has_mobile_app'>I currently have a mobile app that accepts orders</label>
+				<label><input type='checkbox' value='has_mobile_website'>I currently have a mobile website that accepts orders</label>
+				<label><input type='checkbox' value='wants_mobile'>No, but I’d sure like these!</label>
+			</div>
+
+			<div class='displayNone trainerSellOnMarketplaces' data-panel-id='trainerSellOnMarketplaces'>
+				<p>On which marketplaces do you currently/plan to sell?</p>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_EBAY'>eBay</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_AMAZON' >Amazon</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_BUY' >Buy.com</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_NEWEGG' >New Egg</label>
+				<label><input type='checkbox' name='HAS_MARKETPLACE_OTHER'>Other (not listed)</label>
+			</div>
+
+			<div class='trainerSellWholesale displayNone ' data-input-change="panel-selector" data-panel-id='trainerSellWholesale'>
+				<label><input type='checkbox' value='WANT_CSV'>We only accept commercial buyers</label>
+			</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+
+<article data-runtime='42:15' data-title="Title" data-youtubeid='tM5Lu40PZJQ' data-article-type='video'></article>
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+<div id='trainer_paymentOptions' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Payment Options</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>How do you get paid?</p>
+
+			<label><input type='checkbox' name='payments_3pc_ppec'>PayPal</label>
+			<label><input type='checkbox' name='payments_3pc_cba' >Checkout by Amazon</label>
+			<label><input type='checkbox' name='payments_3pc_gw' >Google Wallet</label>		
+			<label><input type='checkbox' name='payments_cc' data-input-change="panel-selector" data-panel-selector='.trainerCCproviders' data-show-panel='trainerCCproviders'>Credit Card</label>	
+			<label><input type='checkbox' name='payments_offline' >Offline Payments</label>			
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='trainerCCproviders displayNone ' data-panel-id='trainerCCproviders'>
+				<p>What merchant account do you use?</p>
+				<label><input type='checkbox' name='cc_pp_payflowpro'>Paypal Payflow Pro</label>
+				<label><input type='checkbox' name='cc_pp_websitepayments'>Paypal Website Payments Pro</label>
+				<label><input type='checkbox' name='cc_authorizenet'>Authorize.Net</label>
+				<label><input type='checkbox' name='cc_other'>Other</label>
+				<label><input type='checkbox' name='cc_new'>I’d like to establish a new merchant account</label>
+			</div>	
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+<div id='trainer_shipping' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Shipping</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>Shipping Costs <span class='hint'>(choose all that apply)</span></p>
+
+			<label><input type='checkbox' name='shipping_free'>Free shipping on all product</label>
+			<label><input type='checkbox' name='shipping_primarycarrier' data-input-change="panel-selector" data-panel-selector='.trainerPrimaryCarriers' data-show-panel='trainerPrimaryCarriers'>Rate based parcels with a common carrier (FedEx, UPS, USPS)</label>
+			
+			<p>Origins <span class='hint'>(choose all that apply)</span></p>
+			<label><input type='checkbox' name='origin_retail'>We ship from our retail store locations</label>
+			<label><input type='checkbox' name='origin_retailpickup'>We allow pick up from our retail store locations</label>
+			<label><input type='checkbox' name='origin_wms'>We ship from our own warehouse(s)</label>
+			<label><input type='checkbox' name='origin_fba'>We use fulfillment by Amazon</label>
+			<label><input type='checkbox' name='origin_3pl'>We use a 3rd party logistics service</label>
+			<label><input type='checkbox' name='origin_dropship'>Our suppliers/manufacturers drop ship items for us</label>
+			<label><input type='checkbox' name='origin_localdelivery'>We offer local delivery</label>
+			<label><input type='checkbox' name='origin_localinstall'>We offer local delivery with setup and installation</label>
+			<label><input type='checkbox' name='origin_natinstall'>We offer national delivery with setup and installation</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='trainerPrimaryCarriers displayNone ' data-panel-id='trainerPrimaryCarriers'>
+				<p>Which carriers do you offer?</p>
+				<label><input type='checkbox' name='shipping_fedex'>FedEx</label>
+				<label><input type='checkbox' name='shipping_ups'>UPS</label>
+				<label><input type='checkbox' name='shipping_usps'>USPS</label>
+			</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+<div id='trainer_socialMedia' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'>Social Media &amp; Communication</h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>Social</p>
+
+			<label><input type='checkbox' name='social_blog'>I have a blog</label>
+			<label><input type='checkbox' name='social_website'>I have a non-commerce website</label>
+			<label><input type='checkbox' name='social_facebook'>We use facebook</label>
+			<label><input type='checkbox' name='social_googleplus'>We use google+</label>
+			<label><input type='checkbox' name='social_twitter'>We use twitter</label>
+			<label><input type='checkbox' name='social_youtube'>We use youtube to host informational videos</label>
+			<label><input type='checkbox' name='social_email' data-input-change="panel-selector" data-panel-selector='.trainerEmailSolutions' data-show-panel='trainerEmailSolutions'>We currently use an Email Service Provider (ESP)</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='trainerEmailSolutions displayNone ' data-panel-id='trainerEmailSolutions'>
+				<label><input type='checkbox' name='email_amazon'>Amazon Secure Email Services</label>
+				<label><input type='checkbox' name='email_mailchimp'>Mail Chimp</label>
+				<label><input type='checkbox' name='email_other'>Other</label>
+			</div>
+
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+<div id='trainer_cloud' class='trainer ui-widget ui-corner-all'>
+<form action='#' onsubmit="return false">
+	<h2 class='ui-widget-header ui-corner-top stdPadding'><!-- title goes here --></h2>
+	<div class='ui-widget-content contentContainer clearfix labelsAsBreaks'>
+
+		<section class='staticContent boxModelBorder'>
+
+			<p>What other cloud services do you currently use?</p>
+
+			<label><input type='checkbox' name='cloud_github'>Github</label>
+			<label><input type='checkbox' name='cloud_quickbooks'>QuickBooks</label>
+			<label><input type='checkbox' name='cloud_xero'>Xero</label>
+			<label><input type='checkbox' name='cloud_msdynamics'>Microsoft Dynamics</label>
+			<label><input type='checkbox' name='cloud_otheraccounting'>Other Accounting</label>
+			<label><input type='checkbox' name='cloud_chat'>Chat</label>
+			<label><input type='checkbox' name='cloud_salesforce'>Salesforce</label>
+			<label><input type='checkbox' name='cloud_zendesk'>Zen Desk</label>
+			<label><input type='checkbox' name='cloud_kount'>Kount</label>
+			<label><input type='checkbox' name='cloud_googleapps'>Google Apps</label>
+			<label><input type='checkbox' name='cloud_others' data-input-change="panel-selector" data-panel-selector='.trainerCloudOther' data-show-panel='trainerCloudOther'>Others</label>
+
+		</section>
+		
+		<section class='dynamicContent boxModelBorder'>
+
+			<div class='trainerCloudOther displayNone ' data-panel-id='trainerCloudOther'>
+				<p>Please tell us more about the 'other' cloud software you use</p>
+				<textarea name='cloud_other_software'></textarea>
+			</div>
+
+		</section>
+	</div>
+
+	<section class='navAndArticles ui-widget-content ui-corner-bottom'>
+		
+		<div class='navigation' data-app-role='trainerNavigation'>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='previous'>Previous</button>
+			<button class='applyButton' data-app-click='admin_trainer|navigate' data-verb='next'>Next</button>
+		</div>
+		
+		<div class='articles' data-app-role='trainerArticles'>
+<!-- articles. These may be shown or hidden based on selections made in this trainer or a previous step. -->
+<article data-runtime='42:15' data-title="Title" data-youtubeid='SjqaTHPHrxI' data-article-type='video'></article><!-- click event for videos added via JS -->
+<article class='showIfDeveloper' data-title="This is the title" data-article-type='html'>This content would show up.</article>
+
+		</div>
+	</section>
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id='trainerTemplate' class='ui-widget ui-widget-content ui-corner-all trainer stdPadding'>
+<form action='#' onSubmit='return false' class='trainer labelsAsBreaks positionRelative' data-app-change='admin_trainer|handleUpdate'>
+	<fieldset>
+		<legend>Step 1</legend>
+		
+		
+		
+		
+		<section class='questionGroup clearfix'>
+		</section>
+	
+	
+		
+		
+	</fieldset>
+
+
+
+
+<div class='displayNone buttonset clearfix' data-app-role='trainerNavButtons'>
+	<button class='floatedSubgroup applyButton' data-text='true' data-verb='previous' data-app-click="admin_trainer|navigate" disabled='disabled'>Previous</button>	
+	<button class='floatedSubgroup applyButton ui-state-highlight' data-text='true' data-verb='next' data-app-click="admin_trainer|navigate">Next</button>
+</div>
+<div class='displayNone'>
+	I'd like to finish this up later.
+</div>
+
+
+</form>
+
+</div>

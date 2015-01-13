@@ -21,154 +21,140 @@ Adds AddThis social sharing code to the product page.
 
 For AddThis API docs, go here: http://support.addthis.com/customer/portal/articles/381263-addthis-client-api
 
-
-
-
-in index.html, set the following vars for this to work properly:
-
-addthis_id =  #####;
+*** 201344 MAJOR REWRITE
+*** REQUIRES QUICKSTART getDataFromInfoObj METHOD
 
 */
 
-
-//Global object that will be updated before addThis code is rendered.
-var addthis_share = {
-	url : "",
-	title : ""
-};
-
-var partner_addthis = function() {
+var partner_addthis = function(_app) {
 	var r= {
+		
 		vars : {
-			selector : ".socialLinks"
-		},
+			titlePrefix : "",
+			setTitle : true,
+			setDesc : true,
+			
+			//Adjust addthis config below.  Specs for config options can be found at:
+			//http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-ui
+			addthis_config : {
+				username : ""
+				}
+			},
 		
 		callbacks : {
 			init : {
 				onSuccess : function(){
 					var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js';
-					if(typeof addthis_id !== 'undefined'){
-						scriptPath+= '#pubid='+addthis_id;
-					}
-					//setTimeout used to test asynchronous loading and dependency checks
-					//setTimeout(function(){app.u.loadScript(scriptPath);},3000);
-					app.u.loadScript(scriptPath);
-					app.rq.push(['templateFunction','productTemplate','onCompletes',function(infoObj){
-						app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj);
-						}]);
-					app.rq.push(['templateFunction','productTemplate','onDeparts',function(infoObj){
-						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
-						}]);
-					app.rq.push(['templateFunction','categoryTemplateEarthCam','onCompletes',function(infoObj){
-						app.ext.partner_addthis.u.buildSocialLinksCategoryPage(infoObj);
-						}]);
-					app.rq.push(['templateFunction','categoryTemplateEarthCam','onDeparts',function(infoObj){
-						app.ext.partner_addthis.u.destroySocialLinks(infoObj);
-						}]);
+					if(_app.ext.partner_addthis.vars.addthis_config.username && _app.ext.partner_addthis.vars.addthis_config.username !== ""){
+						scriptPath+= '#username='+_app.ext.partner_addthis.vars.addthis_config.username+'&domready';
+						}
+					else {
+						scriptPath += '#domready';
+						}
+					_app.u.loadScript(scriptPath);
+					
 					return true;
 				},
 				onError : function() {
-					app.u.dump('BEGIN app.ext.partner_addthis.callbacks.init.onError');
+					_app.u.dump('BEGIN _app.ext.partner_addthis.callbacks.init.onError');
 				}
 			}
 		},
 		
 	u : {
-		buildSocialLinksProductPage : function(infoObj, attempts){
+	
+		toolbox : function($tags, infoObj){
+			
+			var call = 'toolbox';
+			var target = $tags.get();
+			var configObj = _app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = _app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		button : function($tags, infoObj){
+			
+			var call = 'button';
+			var target = $tags.get();
+			var configObj = _app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = _app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		counter : function($tags, infoObj){
+			
+			var call = 'counter';
+			var target = $tags.get();
+			var configObj = _app.ext.partner_addthis.vars.addthis_config;
+			var sharingObj = _app.ext.partner_addthis.u.buildSharingObj(infoObj);
+			
+			this.callAddThis(call, target, configObj, sharingObj);
+			},
+		
+		callAddThis : function(call, target, configObj, sharingObj, attempts){
 			attempts = attempts || 0;
-			//app.u.dump("-> Addthis attempt: "+attempts);
 			if(typeof addthis !== "undefined"){
-				//Adds the addthis code to the container specified
-				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
-				//Note: this also includes using custom share icons.
-				var $context = $(app.u.jqSelector('#',infoObj.parentID));
-				
-				$(app.ext.partner_addthis.vars.selector, $context).append(
-						'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-					+		'<a class="addthis_button_preferred_1"></a>'
-					+		'<a class="addthis_button_preferred_2"></a>'
-					+		'<a class="addthis_button_preferred_3"></a>'
-					+		'<a class="addthis_button_preferred_4"></a>'
-					+		'<a class="addthis_button_preferred_5"></a>'
-					+		'<a class="addthis_button_preferred_6"></a>'
-					+		'<a class="addthis_button_preferred_7"></a>'
-					+		'<a class="addthis_button_preferred_8"></a>'
-					+		'<a class="addthis_button_compact"></a>'
-					+	'</div>');
-				
-				//Set URL+title for most sharing code
-				var url = zGlobals.appSettings.http_app_url+"product/"+infoObj.pid+"/";
-				addthis_share.url = url;
-				addthis_share.title = app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name'];
-				
-				//Set URL+title for Facebook
-				$('#ogURL').attr('content',url);
-				$('#ogTitle').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_name']);
-				$('#ogImage').attr('content',app.u.makeImage({"name":app.data[infoObj.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
-				$('#ogDescription, #metaDescription').attr('content',app.data[infoObj.datapointer]['%attribs']['zoovy:prod_desc']);
-				
-				//Hooks everything in
-				//app.u.dump("-> Calling addthis.toolbox...");
-				addthis.toolbox('#socialLinks');
+				addthis[call](target, configObj, sharingObj);
 				}
 			else {
-				//app.u.dump("-> Addthis is not defined...");
-				var n = 40;
-				if(attempts > n){
-					app.u.dump("Failed to build social links after "+(n/4)+" seconds.  infoObj follows: "); app.u.dump(infoObj);
+				if(attempts > 40){
+					_app.u.dump("ADDTHIS FAILED "+call);
 					}
-				else{
-					setTimeout(function(){app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj, attempts+1);}, 250);
+				else {
+					setTimeout(function(){_app.ext.partner_addthis.u.callAddThis(call, target,configObj, sharingObj, attempts+1);}, 250);
 					}
 				}
 			},
-		buildSocialLinksCategoryPage : function(infoObj, attempts){
-			attempts = attempts || 0;
-			//app.u.dump("-> Addthis attempt: "+attempts);
-			if(typeof addthis !== "undefined"){
-				//Adds the addthis code to the container specified
-				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
-				//Note: this also includes using custom share icons.
-				var $context = $(app.u.jqSelector('#',infoObj.parentID));
+			
+		buildSharingObj : function(infoObj){
+			// The addThis sharing configuration specs can be found here:
+			// http://support.addthis.com/customer/portal/articles/381263-addthis-client-api#configuration-sharing
+			// By default only url, title, and description are supported.
+			sharingObj = {
+				url : (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url)+ _app.ext.quickstart.u.buildRelativePath(infoObj),
+				title : _app.ext.partner_addthis.vars.titlePrefix || "",
+				description : _app.ext.partner_addthis.vars.defaultDesc || ""
+				};
 				
-				$(app.ext.partner_addthis.vars.selector, $context).append(
-					'<div id="socialLinks" class="addthis_toolbox addthis_default_style ">'
-				+		'<a fb:like:layout="button_count" class="addthis_button_facebook_like"></a>'
-				+		'<a class="addthis_button_tweet"></a>'
-				+		'<a g:plusone:size="medium" class="addthis_button_google_plusone"></a>'
-				+		'<a pi:pinit:layout="horizontal" pi:pinit:media="http://static.zoovy.com/img/cubworld/W326-H57-Btttttt-M/logos/sportsworld/sportsworldchicago_logoweb.png" pi:pinit:url="http://http://www.sportsworldchicago.com/category/a_cubworld_cam/" class="addthis_button_pinterest"></a>'
-				+		'<a class="addthis_counter addthis_pill_style"></a>'
-				+	'</div>');
-				
-				//Set URL+title for most sharing code
-				var url = zGlobals.appSettings.http_app_url+"category/"+infoObj.navcat.substring(1)+"/";
-				addthis_share.url = url;
-				addthis_share.title = app.data['appPageGet|'+infoObj.navcat]['%page']['page_title'];
-				
-				//Set URL+title for Facebook
-				$('#ogURL').attr('content',url);
-				$('#ogTitle').attr('content',app.data['appPageGet|'+infoObj.navcat]['%page']['page_title']);
-				$('#ogImage').attr('content',app.u.makeImage({"name":app.data['appPageGet|'+infoObj.navcat]['%page']['banner2'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
-				$('#ogDescription, #metaDescription').attr('content',app.data['appPageGet|'+infoObj.navcat]['%page']['description2']);
-				
-				//Hooks everything in
-				//app.u.dump("-> Calling addthis.toolbox...");
-				addthis.toolbox('#socialLinks');
+			var data = _app.ext.quickstart.u.getDataFromInfoObj(infoObj);
+			switch(infoObj.pageType){
+				case "product" :
+					if(_app.ext.partner_addthis.vars.setTitle){
+						sharingObj.title += data['%attribs']['zoovy:prod_name'];
+						}
+					if(_app.ext.partner_addthis.vars.setDesc){
+						sharingObj.description = data['%attribs']['zoovy:prod_desc'];
+						}
+					break;
+				case "category" :
+					if(_app.ext.partner_addthis.vars.setTitle){
+						sharingObj.title += data.pretty;
+						}
+					break;
+				case "company" :
+					//no custom behavior
+					break;
+				case "search" :
+					//no custom behavior
+					break;
+				//The following cases should all revert to homepage
+				case "customer" :
+				case "cart" :
+				case "checkout" :
+				case "homepage" :
+				default :
+					sharingObj.url = (document.location.protocol === "https:" ? zGlobals.appSettings.https_app_url : zGlobals.appSettings.http_app_url);
+					break;
 				}
-			else {
-				//app.u.dump("-> Addthis is not defined...");
-				var n = 40;
-				if(attempts > n){
-					app.u.dump("Failed to build social links after "+(n/4)+" seconds.  infoObj follows: "); app.u.dump(infoObj);
-					}
-				else{
-					setTimeout(function(){app.ext.partner_addthis.u.buildSocialLinksProductPage(infoObj, attempts+1);}, 250);
-					}
+			if(sharingObj.title === ""){
+				//If no title is provided in the sharing object, it will default back to the window title
+				delete sharingObj.title;
 				}
-			},
-		destroySocialLinks : function(infoObj){
-			var $context = $(app.u.jqSelector('#',infoObj.parentID));
-			$(app.ext.partner_addthis.vars.selector, $context).empty();
+			if(sharingObj.description === ""){
+				//This is an optional parameter, so if it was not set above, let's get rid of it.
+				delete sharingObj.description
+				}
+			return sharingObj;
 			}
 		}
 	}

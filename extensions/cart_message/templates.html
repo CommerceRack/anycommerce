@@ -1,0 +1,69 @@
+
+<div id='adminCartManagementTemplate' class='ui-widget' data-tablefilter-role='container'>
+	<div class="ui-widget-header ui-widget-header-padding ui-corner-top">
+		<span class='floatRight smallPadding'>
+		<input name='tableSearchQuery' type='search' placeholder='filter value' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
+		<button data-app-click="cart_message|adminCartAddToSession" class='applyButton marginLeft' data-text='true' data-icon-primary='ui-icon-plus'>Add Cart</button>
+		</span>
+		<h2>Cart Management</h2>
+	</div>
+	<div class='ui-widget-content ui-corner-bottom stdPadding'>
+	<table class='fullWidth gridTable applyAnytable' data-tablefilter-role='table'>
+	<thead>
+	<tr>
+		<th data-anytable-nosort='true'></th>
+		<th>Cart ID</th>
+		<th>First Name</th>
+		<th>Last Name</th>
+		<th># Items</th>
+		<th>Domain</th>
+		<th>Active Polling <span  class='toolTip' title="If this is on, the admin app is actively checking for updates on this cart. If you are not interacting with the cart, you should disable this to improve performance.">?</span></th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind='var:carts(carts); format:processList; loadsTemplate:adminCartManagementRowTemplate;' data-app-role='cartManagementCartsTbody'></tbody>
+	</table>
+	</div>
+</div>
+
+
+
+<table>
+<tr id='adminCartManagementRowTemplate'>
+	<td><span class='wait'></span></td>
+	<td class='isSearchable' data-bind="var: cart(value); format:text;"></td><!-- the carts array passed in has the cartID as the value, which process list sets as value -->
+	<td class='isSearchable' data-bind="var: cart(bill/firstname); format:text;"></td>
+	<td class='isSearchable' data-bind="var: cart(bill/lastname); format:text;"></td>
+	<td data-bind="var: cart(sum/items_count); format:text;"></td>
+	<td data-bind="var: cart(our/domain); format:text;"></td>
+	<td data-bind="var: cart(value); format:pollDetect; extension:cart_message;"></td>
+	<td data-bind='var:cart(value);format:assignAttribute; attribute:data-cartid;' class='alignRight'>
+	
+		<button data-text='false' data-icon-primary='ui-icon-close' class='applyButton' data-app-click='cart_message|adminCartRemoveFromSession'>Remove from Session</button>
+		<button data-text='false' data-icon-primary='ui-icon-cart' disabled='disabled' class='applyButton' data-app-click='cart_message|cartEditExec' data-app-role='cartEditButton'>Edit Cart</button>
+		<button data-text='false' data-icon-primary='ui-icon-comment' disabled='disabled' class='applyButton' data-app-click='cart_message|adminCartInteract'>Interact</button>
+	</td>
+</tr>
+</table>
+
+
+
+<div id='adminCartMessageTemplate' data-app-role='cartMessenger'>
+	<form action='#' onsubmit="return false;" novalidate='novalidate'>
+		<!-- size is set on this element, but messages are appended to the child.  allows messageHIstory height to be computed for scolltop -->
+		<div class='messageHistoryContainer' data-app-role='messageHistoryContainer'>
+			<section data-app-role='messageHistory'></section>
+		</div>
+		<fieldset data-app-role='messageInput' class='smallButton messageInputContainer'>
+			<textarea name='message' required='required' placeholder='send a message'></textarea>
+			<button class='applyButton' data-app-click='cart_message|chatPostExec' data-app-role='messageSubmitButton'>Send</button>
+		</fieldset>
+		<section data-app-role='messageCommands' class='messageCommandsContainer'>
+<!-- 		<button class='applyButton' data-app-click="cart_message|chatInitExec" title="">Initiate Chat</button>opens a chat dialog if an buyer is on an app 201401+ -->
+		<button class='applyButton' data-app-click='cart_message|cartEditExec'>Edit Cart</button><!-- opens cart in order create/edit interface -->
+		<button class='applyButton' data-app-click='cart_message|gotoProductShowChooser'>Send Product</button><!-- opens product chooser and allows admin to send a given product to the buyer -->
+		<button class='applyButton' data-app-role='cartMessengerBuyerEditButton' data-app-click='cart_message|customerEditExec' disabled="disabled" title='There is no customer record associated with this cart.'>Edit Customer</button><!-- opens customer in customer editor interface -->
+<!-- 		<button>Show Page</button>allows admin to send a product/category/results to buyer -->
+		</section>
+	</form>
+</div>

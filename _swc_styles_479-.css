@@ -1,0 +1,118 @@
+.displayNone_320{display:none;}
+.alignCenter_320{text-align:center;}
+.fixedContainer {
+	max-width:320px;
+	margin: auto;
+}
+#header {height:50px;}
+#appView {padding-top: 52px;padding-bottom:40px;}
+#mainContentArea {position:absolute; bottom:0px; left: 0px; right: 0px; top:52px;}
+#globalMessaging {position:relative; z-index: 101;}
+#nav {padding: 0px;}
+#nav.expand .fullNav { left:50%;}
+#nav .fullNav {margin-left:-160px; padding: 12px; text-align:center; font-size:16px;}
+#nav .fullNav input{width:225px; }
+#mainContentArea > div {height:100%; overflow: auto;}
+#mainContentArea > div > div {height:100%; overflow: auto;}
+#appView.showFooter {padding-bottom: 402px;}
+/* #appView.peekFooter.showFooter {padding-bottom: 402px;} */
+#appView #footer {height: 360px; bottom:-400px; font-size:16px;}
+#appView.initFooter #footer {bottom:-400px;}
+/* #appView.peekFooter #footer {bottom:-360px;} */
+
+#headerTeam {margin-left: 12px; width: 120px; font-size: height: 50px; padding: 2px;}
+#headerTeam img{height: 46px; width: 46px;}
+#headerTeam h3 {font-size:14px;}
+#headerTeam h4 {font-size:12px;}
+
+#contact{font-size:11px;}
+#mininav{font-size:12px;}
+
+#logo img {width: 150px;}
+
+.footerColumn {width:320px;}
+#footer #copyright {position:static; margin-top:5px;}
+.homepageBanner {height:322px;}
+.homeSlideshow {max-width: 100%;}
+.blockLink, li.blockLink {width: 48%; margin: .8%;}
+.productListItem .prodInfo {font-size: 1.4em;}
+.productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
+
+.categoryTemplate .catName {padding: .5em 0em;}
+
+.productTitle, .productInfo, .productTabs,.productImages {float: none; width:100%;}
+
+.productPage .addtocartbutton{width:131px; height:41px; background:url(images/prodpages/add_to_cart_button_131x41.png) no-repeat;}
+.productPage .mfgLogoContainer img {
+	max-width: 150px;
+	max-height: 80px;
+	padding-right: 20px;
+}
+.productListItem .prodListTagsContainer {
+	height: 16px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 99;
+}
+.productListItem .prodListTagsContainer {
+	bottom: 66px;
+}
+.productListItem .prodListTagsContainer span{
+	display: inline-block;
+	height: 16px;
+	background: url(images/cubworld_smalltags.png) no-repeat;
+}
+.productListItem .prodListTagsContainer .is_fresh{background-position:0px 0px; width:51px;}
+.productListItem .prodListTagsContainer .is_bestseller{background-position:0px -16px; width:49px;}
+.productListItem .prodListTagsContainer .is_user1{background-position:0px -32px; width:61px;}
+.productListItem .prodListTagsContainer .is_sale{background-position:0px -48px; width:61px;}
+.productListItem .prodListTagsContainer .is_user3,
+.productListItem .prodListTagsContainer .is_specialorder{background-position:0px -64px; width:71px;}
+.productListItem .prodListTagsContainer .is_preorder{background-position:0px -80px; width:83px;}
+.productListItem .prodListTagsContainer .is_discontinued,
+.productListItem .prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
+.productListItem .prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
+
+#myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:35px;}
+#myTeamChooser .teamlist  {width: 90%; padding: 0% 5%;}
+#myTeamChooser .teamlist{height: auto;}
+#myTeamChooser .teamlist .teamTemplate {height:55px; font-size:1.2em; vertical-align:middle; line-height: 55px;}
+#myTeamChooser .teamlist .teamTemplate button {height:20px; width: 20px;}
+
+#myTeamChooser .myTeamPopupContainer form h3{font-size:1em;}
+#myTeamChooser .myTeamSelectedContainer > div h3{font-size:1em;}
+#myTeamChooser .myTeamPopupContainer form .checkbox{width: 100px;}
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -120px;
+	margin-top: -90px;
+	width:200px;
+	height: 140px;
+}
+#myTeamChooser .myTeamSelectedContainer > div{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -120px;
+	margin-top: -130px;
+	width:200px;
+	height: 220px;
+	overflow-y: auto;
+}
+
+.filterResultsContainer {
+    float: none;
+    width: 100%;
+}
+.filterList {float: none; position: absolute; left: -110%; transition: .4s all; width: 100%; z-index: 101; font-size: 1.4em;}
+.filterList.active {left: 0px;}
+ul.filterResults{overflow-y:auto; position:absolute; bottom:0px; right:0px; left:0px; top:23px;}
+.filterResultsContainer{position:absolute; bottom:0px; right:0px; left:0px; top:0px;}
+.filterCheckboxList {max-height: none;}

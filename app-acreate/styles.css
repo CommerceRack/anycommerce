@@ -1,0 +1,50 @@
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+
+img {border:0px;}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+
+#appLookup	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px; padding:24px 24px 0 24px;} /* top margin F's up FF and body/html 100% height */
+#appLookup .hint	{font-size:14px;}
+#appLookup legend	{display:none;}
+#appLookup fieldset	{border:0; padding:0; margin:0;}
+
+.loginbutton	{padding:4px;}
+.wait	{background:url(wait.gif) no-repeat center center; height:16px; width:16px; float:left; margin-right:4px; display:none;}
+
+.stdMargin 	{margin:0 24px 24px 24px;}
+.marginBottom	{margin-bottom:12px;}
+.hint	{margin-top:12px;}
+.helper	{font-size:.85em; color:#666666;}
+
+.alignedLabels label span:first-of-type	{width:30%; display:inline-block;}
+
+.labelsAsBreaks label	{
+	display:block; margin-bottom:6px;
+	}
+
+/* phone and number are intentionally left out of this list */
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=url],
+.alignedInputs input[type=password],
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
+

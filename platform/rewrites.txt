@@ -1,2 +1,10 @@
-~path	/category/([^/]*)/?	/#category?navcat=.$1
-~path	/product/([^/]*)/?(.*)	/#product?pid=$1
+~path#rewrite	/c=.*?/(.*)	/$1
+~path#rewrite	/s=.*?/(.*)	/$1
+~path	/category/wrigley_field_cam/?	/#!fieldcam/
+~path	/category/chicago-cubs-souvenirs/?	/#!filter/souvenirs/
+~path	/category/chicago-cubs-shirts/?	/#!filter/shirts/
+~path	/category/chicago-cubs-jerseys/?	/#!filter/jerseys/
+~path	/category/chicago-cubs-hats/?	/#!filter/hats/
+~path	/category/([^/]*)/?	/#!category/$1
+~path	/product/([^/]*)/?(.*)	/#!product/$1
+~path /search\.cgis/(.*?)  /#!search/keywords/$1

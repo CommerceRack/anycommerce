@@ -62,11 +62,104 @@ return supportAtRule('@font-face { font-family: "font"; src: "font.ttf"; }');
 
 
 
-var jerseypreview = function() {
+var jerseypreview = function(_app) {
 	var r = {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
+	vars : {
+		paramsByPID : {
+			
+			},
+		whitelist : [
+			"6200-CUBA-EJ-PER",
+			"6200-CUBR-EJ-PER",
+			"6300-CUBA-EJ-PER",
+			"6300-CUBD-EJ-PER",
+			"6700-CUBD-EJ-PR1",
+			"6700-CUBH-EJ-PER",
+			"6200-CUBH-EJ-PER",
+			"6700-CUBR-EJ-PR1",
+			"6700-PDRH-DRS-PER",
+			"6300-ROYH-ROW-PIN",
+			"6300-ROY2-ROW-PIN",
+			"6300-ROY3-ROW-PIN",
+			"6300-ROYC-ROW-PIN",
+			"7700-ROYH-ROW-PSO",
+			"7703-ROYH-ROW-PSO",
+			"6300-GIAH-GIW-PIN",
+			"6300-GNTR-GIW-PIN",
+			"6300-GIA4-GIW-PIN",
+			"6300-GNTG-GIW-PIN",
+			"7700-GIAH-GIW-PSO",
+			"7703-GIAH-GIW-PSO",
+			"6300-GIAH-GIW-PVQ",
+			"6300-GIA4-GIW-PVQ",
+			"6300-GNTG-GIW-PVQ",
+			"6300-GNTR-GIW-PVQ",
+			"7700-GIAH-GIW-PIR",
+			"7700-GIA4-GIW-PX1",
+			"7700-GNTG-GIW-PX1",
+			"7700-GNTR-GIW-PX1",
+			"7703-GIAH-GIW-PIR",
+			"7703-GIA4-GIW-PX1",
+			"M952-GIGP-GIW-PI6",
+			"M952-GIMN-GIW-PI6",
+			"M952-GOMN-GIW-PI6",
+			"M958-GIGP-GIW-PI6",
+			"M958-GIMN-GIW-PI6",
+			"MCN1-GIMN-GIW-PI6",
+			"6300-ROY2-ROW-PVQ",
+			"6300-ROY3-ROW-PVQ",
+			"6300-ROYC-ROW-PVQ",
+			"6300-ROYH-ROW-PVQ",
+			"7700-ROY3-ROW-PX1",
+			"7700-ROYC-ROW-PX1",
+			"7700-ROYH-ROW-PIR",
+			"7703-ROYH-ROW-PIR",
+			"M952-ROA1-ROW-PI6",
+			"M952-ROMN-ROW-PI6",
+			"M958-ROMN-ROW-PI6",
+			"M958-ROA1-ROW-PI6",
+			"M952-ROR1-ROW-PI6",
+			"M958-ROR1-ROW-PI6",
+			"MCN1-ROA1-ROW-PI6",
+			"6200-CUBA-EJ-PER",
+			"770Y-CUBH-EJ-PRY",
+			"6700-CUBD-EJ-PR1",
+			"6200-CUBH-EJ-PER",
+			"6300-CUBD-EJ-PER",
+			"7700-CUBH-EJ-PER",
+			"3800-EJBP-EJ-PB8",
+			"6200-YANH-NK-PER",
+			"6700-YANH-NK-PER",
+			"blank",
+			"CHIC24",
+			"CUBS81",
+			"CUBS598CUST",
+			"CUBSCUSTWRJ",
+			"M952-NLAN-NTL-PSG",
+			"M952-EJMN-EJ-PER",
+			"M958-EJMN-EJ-PER",
+			"M952-EJMR-EJ-PER",
+			"M958-EJMR-EJ-PER",
+			"M952-EJAE-EJ-PER",
+			"M958-EJAE-EJ-PER",
+			"MCN1-EJMN-EJ-PER",
+			"MCN1-ECMN-EJ-PER",
+			"M952-CU91-CU7-PER",
+			"CUSTAR2",
+			"CUST13",
+			"CUST14",
+			"CUST13-Y",
+			"CUST13-G",
+			"67Y1-CUBH-EJ-PRY",
+			"6300-CUBR-EJ-PER",
+			"CUST14-Y",
+			"BHAWKBCPJ",
+			"sample"
+			]
+		},
 
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
@@ -76,65 +169,14 @@ var jerseypreview = function() {
 
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
-				app.rq.push(['templateFunction','productTemplate','onInits', function(P){
-					}]);
-				app.rq.push(['templateFunction','productTemplate','onCompletes',function(P){
-					app.u.dump('Jersey Preview Oncompletes Running');
-					var pid = P.pid;
-					var $context = $(app.u.jqSelector('#', P.parentID));
-					var $canvas = $('canvas.prodPreviewer', $context);
-					app.u.dump(app.ext.jerseypreview.vars.paramsByPID[pid]);
-					if(!app.ext.jerseypreview.vars.paramsByPID[pid]){
-						//In future update, run only for products marked as customizable?
-						$.getJSON("extensions/jerseypreview/products/"+pid+".json?_="+(new Date().getTime()))
-							.done(function(data, textStatus, jqXHR){
-								app.u.dump("Checking font face support");
-								if(isFontFaceSupported){
-									app.u.dump("Font Face Supported");
-									if(app.data[P.datapointer]["%attribs"]["user:jerseypreview_image"]){
-										font = data.font;
-										if(font){
-											$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
-											}
-										$('input[name=B5], input[name=B6]', $context).keyup(function(){
-											app.u.dump("keyup called");
-											if($(this).data('timer')){
-												clearTimeout($(this).data('timer'));
-												}
-											$(this).data('timer', setTimeout(function(){
-												app.ext.jerseypreview.u.updatePreview($context);
-												}, 600));
-											});
-										data.imgsrc = app.data[P.datapointer]["%attribs"]["user:jerseypreview_image"];
-										app.ext.jerseypreview.vars.paramsByPID[pid] = data;
-										app.ext.jerseypreview.u.assignPreviewerData($canvas, data, pid);
-										}
-									else {
-										app.ext.jerseypreview.vars.paramsByPID[pid] = "Supported, but no Image Found";
-										}
-									}
-								else {
-									app.u.throwMessage("Custom Jersey Previews are not available in your browser's version, sorry!");
-									app.ext.jerseypreview.vars.paramsByPID[pid] = "Font Face Not Supported";
-									}
-								})
-							.fail(function(datajqXHR, textStatus, errorThrown){
-								$canvas.remove();
-								app.ext.jerseypreview.vars.paramsByPID[pid] = "JSON failed to load";
-								app.u.dump("JSON failed to load");
-								//report failure?
-								});
-						}
-					}]);
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN app.ext.cubworld.callbacks.init.onError');
+				_app.u.dump('BEGIN _app.ext.cubworld.callbacks.init.onError');
 				}
 			}
-			
 		}, //callbacks
 
 
@@ -160,29 +202,24 @@ var jerseypreview = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			assignPreviewerData : function($canvas, data, pid){
-				data.img = $(app.u.makeImage({
-					name : data.imgsrc,
-					w : $canvas.attr('width'),
-					h : $canvas.attr('height'),
-					b : "FFFFFF",
-					tag : 1
-					})).get(0);
-				
-				$canvas.data('preview-params', data);
-				},
 			updatePreview : function($context){
-				//app.u.dump(name+" "+number);
+				//_app.u.dump(name+" "+number);
 				var $canvas = $('canvas.prodPreviewer', $context);
 				if($canvas.length != 0){
-					var name = $('input[name=B5]', $context).val().toUpperCase();
+					$canvas.get(0).width = $canvas.parent().innerWidth();
+					$canvas.get(0).height = $canvas.parent().innerHeight();
+					var params = _app.ext.jerseypreview.vars.paramsByPID[$canvas.attr('data-pid')];
+					var name = "";
+					if(params.name){
+						name = $('input[name=B5]', $context).val().toUpperCase() || "";
+						}
 					var number = $('input[name=B6]', $context).val().toUpperCase();
-					if(name != "" && number != ""){
+					if((name != "" || !params.name) && number != ""){
 						var context = $canvas.get(0).getContext('2d');
-						var params = $canvas.data('preview-params');
 						var w = $canvas.innerWidth();
 						var h = $canvas.innerHeight();
-						
+						var ratio = w / 296;
+						dump(ratio);
 						context.fillStyle = "#ffffff";
 						context.clearRect(0,0,w,h);
 						context.fillRect(0,0,w,h);
@@ -191,44 +228,37 @@ var jerseypreview = function() {
 						var textSize;
 						var x;
 						//draw image to canvas
-						context.drawImage(params.img, 0, 0);
+						context.drawImage(params.img, 0, 0, w, h);
 						
 						//draw number to canvas
-						context.font = params.number.size+"px "+params.font+","+params.font+"2";
+						context.font = (params.number.size*ratio)+"px "+params.font+","+params.font+"2";
 						context.fillStyle = "#"+params.number.color;
 						context.strokeStyle = "#"+params.number.strokeColor;
-						context.lineWidth = params.number.strokeThickness;
+						context.lineWidth = (params.number.strokeThickness*ratio);
 						context.textAlign = "center";
 						
-						x = w/2 + params.number.xOffset;
+						x = w/2 + params.number.xOffset*ratio;
 						
-						context.fillText(number, x, params.number.y+params.number.size);
-						context.strokeText(number, x, params.number.y+params.number.size);
+						context.fillText(number, x, (params.number.y+params.number.size)*ratio);
+						context.strokeText(number, x, (params.number.y+params.number.size)*ratio);
 						
 						//draw name to canvas
+						if(params.name){
+							context.font = (params.name.size*ratio)+"px "+params.font+","+params.font+"2";
+							context.fillStyle = "#"+params.name.color;
+							context.strokeStyle = "#"+params.name.strokeColor;
+							context.lineWidth = params.name.strokeThickness*ratio;
+							
+							x = w/2 + params.name.xOffset*ratio;
+							this.drawTextAlongArc(context, name, x, (params.name.y+params.name.radius)*ratio, params.name.radius*ratio, params.name.charSize*ratio);
+						}
 						
-						context.font = params.name.size+"px "+params.font+","+params.font+"2";
-						context.fillStyle = "#"+params.name.color;
-						context.strokeStyle = "#"+params.name.strokeColor;
-						context.lineWidth = params.name.strokeThickness;
-						
-						x = w/2 + params.name.xOffset;
-						this.drawTextAlongArc(context, name, x, params.name.y+params.name.radius, params.name.radius, params.name.charSize);
-						
-						//textSize = context.measureText(name);
-						//x = (params.name.x < 0 ? w/2 : params.name.x) - textSize.width/2;
-						
-						//context.fillText(name, x, params.name.y+params.name.size);
-						//context.strokeText(name, x, params.name.y+params.name.size);
-						
-						if($canvas.hasClass('displayNone')){
+						if(!$canvas.is(':visible')){
 							$canvas.fadeIn();
-							$canvas.removeClass('displayNone');
 							}
 						}
-					else  if(!$canvas.hasClass('displayNone')){
-						$canvas.fadeOut();
-						$canvas.addClass('displayNone');					
+					else  if($canvas.is(':visible')){
+						$canvas.fadeOut();				
 						}
 					else {
 						//Nothing to update and canvas is already hidden.  Do nothing.
@@ -266,11 +296,6 @@ var jerseypreview = function() {
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			}, //e [app Events]
-		vars : {
-			paramsByPID : {
-				
-				}
-			}
 		} //r object.
 		
 	return r;

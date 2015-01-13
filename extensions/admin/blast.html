@@ -1,0 +1,501 @@
+<div id='blastManagerTemplate' data-app-role='slimLeftContainer'>
+
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+		<div class='accordion marginBottom'>
+			<h2>Settings</h2>
+			<div>
+				<ul class='noPadOrMargin listStyleNone'>
+					<li class='lookLikeLink' data-setting='general' data-app-click="admin_blast|adminBlastSettingsEdit">General</li>
+					<li class='lookLikeLink' data-setting='headerfooter' data-app-click="admin_blast|adminBlastSettingsEdit">Header/Footer</li>
+					<li class='lookLikeLink' data-setting='addmessage' data-app-click="admin_blast|adminBlastSettingsEdit">Add New Message</li>
+					<li class='lookLikeLink' data-setting='macros' data-app-click="admin_blast|adminBlastSettingsEdit">Custom Macros</li>
+					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
+				</ul>
+			</div>
+		
+			<h2>Order</h2>
+			<div>
+				<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Customer</h2>
+			<div>
+				<ul data-app-role="blastmessages_CUSTOMER" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Product</h2>
+			<div>
+				<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Ticket</h2>
+			<div>
+				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+	
+			<h2>Printables</h2>
+			<div>
+				<ul data-app-role="blastmessages_PRINTABLE" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+<!--	
+			<h2>Supply Chain</h2>
+			<div>
+				<ul data-app-role="blastmessages_SUPPLY" class='noPadOrMargin listStyleNone'></ul>
+			</div>
+-->
+		</div>
+
+	</section>
+	
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
+		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer clearfix' data-app-role='slimLeftContentContainer'>
+		<!-- page contents will go here -->
+		
+		
+		</div>
+	</section>
+
+</div>
+
+
+<div id='blastSettingsGlobalTemplate'>
+	<section>
+		<form data-app-submit='admin|submitForm'>
+		<input type='hidden' name='_macrobuilder' value='admin_blast|blastSet' />
+		<input type='hidden' name='_tag/callback' value='showMessaging' />
+		<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+		<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+		<fieldset class='labelsAsBreaks'>
+			<legend>Global Settings</legend>
+			<!-- SANITY -> if you add another param to this form, you must whitelist it in admin_blast.macrobuilders.blastset -->
+			<label>
+				<span class='prompt'>Default email</span>
+				<input name='from_email' type='email' data-tlc="bind $var '.%BLAST.from_email'; apply --select=$var;" />
+				<span class='toolTip' title="Will be used for all outbound blast messages unless a blast specific 'from' address is provided.">?</span>
+			</label>
+			
+		</fieldset>
+		<!-- a container is necessary around this button for positioning of the menu -->
+		<div class='buttonset marginBottom'>
+			<button class='applyButton ' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+		</div>		
+		
+		</form>
+	</section>
+	
+	<section data-app-role='propertiesContainer'>
+	
+	
+	</section>
+
+
+</div>
+
+
+
+<div id='blastMessageAddTemplate'>
+	<form action='#' data-app-submit='admin_blast|adminBlastMsgCreateExec' novalidate>
+	
+	<fieldset class='labelsAsBreaks'>
+		<label>
+			<span class='prompt'>Message type</span>
+			<select name='msgtype' required='required'>
+				<option value=''>please choose</option>
+				<option value='CUSTOMER'>Customer</option>
+				<option value='ORDER'>Order</option>
+				<option value='PRODUCT'>Product</option><!--
+				<option value='SUPPLY'>Supply</option>-->
+				<option value='TICKET'>Ticket</option>
+			</select>
+		</label>
+
+		<label>
+			<span class='prompt'>Message id</span>
+			<input type='text' name='msgid' data-input-keyup="format" value="CUSTOM." data-input-format='blastid,uppercase' required='required' />
+			<span class='toolTip' title="A short, alphanumeric ID for the message. The message type (order, customer, etc) will be automatically be prepended. The message ID should be short but descriptive of what the message will be used for. ex: CANCELLED or CLOSED">?</span>
+		</label>
+		<button class='applyButton'>Create</button>
+	</fieldset>
+	</form>
+</div>
+
+
+<div id='blastMessageSendTestTemplate'>
+	<form action='#' class='labelsAsBreaks alignedLabels'>
+
+	<input type='hidden' name='_cmd' value='adminBlastMsgSend' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your test message has been sent.' />
+
+	<fieldset>
+		<label>
+			<span>Receiver</span>
+			<select name='RECEIVER' data-panel-selector=".blastMsgReceiverInputs" data-input-change='show-panel'>
+				<option>please choose</option>
+				<option value='EMAIL'  data-show-panel='blastMsgReceiverEmail'>Email</option>
+				<option value='CUSTOMER' data-show-panel='blastMsgReceiverCustomer'>Customer</option>
+				<optgroup label="Push Notifications">
+					<option value='GCN'>Google</option>
+					<option value='APNS'>Apple</option>
+					<option value='ADN'>Amazon</option>
+				</optgroup>
+			</select>
+		</label>
+
+	<div class='blastMsgReceiverInputs'  data-panel-id='blastMsgReceiverEmail'>
+		<label>
+			<span>Email</span>
+			<input type='email' name='EMAIL' required='required' data-validation-rules='skipIfHidden' />
+		</label>
+	</div>
+
+	<div class='blastMsgReceiverInputs label'  data-panel-id='blastMsgReceiverCustomer'>
+		<label>
+			<span>Customer id</span>
+			<input type='number' name='CID' required='required' data-validation-rules='skipIfHidden' />
+		</label>
+
+		<div>
+			find customer id by email 
+			<input type='email' name='emailForSearch' />
+			<button class='applyButton' data-text='false' data-icon-primary='ui-icon-search' data-app-click="admin_blast|adminBlastCustomerFind">search</button>
+		</div>
+	
+	</div>
+
+	</fieldset>
+
+	<div class='buttonset'>
+		<button class='applyButton'  data-app-click='admin|submitForm'>Send</button>
+	</div>
+	</form>
+</div>
+
+
+
+
+
+<div id='blastMessageDetailTemplate' class='clearfix'>
+
+	<form action='#' data-app-submit='admin|submitForm' novalidate='novalidate'>
+	<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select=$var;"  />
+	
+	<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+	<div class='buttonset ui-corner-all ui-widget-content smallPadding marginBottom clearfix'>
+		<h2 data-tlc="bind $var '.MSGID'; apply --select=$var;"></h2>
+		<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight applyButton' data-text='true' data-app-click='admin_blast|adminBlastMsgSendTestShow'>Send Test</button>
+		<button data-app-click="admin_blast|adminBlastMsgRemoveConfirm" class='applyButton toolTip' data-text='true' data-icon-primary='ui-icon-trash' data-tlc="bind $var '.%MSG.MSGID'; apply --attrib='data-msgid';" title="Remove a custom message or restore a system message to it's default content.">Remove/Restore</button>
+		
+	</div>
+
+
+	<div class='applyAnytabs labelsAsBreaks'>
+		<!-- tabs for editor -->
+		<ul>
+			<li><a href='#message'>Message</a></li>
+			<li><a href='#email'>Email</a></li>
+			<li><a href='#push'>Native Apps</a></li>
+		<!--	<li>SMS</li>-->
+		</ul>
+
+		<fieldset data-anytab-content='email'>
+		
+			<label>
+				<span>From</span>
+				<!-- don't make this required. it'll default to a global address -->
+				<input type='text' name='%META.email_from' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_from'; apply --select=$var; bind $email '.%BLAST.from_email'; apply --attrib='placeholder';" />
+			</label>
+			<label>
+				<span>bcc</span>
+				<input type='text' name='%META.email_bcc' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select=$var;" />
+			</label>
+		
+		</fieldset>
+
+		<fieldset data-anytab-content='message'>
+			<div class='marginBottom alignedLabels labelsAsBreaks alignedInputs'>
+			<label>
+				<span>Message ID</span>
+				<span data-tlc="bind $var '.%MSG.MSGID'; apply --append;"></span>
+			</label>
+
+			<label>
+				<span>Subject</span>
+				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
+			</label>
+			</div>
+			
+			<label>
+				<span>Message</span>
+				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
+			</label>
+
+
+
+			<div class='marginTop'>
+				<h3>Macros</h3>
+				<table class='gridTable fullWidth applyAnytable'>
+				<thead>
+				<tr>
+					<th>Macro ID</th>
+					<th>Macro</th>
+					<th>Created By</th>
+				</tr>
+				</thead>
+				<tbody data-tlc="bind $var '.@MACROS'; controller#loop --templateid='blastMessageMacroRowTemplate'; apply --append;"></tbody>
+				</table>
+			</div>
+
+
+		</fieldset>
+		
+		<fieldset data-anytab-content='push' class='alignedLabels labelsAsBreaks alignedInputs'>
+		
+			<label>
+				<span>Properties</span>
+				<textarea name='%META.properties' rows='10' data-tlc="bind $var '.%MSG.%META.properties'; apply --select=$var;"></textarea>
+			</label>		
+		
+		
+		</fieldset>
+
+	</div>	
+		<!--
+	to: email, GCM(google cloud messaging), APNS (apple push notification) ADN
+	based on selection, shows appropriate input. 
+	for test, send type  'EMAIL' or 'CUSTOMER' and then EMAIL='something@somewhere.com' or CUSTOMER=CID
+-->
+	</form>
+</div>
+
+
+<table>
+<tr id='blastMessageMacroRowTemplate'>
+	<td data-tlc="bind $var '.MACROID'; apply --append;"></td>
+	<td data-tlc="bind $var '.TITLE'; apply --append;"></td>
+	<td data-tlc="bind $var '.LUSER'; apply --append;"></td>
+</tr>
+</table>
+
+
+
+
+<div id='blastToolTemplate'>
+<form action='#' novalidate>
+	<input type='hidden' name='PRT' value='' data-tlc="bind $var '.%MSG.PRT'; apply --select=$var;" />
+	<input type='hidden' name='OBJECT' value='' data-tlc="bind $var '.%MSG.OBJECT'; apply --select=$var;" />
+	<input type='hidden' name='FORMAT' value='HTML5' />
+
+	<input type='hidden' name='_cmd' value='adminBlastMsgSend' />
+	<input type='hidden' name='_tag/callback' value='showMessaging' />
+	<input type='hidden' name='_tag/message' value='Your message has been sent.' />
+	<input type='hidden' name='_tag/persistent' value='true' /><!-- leaves success present. important cuz form is NOT cleared so user can easily send another message -->
+	<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+	<input type='hidden' name='ORDERID' data-tlc="bind $var '.ORDERID'; apply --select=$var;" /><!-- if coming from an order, this will get populated -->
+
+	<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+		<label>
+			<span>Receiver:</span>
+			<select name='RECEIVER' required='required' data-tlc="bind $var '.RECEIVER'; apply --select=$var;" data-panel-selector=".blastToolReceiverInputs" data-input-change='show-panel'>
+				<option value='EMAIL' selected="selected" data-show-panel='blastToolEmailInputs'>Email</option>
+				<option value='CUSTOMER' selected="selected" data-show-panel='blastToolCustomerInputs'>Customer</option>
+				<optgroup label="Push Notifications">
+					<option value='GCN'>Google</option>
+					<option value='APNS'>Apple</option>
+					<option value='ADN'>Amazon</option>
+				</optgroup>
+			</select>
+		</label>
+
+		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolEmailInputs'>
+			<span>Email address:</span>
+			<input type='text' name='EMAIL' required='required' maxlength="100" required="required" data-validation-rules='skipIfHidden' data-tlc="bind $var '.EMAIL'; apply --select=$var;" />
+		</label>
+
+		<label class='blastToolReceiverInputs displayNone' data-panel-id='blastToolCustomerInputs'>
+			<span>Customer ID:</span>
+			<input type='number' step='1' min='0' name='CID' required='required' maxlength="10" required="required" data-validation-rules='skipIfHidden' data-tlc="bind $var '.CID'; apply --select=$var;" />
+		</label>
+
+		<label>
+			<span>Message source:</span>
+			<select name='MSGID' data-tlc="bind $var '.@MSGS'; admin_blast#msgsasoptions; apply --prepend;" data-app-change="admin_blast|updateBlastInputsBySource">
+				<option value='BLANK' selected="selected">blank</option>
+			</select>
+		</label>
+
+	</fieldset>
+	
+	<fieldset data-app-role='blastToolMsgContent'  class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+	<!-- any content that is message specific (should get changed when msgid changes) should be within this fieldset -->
+		<label>
+			<span>Subject:</span>
+			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
+		</label>
+		
+		<label>
+			<span>Message:</span>
+			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
+		</label>
+	</fieldset>
+
+
+	<fieldset class='updateSystemMessageContainer marginBottom'>
+	<label>
+		<!-- <input type='checkbox' name='updateSystemMessage' disabled='disabled' />-->
+		<!-- Save these changes to the message <span class='msgType'></span> for all future emailsthe .msgType is used to populate the message ID in focus. -->
+	</label>
+	</fieldset>
+
+	<button class='applyButton' data-app-click="admin|submitForm">Send Email</button>
+
+</form>
+</div>
+
+
+
+<div id='adminBlastMacroCreateUpdateTemplate'>
+
+<form class='labelsAsBreaks alignedLabels' data-app-submit='admin|submitForm' novalidate>
+	<label>
+		<span>Title</span>
+		<input type='text' name='TITLE' required='required' value='' data-tlc="bind $var '.TITLE'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>Macro ID</span>
+		<input type='text' name='MACROID' required='required' value='' data-tlc="bind $var '.MACROID'; apply --select=$var;" data-format-rules='blastMacroMacroID' data-input-keyup="format" data-input-format='uppercase' />
+		<span class='toolTip' title="This is the value that will be substituted in the body of the message. ex: %ORDERID%. Must begin and end with a percent sign and contain no other special characters or spaces.">?</span>
+	</label>
+	<label>
+		<span>Body</span>
+		<textarea name='BODY' required='required' data-tlc="bind $var '.BODY'; apply --select=$var;" rows='8' class='fullWidth'></textarea>
+	</label>
+	<div class='buttonset clearfix'>
+		<!-- the following two buttons are conditionally revealed, like in the header/footer editor -->
+<!--		<button class='applyButton displayNone showForHeaderFooterEditor' data-app-click="admin_blast|textarea2editor" disabled>HTML Editor</button> -->
+		<button type="reset" value="Reset" class='applyButton displayNone showForHeaderFooterEditor' disabled>Cancel Changes</button>
+		<button class='applyButton floatRight'>Save</button>
+	</div>
+</form>
+
+</div>
+
+
+<!-- these templates are used as part of DMI, so they're bind, not tlc -->
+<table>
+<tr id='blastMacroRowTemplate'>
+	<td data-bind="var: macro(TITLE); format:text;"></td>
+	<td data-bind="var: macro(MACROID); format:text;"></td>
+	<td data-bind="var: macro(CREATED_TS); format:text;"></td>
+	<td data-bind="var: macro(LUSER); format:text;"></td>
+	<td class='alignRight'>
+		<button data-icon-primary='ui-icon-trash' data-text='false' class='applyButton' data-app-click='admin_blast|blastMacroDeleteConfirm'>Delete</button>
+		<button data-icon-primary='ui-icon-pencil' data-text='false' class='applyButton' data-app-click='admin_blast|blastMacroUpdateShowPanel'>Edit</button>
+	</td>
+</tr>
+</table>
+
+
+<div id='blastSystemMacroItemTemplate' data-app-role='macroDataContainer'>
+	<pre class='prettyPre' data-tlc="bind $var '.BODY'; render --text; apply --append;"></pre>
+	<div class='buttonset alignRight'>
+		<button data-text='true' data-icon-primary='ui-icon-plus' class='applyButton' data-app-click="admin_blast|blastMacroAddShow">Clone to Custom</button>
+	</div>
+</div>
+
+
+
+<div id='blastMacroProperyEditorTemplate'>
+<form data-app-submit="admin|submitForm" class='labelsAsBreaks' action='#'>
+
+<input type='hidden' name='_cmd' value='adminBlastMacroPropertyUpdate' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+<input type='hidden' name='_tag/restoreInputsFromTrackingState' value='1' />
+
+<fieldset class='floatRight width50'>
+	<legend>Properties</legend>
+	<label>
+		<span>Link Syntax</span>
+		<select name='PRT.LINKSYNTAX' data-tlc="bind $var '.%PRT.LINKSYNTAX'; apply --select=$var;">
+			<option value=''>None</option>
+			<option value='APP'>App</option>
+			<option value='VSTORE'>Vstore</option>
+		</select>
+		<span class='toolTip' title="If all the hosts on this partition are apps, set this to app. If any are v-store, set this to vstore and be sure your app-based hosts are set to vstore/app.">?</span>
+</fieldset>
+
+<fieldset class='alignedLabels'>
+	<legend>Partition Macros</legend>
+	
+	<label>
+		<span>%DOMAIN%</span>
+		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
+		<span class='toolTip' title="You should start this with www.  You do NOT need to add the http:// or https://">?</span>
+	</label>
+	<label>
+		<span>%PHONE%</span>
+		<input type='tel' name='PRT.PHONE' value='' data-tlc="bind $var '.%PRT.PHONE'; apply --select=$var;" />
+		<span class='toolTip' title="This should include the area code, if applicable.">?</span>
+	</label>
+	<label>
+		<span>%HELP_EMAIL%</span>
+		<input type='email' name='PRT.HELPEMAIL' value='' data-tlc="bind $var '.%PRT.HELPEMAIL'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>%COMPANY%</span>
+		<input type='text' name='PRT.COMPANY' value='' data-tlc="bind $var '.%PRT.COMPANY'; apply --select=$var;" />
+	</label>
+	<label>
+		<span>%MAILADDR%</span>
+		<textarea name='PRT.MAILADDR' rows='5' data-tlc="bind $var '.%PRT.MAILADDR'; apply --select=$var;" class='fullwidth' />
+	</label>
+
+
+	<div class="label" data-app-role='companyLogoContainer'>
+		<span class='prompt floatLeft'>%LOGOIMAGE%</span>
+		<span data-app-role='companyLogoImgContainer'>
+		<img width="50" height="50" border="0" name='companyLogo' src="blank.gif" data-tlc="bind $var '.%PRT.LOGOIMAGE'; if(is $var --notblank;){{apply --img --media=$var --width=50 --height=50 --bgcolor='#ffffff' --replace;}};">
+		</span>
+	<input type='hidden' name='PRT.LOGOIMAGE' data-tlc="bind $var '.%PRT.LOGOIMAGE'; apply --select=$var;" />
+	</div>
+
+
+
+
+</fieldset>
+
+	<div class='buttonset'>
+	<button class='applyButton' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+
+</form>
+</div>
+
+
+
+
+
+
+<div id='headerFooterTemplate' data-app-role='headerFooterEditorContainer'>
+	<p>The header and footer blocks are macros. That means they can not contain macros because they don't get interpreted. You can use TLC to load variables, if desired. <b>Please make a local copy/backup prior to making changes</b> so that you can easily restore at a later time.</p>
+
+
+	<section data-app-role='headerEditor' data-editor-role='container'>
+		<h3>Header</h3>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
+	</section>
+	<br />
+	<section data-app-role='footerEditor' data-editor-role='container'>
+		<h3>Footer</h3>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='adminBlastMacroCreateUpdateTemplate'; apply --append;"></div>
+	</section>
+
+</div>

@@ -20,7 +20,7 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var store_username = function() {
+var store_username = function(_app) {
 	var theseTemplates = new Array('');
 	var r = {
 
@@ -43,7 +43,7 @@ var store_username = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks

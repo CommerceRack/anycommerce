@@ -1,0 +1,163 @@
+@charset "utf-8";
+
+
+/*
+*** 201403 -> here to fix a bug in jqueryUI. the dialogs, when attempting to move, would jump away from the cursor in FF. This fixed it.
+Put this high in the doc as a reminder to occassionally re-check if it can be removed
+*/
+.ui-dialog {
+    position: fixed;
+	}
+
+
+
+/*
+this file is included by the checkout extension IF _clientid = 1pc
+*/
+
+#appTemplates {display:none;} /* container for all templates. should be hidden */
+#appPreView	{width:50%; max-width:550px; margin:0 auto;}
+
+/*
+loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
+loadingBG classname is removed once template is rendered.
+note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
+note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
+*/
+.loadingBG	{background-image:url(images/loading.gif) !important; background-repeat: no-repeat !important; background-position: center center; min-height:100px !important; min-width:100px;}
+li.loadingBG, .wait	{background:url(images/wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
+span.wait	{display:inline-block;}
+
+/* global styles - added for cross-browser uniformity or usability */
+
+#mainContentArea img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+
+#mainContentArea button {display:inline-block; margin: 0; padding: 0; cursor:pointer;}
+/* for small buttons */
+.smallButton .ui-button-text	{line-height:normal; font-size:.75em;} /* don't mess with padding. will effect icon buttons */
+.smallButton .ui-button-text-icon-primary .ui-button-icon-primary	{left:.25em}
+
+#mainContentArea p	{margin-bottom:1em;}
+
+
+#mainContentArea table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	}
+#mainContentArea td	{vertical-align:top;}
+#mainContentArea td.valignMiddle	{vertical-align: middle;}
+
+
+
+/* feel free to delete these or override in your own .css file */
+#mainContentArea h1, #mainContentArea h2, #mainContentArea h3, #mainContentArea h4, #mainContentArea h5, #mainContentArea h6	{padding:0; margin:0;}
+
+/* some optional form styling
+<label><span class='prompt'>prompt</span><input class='alignInput'></label> w/ alignedForm class around it on form, fieldset, whatever 
+ */
+.alignedForm label	{display:block; clear:both; margin-bottom:.2em; vertical-align:top;}
+.alignedForm label:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+.alignedForm .prompt	{text-align:right; float:left; width:35%; display:block; margin-right:2%;}
+.alignedForm .alignInput	{width:60%; float:right;} /* not enforcing width is common enough that it justifies using a class to enforce it. */
+
+/* chrome and safari add an outer border/glow to the input in focus. this removes it. */
+input:focus {
+	outline:none;
+	}
+
+input.numberInput	{width:50px}
+label span.prompt	{display:inline-block; width:20%; margin-right:2em; vertical-align:top;}
+button:focus	{outline:none;}
+
+/*
+classes used on menus that are toggled on/off. wrap offMenu around the default buttons and onMenu around buttons that get turned on.
+for example, in /customer/myaccount, a 'change' button is displayed (wrapped in offMenu) for each address. onClick, 'onMenu' is toggled on, revealing save and cancel
+and offMenu is toggle off, hiding the change button.
+*/
+.onMenu	{display:none;}
+.offMenu	{}
+
+/* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
+
+
+
+/* positioning */
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+
+.alignCenter	{text-align:center;}
+.alignLeft	{text-align:left;}
+.alignRight	{text-align:right;}
+.alignJustify {text-align:justify;}
+
+.center	{margin:0 auto;}
+
+
+/* aesthetics/usability */
+
+/* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
+.disabled	{
+	cursor:crosshair !important;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+.formValidationError, .zwarn	{color:#cc0000;} /* applied to errors displayed in form validation or generic warnings */
+.pointer	{cursor:pointer;}
+
+/* used when an element needs to start of hidden. this is used frequently. */
+.displayNone	{display:none;}
+
+.lineThrough	{text-decoration:line-through}
+.underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
+.borderNone	{border:none;}
+
+.clearfix	{clear:both;}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+	
+/* added to a piece of text once it becomed editable */
+.editable	{} /* put this on any editable field. */
+.editEnabled	{border:1px solid #ffcc00; min-width:25px; min-height:22px; width:200px; display:inline-block; padding:2px; margin-bottom:2px;} /* added to any editable field once editor is enabled. */
+.edited		{border:1px solid #390;} /* added if a field is changed */
+
+
+.marginLeft	{margin-left:1em;}
+.marginRight	{margin-right:1em;}
+.marginTop	{margin-top:1em;}
+.marginBottom	{margin-bottom:1em;}
+
+.stdMargin	{margin:1em;}
+.headerPadding	{padding: .2em .4em;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
+.stdPadding	{padding:1em;}
+.smallPadding	{padding:.5em;}
+.fullWidth	{width:100%;}
+
+
+
+.buyerLoggedIn .hideIfLoggedIn	{display:none;}
+
+.hideIfLoggedOut	{display:none;}
+
+.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
+.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
+
+#mainContentArea .hint	{font-weight:normal; font-size:.8em;}
+
+/* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
+.appAccordianesque .ui-accordion-header {padding:.5em 2em;}
+
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:1em; padding:0; display:inline-block;}

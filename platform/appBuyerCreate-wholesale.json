@@ -1,0 +1,27 @@
+{
+	"_version":"201403",
+	"_start":"createBuyer",
+	"_inputs":[
+		{ "required":0,"var":"company","type":"text","label":"Company Name" },
+		{ "required":1,"var":"email","type":"text","label":"Email" },
+		{ "required":1,"var":"firstname","type":"text","label":"Purchasing Contact First Name" },
+		{ "required":1,"var":"lastname","type":"text","label":"Purchasing Contact Last Name" },
+		{ "required":1,"var":"address1","type":"text","label":"Company Address 1" },
+		{ "required":0,"var":"address2","type":"text","label":"Company Address 2" },
+		{ "required":1,"var":"city","type":"text","label":"Company City" },
+		{ "required":1,"var":"region","type":"text","label":"Company State" },
+		{ "required":1,"var":"postal","type":"text","label":"Company Zip" },
+		{ "required":0,"var":"referred_by","type":"text","label":"Referred By or Rooftop" },
+		{ "required":1,"var":"todonote","type":"text","label":"To Do Note" }
+	],
+	 
+
+	"createBuyer": [
+		"SET?firstname=$firstname&lastname=$lastname&is_locked=1",
+		"PASSWORDRESET?password=$password",
+		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=BILL&firstname=$firstname&lastname=$lastname&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal",
+		"ADDRCREATE?SHORTCUT=DEFAULT&TYPE=SHIP&firstname=$firstname&lastname=$lastname&address1=$address1&address2=$address2&email=$email&city=$city&region=$region&postal=$postal",
+		"ORGCREATE?firstname=$firstname&lastname=$lastname&company=$company&address1=$address1&address2=$address2&city=$city&region=$region&postal=$postal&email=$phone&ACCOUNT_MANAGER=$referred_by",
+		"ADDTODO?title=New%20Wholesale%20Account%20Request%20To%20Review&note=$todonote"
+	]
+}

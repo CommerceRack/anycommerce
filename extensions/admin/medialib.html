@@ -2,7 +2,7 @@
 
 <div id='mediaLibTemplate'>
 
-<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+<form id="mediaLibUploadForm" action="#" onsubmit="return false;" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
 	<td>
@@ -39,7 +39,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		<span class="btn btn-success fileinput-button">
 			<i class="icon-plus icon-white"></i>
 			<span>Add files...</span>
-			<input type="file" name="files[]" multiple>
+			<input type="file" name="files[]" multiple="multiple" />
 		</span>
 	</div>
 </div>
@@ -51,7 +51,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
    	<div class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<h6 class='clearfix'>Drag your files here from your desktop</h6>
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
+        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" /></noscript>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar clearfix">
             <div class="span7 clearfix">
@@ -166,12 +166,26 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </div>
 
 
+<!--
+not in use yet.
+<div id='fileUploadFilePreviewTemplate'>
+	<span class='fileUpload_file fileUpload_default'></span>
+	<b data-bind="var: file(name); format:text;"></b><br />
+	<span data-bind="var: file(size); format:text; pretext:size: ;"></span><br />
+	<span data-bind="var: file(type); format:text; pretext:type: ;"></span><br />
+	<span data-bind="var: file(lastModifiedData); format:text; pretext:last modified: ;"></span>
+</div>
+-->
+
+<div id='fileUploadTemplate_anyupload' data-app-role='anyuploadContainer' class='genericFileUpload width50'>
+<!-- here for some backward compatibility -->
+</div>
 
 
 
 <div id='fileUploadTemplate'>
 
-<div id='fileUploadMessaging'></div>
+	<div id='fileUploadMessaging'></div>
 
 <!-- START JQFU CODE THAT SHOULD BE LOADED FROM DIV ABOVE -->
 <fieldset class='borderNone'>
@@ -228,7 +242,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
-	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
+	<a href='#' onClick="adminApp.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
 		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
 		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/; hideZero:false;"></span>
 		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
@@ -238,12 +252,12 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	
 	
 	<li id='mediaFileTemplate'>
-	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' />
+	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' />
 	<div data-bind='var: media(Name); format:text;'></div>
-	<button data-btn-action='deleteMedia'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
-	<button data-btn-action='selectMedia'>Use this piece of media.</button>
-	<button data-btn-action='mediaDetails'>More details.</button>
-	<button data-btn-action='downloadMedia'>Download file.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='deleteMedia' class='applyButton btnDelete' data-icon-primary='ui-icon-trash' data-text='false'>Tag media for delete. click the delete selected button to remove all tagged media.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='selectMedia' class='applyButton displayNone' data-icon-primary='ui-icon-circle-check' data-text='false'>Use this piece of media.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='mediaDetails' class='applyButton' data-icon-primary='ui-icon-info' data-text='false'>More details.</button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' data-btn-action='downloadMedia' class='applyButton' data-icon-primary='ui-icon-image' data-text='false'>Download file.</button>
 	</li>
 	
 	
@@ -266,7 +280,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	<div data-bind='var: media(ImgName); format:text; pretext:File format: ;'></div>
 	<div>Dimensions: <span data-bind='var: media(W); format:text;'></span> X <span data-bind='var: media(H); format:text;'></span></div>
 	<div data-bind='var: media(MasterSize); format:text; pretext:(;posttext:);'></div>
-	<div data-bind='var: media(TS); format:unix2mdy; pretext:Added on: ;'></div>
+	<div data-bind='var: media(TS); format:epoch2mdy; pretext:Added on: ;'></div>
 	</td>
 </tr>
 </table>
@@ -287,9 +301,9 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 	<td>
 	<div data-bind='var: media(IMG); format:mediaFilePathAsLinks; extension:admin_medialib; pretext:Currently Selected: ;'></div>
-	<button data-btn-action='clearMedia'></button>
-	<button data-btn-action='details'></button>
-	<button data-btn-action='download'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-circle-close' data-text='false' data-btn-action='clearMedia'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-trash' data-text='false'  data-btn-action='details'></button>
+	<button data-app-click='admin_medialib|handleMediaFileButton' class='applyButton' data-icon-primary='ui-icon-picture' data-text='false' data-btn-action='download'></button>
 	</td>
 </tr>
 </table>
@@ -327,12 +341,57 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 ##########################
 
-PAGE TEMPLATES FOR setup/import
+PAGE TEMPLATES FOR utilities/import
 
 ##########################
 
 
 -->
+
+
+
+
+
+
+<div id='pageFileImportTemplate' class='page pageFileImport' data-app-role='fileImportContainer'>
+
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+		<ul data-app-role='fileImportMenu'>
+			<li><a href='#' data-verb="PRODUCTS" data-app-click="admin_medialib|fileImportPageShow">Products</a></li>
+			<li><a href='#' data-verb="INVENTORY" data-app-click="admin_medialib|fileImportPageShow">Inventory</a></li>
+			<li><a href='#' data-verb="CUSTOMERS" data-app-click="admin_medialib|fileImportPageShow">Customers</a></li>
+			<li><a href='#' data-verb="REVIEWS" data-app-click="admin_medialib|fileImportPageShow">Reviews</a></li>
+			<li><a href='#' data-verb="NAVCATS" data-app-click="admin_medialib|fileImportPageShow">Categories</a></li>
+			<li><a href='#' data-verb="VARIATIONS" data-app-click="admin_medialib|fileImportPageShow">Variations</a></li>
+			<li><a href='#' data-verb="REWRITES" data-app-click="admin_medialib|fileImportPageShow">URL</a></li>
+			<li><a href='#' data-verb="ORDERS" data-app-click="admin_medialib|fileImportPageShow">Orders</a></li>
+			<li><a href='#' data-verb="TRACKING" data-app-click="admin_medialib|fileImportPageShow">Tracking</a></li>
+			<li><a href='#' data-verb="RULES" data-app-click="admin_medialib|fileImportPageShow">Rules</a></li>
+			<li><a href='#' data-verb="LISTINGS" data-app-click="admin_medialib|fileImportPageShow">Listings</a></li>
+			<li><a href='#' data-verb="IMAGES" data-app-click="admin_medialib|fileImportPageShow">Images</a></li>
+			<li><a href='#' data-verb="OTHER" data-app-click="admin_medialib|fileImportPageShow">Other</a></li>
+		</ul>
+	</section>
+	
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
+		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
+		<!-- page contents will go here -->
+		</div>
+	</section>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -357,6 +416,20 @@ PAGE TEMPLATES FOR setup/import
 
 
 
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-variations'>
+<h1>Load Variations from CSV File</h1>
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='VARIATIONS'>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+
+</form>
+</div>
 
 
 
@@ -413,12 +486,21 @@ account being billed for the time necessary to diagnose and repair the issue.
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='INVENTORY'>
 <fieldset>
-	<label><input type='radio' name='TYPE' value='inventory.simple'> Simple Inventory (%SKU,%INVENTORY,%LOCATION,%MIN_QTY)</label>
-	<label><input type='radio' name='TYPE' checked value='inventory'> Inventory (user specified header)</label>
-	<label><input type="checkbox" name="ENABLEINVENTORY"> Enable Inventory for each SKU imported</label>
-	<label><input type="checkbox" name="STRIPDASH"> Strip Dashes from SKU field.</label>
-	<label><input type="checkbox" name="CHECKSKU"> Check/Verify SKU's exist.</label>
-	<div class='formFieldHelp'>(define advanced variables in the header)</div>
+	<h3>Import Type &amp; Target</h3>
+	<label><input type='radio' name='HEADERS' checked value='BASETYPE=SIMPLE'> SIMPLE (%SKU,%QTY,%NOTE,%COST)</label>
+
+	<div data-app-role='fileImportWMSContainer'></div><!-- WMS import options will get loaded here -->
+	<div data-app-role='fileImportSupplierContainer'></div><!-- supplier import options will get loaded here -->
+	<label><input type='radio' name='HEADERS' value='ADVANCED'> Advanced Cmd's &amp; Multi-type (requires %CMD, %BASETYPE, etc.)</label>
+
+	<br>	
+
+	<h3>Action</h3>
+	<label><input type="radio" name="CMD" checked value="SET"> SET: %QTY is the absolute number.</label>
+	<label><input type="radio" name="CMD" value="INC"> INC: %QTY is an incremental (+/-) number that should be added or removed.</label>
+	<label><input type="radio" name="CMD" value=""> CMD: Use the CMD= specified in file header, or %CMD column.</label>
+	<br>
+	<label><input type="checkbox" name="CHECKSKU"> Skip Invalid: Verify PID's exist and SKU's are valid.</label>
 </fieldset>
 
 <!-- adds the file upload area -->
@@ -440,7 +522,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 </form>
 
 <div class="hint">
-to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/index.cgi'); return false;">utilities &#187; ebay</a>
+to export ebay listings go to: <a href="#" onClick="navigateTo('#!productExport'); return false;">utilities &#187; ebay</a>
 </div>
 
 
@@ -449,40 +531,39 @@ to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/
 
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-navcats'>
-<h1>Navigation categories</h1>
+	<h1>Navigation categories</h1>
 
-<section>
-<h2>Import navigation categories from CSV file</h2>
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<fieldset>
-	<input type='hidden' name='filetype' value='NAVCATS'>
-	<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
-	<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
-	<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
-	<label><input type="checkbox" name="CAT_DESTRUCTIVE"> Destructive Overwrite (nukes all categories before running).</label>
-</fieldset>
-
-<!-- adds the file upload area -->
-<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
-</form>
-</section>
-
-
-
-<section>
-<h2>Export navigation categories</h2>
-
-
-<label>Additional headers: <input type="textbox" name="headers" id='navcatExportHeader'></label>
-<div class="hint">
-Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
-However any field that is stored in page namespace can be accessed.
-</div>
-
-<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE&'+app.ext.admin.u.uiCompatAuthKVP()+'&headers='+$('#navcatExportHeader').val());"  class='ui-button ui-state-default ui-corner-all'>Export</button>
-
-
-</section>
+	<section>
+		<h2>Import navigation categories from CSV file</h2>
+		<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+		<fieldset>
+			<input type='hidden' name='filetype' value='NAVCATS'>
+			<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
+			<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
+			<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
+			<label><input type="checkbox" name="CAT_DESTRUCTIVE"> Destructive Overwrite (nukes all categories before running).</label>
+		</fieldset>
+		
+		<!-- adds the file upload area -->
+		<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+		</form>
+		</section>
+		
+		
+		
+		<section>
+		<h2>Export navigation categories</h2>
+		
+		
+		<label>Additional headers: <input type="text" name="headers" id='navcatExportHeader'></label>
+		<div class="hint">
+		Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
+		However any field that is stored in page namespace can be accessed.
+		</div>
+		
+		<button data-app-click='admin_medialib|adminCSVExportNavcatsExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-s'>Export Categories</button>
+	
+	</section>
 
 </div>
 
@@ -508,11 +589,14 @@ or product page. That is because a rewrite lookup is only done immediately befor
 </form>
 </section>
 
-<section>
-<h2>Export rewrites</h2>
-<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
 
+<section>
+<h2>Export Rewrites</h2>
+<button data-app-click='admin_medialib|adminCSVExportRewritesExec' class='applyButton' data-text='true' data-icon-primary='ui-icon-circle-arrow-s'>Export URL Rewrites</button>
 </section>
+
+
+
 </div>
 
 
@@ -570,7 +654,7 @@ Columns headers are as follows:<br />
 	<label><input form="csvUploadToBatchForm" type="checkbox" name="PRODNAVCAT" CHECKED> Configure Management Categories using Navigation Categories schema.</label>
 	<label><input form="csvUploadToBatchForm" type='checkbox' name="REMOVEREST"> Remote System Synchronization: Delete products which were are not found in this import.</label>
 	<label><input form="csvUploadToBatchForm" type="checkbox" name="RESORT_NAVCATS"> Reorder navigation categories after import. (only necessary if updating category sort fields via update - VERY SLOW)</label>
-	<label><input form="csvUploadToBatchForm" type="checkbox" name="NONDESTRUCTIVE" CHECKED> Perform Non-Destructive Import - updates products, rather than doing a complete overwrite of a products data! (slower)</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="DESTRUCTIVE" > Destructive Import - deletes all data from product before doing import (very dangerous)</label>
 </fieldset>
 
 <!-- adds the file upload area -->
@@ -621,13 +705,13 @@ Columns headers are as follows:<br />
 </form>
 
 </section>
-
+<!--
 <section>
 <h2>Exporting rules</h2>
-<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+adminApp.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
 
 </section>
-
+-->
 </div>
 
 

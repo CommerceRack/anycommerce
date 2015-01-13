@@ -20,7 +20,7 @@
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
-var admin_launchpad = function() {
+var admin_launchpad = function(_app) {
 	var theseTemplates = new Array('launchpadTemplate');
 	var r = {
 
@@ -38,12 +38,12 @@ var admin_launchpad = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/launchpad.css','admin_launchpad']);
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/launchpad.html',theseTemplates);
+				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/launchpad.css','admin_launchpad']);
+				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/launchpad.html',theseTemplates);
 				r = true;
 //used for browser resize. binding a resize event triggers it throughout the resize, not just at the end.
 //so this is used to make sure the event is only triggered once.
-app.ext.admin_launchpad.u.delay = (function(){
+_app.ext.admin_launchpad.u.delay = (function(){
   var timer = 0;
   return function(callback, ms){
     clearTimeout (timer);
@@ -52,10 +52,10 @@ app.ext.admin_launchpad.u.delay = (function(){
 })();
 
 $(window).resize(function() {
-    app.ext.admin_launchpad.u.delay(function(){
+    _app.ext.admin_launchpad.u.delay(function(){
 	  if($('#launchpadContent').is(':visible'))	{
       	console.log('Browser resize. Adjust tilegroups and trigger shapeshifter rearrange');
-		app.ext.admin_launchpad.u.handleTileGroupResize();
+		_app.ext.admin_launchpad.u.handleTileGroupResize();
 	  	}
       //...
     }, 500);
@@ -66,7 +66,7 @@ $(window).resize(function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				_app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}
 		}, //callbacks
@@ -76,7 +76,7 @@ $(window).resize(function() {
 		a : {
 
 			showLaunchpad : function()	{
-				app.u.dump("BEGIN admin_launchpad.a.showLaunchpad");
+				_app.u.dump("BEGIN admin_launchpad.a.showLaunchpad");
 
 $('#launchpadContent').empty().anycontent({'templateID':'launchpadTemplate','dataAttribs':{'id':'launchpad'},'showLoading':false})
 
@@ -89,7 +89,7 @@ This is all for drag n drop and adding 'close' buttons.
 					connectWith: '.launchpad_tiles',
 					helper : 'clone', //keeps click events in dragged item from firing on drag.
 					stop: function( event, ui ) {
-						app.ext.admin_launchpad.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
+						_app.ext.admin_launchpad.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
 						$('.tileButton').hide();
 						}
 					});
@@ -98,7 +98,7 @@ This is all for drag n drop and adding 'close' buttons.
 					var $li = $(this);
 					$li.append($("<button>").text('remove').addClass('tileButton').css({'position':'absolute','top':0,'right':0}).button({icons: {primary: "ui-icon-close"},text: false}).on('click',function(){
 						$li.empty().remove()
-						app.ext.admin_launchpad.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
+						_app.ext.admin_launchpad.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
 						}).hide());
 					$li.on('mouseover',function(){
 						$('.tileButton',$li).show();
@@ -108,22 +108,22 @@ This is all for drag n drop and adding 'close' buttons.
 						});
 					});
 */
-app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'translateSelector','extension':'admin','selector':'#tileRecentNews'},'mutable');
-app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
-app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
-app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
-app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
-app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
-app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
-app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
-app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
-app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
+_app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'translateSelector','extension':'admin','selector':'#tileRecentNews'},'mutable');
+_app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
+_app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
+_app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
+_app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+_app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+_app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
+_app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
+_app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
+_app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 
-				app.ext.admin_launchpad.u.buildDomainTiles4Launchpad();
-				app.model.dispatchThis('immutable');
-				app.ext.admin_launchpad.u.addMouseWheel2Launchpad();
+				_app.ext.admin_launchpad.u.buildDomainTiles4Launchpad();
+				_app.model.dispatchThis('immutable');
+				_app.ext.admin_launchpad.u.addMouseWheel2Launchpad();
 				//!!! once we have the tile builder all done, get this out of a timeout.
-				setTimeout(function(){app.ext.admin_launchpad.u.handleTileGroupResize();},500);
+				setTimeout(function(){_app.ext.admin_launchpad.u.handleTileGroupResize();},500);
 
 
 				}
@@ -140,16 +140,17 @@ app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmo
 //change color for active domain.
 //show buttons for 'view website', 'edit domain', 'use this domain'
 				var $ele = $("<li \/>").addClass('tileDomainSelect tile_1x1');
-				$ele.addClass((app.vars.domain == domainArr.id) ? 'blue8' : 'blue2')
+				$ele.addClass((_app.vars.domain == domainArr.id) ? 'blue8' : 'blue2')
 				$ele.on('click.domainSelect',function(){
-					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'),'#!setup');
+					_app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
+					navigateTo('#:setup');
 					$(this).closest('ul').children().each(function(){$(this).removeClass('blue8').addClass('blue2');});
 					$(this).addClass('blue8').removeClass('blue2');
 					})
 				$ele.data(domainArr);
-//if the domain object ever returns 'broken', use something like this: "+(app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
+//if the domain object ever returns 'broken', use something like this: "+(_app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
 				$ele.append("<span class='iconFont focon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span>");
-//				return {'$content' : $ele, 'size':'1x1','bgclass': (app.vars.domain == domainArr.id) ? 'blue5' : 'blue3','target':'domains'};
+//				return {'$content' : $ele, 'size':'1x1','bgclass': (_app.vars.domain == domainArr.id) ? 'blue5' : 'blue3','target':'domains'};
 				return $ele;
 				}
 
@@ -190,7 +191,7 @@ optional
 
 			handleTileGroupResize : function(){
 
-				app.u.dump("BEGIN admin_launchpad.u.handleTileGroupResize");
+				_app.u.dump("BEGIN admin_launchpad.u.handleTileGroupResize");
 				var $LP = $('#launchpad'),
 				$LPI = $('#launchpadInner'),
 				tileWidth = $('.tile_1x1',$LPI).first().outerWidth(true),
@@ -203,7 +204,7 @@ optional
 				var rowsPerGroup = Math.floor(($LPI.height() / tileHeight));
 				$LPI.height(tileHeight * rowsPerGroup); //ensures no vertical scrolling
 			
-				app.u.dump(" -> rowsPerGroup: "+rowsPerGroup);
+				_app.u.dump(" -> rowsPerGroup: "+rowsPerGroup);
 			
 			//resize ul to accomodate # and sizes of tiles.
 				$('ul.launchpad_tiles',$LPI).each(function(){
@@ -260,17 +261,17 @@ optional
 
 			buildDomainTiles4Launchpad : function()	{
 				
-				var r = app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-					if(app.model.responseHasErrors(rd)){
+				var r = _app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+					if(_app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
 					else	{
-						var domains = app.data.adminDomainList['@DOMAINS'],
+						var domains = _app.data.adminDomainList['@DOMAINS'],
 						L = domains.length;
 
 						for(var i = 0; i < L; i += 1)	{
-//							app.ext.admin_launchpad.u.addTileToLaunchpad(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]));
-							$('#tilegroup2').append(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]))
+//							_app.ext.admin_launchpad.u.addTileToLaunchpad(_app.ext.admin_launchpad.t.domain(_app.data.adminDomainList['@DOMAINS'][i]));
+							$('#tilegroup2').append(_app.ext.admin_launchpad.t.domain(_app.data.adminDomainList['@DOMAINS'][i]))
 							}
 						}
 					}},'immutable');
