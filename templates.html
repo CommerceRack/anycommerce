@@ -1216,15 +1216,15 @@ this will likely become more flexible in the future. ###
 				apply --hide --tag;
 				}}; 
 			bind $cn '.%attribs.is:user3'; 
-			if (is $cn --notblank){{
+			if (is $cn --gt='0';){{
 				set $cn 'popup1'; apply --attrib='data-swc-custom-notice';
 				}};
 			bind $cn '.%attribs.user:popup1'; 
-			if (is $cn --notblank){{
+			if (is $cn --gt='0';){{
 				set $cn 'popup1'; apply --attrib='data-swc-custom-notice';
 				}};
 			bind $cn '.%attribs.user:popup2'; 
-			if (is $cn --notblank){{
+			if (is $cn --gt='0';){{
 				set $cn 'popup2'; apply --attrib='data-swc-custom-notice';
 				}}; 
 			bind $var '.pid'; store_product#atcform  --legacy; 
