@@ -6,7 +6,7 @@
 .project
 .metadata
 bin/
-/utilities/proxy/node_modules/
+node_modules/
 tmp/
 proxy/
 *extensions/_notes/
