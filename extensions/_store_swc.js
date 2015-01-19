@@ -1137,6 +1137,20 @@ var store_swc = function(_app) {
 					"user:app_brands"
 					]
 				},
+			'all_team_hats' : {
+				noteams : true,
+				title : "Hats for All Teams",
+				seo_title : "Hats for All Teams",
+				seo_description : "",
+				baseFilter : {
+					"term" : {"app_department":"hat"}
+					},
+				optionList : [
+					"user:app_prod_demographic",
+					"user:app_sub_department",
+					"user:app_brands"
+					]
+				},
 			'chicago' : {
 				title : "Chicago",
 				noteams : true,
