@@ -1011,18 +1011,18 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						a = document.createElement('a');
 						var href = $(this).attr('href');
 						if(href.indexOf('/') != 0){href = "/"+href;}
-						a.href = "http://www.domain.com"+href;
+						a.href = window.origin+''+href;
 						}
 					var path = a.pathname;
 					var search = a.search;
 					var hash = a.hash;
-					console.log($(this).attr('href'));
-					console.log($(this).attr('href').indexOf('#'));
+					console.log(a);
 					if($(this).attr('href').indexOf('#') == 0){
 						//This is an internal hash link, href="#.*"
 						event.preventDefault();
 						}
-					else if(_app.router.handleURIChange(path, search, hash)){
+					else if(window.location.hostname == a.hostname){
+						_app.router.handleURIChange(path, search, hash)
 						event.preventDefault();
 						}
 					else {
