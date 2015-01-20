@@ -1011,7 +1011,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						a = document.createElement('a');
 						var href = $(this).attr('href');
 						if(href.indexOf('/') != 0){href = "/"+href;}
-						a.href = window.origin+''+href;
+						a.href = _app.vars.testURL+''+href;
 						}
 					var path = a.pathname;
 					var search = a.search;
