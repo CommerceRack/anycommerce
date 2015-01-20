@@ -1007,7 +1007,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 		//this would get added at end of INIT. that way, init can modify the hash as needed w/out impacting.
 				$('body').on('click.router','a[href], area[href]',function(event){
 					var a = event.currentTarget;
-					if(document.location.protocol == "file:"){
+					if(a.protocol == "file:"){
 						a = document.createElement('a');
 						var href = $(this).attr('href');
 						if(href.indexOf('/') != 0){href = "/"+href;}
@@ -1016,7 +1016,6 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					var path = a.pathname;
 					var search = a.search;
 					var hash = a.hash;
-					console.log(a);
 					if($(this).attr('href').indexOf('#') == 0){
 						//This is an internal hash link, href="#.*"
 						event.preventDefault();
