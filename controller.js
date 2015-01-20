@@ -1011,7 +1011,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 					if(a.protocol == "file:"){
 						a = document.createElement('a');
 						var href = $(this).attr('href');
-						if(href.indexOf('/') != 0){href = "/"+href;}
+						if(href.charAt(0) != '/'){href = "/"+href;}
 						a.href = _app.vars.testURL+''+href;
 						isFileAndLocal = true;
 						}
