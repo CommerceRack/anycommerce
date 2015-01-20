@@ -1046,6 +1046,9 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 		
 		handleURIChange : function(uri, search, hash, windowHistoryAction, forcedParams){
 			//default to pushstate
+			if(window.location.protocol == "file:"){
+				windowHistoryAction = "none";
+				}
 			if(typeof windowHistoryAction == 'undefined'){
 				windowHistoryAction = 'push';
 				}
