@@ -46,7 +46,7 @@
 		<div data-app-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
-			<ul id='orderListFilterPool' class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
+			<ul class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
 				<li data-filtervalue='RECENT' data-app-click='admin_orders|orderListFiltersUpdate'>Recent</li>
 				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
 				<li data-filtervalue='PREORDER' data-app-click='admin_orders|orderListFiltersUpdate'>Preorder</li>
@@ -63,7 +63,7 @@
 
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
-			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_VERB'>
+			<ul class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_VERB'>
 				<li data-filtervalue='PAID' data-app-click='admin_orders|orderListFiltersUpdate'>Paid</li>
 				<li data-filtervalue='PENDING' data-app-click='admin_orders|orderListFiltersUpdate'>Pending</li>
 				<li data-filtervalue='DENIED' data-app-click='admin_orders|orderListFiltersUpdate'>Denied</li>
@@ -74,7 +74,7 @@
 			
 			<section class='clearfix'>
 			<h4>Payment Type:</h4>
-			<ul id='orderListFilterPaymentType' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_METHOD'>
+			<ul class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_METHOD'>
 				<li data-filtervalue='PAYPAL' data-app-click='admin_orders|orderListFiltersUpdate'>PayPal</li>
 				<li data-filtervalue='CASH' data-app-click='admin_orders|orderListFiltersUpdate'>Cash</li>
 				<li data-filtervalue='CRED' data-app-click='admin_orders|orderListFiltersUpdate'>Credit</li>
@@ -84,14 +84,14 @@
 			
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
-			<ul id='orderListFilterMarket' class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
+			<ul class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
 				<li data-filtervalue='AMZ' data-app-click='admin_orders|orderListFiltersUpdate'>Amazon</li>
 				<li data-filtervalue='EBF' data-app-click='admin_orders|orderListFiltersUpdate'>eBay</li>
 				<li data-filtervalue='GOO' data-app-click='admin_orders|orderListFiltersUpdate'>Google</li>
 			</ul>
 			</section>
 
-			<div class='marginBottom marginTop'><label># orders: <input type='number' class='smallInput' max="250" min="1" id='filterLimit' value='30' size='3' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
+			<div class='marginBottom marginTop'><label># orders: <input type='number' class='smallInput' max="250" min="1" name='filterLimit' value='30' size='3' data-app-blur='admin_orders|orderListFiltersUpdate' /></label></div>
 	
 		</div>
 
@@ -103,13 +103,13 @@
 	</td>
 	
 	<td class='mainCol'><!-- ordersView class will change to itemsView when in items mode -->
-	<div id='ordersInterfaceMainColumn' class='orderListMode' data-mode='order'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
+	<div class='ordersInterfaceMainColumn orderListMode' data-mode='order'><!-- the ID on the TD caused the showLoading script to run 'constrain' itself quite right. -->
 	
 		<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 	
 			<div class='ui-widget-header ui-corner-tr clearfix' data-app-role='ordersButtonContainer'>
 				<div data-app-role='orderCreateButtonset' class='positionRelative floatRight'>
-				<button class='applyButton' data-app-role='createOrderButton' onClick="navigateTo('#!ext/order_create/appCartCreate');">New Order</button>
+				<button class='applyButton' data-app-role='createOrderButton' onClick="navigateTo('/ext/order_create/appCartCreate');">New Order</button>
 				<button class='applyButton' data-app-click='admin_orders|inProgressOrderEditShowList' data-text='false' data-icon-primary='ui-icon-cart' data-icon-secondary='ui-icon-triangle-1-s'>Edit In Progress Order</button>
 				<ul class='displayNone' data-app-role='inProgressOrderList'></ul>
 				</div>
@@ -166,9 +166,9 @@
 	
 			</div>
 
-			<div id='orderListTableContainer' class='ui-widget-content ui-corner-br hideInItemListMode'>
+			<div class='orderListTableContainer ui-widget-content ui-corner-br hideInItemListMode'>
 			
-			<table id="orderListTable" class='gridTable ' data-app-role='orderListTable'>
+			<table class='orderListTable gridTable ' data-app-role='orderListTable'>
 			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 			<thead>
 			<tr>
@@ -187,12 +187,12 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;" data-app-role='orderListTbody'></tbody>
+			<tbody class="orderListTableBody" data-bind="var: order(@orders); format:processList;" data-app-role='orderListTbody'></tbody>
 			</table>
 			</div>
 	
 			<div class='ui-widget-content ui-corner-br hideInOrderListMode'>
-			<table id='itemListTable' class='gridTable fullWidth' data-app-role='itemListTable'>
+			<table class='gridTable fullWidth' data-app-role='itemListTable'>
 			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 			<thead>
 			<tr>
@@ -210,7 +210,7 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody id="itemListTableBody" data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
+			<tbody data-bind="var: order(@INVDETAIL); format:processList; loadsTemplate:adminOrdersItemLineItem;" data-app-role='itemListTbody'></tbody>
 			</table>
 			</div>
 	
@@ -436,7 +436,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 	</div>
 
-	<div class='customerNotes' id='customerInformation'>
+	<div class='customerNotes'>
 		<h3>Customer Notes: </h3>
 		<div class='editable marginBottom'  data-app-role='admin_orders|ADDCUSTOMERNOTE'></div>
 		<table class='gridTable marginTop'>
@@ -451,7 +451,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div data-app-role='orderPaymentInfo'>
 	<h2>Payment Information</h2>
-	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-app-role='orderUpdatePaymentMethodsContainer'>
+	<section class='adminOrdersPaymentMethodsContainer paymentInformation clearfix' id='' data-app-role='orderUpdatePaymentMethodsContainer'>
 	
 	<div class='rightCol' data-app-role='orderUpdateAddPaymentContainer'>
 
@@ -837,7 +837,7 @@ used in legacy compat mode (and probably full app mode as well)
 	<td class='orderContentsProdlistContainer' colspan='2'>
 	<br />
 	<h2>Order Contents</h2>
-	<table id='cartStuffList' class='listStyleNone lineItemProdlist' width='100%'>
+	<table class='listStyleNone lineItemProdlist' width='100%'>
 	<thead>
 	<tr>
 		<th>SKU</th>
@@ -983,7 +983,7 @@ This should get moved to orders when order is taken over
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
 	<br /><h3>Contents</h3>
-	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
+	<table data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
 	</table>
 	
 	</td>

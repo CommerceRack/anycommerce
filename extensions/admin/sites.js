@@ -43,7 +43,7 @@ used, but not pre-loaded.
 			init : {
 				onSuccess : function()	{
 					var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/sites.html',theseTemplates);
+					// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/sites.html',theseTemplates);
 					_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/sites.css','sites_styles']);
 					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 					r = true;
@@ -164,7 +164,7 @@ used, but not pre-loaded.
 				$tag.css('position','relative');  //so menu appears where it should.
 				if(data.value.GITHUB_REPO)	{
 					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.GITHUB_REPO+"'>Visit GitHub Repository<\/a><\/li>");
-					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='project' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
+					$menu.append("<li><a href='#' data-app-click='admin_batchjob|adminBatchJobExec' data-whitelist='PROJECT' data-type='UTILITY/GITPULL'>Pull from GitHub</a></li>");
 					}
 				if(data.value.LINK)	{
 					$menu.append("<li><a href='#' data-app-click='admin|linkOffSite' data-url='"+data.value.LINK+"'>Visit GitHub Repository<\/a><\/li>");
@@ -558,7 +558,7 @@ used, but not pre-loaded.
 								else	{
 									//sample action. success would go here.
 									$('#globalMessaging').anymessage(_app.u.successMsgObject('Your domain has been added.'));
-									navigateTo("#!ext/admin_sites/showDomainConfig");
+									navigateTo("/ext/admin_sites/showDomainConfig");
 									$form.closest('.ui-dialog-content').dialog('close');
 									}
 								}
@@ -871,7 +871,7 @@ used, but not pre-loaded.
 						else	{
 							$('#globalMessaging').anymessage(_app.u.successMsgObject('Thank you, your project has been created.'));
 							$ele.closest('.ui-dialog-content').dialog('close');
-							navigateTo("#!ext/admin_sites/showDomainConfig");
+							navigateTo("/ext/admin_sites/showDomainConfig");
 							}
 						}}
 					_app.model.addDispatchToQ(sfo,"immutable");

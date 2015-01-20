@@ -70,7 +70,6 @@ var datestr = dateFormat(now,"yyyy-mm-dd");
 for( var i in urls['@OBJECTS'] ) {
         // { id: '.mlb.boston_red_sox.z_david_ortiz', type: 'navcat' }
         var res = urls['@OBJECTS'][i];
-		console.dir(res);
 		if(!res['seo:noindex']){
 				var url = '';
 				switch (res.type) {
@@ -78,21 +77,7 @@ for( var i in urls['@OBJECTS'] ) {
 								url = '/product/' + res.id + '/';
 								break;
 						case 'navcat':
-								if(res.id == ".mlb"){
-									url = '/major_league_baseball/';
-									}
-								else if(res.id.indexOf('.mlb') == 0 && res.id.split('.').length == 3){
-									url = '/major_league_baseball/'+res.id.split('.')[2]+'/';
-									}
-								else if(res.id == ".nfl_teams"){
-									url = '/national_football_league/';
-									}
-								else if(res.id.indexOf('.nfl_teams') == 0 && res.id.split('.').length == 3){
-									url = '/national_football_league/'+res.id.split('.')[2]+'/';
-									}
-								else{
-									url = '/category/' + res.id.substr(1) + '/';  // strip leading . in category name
-									}
+								url = '/category/' + res.id.substr(1) +'/';  // strip leading . in category name
 								break;
 						case 'list' :
 								// we don't index these.

@@ -8,21 +8,21 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 .lazyImage {display:none;}
 
-#mediaLibFolderList	{width:25%; font-size:.75em;}
-#mediaLibFolderContainer li	{display:block; clear:both; margin-bottom:5px;} /* folders */
-#mediaLibFolderContainer a	{display:block; padding:2px 0;}
-#mediaLibFolderContainer ul ul	{padding:0;}
+.mediaLibFolderList	{width:25%; font-size:.75em;}
+.mediaLibFolderContainer li	{display:block; clear:both; margin-bottom:5px;} /* folders */
+.mediaLibFolderContainer a	{display:block; padding:2px 0;}
+.mediaLibFolderContainer ul ul	{padding:0;}
 
 .mediaFiles li	{float:left; margin:10px; width:120px; height:160px; overflow:hidden; text-align:center; font-size:.65em;}
 
-#mediaLibActionsBar .ui-menu { width: 200px; } /* for use in folder dropdown. not limited to this tho */
+.mediaLibActionsBar .ui-menu { width: 200px; } /* for use in folder dropdown. not limited to this tho */
 
 .selectAddFolderChoices li	{margin: 3px; padding: 0.4em;}
 
-#mediaLibFolderContainer	{padding:12px;}
-#mediaLibFolderListUL	{margin-left:0;}
+.mediaLibFolderContainer	{padding:12px;}
+.mediaLibFolderListUL	{margin-left:0;}
 
-#mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:350px; overflow:auto;} /* actual height will get overwritten w/ JS. */
+.mediaLibFolderContainer, .mediaLibInfiniteScroller	{height:350px; overflow:auto;} /* actual height will get overwritten w/ JS. */
 
 /*
 buttons are shown by default and turned off when not needed.
@@ -36,13 +36,13 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 
 
 /* hide the buttons until after the file is uploaded */
-#mediaFilesUL .newMediaFile button	{display:none;}
-#mediaFilesUL	{height:100%;} /* fill entire height to be more drag n drop friendly */
-#mediaLibInfiniteScroller .ui-widget-anyupload-buttonset	{display:none;} /* hidden in media lib. */
+.mediaFilesUL .newMediaFile button	{display:none;}
+.mediaFilesUL	{height:100%;} /* fill entire height to be more drag n drop friendly */
+.mediaLibInfiniteScroller .ui-widget-anyupload-buttonset	{display:none;} /* hidden in media lib. */
 
-#mediaLibControlsTabContainer .ui-icon { float: left; margin-right: 5px;}
+.mediaLibControlsTabContainer .ui-icon { float: left; margin-right: 5px;}
 
-#mediaLibControlsTabContainer .labelsAsBreaks input	{width:150px;}
+.mediaLibControlsTabContainer .labelsAsBreaks input	{width:150px;}
 
 /*
  * jQuery File Upload Plugin CSS Example 1.1.1
@@ -84,5 +84,5 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 
 
 /* file upload styles. mostly for import pages */
-#csvUploadToBatchForm label	{display:block; margin-bottom:6px;}
-#csvUploadToBatchForm .formFieldHelp	{margin-left:24px; margin-bottom:6px;}
+form[name=csvUploadToBatchForm] label	{display:block; margin-bottom:6px;}
+form[name=csvUploadToBatchForm] .formFieldHelp	{margin-left:24px; margin-bottom:6px;}

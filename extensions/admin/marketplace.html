@@ -14,7 +14,7 @@
 	</div>
 
 
-	<div class='pointer market' data-mkt="EBF" data-app-event="admin_marketplace|showDSTDetail"><!--  onClick="navigateTo('#!ebay');" -->
+	<div class='pointer market' data-mkt="EBF" data-app-event="admin_marketplace|showDSTDetail"><!--  onClick="navigateTo('/ebay');" -->
 	<img height="40" width="150"  src="app-admin/images/marketplaces/ebay.png" />
 	</div>
 
@@ -142,7 +142,7 @@
 		<div class='ui-widget-content ui-corner-bottom stdPadding slimLeftContentContainer' data-app-role='slimLeftContentContainer'>
 		<!-- syndaction landing page content. -->
 		
-		<div id='syndicationSummaryChartOne'></div>
+		<div class='syndicationSummaryChartOne'></div>
 		
 		</div>
 	</section>
@@ -312,10 +312,11 @@
 	<label class='showForZoovyOnly'>
 		<span>Link Syntax</span>
 		<select name='linkstyle' data-bind="var: mkt(linkstyle); format:popVal;">
+			<option value=''>Not Specified</option>
 			<option value='vstore'>Vstore</option>
-			<option value='app' selected='selected'>App</option>
+			<option value='app'>App</option>
 		</select>
-		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is #! syntax.'>?</span>
+		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is / syntax.'>?</span>
 	</label>
 
 </div>
@@ -374,10 +375,11 @@
 	<label class='showForZoovyOnly'>
 		<span>Link Syntax</span>
 		<select name='linkstyle' data-bind="var: mkt(linkstyle); format:popVal;">
+			<option value=''>Not Specified</option>
 			<option value='vstore'>Vstore</option>
-			<option value='app' selected='selected'>App</option>
+			<option value='app'>App</option>
 		</select>
-		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is #! syntax.'>?</span>
+		<span class='toolTip' title='This will determine how the links back to your store appear. Vstore is /product/PID/... and app is / syntax.'>?</span>
 	</label>
 
 </fieldset>
@@ -1600,7 +1602,7 @@ HINT: The username, password, etc. are provided by NewEgg.com. These settings *M
 	<td class='valignTop rightCol'>
 	<div data-app-role='eBayCatChooserMessaging'></div>
 	<div class='ebayCatChooserRightColContainer'>
-	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft displayNone' name="APIForm" id="APIForm">
+	<form action='#' onSubmit='return false' class='labelsAsBreaks alignedLabels marginLeft displayNone APIForm' name="APIForm">
 		<div data-app-role='ebayItemSpecificsContainer'></div>
 		<div class='buttonset alignCenter'>
 			<button data-app-event="admin_marketplace|ebaySaveCatAndUpdateItemSpecifics">Save Items Specifics and Category</button>
@@ -2863,7 +2865,7 @@ The sandbox can be useful for developers who want to create test listings or pre
 
 <!-- used in the ebay template editor -->
 <div id='ebayZipUploadTemplate'>
-<form id="ebayZipUpload" class='clearfix marginBottom'  name="ebayZipUpload" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="ebayZipUpload" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='ZIP'>
 <!-- adds the file upload area, which is in the media library templates  -->
 <h1 class='floatLeft'>Upload individual files and/or a zip archive containing an entire template (images, html and all)</h1>

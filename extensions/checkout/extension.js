@@ -916,12 +916,13 @@ an existing user gets a list of previous addresses they've used and an option to
 						payby = cartData.want.payby;
 						}
 					if(payby)	{
-						var
-							$radio = $("input[value='"+payby+"']",$fieldset),
-							$supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
-						if($supplemental)	{
-							_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
-							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
+						var $radio = $("input[value='"+payby+"']",$fieldset);
+						if($radio.length > 0){
+							var $supplemental = _app.ext.order_create.u.showSupplementalInputs($radio,_app.ext.order_create.vars);
+							if($supplemental)	{
+								_app.u.dump(" -> payment method ["+payby+"] HAS supplemental inputs");
+								$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
+								}
 							}
 						//the 'loop' renderformat for wallet display only accepts one piece of data. in this case, the walley payment method.
 						//so the 'cart' isn't available to load payby. crappy. a better long term solution would be a tlcFormat 
@@ -1049,7 +1050,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //								_app.u.dump(" -> handlePanel has been run over all fieldsets.");
 								if(_app.u.thisNestedExists("zGlobals.globalSettings.inv_mode") && Number(zGlobals.globalSettings.inv_mode) > 1 && !_app.u.thisIsAnAdminSession())	{
 									_app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
-									_app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create',"require":["cco"],'jqObj':$checkoutContents});
+									_app.ext.cco.calls.cartItemsInventoryVerify.init(cartID,{'callback':'handleInventoryUpdate','extension':'order_create','jqObj':$checkoutContents});
 									_app.model.dispatchThis('immutable');
 									}
 								else if(_app.u.thisIsAnAdminSession() && _app.data[rd.datapointer].customer.cid)	{
@@ -1465,7 +1466,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					var $button = $("<button>").text("Add to Cart").button().on('click',function(event){
 						event.preventDefault();
 						$(this).button('disable'); //prevent doubleclick.
-						var $form = $('form','#chooserResultContainer');
+						var $form = $('form','.chooserResultContainer');
 						if($form && $form.length)	{
 	//						_app.u.dump(" -> found form");
 							$form.append("<input type='hidden' name='_cartid' value='"+$checkout.data('cartid')+"' \/>");
@@ -1509,7 +1510,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 								}
 							}
 						else	{
-							$('#productFinderContents').anymessage({"message":"In order_create.e.cartItemAddWithChooser, #chooserResultContainer had no length.","gMessage":true});
+							$('#productFinderContents').anymessage({"message":"In order_create.e.cartItemAddWithChooser, .chooserResultContainer had no length.","gMessage":true});
 							$(this).button('enable');
 							}
 						});

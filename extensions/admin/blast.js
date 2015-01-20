@@ -31,7 +31,7 @@ var admin_blast = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/blast.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/blast.html',theseTemplates);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				_app.formatRules.blastMacroMacroID = function($input,$err){
 					var val = $input.val(), valid = true;
@@ -503,7 +503,7 @@ function buildLink(section)	{
 						else	{
 							//sample action. success would go here.
 							$('#globalMessaging').anymessage(_app.u.successMsgObject('The message has been added.'));
-							navigateTo("#!ext/admin_blast/blastMessagesList?setting=addmessage");
+							navigateTo("/ext/admin_blast/blastMessagesList?setting=addmessage");
 							}
 						}}},"immutable");
 					_app.model.dispatchThis("immutable");
@@ -533,7 +533,7 @@ function buildLink(section)	{
 							
 							_app.model.addDispatchToQ({"_cmd":"adminBlastMsgRemove","MSGID":$ele.data('msgid'),"_tag":{"callback":"showMessaging","jqObj":$('#globalMessaging'),"message":"The message has been deleted","onComplete":function(){
 								$D.dialog('close');
-								navigateTo("#!ext/admin_blast/blastMessagesList");
+								navigateTo("/ext/admin_blast/blastMessagesList");
 								}}},"mutable");
 							_app.model.dispatchThis("mutable");
 							}

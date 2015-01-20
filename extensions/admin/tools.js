@@ -31,7 +31,7 @@ var admin_tools = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/tools.html',theseTemplates);
 
 				_app.formatRules.validateJSON = function($input,$err){
 					var valid = true;
@@ -77,7 +77,7 @@ var admin_tools = function(_app) {
 					maxDate : 0,
 					dateFormat : 'yymmdd'
 					});
-				_app.u.handleAppEvents($target,{'$form':$('#productPowerToolForm'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
+				_app.u.handleAppEvents($target,{'$form':$('form[name=productPowerToolForm]'),'$dataTbody':$("[data-app-role='powertoolSelectedActionsContainer'] tbody",$target)});
 //				$("input",$picker).each(function(){});
 				},
 			
@@ -498,12 +498,12 @@ var admin_tools = function(_app) {
 					var	$form = $btn.closest('form');
 					
 					if(_app.ext.admin.u.validatePicker($form))	{
-						if($('#powerToolActionListTbody tr').not('.rowTaggedForRemove').length)	{
+						if($('tbody[name=powerToolActionListTbody] tr').not('.rowTaggedForRemove').length)	{
 							obj = {
 								'%vars' : {
 									'GUID' : _app.u.guidGenerator(),
 									'product_selectors' : _app.ext.admin_tools.u.pickerSelection2KVP($("[data-app-role='pickerContainer']",$form)),
-									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('#powerToolActionListTbody'))
+									'actions' : _app.ext.admin_tools.u.powertoolActions2KVP($('tbody[name=powerToolActionListTbody]'))
 									},
 								'type' : 'UTILITY/PRODUCT_POWERTOOL'
 								}
@@ -677,8 +677,21 @@ var admin_tools = function(_app) {
 				$ele.closest("[data-table-role='container']").find(":input").val("");
 				$ele.closest("[data-table-role='inputs']").slideUp();
 				},
-
-			flexeditAttributeCreateUpdateShow : function($ele,p)	{
+			flexeditAttributeRemove : function($ele,P){
+				var $d = _app.ext.admin.i.dialogCreate({
+					'title': 'Remove Flexedit Attribute',
+					});
+				$d.append('<div> Delete this attribute? </div>');
+				var $button = $('<button>Ok</button>');
+				$button.button().on('click', function(e){
+					$d.dialog('close');
+					_app.ext.admin_tools.e.flexeditSaveExec($ele,P);
+					$ele.closest('tr').remove().empty();
+					});
+				$d.append($button);
+				$d.dialog('open');
+				},
+			flexeditAttributeCreateUpdateShow : function($ele,P)	{
 				var $inputContainer = $ele.closest('form').find("[data-app-role='flexeditAttributeAddUpdateContainer']");
 //disable the add and edit buttons so as to not accidentally lose data while it's being entered (form would clear or populate w/ 'edit' contents )
 //					$btn.button('disable');
@@ -690,7 +703,8 @@ var admin_tools = function(_app) {
 				$inputContainer.slideDown();
 
 				if($ele.data('mode') == 'update')	{
-					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),_app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
+					//$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data(),_app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
+					$inputContainer.anycontent({'data':$.extend({},$ele.closest('tr').data('flexedit-definition'),_app.data["appResource|product_attribs_all.json"].contents[$ele.closest('tr').data('id')])});
 					$("[name='type']",$inputContainer).trigger('change'); //will conditionally show 'options' input if necessary.
 					}
 				else if($ele.data('mode') == 'create')	{
@@ -701,7 +715,46 @@ var admin_tools = function(_app) {
 					$ele.closest('form').anymessage({"message":"In admin_tools.e.flexeditAttributeAddUpdateShow, mode not valid. only create or update are accepted.","gMessage":true});
 					}
 				},
-			
+			flexeditAttributeSave : function($ele,P){
+				var newAttr = $('textarea', $ele.closest('[data-app-role="flexeditAttributeAddUpdateContainer"]')).val();
+				// try{
+					newAttr = JSON.parse(newAttr);
+					var json = new Array();
+					var keys = new Array();
+					$ele.closest('form').find('tbody tr').not('.rowTaggedForRemove').each(function(){
+						if($.inArray($(this).data('id'),keys) >= 0)	{
+							//if an id is already in keys, it's already added to the flex json. This keeps duplicate id's from being added.
+							}
+						else	{
+							keys.push($(this).data('id'));
+							//json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','cart','type','options']));
+							json.push($(this).data('flexedit-definition'));
+							}
+						})
+					json.push(newAttr);
+					
+					_app.model.addDispatchToQ({
+						'_cmd':'adminConfigMacro',
+						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(JSON.stringify(json))],
+						'_tag':	{
+							'callback' : function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									_app.u.throwMessage(rd);
+									}
+								else{
+									navigateTo('/ext/admin_tools/showManageFlexedit');
+									}
+								},
+							}
+						},'immutable');
+					_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+					_app.model.dispatchThis('immutable');
+					// }
+				// catch(e){
+					// $ele.closest('[data-app-role="flexeditAttributeAddUpdateContainer"]').anymessage(_app.u.errMsgObject("The JSON you have entered is invalid"));
+					// // _app.u.throwMessage(_app.u.errMsgObject("The JSON you have entered is invalid"));
+					// }
+				},
 			flexeditSaveExec : function($ele,P)	{
 				var json = new Array();
 				var keys = new Array();
@@ -711,7 +764,8 @@ var admin_tools = function(_app) {
 						}
 					else	{
 						keys.push($(this).data('id'));
-						json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','type','options']));
+						//json.push(_app.u.getWhitelistedObject($(this).data(),['id','title','index','cart','type','options']));
+						json.push($(this).data('flexedit-definition'));
 						}
 					})
 				_app.model.addDispatchToQ({

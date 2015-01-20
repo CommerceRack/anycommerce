@@ -65,7 +65,8 @@ function controller(_app)	{
 		_app.vars.fbUser = {};
 
 //used in conjunction with support/admin login. nukes entire local cache.
-		if(_app.u.getParameterByName('flush') == 1)	{
+		if(_app.u.getParameterByName('flush') == 1 || 
+			(_app.vars.thisSessionIsAdmin && document.location.protocol == "file:"))	{
 			_app.u.dump(" !!! Flush is enabled. session and local storage get nuked !!!");
 			if($.support.sessionStorage)	{
 				window.sessionStorage.clear();
@@ -278,7 +279,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 
 		appCartCreate : {
 			init : function(_tag,Q)	{
-				dump(_tag);
 				this.dispatch(_tag,Q); 
 				return 1;
 				},
@@ -1011,33 +1011,42 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 						a = document.createElement('a');
 						var href = $(this).attr('href');
 						if(href.indexOf('/') != 0){href = "/"+href;}
-						a.href = "http://www.domain.com"+href;
+						a.href = window.origin+''+href;
 						}
 					var path = a.pathname;
 					var search = a.search;
 					var hash = a.hash;
-					console.log($(this).attr('href'));
-					console.log($(this).attr('href').indexOf('#'));
+					console.log(a);
 					if($(this).attr('href').indexOf('#') == 0){
 						//This is an internal hash link, href="#.*"
 						event.preventDefault();
 						}
-					else if(_app.router.handleURIChange(path, search, hash)){
+					else if(window.location.hostname == a.hostname){
+						_app.router.handleURIChange(path, search, hash)
 						event.preventDefault();
 						}
 					else {
 						event.currentTarget.target = "_blank";
 						}
 					});
-				
+				var defaultPopState = window.onpopstate;
 				window.onpopstate = function(event){
-					_app.router.handleURIChange(event.state);
+					if(_app.router.handleURIChange(event.state)){
+						//handled, we're all good
+						}
+					else {
+						defaultPopState(event);
+						}
 					}
 				
 				}
 			},
 		
-		handleURIChange : function(uri, search, hash, replace, forcedParams){
+		handleURIChange : function(uri, search, hash, windowHistoryAction, forcedParams){
+			//default to pushstate
+			if(typeof windowHistoryAction == 'undefined'){
+				windowHistoryAction = 'push';
+				}
 			console.log('handleURIChange');
 			var routeObj = _app.router._getRouteObj(uri, 'hash');
 			if(routeObj) {
@@ -1051,16 +1060,30 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				if(hash){
 					routeObj.urihash = hash;
 					}
+				routeObj.path = uri;
+				routeObj.search = search;
+				routeObj.hash = hash;
 				routeObj.value = uri +""+ (search || "") +""+ (hash || "");
 				try{
-					window.history[replace ? 'replaceState' : 'pushState'](routeObj.value, "", routeObj.value);
+					if(windowHistoryAction == 'push'){
+						window.history.pushState(routeObj.value,"",routeObj.value);
+						}
+					else if (windowHistoryAction == 'replace'){
+						window.history.replaceState(routeObj.value,"",routeObj.value);
+						}
+					else if (windowHistoryAction == 'hash'){
+						window.history.pushState(routeObj.value, "", window.location.pathname+"#!"+routeObj.value);
+						}
+					else {
+						//skip
+						}
 					}
 				catch(e){
-					//dump(e);
+					if(windowHistoryAction == 'hash'){
+						window.location.hash = "#!"+routeObj.value;
+						}
 					}
 				_app.router._executeCallback(routeObj);
-				window[_app.vars.analyticsPointer]('send', 'pageview', routeObj.value);
-				window[_app.vars.analyticsPointer]('send', 'screenview', {'screenName' : routeObj.value} );
 				return true;
 				}
 			else {
@@ -1068,7 +1091,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				}
 			return false;
 			},
-		handleURIString : function(uriStr, replace, forcedParams){
+		handleURIString : function(uriStr, windowHistoryAction, forcedParams){
 			var a = document.createElement('a');
 			a.href = "http://www.domain.com"+uriStr;
 			var path = a.pathname;
@@ -1077,7 +1100,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 			console.log(path);
 			console.log(search);
 			console.log(hash);
-			this.handleURIChange(path,search,hash,replace,forcedParams);
+			this.handleURIChange(path,search,hash,windowHistoryAction,forcedParams);
 			}
 		},
 
@@ -1706,6 +1729,7 @@ window.frames["printContainerIframe"].print();
 	//				_app.u.dump(" -> msg: "); _app.u.dump(msg);
 					if(msg._rtag && msg._rtag.jqObj)	{$target = msg._rtag.jqObj}
 					else if(msg.parentID){$target = $(_app.u.jqSelector('#',msg.parentID));}
+					else if(msg.jqObj){$target = msg.jqObj;}
 					else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
 						if(msg._rtag.parentID)	{$target = $(_app.u.jqSelector('#',msg._rtag.parentID))}
 						else if(msg._rtag.targetID)	{$target = $(_app.u.jqSelector('#',msg._rtag.targetID))}
@@ -3286,7 +3310,9 @@ $tmp.empty().remove();
 		epoch2mdy : function($tag,data)	{
 			$tag.text(_app.u.epoch2Pretty(data.value,data.bindData.showtime))
 			},
-	
+		data : function($tag, data){
+			$tag.data(data.bindData.index, data.value);
+			},
 		text : function($tag,data){
 			var o = '';
 			if(jQuery.isEmptyObject(data.bindData))	{o = data.value}
@@ -3330,7 +3356,7 @@ $tmp.empty().remove();
 				}
 			else	{
 //for all other inputs and selects, simply setting the value will suffice.
-				if($tag.data('stringify'))	{
+				if($tag.data('stringify') || data.bindData.stringify)	{
 					$tag.val(JSON.stringify(data.value));
 					}
 				else	{

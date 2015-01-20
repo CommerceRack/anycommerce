@@ -30,7 +30,7 @@ var admin_trainer = function(_app) {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/trainer.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/trainer.html',theseTemplates);
 				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/trainer.css','trainer']);
 				return true;
 				},

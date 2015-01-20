@@ -54,7 +54,7 @@ var store_tracking = function(_app) {
 						google_conversion_format: "3",
 						google_conversion_color : "ffffff",
 						google_conversion_label : labels[i].replace(/^\s+|\s+$/g, ''), //trims label of whitespace
-						google_remarketing_only : "false",
+						google_remarketing_only : "false"
 						}
 					if(plugin.dynamic_value){
 						globals.google_conversion_value = order.sum.order_total;

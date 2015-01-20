@@ -53,7 +53,7 @@ var admin_support = function(_app) {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/support.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/support.html',theseTemplates);
 
 				return r;
 				},
@@ -210,10 +210,10 @@ var admin_support = function(_app) {
 					$target.attr('data-ticketid',ticketid);
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
 					$target.append(_app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid})).dialog('open');
-					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+_app.vars.domain+"' \/>"); //file upload wants domain specified.
-					$('#supportFileUploadForTicket').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
-					$('#supportFileUploadForTicket').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
-					_app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
+					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='domain' value='"+_app.vars.domain+"' \/>"); //file upload wants domain specified.
+					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
+					$('form[name=supportFileUploadForTicket]').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
+					_app.ext.admin_medialib.u.convertFormToJQFU($('form[name=supportFileUploadForTicket]'),'adminTicketFileAttach');
 					
 					}
 				else	{

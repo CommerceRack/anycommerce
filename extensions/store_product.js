@@ -337,7 +337,7 @@ addToCart : function (pid,$form){
 			detailedinvdisplay : function($tag,data)	{
 				var pid = data.value.pid;
 				if(pid && data.value['@inventory'] && data.value['@inventory'][pid])	{
-					$tag.append("<div>Available Inventory: "+data.value['@inventory'][pid].inv+"<\/div>");
+					$tag.append("<div>Available Inventory: "+data.value['@inventory'][pid].AVAILABLE+"<\/div>");
 					}
 				else if(pid && data.value['@inventory'])	{
 					var inventory = data.value['@inventory'],

@@ -10,30 +10,13 @@
 		***************/
 		var domain = window.location.origin;
 		var pages = [
-			"company/about/",
-			"company/contact/",
-			"company/faq/",
-			"company/shipping/",
-			"company/privacy/",
-			"shop-by-player/",
-			"fieldcam/",
-			"affiliates/",
-			"careers/",
-			"rewards/",
-			"inquiry/",
-			"filter/100_years_of_wrigley_field/",
-			"filter/chicago/",
-			"filter/blackhawks/",
-			"filter/shirts/",
-			"filter/jerseys/",
-			"filter/personalized_jerseys/",
-			"filter/sweatshirts/",
-			"filter/hats/",
-			"filter/souvenirs/"
+			"/my/custom/page.html"
 		];
 		var prodBlacklist = [
+			'WIKITEST'
 			];
 		var navcatBlacklist = [
+			'.michael'
 			];
 		/***************
 		SETUP
@@ -110,8 +93,6 @@
 							}
 						p.path = domain+paramStr+(p.path ? "#!"+p.path : "");
 						//console.log(p.path);
-					}
-					
 					}
 					
 					promptPages();
@@ -207,15 +188,11 @@
 		
 		function generateSEO(maxTimeout){
 			console.log(maxTimeout);
-				$('#appContainer').append('<iframe style="width:100%; height:400px;"></iframe>');
-				}
 			for(var i in pages){
 				pages[i].include = $('#page_'+i+' input[type=checkbox]').is(":checked");
 			}
 			console.log('Beginning indexing');
 			indexNextPage(maxTimeout);
-				indexNextPage(this, maxTimeout);
-			});
 		}
 		
 		//Pops a page from pages, builds it in the iframe, sends the snapshot, then calls itself again
@@ -227,8 +204,9 @@
 					rLog("Indexing "+currPage.path);
 					$('#appContainer').get(0).src = currPage.path;
 					
-						indexNextPage(iframe, maxTimeout);
+					window.timeoutID = setTimeout(function(){
 						rLog('Page finished '+currPage.path);
+						finishPage(currPage);
 						indexNextPage(maxTimeout);
 					}, parseInt(maxTimeout)*1000);
 				} else {
@@ -237,19 +215,15 @@
 			} else {
 				console.log("no more pages")
 				 $('#appContainer').get(0).remove();
-				if($('iframe',$('#appContainer')).length){
-					//Keep on keeping on
-				}
-				else {
-					finishSEO();
-					window.lock = false;
-				}
+				//Temporarily bypassing this until we have a domain on 201401 to test
+				finishSEO();
+				window.lock = false;
 			}
 		}
 		
 		
-		function finishPage(iframe, page){
-			clearTimeout(page.timeoutID);
+		function finishPage(page){
+			clearTimeout(window.timeoutID);
 			
 			var iframe = $('#appContainer').get(0);
 			
@@ -264,21 +238,18 @@
 			console.log(doc.getElementsByTagName('script'));
 			console.log(doc.getElementsByTagName('script').length);
 			
-			//var iframe = $('#appContainer').get(0);
-			var dochtml = doc.documentElement.outerHTML;
-			
-			var iframeHash = iframe.contentWindow.location.hash;
-			if(iframeHash.indexOf('#!') == 0){
-				iframeHash = iframeHash.substr(2);
-			$('.seoStrip, script', $tmp).each(function(){
-			
-			$('.seoStrip', $(doc)).each(function(){$(this).remove();});
-			$('head', $(doc)).append('<link rel="canonical" href="'+domain+'/#!'+iframeHash+'" />');
-			console.log(doc.getElementsByTagName('script'));
-			console.log(doc.getElementsByTagName('script').length);
-			
 			var doctype = "<!DOCTYPE html>";
 			var dochtml = doc.documentElement.outerHTML;
+			
+			var body = /<body[^>]*>((.*\n*\r*\u2028*\u2029*)*)<\/body>/;
+			var removeHtml = body.exec(dochtml)[1];
+			var $tmp = $('<div>'+removeHtml+'</div>');
+			$('.seoStrip, script', $tmp).each(function(){
+				$(this).empty().remove();
+			});
+			dochtml = dochtml.replace(removeHtml, $tmp.html());
+			$tmp.remove();
+			
 			var html = doctype + dochtml;
 			
 			var obj = {
@@ -319,8 +290,7 @@
 		</div>
 		<button onClick="fetchSEO($('input[name=seoToken]',$(this).parent()).val()); return false;">Submit Token</input>
 	</div>
-	<div id="appContainer" style="height: 400px; overflow: auto;">
-	</div>
+	<iframe id="appContainer" style="width:100%; height:400px;"></iframe>
 	<div id="pageTableContainer">
 		
 		
