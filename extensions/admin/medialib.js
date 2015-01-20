@@ -456,7 +456,7 @@ setTimeout(function(){
 					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 600});
 
 //allow only alphanumeric characters AND underscores
-					$('.mediaLibNewFolderName').off('keypress.mediaLib').on('keypress.mediaLib', function (event) {
+					$('input[name=mediaLibNewFolderName]').off('keypress.mediaLib').on('keypress.mediaLib', function (event) {
 						if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
 						else	{
 							var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
@@ -1394,14 +1394,14 @@ $('.mediaLibActionsBar button',$target).each(function(){
 			event.preventDefault(); //keeps button from submitting the form.
 	//		dump("Uploads Button Pushed.");
 			$button.parent().find('ul').hide();
-			if($('.mediaLibNewFolderName').val())	{
+			if($('input[name=mediaLibNewFolderName]').val())	{
 				var folderName; //uses either the value of the text input or prepends a path to it.
 //there's a ul near the 'select folder' and when a folder on the left is selected, it's added to this list as the last child with data-fname set to it's name (parent).
 //then, when the new folder button is clicked, if the subfolder option is selected, the fname is prepended to the new folder name and a child is created.
 				if($('.mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname'))	{
-					folderName = $('.mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname')+'/'+$('.mediaLibNewFolderName').val()
+					folderName = $('.mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname')+'/'+$('input[name=mediaLibNewFolderName]').val()
 					} //create a sub level folder.
-				else	{folderName = $('.mediaLibNewFolderName').val()} //create a root level folder.
+				else	{folderName = $('input[name=mediaLibNewFolderName]').val()} //create a root level folder.
 
 
 				_app.ext.admin_medialib.calls.adminImageFolderCreate.init(folderName,{},'immutable');
@@ -1410,7 +1410,7 @@ $('.mediaLibActionsBar button',$target).each(function(){
 				}
 			else	{
 				_app.u.throwMessage("please enter a folder name");
-				$('.mediaLibNewFolderName').focus();
+				$('input[name=mediaLibNewFolderName]').focus();
 				}
 
 			})
