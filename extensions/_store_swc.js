@@ -649,6 +649,11 @@ var store_swc = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			checkoutOptionsShow : function($ele, e){
+				var $cbc = $ele.closest('.cartButtonContainer');
+				$('.optionContainer.cartOptions', $cbc).hide();
+				$('.optionContainer.checkoutOptions', $cbc).show();
+				},
 			addCoupon : function($ele, e){
 				_app.ext.cco.calls.cartCouponAdd.init($('input[name=coupon]',$ele).val(),_app.model.fetchCartID(),{"callback":function(rd){
 					if(_app.model.responseHasErrors(rd)){

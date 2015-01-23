@@ -1228,7 +1228,7 @@ this will likely become more flexible in the future. ###
 				set $cn 'popup2'; apply --attrib='data-swc-custom-notice';
 				}}; 
 			bind $var '.pid'; store_product#atcform  --legacy; 
-			apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="inline">
+			apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="modal">
 			<div class="productInfoSection marginBottom">
 				<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 				<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone"><label class="label_select">Qty: </label></fieldset>
@@ -1946,11 +1946,11 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<h2>Cart Totals</h2>
 		</form>
 		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
+			<div class="highlightText alignRight" data-tlc="bind $var '.sum.items_total'; store_swc#dump; if (is $var --notblank;) {{ if(is $var --lt='99';){{math --mult='-1' --add='99'; format --currency='USD'; format --prepend='Spend just '; format --append=' more for free shipping!'; apply --append;}} else {{apply --hide --tag;}}; }};"></div>
 
 <section class="cartSummary marginBottom">
 
 	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
-
 	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
 
 	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipinfobyid; extension:cco;"></div>
@@ -1991,15 +1991,27 @@ This is the template used both within a dialog and inline, unless implicitly ove
 </section>
 
 		</div>
-		<div class="ui-state-default cartButtons stdPadding clearfix">
+		<div class="cartButtonContainer ui-state-default cartButtons stdPadding clearfix">
 			<!-- spans are set around the buttons so each element has one consitent tag type around it -->
 			<!-- <span class="continueShoppingSpan thisButton"><button class="applyButton continueShoppingButton" data-app-click="quickstart|dialogCloseExec">Continue Shopping</button></span> -->
+			<div class="optionContainer cartOptions">
+				<span class='thisButton' title="proceed to secure checkout">
+					<span class="applyButton ui-state-highlight checkoutButton" data-app-click="store_swc|checkoutOptionsShow">Checkout with...</span>
+				</span>
+			
+				<span class='thisButton' title="keep shopping">
+					<a class="applyButton" href='/'>Keep Shopping</a>
+				</span>
+			</div>
+			
+			<div class="displayNone optionContainer checkoutOptions">
+				<span class='thisButton' title="proceed to secure checkout">
+					<a class="applyButton ui-state-highlight checkoutButton" href='/checkout/'>Store Checkout</a>
+				</span>
+				<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" class="thisButton"></span>
+			</div>
+			
 	
-			<span id="inStoreCheckoutButton" class='thisButton' title="proceed to secure checkout">
-				<a class="applyButton ui-state-highlight checkoutButton" href='/checkout/'>Store Checkout</a>
-			</span>
-	
-			<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" id="paypalecbutton" class="thisButton"></span>
 	
 		</div>
 
