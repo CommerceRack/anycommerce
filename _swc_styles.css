@@ -216,6 +216,8 @@ a.leagueLink:hover {background:#233628; color:white;}
 a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
 .categoryListItem .catName, .productListItem .prodInfo {position:absolute; bottom:0px; right:0px; left:0px; color: white; padding: .8em 0em; font-weight:bold;}
+.productListItem a:hover h6.prodName{color:orange;}
+.categoryListItem a:hover .catName{color:orange;}
 .productListItem .prodInfo {height: 12%;}
 .productListItem .prodInfo .prodName {padding: 0px 10px;}
 .productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.2em;}
