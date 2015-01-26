@@ -31,6 +31,8 @@
 { "type":"path", "if":"/change_password/", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/my_order_history/", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/my_wishlist/", "then#sendfile":"/index.html", "apptimize":false },
-{ "type":"path", "if":"/search\\.cgis/(.*?)", "then#redirect":"/search/keywords/$1" },
+
+//redirect old search urls
+{ "type":"path", "if":"/search\\.cgis/(.*?)", "then#redirect":"/search/keywords/$1" }
 
 ]
