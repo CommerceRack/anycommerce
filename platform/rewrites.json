@@ -1,0 +1,36 @@
+[
+
+// rewrite legacy vstore cart and session id's out of path
+{ "type":"path", "if":"/c=.*?/(.*)", "then#redirect":"/$1" },
+{ "type":"path", "if":"/s=.*?/(.*)", "then#redirect":"/$1" },
+
+// if a file is explicitly requested, send it.
+{ "type":"path", "if":"/(.*\\.html)", "then#sendfile":"/$1", "apptimize":true },
+{ "type":"path", "if":"/(.*\\.css)", "then#sendfile":"/$1", "apptimize":true },
+{ "type":"path", "if":"/(.*)", "then#sendfile":"/$1" },
+
+// sendfile known paths
+{ "type":"path", "if":"/product/([a-zA-Z0-9\\-\\_]+)/.*", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/product/[a-zA-Z0-9\\-\\_]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/category/([a-zA-Z0-9\\.\\_\\-]+)/.*", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/search/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
+
+// sendfile known urls
+{ "type":"path", "if":"/cart/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/checkout/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/home/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/about_us/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/contact_us/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/frequently_asked_questions/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/payment_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/privacy_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/return_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/shipping_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_account/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/change_password/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_order_history/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_wishlist/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/search\\.cgis/(.*?)", "then#redirect":"/search/keywords/$1" },
+
+]
