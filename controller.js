@@ -3159,7 +3159,14 @@ return $r;
 //				dump(" -> templateid: "+argObj.templateid.value);// dump(arr);
 				for(var i in arr)	{
 					arr[i].obj_index = i; //allows for the data object to be looked up in memory later.
-					$tmp.tlc({'templateid':argObj.templateid,'dataset':arr[i],'dataAttribs':arr[i]});
+					var tlcObj = {'templateid':argObj.templateid,'dataset':arr[i]};
+					if(typeof arr[i] == 'object'){
+						tlcObj.dataAttribs = arr[i];
+						}
+					else {
+						//if the data object is a scalar, no point in including dataAttribs
+						}
+					$tmp.tlc(tlcObj);
 					}
 				data.globals.binds[data.globals.focusBind] = $tmp.children();
 				}
