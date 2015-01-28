@@ -1348,7 +1348,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				return false;
 				},
 			
-			cartItemRemove	: function($ele,p)	{
+			cartItemRemove : function($ele,p)	{
 				p.preventDefault();
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{
