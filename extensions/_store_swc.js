@@ -174,6 +174,40 @@ var store_swc = function(_app) {
 					return false;
 					}
 				},
+			producttag : function(data,thisTLC){
+				var tag = data.globals.binds[data.globals.focusBind];
+				var tagphrase = "";
+				switch(tag){
+					case "IS_FRESH":
+						tagphrase = "NEW!";
+						break;
+					case "IS_BESTSELLER":
+						tagphrase = "HOT";
+						break;
+					case "IS_USER1":
+						tagphrase = "YOUTH";
+						break;
+					case "IS_SALE":
+						tagphrase = "SALE";
+						break;
+					case "IS_SPECIALORDER":
+						tagphrase = "CUSTOM";
+						break;
+					case "IS_PREORDER":
+						tagphrase = "PREORDER";
+						break;
+					case "IS_DISCONTINUED":
+					case "IS_OUTOFSTOCK":
+						tagphrase = "ALL GONE";
+						break;
+					case "IS_SHIPFREE":
+						tagphrase = "FREE SHIPPING";
+						break;
+					
+					}
+				data.globals.binds[data.globals.focusBind] = tagphrase;
+				return tagphrase;
+				},
 			imageurl : function(data,thisTLC){
 				var args = thisTLC.args2obj(data.command.args, data.globals);
 				data.globals.binds[data.globals.focusBind] = _app.u.makeImage(args);
@@ -649,6 +683,9 @@ var store_swc = function(_app) {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			prodToggleTags : function($ele,e){
+				$ele.closest('.productTagsContainer').toggleClass('collapsed');
+				},
 			checkoutOptionsShow : function($ele, e){
 				var $cbc = $ele.closest('.cartButtonContainer');
 				$('.optionContainer.cartOptions', $cbc).hide();

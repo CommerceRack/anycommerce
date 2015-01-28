@@ -288,6 +288,43 @@ a.blockLink, li.blockLink {display: inline-block;}
 
 .myteams h4 > span { padding-left: 10px;}
 
+.productTagsContainer { position:relative; max-width:550px; margin: 0px auto; overflow: hidden; transition: height .5s;}
+.productTagsContainer.collapsed {
+	height:20px;
+	}
+.productTagsContainer .productTag {
+	height:20px;
+	color: white;
+	line-height: 20px;
+	font-size: 18px;
+	font-weight:bold;
+	letter-spacing: 2px;
+	}
+
+.productTagsContainer .productTag.is_fresh { background:SteelBlue; }
+.productTagsContainer .productTag.is_bestseller { background:DarkRed; }
+.productTagsContainer .productTag.is_user1 { background:green; }
+.productTagsContainer .productTag.is_sale { background:orange; }
+.productTagsContainer .productTag.is_specialorder { background:DarkCyan; }
+.productTagsContainer .productTag.is_preorder { background:DarkGoldenRod; }
+.productTagsContainer .productTag.is_discontinued,
+.productTagsContainer .productTag.is_outofstock { background:grey; }
+.productTagsContainer .productTag.is_shipfree { background:red; }
+
+.productTagsContainer.collapsed .moreTagsButton .ui-icon-minusthick {display:none;}
+.productTagsContainer .moreTagsButton .ui-icon-minusthick {display:block;}
+.productTagsContainer.collapsed .moreTagsButton .ui-icon-plusthick {display:block;}
+.productTagsContainer .moreTagsButton .ui-icon-plusthick {display:none;}
+
+
+.moreTagsButton {
+	position:absolute;
+	height:18px;
+	width:18px;
+	top:0px;
+	right:0px;
+	}
+
 .prodListTagsContainer {
 	height: 26px;
 	overflow: hidden;

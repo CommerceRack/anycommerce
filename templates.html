@@ -1045,9 +1045,12 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 
 
-<div id="productTagTemplate" class="productTag" data-tlc="bind $var '.'; store_swc#producttag; apply --append;"></div>
+<div id="productTagTemplate" class="productTag alignCenter" data-tlc="bind $var '.'; store_swc#producttag; apply --append; bind $var '.'; format --lowercase; apply --add --class=$var;"></div>
 
-
+<span id="moreTagsButton" class="ui-state-default ui-button-icon-only highlightBG_2 moreTagsButton" data-app-click="store_swc|prodToggleTags">
+	<span class="ui-icon ui-icon-plusthick"></span>
+	<span class="ui-icon ui-icon-minusthick"></span>
+</span>
 <!--
 form - the form id gets modified to be unique in case multiple viewers are open at the same time. _pid is appended to it.
 NOTE - currently, variations.js supports only 1 viewer at a time. this will change.
@@ -1091,12 +1094,25 @@ this will likely become more flexible in the future. ###
 					<!-- OLD PROD TAGS -->
 					<!-- <div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div> -->
 
-					<div class="displayNone" data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; set $tagarr $var --split=' '; controller#loop --templateid='productTagTemplate'; apply --append;"></div>
 					
 					<img class="displayNone_320 displayNone_480 displayNone_640" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=550 --h=550 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 					<img class="displayNone_960 displayNone_1280" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=400 --h=400 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 				</div>
 			</a>
+			<div class="productTagsContainer displayNone collapsed" data-tlc="
+				bind $length '.%attribs.zoovy:prod_is_tags.length'; if (is $length --gt='0';){{
+					apply --show --tag;
+					bind $var '.%attribs.zoovy:prod_is_tags'; 
+					set $tagarr $var --split=','; 
+					controller#loop --templateid='productTagTemplate'; 
+					apply --append;
+					if(is $length --gt='1';) {{
+						transmogrify --templateid='moreTagsButton';
+						store_swc#dump;
+						apply --append;
+						}};
+					}};
+				"></div>
 			<a data-tlc="
 				bind $team '.%attribs.user:app_mlb';
 				apply --attrib='data-swc-team';
