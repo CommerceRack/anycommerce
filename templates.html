@@ -1100,15 +1100,18 @@ this will likely become more flexible in the future. ###
 				</div>
 			</a>
 			<div class="productTagsContainer displayNone collapsed" data-tlc="
-				bind $length '.%attribs.zoovy:prod_is_tags.length'; if (is $length --gt='0';){{
+				bind $length '.%attribs.zoovy:prod_is_tags'; 
+				set $length $length --split=',';
+				format --length;
+				store_swc#dump;
+				if (is $length --gt='0';){{
 					apply --show --tag;
 					bind $var '.%attribs.zoovy:prod_is_tags'; 
-					set $tagarr $var --split=','; 
+					set $var $var --split=',';
 					controller#loop --templateid='productTagTemplate'; 
 					apply --append;
 					if(is $length --gt='1';) {{
 						transmogrify --templateid='moreTagsButton';
-						store_swc#dump;
 						apply --append;
 						}};
 					}};
