@@ -1,6 +1,33 @@
 html, body{padding:0px; margin: 0px;}
 /*
 */
+#preview {color:gray;}
+#preview, #preview svg {
+	position:absolute;
+	top:0px;
+	left:0px;
+	right:0px;
+	bottom:0px;
+	width:100%;
+	height:100%;
+}
+#svg-circle {
+  display:block;
+  width:150px;
+  height:150px;
+  margin: 0 auto;
+}
+#pink {
+  fill:#eb307d;
+  }
+#svg-circle #clipmask {
+animation: move-mask infinite running 2s ease;
+}
+@keyframes move-mask {
+0%, 100% {transform: translateY(-90px)}
+50% {transform: translateY(0px)}
+}
+#preview img {margin-top: 10%; max-width:85%;}
 
 body{background:url(images/andho15g.jpg) no-repeat fixed center top, #233628;}
 .highlightText {color:orange;}
@@ -492,3 +519,28 @@ a.blockLink, li.blockLink {display: inline-block;}
 .notFoundContainer{
 	padding: 12px;
 	}
+
+.maskrect{transition: x 5s;}
+
+#mask1 {
+	animation:mask infinite running 5s ease;
+	-moz-animation:mask infinite running 5s ease;
+	-webkit-animation:mask infinite running 5s ease;
+}
+
+#mask2 {
+	animation:mask 5s ease 2s infinite;
+	-moz-animation:mask 5s ease 2s infinite;
+	-webkit-animation:mask 5s ease 2s infinite;
+}
+
+#mask3 {
+	animation:mask 5s ease 4s infinite;
+	-moz-animation:mask 5s ease 4s infinite;
+	-webkit-animation:mask 5s ease 4s infinite;
+}
+
+@keyframes mask{
+	0%, 100%{ transform:translateX(0px);}
+	50% {transform:translateX(1000px);}
+}
