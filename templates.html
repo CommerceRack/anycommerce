@@ -902,7 +902,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class="floatRight pointer quickView displayNone" data-app-click="quickstart|quickviewShow" data-loadstemplate="productTemplateQuickView">Quickview</button>
 	-->
 	<a data-tlc="bind $pid '.pid'; bind $seo '.%attribs.zoovy:prod_name'; store_swc#dump; set $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
-		<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div>
+		<!-- <div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div> -->
 		<img data-tlc="bind $var '.%attribs.zoovy:prod_thumb'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_image1';}}; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.%attribs.zoovy:prod_name'; bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
@@ -998,7 +998,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 -->
 <li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink" data-tlc="bind $var '.prod_name'; apply --attrib='title';">
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; set $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
-		<div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div>
+		<!-- <div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div> -->
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
 		
 		<div class="prodInfo highlightBG_1_alpha">
@@ -1336,7 +1336,7 @@ this will likely become more flexible in the future. ###
 	<td class="imageContainer">
 <div>
 
-	<div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div>
+	<!-- <div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy; if (is $var --notblank;) {{apply --append;}};" class="tagsContainer"></div> -->
 	<div data-tlc="bind $var '.pid'; quickstart#addpicslider  --legacy; apply --append;"><img data-tlc="bind $var '.%attribs.zoovy:prod_image1'; apply --img --media=$var --width=240 --height=240 --bgcolor='#ffffff' --replace;" src="blank.gif" class="prodBigImage" alt="" height="240" width="240"></div>
 
 </div>
