@@ -30,7 +30,7 @@ animation: move-mask infinite running 2s ease;
 #preview img {margin-top: 10%; max-width:85%;}
 
 body{background:url(images/andho15g.jpg) no-repeat fixed center top, #233628;}
-.highlightText {color:orange;}
+.highlightText {color:red;}
 .highlight_1, a.highlight_1{color:#233628;}
 .highlight_2, a.highlight_2{color:#5c6a60;}
 .highlightBG_1 {background: #233628;}
