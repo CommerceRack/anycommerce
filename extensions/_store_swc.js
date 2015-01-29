@@ -174,6 +174,9 @@ var store_swc = function(_app) {
 					return false;
 					}
 				},
+			sdomain : function(data,thisTLC){
+				data.globals.binds[data.globals.focusBind] = zGlobals.appSettings.sdomain;
+				},
 			producttag : function(data,thisTLC){
 				var tag = data.globals.binds[data.globals.focusBind];
 				var tagphrase = "";

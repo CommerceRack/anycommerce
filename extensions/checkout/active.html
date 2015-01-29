@@ -406,10 +406,40 @@ do NOT change the input name or id or checkout will likely break.
 
 
 
+<div id="GTSOrderTemplate">
+	<!-- START Google Trusted Stores Order -->
+	<div data-tlc="set $var 'gts-order'; apply --attrib='id'; set $var " style="display:none;" translate="no">
+
+	  <!-- start order and merchant information -->
+	  <span data-tlc="set $var 'gts-o-id'; apply --attrib='id'; bind $var '.orderid'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-domain'; apply --attrib='id'; store_swc#sdomain; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-email'; apply --attrib='id'; bind $var '.order.bill.email'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-country'; apply --attrib='id'; bind $var '.order.bill.countrycode'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-currency'; apply --attrib='id';">USD</span>
+	  <span data-tlc="set $var 'gts-o-total'; apply --attrib='id'; bind $var '.order.sum.order_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-discounts'; apply --attrib='id';">0</span>
+	  <span data-tlc="set $var 'gts-o-shipping-total'; apply --attrib='id'; bind $var '.order.sum.shp_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-tax-total'; apply --attrib='id'; bind $var '.order.sum.tax_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-est-ship-date'; apply --attrib='id';">ORDER_EST_SHIP_DATE</span>
+	  <span data-tlc="set $var 'gts-o-est-delivery-date'; apply --attrib='id';">ORDER_EST_DELIVERY_DATE</span>
+	  <span data-tlc="set $var 'gts-o-has-preorder'; apply --attrib='id';">HAS_BACKORDER_PREORDER</span>
+	  <span data-tlc="set $var 'gts-o-has-digital'; apply --attrib='id';">HAS_DIGITAL_GOODS</span>
+	  <!-- end order and merchant information -->
+
+	</div>
+	<!-- END Google Trusted Stores Order -->
+</div>
 
 
-
-
+<span id="GTSItemTemplate" class="gts-item">
+	<span class="gts-i-name">ITEM_NAME</span>
+	<span class="gts-i-price">ITEM_PRICE</span>
+	<span class="gts-i-quantity">ITEM_QUANTITY</span>
+	<span class="gts-i-prodsearch-id">ITEM_GOOGLE_SHOPPING_ID</span>
+	<span class="gts-i-prodsearch-store-id">ITEM_GOOGLE_SHOPPING_ACCOUNT_ID</span>
+	<span class="gts-i-prodsearch-country">ITEM_GOOGLE_SHOPPING_COUNTRY</span>
+	<span class="gts-i-prodsearch-language">ITEM_GOOGLE_SHOPPING_LANGUAGE</span>
+</span>
 
 
 <!-- used after a successful checkout.  -->
@@ -417,8 +447,9 @@ do NOT change the input name or id or checkout will likely break.
 <div id="chkoutCompletedTemplate" class="checkoutSuccess">
 
 	<div class="floatRight ocmThirdParty" data-app-role="thirdPartyContainer"></div>
-
-
+	
+	<!-- <div data-tlc="bind $var '.'; transmogrify --templateid='GTSOrderTemplate' --dataset=$var; apply --append;" -->
+	
 	<div class="orderSummaryDetails">
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-tlc="bind $var '.orderid'; if (is $var --notblank;) {{format --prepend='Your order id is '; apply --append;}};"></h3>
