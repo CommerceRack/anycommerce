@@ -182,7 +182,7 @@ var store_swc = function(_app) {
 				var tagphrase = "";
 				switch(tag){
 					case "IS_FRESH":
-						tagphrase = "NEW!";
+						tagphrase = "NEW";
 						break;
 					case "IS_BESTSELLER":
 						tagphrase = "HOT";
