@@ -451,6 +451,8 @@ do NOT change the input name or id or checkout will likely break.
 	<!-- <div data-tlc="bind $var '.'; transmogrify --templateid='GTSOrderTemplate' --dataset=$var; apply --append;" -->
 	<!-- <div class="displayNone" data-tlc="bind $var '.@TRACKERS'; foreach $i in $var {{ set $o $i --path='.owner'; if(is $o --eq='google-trustedstores';){{set $i $i --path='.script'; apply --append;}}; }};"></div> -->
 	
+	<iframe class="displayNone" data-tlc="bind $var '.orderid'; foramt --prepend='https://www.sportsworldchicago.com/jsonapi/plugin/GOOGLETRUSTEDSTORES.html?orderid='; apply --attrib='src';"></iframe>
+	
 	<div class="orderSummaryDetails">
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-tlc="bind $var '.orderid'; if (is $var --notblank;) {{format --prepend='Your order id is '; apply --append;}};"></h3>
