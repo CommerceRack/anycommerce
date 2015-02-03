@@ -519,28 +519,3 @@ a.blockLink, li.blockLink {display: inline-block;}
 .notFoundContainer{
 	padding: 12px;
 	}
-
-.maskrect{transition: x 5s;}
-
-#mask1 {
-	animation:mask infinite running 5s ease;
-	-moz-animation:mask infinite running 5s ease;
-	-webkit-animation:mask infinite running 5s ease;
-}
-
-#mask2 {
-	animation:mask 5s ease 2s infinite;
-	-moz-animation:mask 5s ease 2s infinite;
-	-webkit-animation:mask 5s ease 2s infinite;
-}
-
-#mask3 {
-	animation:mask 5s ease 4s infinite;
-	-moz-animation:mask 5s ease 4s infinite;
-	-webkit-animation:mask 5s ease 4s infinite;
-}
-
-@keyframes mask{
-	0%, 100%{ transform:translateX(0px);}
-	50% {transform:translateX(1000px);}
-}
