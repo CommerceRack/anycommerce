@@ -26,8 +26,10 @@ _app.u.loadScript(configURI,function(){
 	
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
+		$('#background').fadeIn();
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
-				
+		_app.ext.store_swc.vars.killLoader = true;
+		$('#preview').empty().remove();
 		_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
 		_app.model.dispatchThis('mutable');
 		if(_robots._robotGreeting){

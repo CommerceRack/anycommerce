@@ -226,7 +226,7 @@ window._robots = {
 </head>
 
 <body class="dosis">
-
+<div id="background" class="displayNone" ></div>
 <script type='text/javascript'>
 document.write('<div id="clickBlocker" style="position:absolute; width: 100%; height: 100%; z-index: 99999999;"></div>');
 </script>
@@ -243,121 +243,7 @@ document.write('<div id="clickBlocker" style="position:absolute; width: 100%; he
 	</div>
 </div> -->
 
-<div id="preview" class=" displayNone alignCenter">
-	<canvas id="loaderCanvas"></canvas>
-	
-	<script type="text/javascript">
-		(function(){
-			
-			var canvas = document.getElementById('loaderCanvas');
-			var context = canvas.getContext('2d');
-			var img = document.createElement('IMG');
-			
-			var CYCLE_LENGTH = 5000;
-			var masks = [
-				{pos:0, cycle:0},
-				{pos:0, cycle:-1500},
-				{pos:0, cycle:-3000},
-				];
-				
-			var lastTime = false;
-			var thisTime;
-			var d;
-			var m;
-			
-			var MASK_WIDTH = 20;
-			//only add one mask_width here since we're using the centerpoint of the mask.
-			var MASK_RANGE;
-			var LOGFRAMES = 20;
-			var frames = 0;
-			
-			function log(message){
-				if(frames == 1){console.log(message);}
-				}
-			
-			function draw(){
-				if(window.myApp && window.myApp.ext && window.myApp.ext.store_swc && window.myApp.ext.store_swc.vars && window.myApp.ext.store_swc.vars.killLoader){
-					//we're done here, pack it up
-					return true;
-					}
-				frames++;
-				frames = frames%LOGFRAMES;
-				thisTime = new Date().getTime();
-				if(!lastTime){lastTime = thisTime;}
-				d = thisTime - lastTime;
-				lastTime = thisTime;
-				for(var i in masks){
-					m = masks[i];
-					m.cycle += d;
-					if(m.cycle > CYCLE_LENGTH){
-						m.cycle -= CYCLE_LENGTH;
-						}
-					if(m.cycle >= 0){
-						m.pos = .5*(Math.sin(Math.PI*(2*m.cycle/CYCLE_LENGTH - .5)) + 1);
-						}
-					}
-				log("AFTER POSITION UPDATES: "+(thisTime - new Date().getTime()));
-				context.clearRect(0,0,canvas.width,canvas.height);
-					
-				//draw image
-				context.drawImage(img,0,0);
-				
-				//draw overlay
-				context.save();
-				context.fillStyle = 'white';
-				context.globalAlpha = .65;
-				context.fillRect(0,0,canvas.width,canvas.height);
-				context.restore();
-				
-				//draw masked image
-				for(var i in masks){
-					//context.save();
-					//context.fillStyle = "red";
-					//context.fillRect(	masks[i].pos * MASK_RANGE - MASK_WIDTH, 
-					//				0, 
-					//				MASK_WIDTH, 
-					//				canvas.height);
-					var x = masks[i].pos * MASK_RANGE - MASK_WIDTH;
-					var w = MASK_WIDTH;
-					log(x);
-					if(x <= 0){
-						w += x;
-						x=0;
-						}
-					else if(x > img.width){
-						x = img.width;
-						w = 0;
-						}
-					else if(x >= img.width - MASK_WIDTH){
-						w = img.width - x;
-						}
-					log(x+".."+w+".."+img.height);
-					if(w > 0){
-						context.drawImage(	img,	//image
-											x,	//sx
-											0,	//sy
-											w,	//swidth
-											img.height,	//sheight
-											x,	//x
-											0,	//y
-											w,	//width
-											img.height);	//height
-						}
-					//context.restore();
-					}
-				window.requestAnimationFrame(draw);
-				}
-			
-			img.onload = function(){
-				canvas.width = img.width;
-				canvas.height = img.height;
-				MASK_RANGE = canvas.width + MASK_WIDTH;
-				//draw();
-				}
-			img.src = "images/sportsworldchicago_logoweb.jpg";
-			})()
-	</script>
-</div>
+
 
 <div id='appView' class="initFooter">
 
@@ -487,7 +373,121 @@ document.write('<div id="clickBlocker" style="position:absolute; width: 100%; he
 </div>
 -->
 <div id='mainContentArea' class="clear">
-	<div class="alignCenter paddingTop paddingBottom active noBG preview"><img src="loading.gif"/></div>
+	<div id="preview" class="active alignCenter">
+		<canvas id="loaderCanvas"></canvas>
+		
+		<script type="text/javascript">
+			(function(){
+				
+				var canvas = document.getElementById('loaderCanvas');
+				var context = canvas.getContext('2d');
+				var img = document.createElement('IMG');
+				
+				var CYCLE_LENGTH = 3900;
+				var masks = [
+					{pos:0, cycle:0},
+					{pos:0, cycle:-1300},
+					{pos:0, cycle:-2600},
+					];
+					
+				var lastTime = false;
+				var thisTime;
+				var d;
+				var m;
+				
+				var MASK_WIDTH = 20;
+				//only add one mask_width here since we're using the centerpoint of the mask.
+				var MASK_RANGE;
+				var LOGFRAMES = 20;
+				var frames = 0;
+				
+				function log(message){
+					if(frames == 1){console.log(message);}
+					}
+				
+				function draw(){
+					if(window.myApp && window.myApp.ext && window.myApp.ext.store_swc && window.myApp.ext.store_swc.vars && window.myApp.ext.store_swc.vars.killLoader){
+						//we're done here, pack it up
+						return true;
+						}
+					frames++;
+					frames = frames%LOGFRAMES;
+					thisTime = new Date().getTime();
+					if(!lastTime){lastTime = thisTime;}
+					d = thisTime - lastTime;
+					lastTime = thisTime;
+					for(var i in masks){
+						m = masks[i];
+						m.cycle += d;
+						if(m.cycle > CYCLE_LENGTH){
+							m.cycle -= CYCLE_LENGTH;
+							}
+						if(m.cycle >= 0){
+							m.pos = .5*(Math.sin(Math.PI*(2*m.cycle/CYCLE_LENGTH - .5)) + 1);
+							}
+						}
+					log("AFTER POSITION UPDATES: "+(thisTime - new Date().getTime()));
+					context.clearRect(0,0,canvas.width,canvas.height);
+						
+					//draw image
+					context.drawImage(img,0,0);
+					
+					//draw overlay
+					context.save();
+					context.fillStyle = 'white';
+					context.globalAlpha = .65;
+					context.fillRect(0,0,canvas.width,canvas.height);
+					context.restore();
+					
+					//draw masked image
+					for(var i in masks){
+						//context.save();
+						//context.fillStyle = "red";
+						//context.fillRect(	masks[i].pos * MASK_RANGE - MASK_WIDTH, 
+						//				0, 
+						//				MASK_WIDTH, 
+						//				canvas.height);
+						var x = masks[i].pos * MASK_RANGE - MASK_WIDTH;
+						var w = MASK_WIDTH;
+						log(x);
+						if(x <= 0){
+							w += x;
+							x=0;
+							}
+						else if(x > img.width){
+							x = img.width;
+							w = 0;
+							}
+						else if(x >= img.width - MASK_WIDTH){
+							w = img.width - x;
+							}
+						log(x+".."+w+".."+img.height);
+						if(w > 0){
+							context.drawImage(	img,	//image
+												x,	//sx
+												0,	//sy
+												w,	//swidth
+												img.height,	//sheight
+												x,	//x
+												0,	//y
+												w,	//width
+												img.height);	//height
+							}
+						//context.restore();
+						}
+					window.requestAnimationFrame(draw);
+					}
+				
+				img.onload = function(){
+					canvas.width = img.width;
+					canvas.height = img.height;
+					MASK_RANGE = canvas.width + MASK_WIDTH;
+					draw();
+					}
+				img.src = "images/sportsworldchicago_logoweb.png";
+				})()
+		</script>
+	</div>
 </div>
 <div class="clear"></div>
 <div id="footer" class="highlightBG_1">
