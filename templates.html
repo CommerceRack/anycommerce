@@ -1099,7 +1099,7 @@ this will likely become more flexible in the future. ###
 					<img class="displayNone_960 displayNone_1280" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=400 --h=400 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 				</div>
 			</a>
-			<div class="productTagsContainer displayNone" data-tlc="
+			<!-- <div class="productTagsContainer displayNone" data-tlc="
 				bind $length '.%attribs.zoovy:prod_is_tags'; 
 				set $length $length --split=',';
 				format --length;
@@ -1111,7 +1111,7 @@ this will likely become more flexible in the future. ###
 					controller#loop --templateid='productTagTemplate'; 
 					apply --append;
 					}};
-				"></div>
+				"></div> -->
 			<a data-tlc="
 				bind $team '.%attribs.user:app_mlb';
 				apply --attrib='data-swc-team';
