@@ -1086,7 +1086,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				}, //startCheckout
 			showInvoice : function($container, cartid){
-				var parentID = 'invoiceContainer-'+cartid;
+				var parentID = _app.u.jqSelector('#', 'invoiceContainer-'+cartid);
 				$container.attr('id', parentID);
 				_app.model.addDispatchToQ({
 					'_cmd':'cartOrderStatus',
@@ -1772,7 +1772,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						if(_app.ext.order_create.validate.checkout($form))	{
 							var $checkout = $form.closest("[data-app-role='checkout']");
 							$checkout.slideUp('fast',function(){
-								$('body').showLoading({'message':'Creating order...'});
+								//$('body').showLoading({'message':'Creating order...'});
 								});
 							_app.ext.cco.u.sanitizeAndUpdateCart($form);
 							var cartid = $ele.closest("[data-app-role='checkout']").data('cartid'), payments;
