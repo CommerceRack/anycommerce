@@ -42,6 +42,7 @@
 // sendfile
 { "type":"path", "if":"/cart/?", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/checkout/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/invoice/?", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/home/?", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/about_us/", "then#sendfile":"/index.html", "apptimize":false },
 { "type":"path", "if":"/contact_us/", "then#sendfile":"/index.html", "apptimize":false },
