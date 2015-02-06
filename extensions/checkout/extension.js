@@ -1085,12 +1085,13 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('#globalMessaging').anymessage({'message':'in order_create.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
 					}
 				}, //startCheckout
-			showInvoice : function($container, cartid){
+			showInvoice : function($container, cartid, orderid){
 				var parentID = 'invoiceContainer-'+cartid;
 				$container.attr('id', parentID);
 				_app.model.addDispatchToQ({
 					'_cmd':'cartOrderStatus',
-					'_cartid' : cartid,
+					'cartid' : cartid,
+					'orderid' : orderid,
 					'_tag' : {
 						'attempt' : 1,
 						'callback' : 'cartOrderStatus',
@@ -1111,7 +1112,8 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else if(_rtag.refresh){
 					var cartid = _app.data[_rtag.datapointer].order.cart.cartid;
-					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid;
+					var orderid = _app.data[_rtag.datapointer].orderid;
+					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid+'&orderid='+orderid;
 					}
 				else {
 					$('#'+_rtag.parentID).hideLoading();
