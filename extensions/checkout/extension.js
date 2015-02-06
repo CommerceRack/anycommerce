@@ -1111,8 +1111,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('#globalMessaging').anymessage({'message':_rtag});
 					}
 				else if(_rtag.refresh){
-					var cartid = _app.data[_rtag.datapointer].order.cart.cartid;
-					var orderid = _app.data[_rtag.datapointer].orderid;
+					var cartid = _app.data[_rtag.datapointer]['status-cartid'];
 					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid+'&orderid='+orderid;
 					}
 				else {
