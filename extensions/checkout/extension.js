@@ -206,7 +206,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					
 					//when the cartOrderCreate response comes back, update the loading text to show the order id.
 					if(_rtag.datapointer.indexOf('cartOrderCreate') >= 0)	{
-						$(document.body).showLoading({'message':'Order '+_app.data[_rtag.datapointer].orderid+' Created. Verifying payment...'});
+						$('#checkoutContainer').showLoading({'message':'Your order is being created.  For security reasons, the page will reload when it has finished.'});
 						}
 					
 					/*
@@ -222,7 +222,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 //Continue polling till order is finished.
 					setTimeout(function(){
 						var cartid = _app.data[_rtag.datapointer]['status-cartid']
-						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":cartid,"_tag":{"datapointer":"cartOrderStatus|"+cartid,"parentID":_rtag.parentID,"attempt" :(_rtag.attempt+1), "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
+						_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":cartid,"_tag":{"datapointer":"cartOrderStatus|"+cartid,"parentID":_rtag.parentID,"attempt" :(_rtag.attempt+1), "callback":"cartOrderStatus","extension":"order_create", "refresh" : true}},"mutable");
 						dump(" -------------> timeout triggered. dispatch cartOrderStatus. attempt: "+_rtag.attempt);
 						_app.model.dispatchThis("mutable");
 						},2000);
@@ -247,7 +247,7 @@ _app.ext.order_create.u.handlePanel($context,'chkoutMethodsPay',['empty','transl
 					else if(_app.data[rd._rtag.datapointer] && _app.data[rd._rtag.datapointer]['status-cartid'])	{
 						rd._rtag.attempt = rd._rtag.attempt || 0; //start at zero for an error. so '1' is hit next time.
 						setTimeout(function(){
-							_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[rd._rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":rd._rtag.parentID,"attempt" : rd._rtag.attempt++, "callback":"cartOrderStatus","extension":"order_create"}},"mutable");
+							_app.model.addDispatchToQ({"_cmd":"cartOrderStatus","_cartid":_app.data[rd._rtag.datapointer]['status-cartid'],"_tag":{"datapointer":"cartOrderStatus","parentID":rd._rtag.parentID,"attempt" : rd._rtag.attempt++, "callback":"cartOrderStatus","extension":"order_create", "refresh":true}},"mutable");
 							_app.model.dispatchThis("mutable");
 							},2000);
 						}
@@ -1085,20 +1085,39 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('#globalMessaging').anymessage({'message':'in order_create.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
 					}
 				}, //startCheckout
-			
+			showInvoice : function($container, cartid){
+				var parentID = 'invoiceContainer-'+cartid;
+				$container.attr('id', parentID);
+				_app.model.addDispatchToQ({
+					'_cmd':'cartOrderStatus',
+					'_cartid' : 'cartOrderCreate|'+cartid,
+					'_tag' : {
+						'attempt' : 1,
+						'callback' : 'cartOrderStatus',
+						'extension' : 'order_create',
+						'datapointer' : 'cartOrderCreate|'+cartid,
+						'parentID' : parentID
+						}
+					}, 'mutable');
+				_app.model.dispatchThis('mutable');
+				},
 			//When this gets run, the datapointer in _rtag will be cartOrderStatus. 
 			checkoutComplete : function(_rtag)	{
 				_app.u.dump('BEGIN order_create.a.checkoutComplete. _rtag: '); dump(_rtag);
-				$(document.body).hideLoading();
-				
 				//getting here is not a guarantee checkout was successful.  Check _rtag for errors.
 				//could be that a max. # of polls was reached or some other error occured.
 				if(_app.model.responseHasErrors(_rtag)){
 					$('#globalMessaging').anymessage({'message':_rtag});
 					}
-				else	{
+				else if(_rtag.refresh){
+					var cartid = _app.data[_rtag.datapointer].order.cart.cartid;
+					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid;
+					}
+				else {
+					$('#'+_rtag.parentID).hideLoading();
+					
 					var $checkout = $(_app.u.jqSelector('#',_rtag.parentID)),
-					checkoutData = _app.data[_rtag.datapointer] || {};
+					var checkoutData = _app.data[_rtag.datapointer] || {};
 					
 					if($checkout instanceof jQuery && $checkout.length)	{
 						var orderID = checkoutData.orderid,
@@ -1217,8 +1236,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 						//something went wrong. $checkout is not a valid jquery instance or has no length.
 						$('#globalMessaging').anymessage({'message':'Your order ('+checkoutData.orderid+') was created, but something went amiss along the way and the invoice can not be displayed. Please go to my account and order history to view your invoice.  A copy was also mailed to you.','persistent':true});
 						}
-					
-					}				
+					}
 				}
 			
 			

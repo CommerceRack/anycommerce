@@ -446,6 +446,10 @@ var store_swc = function(_app) {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			applyGTS : function(){
+				postscribe('#appView', '<script type="text/javascript">'+_app.templates.gtsscript.html()+'</script>');
+				
+				},
 			fetchTemplateForPage : function(navcat){
 				var r = false;
 				if(_app.ext.store_swc.pages[navcat]){
