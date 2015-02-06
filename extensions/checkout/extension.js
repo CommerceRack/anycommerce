@@ -1085,13 +1085,12 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					$('#globalMessaging').anymessage({'message':'in order_create.a.startCheckout, no $chkContainer [jQuery instance: '+($chkContainer instanceof jQuery)+'] not passed or does not exist or cartid ['+cartID+'] not passed.','gMessage':true});
 					}
 				}, //startCheckout
-			showInvoice : function($container, cartid, orderid){
+			showInvoice : function($container, cartid){
 				var parentID = 'invoiceContainer-'+cartid;
 				$container.attr('id', parentID);
 				_app.model.addDispatchToQ({
 					'_cmd':'cartOrderStatus',
-					'cartid' : cartid,
-					'orderid' : orderid,
+					'_cartid' : cartid,
 					'_tag' : {
 						'attempt' : 1,
 						'callback' : 'cartOrderStatus',

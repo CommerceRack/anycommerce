@@ -103,7 +103,7 @@ _app.couple('quickstart','addPageHandler',{
 	"require" : ['order_create', 'store_crm','extensions/checkout/active.html'],
 	"handler" : function($container, infoObj, require){
 		_app.require(require, function(){
-			_app.ext.order_create.a.showInvoice($container, infoObj.cartid, infoObj.orderid);
+			_app.ext.order_create.a.showInvoice($container, infoObj.cartid);
 			});
 		}
 	});
@@ -185,7 +185,7 @@ _app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'
 _app.router.appendHash({'type':'exact','route':'/checkout/','callback':'checkout'});
 
 _app.router.addAlias('invoice',		function(routeObj){
-	var infoObj = $.extend({'pageType' : 'invoice','requireSecure' : true}, routeObj.params, _app.u.getWhitelistedObject(routeObj.searchParams, ['cartid','orderid']));
+	var infoObj = $.extend({'pageType' : 'invoice','requireSecure' : true}, routeObj.params, _app.u.getWhitelistedObject(routeObj.searchParams, ['cartid']));
 	console.log(routeObj.searchParams);
 	console.log(infoObj);
 	_app.ext.quickstart.a.newShowContent(routeObj.value, infoObj);
