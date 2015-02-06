@@ -58,7 +58,8 @@ var store_swc = function(_app) {
 
 				var userTeam = _app.model.readLocal('swcUserTeam');
 				if(document.location.search.indexOf("team=") >= 0){
-					//do nothing, it'll get handled in the filter callback
+					var p = _app.u.kvp2array(document.location.search.substr(1));
+					_app.ext.store_swc.u.setUserTeam({sport:p.sport,team:p.team}, true);
 					}
 				else if(userTeam){
 					_app.ext.store_swc.u.setUserTeam(userTeam, true);
