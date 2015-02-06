@@ -1112,7 +1112,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				else if(_rtag.refresh){
 					var cartid = _app.data[_rtag.datapointer]['status-cartid'];
-					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid+'&orderid='+orderid;
+					window.location = zGlobals.appSettings.https_app_url + "invoice/?cartid="+cartid;
 					}
 				else {
 					$('#'+_rtag.parentID).hideLoading();
