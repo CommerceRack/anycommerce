@@ -77,17 +77,17 @@ item list and summary are separate just to give more control over location.
 		<legend class="headerPadding">Contents</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
+	
+<!-- totals et all -->
+	<fieldset data-app-role="chkoutNotes" class="marginBottom">
+		<legend class="headerPadding">Order Notes/Special Instructions</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
+	</fieldset>
 
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom">
 		<legend class="headerPadding">Summary</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
-	</fieldset>
-
-<!-- totals et all -->
-	<fieldset data-app-role="chkoutNotes" class="marginBottom">
-		<legend class="headerPadding">Order Notes/Special Instructions</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 	</form>
