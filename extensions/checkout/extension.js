@@ -1116,7 +1116,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 				else {
 					$('#'+_rtag.parentID).hideLoading();
 					
-					var $checkout = $(_app.u.jqSelector('#',_rtag.parentID)),
+					var $checkout = $(_app.u.jqSelector('#',_rtag.parentID));
 					var checkoutData = _app.data[_rtag.datapointer] || {};
 					
 					if($checkout instanceof jQuery && $checkout.length)	{
