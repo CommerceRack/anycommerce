@@ -58,7 +58,7 @@ var store_swc = function(_app) {
 
 				var userTeam = _app.model.readLocal('swcUserTeam');
 				if(document.location.search.indexOf("team=") >= 0){
-					var p = _app.u.kvp2array(document.location.search.substr(1));
+					var p = _app.u.kvp2Array(document.location.search.substr(1));
 					_app.ext.store_swc.u.setUserTeam({sport:p.sport,team:p.team}, true);
 					}
 				else if(userTeam){
