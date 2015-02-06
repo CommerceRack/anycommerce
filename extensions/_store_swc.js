@@ -447,6 +447,7 @@ var store_swc = function(_app) {
 //any functions that are recycled should be here.
 		u : {
 			applyGTS : function(){
+				$('#gts-o-domain').html(window.location.hostname);
 				postscribe('#appView', '<script type="text/javascript">'+_app.templates.gtsscript.html()+'</script>');
 				
 				},
