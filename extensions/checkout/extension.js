@@ -1179,7 +1179,6 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 //This will handle the @trackers code. Doesn't get run in admin.
 						if(!_app.u.thisIsAnAdminSession())	{
 							_app.ext.order_create.u.scripts2iframe(checkoutData['@TRACKERS']);
-							_app.ext.store_swc.u.applyGTS();
 							}
 
 // ### TODO -> move this out of here. move it into the appropriate app init.
@@ -2326,7 +2325,7 @@ the timeout is added for multiple reasons.
 									}
 								},(200 * (i + 1)),arr[i]);
 							}
-
+						setTimeout(_app.ext.store_swc.u.applyGTS,200*(arr.length+1));
 /*
 left here in case we want to come back to this. It'll work IF each tracker can run in an isolated environment.
 unfortunately, too many of the tracker codes rely on scripts being loaded onLoad in the parent window and are not functioning
