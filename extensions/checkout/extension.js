@@ -1086,7 +1086,7 @@ _app.u.handleButtons($chkContainer); //will handle buttons outside any of the fi
 					}
 				}, //startCheckout
 			showInvoice : function($container, cartid){
-				var parentID = _app.u.jqSelector('#', 'invoiceContainer-'+cartid);
+				var parentID = 'invoiceContainer-'+cartid.replace(/[^a-zA-Z0-9]+/g, '-');
 				$container.attr('id', parentID);
 				_app.model.addDispatchToQ({
 					'_cmd':'cartOrderStatus',
