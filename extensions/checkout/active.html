@@ -7,7 +7,7 @@ The chkout prefix is reserved for checkout.
 
 item list and summary are separate just to give more control over location.
 -->
-<div id="checkoutTemplate" class="checkoutFormContainer" data-app-role="checkout">
+<div id="checkoutTemplate" class="checkoutFormContainer noBG" data-app-role="checkout">
 
 	<form action="#">
 	<input data-tlc="bind $var '.bill.shortcut'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/shortcut" type="hidden">
@@ -31,7 +31,6 @@ item list and summary are separate just to give more control over location.
 	</fieldset>
 
 
-
 	<fieldset data-app-role="chkoutAddressBill" data-app-addresstype="bill" class="marginBottom">
 		<legend class="headerPadding">Billing Address</legend>
 		<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
@@ -44,7 +43,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div data-app-role="billToShipContainer">
 		<label>
-		<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="applyAnycb" data-app-change="order_create|tagAsBillToShip" type="checkbox">
+		<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="" data-app-change="order_create|tagAsBillToShip" type="checkbox">
 		ship to billing address
 		</label>
 		</div>
@@ -61,40 +60,34 @@ item list and summary are separate just to give more control over location.
 
 
 
-	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom">
+	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom vertHalf left">
 		<legend class="headerPadding">Shipping Methods</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 
 	
-	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom">
+	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom vertHalf right">
 		<legend class="headerPadding">Payment Choices</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
-
-
-<!-- totals et all -->
-	<fieldset data-app-role="chkoutNotes" class="marginBottom">
-		<legend class="headerPadding">Order Notes/Special Instructions</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
-	</fieldset>
-
-
-
 <!-- line items -->	
-	<fieldset data-app-role="chkoutCartItemsList" class="marginBottom">
+	<fieldset data-app-role="chkoutCartItemsList" class="clear marginBottom">
 		<legend class="headerPadding">Contents</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
-
-
 
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom">
 		<legend class="headerPadding">Summary</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
+	</fieldset>
+
+<!-- totals et all -->
+	<fieldset data-app-role="chkoutNotes" class="marginBottom">
+		<legend class="headerPadding">Order Notes/Special Instructions</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
 	</form>
@@ -109,14 +102,13 @@ item list and summary are separate just to give more control over location.
 	<h4 data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if (is $var --notblank;) {{apply --append;}};" class="displayNone" data-app-role="username"></h4>
 	
 	<div data-app-role="login">
-		<div class='floatLeft marginBottom'>
-			<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
-			<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
+		<div class=''>
+			<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required="required" name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email">
 		</div>
 	
-		<div data-app-role="loginPasswordContainer" class="displayNone floatRight passwordContainer">
-			<div>If you have an account with us, please enter your password below to login</div>
-			<input placeholder="password" size="30" name="password" type="password"><button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
+		<div data-app-role="loginPasswordContainer" class="displayNone passwordContainer">
+			<input placeholder="password" size="30" name="password" type="password"><span class="optional" >(Optional)</span>
+			<button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
 		</div>
 	</div>
 

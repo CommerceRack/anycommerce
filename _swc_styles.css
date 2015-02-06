@@ -47,6 +47,11 @@ a.redText{color:#7e0000;}
 .emph{font-size:1.2em;}
 
 #mainContentArea > div > div, .contentBG {background:rgba(256,256,256,.8);}
+.checkoutFormContainer fieldset {font-size: 1.15em;background: rgba(256,256,256,.9);}
+.checkoutFormContainer fieldset.marginBottom {margin-bottom: .5em;}
+.checkoutFormContainer .optional {color: gray;}
+.checkoutFormContainer fieldset legend {font-size: .9em; border:1px solid white;}
+.checkoutFormContainer fieldset button {font-size: .8em;}
 #mainContentArea > div > div.noBG {background:none;}
 
 .preview img {
@@ -520,4 +525,3 @@ a.blockLink, li.blockLink {display: inline-block;}
 	padding: 12px;
 	}
 	
-.checkoutFormContainer fieldset {font-size: 1.15em;background: rgba(255,255,255,.5);}

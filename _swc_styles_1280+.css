@@ -84,3 +84,6 @@
 
 .fieldCamPage .cam1 {float:left;}
 .fieldCamPage .cam2 {float:right;}
+.checkoutFormContainer .vertHalf {width: 45%;}
+.checkoutFormContainer .vertHalf.left {float:left;}
+.checkoutFormContainer .vertHalf.right {float:right;}
