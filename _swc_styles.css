@@ -56,6 +56,17 @@ a.redText{color:#7e0000;}
 .checkoutFormContainer .optional {color: gray;}
 .checkoutFormContainer fieldset button {font-size: .8em;}
 
+.paycon.PAYPALEC ,
+.paycon.CREDIT {
+	height: 16px;
+	width: 76px;
+	display:block;
+	float:left;
+	margin: 3px 10px 0 0;
+	background: url(images/spritesheet_payment.png);
+}
+.paycon.PAYPALEC{background-position: 0px 0px;}
+.paycon.CREDIT{background-position: 0px -18px;}
 .preview img {
 	margin-top: 30px;
 	background:rgba(256,256,256,.8);
