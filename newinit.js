@@ -1039,7 +1039,9 @@ _app.router.appendInit({
 		}
 	});
 
-
+_app.u.bindTemplateEvent(function(){return true;},'complete.analytics',function(event, $context, infoObj){
+	window[_app.vars.analyticsPointer]('send','pageview');
+	});
 
 
 })(myApp);
