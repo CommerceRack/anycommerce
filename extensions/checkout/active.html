@@ -17,9 +17,11 @@ item list and summary are separate just to give more control over location.
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom">
 		<legend class="headerPadding">Email / Account Login</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
-		<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
-			Not you? <span class="lookLikeLink zlink">click here</span>.
+		<div class="panelContent">
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
+			<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
+				Not you? <span class="lookLikeLink zlink">click here</span>.
+			</div>
 		</div>
 	</fieldset>
 
@@ -33,19 +35,21 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAddressBill" data-app-addresstype="bill" class="marginBottom">
 		<legend class="headerPadding">Billing Address</legend>
-		<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
-		
-		<div data-tlc="bind $var '.@bill'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		
-		<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="bill">Add New Address</button></div>
-		
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
-		
-		<div data-app-role="billToShipContainer">
-		<label>
-		<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="" data-app-change="order_create|tagAsBillToShip" type="checkbox">
-		ship to billing address
-		</label>
+		<div class="panelContent">
+			<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
+			
+			<div data-tlc="bind $var '.@bill'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
+			
+			<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="bill">Add New Address</button></div>
+			
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+			
+			<div data-app-role="billToShipContainer">
+				<label>
+					<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="" data-app-change="order_create|tagAsBillToShip" type="checkbox">
+					ship to billing address
+				</label>
+			</div>
 		</div>
 	</fieldset>
 
@@ -53,9 +57,11 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAddressShip" data-app-addresstype="ship" class="displayNone marginBottom">
 		<legend class="headerPadding">Shipping Address</legend>
-		<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
-		<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
+		<div class="panelContent">
+			<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+			<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
+		</div>
 	</fieldset>
 
 
@@ -79,10 +85,10 @@ item list and summary are separate just to give more control over location.
 	</fieldset>
 	
 <!-- totals et all -->
-	<fieldset data-app-role="chkoutNotes" class="marginBottom">
+	<!-- <fieldset data-app-role="chkoutNotes" class="marginBottom">
 		<legend class="headerPadding">Order Notes/Special Instructions</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
-	</fieldset>
+	</fieldset> -->
 
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom">
