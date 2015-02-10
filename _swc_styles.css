@@ -50,7 +50,7 @@ a.redText{color:#7e0000;}
 #mainContentArea > div > div.noBG {background:none;}
 
 .checkoutFormContainer fieldset { padding:0px !important; font-size: 1.15em; border:none; background: rgba(256,256,256,.9); }
-.checkoutFormContainer fieldset > .panelContent{box-sizing: border-box; padding: 1em; border:1px solid white; width:100%; }
+.checkoutFormContainer fieldset > .panelContentContainer{box-sizing: border-box; padding: 1em; border:1px solid white; width:100%; }
 .checkoutFormContainer fieldset legend {font-size: .9em; border:1px solid white; box-sizing: border-box; width:100%;}
 .checkoutFormContainer fieldset.marginBottom {margin-bottom: .5em;}
 .checkoutFormContainer .optional {color: gray;}

@@ -17,7 +17,7 @@ item list and summary are separate just to give more control over location.
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom">
 		<legend class="headerPadding">Email / Account Login</legend>
-		<div class="panelContent">
+		<div class="panelContentContainer">
 			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
 			<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
 				Not you? <span class="lookLikeLink zlink">click here</span>.
@@ -29,13 +29,13 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAccountCreate" class="displayNone marginBottom">
 		<legend class="headerPadding">Account Creation</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 
 	<fieldset data-app-role="chkoutAddressBill" data-app-addresstype="bill" class="marginBottom">
 		<legend class="headerPadding">Billing Address</legend>
-		<div class="panelContent">
+		<div class="panelContentContainer">
 			<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
 			
 			<div data-tlc="bind $var '.@bill'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
@@ -57,7 +57,7 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAddressShip" data-app-addresstype="ship" class="displayNone marginBottom">
 		<legend class="headerPadding">Shipping Address</legend>
-		<div class="panelContent">
+		<div class="panelContentContainer">
 			<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
 			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
 			<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
@@ -68,20 +68,20 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom vertHalf left">
 		<legend class="headerPadding">Shipping Methods</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 
 	
 	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom vertHalf right">
 		<legend class="headerPadding">Payment Choices</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 <!-- line items -->	
 	<fieldset data-app-role="chkoutCartItemsList" class="clear marginBottom">
 		<legend class="headerPadding">Contents</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 	
 <!-- totals et all -->
