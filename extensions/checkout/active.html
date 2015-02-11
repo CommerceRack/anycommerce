@@ -16,7 +16,7 @@ item list and summary are separate just to give more control over location.
 
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom">
-		<legend class="headerPadding">1) Email / Account Login</legend>
+		<legend class="headerPadding">1 - Email / Account Login</legend>
 		<div class="panelContentContainer">
 			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
 			<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
@@ -34,7 +34,7 @@ item list and summary are separate just to give more control over location.
 
 
 	<fieldset data-app-role="chkoutAddressBill" data-app-addresstype="bill" class="marginBottom">
-		<legend class="headerPadding">2) Billing Address</legend>
+		<legend class="headerPadding">2 - Billing Address</legend>
 		<div class="panelContentContainer">
 			<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
 			
@@ -67,20 +67,20 @@ item list and summary are separate just to give more control over location.
 
 
 	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom vertHalf left">
-		<legend class="headerPadding">3) Shipping Methods</legend>
+		<legend class="headerPadding">3 - Shipping Methods</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 
 	
 	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom vertHalf right">
-		<legend class="headerPadding">4) Payment Choices</legend>
+		<legend class="headerPadding">4 - Payment Choices</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 <!-- line items -->	
 	<fieldset data-app-role="chkoutCartItemsList" class="clear marginBottom">
-		<legend class="headerPadding">5) Contents</legend>
+		<legend class="headerPadding">5 - Contents</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 	
@@ -92,7 +92,7 @@ item list and summary are separate just to give more control over location.
 
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom">
-		<legend class="headerPadding">6) Summary</legend>
+		<legend class="headerPadding">6 - Summary</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
