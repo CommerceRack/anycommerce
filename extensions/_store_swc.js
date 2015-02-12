@@ -800,20 +800,29 @@ var store_swc = function(_app) {
 					elasticsearch.filter.and.push(playerFilters);
 					}
 				var es;
-				// if(!elasticsearch.sort){
-					// var tmp = {
-						// "query" :{
-							// "function_score" : {"filter":elasticsearch.filter}
-							// },
-						// "facets" : elasticsearch.facets
-						// }
-					// tmp.query.function_score.boost_mode = "sum";
-					// tmp.query.function_score.script_score = {"script":"doc['boost'].value"};
-					// es = _app.ext.store_search.u.buildElasticRaw(tmp);
-					// }
-				// else {
+				if(!elasticsearch.sort){
+					var tmp = {
+						"query" :{
+							"function_score" : {"filter":elasticsearch.filter}
+/*							"function_score" : {
+								"filter":elasticsearch.filter,
+								"functions" : [
+									{
+										"field_value_factor" : {
+											"field" : "boost"
+											}
+										}
+									],
+								"boost_mode" : "sum"
+								}
+*/							},
+						"facets" : elasticsearch.facets
+						}
+					es = _app.ext.store_search.u.buildElasticRaw(tmp);
+					}
+				else {
 					es = _app.ext.store_search.u.buildElasticRaw(elasticsearch);
-					// }
+					}
 				if(loadFullList){
 					es.size = 200;
 					es.timeout = 60;
