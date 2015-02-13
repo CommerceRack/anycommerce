@@ -714,7 +714,9 @@ _app.u.bindTemplateEvent(function(){return true;},'complete.analyticssetup',func
 		_app.vars.analyticsFirstPageSent = true;
 		}
 	else{
-		window[_app.vars.analyticsPointer]('send','pageview');
+		var url = $context.closest('[data-app-uri]').attr('data-app-uri');
+		if(url)	{window[_app.vars.analyticsPointer]('send','pageview', url);}
+		else	{window[_app.vars.analyticsPointer]('send','pageview');}
 		}
 	});
 

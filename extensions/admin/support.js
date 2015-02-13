@@ -52,7 +52,11 @@ var admin_support = function(_app) {
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
-
+				
+				_app.ext.admin_support.u.helpdeskLoginLinkApply();
+				var $target = $("<div \/>").attr({'id':'helpdeskPopup'}).appendTo('body');
+				$target.dialog({'modal':true,'autoOpen':false});				
+				
 				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/support.html',theseTemplates);
 
 				return r;
@@ -243,6 +247,30 @@ var admin_support = function(_app) {
 
 
 		u : {
+			helpdeskLoginLinkApply : function($ele,p) {
+				$('#mastHead .supportTab').on('click', function(e){
+					_app.model.addDispatchToQ({
+						"_cmd" : "adminHelpdeskLogin",
+						"_tag" : {
+							"datapointer" : "adminHelpdeskLogin",
+							"callback" : function(rd){
+								var popup = window.open(_app.data[rd.datapointer].helpdesk_url, '_blank');
+								if (popup == null || typeof(popup)=='undefined') { 	
+									var $target = $('#helpdeskPopup');
+									$target.intervaledEmpty();
+									$target.dialog('option','title','Support page blocked!');
+									$target.tlc({'templateid':'helpdeskPopupTemplate', 'dataset':_app.data[rd.datapointer], 'verb':'transmogrify'});
+									$target.dialog('open');
+									} 
+								else { 	
+									popup.focus();
+									}
+								},
+							}
+						}, 'immutable');
+					_app.model.dispatchThis('immutable');
+					});
+				},
 
 //gather some information about the browser/computer that submitted the ticket.
 			gatherIntel : function()	{
@@ -345,7 +373,6 @@ var admin_support = function(_app) {
 
 
 		e : {
-
 			platformInfoWatchVideo : function($ele,p)	{
 				var data = $ele.closest("[data-youtubevideoid]").data();
 				if(data.youtubevideoid)	{
