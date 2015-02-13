@@ -1598,31 +1598,29 @@ $('.editable',$container).each(function(){
 							okOrders = new Array(), //list of orders that were retrieved w/out error.
 							prts = new Array(); //list of partitions that the orders belong to. necessary for fetching appopriate blast message.
 						prts.push(0); //the zero partition is used when no partition can be ascertained. Added to array to ensure the default printable message is retrieved.
+						function handleOrder(orderid){
+							$ul.append("<li data-orderid='"+orderid+"'>"+orderid+" - <span class='status'>Fetching<\/span><\s/li>");
+							_app.ext.admin.calls.adminOrderDetail.init(orderid,{callback : function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('error!').end().anymessage(rd);
+									}
+								else	{
+									dump(" -> order fetch callback. orderid: "+orderid);
+									okOrders.push(orderid);
+									if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderid+".our.domain",_app))	{
+										$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('processing...');
+										var dObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',_app.data['adminOrderDetail|'+orderid].our.domain);
+							//										dump(dObj);
+										if(dObj && dObj.PRT >= 0)	{
+											_app.data['adminOrderDetail|'+orderid]._PRT = dObj.PRT; //add this to order in memory for quick lookup in printOrders callback.
+											if($.inArray(dObj.PRT,prts) < 0)	{prts.push(dObj.PRT);}
+											}
+										}
+									}		
+								}},'mutable');
+							}
 						for(var i = 0; i < L; i += 1)	{
-
-function handleOrder(orderid){
-	$ul.append("<li data-orderid='"+orderid+"'>"+orderid+" - <span class='status'>Fetching<\/span><\s/li>");
-	_app.ext.admin.calls.adminOrderDetail.init(orderid,{callback : function(rd){
-		if(_app.model.responseHasErrors(rd)){
-			$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('error!').end().anymessage(rd);
-			}
-		else	{
-			dump(" -> order fetch callback. orderid: "+orderid);
-			okOrders.push(orderid);
-			if(_app.u.thisNestedExists("data.adminOrderDetail|"+orderid+".our.domain",_app))	{
-				$("li[data-orderid='"+orderid+"']",$ul).find('.status').text('processing...');
-				var dObj = _app.ext.admin.u.getValueByKeyFromArray(_app.data.adminDomainList['@DOMAINS'],'DOMAINNAME',_app.data['adminOrderDetail|'+orderid].our.domain);
-	//										dump(dObj);
-				if(dObj && dObj.PRT >= 0)	{
-					_app.data['adminOrderDetail|'+orderid]._PRT = dObj.PRT; //add this to order in memory for quick lookup in printOrders callback.
-					if($.inArray(dObj.PRT,prts) < 0)	{prts.push(dObj.PRT);}
-					}
-				}
-			}		
-		}},'mutable');
-	}
-handleOrder(orders[i]);
-
+							handleOrder(orders[i]);
 							}
 //now fetch the printable message for each partition being used.
 						_app.model.addDispatchToQ({"_cmd":"ping","_tag":{"callback":function(rd){
