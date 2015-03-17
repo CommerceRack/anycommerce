@@ -29,11 +29,11 @@ animation: move-mask infinite running 2s ease;
 }
 #preview img {margin-top: 10%; max-width:85%;}
 
-body{background:url(images/andho15g.jpg) no-repeat fixed center top, #233628;}
+body{background:url(images/andho15g.jpg) no-repeat fixed center top, #003366;}
 .highlightText {color:red;}
-.highlight_1, a.highlight_1{color:#233628;}
+.highlight_1, a.highlight_1{color:#003366;}
 .highlight_2, a.highlight_2{color:#5c6a60;}
-.highlightBG_1 {background: #233628;}
+.highlightBG_1 {background: #003366;}
 .highlightBG_1_alpha {background:rgba(35,54,40,.75);}
 .highlightBG_2 {background: #5c6a60;}
 .redText{color:#7e0000;}
@@ -126,7 +126,7 @@ a.redText{color:#7e0000;}
 	width: 200px;
 	margin-left: -100px;
 	margin-top: -50px;
-	border: 5px solid #233628;
+	border: 5px solid #003366;
 	box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);
 }
 #mainContentArea {position:relative;}
@@ -253,11 +253,11 @@ a.redText{color:#7e0000;}
 .homepageBanner img{vertical-align:middle; max-width: 98%; max-height: 98%;}
 
 .homepageContent p{ font-size: .9em; padding: 0px 12px; text-indent: 12px;}
-.homepageContent {border: 2px solid #233628; padding-bottom: 12px;}
+.homepageContent {border: 2px solid #003366; padding-bottom: 12px;}
 
 .leagueLinkContainer {border-spacing: 5px;}
-.leagueLink {font-size: 3em; border: 3px solid #233628;}
-a.leagueLink:hover {background:#233628; color:white;}
+.leagueLink {font-size: 3em; border: 3px solid #003366;}
+a.leagueLink:hover {background:#003366; color:white;}
 
 a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
@@ -325,7 +325,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 	text-align: left;
 	background:rgba(256,256,256,.8);
 }
-.noResults legend {font-weight: bold; font-size: 1.2em; color: #233628;}
+.noResults legend {font-weight: bold; font-size: 1.2em; color: #003366;}
 .noResults label { width: 100px; display: inline-block; color: black;}
 
 .sliderValContainer {text-decoration: none;}
