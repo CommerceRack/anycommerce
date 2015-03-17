@@ -43,7 +43,7 @@ a.redText{color:#7e0000;}
 .noUnderline, a.noUnderline {text-decoration:none;}
 .blockLink, .blockLink a {text-decoration:none;}
 .bold {font-weight:bold;}
-.white{color:black;}
+.white{color:white;}
 .emph{font-size:1.2em;}
 
 #mainContentArea > div > div, .contentBG {background:rgba(256,256,256,.8);}
