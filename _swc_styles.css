@@ -32,10 +32,10 @@ animation: move-mask infinite running 2s ease;
 body{background: #F0F0F0;) no-repeat fixed center top, #003366;}
 .highlightText {color:red;}
 .highlight_1, a.highlight_1{color:#003366;}
-.highlight_2, a.highlight_2{color:#5c6a60;}
+.highlight_2, a.highlight_2{color:#B3B3B3;}
 .highlightBG_1 {background: #003366;}
 .highlightBG_1_alpha {background:rgba(00,33,66,.75);}
-.highlightBG_2 {background: #5c6a60;}
+.highlightBG_2 {background: #B3B3B3;}
 .redText{color:#7e0000;}
 a.redText{color:#7e0000;}
 .strong{font-weight:bold;}
@@ -43,7 +43,7 @@ a.redText{color:#7e0000;}
 .noUnderline, a.noUnderline {text-decoration:none;}
 .blockLink, .blockLink a {text-decoration:none;}
 .bold {font-weight:bold;}
-.white{color:white;}
+.white{color:black;}
 .emph{font-size:1.2em;}
 
 #mainContentArea > div > div, .contentBG {background:rgba(256,256,256,.8);}
