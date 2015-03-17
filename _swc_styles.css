@@ -29,7 +29,7 @@ animation: move-mask infinite running 2s ease;
 }
 #preview img {margin-top: 10%; max-width:85%;}
 
-body{background: #b3b3b3;) no-repeat fixed center top, #003366;}
+body{background: #F0F0F0;) no-repeat fixed center top, #003366;}
 .highlightText {color:red;}
 .highlight_1, a.highlight_1{color:#003366;}
 .highlight_2, a.highlight_2{color:#5c6a60;}
