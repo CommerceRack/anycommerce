@@ -303,7 +303,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .productInfoSection label {font-weight:bold;}
 .prodPrice .prefix, .prodMSRP .prefix { display:inline-block; width: 100px; }
 .prodPrice .prefix{ color: #333333;}
-.basePrice {color:#e24b2c; font-size: 1.5em;}
+.basePrice {color:#9E0000; font-size: 1.5em;}
 
 .productPage .addtocartbutton{border:none;}
 
