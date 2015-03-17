@@ -257,7 +257,7 @@ a.redText{color:#7e0000;}
 
 .leagueLinkContainer {border-spacing: 5px;}
 .leagueLink {font-size: 3em; border: 3px solid #003366;}
-a.leagueLink:hover {background:#003366; color:white;}
+a.leagueLink:hover {background:#9E0000; color:white;}
 
 a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
