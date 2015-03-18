@@ -8,7 +8,12 @@ _app.u.loadScript(configURI,function(){
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 	_app.vars.secureURL = zGlobals.appSettings.https_app_url;
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
-	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
+	if(document.location.protocol === 'file:' || document.domain == 'localhost' || document.domain == '127.0.0.1'){
+		_app.vars.jqurl = _app.vars.testURL+'jsonapi/';
+		}
+	else {
+		_app.vars.jqurl = '/jsonapi/';
+		}
 	
 	var startupRequires = ['quickstart','store_swc', 'gts.html']
 	
