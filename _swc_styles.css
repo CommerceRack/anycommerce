@@ -29,13 +29,13 @@ animation: move-mask infinite running 2s ease;
 }
 #preview img {margin-top: 10%; max-width:85%;}
 
-body{background:url(images/andho15g.jpg) no-repeat fixed center top, #233628;}
+body{background: #F0F0F0;) no-repeat fixed center top, #003366;}
 .highlightText {color:red;}
-.highlight_1, a.highlight_1{color:#233628;}
-.highlight_2, a.highlight_2{color:#5c6a60;}
-.highlightBG_1 {background: #233628;}
-.highlightBG_1_alpha {background:rgba(35,54,40,.75);}
-.highlightBG_2 {background: #5c6a60;}
+.highlight_1, a.highlight_1{color:#003366;}
+.highlight_2, a.highlight_2{color:#B3B3B3;}
+.highlightBG_1 {background: #003366;}
+.highlightBG_1_alpha {background:rgba(00,33,66,.75);}
+.highlightBG_2 {background: #B3B3B3;}
 .redText{color:#7e0000;}
 a.redText{color:#7e0000;}
 .strong{font-weight:bold;}
@@ -126,7 +126,7 @@ a.redText{color:#7e0000;}
 	width: 200px;
 	margin-left: -100px;
 	margin-top: -50px;
-	border: 5px solid #233628;
+	border: 5px solid #003366;
 	box-shadow:box-shadow: 5px 5px 8px rgba(64,64,64,.5);
 }
 #mainContentArea {position:relative;}
@@ -173,7 +173,7 @@ a.redText{color:#7e0000;}
 	border-left:1px solid white;
 	border-right:1px solid white;
 }
-#nav a:hover {color:#9e0000;}
+#nav a:hover {color:#FFFC00;}
 #mininav a{color:black;}
 #search input{ border-radius:3px; border: 1px solid #b3b3b3;}
 
@@ -253,11 +253,11 @@ a.redText{color:#7e0000;}
 .homepageBanner img{vertical-align:middle; max-width: 98%; max-height: 98%;}
 
 .homepageContent p{ font-size: .9em; padding: 0px 12px; text-indent: 12px;}
-.homepageContent {border: 2px solid #233628; padding-bottom: 12px;}
+.homepageContent {border: 2px solid #003366; padding-bottom: 12px;}
 
 .leagueLinkContainer {border-spacing: 5px;}
-.leagueLink {font-size: 3em; border: 3px solid #233628;}
-a.leagueLink:hover {background:#233628; color:white;}
+.leagueLink {font-size: 3em; border: 3px solid #003366;}
+a.leagueLink:hover {background:#9E0000; color:white;}
 
 a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem.blockLink, .productListItem.blockLink{position:relative;}
@@ -266,7 +266,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .categoryListItem a:hover .catName{color:orange;}
 .productListItem .prodInfo {height: 12%;}
 .productListItem .prodInfo .prodName {padding: 0px 10px;}
-.productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#ff6c4f; font-size: 1.2em;}
+.productListItem .price {position:absolute; bottom: 5px; right: 10px; color:#9E0000; font-size: 1.2em;}
 .productListItem .price > span {color:white; font-size.75em;}
 
 .productListItem.blockLink { padding-bottom: 66px;}
@@ -303,7 +303,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 .productInfoSection label {font-weight:bold;}
 .prodPrice .prefix, .prodMSRP .prefix { display:inline-block; width: 100px; }
 .prodPrice .prefix{ color: #333333;}
-.basePrice {color:#e24b2c; font-size: 1.5em;}
+.basePrice {color:#9E0000; font-size: 1.5em;}
 
 .productPage .addtocartbutton{border:none;}
 
@@ -325,7 +325,7 @@ a.blockLink, li.blockLink {display: inline-block;}
 	text-align: left;
 	background:rgba(256,256,256,.8);
 }
-.noResults legend {font-weight: bold; font-size: 1.2em; color: #233628;}
+.noResults legend {font-weight: bold; font-size: 1.2em; color: #003366;}
 .noResults label { width: 100px; display: inline-block; color: black;}
 
 .sliderValContainer {text-decoration: none;}
