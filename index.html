@@ -51,7 +51,7 @@ if(document.location.protocol == 'file:')	{
 	baseURL  = "";
 	}
 else	{
-	baseURL = document.origin+"/";
+	baseURL = document.location.origin+"/";
 	}
 document.getElementsByTagName('base')[0].href = baseURL;
 </script>
