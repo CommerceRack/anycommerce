@@ -182,17 +182,17 @@
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamUp"><span class="ui-icon ui-icon-triangle-1-n"></span></button>
 		<button class="ui-state-highlight ui-button" data-app-click="store_swc|bumpTeamDown"><span class="ui-icon ui-icon-triangle-1-s"></span></button>
 		-->
-		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';" >
+		<img src="loading1.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';" >
 		<button class="ui-state-highlight ui-button" >-</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 	<li id="validteamTemplate" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team';" data-app-click="store_swc|addteam">
-		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
+		<img src="loading1.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<button class="ui-state-highlight ui-button" >+</button>
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 	<li id="teamListing" class="teamTemplate pointer" data-tlc="bind $var '.v'; apply --attrib='data-swc-team'; bind $pretty '.p'; apply --attrib='data-ga-label';" data-app-click="store_swc|selectUserTeam">
-		<img src="loading.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
+		<img src="loading1.gif" data-tlc="bind $var '.img'; store_swc#imageurl --name=$var --w='85' --h='85' --b='ffffff'; apply --attrib='data-src';">
 		<span data-tlc="bind $name '.p'; apply --append;"></span>
 	</li>
 </ul>
