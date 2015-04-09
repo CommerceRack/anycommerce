@@ -829,7 +829,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<span class="displayNone_1280 displayNone_ 960 displayNone_640 displayNone_480" data-tlc="bind $var '.title'; apply --append;"></span>
 			<span class="displayNone_1280 displayNone_ 960 displayNone_640 displayNone_480 floatRight pointer" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).addClass('active');">Filters...</span>
 		</h2>
-		<ul class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
+		<ul class="filterResults listStyleNone noPadOrMargin alignCenter" data-tlc="bind $var '.results'; if(is $var --notblank;){{legacy#search}};"></ul>
 		<div class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.seo_description'; apply --append;"></div>
 	</div>
 </div>
@@ -995,7 +995,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
-<li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink" data-tlc="bind $var '.prod_name'; apply --attrib='title';">
+<li id="productListTemplateResults" class="alignLeft loadingBG searchResultsProduct productListItem blockLink" data-tlc="bind $var '.prod_name'; apply --attrib='title'; bind $var '.pid'; apply --attrib='data-pid';">
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; set $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
 		<!-- <div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div> -->
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
@@ -1464,12 +1464,17 @@ if you change these, you should move them above this comment so that when you (o
 </ul>
 
 <div id="aboutUsTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea article">
 			<h1 class="" >About Us</h1>
-			<div id="aboutUsContent">
-				<div data-bind="var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;" id="aboutUsContent">
+			<div>
+				<div data-bind="var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;">
 					<p>
 						Sports World Chicago is the online home of our Wrigleyville store, located across from Wrigley Field at the corners of Clark and Addison Streets. Being situated right outside the Wrigley front entrance is great for Chicago Cubs fans who are in town and don't want to pay in-park prices.
 					</p>
@@ -1509,7 +1514,12 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <div id="contactUsTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h1>Contact Information</h1>
@@ -1521,7 +1531,6 @@ if you change these, you should move them above this comment so that when you (o
 			<input name="msgtype" value="feedback" type="hidden">
 			<fieldset>
 				<legend>Contact Us</legend>
-				<div id="contactFormMessaging"></div>
 				<label><span class="prompt">Email Address</span><input name="sender" required type="email" class='alignInput'></label>
 				<label><span class="prompt">Subject</span><input name="subject" required type="text" class='alignInput'></label>
 				<label><span class="prompt">Order ID</span><input name="OID" type="text" class='alignInput'></label>
@@ -1535,17 +1544,28 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <div id="faqTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h1>Frequently Asked Questions</h1>
-			<div class="faqContent ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"></div>
+			<div class="faqContent ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque"
+				data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{bind $var '.'; legacy#faq;}};"></div>
 		</div>
 	</div>
 </div>
 
 <div id="paymentTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h1>Payment Policy</h1>
@@ -1566,7 +1586,12 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <div id="privacyTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h4>Privacy</h4>
@@ -1594,11 +1619,16 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <div id="returnTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h1>Return Policy</h1>
-			<div id="returnContent">
+			<div>
 				<h2>Returns &amp; Exchanges</h2>
 				<p>It's important to us that you're totally pleased with your purchases made at SportsWorldChicago. If you are not happy with your purchase, we are glad to offer a refund or exchange on your item. Also the clothing and hat return policy is below. We recommend that you tracking for your return package, as we can track for lost shipments.  All products come with a 30 day or receiving the item guarantee within the United States, as long as the product is returned to us unused has not been washed and with all price tags still intact in a sellable condition. For outside on the United States you have to e-mail call 888-428-2967 within 10 days to make returned arrangements. 
 				</p>
@@ -1636,11 +1666,16 @@ if you change these, you should move them above this comment so that when you (o
 </div>
 
 <div id="shippingTemplate">
-	<div class="sideline" data-tlc="transmogrify --templateid='companySidelineTemplate'; apply --append;"></div>
+	<div class="sideline" data-tlc="bind $var '.SERVER'; if(is $var --notblank;){{
+			bind $var '.'; template#translate --templateid='companySidelineTemplate' --data=$var;
+			}}
+		else{{
+			bind $var '.'; transmogrify --templateid='companySidelineTemplate'; apply --append;
+			}};"></div>
 	<div class="mainColumn">
 		<div class="textContentArea">
 			<h1>Shipping Information</h1>
-			<div id="shippingContent">
+			<div>
 				<h2>Policies, Terms and Conditions:</h2>
 				<p>The terms, policies and conditions (collectively known as "Conditions") described below govern the use of this site (referred to as "SportsWorldChicago" or "site"). Your use and/or placement of any order indicate your acceptance of these Conditions. SportsWorldChicago of IL. 
 				</p>
@@ -1872,7 +1907,7 @@ if you change these, you should move them above this comment so that when you (o
 
 	<div class="previewListContainer">
 		<!-- productListTemplateResults gets loaded into here -->
-		<ul data-app-role="resultsContainer" class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
+		<ul data-app-role="resultsContainer" data-tlc="bind $var '.results'; if(is $var --notblank;){{legacy#search}};" class="filterResults listStyleNone noPadOrMargin alignCenter"></ul>
 	</div>
 
 </div>
@@ -2244,7 +2279,7 @@ used for store_crm.js
 
 
 
-<section id="faqTopicTemplate">
+<section id="faqTopicTemplate" data-tlc="bind $var '.TOPIC_ID'; apply --attrib='data-topicid';">
 
 	<div class="ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom" data-app-click="quickstart|faqDetailShow">
 	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>

@@ -985,18 +985,22 @@ _app.router.appendInit({
 		if($existingPage.length /*&& $existingPage.attr('data-app-uri') == document.location.pathname*/){
 			//We are a transplanted document, let's load accordingly.
 			//re-attach template handlers
-			var $renderedTemplate = $('[data-templateid]', $existingPage);
-			var templateid = $renderedTemplate.attr('data-templateid');
-			for(var i in _app.templateEvents){
-				var event = _app.templateEvents[i];
-				if(event.filterFunc(templateid)){
-					dump("Attaching event");
-					dump(event);
-					$renderedTemplate.on(event.event, event.handler);
-					}
-				}
+			// var $renderedTemplate = $('[data-templateid]', $existingPage);
+			// var templateid = $renderedTemplate.attr('data-templateid');
+			// console.log("RENDERED:"+templateid);
+			// for(var i in _app.templateEvents){
+				// var event = _app.templateEvents[i];
+				// if(event.filterFunc(templateid)){
+					// dump("Attaching event");
+					// dump(event);
+					// $renderedTemplate.on(event.event, event.handler);
+					// }
+				// }
 			//handleURIChange here will not change the page, but it will execute appropriate events
-			_app.router.handleURIString($existingPage.attr('data-app-uri'), true, {"retrigger" : true});
+			var uri = $existingPage.attr('data-app-uri');
+			$existingPage.empty().remove();
+			_app.router.handleURIString(uri, 'replace');
+			
 			}
 		else if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);
