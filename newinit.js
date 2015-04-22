@@ -1,5 +1,5 @@
 (function(_app){
-var configURI = (document.location.protocol == 'file:') ? _app.vars.testURL+'jsonapi/config.js' : _app.vars.baseURL+'jsonapi/config.js';
+var configURI = (document.location.protocol == 'file:' || document.location.hostname == 'localhost') ? _app.vars.testURL+'jsonapi/config.js' : _app.vars.baseURL+'jsonapi/config.js';
 
 _app.u.loadScript(configURI,function(){
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
