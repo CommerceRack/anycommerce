@@ -2130,7 +2130,7 @@ var store_swc = function(_app) {
 //								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", "players" : ["Jonathan Toews","Patrick Kane","Marian Hossa,"Scott Darling", "Corey Crawford"],
+						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", "players" : ["Jonathan Toews","Patrick Kane","Marian Hossa,"Scott Darling","Corey Crawford"],
 							"filters" : [
 								{"id":"shirts","img":"C/chicago_blackhawks_primary_logo_t_shirt"},
 								{"id":"jerseys","img":"blackhawksshopcom/chicago_blackhawks_youth_premier_home_jersey_by_reebok"},
