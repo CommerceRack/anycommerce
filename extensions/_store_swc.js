@@ -1197,6 +1197,81 @@ var store_swc = function(_app) {
 					"user:app_brands"
 					]
 				},
+			'blackhawks-stanley-cup-2015-shirts' : {
+				noteams : true,
+				title : "",
+				seo_title : "",
+				seo_description : "",
+				baseFilter : {
+					"and" : [
+						{"term" : {"tags":"IS_USER5"}},
+						{"term":{"app_department":"t_shirt"}}
+						]
+					},
+				optionList : [
+					"user:app_prod_demographic",
+					"user:app_t_shirts",
+					"user:app_brands"
+					]
+				},
+			'blackhawks-stanley-cup-2015-jerseys' : {
+				noteams : true,
+				title : "",
+				seo_title : "",
+				seo_description : "",
+				baseFilter : {
+					"and" : [
+						{"term" : {"tags":"IS_USER5"}},
+						{"term":{"app_department":"jersey"}}
+						]
+					},
+				options : {
+					"base_price" : {
+						"min":0,
+						"max":300
+						}
+					},
+				optionList : [
+					"user:app_prod_demographic",
+					"user:app_jerseys",
+					"user:app_jerseys_style",
+					"user:app_jerseys_kind",
+					"user:app_brands"
+					]
+				},
+			'blackhawks-stanley-cup-2015-hats' : {
+				noteams : true,
+				title : "",
+				seo_title : "",
+				seo_description : "",
+				baseFilter : {
+					"and" : [
+						{"term" : {"tags":"IS_USER5"}},
+						{"term":{"app_department":"hat"}}
+						]
+					},
+				optionList : [
+					"user:app_prod_demographic",
+					"user:app_sub_department",
+					"user:app_brands"
+					]
+				},
+			'blackhawks-stanley-cup-2015-souvenirs' : {
+				noteams : true,
+				title : "",
+				seo_title : "",
+				seo_description : "",
+				baseFilter : {
+					"and" : [
+						{"term" : {"tags":"IS_USER5"}},
+						{"term":{"app_department":"souvenir"}}
+						]
+					},
+				optionList : [
+					"user:app_souvenirs",
+					"user:app_brands"
+					]
+				},
 			'all_team_hats' : {
 				noteams : true,
 				title : "Hats for All Teams",
