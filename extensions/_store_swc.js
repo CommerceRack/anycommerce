@@ -803,19 +803,21 @@ var store_swc = function(_app) {
 				if(!elasticsearch.sort){
 					var tmp = {
 						"query" :{
+/*
 							"function_score" : {"filter":elasticsearch.filter}
-/*							"function_score" : {
+*/							
+							"function_score" : {
 								"filter":elasticsearch.filter,
 								"functions" : [
 									{
 										"field_value_factor" : {
-											"field" : "boost"
+											"field" : "booster"
 											}
 										}
 									],
 								"boost_mode" : "sum"
 								}
-*/							},
+							},
 						"facets" : elasticsearch.facets
 						}
 					es = _app.ext.store_search.u.buildElasticRaw(tmp);
