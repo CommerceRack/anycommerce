@@ -1201,9 +1201,9 @@ var store_swc = function(_app) {
 				},
 			'blackhawks-stanley-cup-2015-shirts' : {
 				noteams : true,
-				title : "",
-				seo_title : "",
-				seo_description : "",
+				title : "Chicago Blackhawks 2015 Stanley Cup Playoff Shirts",
+				seo_title : "Chicago Blackhawks 2015 Stanley Cup Playoff Shirts",
+				seo_description : "Chicago Blackhawks Stanley Cup Shirts. We have a huge selection of Chicago Blackhawks Shirts for any Chicago Blackhawks fans. SportsWorldChicag.com has Chicago Blackhawks Stanley Cup Shirts for men, women and kids.",
 				baseFilter : {
 					"and" : [
 						{"term" : {"tags":"IS_USER5"}},
@@ -1218,9 +1218,9 @@ var store_swc = function(_app) {
 				},
 			'blackhawks-stanley-cup-2015-jerseys' : {
 				noteams : true,
-				title : "",
-				seo_title : "",
-				seo_description : "",
+				title : "Chicago Blackhawks 2015 Stanley Cup Playoff Jerseys",
+				seo_title : "Chicago Blackhawks 2015 Stanley Cup Playoff Jerseys",
+				seo_description : "Chicago Blackhawks Stanley Cup Jerseys. We have a huge selection of Chicago Blackhawks Jerseys for any Chicago Blackhawks fans. SportsWorldChicag.com has Chicago Blackhawks Stanley Cup Jerseys for men, women and kids.",
 				baseFilter : {
 					"and" : [
 						{"term" : {"tags":"IS_USER5"}},
@@ -1243,9 +1243,9 @@ var store_swc = function(_app) {
 				},
 			'blackhawks-stanley-cup-2015-hats' : {
 				noteams : true,
-				title : "",
-				seo_title : "",
-				seo_description : "",
+				title : "Chicago Blackhawks 2015 Stanley Cup Playoff Hats",
+				seo_title : "Chicago Blackhawks 2015 Stanley Cup Playoff Hats",
+				seo_description : "Chicago Blackhawks Stanley Cup Hats. We have a huge selection of Chicago Blackhawks Caps for any Chicago Blackhawks fans. SportsWorldChicag.com has Chicago Blackhawks Stanley Cup Hats for men, women and kids.",
 				baseFilter : {
 					"and" : [
 						{"term" : {"tags":"IS_USER5"}},
@@ -1260,9 +1260,9 @@ var store_swc = function(_app) {
 				},
 			'blackhawks-stanley-cup-2015-souvenirs' : {
 				noteams : true,
-				title : "",
-				seo_title : "",
-				seo_description : "",
+				title : "Chicago Blackhawks 2015 Stanley Cup Playoff Souvenirs",
+				seo_title : "Chicago Blackhawks 2015 Stanley Cup Playoff Souvenirs",
+				seo_description : "Chicago Blackhawks Stanley Cup Souvenirs. We have a huge selection of Chicago Blackhawks Souvenirs for any Chicago Blackhawks fans. SportsWorldChicag.com has Chicago Blackhawks Stanley Cup SOuvenirs for men, women and kids.",
 				baseFilter : {
 					"and" : [
 						{"term" : {"tags":"IS_USER5"}},
