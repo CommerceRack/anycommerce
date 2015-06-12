@@ -299,6 +299,14 @@ _app.router.appendHash({'type':'exact','route':'/affiliates/','callback':functio
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
+_app.router.appendHash({'type':'exact','route':'/blackhawks-stanley-cup-2015/','callback':function(routeObj){
+	$.extend(routeObj.params,{
+		'pageType':'static',
+		'templateID':'blackhawksStanleyCupTemplate',
+		'require':['templates.html']
+		});
+	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+	}});
 _app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'static',
