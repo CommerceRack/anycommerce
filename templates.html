@@ -1315,7 +1315,7 @@ this will likely become more flexible in the future. ###
 			if (is $cn --gt='0';){{
 				set $cn 'popup2'; apply --attrib='data-swc-custom-notice';
 				}}; 
-			bind $var '.pid'; store_product#atcform  --legacy; 
+			bind $var '.pid'; apply --attrib='data-pid'; store_product#atcform  --legacy; 
 			apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="modal">
 			<div class="productInfoSection marginBottom">
 				<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
