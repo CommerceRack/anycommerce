@@ -979,7 +979,7 @@ var store_swc = function(_app) {
 						
 					$notice.append($button);
 					
-					$notice.dialog({'modal':'true','title':'Special Event Product Agreement', 'width':400});
+					$notice.dialog({'modal':'true','title':'Special Event Product', 'width':400});
 					}
 				else {
 					_app.ext.quickstart.e.productAdd2Cart($form,p);
