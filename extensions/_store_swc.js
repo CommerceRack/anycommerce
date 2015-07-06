@@ -1377,8 +1377,9 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"t_shirt"}}
 						]
 					},
+				allstar : true,
 				options : {
-					"allstar" : true
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
