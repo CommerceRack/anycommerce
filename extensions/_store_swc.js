@@ -1411,12 +1411,13 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"jersey"}}
 						]
 					},
+				allstar : true,
 				options : {
 					"base_price" : {
 						"min":0,
 						"max":300
 						},
-					"allstar" : true
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
