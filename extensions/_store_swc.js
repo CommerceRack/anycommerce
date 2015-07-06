@@ -1379,7 +1379,7 @@ var store_swc = function(_app) {
 					},
 				options : {
 					"allstar" : true
-					}
+					},
 				optionList : [
 					"user:app_prod_demographic",
 					"user:app_t_shirts",
