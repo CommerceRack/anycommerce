@@ -1377,6 +1377,9 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"t_shirt"}}
 						]
 					},
+				options : {
+					"allstar" : true
+					}
 				optionList : [
 					"user:app_prod_demographic",
 					"user:app_t_shirts",
@@ -1411,7 +1414,8 @@ var store_swc = function(_app) {
 					"base_price" : {
 						"min":0,
 						"max":300
-						}
+						},
+					"allstar" : true
 					},
 				optionList : [
 					"user:app_prod_demographic",

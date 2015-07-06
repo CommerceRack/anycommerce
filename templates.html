@@ -842,6 +842,18 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
 		</div>
 		
+		<div class="filterGroup" data-tlc="bind $var '.options.allstar'; if(is $var --blank;){{apply --tag --remove;}};">
+			<legend class="highlightBG_2">Special Event:</legend>
+			<div class="filterCheckboxList" data-filter-index="tags" data-filter-type="checkboxList">
+				<div data-filter="inputContainer">
+					<label>
+						<input data-filter="filterCheckbox" type="checkbox" name="IS_USER6" />
+						All Star Game
+					</label>
+				</div>
+			</div>
+		</div>
+		
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
 			<legend class="highlightBG_2">My Team: [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">change</span>]:</legend>
 			<div class="myTeamList">
