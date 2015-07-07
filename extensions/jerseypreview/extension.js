@@ -152,6 +152,7 @@ var jerseypreview = function(_app) {
 			"M952-NLAR-NTL-PAS",
 			"390A-HRNL-NTL-PX5R",
 			"390A-HRAL-AML-PX5",
+			"393A-HRNL-NTL-PW5",
 			"CUSTAR2",
 			"CUST13",
 			"CUST14",
