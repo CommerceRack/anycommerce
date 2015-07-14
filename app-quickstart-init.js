@@ -19,7 +19,7 @@ _app.u.loadScript(configURI,function(){
 			//GTS will get applied later
 			}
 		else {
-			_app.ext.store_swc.u.applyGTS();
+			_app.ext.quickstart.u.applyGTS();
 			}
 		});
 	}); //The config.js is dynamically generated.
@@ -94,7 +94,7 @@ _app.couple('quickstart','addPageHandler',{
 	"require" : ['order_create', 'store_crm','extensions/checkout/active.html'],
 	"handler" : function($container, infoObj, require){
 		_app.require(require, function(){
-			_app.ext.order_create.a.showInvoice($container, infoObj.cartID);
+			_app.ext.order_create.a.showInvoice($container, infoObj.cartid);
 			});
 		}
 	});
@@ -170,8 +170,10 @@ _app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.showCo
 _app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'});
 _app.router.appendHash({'type':'exact','route':'/checkout/','callback':'checkout'});
 
-_app.router.addAlias('invoice',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value, $.extend({'pageType' : 'invoice','requireSecure' : true}, routeObj.params, _app.u.getWhitelistedObject(['cartID'], routeObj.searchParams)));});
-_app.router.appendHash({'type':'exact','route':'/invoice','callback':'invoice'});
+_app.router.addAlias('invoice',		function(routeObj){
+	var infoObj = $.extend({'pageType' : 'invoice','requireSecure' : true}, routeObj.params, _app.u.getWhitelistedObject(routeObj.searchParams, ['cartid']));
+	_app.ext.quickstart.a.showContent(routeObj.value, infoObj);
+	});_app.router.appendHash({'type':'exact','route':'/invoice','callback':'invoice'});
 _app.router.appendHash({'type':'exact','route':'/invoice/','callback':'invoice'});
 
 _app.router.addAlias('cart',	function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'cart'}, routeObj.params));});
@@ -696,7 +698,7 @@ _app.router.appendInit({
 			if(pathStr.indexOf('?') >= 0){
 				var arr = pathStr.split('?');
 				pathStr = arr[0];
-				search = arr[1];
+				search = '?'+arr[1];
 				}
 			_app.router.handleURIChange("/"+pathStr, search, false, 'replace');
 			}
