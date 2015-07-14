@@ -827,72 +827,15 @@ has to be within the fieldset to for data-table to work right.
 
 <div id='manageFlexeditTemplate' data-app-role='flexeditManager'>
 <h1>Product Flexedit Manager</h1>
-	
-	<div class='ui-widget twoColumn'>
-		<h3  class='stdPadding ui-widget-header ui-corner-top'>Enabled Attributes</h3>
-		<form class='ui-widget-content ui-corner-bottom stdPadding' data-app-role='flexeditEnabledListContainer' action='#' onSubmit='return false'>
-		
-			<fieldset data-table-role='container'>
-			<table data-app-role='dataTable' class=' fullWidth gridTable flexeditEnabledListContainer'>
-				<tbody data-table-role='content' data-bind="var: flexedit(%flexedit); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" class='connectMe' data-app-role='flexeditEnabledListTbody' ></tbody>
-			</table>
-			
-			<div class='buttonset marginTop alignRight'>
-				<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create' class='applyButton'>Add Custom</button>
-				<!-- <button data-app-click='admin_tools|flexeditSaveExec' class='applyButton'>Save Changes</button> -->
-			</div>
-
-<!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
-			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer' data-table-role='inputs'>
-				<textarea class="fullWidth" name="flexedit-definition" data-bind="useParentData:true; format:popVal; stringify:1;"></textarea>
-				<button data-app-click="admin_tools|flexeditAttributeSave" class="applyButton">Save Attribute</button>
-			</div>
-			</fieldset>
-		</form>
-	</div>
-	
-	
-	<section class='ui-widget twoColumn column2' data-tablefilter-role='container'>
-		<h3 class='stdPadding ui-widget-header ui-corner-top'>Popular Attributes</h3>
-		<div class='ui-widget-content ui-corner-bottom stdPadding flexeditMasterListContainer' data-app-role='flexeditMasterListContainer'>
-			<div class='buttonset'>
-				<input name='tableSearchQuery' type='search' placeholder='filter attributes' x-webkit-speech="x-webkit-speech" data-app-keyup="admin|tableFilter" />
-				<button data-app-click="admin_tools|flexeditAttributesFullListShow" class='applyButton floatRight'>Full Attribute List</button>
-				</div>
-			<p>To enable a new attribute, simply drag it to the 'enabled' list on the left</p>
-			<table class='fullWidth gridTable' data-tablefilter-role='table' data-tablefilter-selector='tr'>
-				<tbody data-bind="var: flexedit(contents); format:processList; loadsTemplate:flexeditAttributeRowTemplate;" data-app-role='flexeditAttributeListTbody'>
-				</tbody>
-			</table>
-
-		</div>
-	</section>
-
+<form onsubmit="return false;" data-app-submit="admin_tools|flexeditSave">
+	<textarea style="width: 100%; height: 500px;"></textarea>
+	<input type="submit" val="Save Flexedit"></input>
+</form>
 
 </div>
 
 
 
-
-
-<table>
-<tr id='flexeditAttributeRowTemplate' data-bind="useParentData:true; format:data; index:flexedit-definition;">
-	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
-	<td class='alignLeft isSearchable'>
-		<div data-bind='var:flexedit(id); format:text;'></div>
-		<div>
-			<span data-bind='var:flexedit(title); defaultVar:flexedit(tag); format:text;'></span>
-			<span data-bind='var:flexedit(index); format:text; pretext:(; posttext:);'></span>
-		</div>
-	</td>
-	<td class='width20 alignRight'>
-		<span data-app-click="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList ui-icon ui-icon-circle-arrow-w pointer' title="Add to Enabled List"></span>
-		<button data-app-click="admin_tools|flexeditAttributeRemove" class='hideInMasterList applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Remove Field</button>
-		<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList applyButton' data-text='false' data-icon-primary="ui-icon-pencil">Update Attribute</button>
-	</td>
-</tr>
-
-</table>
 
 
 
