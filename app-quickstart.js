@@ -1408,6 +1408,10 @@ $target.tlc({
 
 
 		u : {
+			applyGTS : function(){
+				postscribe('#appView', '<script type="text/javascript">'+_app.templates.gtsscript.html()+'</script>');
+				
+				},
 			secureContentLocation : function(path){
 				if(path.indexOf('/') == 0){
 					path = path.substr(1);

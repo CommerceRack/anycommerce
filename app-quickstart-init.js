@@ -10,11 +10,17 @@ _app.u.loadScript(configURI,function(){
 	_app.vars.domain = zGlobals.appSettings.sdomain; //passed in ajax requests.
 	_app.vars.jqurl = (document.location.protocol === 'file:') ? _app.vars.testURL+'jsonapi/' : '/jsonapi/';
 	
-	var startupRequires = ['quickstart'];
+	var startupRequires = ['quickstart', 'gts.html'];
 	
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
+		if(window.location.pathname.indexOf('/invoice') == 0){
+			//GTS will get applied later
+			}
+		else {
+			_app.ext.store_swc.u.applyGTS();
+			}
 		});
 	}); //The config.js is dynamically generated.
 	
@@ -82,7 +88,17 @@ _app.extend({
 	"namespace" : "cco",
 	"filename" : "extensions/cart_checkout_order.js"
 	});
-
+	
+_app.couple('quickstart','addPageHandler',{
+	"pageType" : "invoice",
+	"require" : ['order_create', 'store_crm','extensions/checkout/active.html'],
+	"handler" : function($container, infoObj, require){
+		_app.require(require, function(){
+			_app.ext.order_create.a.showInvoice($container, infoObj.cartID);
+			});
+		}
+	});
+	
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "cart",
 	"require" : ['cco','order_create','templates.html'],
@@ -153,6 +169,10 @@ _app.router.appendHash({'type':'match','route':'/search/keywords/{{KEYWORDS}}*',
 _app.router.addAlias('checkout',	function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'checkout', 'requireSecure':true}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'/checkout','callback':'checkout'});
 _app.router.appendHash({'type':'exact','route':'/checkout/','callback':'checkout'});
+
+_app.router.addAlias('invoice',		function(routeObj){_app.ext.quickstart.a.newShowContent(routeObj.value, $.extend({'pageType' : 'invoice','requireSecure' : true}, routeObj.params, _app.u.getWhitelistedObject(['cartID'], routeObj.searchParams)));});
+_app.router.appendHash({'type':'exact','route':'/invoice','callback':'invoice'});
+_app.router.appendHash({'type':'exact','route':'/invoice/','callback':'invoice'});
 
 _app.router.addAlias('cart',	function(routeObj){_app.ext.quickstart.a.showContent(routeObj.value,	$.extend({'pageType':'cart'}, routeObj.params));});
 _app.router.appendHash({'type':'exact','route':'/cart','callback':'cart'});
