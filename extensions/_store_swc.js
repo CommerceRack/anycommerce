@@ -969,7 +969,7 @@ var store_swc = function(_app) {
 					$notice.dialog({'modal':'true','title':'Custom Product Agreement', 'width':400});
 					}
 				else if($form.attr('data-pid') == 'BH-2015-6'){
-					var $notice = $('<div><div>I Understand the Anticipated Ship Date on This Item is Between July 16 - 28, 2015 (Due to Special Event Item). Selecting Expedited Shipping in NO Way Affects the Lead Time!</div></div>');
+					var $notice = $('<div><div>I Understand the Anticipated Ship Date on This Item is July 22, 2015. Selecting Expedited Shipping in NO Way Affects the Lead Time!</div></div>');
 						
 					var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
 					$button.bind('click',function(){
