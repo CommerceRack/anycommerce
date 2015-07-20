@@ -186,6 +186,12 @@ a.redText{color:#7e0000;}
 	z-index:100;
 }
 
+#GTS_CONTAINER{
+	position: absolute;
+	left:0px;
+	top: -66px;
+}
+
 #toggleFooterBtn{
 	height:40px;
 	width: 40px;
