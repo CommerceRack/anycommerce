@@ -189,7 +189,7 @@ a.redText{color:#7e0000;}
 #GTS_CONTAINER{
 	position: absolute;
 	left:0px;
-	top: -66px;
+	bottom:100%;
 }
 
 #toggleFooterBtn{
