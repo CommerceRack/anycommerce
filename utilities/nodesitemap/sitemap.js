@@ -131,7 +131,7 @@ while (CHUNKS.length>0) {
         URLS = CHUNKS.shift();
         for(var i in URLS) {
                 var url = URLS[i];
-                url = 'http://' + DOMAIN + url;
+                url = 'https://' + DOMAIN + url;
                 xw.startElement("url");
                         xw.startElement("loc").text(url).endElement();
                         xw.startElement("priority").text("1").endElement();
@@ -144,7 +144,7 @@ while (CHUNKS.length>0) {
 
         var FILENAME = 'sitemap-'+DOMAIN+'-'+FILENUM+'.xml';
         si.startElement('sitemap');
-                si.startElement('loc').text( 'http://' + DOMAIN + '/' + FILENAME).endElement();
+                si.startElement('loc').text( 'https://' + DOMAIN + '/' + FILENAME).endElement();
                 si.startElement('lastmod').text(datestr).endElement();
         si.endElement();
         si.writeRaw("\n");
