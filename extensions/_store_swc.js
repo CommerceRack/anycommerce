@@ -955,6 +955,13 @@ var store_swc = function(_app) {
 				},
 			productAdd2Cart : function($form, p){
 				p.preventDefault();
+				var specialEventProducts = [
+					'CUBSARGYLE-AM',
+					'CUBSARGYLE-SM',
+					'CUBSARGYLE-KBM',
+					'CUBSVEST',
+					'SPORTCOAT'
+					]
 				if($form.attr('data-swc-custom-notice')){
 					var $notice = $('<div><div>'+_app.ext.store_swc.vars.customPrompt[$form.attr('data-swc-custom-notice')]+'</div></div>');
 						
@@ -968,7 +975,7 @@ var store_swc = function(_app) {
 					
 					$notice.dialog({'modal':'true','title':'Custom Product Agreement', 'width':400});
 					}
-				else if($form.attr('data-pid') == 'CUBSARGYLE-AM'){
+				else if($.inArray($form.attr('data-pid'), specialEventProducts)){
 					var $notice = $('<div><div>I understand that this made-to-order items take up to 3 weeks for delivery and cannot be cancelled or returned once ordered. Selecting Expedited Shipping in NO Way Affects the Lead Time!</div></div>');
 						
 					var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
