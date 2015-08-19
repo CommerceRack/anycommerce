@@ -1379,7 +1379,7 @@ var store_swc = function(_app) {
 					},
 				allstar : true,
 				options : {
-					"tags" : [{"v":"IS_USER6","p":"All Star Game"}]
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
@@ -1417,7 +1417,7 @@ var store_swc = function(_app) {
 						"min":0,
 						"max":300
 						},
-					"tags" : [{"v":"IS_USER6","p":"All Star Game"}]
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
@@ -1456,7 +1456,8 @@ var store_swc = function(_app) {
 					"base_price" : {
 						"min":0,
 						"max":300
-						}
+						},
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
@@ -1488,6 +1489,9 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"sweatshirt_jacket"}}
 						]
 					},
+				options : {
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
+					},
 				optionList : [
 					"user:app_prod_demographic",
 					"user:app_brands"
@@ -1513,6 +1517,9 @@ var store_swc = function(_app) {
 					},
 				baseFilter : {
 					"term" : {"app_department":"hat"}
+					},
+				options : {
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
 					},
 				optionList : [
 					"user:app_prod_demographic",
@@ -1540,6 +1547,9 @@ var store_swc = function(_app) {
 					},
 				baseFilter : {
 					"term" : {"app_department":"souvenir"}
+					},
+				options : {
+					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Playoffs"}]
 					},
 				optionList : [
 					"user:app_souvenirs",
