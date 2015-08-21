@@ -1640,7 +1640,7 @@ else	{
 	}
 var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($pc);
 $iframe.contents().find('body').append($ele.html());
-$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
+$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .pageBreak:last-child{ page-break-after:auto; } .hide4Print {display:none;}}</style>');
 window.frames["printContainerIframe"].focus();
 window.frames["printContainerIframe"].print();
 
