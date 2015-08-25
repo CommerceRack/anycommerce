@@ -961,6 +961,10 @@ var store_swc = function(_app) {
 					'CUBSARGYLE-KBM',
 					'CUBSVEST',
 					'SPORTCOAT'
+					'CUBSARGYLE-SKM',
+					'CUBSARGYLE-SSM',
+					'CUBSARGYLE-WSM',
+					'CUBSARGYLE-WJM',
 					]
 				if($form.attr('data-swc-custom-notice')){
 					var $notice = $('<div><div>'+_app.ext.store_swc.vars.customPrompt[$form.attr('data-swc-custom-notice')]+'</div></div>');
