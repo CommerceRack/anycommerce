@@ -960,7 +960,7 @@ var store_swc = function(_app) {
 					'CUBSARGYLE-SM',
 					'CUBSARGYLE-KBM',
 					'CUBSVEST',
-					'SPORTCOAT'
+					'SPORTCOAT',
 					'CUBSARGYLE-SKM',
 					'CUBSARGYLE-SSM',
 					'CUBSARGYLE-WSM',
