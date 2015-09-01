@@ -57,10 +57,11 @@ if(opts['customurls']){
 //
 // now load all products and categories
 //
+console.log('running fetch');
 var request = new XMLHttpRequest();
-request.open('GET','http://www.sportsworldchicago.com/jsonapi/call/v201410/appSEOFetch',false);
+request.open('GET','https://www.sportsworldchicago.com/jsonapi/call/v201410/appSEOFetch',false);
 request.send(null);
-
+// console.log(request.responseText);
 var urls = JSON.parse(request.responseText);
 // console.log(urls['@OBJECTS']);
 
