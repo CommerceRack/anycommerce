@@ -1342,9 +1342,11 @@ function getIndexByObjValue(arr,key,value)	{
 								}
 //							_app.u.dump(" -> $select:"); _app.u.dump($select);
 							$tag.append($select.children());
-							if(data.value)	{
-								$tag.val(data.value);
-								}
+							//if(data.value)	{
+							//	$tag.val(data.value);
+							//	}
+							//Not 'if'ing because an empty value should pop it back to the null value
+							$tag.val(data.value);
 							}
 						else	{
 							$tag.parent().anymessage({'message':'You have not created any schedules yet.'})
