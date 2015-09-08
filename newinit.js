@@ -479,6 +479,20 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 						}
 					var optStrs = routeObj.params.dataset.optionList;
 					routeObj.params.dataset.options = routeObj.params.dataset.options || {};
+					for(var i in routeObj.params.dataset.options){
+						console.log(i);
+						console.log(routeObj.searchParams);
+						if(routeObj.searchParams && routeObj.searchParams[i]){
+							var values = routeObj.searchParams[i].split('|');
+							for(var j in routeObj.params.dataset.options[i]){
+								var option = routeObj.params.dataset.options[i][j];
+								if($.inArray(option.v, values) >= 0){
+									option.checked = "checked";
+									}
+								}
+							}
+						}
+					
 					for(var i in optStrs){
 						var o = optStrs[i];
 						if(_app.ext.store_swc.vars.elasticFields[o]){
