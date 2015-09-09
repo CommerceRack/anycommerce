@@ -14,9 +14,9 @@ _app.u.loadScript(configURI,function(){
 	else {
 		_app.vars.jqurl = '/jsonapi/';
 		}
-	
+
 	var startupRequires = ['quickstart','store_swc', 'gts.html']
-	
+
 	if(_robots._robotGreeting){
 		startupRequires.push('seo_robots');
 		}
@@ -28,18 +28,18 @@ _app.u.loadScript(configURI,function(){
 				});
 			}
 		}
-	
+
 	_app.require(startupRequires, function(){
 		setTimeout(function(){$('#appView').removeClass('initFooter');}, 1200);
 		_app.ext.quickstart.callbacks.startMyProgram.onSuccess();
 		console.log('here');
 		if(window.location.pathname.indexOf('/invoice') == 0){
-			
+
 			}
 		else {
 			_app.ext.store_swc.u.applyGTS();
 			}
-		
+
 		_app.model.addDispatchToQ({"_cmd":"appResource","filename":"elastic_public.json","_tag":{"datapointer":"appResource|elastic_public", "callback":"handleElasticFields","extension":"store_swc"}},'mutable');
 		_app.model.dispatchThis('mutable');
 		if(_robots._robotGreeting){
@@ -47,7 +47,7 @@ _app.u.loadScript(configURI,function(){
 			}
 		});
 	}); //The config.js is dynamically generated.
-	
+
 _app.extend({
 	"namespace" : "quickstart",
 	"filename" : "app-quickstart.js"
@@ -112,7 +112,7 @@ _app.couple('quickstart','addPageHandler',{
 			});
 		}
 	});
-	
+
 _app.extend({
 	"namespace" : "cco",
 	"filename" : "extensions/cart_checkout_order.js"
@@ -133,7 +133,7 @@ _app.couple('quickstart','addPageHandler',{
 			//var $cart = $(_app.renderFunctions.createTemplateInstance('cartTemplate',infoObj));
 			var $cart = _app.ext.cco.a.getCartAsJqObj(infoObj);
 			$container.append($cart);
-			
+
 			$cart.on('complete',function(){
 				$("[data-app-role='shipMethodsUL']",$(this)).find(":radio").each(function(){
 					$(this).attr('data-app-change','quickstart|cartShipMethodSelect');
@@ -142,7 +142,7 @@ _app.couple('quickstart','addPageHandler',{
 
 			$cart.trigger(infoObj.trigger,$.extend({'Q':'mutable'},infoObj));
 				_app.model.dispatchThis('mutable');
-			
+
 			// _app.calls.cartDetail.init(_app.model.fetchCartID(),{
 				// 'callback':'tlc',
 				// 'onComplete' : function(){
@@ -242,7 +242,7 @@ _app.u.bindTemplateEvent('faqTemplate','complete.faq',function(event, $context, 
 	dump('in faq complete event');
 	_app.require(['store_crm','templates.html'],function(){
 		_app.ext.store_crm.calls.appFAQsAll.init({'jqObj':$('.faqContent',$context),'deferred':infoObj.deferred,'callback':'showFAQTopics','extension':'store_crm','templateID':'faqTopicTemplate'});
-		_app.model.dispatchThis();			
+		_app.model.dispatchThis();
 		});
 	});
 _app.router.appendHash({'type':'exact','route':'/payment_policy/','callback':function(routeObj){
@@ -277,7 +277,7 @@ _app.router.appendHash({'type':'exact','route':'/shipping_policy/','callback':fu
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
-	
+
 _app.router.appendHash({'type':'exact','route':'/fieldcam/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'static',
@@ -307,6 +307,16 @@ _app.router.appendHash({'type':'exact','route':'/blackhawks-stanley-cup-2015/','
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
+
+_app.router.appendHash({'type':'exact','route':'/cubs_playoff_gear/','callback':function(routeObj){
+    $.extend(routeObj.params,{
+        'pageType':'static',
+        'templateID':'cubsPlayoffGearTemplate',
+        'require':['templates.html']
+        });
+    _app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+    }});
+
 _app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'static',
@@ -339,7 +349,7 @@ _app.router.appendHash({'type':'exact','route':'/national_hockey_league/','callb
 	$.extend(routeObj.params,{'pageType':'category','navcat':'.nhl','templateID':'leagueTemplate'});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
-	
+
 _app.u.bindTemplateEvent('leagueTeamTemplate', 'complete.filterlinks', function(event, $context, infoObj){
 	var data = $.grep(_app.ext.store_swc.validTeams[infoObj.sport], function(e, i){ return e.v == infoObj.team})[0];
 	for(var i in data.filters){
@@ -357,7 +367,7 @@ _app.router.appendHash({'type':'exact','route':'/careers/','callback':function(r
 		'templateID':'categoryTemplateHTML'
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
-	}});	
+	}});
 _app.router.appendHash({'type':'exact','route':'/inquiry/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'category',
@@ -391,7 +401,7 @@ _app.router.appendHash({'type':'match','route':'/search/manufacturer/{{mfg}}*','
 		});
 	_app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
 	}});
-	
+
 _app.router.appendHash({'type':'exact','route':'/my_account/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'static',
@@ -404,7 +414,7 @@ _app.router.appendHash({'type':'exact','route':'/my_account/','callback':functio
 _app.u.bindTemplateEvent('myAccountTemplate','complete.customer',function(event, $context, infoObj){
 	_app.ext.cco.calls.appCheckoutDestinations.init(_app.model.fetchCartID(),{},'mutable'); //needed for country list in address editor.
 	_app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag":{'callback':'tlc','jqObj':$('.mainColumn',$context),'verb':'translate','datapointer':'buyerAddressList'}},'mutable');
-	_app.model.dispatchThis();							
+	_app.model.dispatchThis();
 	});
 _app.router.appendHash({'type':'exact','route':'/change_password/','callback':function(routeObj){
 	$.extend(routeObj.params,{
@@ -431,7 +441,7 @@ _app.u.bindTemplateEvent('changePasswordTemplate','complete.customer',function(e
 		"verb" : "translate",
 		"jqObj" : $("[data-app-role='orderList']",$context).empty()
 		}},"mutable");
-	_app.model.dispatchThis();							
+	_app.model.dispatchThis();
 	});
 _app.router.appendHash({'type':'exact','route':'/my_wishlist/','callback':function(routeObj){
 	$.extend(routeObj.params,{
@@ -444,13 +454,13 @@ _app.router.appendHash({'type':'exact','route':'/my_wishlist/','callback':functi
 	}});
 _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(event, $context, infoObj){
 	_app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag":{"datapointer":"buyerProductLists",'verb':'translate','jqObj': $('.mainColumn',$context),'callback':'tlc',onComplete : function(rd){
-//data formatting on lists is unlike any other format for product, so a special handler is used.				
+//data formatting on lists is unlike any other format for product, so a special handler is used.
 		function populateBuyerProdlist(listID,$context)	{
 			//add the product list ul here because tlc statement has list ID for bind.
 			$("[data-buyerlistid='"+listID+"']",$context).append("<ul data-tlc=\"bind $var '.@"+listID+"'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplateBuyerList'  --legacy;\" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>");
 			_app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : {'datapointer':'buyerProductListDetail|'+listID,"listid":listID,'callback':'buyerListAsProdlist','extension':'quickstart', "require":"store_prodlist",'jqObj':$("[data-buyerlistid='"+listID+"'] ul",$context)}},'mutable');
 			}
-		
+
 		var data = _app.data[rd.datapointer]['@lists']; //shortcut
 		var L = data.length;
 		var numRequests = 0;
@@ -463,10 +473,10 @@ _app.u.bindTemplateEvent('customerListsTemplate','complete.customer',function(ev
 			$('.applyAccordion',rd.jqObj).accordion({heightStyle: "content"});
 			}
 		}}},"mutable");
-	_app.model.dispatchThis();							
+	_app.model.dispatchThis();
 	});
-	
-	
+
+
 _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':function(routeObj){
 	_app.require(['store_swc','seo_robots', 'store_search','store_routing','prodlist_infinite','store_prodlist', 'templates.html'], function(){
 		if(_app.ext.store_swc.filterData[routeObj.params.id]){
@@ -492,7 +502,7 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 								}
 							}
 						}
-					
+
 					for(var i in optStrs){
 						var o = optStrs[i];
 						if(_app.ext.store_swc.vars.elasticFields[o]){
@@ -515,15 +525,15 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 						_app.ext.store_swc.u.setUserTeam({sport:routeObj.searchParams.sport,team:routeObj.searchParams.team}, true);
 						}
 					routeObj.params.dataset.userTeam = _app.ext.store_swc.vars.userTeam;
-					
+
 					if(routeObj.params.dataset.titleBuilder){
 						routeObj.params.dataset.seo_title = routeObj.params.dataset.titleBuilder(routeObj.params.dataset.userTeam.p);
 						}
-						
+
 					if(routeObj.params.dataset.descriptionBuilder){
 						routeObj.params.dataset.seo_description = routeObj.params.dataset.descriptionBuilder(routeObj.params.dataset.userTeam.p);
 						}
-					
+
 					if(routeObj.params.dataset.metaDescriptionBuilder){
 						routeObj.params.dataset.meta_description = routeObj.params.dataset.metaDescriptionBuilder(routeObj.params.dataset.userTeam.p);
 						}
@@ -543,7 +553,7 @@ _app.router.appendHash({'type':'match','route':'/filter/{{id}}*','callback':func
 			}
 		});
 	}});
-	
+
 _app.u.bindTemplateEvent('filteredSearchTemplate', 'complete.filter',function(event, $context, infoObj){
 	$('.closeButton', $context).button({'icons':{"primary":"ui-icon-closethick"}, "text":false});
 	$('form.filterList', $context).data('loadFullList', infoObj.loadFullList);
@@ -571,13 +581,13 @@ _app.u.bindTemplateEvent('filteredSearchTemplate', 'depart.filter',function(even
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(event, $context, infoObj){
 	if(infoObj){
 		var canonical = "";
-		
+
 		var $routeEle = $('[data-canonical]',$context);
 		if($routeEle.length){ canonical = $routeEle.attr('data-canonical'); }
 		else{
 			canonical = $context.closest('[data-app-uri]').attr('data-app-uri');
 			}
-		
+
 		var $canonical = $('link[rel=canonical]')
 		if(!$canonical.length){
 			dump('NO CANONICAL IN THE DOCUMENT');
@@ -587,7 +597,7 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.routing', function(
 		$canonical.attr('href', canonical);
 		}
 	});
-	
+
 _app.extend({
 	"namespace" : "store_tracking",
 	"filename" : "extensions/store_tracking.js"
@@ -626,7 +636,7 @@ _app.couple('order_create','addOrderCompleteHandler',{
 
 				ga('ecommerce:send');
 				_app.u.dump('FINISHED store_tracking.onSuccess (google analytics)');
-				
+
 				for(var i in plugins){
 					if(_app.ext.store_tracking.trackers[i] && _app.ext.store_tracking.trackers[i].enable){
 						_app.ext.store_tracking.trackers[i](order, plugins[i]);
@@ -642,14 +652,14 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.metainformation',fu
 	var defaultTitle = "Chicago Cubs Apparel & Merchandise";
 	var titlePrefix = "";
 	var titlePostfix = " | SportsWorldChicago.com";
-	
+
 	var baseTitle = $('[data-seo-title]', $context).attr('data-seo-title') || defaultTitle;
 	var desc = $('[data-seo-desc]', $context).attr('data-seo-desc') || '';
-	
+
 	document.title = titlePrefix + baseTitle + titlePostfix;
 	$('meta[name=description]').attr('content', desc);
 	});
-	
+
 //Scroll restore
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.scrollrestore',function(event, $context, infoObj){
 	var scroll = $context.data('scroll-restore');
@@ -663,7 +673,7 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.scrollrestore',func
 		//do nothing
 		}
 	});
-	
+
 _app.u.bindTemplateEvent(function(){return true;}, 'depart.scrollrestore', function(event, $context, infoObj){
 	var scroll = $('html').scrollTop()
 	$context.data('scroll-restore',scroll);
@@ -673,7 +683,7 @@ _app.extend({
 	"namespace" : "store_swc",
 	"filename" : "extensions/_store_swc.js"
 	});
-	
+
 _app.u.bindTemplateEvent(function(){return true;}, 'complete.dismissnav',function(event, $context, infoObj){
 	_app.require('store_swc',function(){
 		_app.ext.store_swc.e.dismissNav(null, {preventDefault : function(){}});
@@ -681,13 +691,13 @@ _app.u.bindTemplateEvent(function(){return true;}, 'complete.dismissnav',functio
 	});
 _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event, $context, infoObj){
 	// We only need to run this once
-	//		this will only remove this event from this instance of the template, but the template object itself 
+	//		this will only remove this event from this instance of the template, but the template object itself
 	//		still has the listener.  Any future instances of the template will still have the listener upon creation
 	$context.off('complete.slideshow');
 	var $slideshow = $('.homeSlideshow', $context);
 	$('img[data-src]:not([src])', $slideshow).each(function(){
 		$(this).attr('src', _app.u.makeImage({
-			'name' : $(this).attr('data-src'), 
+			'name' : $(this).attr('data-src'),
 			'b' : $(this).attr('data-bgcolor'),
 			'tag' : false
 			}));
@@ -700,11 +710,11 @@ _app.u.bindTemplateEvent('homepageTemplate', 'complete.slideshow',function(event
 		});
 	});
 
-	
+
 _app.u.bindTemplateEvent('fieldcamTemplate', 'depart.destroy',function(event, $context, infoObj){
 	$('[data-app-uri]', $context).empty().remove();
 	});
-	
+
 _app.u.bindTemplateEvent('productTemplate', 'complete.invcheck',function(event, $context, infoObj){
 	if(!$context.attr('data-invcheck')){
 		$context.attr('data-invcheck','true');
@@ -724,7 +734,7 @@ _app.u.bindTemplateEvent('productTemplate', 'complete.invcheck',function(event, 
 			}
 		}
 	});
-	
+
 _app.extend({
 	"namespace" : "jerseypreview",
 	"filename" : "extensions/jerseypreview/extension.js"
@@ -742,7 +752,7 @@ _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $co
 						if(font){
 							$context.append($("<div class='"+font+"'>Some Text</div>").css({"height": "0px", "overflow":"hidden"}));
 							}
-						
+
 						data.img = $(_app.u.makeImage({
 							name : _app.data[infoObj.datapointer]["%attribs"]["user:jerseypreview_image"],
 							b : "FFFFFF",
@@ -765,7 +775,7 @@ _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $co
 				//report failure?
 				});
 		}
-		
+
 	$('input[name=B5], input[name=B6]', $context).keyup(function(){
 		if($(this).data('timer')){
 			clearTimeout($(this).data('timer'));
@@ -775,27 +785,27 @@ _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $co
 			}, 600));
 		});
 	});
-	
+
 _app.extend({
 	"namespace" : "seo_robots",
 	"filename" : "extensions/_robots.js"
 	});
-	
+
 _app.extend({
 	"namespace" : "store_prodlist",
 	"filename" : "extensions/store_prodlist.js"
 	});
-	
+
 _app.extend({
 	"namespace" : "prodlist_infinite",
 	"filename" : "extensions/prodlist_infinite.js"
 	});
-	
+
 _app.extend({
 	"namespace" : "store_navcats",
 	"filename" : "extensions/store_navcats.js"
 	});
-	
+
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "homepage",
 	"require" : ['store_navcats','templates.html','store_swc','store_routing'],
@@ -810,7 +820,7 @@ _app.couple('quickstart','addPageHandler',{
 			});
 		}
 	});
-	
+
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "category",
 	"require" : ['store_navcats','store_prodlist','prodlist_infinite','templates.html','store_swc','store_routing'],
@@ -827,29 +837,29 @@ _app.couple('quickstart','addPageHandler',{
 			if(infoObj.templateID){}
 			else if(infoObj.templateID = _app.ext.store_swc.u.fetchTemplateForPage(infoObj.navcat)){}
 			else{infoObj.templateID = 'categoryTemplate';}
-			
+
 			//currently this is expected to be resolved by the prodlist_infinite tlc format.  Probably a bad idea.
 			infoObj.prodRenderedDeferred = $.Deferred();
 			infoObj.defPipeline.addDeferred(infoObj.prodRenderedDeferred);
 
 			_app.ext.store_navcats.u.showPage($container, infoObj);
 			});
-						
+
 		}
 	});
-	
+
 _app.extend({
 	"namespace" : "store_search",
 	"filename" : "extensions/store_search.js"
 	});
-	
+
 _app.couple('store_search','addUniversalFilter',{
 	'filter' : {"has_child":{"type":"sku","query":{"range":{"available":{"gte":1}}}}}
 	});
 _app.couple('store_search','addUniversalFilter',{
 	'filter' : {"not":{"term":{"tags":"IS_DISCONTINUED"}}}
 	});
-				
+
 _app.couple('quickstart','addPageHandler',{
 	"pageType" : "search",
 	"require" : ['store_search','templates.html','store_routing'],
@@ -859,10 +869,10 @@ _app.couple('quickstart','addPageHandler',{
 		_app.require(require,function(){
 			_app.ext.store_search.u.showSearch($container, infoObj);
 			});
-						
+
 		}
 	});
-	
+
 _app.extend({
 	"namespace" : "store_product",
 	"filename" : "extensions/store_product.js"
@@ -888,17 +898,17 @@ _app.couple('quickstart','addPageHandler',{
 			});
 		}
 	});
-	
+
 // _app.extend({
 	// "namespace" : "cart_message",
 	// "filename" : "extensions/cart_message/extension.js"
 	// });
-	
+
 _app.extend({
 	"namespace" : "store_crm",
 	"filename" : "extensions/store_crm.js"
 	});
-	
+
 _app.extend({
 	"namespace" : "partner_addthis",
 	"filename" : "extensions/partner_addthis.js"
@@ -921,11 +931,11 @@ _app.u.bindTemplateEvent('productTemplate', 'complete.test', function(event, $co
 			+		'<a class="addthis_button_preferred_8add"></a>'
 			+		'<a class="addthis_button_compact"></a>'
 			+	'</div>');
-		
+
 		_app.ext.partner_addthis.u.toolbox($toolbox, infoObj);
 		}
 	});
-	
+
 _app.rq.push(['script',0,'lightbox/js/lightbox-2.6.min.js']);
 
 _app.model.getGrammar("pegjs");
@@ -935,21 +945,21 @@ _app.model.getGrammar("pegjs");
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 _app.u.appInitComplete = function()	{
 //	_app.u.dump("Executing _appIsLoaded code...");
-	
+
 	_app.ext.order_create.checkoutCompletes.push(function(vars,$checkout){
 		dump(" -> begin checkoutCOmpletes code: "); dump(vars);
-		
+
 		var cartContentsAsLinks = encodeURIComponent(_app.ext.cco.u.cartContentsAsLinks(_app.data[vars.datapointer].order));
-	
-		
-//append this to 
+
+
+//append this to
 		$("[data-app-role='thirdPartyContainer']",$checkout).append("<h2>What next?</h2><div class='ocm ocmFacebookComment pointer zlink marginBottom checkoutSprite  '></div><div class='ocm ocmTwitterComment pointer zlink marginBottom checkoutSprit ' ></div><div class='ocm ocmContinue pointer zlink marginBottom checkoutSprite'></div>");
 		$('.ocmTwitterComment',$checkout).click(function(){
 			window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
 			window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','Tweeted about order');
 			window[_app.vars.analyticsPointer]('send', 'event','Checkout','User Event','Tweeted about order');
 			});
-		//the fb code only works if an appID is set, so don't show banner if not present.				
+		//the fb code only works if an appID is set, so don't show banner if not present.
 		if(_app.u.thisNestedExists("zGlobals.thirdParty.facebook.appId") && typeof FB == 'object')	{
 			$('.ocmFacebookComment',$checkout).click(function(){
 				_app.ext.quickstart.thirdParty.fb.postToWall(cartContentsAsLinks);
@@ -959,7 +969,7 @@ _app.u.appInitComplete = function()	{
 			}
 		else	{$('.ocmFacebookComment').hide()}
 		});
-	
+
 	//Cart Messaging Responses.
 	_app.cmr.push(['chat.join',function(message){
 		if(message.FROM == 'ADMIN')	{
@@ -1022,7 +1032,7 @@ _app.router.appendInit({
 			var uri = $existingPage.attr('data-app-uri');
 			$existingPage.empty().remove();
 			_app.router.handleURIString(uri, 'replace');
-			
+
 			}
 		else if (document.location.hash.indexOf("#!") == 0){
 			var pathStr = document.location.hash.substr(2);
@@ -1041,18 +1051,18 @@ _app.router.appendInit({
 			_app.router.handleURIString('/product/'+g.uriParams.product+'/', 'replace');
 			window[_app.vars.analyticsPointer]('send','event','Arrival','Syndication','product '+g.uriParams.product);
 			}
-		else if(document.location.pathname)	{	
+		else if(document.location.pathname)	{
 			_app.u.dump('triggering handleHash');
-			
+
 			if(_app.router.handleURIChange(document.location.pathname, document.location.search, document.location.hash, true)){
 				//we're good
 				}
 			else{
 				_app.router.handleURIChange("/", document.location.search, document.location.hash, true);
 				_app.u.throwMessage(_app.u.successMsgObject("We're sorry, the page you requested could not be found!"));
-				window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);				
+				window[_app.vars.analyticsPointer]('send', 'event','init','404 event',document.location.href);
 				}
-			
+
 			}
 		else	{
 			_app.router.handleURIChange("/", document.location.search, document.location.hash, true);

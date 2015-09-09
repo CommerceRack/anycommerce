@@ -25,8 +25,8 @@
 			<div><label for='contactFormSubject'>Team: </label><input type='text' name='team' /></div>
 			<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' /></div>
 			<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required'></textarea></div>
-			
-			
+
+
 			<div class='alignRight'>
 				<button onClick="$(this).closest('form').trigger('submit'); return false;" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
 					<span class="ui-button-text">Send Message</span>
@@ -38,7 +38,7 @@
 
 <div id="myTeamChooserTemplate" class="chooser">
 	<h2 class="highlightBG_1">My Team Chooser <span class="closeButton floatRight" data-app-click="store_swc|hideMyTeamChooser"></span></h2>
-	
+
 	<div class="contentContainer positionRelative">
 		<div class="sportChooser alignCenter displayNone_1280 displayNone_960">
 			<div class="pointer selector" data-app-click="store_swc|selectSport" data-swc-sport="app_mlb">
@@ -62,7 +62,7 @@
 			<div class="displayNone_1280 displayNone_960">
 				<div class="backButton" data-app-click="store_swc|selectSport"></div>
 			</div>
-			<!-- 
+			<!--
 			<div class="myteams teamlist">
 				<h4 class="highlightBG_2 white">My MLB Teams <span>[<span class="underline pointer" data-app-click="store_swc|clearTeams">deselect all</span>]</span></h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.userTeams.app_mlb'; if(is $teams --notblank;;){{apply --empty; controller#loop --templateid='myteamTemplate'; apply --append;}};">None Selected</ul>
@@ -70,7 +70,7 @@
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_mlb'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-			</div> 
+			</div>
 			-->
 			<div class="teamlist">
 				<h4 class="highlightBG_2 white">MLB Teams:</h4>
@@ -108,7 +108,7 @@
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nba'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-			</div> 
+			</div>
 			-->
 			<div class="teamlist">
 				<h4 class="highlightBG_2 white">NBA Teams:</h4>
@@ -127,7 +127,7 @@
 			<div class="moreteams teamlist">
 				<h4 class="highlightBG_2 white">Add More:</h4>
 				<ul class="listStyleNone noPadOrMargin" data-tlc="bind $teams '.validTeams.app_nhl'; controller#loop --templateid='validteamTemplate'; apply --append;"></ul>
-			</div> 
+			</div>
 			-->
 			<div class="teamlist">
 				<h4 class="highlightBG_2 white">NHL Teams:</h4>
@@ -135,7 +135,7 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="myTeamPopupContainer">
 		<form class="myTeamPopup" onSubmit="return false;" data-app-submit="store_swc|dismissMyTeamsPopup">
 			<h3>
@@ -144,7 +144,7 @@
 				-->
 				This site is designed to filter search results to help you find <span class="redText">exactly what you're looking for</span>.  Choose the team you're shopping for here to customize your shopping experience!
 			</h3>
-			
+
 			<div class="checkbox">
 				<label><input type="checkbox" name="permaDismiss"/>Do not tell me again on this device</label>
 			</div>
@@ -153,7 +153,7 @@
 			</div>
 		</form>
 	</div>
-	
+
 	<div class="myTeamSelectedContainer" data-templateid="myTeamSelectedTemplate"></div>
 	<div class="myTeamPromptContainer" data-templateid="myTeamPromptTemplate"></div>
 </div>
@@ -203,10 +203,10 @@
 			<img src="images/wrapper/social/Facebook-Icon-Transparent.gif"/>
 		</a>
 		Sports World Chicago is a fun way to to visit your Chicago Cubs Facebook friends.  Don't forget to <a href="https://www.facebook.com/SportsWorldChicago" target="_blank">'Like' us on Facebook</a> for discounts, promotions, contests and more!
-		
+
 		<h4>Why would I want to become a fan of the Sports World Chicago official Facebook page?</h4>
 		We are making every effort to constantly improve ways we can communicate with our fans, friends and followers.  If word of mouth is the best way to get the word out, we are finding Facebook is not far behind when we need to let you know something in real time.
-		
+
 		<h4>What happens if I do not have a need to follow your Facebook page?</h4>
 		You can opt out at any time by clicking UNLIKE on our official Facebook page.
 		<br/>
@@ -367,77 +367,77 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_football_league/">
 			NFL
 		</a>
-		<!-- 
+		<!--
 		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_basketball_association/">
 			NBA
 		</a>
 		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/national_hockey_league/">
 			NHL
-		</a> 
+		</a>
 		-->
 	</div>
-	<!-- 
+	<!--
 	<div class="leagueLinkContainer alignCenter displayTable fillWidth">
 		<a class="leagueLink dosis strong noUnderline displayTableCell highlight_1" href="/blackhawks-stanley-cup-2015/">
 			Chicago Blackhawks 2015 Stanley Cup Champions
 		</a>
 	</div>
 	-->
-		
+
 	<a class="blockLink" href="/filter/blackhawks/">
 		<img data-apptimize="embed" src="images/homepage/test/chicago_blackhawks_banner_sportsworldchicago-v3.png"/>
 	</a>
-	
-	
+
+
 	<a class="blockLink" href="/filter/shirts/">
 		<img data-apptimize="embed" src="images/homepage/test/Chicago-Cubs-Homepage-Square-v3.png"/>
 	</a>
-	
+
 	<a class="blockLink pointer" href="/category/mlb.chicago_cubs.z_ernie_banks/Ernie-Banks/">
 		<img data-apptimize="embed" src="images/homepage/test/Ernie-Banks-Memorial-Homepage-Square-v3.png"/>
 	</a>
-	
+
 	<a class="blockLink" href="/filter/jerseys/?user:app_jerseys_style=custom_personalized">
 		<img data-apptimize="embed" src="images/homepage/test/personalized_jersey_v4-v3.png"/>
 	</a>
-	
+
 	<!--
 	<a class="blockLink" href="/filter/jerseys/?user:app_jerseys_style=custom_personalized">
 		<img data-apptimize="embed" src="images/homepage/personalized.jpg"/>
 	</a>
 	-->
-	
-		
+
+
 	<a class="blockLink" href="/filter/hats/">
 		<img data-apptimize="embed" src="images/homepage/test/caps_v4-v3.png"/>
-	
+
 	</a>
-	
+
 	<a class="blockLink" href="/filter/jerseys/">
 		<img data-apptimize="embed" src="images/homepage/test/2015-Authentic-Jerseys-Banner-v3.png"/>
-	
+
 	</a>
-	
+
 	<a class="blockLink" href="/fieldcam/">
 		<img data-apptimize="embed" src="images/homepage/test/webcam_v4-v3.png"/>
-	
+
 	</a>
-	
+
 	<a class="blockLink pointer" data-app-click="store_swc|showMyTeamChooser">
 		<img data-apptimize="embed" src="images/homepage/test/other_teams_v5-v3.png"/>
-		
+
 	</a>
-	
+
 	<a class="blockLink" href="/product/OLGC2/">
 		<img data-apptimize="embed" src="images/homepage/test/gift_cards_v4-v3.png"/>
-	
+
 	</a>
-	
+
 	<a class="blockLink pointer" href="/filter/bears/">
 		<img data-apptimize="embed" src="images/homepage/Test/Bears2015Square3.png"/>
 	</a>
-	
-	
+
+
 	<!--
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin categoryList"></ul>
 
@@ -449,14 +449,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<ul data-tlc="bind $var '.$listName.@products'; store_prodlist#productlist  --hideSummary='1' --withReviews='1' --withVariations='1' --withInventory='1' --templateid='productListTemplate'  --legacy;" class="listStyleNone fluidList clearfix noPadOrMargin productList"></ul>
 	-->
-	
+
 	<div class="contentBG alignJustify homepageContent">
 		<h1 class="alignCenter white highlightBG_1">Your One Stop Shop For Chicago Cubs Gear in Wrigleyville</h1>
 		<p>
-			SportsWorldChicago.com is the online home to Sports World, a Chicago Cubs, Wrigleyville, clothing and accessories supplier with a great selection and affordable prices.  
-			Our large selection of Chicago Cubs shirts, hats and Chicago Cubs jerseys is just what you need to show your support throughout the season or to proudly display your 
-			team's colors year-round. As one of the most popular retailers of Chicago Cubs apparel, our website is designed to make sure that Cub fans everywhere can get their gear. 
-			SportsWorldChicago.com offers Chicago Cubs merchandise at low prices so you do not need to overspend in order to support your favorite team.  Whether you're looking for 
+			SportsWorldChicago.com is the online home to Sports World, a Chicago Cubs, Wrigleyville, clothing and accessories supplier with a great selection and affordable prices.
+			Our large selection of Chicago Cubs shirts, hats and Chicago Cubs jerseys is just what you need to show your support throughout the season or to proudly display your
+			team's colors year-round. As one of the most popular retailers of Chicago Cubs apparel, our website is designed to make sure that Cub fans everywhere can get their gear.
+			SportsWorldChicago.com offers Chicago Cubs merchandise at low prices so you do not need to overspend in order to support your favorite team.  Whether you're looking for
 			a Cubs hat, an authentic Cubs jersey or any other Cubs apparel, you'll find it at SportsWorldChicago.com. And don't forget our Cubs baby clothing for your little Cubs fans!  Don't forget about our LIVE Wrigley Web Cam so you can always see what's going on around Wrigleyville!
 		</p>
 	</div>
@@ -465,7 +465,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="leagueTemplate" class="">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{bind $var '.%page.meta_description';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+
 	<h1 data-tlc="bind $var '.%page.page_title'; if (is $var --notblank;) {{apply --append;}};"></h1>
 	<p class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='leagueListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
@@ -489,23 +489,70 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="leagueTeamTemplate" class="">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{bind $var '.%page.meta_description';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+
 	<h1 data-tlc="bind $var '.%page.page_title'; if (is $var --notblank;) {{apply --append;}};"></h1>
 	<p class="highlightBG_2 white displayNone_320" data-tlc="bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
-	
+
 	<div class="filterSubcatContainer" data-templateid="leagueTeamFilterULTemplate"></div>
-	
+
+</div>
+
+
+<div id="cubsPlayoffGearTemplate" class="">
+    <span class="displayNone" data-seo-title="Chicago Blackhawks 2015 Stanley Cup Champions T-Shirts, Hats, Jerseys & Clothing"></span>
+    <span class="displayNone" data-seo-description="The Chicago Blackhawks won the Stanley Cup, then celebrated by wearing their Officially Licensed Locker Room T-Shirts and Locker Room Hats on the ice. We are your source for Chicago Blackhawks Stanley Cup Merchandise and Apparel. Buy Officially Licensed Blackhawks 2015 Stanley Cup Champs Gear featuring the same 2015 Blackhawks Locker Room Hats, Caps and T-Shirts you see your Hawks celebrating in after the game."></span>
+
+    <h1>Chicago Blackhawks 2015 Stanley Cup Champions T-Shirts, Caps, Hats, Apparel, Souvenirs & Clothing</h1>
+    <p class="highlightBG_2 white displayNone_320" >
+        Chicago Blackhawks 2015 Stanley Cup Champions Merchandise featuring T-shirts and Hats. We have a huge selection of Chicago Blackhawks Merchandise for any Chicago Blackhawks fans. SportsWorldChicago.com has Chicago Blackhawks Stanley Cup Champions Gear for men, women and kids!
+    </p>
+
+    <div class="filterSubcatContainer" data-templateid="leagueTeamFilterULTemplate">
+        <ul>
+            <li class="categoryListItem blockLink alignLeft">
+                <a href="/filter/shirts/?tags=IS_USER7">
+                    <div class="thumbContainer"><img src="/images/stanleycup/shirts2.jpg" class="catThumb" alt=""></div>
+                    <div class="catName alignCenter highlightBG_1_alpha"><span>Shirts</span></div>
+                </a>
+            </li>
+            <li class="categoryListItem blockLink alignLeft">
+                <a href="/filter/jerseys/?tags=IS_USER7">
+                    <div class="thumbContainer"><img src="/images/stanleycup/jerseys2.jpg" class="catThumb" alt=""></div>
+                    <div class="catName alignCenter highlightBG_1_alpha"><span>Jerseys</span></div>
+                </a>
+            </li>
+            <li class="categoryListItem blockLink alignLeft">
+                <a href="/filter/sweatshirts/?tags=IS_USER7">
+                    <div class="thumbContainer"><img src="/images/stanleycup/jerseys2.jpg" class="catThumb" alt=""></div>
+                    <div class="catName alignCenter highlightBG_1_alpha"><span>Sweatshirts</span></div>
+                </a>
+            </li>
+            <li class="categoryListItem blockLink alignLeft">
+                <a href="/filter/hats/?tags=IS_USER7">
+                    <div class="thumbContainer"><img src="/images/stanleycup/hats2.jpg" class="catThumb" alt=""></div>
+                    <div class="catName alignCenter highlightBG_1_alpha"><span>Hats</span></div>
+                </a>
+            </li>
+            <li class="categoryListItem blockLink alignLeft">
+                <a href="/filter/souvenirs/?tags=IS_USER7">
+                    <div class="thumbContainer"><img src="/images/stanleycup/souvenirs2.jpg" class="catThumb" alt=""></div>
+                    <div class="catName alignCenter highlightBG_1_alpha"><span>Souvenirs</span></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
 </div>
 
 <div id="blackhawksStanleyCupTemplate" class="">
 	<span class="displayNone" data-seo-title="Chicago Blackhawks 2015 Stanley Cup Champions T-Shirts, Hats, Jerseys & Clothing"></span>
 	<span class="displayNone" data-seo-description="The Chicago Blackhawks won the Stanley Cup, then celebrated by wearing their Officially Licensed Locker Room T-Shirts and Locker Room Hats on the ice. We are your source for Chicago Blackhawks Stanley Cup Merchandise and Apparel. Buy Officially Licensed Blackhawks 2015 Stanley Cup Champs Gear featuring the same 2015 Blackhawks Locker Room Hats, Caps and T-Shirts you see your Hawks celebrating in after the game."></span>
-	
+
 	<h1>Chicago Blackhawks 2015 Stanley Cup Champions T-Shirts, Caps, Hats, Apparel, Souvenirs & Clothing</h1>
 	<p class="highlightBG_2 white displayNone_320" >
 		Chicago Blackhawks 2015 Stanley Cup Champions Merchandise featuring T-shirts and Hats. We have a huge selection of Chicago Blackhawks Merchandise for any Chicago Blackhawks fans. SportsWorldChicago.com has Chicago Blackhawks Stanley Cup Champions Gear for men, women and kids!
 	</p>
-	
+
 	<div class="filterSubcatContainer" data-templateid="leagueTeamFilterULTemplate">
 		<ul>
 			<li class="categoryListItem blockLink alignLeft">
@@ -534,7 +581,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</li>
 		</ul>
 	</div>
-	
+
 </div>
 
 <ul id="leagueTeamFilterULTemplate" data-tlc="bind $sport '.sport'; apply --attrib='data-sport';
@@ -547,17 +594,17 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<div class="cam1" data-tlc="bind $html '.cam1'; apply --append;"></div>
 	<div class="cam2" data-tlc="bind $html '.cam2'; apply --append;"></div>
 	<div class="clear"></div>
-	
+
 	<p>
-		SportsWorldChicago.com has one of the only Live Web Cameras in Wrigleyville at the corner of Clark and Addison Streets.  Directly across from Wrigley Field, 
+		SportsWorldChicago.com has one of the only Live Web Cameras in Wrigleyville at the corner of Clark and Addison Streets.  Directly across from Wrigley Field,
 		home of the Chicago Cubs, you can always see night and day what is happening at the epicenter of baseball in Chicago.
 	</p>
 
-		Be sure to browse through SportsWorldChicago.com to shop for all your <a href="/filter/shirts/">Chicago Cubs shirts</a> and Wrigley Field hats.  
-		Sports World has one of the largest selections of <a href="/filter/hats/">Cubs caps and hats</a>, plus all <a href="/filter/jerseys/">Chicago Cubs authentic jerseys</a> 
+		Be sure to browse through SportsWorldChicago.com to shop for all your <a href="/filter/shirts/">Chicago Cubs shirts</a> and Wrigley Field hats.
+		Sports World has one of the largest selections of <a href="/filter/hats/">Cubs caps and hats</a>, plus all <a href="/filter/jerseys/">Chicago Cubs authentic jerseys</a>
 		and on-field merchandise needed to make you a true Chicago Cubs fan!
 	</p>
-	
+
 	<!--
 	<iframe width="650" scrolling="no" height="366" frameborder="0" src="https://ssl.earthcam.com/js/cubworld.php" marginwidth="0" marginheight="0"></iframe>
 	<object width="650" height="480" align="middle" id="metro_cam_player_01" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000"><param value="sameDomain" name="allowScriptAccess"><param value="https://ssl.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000" name="movie"><param value="high" name="quality"><param value="#000000" name="bgcolor"><embed width="650" height="480" align="middle" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" allowscriptaccess="sameDomain" name="metro_cam_player_01" bgcolor="#000000" quality="high" src="http://www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000"></object>
@@ -591,7 +638,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<br/>3. Get Approved
 			<br/>4. Get Links and Start Earning Today!
 			<p>
-			For questions or feedback e-mail us at 
+			For questions or feedback e-mail us at
 			<a href="mailto:CustomerService@SportsWorldChicago.com" title="CustomerService@SportsWorldChicago.com" class="wikilink wikilink_url">CustomerService@SportsWorldChicago.com</a>.
 			We can also be easily contacted at 844-GO-CHICAGO (844-462-4422).
 		</div>
@@ -607,7 +654,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<h2>Get Paid Quickly</h2>
 			With Sports World's affiliate network you will be paid on a monthly basis provided that the total commission due to you at the end of each calendar month is equal to or greater than $20. Commissions less than $20 will be carried into the next month until you reach $20.
 		</div>
-			
+
 	</div>
 </div>
 
@@ -622,8 +669,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div><label for='contactFormSubject'>Team: </label><input type='text' name='team' /></div>
 			<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' /></div>
 			<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required'></textarea></div>
-			
-			
+
+
 			<div class='alignRight'>
 				<button onClick="$(this).closest('form').trigger('submit'); return false;" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
 					<span class="ui-button-text">Send Message</span>
@@ -637,7 +684,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="rewardsTemplate">
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
-	
+
 	<img alt="" data-apptimise="embed" src="images/sportsworldpages/rewards/cw_c_rewardshead-320x49.png" border="0" height="49" width="320">
 	<form class="floatRight" action="#" data-app-submit="store_swc|accountLoginSubmit" onSubmit="return false;">
 		<div class="alignCenter">
@@ -675,7 +722,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/Enjoy-Savings-Banner-Transparent.gif" height="31" width="331">
 	</div>
 	<div data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{apply --append;}};" class="description"></div>
-		
+
 	<div class="clear marginTop">
 		<table border="0" cellpadding="0" cellspacing="0" width="100%">
 			<tbody>
@@ -688,14 +735,14 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 					<td class="ztable_row" valign="top" width="50%">
 						<div data-tlc="bind $var '.%page.description2'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" class="description"></div>
 					</td>
-				
+
 
 					<!-- <td valign="top" width="1%">
 						<div style="margin-top:-4px; position:relative; z-index:10;">
 							<img data-apptimize="embed" alt="" src="images/sportsworldpages/groupsales/cw09_c_groups_bg-20x130.gif" height="130" width="20">
 						</div>
 					</td> -->
-				
+
 					<td width="50%">
 						<form data-app-submit="store_swc|sendGroupRequest" onSubmit="return false;" name="contact_form">
 						<input value="Group Sales Contact Form" name="subject" type="hidden">
@@ -732,7 +779,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</tr>
 			</tbody></table>
 	</div>
-	
+
 	<!-- <div class="marginTop">
 		<div class="floatLeft halfScreen ztxt description" data-bind="var:category(%page.description3); format:wiki; wikiFormats:myRIA;"></div>
 		<div class="floatRight halfScreen alignCenter">
@@ -752,7 +799,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<span class="displayNone" data-tlc="bind $var '.%page.page_title'; if(is $var --null;){{bind $var '.pretty';}}; if(is $var --blank;){{bind $var '.pretty';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%page.description'; if(is $var --null;){{bind $var '.%page.description2';}}; if(is $var --null;){{set $var '';}}; apply --attrib='data-seo-desc';"></span>
 	<ul data-tlc="bind $var '.path'; store_navcats#breadcrumb  --templateid='breadcrumbTemplate'  --legacy;" class="breadcrumb clearfix noPadOrMargin fluidList"></ul>
-	
+
 	<p data-tlc="bind $var '.%page.description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 </div>
 
@@ -786,10 +833,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<p class="displayNone" data-tlc="bind $name '.%page.player_name';if(is $name --null;){{apply --show --tag;}}; bind $team '.%page.team_name'; if(is $team --null;){{apply --show --tag;}}; bind $var '.%page.meta_description'; if (is $var --notblank;) {{ render --wiki='quickstart'; apply --append;}};"></p>
 	<p data-tlc="bind $name '.%page.player_name'; if(is $name --null;){{apply --hide --tag;}}; bind $team '.%page.team_name'; if(is $team --null;){{apply --hide --tag;}};">
-		Browse below for your authentic <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jersey. 
-		Select from home, road, or any of our other <span data-tlc="bind $team '.%page.team_name'; apply --append;"></span> jersey styles. 
-		We also have a wide selection of <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> Shirt options, for when you need to slip into something a little more comfortable. 
-		All of our <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jerseys, shirts and other apparel is officially licensed MLB gear! 
+		Browse below for your authentic <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jersey.
+		Select from home, road, or any of our other <span data-tlc="bind $team '.%page.team_name'; apply --append;"></span> jersey styles.
+		We also have a wide selection of <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> Shirt options, for when you need to slip into something a little more comfortable.
+		All of our <span data-tlc="bind $name '.%page.player_name'; apply --append;"></span> jerseys, shirts and other apparel is officially licensed MLB gear!
 	</p>
 	<ul data-tlc="bind $var '.@subcategoryDetail'; store_navcats#categorylist  --detail='max' --templateid='categoryListTemplate'  --legacy;" class="listStyleNone alignCenter clearfix noPadOrMargin"></ul><!-- outputs a list of subcategories -->
 
@@ -802,10 +849,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id="filteredSearchTemplate" data-filter-page="parent" class="filteredSearchPage positionRelative noBG">
 	<span class="displayNone" data-tlc="bind $var '.seo_title'; if(is $var --notblank;){{apply --attrib='data-seo-title';}};"></span>
 	<span class="displayNone" data-tlc="bind $var '.meta_description'; if(is $var --notblank;){{apply --attrib='data-seo-desc';}};"></span>
-	
+
 	<form class="filterList highlightBG_1 floatLeft" data-tlc="bind $bf '.baseFilter'; stringify; apply --attrib='data-filter-base';" data-app-submit="store_swc|execFilteredSearch" onSubmit="return false;">
 		<span class="displayNone_1280 displayNone_960 displayNone_640 displayNone_480 closeButton floatRight" onClick="$('.filterList',$(this).closest('.filteredSearchPage')).removeClass('active');"></span>
-		
+
 		<div class="filterGroup">
 			<select data-filter-type="sort" data-app-change="store_swc|execFilteredSearch">
 				<option>Sort By...</option>
@@ -813,18 +860,18 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<option data-filter-sort-attribute="base_price" data-filter-sort-direction="desc">Price (desc)</option>
 			</select>
 		</div>
-		
+
 		<div class="filterGroup countHideImmune" data-tlc="bind $var '.options.base_price'; if(is $var --blank;){{apply --tag --remove;}};">
 			<legend class="highlightBG_2">Price:</legend>
 			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
 		</div>
-		
+
 		<div class="filterGroup" data-tlc="bind $var '.allstar'; store_swc#dump; if(is $var --blank;){{apply --tag --remove;}};">
 			<legend class="highlightBG_2">Special Event:</legend>
 			<div class="filterCheckboxList" data-filter-index="tags" data-filter-type="checkboxList" data-tlc="
 				set $index 'tags';bind $cbl '.options.tags'; store_swc#filtercheckboxlist --index=$index;
 				">
-				<!-- 
+				<!--
 				<div data-filter="inputContainer">
 					<label>
 						<input data-filter="filterCheckbox" type="checkbox" name="IS_USER6" />
@@ -840,7 +887,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				-->
 			</div>
 		</div>
-		
+
 		<div class="filterGroup countHideImmune" data-filter-type="checkboxList" data-tlc="bind $rf '.noteams'; if(is $rf --notblank;){{apply --tag --remove;}};">
 			<legend class="highlightBG_2">My Team: [<span class="underline pointer" data-app-click="store_swc|showMyTeamChooser">change</span>]:</legend>
 			<div class="myTeamList">
@@ -853,7 +900,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div class="filterCheckboxList myTeamsFilter" data-tlc="bind $index '.userTeam.sport'; bind $team '.userTeam'; store_swc#myteamcheckbox --index=$index;"></div>
 			</div>
 		</div>
-		
+
 		<div data-tlc="bind $var '.options.user:app_prod_demographic'; if(is $var --blank){{apply --hide;}};" class="filterGroup">
 			<legend class="highlightBG_2">Demographic:</legend>
 			<div class="filterCheckboxList" data-tlc="bind $index '.options.user:app_prod_demographic.index';bind $cbl '.options.user:app_prod_demographic.options'; store_swc#filtercheckboxlist --index=$index;"></div>
@@ -937,9 +984,9 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id="categoryListTemplate" class="categoryListItem blockLink alignLeft">
-	<a data-tlc="bind $title '.%page.page_title'; 
+	<a data-tlc="bind $title '.%page.page_title';
 					if(is $title --null;){{bind $title '.pretty';}};
-					if(is $title --blank;){{bind $title '.pretty';}}; 
+					if(is $title --blank;){{bind $title '.pretty';}};
 					bind $parent '.'; store_routing#seoanchor  --seo=$title; apply --attrib='href';" >
 		<div class="thumbContainer"><img data-tlc="bind $var '.%meta.CAT_THUMB'; if (is $var --notblank){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="catThumb" alt=""></div>
 		<div class="catName alignCenter highlightBG_1_alpha"><span data-tlc="bind $var '.pretty'; quickstart#cattext  --legacy;"></span></div>
@@ -978,7 +1025,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 				<span data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --notblank;) {{ format --currency='USD'; apply --append;}};" ></span>
 			</h5>
 		</div>
-		<!-- 
+		<!--
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
 		-->
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
@@ -1008,12 +1055,12 @@ container ul should have lineItemProdlist class on it instead of productList
 		<h6 data-tlc="bind $var '.%attribs.zoovy:base_price';  if (is $var --notblank;) {{format --currency='USD'; format --prepend='Our Price: ';  apply --append;}};"></h6>
 
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite"></span>
-	
+
 		<form data-tlc="bind $var '.pid'; store_product#atcform  --legacy; apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="quickstart|productAdd2Cart" data-show="modal">
-	
+
 			<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 			<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='0' --legacy;" class="borderNone"></fieldset>
-	
+
 			<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy; apply --append;" value="Add to Cart" class="applyButton addtocartbutton displayNone" type="submit">
 		</form>
 
@@ -1037,7 +1084,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				</div>
 			</div>
 		</div>
-		
+
 		<span data-tlc="bind $var '.reviews.average'; if(is $var --notblank) {{format --prepend='review_'; apply --add --class=$var; }};" class="reviewSprite floatRight"></span>
 
 		<h5 data-tlc="bind $var '.%attribs.zoovy:prod_name'; if (is $var --notblank;) {{apply --append;}};"></h5>
@@ -1067,7 +1114,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; set $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';">
 		<!-- <div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div> -->
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb">
-		
+
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.prod_name'; bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
 			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" >
@@ -1082,7 +1129,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 	<a data-tlc="bind $pid '.pid'; bind $seo '.prod_name'; set $href ''; store_routing#productlink --pid=$pid --seo=$seo; apply --attrib='href';" itemprop="url">
 		<!-- <div data-tlc="bind $var '.tags'; if(is $var --notblank;){{ quickstart#tags --legacy; }};" class="tagsContainer prodListTagsContainer"></div> -->
 		<img data-tlc="bind $var '.images.0'; if(is $var --notblank;){{store_swc#imageurl --name=$var --w=310 --h=310 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodThumb" itemprop="image">
-		
+
 		<div class="prodInfo highlightBG_1_alpha">
 			<h6 class="prodName" data-tlc="bind $orig '.prod_name'; bind $var '.prod_name'; if (is $var --notblank;) {{format --truncate='54';apply --append;}}; if(is $var --ne=$orig;){{set $e '&#8230;'; apply --append; }};"></h6>
 			<h5 class="alignRight price" data-tlc="bind $var '.base_price'; if (is $var --blank;) {{ apply --hide --tag;}};" itemprop="offers" itemscope itemtype="http://schema.org/Offer" >
@@ -1141,15 +1188,15 @@ this will likely become more flexible in the future. ###
 	<!-- <span class="displayNone" data-tlc=""></span> -->
 	<span class="displayNone" data-tlc="bind $var '.%attribs.zoovy:prod_seo_title'; if(is $var --blank;){{bind $var '.%attribs.zoovy:prod_name';}}; apply --attrib='data-seo-title';"></span>
 	<span class="displayNone" data-tlc="bind $var '.%attribs.zoovy:prod_desc'; apply --attrib='data-seo-desc';"></span>
-	
+
 	<h1 class="dosis productTitle marginBottom" data-tlc="bind $var '.%attribs.zoovy:prod_name'; apply --append;" itemprop="name"></h1>
-	
+
 	<div class="productImages">
 		<div class="pointer clearfix positionRelative alignCenter">
 			<a data-tlc="
-				bind $href '.%attribs.zoovy:prod_image1'; 
+				bind $href '.%attribs.zoovy:prod_image1';
 				if(is $href --notblank;) {{
-					store_swc#imageurl --name=$href --b='ffffff'; 
+					store_swc#imageurl --name=$href --b='ffffff';
 					apply --attrib='href';
 					bind $pid '.pid';
 					format --prepend='prodPage_';
@@ -1157,25 +1204,25 @@ this will likely become more flexible in the future. ###
 				}};" class="prodThumb" href="#">
 				<div class="imgContainer positionRelative">
 					<canvas class="prodPreviewer displayNone" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';"></canvas>
-					
+
 					<!-- OLD PROD TAGS -->
 					<!-- <div data-tlc="bind $var '.%attribs.zoovy:prod_is_tags'; quickstart#tags --legacy;" class="tagsContainer prodListTagsContainer"></div> -->
 
-					
+
 					<img class="displayNone_320 displayNone_480 displayNone_640" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=550 --h=550 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 					<img class="displayNone_960 displayNone_1280" data-tlc="bind $var '.%attribs.zoovy:prod_image1'; if(is $var --notblank){{store_swc#imageurl --name=$var --w=400 --h=400 --b='ffffff'; apply --attrib='src';}};" src="blank.gif" class="prodBigImage" alt="" itemprop="image" />
 				</div>
 			</a>
 			<div class="productTagsContainer displayNone" data-tlc="
-				bind $length '.%attribs.zoovy:prod_is_tags'; 
+				bind $length '.%attribs.zoovy:prod_is_tags';
 				set $length $length --split=',';
 				format --length;
 				store_swc#dump;
 				if (is $length --gt='0';){{
 					apply --show --tag;
-					bind $var '.%attribs.zoovy:prod_is_tags'; 
+					bind $var '.%attribs.zoovy:prod_is_tags';
 					set $var $var --split=',';
-					controller#loop --templateid='productTagTemplate'; 
+					controller#loop --templateid='productTagTemplate';
 					apply --append;
 					}};
 				"></div>
@@ -1211,15 +1258,15 @@ this will likely become more flexible in the future. ###
 			</a>
 		</div>
 
-		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid'; 
-						bind $img '.%attribs.zoovy:prod_image2'; 
+		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';
+						bind $img '.%attribs.zoovy:prod_image2';
 						if(is $img --blank;){{ bind $img '.%attribs.zoovy:prod_image3';}};
 						if(is $img --blank;){{ bind $img '.%attribs.zoovy:prod_image4';}};
 						if(is $img --blank;){{apply --hide;}};" class="prodThumbs displayTable fillWidth">
 			<a data-tlc="
-				bind $href '.%attribs.zoovy:prod_image2'; 
+				bind $href '.%attribs.zoovy:prod_image2';
 				if(is $href --notblank;) {{
-					store_swc#imageurl --name=$href --b='ffffff'; 
+					store_swc#imageurl --name=$href --b='ffffff';
 					apply --attrib='href';
 					bind $pid '.pid';
 					format --prepend='prodPage_';
@@ -1228,9 +1275,9 @@ this will likely become more flexible in the future. ###
 				<img data-tlc="bind $var '.%attribs.zoovy:prod_image2'; store_swc#imageurl --name=$var --w=232 --h=232 --b='ffffff'; apply --attrib='src';" src="blank.gif" />
 			</a>
 			<a data-tlc="
-				bind $href '.%attribs.zoovy:prod_image3'; 
+				bind $href '.%attribs.zoovy:prod_image3';
 				if(is $href --notblank;) {{
-					store_swc#imageurl --name=$href --b='ffffff'; 
+					store_swc#imageurl --name=$href --b='ffffff';
 					apply --attrib='href';
 					bind $pid '.pid';
 					format --prepend='prodPage_';
@@ -1239,9 +1286,9 @@ this will likely become more flexible in the future. ###
 				<img data-tlc="bind $var '.%attribs.zoovy:prod_image3'; store_swc#imageurl --name=$var --w=232 --h=232 --b='ffffff'; apply --attrib='src';" src="blank.gif" />
 			</a>
 			<a data-tlc="
-				bind $href '.%attribs.zoovy:prod_image4'; 
+				bind $href '.%attribs.zoovy:prod_image4';
 				if(is $href --notblank;) {{
-					store_swc#imageurl --name=$href --b='ffffff'; 
+					store_swc#imageurl --name=$href --b='ffffff';
 					apply --attrib='href';
 					bind $pid '.pid';
 					format --prepend='prodPage_';
@@ -1262,7 +1309,7 @@ this will likely become more flexible in the future. ###
 			<h5 data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; if (is $var --blank;) {{apply --hide --tag;}};">More Products By: <a data-tlc="bind $var '.%attribs.zoovy:prod_mfg'; apply --append; bind $href '.%attribs.zoovy:prod_mfg'; format --uriencode; format --prepend='?search/manufacturer/'; apply --attrib='href';" itemprop="manufacturer"></a></h5>
 			<div class="clear"></div>
 		</div>
-	
+
 		<div class="productInfoSection priceContainer marginBottom" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
 			<h4 data-tlc="bind $var '.%attribs.zoovy:base_price'; if (is $var --blank;) {{apply --hide --tag;}};" class="prodPrice">
 				<span class="prefix">Our Price:</span>
@@ -1274,12 +1321,12 @@ this will likely become more flexible in the future. ###
 				<span data-tlc="
 					bind $var '.%attribs.zoovy:prod_msrp';
 					if (is $var --notblank;) {{
-						format --currency='USD'; 
+						format --currency='USD';
 						apply --append;
 					}};">
 				</span>
 				<span class="savings" data-tlc="
-					bind $price '.%attribs.zoovy:base_price'; 
+					bind $price '.%attribs.zoovy:base_price';
 					bind $msrp '.%attribs.zoovy:prod_msrp';
 					bind $savings '.%attribs.zoovy:prod_msrp';
 					math --sub=$price --div=$msrp --mult='100' --precision='0';
@@ -1291,47 +1338,47 @@ this will likely become more flexible in the future. ###
 			</h4>
 			<span class="displayNone" itemprop="availability" data-tlc="bind $var '.pid'; store_swc#schemaavailability; apply --append;"></span>
 		</div>
-		
-		
-		
+
+
+
 		<table class="marginBottom fullWidth gridTable" data-app-role="childrenSiblingsContainer">
 			<tbody data-tlc="bind $var '.%attribs.zoovy:grp_children'; store_prodlist#productlist  --hideSummary='true' --withInventory='1' --withVariations='1' --templateid='productListTemplateChildren'  --legacy; apply --append;"></tbody>
 		</table>
 		<form data-tlc="
-			bind $phone '.%attribs.user:prod_phoneorder_only'; 
-			if(is $phone --gt='0';){{ 
+			bind $phone '.%attribs.user:prod_phoneorder_only';
+			if(is $phone --gt='0';){{
 				apply --hide --tag;
-				}}; 
-			bind $cn '.%attribs.is:user3'; 
+				}};
+			bind $cn '.%attribs.is:user3';
 			if (is $cn --gt='0';){{
 				set $cn 'popup1'; apply --attrib='data-swc-custom-notice';
 				}};
-			bind $cn '.%attribs.user:popup1'; 
+			bind $cn '.%attribs.user:popup1';
 			if (is $cn --gt='0';){{
 				set $cn 'popup1'; apply --attrib='data-swc-custom-notice';
 				}};
-			bind $cn '.%attribs.user:popup2'; 
+			bind $cn '.%attribs.user:popup2';
 			if (is $cn --gt='0';){{
 				set $cn 'popup2'; apply --attrib='data-swc-custom-notice';
-				}}; 
-			bind $var '.pid'; apply --attrib='data-pid'; store_product#atcform  --legacy; 
+				}};
+			bind $var '.pid'; apply --attrib='data-pid'; store_product#atcform  --legacy;
 			apply --append;" class="prodViewerAddToCartForm clearfix" action="#" data-app-submit="store_swc|productAdd2Cart" data-show="modal">
 			<div class="productInfoSection marginBottom">
 				<fieldset data-tlc="bind $var '.pid'; store_product#atcvariations  --legacy; apply --append;" class="borderNone"></fieldset>
 				<fieldset data-tlc="bind $var '.'; store_product#atcquantityinput  --defaultvalue='1' --legacy;" class="borderNone"><label class="label_select">Qty: </label></fieldset>
 			</div>
-	
+
 			<div class="productInfoSection marginBottom alignCenter_320">
 				<input data-tlc="bind $var '.pid'; store_product#addtocartbutton  --legacy;" value="" class="applyButton addtocartbutton displayNone" type="submit" />
 			</div>
 		</form>
 		<div class="displayNone productInfoSection marginBottom" data-tlc="bind $phone '.%attribs.user:prod_phoneorder_only'; if(is $phone --gt='0';){{ apply --show --tag;}};">
-			Due to NFL restrictions, this item is <strong class="redText">available by phone order only</strong>. 
-			Call 888-428-2967 or 
-				<span class="pointer redText underline" data-app-click="store_swc|showPhoneOrderForm" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';">click here</span> 
+			Due to NFL restrictions, this item is <strong class="redText">available by phone order only</strong>.
+			Call 888-428-2967 or
+				<span class="pointer redText underline" data-app-click="store_swc|showPhoneOrderForm" data-tlc="bind $pid '.pid'; apply --attrib='data-pid';">click here</span>
 			to contact us - we will get in touch with you shortly.
 		</div>
-		
+
 	</div>
 
 	<div class="productTabs">
@@ -1340,7 +1387,7 @@ this will likely become more flexible in the future. ###
 		or the tab clicked won't open the right content.
 		It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
 		-->
-		
+
 		<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="prodTabs tabbedProductContent applyAnytabs">
 			<ul class="tabs">
 				<li class="prodDescTab"><a href="#prodDesc">Description</a></li>
@@ -1353,24 +1400,24 @@ this will likely become more flexible in the future. ###
 			<div class="tabContent alignJustify" data-anytab-content="prodDesc">
 				<div data-tlc="bind $var '.%attribs.zoovy:prod_desc'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};" itemprop="description"></div>
 			</div>
-			
+
 			<div class="tabContent" data-anytab-content="prodShare">
 				<div class="socialLinks"></div>
 			</div>
-			
+
 			<div class="tabContent" data-anytab-content="prodSpecs">
 				<div data-tlc="bind $var '.%attribs.zoovy:prod_detail'; if (is $var --notblank;) {{render --wiki='quickstart'; apply --append;}};"></div>
 			</div>
-		
+
 			<div class="tabContent" data-anytab-content="prodReviews">
-		
+
 				<div data-tlc="bind $var '.pid'; apply --attrib='data-pid';" class="clearfix alignRight">
 					<button class="applyButton" data-app-click="store_crm|productReviewShow">Write Review</button>
 				</div>
 
 				<ul data-tlc="bind $var '.reviews.@reviews'; controller#loop --templateid='productReviewsTemplateDetail'; if (is $var --notblank;) {{apply --append;}};" class="listStyleNone clearfix productReviewsList"></ul>
 			</div>
-		
+
 			<div class="tabContent" data-anytab-content="prodVideo">
 				<div data-tlc="bind $var '.%attribs.youtube:videoid'; controller#youtubevideo --legacy;"></div>
 			</div>
@@ -1380,9 +1427,9 @@ this will likely become more flexible in the future. ###
 			</div>
 
 		</div>
-	
+
 	</div>
-	
+
 	<div class="clear">
 		<h3>You May Also Like:</h3>
 		<ul class="prodlistRelated alignCenter listStyleNone noPadOrMargin"  data-tlc="store_swc#relatedproducts"></ul>
@@ -1467,7 +1514,7 @@ this will likely become more flexible in the future. ###
 			We couldn't find the page you were looking for (<span data-tlc="bind $var '.route'; apply --append;"></span>)
 		</p>
 		<p class="displayNone" data-tlc="bind $var '.errmsg'; if(is $var --notblank;){{apply --show --tag; apply --append;}};">
-			We reached an error trying to reach this page: 
+			We reached an error trying to reach this page:
 		</p>
 		<h4>May we suggest:</h4>
 		<div><a href="/">Home</a></div>
@@ -1550,7 +1597,7 @@ if you change these, you should move them above this comment so that when you (o
 						We are a store for all fans, carrying Cubs and Wrigley Field apparel for men, women and kids of all ages. We are constantly updating our inventory of authentic Cubs jerseys, shirts, hats, and more, and also have a wide selection of Cubs accessories and fun novelties, gifts, and Cubs souvenirs.
 					</p>
 					<p>
-						As one of the most popular retailers of Chicago Cubs apparel, merchandise and gifts, selling officially licensed goods by Major League Baseball and huge Cubs fans ourselves, we hope Sports World Chicago can become your store of choice for all your Chicago Cubs needs so you can support your lovable team all year long.  
+						As one of the most popular retailers of Chicago Cubs apparel, merchandise and gifts, selling officially licensed goods by Major League Baseball and huge Cubs fans ourselves, we hope Sports World Chicago can become your store of choice for all your Chicago Cubs needs so you can support your lovable team all year long.
 					</p>
 					<p>
 						Go Cubs!
@@ -1639,11 +1686,11 @@ if you change these, you should move them above this comment so that when you (o
 			<h1>Payment Policy</h1>
 			<div>
 				<h2>Credit Cards</h2>
-				<p>We accept the following credit cards: Visa, MasterCard, American Express, and Discover. There is no surcharge for using your credit card to make purchases with SportsWorldChicago Online. Please be sure to provide your exact billing address and telephone number (i.e. the address and phone number your credit card bank has on file for you). Incorrect information will cause a delay in processing your order. Your credit card will be billed upon shipment of your order. 
+				<p>We accept the following credit cards: Visa, MasterCard, American Express, and Discover. There is no surcharge for using your credit card to make purchases with SportsWorldChicago Online. Please be sure to provide your exact billing address and telephone number (i.e. the address and phone number your credit card bank has on file for you). Incorrect information will cause a delay in processing your order. Your credit card will be billed upon shipment of your order.
 				</p>
 
 				<h2>Taxes</h2>
-				<p>SportsWorldChicago.com shall automatically charge and withhold the applicable sales tax for orders to be delivered to addresses within the state of Illinois and to California. For orders shipped to other states, please check for all local sales taxes or other taxes. 
+				<p>SportsWorldChicago.com shall automatically charge and withhold the applicable sales tax for orders to be delivered to addresses within the state of Illinois and to California. For orders shipped to other states, please check for all local sales taxes or other taxes.
 				</p>
 				<h2>Authorize.net</h2>
 				<p>You can shop at SportsWorldChicago with confidence.  We have partnered with Authorize.Net, a leading payment gateway since 1996, to offer safe and secure credit card transactions for our customers.  The Authorize.Net Payment Gateway manages the complex routing of sensitive customer information through the credit card processing network.  The company adheres to strict industry standards for payment processing, including: 128-bit Secure Sockets Layer (SSL) technology for secure Internet Protocol (IP) transactions.  Industry leading encryption hardware and software methods and security protocols to protect customer information.  Compliance with the Payment Card Industry (PCI) Data Security Standard. For additional information regarding the privacy of your sensitive cardholder data, please read the.  SportsWorldChicago is registered with the Authorize.Net Verified Merchant Seal program.
@@ -1667,7 +1714,7 @@ if you change these, you should move them above this comment so that when you (o
 				We keep your personal information private and secure. When you make a purchase from our site, you provide your name, email address, credit card information, address, phone number, and a password. We use this information to process your orders, to keep you updated on your orders and to personalize your shopping experience.
 			</p>
 			<p>
-				Our secure servers protect your information using advanced encryption techniques and firewall technology. 
+				Our secure servers protect your information using advanced encryption techniques and firewall technology.
 			</p>
 			<p>
 				To keep you informed about our latest offers, we may notify you of current promotions, specials and new additions to the Cubworld Online site. You may unsubscribe from our newsletters by following the unsubscribe instructions in any email you receive from us.
@@ -1676,11 +1723,11 @@ if you change these, you should move them above this comment so that when you (o
 				When entering any of our contests or prize drawings, you provide your name, email address and mailing address. If you win, we will send the prize to the address entered and notify you by email. When you enter a contest or drawing you are also included in our newsletter list to receive notice of promotions, specials and new additions to the Cubworld Online site. You may unsubscribe from this news list by following the unsubscribe instructions in any email received.
 			</p>
 			<p>
-				We use "cookies" to keep track of your current shopping session to personalize your experience and so that you may retrieve your shopping cart at any time. 
+				We use "cookies" to keep track of your current shopping session to personalize your experience and so that you may retrieve your shopping cart at any time.
 			</p>
 			<h4>Privacy on Other Web Sites</h4>
 			<p>
-				Other sites accessible through our site have their own privacy policies and data collection practices. Please consult each site's privacy policy. Cubworld Online is not responsible for the actions of third parties. 
+				Other sites accessible through our site have their own privacy policies and data collection practices. Please consult each site's privacy policy. Cubworld Online is not responsible for the actions of third parties.
 			</p>
 		</div>
 	</div>
@@ -1698,7 +1745,7 @@ if you change these, you should move them above this comment so that when you (o
 			<h1>Return Policy</h1>
 			<div>
 				<h2>Returns &amp; Exchanges</h2>
-				<p>It's important to us that you're totally pleased with your purchases made at SportsWorldChicago. If you are not happy with your purchase, we are glad to offer a refund or exchange on your item. Also the clothing and hat return policy is below. We recommend that you tracking for your return package, as we can track for lost shipments.  All products come with a 30 day or receiving the item guarantee within the United States, as long as the product is returned to us unused has not been washed and with all price tags still intact in a sellable condition. For outside on the United States you have to e-mail call 888-428-2967 within 10 days to make returned arrangements. 
+				<p>It's important to us that you're totally pleased with your purchases made at SportsWorldChicago. If you are not happy with your purchase, we are glad to offer a refund or exchange on your item. Also the clothing and hat return policy is below. We recommend that you tracking for your return package, as we can track for lost shipments.  All products come with a 30 day or receiving the item guarantee within the United States, as long as the product is returned to us unused has not been washed and with all price tags still intact in a sellable condition. For outside on the United States you have to e-mail call 888-428-2967 within 10 days to make returned arrangements.
 				</p>
 
 				<ul>
@@ -1718,7 +1765,7 @@ if you change these, you should move them above this comment so that when you (o
 				</p>
 
 				<h2>Hat Return Policy</h2>
-				<p>All hats must be in a box (at least 4 inches deep - we recommend reusing the box that the hat was originally shipped in). Any hats shipped in bags, enveloped, or boxes not deep enough to maintain the shape of the hat will be refused because the hat that become crushed or lose their shape in transit to us and cannot be resold in this condition. 
+				<p>All hats must be in a box (at least 4 inches deep - we recommend reusing the box that the hat was originally shipped in). Any hats shipped in bags, enveloped, or boxes not deep enough to maintain the shape of the hat will be refused because the hat that become crushed or lose their shape in transit to us and cannot be resold in this condition.
 				</p>
 
 
@@ -1745,31 +1792,31 @@ if you change these, you should move them above this comment so that when you (o
 			<h1>Shipping Information</h1>
 			<div>
 				<h2>Policies, Terms and Conditions:</h2>
-				<p>The terms, policies and conditions (collectively known as "Conditions") described below govern the use of this site (referred to as "SportsWorldChicago" or "site"). Your use and/or placement of any order indicate your acceptance of these Conditions. SportsWorldChicago of IL. 
+				<p>The terms, policies and conditions (collectively known as "Conditions") described below govern the use of this site (referred to as "SportsWorldChicago" or "site"). Your use and/or placement of any order indicate your acceptance of these Conditions. SportsWorldChicago of IL.
 				</p>
 
 
 				<h2>Shipping Policy</h2>
-				<p>Shipping Time -- Most orders received before 3:00PM will ship the same day, provided the product ordered is available. Most orders received after 3:00 PM will ship the next business day. Orders are not shipped on Sunday, except by prior arrangement. 
+				<p>Shipping Time -- Most orders received before 3:00PM will ship the same day, provided the product ordered is available. Most orders received after 3:00 PM will ship the next business day. Orders are not shipped on Sunday, except by prior arrangement.
 				</p>
 
 				<p>
-				We cannot guarantee when an order will arrive. Consider any shipping or transit time offered to you by SportsWorldChicago or other parties only as an estimate. We encourage you to order in a timely fashion to avoid delays caused by shipping or product availability. 
+				We cannot guarantee when an order will arrive. Consider any shipping or transit time offered to you by SportsWorldChicago or other parties only as an estimate. We encourage you to order in a timely fashion to avoid delays caused by shipping or product availability.
 				</p>
 				<h2>Order Acceptance Policy</h2>
-				<p>Your receipt of an electronic or other form of order confirmation does not signify our acceptance of your order, nor does it constitute confirmation of our offer to sell. SportsWorldChicago reserves the right at any time after receipt of your order to accept or decline your order for any reason or to supply less than the quantity you ordered of any item. 
+				<p>Your receipt of an electronic or other form of order confirmation does not signify our acceptance of your order, nor does it constitute confirmation of our offer to sell. SportsWorldChicago reserves the right at any time after receipt of your order to accept or decline your order for any reason or to supply less than the quantity you ordered of any item.
 				</p>
 
 
 				<h2>Unavailable Products</h2>
-				<p>We will ship your product as it becomes available. Usually, products ship the same day if ordered by 3:00PM , or by the next business day if your order is received after this time and for orders received on Saturday, Sunday or any major holiday. However, there may be times when the product you have ordered is unavailable which will delay fulfilling your order. We will keep you informed of any products that you have ordered that are unavailable and unavailable for immediate shipment. You may cancel your order at any time prior to shipping. 
+				<p>We will ship your product as it becomes available. Usually, products ship the same day if ordered by 3:00PM , or by the next business day if your order is received after this time and for orders received on Saturday, Sunday or any major holiday. However, there may be times when the product you have ordered is unavailable which will delay fulfilling your order. We will keep you informed of any products that you have ordered that are unavailable and unavailable for immediate shipment. You may cancel your order at any time prior to shipping.
 				</p>
 				<h2>Multiple Product Orders</h2>
-				<p>For a multiple product order, we will make every attempt to ship all products contained in the order at the same time. Products that are unavailable at the time of shipping will be shipped as they become available, unless you inform us otherwise. You will only be charged for products contained in a given shipment, plus any applicable shipping charges. You will only be charged for shipping at the rate quoted to you on your purchase receipt. The entirety of this shipping charge may be applied to the first product(s) shipped on a multiple shipment order. 
+				<p>For a multiple product order, we will make every attempt to ship all products contained in the order at the same time. Products that are unavailable at the time of shipping will be shipped as they become available, unless you inform us otherwise. You will only be charged for products contained in a given shipment, plus any applicable shipping charges. You will only be charged for shipping at the rate quoted to you on your purchase receipt. The entirety of this shipping charge may be applied to the first product(s) shipped on a multiple shipment order.
 				</p>
 
 				<h2>Typographical Errors</h2>
-				<p>In the event a product is listed at an incorrect price due to typographical error or error in pricing information received from our suppliers, SportsWorldChicago Online shall have the right to refuse or cancel any orders placed for product listed at the incorrect price. SportsWorldChicago Online shall have the right to refuse or cancel any such orders whether or not the order has been confirmed and your credit card charged. If your credit card has already been charged for the purchase and your order is canceled, SportsWorldChicago Online shall immediately issue a credit to your credit card account in the amount of the incorrect price 
+				<p>In the event a product is listed at an incorrect price due to typographical error or error in pricing information received from our suppliers, SportsWorldChicago Online shall have the right to refuse or cancel any orders placed for product listed at the incorrect price. SportsWorldChicago Online shall have the right to refuse or cancel any such orders whether or not the order has been confirmed and your credit card charged. If your credit card has already been charged for the purchase and your order is canceled, SportsWorldChicago Online shall immediately issue a credit to your credit card account in the amount of the incorrect price
 				</p>
 
 
@@ -2094,7 +2141,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 		<input name="coupon" type="text">
 		<button class="applyButton" type="submit">Go!</button>
 	</form>
-	
+
 	<h3>Shipping:</h3>
 
 	<form class="cartZipCodeContainer marginBottom" onsubmit="return false;" data-app-submit="cco|cartZipUpdateExec">
@@ -2108,7 +2155,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 
 <section class="marginBottom">
 
-	
+
 
 </section>
 
@@ -2120,12 +2167,12 @@ This is the template used both within a dialog and inline, unless implicitly ove
 				<span class='thisButton' title="proceed to secure checkout">
 					<span class="applyButton ui-state-highlight checkoutButton" data-app-click="store_swc|checkoutOptionsShow">Checkout with...</span>
 				</span>
-			
+
 				<span class='thisButton' title="keep shopping">
 					<a class="applyButton" href='/'>Keep Shopping</a>
 				</span>
 			</div>
-			
+
 			<div class="displayNone optionContainer checkoutOptions">
 				<span class='thisButton' title="proceed to secure checkout">
 					<a class="applyButton ui-state-highlight checkoutButton" href='/checkout/'>Store Checkout</a>
@@ -2133,9 +2180,9 @@ This is the template used both within a dialog and inline, unless implicitly ove
 				<span data-tlc="bind $var '.cart.cartid'; cco#paypalecbutton  --legacy;" class="thisButton"></span>
 				<span data-tlc="bind $var '.cart.cartid'; cco#checkoutbyamazonbutton;" class="thisButton"></span>
 			</div>
-			
-	
-	
+
+
+
 		</div>
 
 	</div>
@@ -2422,7 +2469,7 @@ The 'data-action' attribute is used to assign an onclick.
 		<button data-app-click="quickstart|execOrder2Cart" class="applyButton" data-text="false" data-icon-primary="ui-icon-arrowrefresh-1-w">Re-order</button>
 		<button data-app-click="order_create|execInvoicePrint" class="applyButton" data-text="false" data-icon-primary="ui-icon-print">Print Invoice</button>
 		</div>
-	
+
 		<h3 data-tlc="bind $var '.order.flow.pool'; format --prepend='Order Status: '; if (is $var --notblank;) {{apply --append;}};"></h3>
 		<h5 data-tlc="bind $var '.order.sum.order_total'; format --prepend='Order Total: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="orderTotal"></h5>
 		<h5 data-tlc="bind $var '.order.sum.balance_due_total'; format --prepend='Balance Due: '; format --currency='USD'; if (is $var --notblank;) {{apply --append;}};" class="balanceDue"></h5>
