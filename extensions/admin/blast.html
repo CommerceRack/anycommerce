@@ -12,32 +12,32 @@
 					<li class='lookLikeLink' data-setting='systemmacros' data-app-click="admin_blast|adminBlastSettingsEdit">System Macros</li>
 				</ul>
 			</div>
-		
+
 			<h2>Order</h2>
 			<div>
 				<ul data-app-role="blastmessages_ORDER" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+
 			<h2>Customer</h2>
 			<div>
 				<ul data-app-role="blastmessages_CUSTOMER" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+
 			<h2>Product</h2>
 			<div>
 				<ul data-app-role="blastmessages_PRODUCT" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+
 			<h2>Ticket</h2>
 			<div>
 				<ul data-app-role="blastmessages_TICKET" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-	
+
 			<h2>Printables</h2>
 			<div>
 				<ul data-app-role="blastmessages_PRINTABLE" class='noPadOrMargin listStyleNone'></ul>
 			</div>
-<!--	
+<!--
 			<h2>Supply Chain</h2>
 			<div>
 				<ul data-app-role="blastmessages_SUPPLY" class='noPadOrMargin listStyleNone'></ul>
@@ -46,12 +46,12 @@
 		</div>
 
 	</section>
-	
+
 	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
 		<div class='ui-widget-content ui-corner-all stdPadding slimLeftContentContainer clearfix' data-app-role='slimLeftContentContainer'>
 		<!-- page contents will go here -->
-		
-		
+
+
 		</div>
 	</section>
 
@@ -74,19 +74,19 @@
 				<input name='from_email' type='email' data-tlc="bind $var '.%BLAST.from_email'; apply --select=$var;" />
 				<span class='toolTip' title="Will be used for all outbound blast messages unless a blast specific 'from' address is provided.">?</span>
 			</label>
-			
+
 		</fieldset>
 		<!-- a container is necessary around this button for positioning of the menu -->
 		<div class='buttonset marginBottom'>
 			<button class='applyButton ' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
-		</div>		
-		
+		</div>
+
 		</form>
 	</section>
-	
+
 	<section data-app-role='propertiesContainer'>
-	
-	
+
+
 	</section>
 
 
@@ -96,7 +96,7 @@
 
 <div id='blastMessageAddTemplate'>
 	<form action='#' data-app-submit='admin_blast|adminBlastMsgCreateExec' novalidate>
-	
+
 	<fieldset class='labelsAsBreaks'>
 		<label>
 			<span class='prompt'>Message type</span>
@@ -157,11 +157,11 @@
 		</label>
 
 		<div>
-			find customer id by email 
+			find customer id by email
 			<input type='email' name='emailForSearch' />
 			<button class='applyButton' data-text='false' data-icon-primary='ui-icon-search' data-app-click="admin_blast|adminBlastCustomerFind">search</button>
 		</div>
-	
+
 	</div>
 
 	</fieldset>
@@ -180,7 +180,7 @@
 
 	<form action='#' data-app-submit='admin|submitForm' novalidate='novalidate'>
 	<input type='hidden' name='MSGID'  data-tlc="bind $var '.%MSG.MSGID'; apply --select=$var;"  />
-	
+
 	<input type='hidden' name='_cmd' value='adminBlastMsgUpdate' />
 	<input type='hidden' name='_tag/callback' value='showMessaging' />
 	<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
@@ -191,7 +191,7 @@
 		<button data-app-role='saveButton' class='applyButton floatRight'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight applyButton' data-text='true' data-app-click='admin_blast|adminBlastMsgSendTestShow'>Send Test</button>
 		<button data-app-click="admin_blast|adminBlastMsgRemoveConfirm" class='applyButton toolTip' data-text='true' data-icon-primary='ui-icon-trash' data-tlc="bind $var '.%MSG.MSGID'; apply --attrib='data-msgid';" title="Remove a custom message or restore a system message to it's default content.">Remove/Restore</button>
-		
+
 	</div>
 
 
@@ -205,7 +205,7 @@
 		</ul>
 
 		<fieldset data-anytab-content='email'>
-		
+
 			<label>
 				<span>From</span>
 				<!-- don't make this required. it'll default to a global address -->
@@ -215,7 +215,7 @@
 				<span>bcc</span>
 				<input type='text' name='%META.email_bcc' maxlength="100" data-tlc="bind $var '.%MSG.%META.email_bcc'; apply --select=$var;" />
 			</label>
-		
+
 		</fieldset>
 
 		<fieldset data-anytab-content='message'>
@@ -230,7 +230,7 @@
 				<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
 			</label>
 			</div>
-			
+
 			<label>
 				<span>Message</span>
 				<textarea name='BODY' rows='10' required='required' data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
@@ -254,21 +254,21 @@
 
 
 		</fieldset>
-		
+
 		<fieldset data-anytab-content='push' class='alignedLabels labelsAsBreaks alignedInputs'>
-		
+
 			<label>
 				<span>Properties</span>
 				<textarea name='%META.properties' rows='10' data-tlc="bind $var '.%MSG.%META.properties'; apply --select=$var;"></textarea>
-			</label>		
-		
-		
+			</label>
+
+
 		</fieldset>
 
-	</div>	
+	</div>
 		<!--
 	to: email, GCM(google cloud messaging), APNS (apple push notification) ADN
-	based on selection, shows appropriate input. 
+	based on selection, shows appropriate input.
 	for test, send type  'EMAIL' or 'CUSTOMER' and then EMAIL='something@somewhere.com' or CUSTOMER=CID
 -->
 	</form>
@@ -332,14 +332,14 @@
 		</label>
 
 	</fieldset>
-	
+
 	<fieldset data-app-role='blastToolMsgContent'  class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
 	<!-- any content that is message specific (should get changed when msgid changes) should be within this fieldset -->
 		<label>
 			<span>Subject:</span>
 			<input type='text' name='SUBJECT' required='required' maxlength="100" data-tlc="bind $var '.%MSG.SUBJECT'; apply --select=$var;" />
 		</label>
-		
+
 		<label>
 			<span>Message:</span>
 			<textarea name='BODY' rows='10' required='required'  data-tlc="bind $var '.%MSG.BODY'; apply --select=$var;"></textarea>
@@ -370,7 +370,7 @@
 	</label>
 	<label>
 		<span>Macro ID</span>
-		<input type='text' name='MACROID' required='required' value='' data-tlc="bind $var '.MACROID'; apply --select=$var;" data-format-rules='blastMacroMacroID' data-input-keyup="format" data-input-format='uppercase' />
+		<input type='text' name='MACROID' required='required' value='' data-tlc="bind $var '.MACROID'; apply --select=$var;" data-format-rules='blastMacroMacroID' data-input-keyup="format" data-input-format='uppercase' maxlength="15"/>
 		<span class='toolTip' title="This is the value that will be substituted in the body of the message. ex: %ORDERID%. Must begin and end with a percent sign and contain no other special characters or spaces.">?</span>
 	</label>
 	<label>
@@ -434,7 +434,7 @@
 
 <fieldset class='alignedLabels'>
 	<legend>Partition Macros</legend>
-	
+
 	<label>
 		<span>%DOMAIN%</span>
 		<input type='text' name='PRT.DOMAIN' value='' data-tlc="bind $var '.%PRT.DOMAIN'; apply --select=$var;" />
