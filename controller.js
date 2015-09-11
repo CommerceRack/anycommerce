@@ -3347,6 +3347,7 @@ $tmp.empty().remove();
 				else	{
 //the value here could be checked, on, 1 or some other string. if the value is set (and we won't get this far if it isn't), check the box.
 					$tag.prop({'checked':true,'defaultChecked':true});
+					if($tag.data('anycb')){ $tag.anycb('update'); }
 					}
 				}
 			else if($tag.is(':radio'))	{
