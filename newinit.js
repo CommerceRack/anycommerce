@@ -317,6 +317,37 @@ _app.router.appendHash({'type':'exact','route':'/cubs_playoff_gear/','callback':
     _app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
     }});
 
+	
+_app.router.appendHash({'type':'exact','route':'/cubs_postseason_gear/','callback':function(routeObj){
+    $.extend(routeObj.params,{
+        'pageType':'static',
+        'templateID':'cubsPlayoffGearTemplate2',
+        'require':['templates.html']
+        });
+    _app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+    }});
+
+	
+_app.router.appendHash({'type':'exact','route':'/cubs_locker_room_shirts_jersey_hats/','callback':function(routeObj){
+    $.extend(routeObj.params,{
+        'pageType':'static',
+        'templateID':'cubsPlayoffGearTemplate3',
+        'require':['templates.html']
+        });
+    _app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+    }});
+
+	
+_app.router.appendHash({'type':'exact','route':'/cubs_postseason_apparel/','callback':function(routeObj){
+    $.extend(routeObj.params,{
+        'pageType':'static',
+        'templateID':'cubsPlayoffGearTemplate4',
+        'require':['templates.html']
+        });
+    _app.ext.quickstart.a.newShowContent(routeObj.value,routeObj.params);
+    }});
+	
+	
 _app.router.appendHash({'type':'exact','route':'/connect_with_sportsworld/','callback':function(routeObj){
 	$.extend(routeObj.params,{
 		'pageType':'static',
