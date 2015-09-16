@@ -1445,7 +1445,6 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"t_shirt"}}
 						]
 					},
-				allstar : true,
 				options : {
 					"tags" : [{"v":"IS_USER6","p":"All Star Game"},{"v":"IS_USER7","p":"Postseason"}]
 					},
@@ -1479,7 +1478,6 @@ var store_swc = function(_app) {
 						{"term":{"app_department":"jersey"}}
 						]
 					},
-				allstar : true,
 				options : {
 					"base_price" : {
 						"min":0,
