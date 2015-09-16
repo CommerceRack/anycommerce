@@ -1005,7 +1005,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div data-filter-range-mult="100" data-tlc="bind $range '.options.base_price'; if(is $range --notblank;){{store_swc#filterrange --index='base_price';}};"></div>
 		</div>
 
-		<div class="filterGroup" data-tlc="bind $var '.allstar'; store_swc#dump; if(is $var --blank;){{apply --tag --remove;}};">
+		<div class="filterGroup" data-tlc="bind $var '.options.tags'; if(is $var --blank){{apply --hide;}};">
 			<legend class="highlightBG_2">Special Event:</legend>
 			<div class="filterCheckboxList" data-filter-index="tags" data-filter-type="checkboxList" data-tlc="
 				set $index 'tags';bind $cbl '.options.tags'; store_swc#filtercheckboxlist --index=$index;
