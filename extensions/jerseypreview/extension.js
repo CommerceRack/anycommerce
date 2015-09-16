@@ -167,6 +167,7 @@ var jerseypreview = function(_app) {
 			"7700-CUBR-EJ-PER",
 			"7700-CUBR-EJW-PER",
 			"7700-CUBD-EJ-PER",
+			"7700-CUBD-EJW-PER",
 			"sample"
 			]
 		},
