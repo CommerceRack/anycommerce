@@ -102,14 +102,55 @@ $(document).ready(function(){
 </head>
 
 <body>
-<!-- DELETE THIS WHEN YOU GET STARTED -->
-<h1>WELCOME TO QUICKSTART</h1>
-This file is intended to go along with the 10-step tutorial at:
-<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
-<!-- /DELETE THIS WHEN YOU GET STARTED -->
+<table cellspacing='0' cellpadding='0' width='100%'  style='background:#000000' align='center'  >
+<tr>
+<td width='300px' valign='top' align='left' style='background:#000000; padding:0 0 0 0px;' width='100%'>
 
 
 
+<table cellspacing='0' cellpadding='0' width='1024px'  style='background:#000000' align='center'  >
+<tr>
+<td width='300px' valign='top' align='left' style='background: left top no-repeat; padding:10px 0 0 0;' width='100%'>
+<div style='width:181px; margin-right:5px;'>
+<div><a href='%HOME_URL%'><img src='%WRAPPER_URL%/BeltsDirectLogo_Frame.png' alt='beltsdirect.com' border='0'></a></div>
+</td>
+<td width='50px' align='right'>
+
+		<table cellspacing='0' cellpadding='0'  style='background:#000000' align='right'  >
+		<tr>
+		<td valign="right">
+		<div class="zcart_text">Shopping Cart</div>
+		<div class="zcart_text_small">%WRAP_MINICART%</div>
+		</td>
+		<td width='50px' valign='right'><a href="%CART_URL%"><img src="%WRAPPER_URL%/bd_cart_ico-29x30.gif" alt="Shopping Cart" width="29" height="30" border="0"></a></td>
+		</tr>
+		
+		<tr>
+  		<td width="200px">
+		<!-- Search Form Starts here -->
+		<form action='%RESULTS_URL%' method='get' style='margin:0px;'>
+		<input type='hidden' name='catalog' value='%SEARCHCATALOG%'>
+		
+		<!-- table cellspacing='2' cellpadding='0' -->
+	 	<td><div class="zsearch">Search:</div></td>
+ 		<td><input type='text' name='keywords' value='' class='zform_textbox'></td>
+ 		<td><input type="image"  value='search' src="%WRAPPER_URL%/bd_search_btn-36x18.gif" alt="Search Submit"></td>
+		<!--/ table -->
+		</form>
+<!-- Search Form Ends here -->
+		</td>
+		</tr>
+		</table>
+	
+	</td>
+  	
+
+
+</tr>
+</table>
+</td>
+</tr>
+</table>
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
