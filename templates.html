@@ -2342,10 +2342,7 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<div class="highlightText alignRight" data-tlc="bind $var '.sum.items_total'; store_swc#dump; if (is $var --notblank;) {{ if(is $var --lt='99';){{math --mult='-1' --add='99'; format --currency='USD'; format --prepend='Spend Just '; format --append=' More for FREE Shipping!'; apply --append;}} else {{apply --hide --tag;}}; }};"></div>
 
 <section class="cartSummary marginBottom">
-<!--
-	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
-	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
--->
+
 	<div data-tlc="cco#shipinfobyid  --legacy;" class="orderShipping" data-bind="useParentData:true; format:shipinfobyid; extension:cco;"></div>
 
 	<div data-tlc="bind $var '.sum.order_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Order Total: '; apply --add --class='orderTotal'; apply --append;}};"></div>
