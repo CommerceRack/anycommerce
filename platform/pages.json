@@ -141,6 +141,15 @@
       "page_title" : "Adam Ottavino Jersey, Adam Ottavino Shirt | Colorado Rockies Adam Ottavino Jerseys & Shirts",
       "%head_title" : "Adam Ottavino Jersey, Adam Ottavino Shirt | Colorado Rockies Adam Ottavino Jerseys & Shirts"
    },
+   ".mlb.chicago_cubs.john_lackey" : {
+      "meta_keywords" : "John Lackey Jersey, John Lackey Shirt, Chicago Cubs Shirts, John Lackey Jerseys, Chicago Cubs Jerseys",
+      "player_name" : "John Lackey",
+      "prodlist3_custom" : "&SORTBY=NONE&FORMAT=CUSTOM&SRC=LIST%3A%24nothing&ALTERNATE=0&SIZE=&SHOWSKU=&SHOWQUANTITY=0&",
+      "meta_description" : "Find The Perfect John Lackey Jersey Or Shirt From Our Wide Selection Of John Lackey Jerseys And Other Chicago Cubs Apparel.",
+      "page_title" : "John Lackey Jersey, John Lackey Shirt | Chicago Cubs John Lackey Jerseys & Shirts",
+      "head_title" : "John Lackey Jersey, John Lackey Shirt | Chicago Cubs John Lackey Jerseys & Shirts",
+      "team_name" : "Chicago Cubs"
+   },
    ".mlb.houston_astros.z_gregorio_petit" : {
       "meta_keywords" : "Gregorio Petit Jersey, Gregorio Petit Shirt, Houston Astros Shirts, Gregorio Petit Jerseys, Houston Astros Jerseys",
       "player_name" : "Gregorio Petit",
@@ -8856,7 +8865,7 @@
       "meta_description" : "Check out our live web cam located outside of Wrigley Field in Chicago.  Streaming live 24-7!",
       "description2" : "SportsWorldChicago.com has one of the only Live Web Cameras in Wrigleyville at the corner of Clark and Addison Streets.  Directly across from Wrigley Field, home of the Chicago Cubs, you can always see night and day what is happening at the epicenter of baseball in Chicago.\n\n\n\nBe sure to browse through SportsWorldChicago.com to shop for all your [[Chicago Cubs shirts]:category=l_shirts/] and Wrigley Field hats.  Sports World has one of the largest selections of [[Cubs caps and hats]:category=ww/], plus all [[Chicago Cubs authentic jerseys]:category=m_jerseys/] and on-field merchandise needed to make you a true Chicago Cubs fan!",
       "description" : "",
-      "html" : "<iframe width=\"650\" height=\"366\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"  scrolling=\"no\" src=\"http://www.earthcam.com/js/cubworld.php\"></iframe>\n\n\n<!-- EarthCam Player -->\n<script language=\"JavaScript\"\nsrc=\"https://www.earthcam.com/js/webcamviewer.v1.js\"\ntype=\"text/javascript\"></script>\n<script language=\"JavaScript\" type=\"text/javascript\">\nvar camU = \"https://images.earthcam.com/ec_metros/ourcams/rosensports.jpg\";\ncamW = '650';\ncamH = '480';\ncamViewer(camU,camW,camH);\n</script>\n<!--/EarthCam Player -->",
+      "html" : "<iframe width=\"650\" height=\"366\" frameborder=\"0\" marginheight=\"0\" marginwidth=\"0\"  scrolling=\"no\" src=\"//www.earthcam.com/js/cubworld.php\"></iframe>\n\n\n<object width=\"600\" height=\"480\" align=\"middle\" id=\"metro_cam_player_01\" codebase=\"http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,0,0\" classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"><param value=\"sameDomain\" name=\"allowScriptAccess\"><param value=\"//www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000\" name=\"movie\"><param value=\"high\" name=\"quality\"><param value=\"#000000\" name=\"bgcolor\"><embed width=\"600\" height=\"480\" align=\"middle\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" allowscriptaccess=\"sameDomain\" name=\"metro_cam_player_01\" bgcolor=\"#000000\" quality=\"high\" src=\"//www.earthcam.com/swf/dotcom_live_viewer_multi_size.swf?http://images.earthcam.com/ec_metros/ourcams/rosensports.jpg,50,1000\"></object>",
       "page_title" : "Wrigley Field Live Web Cam",
       "head_title" : "Wrigley Field Live Web Cam",
       "banner10_link" : "http://www.facebook.com/SportsWorldChicago/app_340153202703181",
@@ -8999,12 +9008,12 @@
       "page_title" : "Chad Qualls Jersey, Chad Qualls Shirt | Houston Astros Chad Qualls Jerseys & Shirts",
       "%head_title" : "Chad Qualls Jersey, Chad Qualls Shirt | Houston Astros Chad Qualls Jerseys & Shirts"
    },
-   ".mlb.detroit_tigers.z_jd_martinez" : {},
    ".mlb.detroit_tigers.personalized_jerseys___shirts" : {
       "meta_keywords" : "Detroit Tigers Personalized Jersey & Detroit Tigers Personalized Shirt",
       "page_title" : "Detroit Tigers Personalized Jersey & Detroit Tigers Personalized Shirt",
       "head_title" : "Detroit Tigers Personalized Jersey & Detroit Tigers Personalized Shirt"
    },
+   ".mlb.detroit_tigers.z_jd_martinez" : {},
    ".mlb.san_diego_padres.z_jake_goebbert" : {
       "meta_keywords" : "Jake Goebbert Jersey, Jake Goebbert Shirt, San Diego Padres Shirts, Jake Goebbert Jerseys, San Diego Padres Jerseys",
       "player_name" : "Jake Goebbert",
