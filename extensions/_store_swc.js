@@ -1845,7 +1845,7 @@ var store_swc = function(_app) {
 								{"id":"souvenirs","img":"game_time/Boston_Red_Sox_B_Logo_Womens_All_Star_Series_Watch"}
 							]
 						},
-						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"/category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Kris Bryant","Jake Arrieta"], 
+						{"p":"Chicago Cubs","v":"chicago_cubs", "img":"47brand/chicago_cubs_royal_franchise_cap_by__47_brand.jpg", "catlink":"/category/.mlb.chicago_cubs/Chicago%20Cubs", "players" : ["Anthony Rizzo","Kris Bryant","Jake Arrieta","Kyle Schwarber"], 
 							"filters" : [
 								{"id":"shirts","img":"5/chicago_cubs_blue_logo_t_shirt5"},
 								{"id":"jerseys","img":"Chicago_Cubs/Chicago_Cubs_Home_Authentic_Jersey"},
@@ -1893,7 +1893,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/detroit_tigers_home_47_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Detroit_Tigers_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"/category/.mlb.houston_astros/Houston%20Astros", "players" : ["Dexter Fowler","Kevin Chapman","Scott Feldman"], 
+						{"p":"Houston Astros","v":"houston_astros", "img":"mlbhats/houston_astros_adjustable_clean_up_hat8.jpg", "catlink":"/category/.mlb.houston_astros/Houston%20Astros", "players" : ["Kevin Chapman","Scott Feldman"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Houston_Astros_Orange_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Houston_Astros/Houston_Astros_Road_Authentic_Cool_Base_Jersey"},
@@ -1909,7 +1909,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/kansas_city_royals_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Kansas_City_Royals_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson","Josh Hamilton"], 
+						{"p":"L.A. Angels of Anaheim","v":"la_angels_of_anaheim", "img":"mlbhats/los_angeles_angels_of_anaheim_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.los_angeles_angels/L.A.%20Angels%20of%20Anaheim", "players" : ["Albert Pujols","C.J. Wilson"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Los_Angeles_Angels_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Los_Angeles_Angels/Los_Angeles_Angels_Road_Authentic_Cool_Base_Jersey"},
@@ -1925,7 +1925,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/los_angeles_dodgers_royal_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Los_Angeles_Dodgers_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Saltalamacchia","Justin Ruggiano","Ty Wigginton"], 
+						{"p":"Miami Marlins","v":"miami_marlins", "img":"mlbhats/miami_marlins_game_47_franchise_cap.jpg", "catlink":"/category/.mlb.miami_marlins/Miami%20Marlins", "players" : ["Justin Ruggiano","Ty Wigginton"], 
 							"filters" : [
 								{"id":"shirts","img":"C/miami_marlins_official_wordmark_t_shirt_by_majestic"},
 								{"id":"jerseys","img":"Miami_Marlins/Miami_Marlins_Road_Authentic_Cool_Base_Jersey"},
@@ -1933,7 +1933,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/miami_marlins_game_47_franchise_cap"},
 								{"id":"souvenirs","img":"game_time/Miami_Marlins_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"/category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Matt Garza","Rickie Weeks","Ryan Braun"], 
+						{"p":"Milwaukee Brewers","v":"milwaukee_brewers", "img":"mlbhats/milwaukee_brewers_franchise_cap5.jpg", "catlink":"/category/.mlb.milwaukee_brewers/Milwaukee%20Brewers", "players" : ["Rickie Weeks","Ryan Braun"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Milaukee_Brewers_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Milwaukee_Brewers/Milwaukee_Brewers_Road_Authentic_Cool_Base_Jersey"},
@@ -1941,7 +1941,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/milwaukee_brewers_franchise_cap5"},
 								{"id":"souvenirs","img":"game_time/Milwaukee_Brewers_Womens_All_Star_Series_Watch"}
 							]},
-						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"/category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Brian Dozier","Jason Kubel","Joe Mauer"], 
+						{"p":"Minnesota Twins","v":"minnesota_twins", "img":"mlbhats/minnesota_twins_alternate_47_franchise_cap6.jpg", "catlink":"/category/.mlb.minnesota_twins/Minnesota%20Twins", "players" : ["Brian Dozier","Jason Kubel"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Minnesota_Twins_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Minnesota_Twins/Minnesota_Twins_Road_Authentic_Cool_Base_Jersey_ASG_Patch"},
@@ -1957,7 +1957,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/new_york_mets_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/New_York_Mets_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Derek Jeter","Ichiro Ichiro","Masahiro Tanaka"], 
+						{"p":"New York Yankees","v":"new_york_yankees", "img":"mlbhats/new_york_yankees_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.new_york_yankees/New%20York%20Yankees", "players" : ["Derek Jeter","Masahiro Tanaka"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/New_York_Yankees_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"New_York_Yankees/New_York_Yankees_Home_Authentic_Jersey"},
@@ -1973,7 +1973,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/oakland_athletics_road_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/Oakland_Athletics_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"/category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Cliff Lee","Cole Hamels","Ryan Howard"], 
+						{"p":"Philadelphia Phillies","v":"philadelphia_phillies", "img":"mlbhats/philadelphia_phillies_adjustable_clean_up_hat5.jpg", "catlink":"/category/.mlb.philadelphia_phillies/Philadelphia%20Phillies", "players" : ["Cliff Lee","Cole Hamels"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Philadelphia_Phillies_Red_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Philadelphia_Phillies/Philadelphia_Phillies_Road_Authentic_Cool_Base_Jersey"},
@@ -1997,7 +1997,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/san_diego_padres_game_47_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/San_Diego_Padres_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"/category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Madison Bumgarner","Pablo Sandoval","Joe Panik"], 
+						{"p":"San Francisco Giants","v":"san_francisco_giants", "img":"mlbhats/san_francisco_giants_black_franchise_cap6.jpg", "catlink":"/category/.mlb.san_francisco_giants/San%20Francisco%20Giants", "players" : ["Madison Bumgarner","Pablo Sandoval"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/San_Francisco_Giants_Black_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"San_Francisco_Giants/San_Francisco_Giants_Alternate_Grey_Authentic_Cool_Base_Jersey"},
@@ -2013,7 +2013,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/seattle_mariners_game_47_franchise_cap7"},
 								{"id":"souvenirs","img":"game_time/Seattle_Mariners_Mens_Elite_Series_Watch"}
 							]},
-						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"/category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter","Jason Motte"], 
+						{"p":"St. Louis Cardinals","v":"st_louis_cardinals", "img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6.jpg", "catlink":"/category/.mlb.st_louis_cardinals/St.%20Louis%20Cardinals", "players" : ["Adam Wainwright","Chris Carpenter"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/St_Louis_Cardinals_Red_Authentic_Experience_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"St_Louis_Cardinals/St_Louis_Cardinals_Road_Authentic_Cool_Base_Jersey"},
