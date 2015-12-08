@@ -1836,7 +1836,7 @@ var store_swc = function(_app) {
 							"v":"boston_red_sox", 
 							"img":"mlbhats/boston_red_sox_game_47_franchise_cap6.jpg", 
 							"catlink":"/category/.mlb.boston_red_sox/Boston%20Red%20Sox", 
-							"players" : ["David Ortiz","Dustin Pedroia","Xander Bogaerts"], 
+							"players" : ["David Ortiz","Dustin Pedroia","David Price"], 
 							"filters" : [
 								{"id":"shirts","img":"chicagocubs20143/boston_red_sox_2014_practice_t_shirt"},
 								{"id":"jerseys","img":"Boston_Red_Sox/Boston_Red_Sox_Home_Authentic_Cool_Base_Jersey"},
@@ -2021,7 +2021,7 @@ var store_swc = function(_app) {
 								{"id":"hats","img":"mlbhats/st__louis_cardinals_scarlet_franchise_cap6"},
 								{"id":"souvenirs","img":"game_time/St_Louis_Cardinals_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","David Price","Evan Longoria"], 
+						{"p":"Tampa Bay Rays","v":"tampa_bay_rays", "img":"mlbhats/tampa_bay_rays_game_47_franchise_cap6.jpg", "catlink":"/category/.mlb.tampa_bay_rays/Tampa%20Bay%20Rays", "players" : ["Ben Zobrist","Evan Longoria"], 
 							"filters" : [
 								{"id":"shirts","img":"blanks/Tampa_Bay_Rays_Navy_Wordmark_T_Shirt_by_Majestic"},
 								{"id":"jerseys","img":"Tampa_Bay_Rays/Tampa_Bay_Rays_Road_Authentic_Cool_Base_Jersey"},
@@ -2302,7 +2302,7 @@ var store_swc = function(_app) {
 //								{"id":"sweatshirts","img":"majestic/Arizona_Diamondbacks_Red_Authentic_Collection_Tech_Fleece"},
 								{"id":"souvenirs","img":"game_time/Arizona_Diamondbacks_Mens_All_Pro_Series_Watch"}
 							]},
-						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", "players" : ["Jonathan Toews","Patrick Kane","Marian Hossa","Scott Darling","Corey Crawford"],
+						{"p":"Chicago Blackhawks","v":"chicago_blackhawks", "img":"nhlhats/chicago_blackhawks_hat.jpg", "players" : ["Jonathan Toews","Patrick Kane","Marian Hossa","Artemi Panarin","Corey Crawford"],
 							"filters" : [
 								{"id":"shirts","img":"C/chicago_blackhawks_primary_logo_t_shirt"},
 								{"id":"jerseys","img":"blackhawksshopcom/chicago_blackhawks_youth_premier_home_jersey_by_reebok"},
