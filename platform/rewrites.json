@@ -31,7 +31,6 @@
 { "type":"path", "if":"/category/mlb.oakland_athletics.z_ben_zobrist/Ben-Zobrist-Jersey-Ben-Zobrist-Shirt-Oakland-Athletics-Ben-Zobrist-Jerseys-Shirts/?", "then#redirect":"/category/mlb.chicago_cubs.ben_zobrist/Ben-Zobrist/" },
 { "type":"path", "if":"/category/mlb.oakland_athletics.z_ben_zobrist/?", "then#redirect":"/category/mlb.chicago_cubs.ben_zobrist/Ben-Zobrist/" },
 { "type":"path", "if":"/category/mlb.st_louis_cardinals.z_jason_heyward/?", "then#redirect":"/category/mlb.chicago_cubs.jason_heyward/" },
-
 // CATEGORY HANDLER
 { "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
 
