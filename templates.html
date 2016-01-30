@@ -2354,10 +2354,10 @@ This is the template used both within a dialog and inline, unless implicitly ove
 			<button class='applyButton cartRefreshButton' data-text='false' data-icon-primary='ui-icon-refresh' data-app-click="cco|cartFetchExec">Refresh Cart</button>
 			<h2>Cart Totals</h2>
 		</form>
-<!--
+-
 		<div class="cartSummaryContainer stdPadding ui-widget-content clearfix">
 			<div class="highlightText alignRight" data-tlc="bind $var '.sum.items_total'; store_swc#dump; if (is $var --notblank;) {{ if(is $var --lt='99';){{math --mult='-1' --add='99'; format --currency='USD'; format --prepend='Spend Just '; format --append=' More for FREE Shipping!'; apply --append;}} else {{apply --hide --tag;}}; }};"></div>
--->	
+-
 <section class="cartSummary marginBottom">
 	<div data-tlc="bind $var '.sum.items_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Subtotal: '; apply --add --class='orderSubtotal'; apply --append;}};"></div>
 	<div data-tlc="bind $var '.sum.tax_total'; if (is $var --notblank;) {{format --currency='USD'; format --prepend='Tax: '; apply --add --class='orderTax'; apply --append;}};"></div>
