@@ -2,7 +2,7 @@
 
 <div id='productPowerToolTemplate'>
 
-<form action='#' onSubmit="return false" class='labelsAsBreaks' id='productPowerToolForm' novalidate>
+<form action='#' onSubmit="return false" class='labelsAsBreaks' name='productPowerToolForm' novalidate>
 <input type="hidden" value="0" name="JOBID" />
 
 
@@ -318,7 +318,7 @@ has to be within the fieldset to for data-table to work right.
 	<th></th>
 </tr>
 </thead>
-<tbody id='powerToolActionListTbody' data-bind="var: batch(@ACTIONS); format:processList; loadsTemplate:powerToolActionsRowTemplate;" ></tbody>
+<tbody name='powerToolActionListTbody' data-bind="var: batch(@ACTIONS); format:processList; loadsTemplate:powerToolActionsRowTemplate;" ></tbody>
 </table>
 </div>
 
@@ -698,7 +698,7 @@ has to be within the fieldset to for data-table to work right.
 		<table class='marginTop'>
 		<tbody>
 		<tr>
-			<td class='valignTop'><button class='applyButton' onClick="navigateTo('#!ext/admin_support/showPlatformInfo'); return false;">App/Server Details</button></td>
+			<td class='valignTop'><button class='applyButton' onClick="navigateTo('/ext/admin_support/showPlatformInfo'); return false;">App/Server Details</button></td>
 			<td>Some details about the server you are on, app version, etc.</td>
 		</tr>
 		<tr>
@@ -839,47 +839,13 @@ has to be within the fieldset to for data-table to work right.
 			
 			<div class='buttonset marginTop alignRight'>
 				<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='create' class='applyButton'>Add Custom</button>
-				<button data-app-click='admin_tools|flexeditSaveExec' class='applyButton'>Save Changes</button>
+				<!-- <button data-app-click='admin_tools|flexeditSaveExec' class='applyButton'>Save Changes</button> -->
 			</div>
 
 <!-- the list of fields that save per flex attribute is whitelisted.  see admin_tools.e.flexeditSaveExec -->
 			<div class='labelsAsBreaks displayNone marginTop' data-app-role='flexeditAttributeAddUpdateContainer' data-table-role='inputs'>
-				<label><span>Attribute ID </span><input name='id' value='' type='text' required='required' data-bind='var: flexedit(id); format:popVal;' data-input-keyup="format" data-input-format='lowercase,flex' /></label>
-				<input name='guid' value='' type='hidden' data-bind='var: flexedit(guid); format:popVal;' /><!-- needed for data table. if guid is already in table, will do an update instead of an add -->
-				<label><span>Title</span><input name='title' type='text' maxlength="25" data-bind='var: flexedit(title); format:popVal;' /></label>
-				<label><span>Index</span><input name='index' type='text' maxlength="20" data-bind='var: flexedit(index); format:popVal;'  data-input-keyup="format" data-input-format='lowercase,alphanumeric' /> <span title="If set, field will be indexed by elastic. value should be same as attribute ID without zoovy: prefix (ex: zoovy:prod_msrp index should be prod_msrp)" class='toolTip'>?</span></label>
-				<label>
-					<span>Type</span>
-					<select name='type' data-bind='var: flexedit(type); format:popVal;'  required='required' data-panel-selector=".flexEditTypeInputs" data-input-change='show-panel'>
-						<option value='boolean'>Boolean (checkbox)</option>
-						<option value='checkbox'>Checkbox</option>
-						<option value='currency'>Currency</option>
-						<option value='image'>Image</option>
-						<option value='keyword'>Keyword</option>
-						<option value='keywordlist'>Keyword list</option>
-						<option value='number'>Number</option>
-						<option value='select' data-show-panel='flexEditOptionsInput'>Select</option>
-						<option value='textbox'>Text (single line)</option>
-						<option value='textarea'>Text (multi line)</option>
-						<option value='weight'>Weight</option>
-					</select>
-				</label>
-				
-				<!-- add this to your select list. make the class very specific. anything with this class will get toggled off onChange -->
-
-
-<!-- add this to each option that 'reveals' something. make the value very specific -->
-
-
-<!-- add one of these for each matching 'option' that reveals content.  Class should match panel-selector. panel-id should match show-panel value in corresponding option -->
-				<div data-panel-id='flexEditOptionsInput' class='displayNone flexEditTypeInputs'>
-				<label>
-					<span>Options</span>
-					<textarea required='required' class='fullWidth' rows='10' data-validation-rules="skipIfHidden" data-format-rules='validateJSON' data-stringify='true' name='options' data-bind='var: flexedit(options); format:popVal;'></textarea>
-				</label>
-				</div>
-				<button data-app-click="admin_tools|flexDataTableAddEditCancel" class='applyButton'>Cancel</button>
-				<button data-app-click="admin_config|dataTableAddUpdate" class='applyButton' data-hide-inputs-onapply='true'>Apply Attribute</button>
+				<textarea class="fullWidth" name="flexedit-definition" data-bind="useParentData:true; format:popVal; stringify:1;"></textarea>
+				<button data-app-click="admin_tools|flexeditAttributeSave" class="applyButton">Save Attribute</button>
 			</div>
 			</fieldset>
 		</form>
@@ -910,7 +876,7 @@ has to be within the fieldset to for data-table to work right.
 
 
 <table>
-<tr id='flexeditAttributeRowTemplate'>
+<tr id='flexeditAttributeRowTemplate' data-bind="useParentData:true; format:data; index:flexedit-definition;">
 	<td class='width1 hideInMasterList'><span class="ui-icon ui-icon-arrowthick-2-n-s"></span></td>
 	<td class='alignLeft isSearchable'>
 		<div data-bind='var:flexedit(id); format:text;'></div>
@@ -919,9 +885,9 @@ has to be within the fieldset to for data-table to work right.
 			<span data-bind='var:flexedit(index); format:text; pretext:(; posttext:);'></span>
 		</div>
 	</td>
-	<td class='alignRight'>
+	<td class='width20 alignRight'>
 		<span data-app-click="admin_tools|flexeditAttributeAdd2EnabledList" class='hideInEnabledList ui-icon ui-icon-circle-arrow-w pointer' title="Add to Enabled List"></span>
-		<button data-app-click="admin|tagRow4Remove" class='hideInMasterList applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Remove Field</button>
+		<button data-app-click="admin_tools|flexeditAttributeRemove" class='hideInMasterList applyButton' data-text='false' data-icon-primary='ui-icon-closethick'>Remove Field</button>
 		<button data-app-click='admin_tools|flexeditAttributeCreateUpdateShow' data-mode='update' class='hideInMasterList applyButton' data-text='false' data-icon-primary="ui-icon-pencil">Update Attribute</button>
 	</td>
 </tr>

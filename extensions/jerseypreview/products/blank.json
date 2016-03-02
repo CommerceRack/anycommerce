@@ -1,0 +1,21 @@
+{
+  "font" : "Comic Sans",
+	"name" : {
+		"size" : 0,
+		"charSize" : 0,
+		"radius" : 0,
+		"color" : "FFFFFF",
+		"strokeColor" : "FFFFFF",
+		"strokeThickness" : 0,
+		"xOffset" : 0,
+		"y" : 0
+	},
+	"number" : {
+		"size" : 0,
+		"color" : "FFFFFF",
+		"strokeColor" : "FFFFFF",
+		"strokeThickness" : 0,
+		"xOffset" : 0,
+		"y" : 0
+	}
+}

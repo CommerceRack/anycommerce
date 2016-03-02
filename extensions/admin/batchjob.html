@@ -21,7 +21,7 @@
 	<p data-tlc="bind $var '.notes'; if (is $var --notblank;) {{apply --append;}};" class="marginBottom"></p>
 	<button data-app-click="admin_batchjob|adminBatchJobCleanupExec" class="applyButton" data-text="true" data-icon-primary="ui-icon-trash"  data-tlc="bind $var '.status';  format --truncate='3'; apply --append; if(is $var --eq='END';) {{apply --hide;}};">Cancel/Remove Job</button>
 
-	<p data-tlc="bind $var '.status';  format --truncate='3'; apply --append; if(is $var --eq='END';) {{apply --hide;}};">This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="#!ext/admin_batchjob/showBatchJobManager" onclick="if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')};">Batch Job Manager can be found here.</a></p>
+	<p data-tlc="bind $var '.status';  format --truncate='3'; apply --append; if(is $var --eq='END';) {{apply --hide;}};">This panel will update automatically if the job is not finished. You can shrink the window (drag a corner) and leave it open. The <a href="/ext/admin_batchjob/showBatchJobManager" onclick="if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close')};">Batch Job Manager can be found here.</a></p>
 
 
 	<div class='buttonset' data-tlc="bind $var '.GUID'; apply --attrib='data-guid';" >

@@ -217,7 +217,7 @@ calls should always return the number of dispatches needed. allows for cancellin
 				if(window.debug1pc)	{extras = "&sender=jcheckout&fl=checkout-"+_app.model.version+debug1pc} //set debug1pc to a,p or r in console to force this versions 1pc layout on return from paypal
 				obj._cmd = "cartPaypalSetExpressCheckout";
 				obj.cancelURL = (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/cart.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#!cart";
-				obj.returnURL =  (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID()+"#!checkout?"; //? at end because paypal is going to add key value pairs to this url.
+				obj.returnURL =  (_app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+_app.model.fetchCartID()+"/checkout.cgis?parentID="+parentID+extras : zGlobals.appSettings.https_app_url+"checkout/?_session="+_app.vars._session+"&parentID="+parentID+"&cartID="+_app.model.fetchCartID(); 
 				
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
 //				dump(" -> cartPaypalSetExpressCheckout obj: "); dump(obj);
@@ -407,7 +407,9 @@ left them be to provide guidance later.
 							'onComplete' : function(r){
 								P.state = 'complete';
 								_app.renderFunctions.handleTemplateEvents(r.jqObj,$.extend(true,{},P,event));
+								if(r.deferred){r.deferred.resolve();}
 								},
+							'deferred' : vars.deferred,
 							'templateID' : $c.data('templateid'),
 							'jqObj' : $c
 							},P.Q);
@@ -587,8 +589,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 */
 			nukePayPalEC : function(_tag) {
 //				_app.u.dump("BEGIN cco.u.nukePayPalEC");
-				_app.ext.order_create.vars['payment-pt'] = null;
-				_app.ext.order_create.vars['payment-pi'] = null;
+				if(_app.ext.order_create){
+					//Doesn't require a _require, since if it's not loaded, it's already "nuked"
+					_app.ext.order_create.vars['payment-pt'] = null;
+					_app.ext.order_create.vars['payment-pi'] = null;
+					}
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					//the delete cmd will reset want/payby to blank.
 					_app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
@@ -825,6 +830,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 //run this just prior to creating an order.
 //will clean up cart object.
+			//NOT INCLUDING A _REQUIRE SINCE THIS IS ONLY CALLED FROM ORDER_CREATE
 			sanitizeAndUpdateCart : function($form,_tag)	{
 //				dump("BEGIN cco.u.sanitizeAndUpdateCart");
 				if($form instanceof jQuery)	{
@@ -1342,7 +1348,7 @@ in a reorder, that data needs to be converted to the variations format required 
 				return false;
 				},
 			
-			cartItemRemove	: function($ele,p)	{
+			cartItemRemove : function($ele,p)	{
 				p.preventDefault();
 				var stid = $ele.closest('[data-stid]').data('stid'), cartid = $ele.closest("[data-template-role='cart']").data('cartid');
 				if(stid && cartid)	{

@@ -1,0 +1,69 @@
+[
+// rewrite legacy vstore cart and session id's out of path
+{ "type":"path", "if":"/c=.*?/(.*)", "then#redirect":"/$1" },
+{ "type":"path", "if":"/s=.*?/(.*)", "then#redirect":"/$1" },
+// LEGACY VSTORE: about_us.cgis, privacy.cgis
+{ "type":"path", "if":"/.*\\.cgis", "then#sendfile":"/index.html" },
+{ "type":"path", "if":"/careers/.*", "then#sendfile":"/index.html" },
+
+// if a file is explicitly requested, send it.
+{ "type":"path", "if":"/(.*\\.html)", "then#sendfile":"/$1", "apptimize":true },
+{ "type":"path", "if":"/(.*\\.css)", "then#sendfile":"/$1", "apptimize":true },
+{ "type":"path", "if":"/(.*)", "then#sendfile":"/$1" },
+
+// check rendered files.
+
+// { "type":"path", "if":"/product/([a-zA-Z0-9\\-\\_]+)/.*", "then#sendfile":"/product/$1.html" },
+// { "type":"path", "if":"/category/([a-zA-Z0-9\\.\\_\\-]+)/.*", "then#sendfile":"/category/$1.html" },
+{ "type":"path", "if":"/product/[a-zA-Z0-9\\-\\_]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
+
+
+
+// CATEGORY REDIRECTS
+// category/affiliates?meta=8.10.12
+// LEGACY: /c=37y2QN9H5q1UAIEJ2m34bR0be/category/a_cubworld_cam/
+{ "type":"path", "if":"/category/a_cubworld_cam/?", "then#redirect":"/fieldcam/" },
+{ "type":"path", "if":"/category/wrigley_field_cam/?", "then#redirect":"/fieldcam/" },
+{ "type":"path", "if":"/category/chicago-cubs-souvenirs/?", "then#redirect":"/filter/souvenirs/" },
+{ "type":"path", "if":"/category/chicago-cubs-shirts/?", "then#redirect":"/filter/shirts/" },
+{ "type":"path", "if":"/category/chicago-cubs-jerseys/?", "then#redirect":"/filter/jerseys/" },
+{ "type":"path", "if":"/category/chicago-cubs-hats/?", "then#redirect":"/filter/hats/" },
+{ "type":"path", "if":"/category/mlb.oakland_athletics.z_ben_zobrist/Ben-Zobrist-Jersey-Ben-Zobrist-Shirt-Oakland-Athletics-Ben-Zobrist-Jerseys-Shirts/?", "then#redirect":"/category/mlb.chicago_cubs.ben_zobrist/Ben-Zobrist/" },
+{ "type":"path", "if":"/category/mlb.oakland_athletics.z_ben_zobrist/?", "then#redirect":"/category/mlb.chicago_cubs.ben_zobrist/Ben-Zobrist/" },
+{ "type":"path", "if":"/category/mlb.st_louis_cardinals.z_jason_heyward/?", "then#redirect":"/category/mlb.chicago_cubs.jason_heyward/" },
+// CATEGORY HANDLER
+{ "type":"path", "if":"/category/[a-zA-Z0-9\\.\\_\\-]+(/.*)?", "then#sendfile":"/index.html", "apptimize":false },
+
+// more rewrites
+{ "type":"path", "if":"/filter/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/search/.*?/.*", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/major_league_baseball/.*?/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/national_football_league/.*?/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/major_league_baseball/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/national_football_league/", "then#sendfile":"/index.html", "apptimize":false },
+
+// sendfile
+{ "type":"path", "if":"/cart/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/checkout/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/invoice/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/home/?", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/about_us/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/contact_us/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/frequently_asked_questions/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/payment_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/privacy_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/return_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/shipping_policy/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_account/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/change_password/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_order_history/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/my_wishlist/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/fieldcam/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/affiliates/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/connect_with_sportsworld/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/careers/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/inquiry/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/rewards/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/group_sales/", "then#sendfile":"/index.html", "apptimize":false },
+{ "type":"path", "if":"/search\\.cgis/(.*?)", "then#redirect":"/search/keywords/$1" }
+]

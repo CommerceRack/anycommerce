@@ -1,0 +1,83 @@
+.displayNone_640{display:none;}
+
+.fixedContainer {
+	max-width:640px;
+	margin: auto;
+}
+#header {height:76px;}
+#appView {
+	padding-top: 80px;
+	padding-bottom:40px;}
+#appView.showFooter {padding-bottom: 210px;}
+#appView.initFooter {padding-bottom: 210px;}
+/* #appView.peekFooter.showFooter {padding-bottom: 210px;} */
+#appView #footer {bottom:-180px;}
+/* #appView.peekFooter #footer {bottom:-130px;} */
+
+/* #livechat {margin-left: 20px;} */
+/* #livechat img {width:115px; height:42px;} */
+
+#headerTeam {margin-left: 36px; width: 140px; font-size: height: 50px; padding: 2px; font-size:.7em;}
+#headerTeam img{height: 46px; width: 46px;}
+
+#mininav{font-size:.7em;}
+#contact{font-size:.7em;}
+#search input{ height:13px;}
+#nav.expand .fullNav { left:50%;}
+#nav .fullNav {margin-left:-320px; padding: 12px; }
+
+#footer .footerTeaser h3{line-height:30px;}
+#footer .footerContent{position:relative; height:130px; margin:40px auto;}
+
+.footerColumn {
+	position:absolute;
+	width:170px;
+}
+
+#footerLeft{left:0px;}
+#footerRight{right:0px;}
+#footerMiddle{left: 50%; margin-left:-85px;}
+
+.footerColumn h3 { letter-spacing:4px; font-size: .7em; padding: 2px 0px;}
+
+.homepageBanner {height:322px;}
+.blockLink, li.blockLink {width: 24%; margin: .3%;}
+.productListItem .price {font-size: 1em; bottom: 0px; right: 5px;}
+
+.productPage .addtocartbutton{width:99px; height:31px; background:url(images/prodpages/add_to_cart_button_99x31.png) no-repeat;}
+.productPage .mfgLogoContainer img {
+	max-width: 150px;
+	max-height: 80px;
+	padding-right: 20px;
+}
+.productTabs{float:none; clear:both; width: 100%;}
+.productTitle, .productInfo {width: 50%;}
+.productImages {width: 46%;  padding-left: 5px;}
+
+#myTeamChooser .chooser{left:20px; right:20px; bottom:20px; top:80px;}
+#myTeamChooser .teamlist  {width: 46%; padding: 0px 1.8%;}
+#myTeamChooser .teamlist .teamTemplate {height:85px; font-size:1em; line-height: 85px;}
+
+#myTeamChooser .myTeamPopupContainer form,
+#myTeamChooser .myTeamPromptContainer > div{
+	background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -260px;
+	margin-top: -90px;
+	width:480px;
+	height: 140px;
+}
+#myTeamChooser .myTeamSelectedContainer > div{background:white;
+	position:absolute;
+	left:50%;
+	top:50%;
+	margin-left: -260px;
+	margin-top: -165px;
+	width:480px;
+	height: 290px;
+}
+.checkoutFormContainer .vertHalf {width: 48%;}
+.checkoutFormContainer .vertHalf.left {float:left;}
+.checkoutFormContainer .vertHalf.right {float:right;}

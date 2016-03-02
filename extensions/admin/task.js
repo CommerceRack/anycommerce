@@ -55,7 +55,7 @@ var admin_task = function(_app) {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
 
 //used for the add new modal.
 $('body').append("<div id='createTaskModal' class='displayNone' title='Create a new task'></div>");

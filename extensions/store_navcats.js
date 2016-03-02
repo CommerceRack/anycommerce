@@ -167,6 +167,8 @@ templateID - the template id used (from _app.templates)
 //to display a category w/ thumbnails, first the parent category obj is fetched (appNavcatDetail...) and this would be the callback.
 //it will get the detail of all the children, including 'meta' which has the thumbnail. It'll absorb the tag properties set in the inital request (parent, template) but
 // override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
+		
+		//Unused?
 		getChildData : {
 			onSuccess : function(tagObj)	{
 //				_app.u.dump('BEGIN _app.ext.quickstart.callbacks.getChildData.onSuccess');
@@ -271,7 +273,32 @@ templateID - the template id used (from _app.templates)
 
 
 		u : {
-/*
+			showPage : function($container, infoObj)	{
+				var catSafeID = infoObj.navcat;
+				if(!catSafeID)	{
+					$("#globalMessaging").anymessage({"message":"In quickstart.u.showPage, no navcat was passed in infoObj.","gMessage":true});
+					}
+				else	{
+					if(infoObj.templateID){/*templateID 'forced'. use it.*/}
+					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
+						infoObj.templateID = 'homepageTemplate'
+						}
+					else	{ infoObj.templateID = 'categoryTemplate'; }
+					
+					var parentID = infoObj.parentID || infoObj.templateID+'_'+_app.u.makeSafeHTMLId(catSafeID);
+					var $page = new tlc().getTemplateInstance(infoObj.templateID);
+					
+					infoObj.state = 'init';
+					_app.renderFunctions.handleTemplateEvents($page,infoObj);
+					
+					$container.append($page);
+
+					$.extend(infoObj,{'callback':'fetchPageContent','extension':'quickstart','jqObj':$page});
+					_app.calls.appNavcatDetail.init({'path':catSafeID,'detail':'max'},infoObj);
+					_app.model.dispatchThis();
+					}
+				}, //showPage
+/*		
 In cases where the root categories are needed, this function will return them from the appCategoryList dataset.
 function assumes appCategoryList already exists in memory.
 will return an object of id:safeid, which is how the categories are stored in a appNavcatDetail.

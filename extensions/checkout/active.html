@@ -7,7 +7,7 @@ The chkout prefix is reserved for checkout.
 
 item list and summary are separate just to give more control over location.
 -->
-<div id="checkoutTemplate" class="checkoutFormContainer" data-app-role="checkout">
+<div id="checkoutTemplate" class="checkoutFormContainer noBG" data-app-role="checkout">
 
 	<form action="#">
 	<input data-tlc="bind $var '.bill.shortcut'; if(is $var --notblank;) {{apply --select=$var;}}; " name="bill/shortcut" type="hidden">
@@ -16,10 +16,12 @@ item list and summary are separate just to give more control over location.
 
 <!-- define panel order -->
 	<fieldset data-app-role="chkoutPreflight" class="marginBottom">
-		<legend class="headerPadding">Email / Account Login</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
-		<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
-			Not you? <span class="lookLikeLink zlink">click here</span>.
+		<legend class="headerPadding">1 - Email / Account Login</legend>
+		<div class="panelContentContainer">
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutPreflightTemplate'; apply --append;" data-legacy-useparentdata="true" class="panelContent"></div>
+			<div data-app-role="buyerLogout" class="displayNone pointer" data-app-click="order_create|buyerLogout">
+				Not you? <span class="lookLikeLink zlink">click here</span>.
+			</div>
 		</div>
 	</fieldset>
 
@@ -27,26 +29,27 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAccountCreate" class="displayNone marginBottom">
 		<legend class="headerPadding">Account Creation</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent"></div>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAccountCreateTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 
-
 	<fieldset data-app-role="chkoutAddressBill" data-app-addresstype="bill" class="marginBottom">
-		<legend class="headerPadding">Billing Address</legend>
-		<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
-		
-		<div data-tlc="bind $var '.@bill'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		
-		<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="bill">Add New Address</button></div>
-		
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
-		
-		<div data-app-role="billToShipContainer">
-		<label>
-		<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="applyAnycb" data-app-change="order_create|tagAsBillToShip" type="checkbox">
-		ship to billing address
-		</label>
+		<legend class="headerPadding">2 - Billing Address</legend>
+		<div class="panelContentContainer">
+			<p data-app-role="addressExists" class="displayNone clearfix">Click the checkmark of the address you would like to use</p>
+			
+			<div data-tlc="bind $var '.@bill'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
+			
+			<div class="clearfix marginBottom" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="bill">Add New Address</button></div>
+			
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressBillTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+			
+			<div data-app-role="billToShipContainer">
+				<label>
+					<input data-tlc="bind $var '.want.bill_to_ship'; if(is $var --notblank;) {{apply --select=$var;}}; " name="want/bill_to_ship" checked="checked" class="" data-app-change="order_create|tagAsBillToShip" type="checkbox">
+					ship to billing address
+				</label>
+			</div>
 		</div>
 	</fieldset>
 
@@ -54,46 +57,42 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role="chkoutAddressShip" data-app-addresstype="ship" class="displayNone marginBottom">
 		<legend class="headerPadding">Shipping Address</legend>
-		<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
-		<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
+		<div class="panelContentContainer">
+			<div data-tlc="bind $var '.@ship'; controller#loop --templateid='chkoutBuyerAddressTemplate'; if (is $var --notblank;) {{apply --append;}};" class="panelContent displayNone addressList" data-app-role="addressExists"></div><!-- for return customers -->
+			<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutAddressShipTemplate'; apply --append;" class="panelContent" data-app-role="addressNew"></div><!-- for new customers -->
+			<div class="clearfix" data-app-role="addressExists"><button class="applyButton" data-app-click="order_create|showBuyerAddressAdd" data-app-addresstype="ship">Add New Shipping Address</button></div>
+		</div>
 	</fieldset>
 
 
 
-	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom">
-		<legend class="headerPadding">Shipping Methods</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent"></div>
+	<fieldset data-app-role="chkoutMethodsShip" class="marginBottom vertHalf left">
+		<legend class="headerPadding">3 - Shipping Methods</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsShipTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
 
 
 	
-	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom">
-		<legend class="headerPadding">Payment Choices</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent"></div>
+	<fieldset data-app-role="chkoutMethodsPay" class="marginBottom vertHalf right">
+		<legend class="headerPadding">4 - Payment Choices</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutMethodsPayTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
-
-
-
-<!-- totals et all -->
-	<fieldset data-app-role="chkoutNotes" class="marginBottom">
-		<legend class="headerPadding">Order Notes/Special Instructions</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
-	</fieldset>
-
-
 
 <!-- line items -->	
-	<fieldset data-app-role="chkoutCartItemsList" class="marginBottom">
-		<legend class="headerPadding">Contents</legend>
-		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent"></div>
+	<fieldset data-app-role="chkoutCartItemsList" class="clear marginBottom">
+		<legend class="headerPadding">5 - Contents</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartContentsTemplate'; apply --append;" class="panelContent panelContentContainer"></div>
 	</fieldset>
-
-
+	
+<!-- totals et all -->
+	<!-- <fieldset data-app-role="chkoutNotes" class="marginBottom">
+		<legend class="headerPadding">Order Notes/Special Instructions</legend>
+		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutNotesTemplate'; apply --append;" class="panelContent"></div>
+	</fieldset> -->
 
 <!-- totals et all -->
 	<fieldset data-app-role="chkoutCartSummary" class="marginBottom">
-		<legend class="headerPadding">Summary</legend>
+		<legend class="headerPadding">6 - Summary</legend>
 		<div data-tlc="bind $var '.'; transmogrify --dataset=$var --templateid='chkoutCartSummaryTemplate'; apply --append;" class="panelContent"></div>
 	</fieldset>
 
@@ -109,14 +108,13 @@ item list and summary are separate just to give more control over location.
 	<h4 data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if (is $var --notblank;) {{apply --append;}};" class="displayNone" data-app-role="username"></h4>
 	
 	<div data-app-role="login">
-		<div class='floatLeft marginBottom'>
-			<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email"><br>
-			<label class="accountCreateContainer"><input name="want/create_customer" class="applyAnycb" data-app-change="order_create|tagAsAccountCreate" type="checkbox" >Create account</label>
+		<div class=''>
+			<input data-tlc="bind $var '.bill.email'; if(is $var --blank;) {{bind $var '.customer.login'; }}; if(is $var --notblank;) {{apply --select=$var;}}; " required="required" name="bill/email" size="30" placeholder="email address" data-app-blur="order_create|execBuyerEmailUpdate" type="email">
 		</div>
 	
-		<div data-app-role="loginPasswordContainer" class="displayNone floatRight passwordContainer">
-			<div>If you have an account with us, please enter your password below to login</div>
-			<input placeholder="password" size="30" name="password" type="password"><button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
+		<div data-app-role="loginPasswordContainer" class="displayNone passwordContainer">
+			<input placeholder="password" size="30" name="password" type="password"><span class="optional" >(Optional)</span>
+			<button class="applyButton" data-app-click="order_create|execBuyerLogin">login</button>
 		</div>
 	</div>
 
@@ -406,10 +404,40 @@ do NOT change the input name or id or checkout will likely break.
 
 
 
+<div id="GTSOrderTemplate">
+	<!-- START Google Trusted Stores Order -->
+	<div data-tlc="set $var 'gts-order'; apply --attrib='id'; set $var " style="display:none;" translate="no">
+
+	  <!-- start order and merchant information -->
+	  <span data-tlc="set $var 'gts-o-id'; apply --attrib='id'; bind $var '.orderid'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-domain'; apply --attrib='id'; store_swc#sdomain; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-email'; apply --attrib='id'; bind $var '.order.bill.email'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-country'; apply --attrib='id'; bind $var '.order.bill.countrycode'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-currency'; apply --attrib='id';">USD</span>
+	  <span data-tlc="set $var 'gts-o-total'; apply --attrib='id'; bind $var '.order.sum.order_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-discounts'; apply --attrib='id';">0</span>
+	  <span data-tlc="set $var 'gts-o-shipping-total'; apply --attrib='id'; bind $var '.order.sum.shp_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-tax-total'; apply --attrib='id'; bind $var '.order.sum.tax_total'; apply --append;"></span>
+	  <span data-tlc="set $var 'gts-o-est-ship-date'; apply --attrib='id';">ORDER_EST_SHIP_DATE</span>
+	  <span data-tlc="set $var 'gts-o-est-delivery-date'; apply --attrib='id';">ORDER_EST_DELIVERY_DATE</span>
+	  <span data-tlc="set $var 'gts-o-has-preorder'; apply --attrib='id';">HAS_BACKORDER_PREORDER</span>
+	  <span data-tlc="set $var 'gts-o-has-digital'; apply --attrib='id';">HAS_DIGITAL_GOODS</span>
+	  <!-- end order and merchant information -->
+
+	</div>
+	<!-- END Google Trusted Stores Order -->
+</div>
 
 
-
-
+<span id="GTSItemTemplate" class="gts-item">
+	<span class="gts-i-name">ITEM_NAME</span>
+	<span class="gts-i-price">ITEM_PRICE</span>
+	<span class="gts-i-quantity">ITEM_QUANTITY</span>
+	<span class="gts-i-prodsearch-id">ITEM_GOOGLE_SHOPPING_ID</span>
+	<span class="gts-i-prodsearch-store-id">ITEM_GOOGLE_SHOPPING_ACCOUNT_ID</span>
+	<span class="gts-i-prodsearch-country">ITEM_GOOGLE_SHOPPING_COUNTRY</span>
+	<span class="gts-i-prodsearch-language">ITEM_GOOGLE_SHOPPING_LANGUAGE</span>
+</span>
 
 
 <!-- used after a successful checkout.  -->
@@ -417,8 +445,12 @@ do NOT change the input name or id or checkout will likely break.
 <div id="chkoutCompletedTemplate" class="checkoutSuccess">
 
 	<div class="floatRight ocmThirdParty" data-app-role="thirdPartyContainer"></div>
-
-
+	
+	<!-- <div data-tlc="bind $var '.'; transmogrify --templateid='GTSOrderTemplate' --dataset=$var; apply --append;" -->
+	<!-- <div class="displayNone" data-tlc="bind $var '.@TRACKERS'; foreach $i in $var {{ set $o $i --path='.owner'; if(is $o --eq='google-trustedstores';){{set $i $i --path='.script'; apply --append;}}; }};"></div> -->
+	<!-- <iframe class="displayNone" data-tlc="bind $var '.orderid'; format --prepend='https://www.sportsworldchicago.com/jsonapi/plugin/GOOGLETRUSTEDSTORES.html?orderid='; apply --attrib='src';"></iframe> -->
+	
+	
 	<div class="orderSummaryDetails">
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-tlc="bind $var '.orderid'; if (is $var --notblank;) {{format --prepend='Your order id is '; apply --append;}};"></h3>

@@ -14,6 +14,12 @@
 <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 <meta name="expires" content="0">
 <META NAME="ROBOTS" CONTENT="NONE">
+<!-- INTERCOM.IO -->
+<script>(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;
+//Commerce-Engine's Intercom app id is: de6tmbrt
+s.src='https://widget.intercom.io/widget/de6tmbrt';
+
+var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()</script>
 
 <script type="text/javascript">
 
@@ -55,11 +61,51 @@ https://developers.google.com/speed/articles/include-scripts-properly -> section
 <script type="text/javascript" src="controller.js"></script>
 <script type="text/javascript" src="model.js"></script>
 
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.showloading-v1.0.jt.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jsonpath.0.8.0.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/tlc.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/peg-0.8.0.js"></script>
+
+<script data-apptimize="embed" type="text/javascript" src="includes.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/anycontent.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.jeditable.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="app-admin/resources/highcharts-3.0.1/highcharts.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/crypto-md5-2.5.3.js"></script>
+
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery-ui-timepicker-addon.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/jquery-ui-timepicker-addon.css" />
+
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.anyplugins.js"></script>
+<link rel="stylesheet" type="text/css" href="resources/anyplugins.css" />
+
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.ui.qrcode-0.7.0.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="app-admin/resources/jquery.ebay-specifics-form.js"></script>
+
+<link rel="stylesheet" type="text/css" href="app-admin/resources/jquery.contextMenu.css" />
+<script data-apptimize="embed" type="text/javascript" src="app-admin/resources/jquery.contextMenu.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="app-admin/resources/jquery.ui.position.js"></script>
+
+<script data-apptimize="embed" type="text/javascript" src="resources/load-image.min.js"></script>
+<script data-apptimize="embed" type="text/javascript" src="resources/jquery.image-gallery.jt.js"></script>
+
+<script type="text/javascript">
+	(function(){
+		var href = '';
+		if(document.location.protocol == "file:"){
+			//leave the base as is
+			}
+		else{
+			href = window.location.pathname.replace('app-admin.html','');
+			}
+		$('head').append('<base href="'+href+'" />');
+		})()
+</script>
+
 <script type="text/javascript">
 $(document).ready(function(){
 	window.adminApp = new initApp({
 		/////////////////////////////////\
-		"release":"201408.g",   ///|> Don't forget to tag the repo when this changes. Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+		"release":"201411.b",   ///|> Don't forget to tag the repo when this changes. Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 		//////////////////////////////////
 		"thisSessionIsAdmin": true,
 		"checkoutAuthMode" : 'order_create', //used to load the appropriate checkout/order create template file
@@ -219,11 +265,11 @@ $(document).ready(function(){
 	<div id='mastHead'>
 	
 		<div class='headerTop'>
-			<div class='logo pointer alignCenter' onClick="navigateTo('#!dashboard');" title='home'><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
+			<div class='logo pointer alignCenter' onClick="navigateTo('/dashboard');" title='home'><img src='app-admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
 			<div class='menu floatRight'>
-				<span class='pointer lookLikeLink' onClick="return navigateTo('#!showPlatformInfo');">About</span>
-				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!ext/admin_task/showTaskManager');" title='view and edit your task list'>Tasks</span>
-				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!logout');" title='log out of your account' >Exit</span>
+				<span class='pointer lookLikeLink' onClick="return navigateTo('/showPlatformInfo');">About</span>
+				| <span class='pointer lookLikeLink' onClick="return navigateTo('/ext/admin_task/showTaskManager');" title='view and edit your task list'>Tasks</span>
+				| <span class='pointer lookLikeLink' onClick="return navigateTo('/logout');" title='log out of your account' >Exit</span>
 			</div>
 			
 			<div class='floatRight marginRight'>
@@ -235,62 +281,62 @@ $(document).ready(function(){
 		<div class='mhTabsContainer'>
 		<ul class='showIcons navIcons'>
 			<li class='toggleArrow alignCenter' onClick="adminApp.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
-			<li class='setupTab' onClick="navigateTo('#!tab/setup');">
+			<li class='setupTab' onClick="navigateTo('/tab/setup');">
 				<span class='text'>Setup</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="setup?animFunc=fwd" data-animation-mouseout="setup?animFunc=back"></span>
 				<span class='animIcon' data-animation="setup?imgsrc=app-admin/images/header_anime/setup_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=55&amp;height=55&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='sitesTab' onClick="navigateTo('#!tab/sites');">
+			<li class='sitesTab' onClick="navigateTo('/tab/sites');">
 				<span class='text'>Sites &amp; Apps</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="sites?animFunc=loop" data-animation-mouseout="sites?animFunc=stop&amp;animCallback=goToFirstFrame"></span>
 				<span class='animIcon' data-animation="sites?imgsrc=app-admin/images/header_anime/sites_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=42&amp;height=32&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=120" ></span>
 			</li>
-			<li class='productTab' onClick="navigateTo('#!tab/product');">
+			<li class='productTab' onClick="navigateTo('/tab/product');">
 				<span class='text'>Product</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="products?animFunc=loop" data-animation-mouseout="products?animFunc=stop&amp;animCallback=goToFirstFrame"></span>
 				<span class='animIcon' data-animation="products?imgsrc=app-admin/images/header_anime/products_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=45&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=120" ></span>
 			</li>
-			<li class='ordersTab' onClick="navigateTo('#!tab/orders');">
+			<li class='ordersTab' onClick="navigateTo('/tab/orders');">
 				<span class='text'>Orders</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="orders?animFunc=fwd&amp;start=0"></span>
 				<span class='animIcon' data-animation="orders?imgsrc=app-admin/images/header_anime/orders_sprite.png&amp;frameCount=13&amp;startFrame=12&amp;width=61&amp;height=42&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='crmTab' onClick="navigateTo('#!tab/crm');">
+			<li class='crmTab' onClick="navigateTo('/tab/crm');">
 				<span class='text'>CRM</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="crm?animFunc=fwd" data-animation-mouseout="crm?animFunc=back"></span>
 				<span class='animIcon' data-animation="crm?imgsrc=app-admin/images/header_anime/crm_sprite.png&amp;frameCount=16&amp;startFrame=0&amp;width=62&amp;height=36&amp;xGap=5&amp;x1=65&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='syndicationTab' onClick="navigateTo('#!tab/syndication');">
+			<li class='syndicationTab' onClick="navigateTo('/tab/syndication');">
 				<span class='text'>Marketplaces</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="marketplaces?animFunc=fwd&amp;start=0"></span>
 				<span class='animIcon' data-animation="marketplaces?imgsrc=app-admin/images/header_anime/marketplaces_sprite.png&amp;frameCount=15&amp;startFrame=14&amp;width=60&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60"></span>
 			</li>
-			<li class='reportsTab' onClick="navigateTo('#!tab/reports');">
+			<li class='reportsTab' onClick="navigateTo('/tab/reports');">
 				<span class='text'>Reports</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="reports?animFunc=fwd&amp;start=0"></span>
 				<span class='animIcon' data-animation="reports?imgsrc=app-admin/images/header_anime/reports_sprite.png&amp;frameCount=15&amp;startFrame=14&amp;width=33&amp;height=39&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='kpiTab' onClick="navigateTo('#!tab/kpi');">
+			<li class='kpiTab' onClick="navigateTo('/tab/kpi');">
 				<span class='text'>KPI</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="kpi?animFunc=loop&amp;start=0" data-animation-mouseout="kpi?animFunc=stop&amp;animCallback=goToFirstFrame" ></span>
 				<span class='animIcon' data-animation="kpi?imgsrc=app-admin/images/header_anime/kpi_sprite.png&amp;frameCount=33&amp;startFrame=0&amp;width=41&amp;height=32&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
-			<li class='utilitiesTab' onClick="navigateTo('#!tab/utilities');">
+			<li class='utilitiesTab' onClick="navigateTo('/tab/utilities');">
 				<span class='text'>Utilities</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="utilities?animFunc=fwd" data-animation-mouseout="utilities?animFunc=back"></span>
 				<span class='animIcon' data-animation="utilities?imgsrc=app-admin/images/header_anime/utilities_sprite.png&amp;frameCount=15&amp;startFrame=0&amp;width=53&amp;height=53&amp;xGap=5&amp;x1=70&amp;y=0&amp;frameDur=60" ></span>
 			</li>
 
-			<li class='supportTab' onClick="navigateTo('#!tab/support');">
+			<li class='supportTab' onClick="navigateTo('/tab/support');">
 				<span class='text'>Support</span>
 				<span class='icon'></span>
 				<span class="animator" data-animation-mouseenter="support?animFunc=fwd" data-animation-mouseout="support?animFunc=back"></span>
@@ -446,10 +492,10 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <ul class='debugMenu'>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<li><a href='#' onClick="navigateTo('#!ext/admin_template/showTemplateEditor',{'mode':'Campaign','campaignid':'201312052_2013122'}); return false;">showNewTemplateEditor</a>
+		<li><a href='#' onClick="navigateTo('/ext/admin_template/showTemplateEditor',{'mode':'Campaign','campaignid':'201312052_2013122'}); return false;">showNewTemplateEditor</a>
 		<li><a href='#' onClick="adminApp.model.addDispatchToQ({'_cmd':'adminConfigDetail','tuning':'1'},'mutable'); adminApp.model.dispatchThis('mutable'); return false;">adminConfigDetail -> tuning</a></li>
-		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!ext/admin_template/showAppChooser'); return false;">App Chooser</a></li>
+		<li><a href='#' onClick="navigateTo('/launchpad'); return false;">Launchpad</a></li>
+		<li><a href='#' onClick="navigateTo('/ext/admin_template/showAppChooser'); return false;">App Chooser</a></li>
 		<li><a href='#' onClick="adminApp.ext.admin_trainer.a.showTrainerInModal(); return false;">Trainer</a></li>
 		<li><a href='#' onClick="$('#setupContent').empty(); adminApp.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>
@@ -475,6 +521,222 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 
+<script type="text/pegjs" id="pegjs">
+dataTLC
+ = grammar+
+
+grammar
+ = _ cmd:(IfStatement) _ lb* { return cmd; }
+ / _ cmd:(WhileLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(ForeachLoopStatement) _ lb* { return cmd; }
+ / _ cmd:(BindStatement) _ lb* { return cmd; } 
+ / _ cmd:(SetStatement) _ lb* { return cmd; } 
+ / _ cmd:(ExportStatement) _ lb* { return cmd; } 
+ / _ cmd:(command) _ lb* { return cmd; }
+
+command
+ = _ module:([a-z_]+ "#")? cmd:[a-z?]+ args:((ws+ value)+)? _ lb* {
+     return {
+       type: "command",
+       module: module ? module[0].join("") : "core",
+       name: cmd.join("").toLowerCase(),
+       args: args ? args.map(function(a) { return a[1] }) : null
+     }
+   }
+
+
+// ** BIND **
+// bind $var 'something'; (jsonpath lookup)
+// bind $var $someothervar; (jsonpath lookup)
+// bind $var ~tag; (returns tag id/path)
+// bind ~tag '#tagid'; jQuery('#tagid')
+// bind ~tag $tagid jQuery($tagid)
+BindStatement
+ = "bind" _ set:(variable / tag) _ src:(variable / scalar / tag) _ lb+ {
+  return { type:"BIND", Set:set, Src:src }
+  }
+
+
+// ** EXPORT **
+// export 'key' --dataset=$var
+// export '%key' --dataset=$var
+ExportStatement
+= "export" _ set:(scalar / variable) args:(ws+ value)+ _ lb+ {
+  return { type:"EXPORT", Set:set, args: args ? args.map(function(a) { return a[1] }) : null } 
+  }
+
+// ** SET ** 
+// set $dst $src --path='.xyz';
+SetStatement
+ = "set" _ set:(variable / tag) _ src:(variable / scalar / tag / boolean / integer) args:((ws+ value)+)? _ lb+ {
+  return { type:"SET", Set:set, Src:src, args: args ? args.map(function(a) { return a[1] }) : null }
+  }
+
+// if (command) {{ }} else {{ }};
+IfStatement
+  = "if" _ "(" _ condition:command _ ")" _ ifStatement:Block elseStatement:(_ "else" _ Block)? _ lb+ {
+      return ({
+        type: "IF",
+        When: condition,
+        IsTrue: ifStatement,
+        IsFalse: elseStatement !== null ? elseStatement[3] : null
+      });
+   }
+
+// while (something) {{ inner loop }};
+WhileLoopStatement
+  = "while" _ "(" _ condition:command _ ")" _ whileStatement:Block lb+ {
+      return ({
+        type: "WHILE",
+        While: condition,
+        Loop: whileStatement,
+      });
+   }
+
+
+// foreach $item in $items {{ inner loop }};
+ForeachLoopStatement
+  = "foreach" _ set:(variable) _ "in" _ members:(variable) _ loop:Block lb+ {
+      return ({
+        type: "FOREACH",
+        Set: set,
+        Members: members,
+        Loop: loop,
+      });
+   }
+
+
+Block
+  = "{{" _ statements:(StatementList _)? "}}" {
+      return {
+        type: "Block",
+        statements: statements !== null ? statements[0][0] : []
+      };
+    }
+
+StatementList
+  = head:Statement tail:(_ Statement)* {
+      var result = [head];
+      for (var i = 0; i < tail.length; i++) {
+        result.push(tail[i][1]);
+      }
+      return result;
+    }
+
+Statement
+  = Block
+  / grammar+
+
+
+/* value types */
+
+// ~tag is a reference to a jquery object
+tag
+ = "~" tag:([a-zA-Z]+) {
+   // tag table should maintain reference to tags on DOM
+   return { type:"tag", tag:tag.join(""), jq:null }
+   }
+
+boolean
+ = "true" {return{ "type":"boolean", "value": true }}
+ / "false" {return{ "type":"boolean", "value": false }}
+
+// longopt start with a --
+longopt
+ = "--" k:([a-zA-Z]+) "=" v:( value ) {
+    return {
+       type: "longopt",
+       key: k.join(""),
+       value: v
+       }
+    }
+ / "--" k:([a-zA-Z]+) {
+    return {
+      type: "longopt",
+      key: k.join(""),
+      value: null
+      }
+    }
+
+
+// scalar (string)
+// NOTE: at this point there is no way to escape a ' in a string.
+//
+scalar
+ = "'" v:([^']*) "'" {
+     return {
+       type: "scalar",
+       value: v.join("")
+     }
+   }
+
+// Variables can't start with a number
+variable
+ = "$" v:([a-zA-Z0-9_]*) {
+     return {
+       type: "variable",
+       value: v.join("")
+     }
+   }
+
+integer
+  = digits:[0-9]+ {
+      return {
+        type: "integer",
+        value: parseInt(digits.join(""), 10)
+      }
+    }
+
+hexcolor
+  = "#" v:([A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9][A-Fa-f0-9]) {
+     return { type:"hexcolor", value: v.join("") }
+     }
+
+additive
+  = left:muldiv _ sign:[+-] _ right:additive {
+      return {
+        type: "command",
+        name:sign,
+        args:[left,right]
+      }
+    }
+  / muldiv
+
+muldiv
+  = left:primary _ sign:[*/] _ right:muldiv {
+      return {
+        type: "command",
+        name: sign,
+        args:[left, right]
+      }
+    }
+  / primary
+
+primary
+  = (variable / integer)
+  / "(" _ additive:additive _ ")" { return additive; }
+
+value
+ = longopt / variable / integer / scalar / boolean / tag / hexcolor / additive
+
+// /* i am a comment (i can only appear before a command) */
+comment
+  = "/*" (!"*/" SourceCharacter)* "*/" { return{}; }
+
+SourceCharacter
+  = .
+
+ws
+ = [ \t\n\r]
+
+_
+ = (ws / comment)*
+
+lb
+ = ";"
+
+
+</script>
 
 
 

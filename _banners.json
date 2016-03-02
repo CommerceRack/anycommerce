@@ -1,0 +1,44 @@
+[
+	{
+		"src":"banners/wrigley_centennial_banner.png",
+		"alt":"100 Years of Wrigley Field",
+		"title":"100 Years of Wrigley Field",
+		"href":"/filter/100_years_of_wrigley_field/"
+	},
+	{
+		"src":"banners/2014/chicago_bears_transparent_artwork.png",
+		"alt":"Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com",
+		"title":"Chicago Bears Shirts, Hats, Apparel and Souvenirs at SportsWorldChicago.com",
+		"href":"/filter/bears/"
+	},
+	{
+		"src":"banners/2014/sportsworldchicago_nike_transparent_banner_v2.png",
+		"alt":"Authentic Chicago Cubs Nike Apparel at SportsWorldChicago.com",
+		"title":"Authentic Chicago Cubs Nike Apparel at SportsWorldChicago.com",
+		"href":"/search/keywords/nike/"
+	},
+	{
+		"src":"banners/2014/chicago_blackhawks_transparent_banner_3.png",
+		"alt":"Chicago Blackhawks Shirts, Jerseys, Hats at SportsWorldChicago.com",
+		"title":"Chicago Blackhawks Shirts, Jerseys, Hats at SportsWorldChicago.com",
+		"href":"/filter/blackhawks/"
+	},
+	{
+		"src":"banners/chicago_cubs_authentic_jersey_homepage_banner.png",
+		"alt":"Authentic Jerseys at SportsWorldChicago.com",
+		"title":"Authentic Jerseys at SportsWorldChicago.com",
+		"href":"/filter/jerseys/"
+	},
+	{
+		"src":"banners/chicago_cubs_hats_banner_homepage.png",
+		"alt":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
+		"title":"Chicago Cubs Caps and Hats at SportsWorldChicago.com",
+		"href":"/filter/hats/"
+	},
+	{
+		"src":"banners/2014/blackhawks_transparent_banner.png",
+		"alt":"Chicago Blackhawks Apparel and Merchandise",
+		"title":"Chicago Blackhawks Apparel and Merchandise",
+		"href":"/filter/blackhawks/"
+	}
+]

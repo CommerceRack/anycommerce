@@ -1,0 +1,31 @@
+{
+	//The font of the text.  Accepted values are:
+	//	LHFoldblock
+	//	LHFoldblockREGMED
+	//	LHFoldblockREGBOLD
+	//	LHFoldblockCONDMED
+	//	LHFoldblockCONDBOLD
+	"font" : "LHFoldblockCONDMED",
+	
+	//attributes for the jersey name
+	"name" : {
+		"size" : 25,				//Font Size
+		"charSize" : 12,			//Width of a character (used for spacing on the arc
+		"radius" : 190,				//Radius of the arc for the text
+		"color" : "28489B",			//Hex color for the text
+		"strokeColor" : "DB2321",	//Hex color for the text outline
+		"strokeThickness" : 1,		//Thickness of outline
+		"xOffset" : -1,				//Horizontal offset from center (0).  Negative values move the text left, Positive right
+		"y" : 50					//Distance from the top edge to bottom of highest text
+	},
+	
+	//attributes for the jersey number
+	"number" : {
+		"size" : 65,				//Font Size
+		"color" : "28489B",			//Hex color for the text
+		"strokeColor" : "DB2321",	//Hex color for the text outline
+		"strokeThickness" : 3,		//Thickness of outline
+		"xOffset" : -1,				//Horizontal offset from center (0).  Negative values move the text left, Positive right
+		"y" : 50					//Distance from the top edge to top of text
+	}
+}

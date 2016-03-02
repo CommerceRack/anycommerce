@@ -80,7 +80,7 @@ The advantage of saving the data in memory and local storage is lost if the data
 		getDetailedProduct : {
 			init : function(obj,tagObj,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-//				_app.u.dump("BEGIN _app.ext.store_product.calls.appProductGet");
+//				_app.u.dump("BEGIN _app.ext.store_prodlist.calls.appProductGet");
 //				_app.u.dump(" -> PID: "+obj.pid);
 //				_app.u.dump(" -> obj['withReviews']: "+obj['withReviews']);
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
@@ -381,6 +381,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 */
 
 			setProdlistVars : function(obj)	{
+				dump(obj);
 //				_app.u.dump("BEGIN store_prodlist.u.setProdlistVars"); _app.u.dump(obj);
 				var r = false;
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
@@ -545,7 +546,7 @@ params that are missing will be auto-generated.
 
 //Need either the tag itself ($tag) or the parent id to build a list. recommend $tag to ensure unique parent id is created
 //also need a list of product (csv)
-				if(($tag || (obj && obj.parentID)) && obj.csv)	{
+				if($tag && obj.csv)	{
 //					_app.u.dump(" -> required parameters exist. Proceed...");
 					obj.csv = _app.ext.store_prodlist.u.cleanUpProductList(obj.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
 
@@ -575,22 +576,23 @@ params that are missing will be auto-generated.
 					var plObj = this.setProdlistVars(obj); //full prodlist object now.
 
 //need a jquery obj. to work with.
-					if($tag)	{$tag.attr('id',plObj.parentID);}
-					else	{$tag = $('#'+plObj.parentID);}
+					// if($tag)	{$tag.attr('id',plObj.parentID);}
+					// else	{$tag = $('#'+plObj.parentID);}
 					
 				
 					$tag.data('pageProductLoaded',0); //used to count how many product have been loaded on this page (for prodlistComplete)
 					$tag.data('totalProductLoaded',0); //used to count how many product have been loaded for total count (for prodlistComplete)					
 					
 //a wrapper around all the prodlist content is created just once. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
-					if($('#'+plObj.parentID+'_container').length == 0)	{
+					if($tag.closest('[data-app-role=prodListContainer]').length == 0){
 						if($tag.is('tbody'))	{
-							$tag.closest('table').wrap("<div id='"+plObj.parentID+"_container' />");
+							$tag.closest('table').wrap("<div data-app-role='prodListContainer' />");
 							}
 						else	{
-							$tag.wrap("<div id='"+plObj.parentID+"_container' />");
+							$tag.wrap("<div data-app-role='prodListContainer' />");
 							}
 						}
+					$tag.closest('[data-app-role=prodListContainer]').data('targetlist', $tag);
 //adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
 //can't just transmogrify beccause sequence is important and if some data is local and some isn't, order will get messed up.
 
@@ -632,8 +634,8 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 			mpJumpToPage : function($pageTag)	{
 				if($pageTag.attr('disabled') != 'disabled'){
 //					_app.u.dump("BEGIN _app.ext.store_prodlist.u.mpJumpToPage");
-					var targetList = $pageTag.closest('[data-targetlist]').attr('data-targetlist');
-					var plObj = $('#'+targetList).data('prodlist');
+					var targetList = $pageTag.closest('[data-app-role=prodListContainer]').data('targetlist');
+					var plObj = targetList.data('prodlist');
 
 //figure out what page to show next.
 //the multipage controls take care of enabling/disabling next/back buttons to ensure no 'next' appears/is clickable on last page.				

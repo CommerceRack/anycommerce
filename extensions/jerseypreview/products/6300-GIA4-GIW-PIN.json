@@ -1,0 +1,11 @@
+{
+	"font" : "LHFoldblockCONDMED",
+	"number" : {
+		"size" : 80,
+		"color" : "21221D",
+		"strokeColor" : "FFDBB8",
+		"strokeThickness" : 1.5,
+		"xOffset" : -1,
+		"y" : 30
+	}
+}

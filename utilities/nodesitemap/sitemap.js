@@ -57,10 +57,11 @@ if(opts['customurls']){
 //
 // now load all products and categories
 //
+console.log('running fetch');
 var request = new XMLHttpRequest();
-request.open('GET','http://www.sportsworldchicago.com/jsonapi/call/v201410/appSEOFetch',false);
+request.open('GET','https://www.sportsworldchicago.com/jsonapi/call/v201410/appSEOFetch',false);
 request.send(null);
-
+// console.log(request.responseText);
 var urls = JSON.parse(request.responseText);
 // console.log(urls['@OBJECTS']);
 
@@ -74,10 +75,10 @@ for( var i in urls['@OBJECTS'] ) {
 				var url = '';
 				switch (res.type) {
 						case 'pid':
-								url = '/product/' + res.id;
+								url = '/product/' + res.id + '/';
 								break;
 						case 'navcat':
-								url = '/category/' + res.id.substr(1);  // strip leading . in category name
+								url = '/category/' + res.id.substr(1) +'/';  // strip leading . in category name
 								break;
 						case 'list' :
 								// we don't index these.
@@ -105,7 +106,7 @@ var CHUNKS = new Array;
 while (URLS.length > 0) {
         if (CHUNKS[CHUNKCOUNT]  == null) { CHUNKS[CHUNKCOUNT] = new Array; }    // initialize array
         CHUNKS[CHUNKCOUNT].push( URLS.shift() );
-        if (CHUNKS[CHUNKCOUNT].length > 50000) { CHUNKCOUNT++; }
+        if (CHUNKS[CHUNKCOUNT].length >= 50000) { CHUNKCOUNT++; }
         }
 
 //
@@ -131,7 +132,7 @@ while (CHUNKS.length>0) {
         URLS = CHUNKS.shift();
         for(var i in URLS) {
                 var url = URLS[i];
-                url = 'http://' + DOMAIN + url;
+                url = 'https://' + DOMAIN + url;
                 xw.startElement("url");
                         xw.startElement("loc").text(url).endElement();
                         xw.startElement("priority").text("1").endElement();
@@ -144,7 +145,7 @@ while (CHUNKS.length>0) {
 
         var FILENAME = 'sitemap-'+DOMAIN+'-'+FILENUM+'.xml';
         si.startElement('sitemap');
-                si.startElement('loc').text( 'http://' + DOMAIN + '/' + FILENAME).endElement();
+                si.startElement('loc').text( 'https://' + DOMAIN + '/' + FILENAME).endElement();
                 si.startElement('lastmod').text(datestr).endElement();
         si.endElement();
         si.writeRaw("\n");

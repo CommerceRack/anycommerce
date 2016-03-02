@@ -33,7 +33,7 @@ order list
 
 #orderListMessaging	{max-height:220px; overflow:auto;}
 #orderList	{margin:0 auto;font-size:.8em;} /* the container. the margin will center it on the page */
-.orderManagerTable, #orderListTable	{width:100%;}
+.orderManagerTable, .orderListTable	{width:100%;}
 
 table.orderManagerTable	{
 	border-spacing:0;
@@ -50,7 +50,7 @@ table.orderManagerTable	{
 
 .orderManagerTable .ui-accordion-header	{border-right:0} /* right border not needed. bounding box handles it */
 
-#orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
+.orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
 .filterGroup ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
 .filterGroup li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
 
@@ -121,7 +121,7 @@ order detail
 .orderMailMenuList a	{text-decoration:none; padding:3px 6px; font-size:.75em;} /* the list of emails in the dropdown for send mail */
 
 /* compensate for some default styling to make supplemental contain wrap up right against the corresponding payment type */
-#adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
+.adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
 .paybySupplemental	{margin-top:0; padding:.6em}
 .paybySupplemental div	{margin-bottom:.3em}
 /* payment panel */

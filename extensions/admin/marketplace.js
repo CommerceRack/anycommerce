@@ -42,7 +42,7 @@ var admin_marketplace = function(_app) {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 //the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/marketplace.html',theseTemplates);
 
 				r = true;
 
@@ -114,6 +114,7 @@ var admin_marketplace = function(_app) {
 						_rtag.jqObj.hideLoading();
 						_rtag.jqObj.anycontent({'templateID':'syndication_register_ebf','showLoading':false});
 						_app.u.handleAppEvents(_rtag.jqObj);
+						_app.u.handleButtons(_rtag.jqObj);
 						}
 					}
 				else	{
@@ -258,7 +259,7 @@ var admin_marketplace = function(_app) {
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
 				_app.u.handleAppEvents($target);
 				
-				_app.ext.admin_reports.u.getChartData($("#syndicationSummaryChartOne",$target).show().addClass("graphType_pie"),{"function":"sum","graph":"pie","period":"days.7","grpby":"none","dataColumns":"dynamic","column":"gms","ddataset":"MARKETS","datasetGrp":"","title":"7 Day Gross Sales Summary by Integrations","collection":"collection/graph location","@datasets":["MARKETS"],"_cmd":"adminKPIDBDataQuery"});
+				_app.ext.admin_reports.u.getChartData($(".syndicationSummaryChartOne",$target).show().addClass("graphType_pie"),{"function":"sum","graph":"pie","period":"days.7","grpby":"none","dataColumns":"dynamic","column":"gms","ddataset":"MARKETS","datasetGrp":"","title":"7 Day Gross Sales Summary by Integrations","collection":"collection/graph location","@datasets":["MARKETS"],"_cmd":"adminKPIDBDataQuery"});
 				_app.model.dispatchThis('mutable');
 				}, //showSyndication
 
@@ -345,6 +346,7 @@ var admin_marketplace = function(_app) {
 						else	{
 							$target.anycontent({'templateID':'syndication_register_ebf','showLoading':false,'dataAttribs':{'dst':'EBF'}});
 							_app.u.handleAppEvents($target);
+							_app.u.handleButtons($target);
 							}
 						}
 					}}},'mutable');
@@ -624,7 +626,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 									$ItemSpecificsArea.ebaySpecificsFormBuild(_app.data[rd.datapointer]);
 									//$ItemSpecificsArea.ebaySpecificsFormBuild(_app.data[rd.datapointer]);
 									//_app.u.dump(_app.data[rd.datapointer]);
-									$('#APIForm').show(); //form is hidden by default
+									$('form[name=APIForm]').show(); //form is hidden by default
 									// chooser block can become long when you browse the category tree
 									// and ItemSpecificsForm appears on the top -> scroll there
 									$('#ebayCategoryChooser').animate({ scrollTop:0 }, 600);
@@ -639,7 +641,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 						else	{
 //							_app.u.dump(" -> get subcats");
 							$ItemSpecificsArea.empty(); //this will get re-populated on another leaf click.
-							$('#APIForm').hide(); //cleans up the ui to hide this. inappropriate buttons are hidden.
+							$('form[name=APIForm]').hide(); //cleans up the ui to hide this. inappropriate buttons are hidden.
 							var $ul = $("<ul \/>",{'id':'children4_'+$li.data('categoryid'),'data-bind':'var: ebay(@CHILDREN); format: processList; loadsTemplate:ebayCategoryListitemTemplate;'});
 							$ul.addClass('noPadOrMargin marginLeft').appendTo($li)
 							$ul.showLoading({'message':'Fetching Categories...'});
@@ -702,7 +704,7 @@ pass in an LI.  expects certain data params to be set on the li itself. specific
 //					_app.u.dump("BEGIN admin_marketplace.u.ebayShowTreeByChild");
 //					_app.u.dump(' -> categoryid: '+categoryid);
 					//_app.u.dump(vars);
-					$('#APIForm').show(); //make sure form is visible.
+					$('form[name=APIForm]').show(); //make sure form is visible.
 					var $chooser = $('#ebayCategoryChooser');
 					var $ItemSpecificsArea = $("[data-app-role='ebayItemSpecificsContainer']",$chooser);
 					$chooser.data('categoryid',categoryid); //update the 'global' data object to reference the category now in focus.
@@ -759,7 +761,7 @@ if(categoryid && data.pid)	{
 							$ItemSpecificsArea.ebaySpecificsFormBuild(leafData);
 							_app.u.handleAppEvents($chooser);
 							$("[data-categoryid='"+categoryid+"']:first",$chooser).addClass('activeListItem');
-							$('#APIForm').show(); //form is hidden by default
+							$('form[name=APIForm]').show(); //form is hidden by default
 							// chooser block can become long when you browse the category tree
 							// and ItemSpecificsForm appears on the top -> scroll there
 							$('#ebayCategoryChooser').animate({ scrollTop:0 }, 600);

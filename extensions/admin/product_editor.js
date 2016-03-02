@@ -73,7 +73,7 @@ var admin_prodedit = function(_app) {
 				onSuccess : function()	{
 					var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 					_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/product_editor.css','product_editor_styles']);
-					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
+					// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
 	//				window.savePanel = _app.ext.admin.a.saveProductPanel; //for product editor. odd. this function doesn't exist. commented out by JT on 2012-11-27
 
 					return r;
@@ -3082,7 +3082,7 @@ function type2class(type)	{
 
 			webPageEditor : function($ele,p)	{
 				var pid = $ele.closest("[data-pid]").data('pid');
-				if(pid)	{navigateTo('#!/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PRODUCT&FS=P&SKU='+pid);}
+				if(pid)	{navigateTo('/biz/vstore/builder/index.cgi?ACTION=INITEDIT&FORMAT=PRODUCT&FS=P&SKU='+pid);}
 				else	{_app.u.throwGMessage("In admin_prodedit.uiActions.webPageEditor, unable to determine pid.");}
 				}, //webPageEditor
 
@@ -3404,7 +3404,7 @@ function type2class(type)	{
 			
 			variationSearchByIDExec : function($ele,p)	{
 				var varID = $ele.closest('tr').data('id');
-				navigateTo('#!tab/product');
+				navigateTo('/tab/product');
 				_app.ext.admin_prodedit.u.prepContentArea4Results($('#productContent'));
 				$("[data-app-role='productManagerSearchResults']",$('#productContent')).showLoading({'message':'Performing search...'});
 
@@ -3713,7 +3713,7 @@ function type2class(type)	{
 					_app.u.addEventDelegation($tab);
 					$tab.empty().append(_app.ext.admin_prodedit.a.getVariationEditor('store',_app.data.adminSOGComplete['%SOGS'][$ele.closest('tr').data('id')]).anyform({'trackEdits':true}));
 					$("[data-app-role='variationsHeaderContainer']:first","#"+_app.ext.admin.vars.tab+'Content').addClass('smallButton').prepend($("<button \/>").addClass('floatRight').text('Global Variations').button({icons: {primary: "ui-icon-arrowthick-1-w"},text: true}).on('click',function(){
-						navigateTo("#!ext/admin_prodedit/showStoreVariationsManager");
+						navigateTo("/ext/admin_prodedit/showStoreVariationsManager");
 						}));
 					}
 				else if($ele.data('variationmode') == 'product')	{
@@ -3905,7 +3905,7 @@ function type2class(type)	{
 										var $VM = $("[data-app-role='variationManager']",$(_app.u.jqSelector('#',_app.ext.admin.vars.tab+'Content')))
 										if($VM.length)	{
 											//if VM has length, this is store variation manager, NOT adding a store variation from the product editor. refresh the list.
-											navigateTo("#!ext/admin_prodedit/showStoreVariationsManager");
+											navigateTo("/ext/admin_prodedit/showStoreVariationsManager");
 											}
 										else	{
 											$taskItem = $("li.isProductContainer[data-pid='"+pid+"']",'#productContent');

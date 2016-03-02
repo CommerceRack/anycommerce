@@ -53,7 +53,7 @@ var admin_orders = function(_app) {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 //				_app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				_app.rq.push(['css',0,_app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
-				_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+				// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
 				return r;
 				},
 			onError : function()	{
@@ -111,7 +111,7 @@ var admin_orders = function(_app) {
 				var numQd = 0; //the number of items still queued.
 //go through all rows that have a status, not just selected.  It's possible a merchant could check or uncheck items during the sync.
 //completed items have already been removed by this point.
-				$('#orderListTable tr[data-status]').each(function(){
+				$('.orderListTable tr[data-status]').each(function(){
 					var $row = $(this);
 					if($row.attr('data-status') == 'error')	{
 						numErrors += 1;
@@ -132,8 +132,8 @@ var admin_orders = function(_app) {
 
 
 
-var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
-$('#ordersInterfaceMainColumn','#ordersContent').hideLoading().removeData('activeRequestUUID');
+var $target = $('.orderListTableBody'); //a table in the orderManagerTemplate
+$('.ordersInterfaceMainColumn','#ordersContent').hideLoading().removeData('activeRequestUUID');
 
 //ucomment this in button instead of auto-submit mode. button class changed once filter changes occur (but before button is pressed). this resets button.
 //$("[data-app-event='admin_orders|orderListFiltersUpdateButton']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
@@ -215,14 +215,14 @@ $.contextMenu({
 
 	}
 else	{
-	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
+	$('.orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
 	//if this was a keyword search and the keyword was an order ID, show this extra messaging to allow the user to attempt to load the order directly. 
 	//good for if elastic is having emotional issues.
 
 	var regex = /^20\d\d-[01]\d-[\d]+$/;
 	if(tagObj.keyword && regex.test(tagObj.keyword))	{
 		_app.u.dump("The search was for an order ID.");
-		$('#orderListTableContainer').append($("<div \/>").addClass('lookLikeLink').on('click',function(){
+		$('.orderListTableContainer').append($("<div \/>").addClass('lookLikeLink').on('click',function(){
 			$('#ordersContent').empty();
 			_app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
 			_app.model.dispatchThis();
@@ -341,7 +341,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
 				else if($row.hasClass('ui-selected'))	{
 					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
-					if($('#ordersInterfaceMainColumn','#ordersContent').data('mode') == 'order')	{
+					if($('.ordersInterfaceMainColumn','#ordersContent').data('mode') == 'order')	{
 //make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
 						$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
 							$(this).closest('tr').find("[data-app-click='admin_orders|orderUpdateShowEditor']").trigger('click');
@@ -373,7 +373,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 				$("table[data-app-role='itemListTable']:first",$target).anytable(); //make table headers sortable.
 				
 
-				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
+				if(P.filters.LIMIT)	{$('input[name=filterLimit]').val(P.filters.LIMIT)} //set default val for limit.
 
 //check to see which index in accordian was open last.
 				var settings = _app.model.dpsGet('admin_orders','accordion') || {};
@@ -546,7 +546,7 @@ $('#orderListTab').find("table").stickytab('destroy');
 //zero isn't a valid cid.  cid must also be a number.
 				if(Number(CID) > 0)	{
 				//	_app.u.dump("fetch customer record");
-					r += _app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
+					r += _app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'.customerNotes'},Q); //
 					}
 				else	{
 					_app.u.dump("WARNING! - no CID set. not critical, but CID is preferred.");
@@ -594,7 +594,7 @@ else	{
 			//
 //			_app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent')
 				if($mainCol.data('activeRequestUUID'))	{
 					_app.model.abortRequest('mutable',$mainCol.data('activeRequestUUID'))
 					}
@@ -645,7 +645,7 @@ else	{
 
 				if(err)	{
 					var msgObj = _app.u.errMsgObject(err);
-					msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+					msgObj.jqObj = $('.adminOrdersPaymentMethodsContainer');
 					_app.u.throwMessage(msgObj);
 					}
 				else	{
@@ -789,7 +789,7 @@ if giftcard is on there, no paypal will appear.
 					else {
 	//						_app.u.dump("rd: "); _app.u.dump(rd);
 	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
-	//					_app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",_app.data[rd.datapointer]);
+	//					_app.renderFunctions.translateSelector(".adminOrdersPaymentMethodsContainer [data-app-role='orderUpdateAddPaymentContainer']",_app.data[rd.datapointer]);
 						$tag.append(_app.ext.order_create.u.buildPaymentOptionsAsRadios(_app.data[rd.datapointer]['@methods']));
 						$(':radio',$tag).each(function(){
 							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
@@ -1067,7 +1067,7 @@ if giftcard is on there, no paypal will appear.
 		handleOrderListTab : function(process)	{
 //			_app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
 			var $target = $('#orderListTab');
-			var $table = $('#orderListTable');
+			var $table = $('.orderListTable');
 			if($target.length)	{
 				//tab already exists. don't create a duplicate.
 				}
@@ -1092,13 +1092,13 @@ if giftcard is on there, no paypal will appear.
 
 		submitFilter : function()	{
 //* 201338 -> added context (,'#ordersContent') to these selectors to make them more efficient.
-			var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+			var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent');
 			_app.ext.admin_orders.u.changeOMMode('order');
 
-			$('#orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
-			$('.noOrdersMessage','#orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
+			$('.orderListTableBody','#ordersContent').empty(); //this is targeting the table body.
+			$('.noOrdersMessage','.orderListTableContainer','#ordersContent').empty().remove(); //get rid of any existing no orders messages.
 			var obj = {}
-			obj.LIMIT = Number($('#filterLimit','#ordersContent').val()) || 30;
+			obj.LIMIT = Number($('input[name=filterLimit]','#ordersContent').val()) || 30;
 			$("[data-app-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
 				var val = $(this).find('.ui-selected').attr('data-filtervalue');
 				if(val){
@@ -1387,7 +1387,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 // _app.ext.admin_orders.u.unSelectRow()
 			unSelectRow : function($row){
 				$row.removeClass("ui-selected").addClass("ui-unselecting");
-				$('#orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
+				$('.orderListTableBody').trigger('mousestop'); // trigger the mouse stop event 
 				},
 
 
@@ -1406,7 +1406,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 
 //Run the dispatch on your own.  That way a bulkChangeOrderPool can be run at the same time as other requests.
 			bulkChangeOrderPool : function(CMD){
-				var $selectedRows = $('#orderListTable tr.ui-selected');
+				var $selectedRows = $('.orderListTable tr.ui-selected');
 				
 				if($selectedRows.length)	{
 					var pool = CMD.substr(5);
@@ -1441,7 +1441,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				}, //flagOrderAsPaid
 
 			bulkFlagOrdersAsPaid : function()	{
-var $selectedRows = $('#orderListTable tr.ui-selected');
+var $selectedRows = $('.orderListTable tr.ui-selected');
 //if no rows are selected, let the user know to select some rows.
 if($selectedRows.length)	{
 	var statusColID = _app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
@@ -1488,7 +1488,7 @@ else	{
 //				_app.u.dump(" -> name = "+name);
 				var colIndex = false; //what is returned. the column index.
 //SANITY - flexigrid creates a separate table for the header columns.
-				$('#orderListTable thead th').each(function(index){
+				$('.orderListTable thead th').each(function(index){
 					if($(this).attr('data-name') == name)	{ colIndex = index;} 
 					});
 //				_app.u.dump(" -> colIndex = "+colIndex);
@@ -1567,7 +1567,7 @@ $('.editable',$container).each(function(){
 				},
 
 			changeOMMode : function(mode)	{
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent');
 				if(mode == 'order')	{
 					$mainCol.removeClass('itemListMode').addClass('orderListMode').data('mode','order');
 					}
@@ -1678,7 +1678,7 @@ handleOrder(orders[i]);
 			"itemListFilterUpdate" : function($ele,P){
 				_app.ext.admin_orders.u.changeOMMode('item');
 
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent');
 				var $tbody = $("[data-app-role='itemListTbody']",$mainCol);
 				$mainCol.showLoading({'message':'Fetching item list'});
 				
@@ -1718,7 +1718,7 @@ handleOrder(orders[i]);
 				},
 
 			"orderListUpdateSelectAll" : function($ele,P)	{
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent');
 				var $tbody = $("[data-app-role='"+$mainCol.data('mode')+"ListTbody']",$mainCol);
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
 				$('tr',$tbody).each(function() {
@@ -1729,7 +1729,7 @@ handleOrder(orders[i]);
 				}, //orderListUpdateSelectAll
 
 			"orderListUpdateDeselectAll" : function($ele,P)	{
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent');
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent');
 				var $tbody = $("[data-app-role='"+$mainCol.data('mode')+"ListTbody']",$mainCol);
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
 				$('tr',$tbody).each(function() {
@@ -1764,7 +1764,7 @@ handleOrder(orders[i]);
 							case 'PRNT':
 //								_app.ext.admin_orders.u.bulkOrdersPrint(command);
 								var orders = new Array();
-								$('.ui-selected','#orderListTableBody').each(function(){
+								$('.ui-selected','.orderListTableBody').each(function(){
 									orders.push($(this).data('orderid'));
 									});
 								_app.ext.admin_orders.u.printOrders(orders,{printable:command.split('|')[1]});
@@ -2059,7 +2059,7 @@ handleOrder(orders[i]);
 						
 						var $parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent'), //tested this in order edit and it works.
-						$form = $('form','#chooserResultContainer'),
+						$form = $('form','.chooserResultContainer'),
 						formJSON = $form.serializeJSON();
 	
 						formJSON.product_id = formJSON.sku;
@@ -2166,7 +2166,7 @@ handleOrder(orders[i]);
 						$btn.closest('.ui-dialog-content').dialog('close');
 						}
 					else	{
-						navigateTo("#!tab/orders");
+						navigateTo("/tab/orders");
 						}
 					}); //the dialog-contentis the div the modal is executed on.
 				}, //orderUpdateCancel
@@ -2205,7 +2205,7 @@ handleOrder(orders[i]);
 
 			orderSearch : function($ele,P)	{
 
-				var $mainCol = $('#ordersInterfaceMainColumn','#ordersContent')
+				var $mainCol = $('.ordersInterfaceMainColumn','#ordersContent')
 				_app.ext.admin_orders.u.changeOMMode('order');
 				
 				var
@@ -2214,8 +2214,8 @@ handleOrder(orders[i]);
 				
 				if(frmObj.keyword)	{
 					var keyword = $.trim(frmObj.keyword);
-					$('#orderListTableBody').empty();
-					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
+					$('.orderListTableBody').empty();
+					$('.noOrdersMessage','.orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					$mainCol.showLoading({'message':'Searching orders...'});
 					if(frmObj.isDetailedSearch == 'on')	{
 						query = {'size':Number(frmObj.size) || 30,'filter' : {
@@ -2394,13 +2394,13 @@ handleOrder(orders[i]);
 //the ui-state-error class gets added to the parent of the input, so that the input, label and more get styled.
 						if(!formJSON.amt)	{
 							var msgObj = _app.u.errMsgObject("Please set an amount");
-							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+							msgObj.jqObj = $('.adminOrdersPaymentMethodsContainer');
 							_app.u.throwMessage(msgObj);
 							$("[name='amt']",$paymentContainer).addClass('ui-state-error');
 							}
 						else if(errors)	{
 							var msgObj = _app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
-							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+							msgObj.jqObj = $('.adminOrdersPaymentMethodsContainer');
 							_app.u.throwMessage(msgObj);
 							for(var index in errors)	{
 								$("[name='"+errors[index]+"']",$paymentContainer).addClass('ui-state-error');
@@ -2444,7 +2444,7 @@ handleOrder(orders[i]);
 						}
 					else	{
 						var msgObj = _app.u.errMsgObject("Please choose a payment method.");
-						msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+						msgObj.jqObj = $('.adminOrdersPaymentMethodsContainer');
 						_app.u.throwMessage(msgObj);
 						}					
 					

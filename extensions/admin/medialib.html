@@ -2,18 +2,18 @@
 
 <div id='mediaLibTemplate'>
 
-<form id="mediaLibUploadForm" action="#" onsubmit="return false;" method="POST" enctype="multipart/form-data">
+<form name="mediaLibUploadForm" action="#" onsubmit="return false;" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
 	<td>
-	<div id='mediaLibraryFocusMediaDetails' class='displayNone'>
+	<div class='mediaLibraryFocusMediaDetails displayNone'>
 <!-- currently populated by media lib -->
 	</div>
 	</td>
-	<td id='mediaLibActionsBar' class='alignRight'>
+	<td class='mediaLibActionsBar alignRight'>
 	
 	<span>
-	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
+	<input type='text' name='mediaLibNewFolderName' />
 	<button data-btn-action="addFolder" title='Add a new media folder. Use the down arrow to choose location.' class='marginRight'>Add Folder</button>
 	<button data-btn-action="selectAddFolderDestination" title='Select whether the new folder will be a top level or a sub folder. For subfolders, navigate to that directory first.' class='marginRight'>Folder Location:</button>
 	<ul class='selectAddFolderChoices'>
@@ -89,7 +89,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
         <div class="fileupload-loading"></div>
 
         <!-- The table listing the files available for upload/download -->
-		<div id='mediaLibraryFileUploadTable'>
+		<div class='mediaLibraryFileUploadTable'>
         <table role="presentation" class="table table-striped clearfix"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
 		</div>
 		
@@ -100,25 +100,25 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </tr>
 <tr>
 	<td colspan='2'>
-	<div class='appMessaging' id='mediaLibMessaging'></div>
+	<div class='appMessaging'></div>
 	</td>
 </tr>
 
 <tr>
-	<td id='mediaLibFolderList'>
+	<td class='mediaLibFolderList'>
 	
-	<div id='mediaLibControlsTabContainer' class=' marginRight'>
+	<div class='mediaLibControlsTabContainer marginRight'>
 		<ul>
 			<li><a href='#mediaLibFolderContainer'><img class="ui-icon ui-icon-folder-collapsed">Browse</a></li>
 			<li><a href='#mediaLibSearchContainer'><img class="ui-icon ui-icon-search">Search</a></li>
 		</ul>
 		
 		
-		<div id='mediaLibFolderContainer'>
-			<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+		<div class='mediaLibFolderContainer' data-anytab-content='mediaLibFolderContainer'>
+			<ul class='mediaLibFolderListUL listStyleNone noPadOrMargin marginLeft' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;"></ul>
 		</div>
 		
-		<div id='mediaLibSearchContainer'>
+		<div class='mediaLibSearchContainer' data-anytab-content='mediaLibSearchContainer'>
 
 
 
@@ -146,18 +146,18 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 	</div>
 	</td>
-	<td id='mediaLibFileList'>
+	<td class='mediaLibFileList'>
 	<div class='welcomeMessage'>
 		<h4>Welcome to the media library.</h4>
 		<p>Before you can add a new file, you need to create a folder</p>
 		<p>To delete a folder, open it and as long as it has no child-folders, you'll be able to delete it. If children are present, delete them first.</p>
 		<p>You can upload individual image files or zip files with multiple images. you can also drag from your desktop into the upload area.</p>
 	</div>
-	<div id='mediaLibInfiniteScroller' class='displayNone'>
-		<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight clearfix' id='mediaFilesUL'></ul>
+	<div class='mediaLibInfiniteScroller displayNone'>
+		<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='mediaFilesUL noPadOrMargin listStyleNone mediaFiles marginRight clearfix'></ul>
 	</div>
 	<!-- infiniteScroll REALLY wants some sort of legacy next link. infinite scroll will break if you remove this. -->
-	<a id="nextMediaFilesPage" href="?page=2" class='displayNone'>next page?</a>
+	<a href="?page=2" class='displayNone'>next page?</a>
 
 	</td>
 </tr>
@@ -185,7 +185,7 @@ not in use yet.
 
 <div id='fileUploadTemplate'>
 
-	<div id='fileUploadMessaging'></div>
+	<div class='appMessaging'></div>
 
 <!-- START JQFU CODE THAT SHOULD BE LOADED FROM DIV ABOVE -->
 <fieldset class='borderNone'>
@@ -319,7 +319,7 @@ not in use yet.
 
 <section>
 <h2>Upload new files</h2>
-<form name="publicFilesUploadForm" id="publicFilesUploadForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form name="publicFilesUploadForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
 </form>
@@ -329,7 +329,7 @@ not in use yet.
 
 <section>
 <h2>Existing files</h2>
-	<ul class='loadingBG' id='publicFilesList'></ul>
+	<ul class='loadingBG publicFilesList'></ul>
 </section>
 </div>
 
@@ -397,7 +397,7 @@ PAGE TEMPLATES FOR utilities/import
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-customers'>
 <h1>Load Customers from CSV File</h1>
-<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <fieldset>
 	<input type='hidden' name='VERB' value='UPLOAD-CUSTOMERS'>
 	<label><input type='radio' checked name='TYPE' value='customer'> CSV Customer Records (specify the header on the first line)</label>
@@ -421,7 +421,7 @@ PAGE TEMPLATES FOR utilities/import
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-variations'>
 <h1>Load Variations from CSV File</h1>
-<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='VARIATIONS'>
 
 <!-- adds the file upload area -->
@@ -472,7 +472,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-images'>
 <h1>Upload images from CSV file</h1>
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='IMAGES'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
@@ -483,7 +483,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-inventory'>
 <h1>Load inventory from a CSV file:</h1>
-<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='INVENTORY'>
 <fieldset>
 	<h3>Import Type &amp; Target</h3>
@@ -514,7 +514,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-listings'>
 
 <h1>Upload listings from a CSV file</h1>
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='LISTINGS'>
 <input type='hidden' name='TYPE' checked value='listings'>
 <!-- adds the file upload area -->
@@ -522,7 +522,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 </form>
 
 <div class="hint">
-to export ebay listings go to: <a href="#" onClick="navigateTo('#!productExport'); return false;">utilities &#187; ebay</a>
+to export ebay listings go to: <a href="#" onClick="navigateTo('/productExport'); return false;">utilities &#187; ebay</a>
 </div>
 
 
@@ -535,7 +535,7 @@ to export ebay listings go to: <a href="#" onClick="navigateTo('#!productExport'
 
 	<section>
 		<h2>Import navigation categories from CSV file</h2>
-		<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+		<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 		<fieldset>
 			<input type='hidden' name='filetype' value='NAVCATS'>
 			<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
@@ -555,7 +555,7 @@ to export ebay listings go to: <a href="#" onClick="navigateTo('#!productExport'
 		<h2>Export navigation categories</h2>
 		
 		
-		<label>Additional headers: <input type="text" name="headers" id='navcatExportHeader'></label>
+		<label>Additional headers: <input type="text" name="headers" class='navcatExportHeader'></label>
 		<div class="hint">
 		Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
 		However any field that is stored in page namespace can be accessed.
@@ -580,7 +580,7 @@ NOTE: You cannot rewrite/redirect a *valid* URL. For example you cannot redirect
 or product page. That is because a rewrite lookup is only done immediately before a 404 page is served.
 </p>
 
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='REWRITES'>
 <input type='hidden' name='TYPE' checked value='rewrites'>
 <input type="checkbox" name="REWRITE_DESTRUCTIVE"> Destructive Overwrite (deletes all existing rewrites).<br>
@@ -612,7 +612,7 @@ Columns headers are as follows:<br />
  &#187; <a href='http://webdoc.zoovy.com/doc/50890' target='webdoc'>Advanced order import guide</a>
 </p>
 
-<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form  name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <fieldset>
 	<input type='hidden' name='filetype' value='ORDERS'>
 	<label><input type="checkbox" name="SEP_CHAR" value='TAB'> Use TAB as the separator for this file (vs a comma)</label>
@@ -630,7 +630,7 @@ Columns headers are as follows:<br />
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-other'>
 <h1>Load 'Other' from CSV File</h1>
-<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form  name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='OTHER'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
@@ -646,7 +646,7 @@ Columns headers are as follows:<br />
 
 <h1>Load Products from CSV File</h1>
 
-<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='PRODUCTS'>
 <fieldset>
 	<label><input form="csvUploadToBatchForm" type="checkbox" name="ALLOW_CRLF"> Allow CR/LF in file (WARNING: you must make sure all fields are properly escaped/quoted to use this).</label>
@@ -670,7 +670,7 @@ Columns headers are as follows:<br />
 
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-reviews'>
 <h1>Load reviews from a CSV file</h1>
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='REVIEW'>
 <input type='hidden' name='TYPE' checked value='review'>
 <!-- adds the file upload area -->
@@ -697,7 +697,7 @@ Columns headers are as follows:<br />
 	</ul>
 </div>
 
-<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<form class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='RULES'>
 <input type='hidden' name='TYPE' checked value='rules'>
 <!-- adds the file upload area -->
@@ -722,7 +722,7 @@ Columns headers are as follows:<br />
 Columns headers are as follows:<br />
 %ORDERID,%CARRIER,%TRACKING_NUMBER,%NOTES
 </p>
-<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<form  name="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='TRACKING'>
 <input type='hidden' name='TYPE' value='TRACKING'>
 <fieldset>

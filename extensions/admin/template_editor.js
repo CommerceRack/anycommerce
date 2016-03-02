@@ -37,7 +37,7 @@ var admin_template = function(_app) {
 				onSuccess : function()	{
 					var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 	//the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
-					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/template_editor.html',theseTemplates);
+					// _app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/admin/template_editor.html',theseTemplates);
 					_app.ext.admin_template.u.declareMagicFunctions(); //adds some global functions to the dom. shortcuts for template editing.
 					return r;
 					},
@@ -342,7 +342,7 @@ _app.u.dump(" -> $focusFieldset.index(): "+$focusFieldset.index());
 	//will need to make a resource call here and then load this as the callback, putting the body of the resource into the textarea.
 				var $buttonset = $("<div \/>").addClass('buttonset alignRight smallPadding ui-widget-content');
 				$("<button \/>").text('Cancel Changes').button().on('click',function(){
-					navigateTo("#!ext.admin_template.invoiceEditor");
+					navigateTo("/ext.admin_template.invoiceEditor");
 					}).appendTo($buttonset);
 
 				$("<button \/>").text('Save Changes').button().on('click',function(){
@@ -1037,7 +1037,7 @@ var $input = $(_app.u.jqSelector('#',ID));
 										else	{
 											$TC.dialog('close');
 											$('#globalMessaging').anymessage(_app.u.successMsgObject("Thank you, the template "+vars.SUBDIR+" has been copied."));
-											navigateTo('#!ext/admin_template/showTemplateEditor',_app.u.getWhitelistedObject(vars,['domain','campaignid','profile','mode']));
+											navigateTo('/ext/admin_template/showTemplateEditor',_app.u.getWhitelistedObject(vars,['domain','campaignid','profile','mode']));
 											}
 										}
 									}	
@@ -1545,15 +1545,15 @@ var $input = $(_app.u.jqSelector('#',ID));
 					var $templateEditor = $ele.closest("[data-app-role='templateEditor']"), data = $templateEditor.data();
 					if(data.mode == 'Campaign')	{
 						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
-						navigateTo('#!ext/admin_customer/showCampaignManager',{'campaignid':data.campaignid});
+						navigateTo('/ext/admin_customer/showCampaignManager',{'campaignid':data.campaignid});
 						}
 					else if(data.mode == 'EBAYProfile')	{
 						$("textarea[data-app-role='templateEditorTextarea']:first",$templateEditor).tinymce().remove();
-						navigateTo('#!syndication',{'mkt':'EBF','profile':data.profile});
+						navigateTo('/syndication',{'mkt':'EBF','profile':data.profile});
 						}
 					else if(data.mode == 'Site')	{
 						$(".isTinymceTextarea",$templateEditor).tinymce().remove();
-						navigateTo('#!ext/admin_sites/showDomainConfig',{'domain':data.domain});
+						navigateTo('/ext/admin_sites/showDomainConfig',{'domain':data.domain});
 						}
 					else	{
 						$("#globalMessaging").anymessage({"message":"In admin_template.e.adminTemplateEditorExit, unrecognize or missing mode ["+data.mode+"] set on template editor.","gMessage":true});
@@ -1695,10 +1695,10 @@ else	{
 					p.preventDefault();
 					var pass = true;
 					if($ele.data('mode') == 'Campaign')	{
-						navigateTo('#!ext/admin_template/showTemplateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
+						navigateTo('/ext/admin_template/showTemplateEditor',{'campaignid':$ele.closest("[data-campaignid]").data('campaignid'),'mode':'Campaign'});
 						}
 					else if ($ele.data('mode') == 'EBAYProfile')	{
-						navigateTo('#!ext/admin_template/showTemplateEditor',{'profile':$ele.closest("[data-profile]").data('profile'),'mode':'EBAYProfile'});
+						navigateTo('/ext/admin_template/showTemplateEditor',{'profile':$ele.closest("[data-profile]").data('profile'),'mode':'EBAYProfile'});
 						}
 					else if ($ele.data('mode') == 'Site')	{
 						
@@ -1706,7 +1706,7 @@ else	{
 						var hostname = $ele.closest("[data-hostname]").attr('data-hostname');
 						
 						if(hostname && domainname)	{
-							navigateTo('#!ext/admin_template/showTemplateEditor',{'domain':hostname.toLowerCase()+'.'+domainname,'mode':'Site'});
+							navigateTo('/ext/admin_template/showTemplateEditor',{'domain':hostname.toLowerCase()+'.'+domainname,'mode':'Site'});
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':'In admin_template.e.templateEditorShow, unable to resolve domain name ['+domainname+'] and/or host name ['+hostname+'].','gMessage':true});

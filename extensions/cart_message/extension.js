@@ -53,7 +53,7 @@ var cart_message = function(_app) {
 						}
 					_app.cmr.push = addCMResponse; // all future pushes will get added immediately to the response list.
 					_app.u.loadCSSFile(_app.vars.baseURL+"extensions/cart_message/styles.css","cart_messageCSS");
-					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_message/templates.html',theseTemplates);
+					_app.model.fetchNLoadTemplates(_app.vars.baseURL+'extensions/cart_message/templates.html');
 					//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 					r = true;
 	
@@ -483,7 +483,7 @@ That way cartmessages can be fetched without impacting the polling time, if desi
 			
 			gotoProductExec : function($ele,p)	{
 				p.preventDefault();
-				var sku = $("input[name='sku']",'#chooserResultContainer').val();
+				var sku = $("input[name='sku']",'.chooserResultContainer').val();
 				//cart id on parent set by gotoProductShowChooser
 				cartMessagePush(cartid,'goto.product',{'vars':{'pid':sku},'_cartid':$ele.parent().data('cartid')});
 				$('#prodFinder').anymessage({'message':'Product '+sku+' sent to buyer.','errtype':'done'});
