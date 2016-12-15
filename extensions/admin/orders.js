@@ -487,7 +487,8 @@ $('#orderListTab').find("table").stickytab('destroy');
 						if(Number(orderData.customer.cid) > 0)	{
 							//customer record assigned. allow customer record to be edited.
 							$("[data-app-role='orderEditorCustomerEditButton']").show();
-							$("[data-app-role='orderEditorCustomerAssignButton']").hide();
+							//$("[data-app-role='orderEditorCustomerAssignButton']").hide();
+							$("[data-app-role='orderEditorCustomerAssignButton']").show();
 							}
 						else	{
 							//no customer record. allow one to be assigned.

@@ -92,40 +92,12 @@ var admin_tools = function(_app) {
 
 			showManageFlexedit : function($target)	{
 				$target.anycontent({'templateID':'manageFlexeditTemplate',data:{}}).anyform();
-				_app.u.addEventDelegation($target);
-				var $enabled = $("[data-app-role='flexeditEnabledListContainer']",$target);
-				$enabled.showLoading({'message':'Fetching your list of enabled fields'})
-				
-				var $master = $("[data-app-role='flexeditMasterListContainer']",$target);
-				$master.showLoading({'message':'Fetching list of popular fields'})
 
-				$('tbody',$enabled).sortable();
-
-				//the connection is one way for now.
-				$('tbody',$master).sortable({
-					connectWith: $('.connectMe',$target),
-					stop : function(event,ui)	{
-						//if the item ends up in the enabled list, change from left/right arrows to up/down. also tag row to denote it's new (for save later).
-						if($(ui.item).closest('tbody').hasClass('connectMe'))	{
-							$(ui.item).addClass('edited isNewRow').data({'isFromMaster':true}).attr({'data-guid':_app.u.guidGenerator(),'data-id':$(ui.item).data('obj_index')});
-							_app.u.handleButtons($(ui.item));
-							}
-						}
-					});
-
-				_app.ext.admin.calls.appResource.init('product_attribs_all.json',{},'mutable'); //have these handy for editor. ### TODO -> don't call these till necessary
-				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':'anycontent','datapointer':'adminConfigDetail|flexedit','jqObj':$enabled}},'mutable');
-				_app.model.addDispatchToQ({'_cmd':'appResource','filename':'product_attribs_popular.json','_tag':{'callback':function(rd){
-					$master.hideLoading();
-					$('tr',$enabled).each(function(){$(this).attr('data-guid',_app.u.guidGenerator())}); //has to be an attribute (as opposed to data()) so that dataTable update see's the row exists already.
-					if(_app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						$master.anycontent({'datapointer':rd.datapointer});
-						_app.u.handleButtons($master);
-						}
-					},'datapointer':'appResource|product_attribs_popular.json'}},'mutable');
+				_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'callback':function(_rtag){
+					// console.log(_rtag);
+					$('textarea', $target).val(JSON.stringify(_app.data[_rtag.datapointer]['%flexedit']));
+					_app.u.addEventDelegation($target);
+					},'datapointer':'adminConfigDetail|flexedit'}},'mutable');
 				_app.model.dispatchThis('mutable');
 				}, //showManageFlexedit
 			
@@ -713,6 +685,31 @@ var admin_tools = function(_app) {
 				else	{
 					$inputContainer.hide();
 					$ele.closest('form').anymessage({"message":"In admin_tools.e.flexeditAttributeAddUpdateShow, mode not valid. only create or update are accepted.","gMessage":true});
+					}
+				},
+			flexeditSave : function($ele, P){
+				var json = $('textarea', $ele).val();
+				try{
+					var obj = JSON.parse(json);
+					_app.model.addDispatchToQ({
+						'_cmd':'adminConfigMacro',
+						'@updates':["GLOBAL/FLEXEDIT-SAVE?json="+encodeURIComponent(json)],
+						'_tag':	{
+							'callback' : function(rd){
+								if(_app.model.responseHasErrors(rd)){
+									_app.u.throwMessage(rd);
+									}
+								else{
+									navigateTo('/ext/admin_tools/showManageFlexedit');
+									}
+								},
+							}
+						},'immutable');
+					_app.model.addDispatchToQ({'_cmd':'adminConfigDetail','flexedit':'1','_tag':{'datapointer':'adminConfigDetail|flexedit'}},'immutable');
+					_app.model.dispatchThis('immutable');
+					}
+				catch(e){
+					_app.u.throwMessage("The JSON submitted could not be parsed");
 					}
 				},
 			flexeditAttributeSave : function($ele,P){

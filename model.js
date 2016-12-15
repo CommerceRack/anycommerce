@@ -942,7 +942,20 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find category (may not exist)";
 							} //a response errid of zero 'may' mean no errors.
 						break;
-	
+					case 'adminProductMacro':
+						//DOESN'T WORK IN THE DEFAULT CASE
+						//	the _cmd comes back with _msgs populated and a success, even if there are errors in the @MSGS.  The else if'ing breaks that.
+						//	To avoid side effects, I'm adding this as a special case since I don't know the intentions at this time -mc
+						if(responseData['@MSGS'] && responseData['@MSGS'].length)	{
+							var L = responseData['@MSGS'].length;
+							for(var i = 0; i < L; i += 1)	{
+								if(responseData['@MSGS'][i]['!'] == 'ERROR')	{
+									r = true;
+									break; //if we have an error, exit early.
+									}
+								}
+							}
+						break;
 					default:
 						if(Number(responseData['errid']) > 0 && responseData.errtype != 'warn') {r = true;} //warnings do not constitute errors.
 						else if(Number(responseData['_msgs']) > 0)	{

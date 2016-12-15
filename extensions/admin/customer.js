@@ -733,8 +733,10 @@ $D is returned.
 							_app.u.dump(" -> $panel.length: "+$panel.length);
 							_app.u.dump(" -> $customerEditor.length: "+v.$customerEditor.length);
 							$("tbody",$panel).empty(); //clear address rows so new can be added.
-							$panel.anycontent({'data' : _app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
-							_app.u.handleButtons($panel);
+							setTimeout(function(){
+								$panel.anycontent({'data' : _app.data['adminCustomerDetail|'+v.CID]}); //translate panel, which add all addresses.
+								_app.u.handleButtons($panel);
+							}, 200);
 							}
 
 						$('.panel_ship',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){

@@ -1640,7 +1640,7 @@ else	{
 	}
 var $iframe = $("<iframe \/>").attr({'id':'printContainerIframe','name':'printContainerIframe'}).appendTo($pc);
 $iframe.contents().find('body').append($ele.html());
-$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style>');
+$iframe.contents().find('head').append('<style>@media print{.pageBreak {page-break-after:always} .pageBreak:last-child{ page-break-after:auto; } .hide4Print {display:none;}}</style>');
 window.frames["printContainerIframe"].focus();
 window.frames["printContainerIframe"].print();
 
@@ -2924,7 +2924,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 //	_app.u.dump(" -> value: "+value);
 
-	if(Number(value) == 0 && bindRules.hideZero)	{
+	if(Number(value) == 0 && bindRules.hideZero && !bindRules.forceRender)	{
 //do nothing. value is zero and zero should be skipped.
 //		_app.u.dump(" -> value is 0 but was skipped: "+bindRules['var']);
 		}
@@ -2951,6 +2951,9 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 
 		if(_app.u.isSet(bindRules.format)){
 //the renderFunction could be in 1 of 2 places, so it's saved to a local var so it can be used as a condition before executing itself.
+			if(bindRules.forceRender){
+				console.log('Forcing Render of '+bindRules.format);
+				}
 			var renderFormat; //saves a copy of the renderFormat to a local var.
 			if(bindRules.extension && _app.ext[bindRules.extension] && typeof _app.ext[bindRules.extension].renderFormats == 'object' && typeof _app.ext[bindRules.extension].renderFormats[bindRules.format] == 'function')	{
 				renderFormat = _app.ext[bindRules.extension].renderFormats[bindRules.format];
@@ -3344,6 +3347,7 @@ $tmp.empty().remove();
 				else	{
 //the value here could be checked, on, 1 or some other string. if the value is set (and we won't get this far if it isn't), check the box.
 					$tag.prop({'checked':true,'defaultChecked':true});
+					if($tag.data('anycb')){ $tag.anycb('update'); }
 					}
 				}
 			else if($tag.is(':radio'))	{
