@@ -1,0 +1,3 @@
+[submodule ".b00t"]
+	path = .b00t
+	url = https://github.com/elasticdotventures/_b00t_
